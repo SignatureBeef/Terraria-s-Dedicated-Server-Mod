@@ -195,6 +195,7 @@
     <Compile Include="Rectangle.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Packet.cs" />
+    <Compile Include="Server\ServerState.cs" />
     <Compile Include="Server\UpdateManager.cs" />
     <Compile Include="Chest.cs" />
     <Compile Include="Sign.cs" />

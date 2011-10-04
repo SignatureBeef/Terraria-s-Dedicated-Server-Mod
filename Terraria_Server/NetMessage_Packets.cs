@@ -994,6 +994,8 @@ namespace Terraria_Server
 
             //Tell whether RPG is allowed.
             Int((Server.AllowTDCMRPG) ? 1 : 0);
+
+            End();
 		}
 	}
 }

@@ -5182,6 +5182,23 @@ namespace Terraria_Server
 				ProgramLog.Error.Log ("Attempt to teleport player {0} to invalid location: {1}, {2}.", Name ?? IPAddress, tx, ty);
 				return false;
 			}
+
+            var ctx = new HookContext
+            {
+                Connection = this.Connection,
+                Player = this,
+                Sender = this,
+            };
+
+            var args = new HookArgs.PlayerTeleport
+            {
+                ToLocation = new Vector2(tx, ty)
+            };
+
+            HookPoints.PlayerTeleport.Invoke(ref ctx, ref args);
+
+            if (ctx.Result == HookResult.IGNORE)
+                return false;
 			
 			bool changeSpawn = false;
 			

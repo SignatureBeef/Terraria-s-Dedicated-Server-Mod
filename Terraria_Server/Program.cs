@@ -49,7 +49,19 @@ namespace Terraria_Server
 				System.Diagnostics.Trace.Listeners.Add (lis);
 				System.Diagnostics.Debug.Listeners.Clear ();
 				System.Diagnostics.Debug.Listeners.Add (lis);
-				
+
+                var ctx = new HookContext()
+                {
+                    Sender = new ConsoleSender()
+                };
+
+                var eArgs = new HookArgs.ServerStateChange()
+                {
+                    ServerChangeState = ServerState.INITIALIZING
+                };
+
+                HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
+
 				ProgramLog.Log ("Initializing " + MODInfo);
 
 				ProgramLog.Log ("Setting up Paths.");
@@ -178,6 +190,19 @@ namespace Terraria_Server
 						Console.ReadKey(true);
 						return;
 					}
+
+                    ctx = new HookContext
+                    {
+                        Sender = new WorldSender(),
+                    };
+
+                    eArgs = new HookArgs.ServerStateChange
+                    {
+                        ServerChangeState = ServerState.GENERATING
+                    };
+
+                    HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
+
 					ProgramLog.Log ("Generating world '{0}'", worldFile);
 
                     string seed = properties.Seed;
@@ -227,6 +252,18 @@ namespace Terraria_Server
                     WorldGen.GenerateWorld(seed);
 					WorldIO.saveWorld(worldFile, true);
 				}
+                
+                ctx = new HookContext
+                {
+                    Sender = new WorldSender(),
+                };
+
+                eArgs = new HookArgs.ServerStateChange
+                {
+                    ServerChangeState = ServerState.LOADING
+                };
+
+                HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
 				
 				// TODO: read map size from world file instead of config
 				int worldXtiles = properties.GetMapSizes()[0];
@@ -270,6 +307,18 @@ namespace Terraria_Server
 				Terraria_Server.Main.maxSectionsY = worldYtiles / 150;
 
                 WorldIO.LoadWorld(Server.World.SavePath);
+                
+                ctx = new HookContext
+                {
+                    Sender = new WorldSender(),
+                };
+
+                eArgs = new HookArgs.ServerStateChange
+                {
+                    ServerChangeState = ServerState.LOADED
+                };
+
+                HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
 
 				updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
 

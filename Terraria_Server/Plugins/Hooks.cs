@@ -16,7 +16,9 @@ namespace Terraria_Server.Plugins
 	public static class HookPoints
 	{
 		public static readonly HookPoint<HookArgs.NewConnection>             NewConnection;
-		
+
+		public static readonly HookPoint<HookArgs.ServerStateChange>         ServerStateChange;
+        public static readonly HookPoint<HookArgs.ConsoleMessageReceived>    ConsoleMessageReceived;		
 		public static readonly HookPoint<HookArgs.PluginLoadRequest>         PluginLoadRequest;
 		
 		public static readonly HookPoint<HookArgs.ConnectionRequestReceived> ConnectionRequestReceived;
@@ -27,6 +29,7 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.StateUpdateReceived>       StateUpdateReceived;
 		public static readonly HookPoint<HookArgs.InventoryItemReceived>     InventoryItemReceived;
 		public static readonly HookPoint<HookArgs.ObituaryReceived>          ObituaryReceived;
+		public static readonly HookPoint<HookArgs.PlayerTeleport>            PlayerTeleport;
 		
 		public static readonly HookPoint<HookArgs.PlayerWorldAlteration>     PlayerWorldAlteration;
 		
@@ -65,6 +68,9 @@ namespace Terraria_Server.Plugins
 		
 		static HookPoints ()
 		{
+			PlayerTeleport            = new HookPoint<HookArgs.PlayerTeleport> ("player-teleport");
+            ConsoleMessageReceived    = new HookPoint<HookArgs.ConsoleMessageReceived>("console-message-received");
+			ServerStateChange         = new HookPoint<HookArgs.ServerStateChange> ("server-state-change");
 			NewConnection             = new HookPoint<HookArgs.NewConnection> ("new-connection");
 			PluginLoadRequest         = new HookPoint<HookArgs.PluginLoadRequest> ("plugin-load-request");
 			ConnectionRequestReceived = new HookPoint<HookArgs.ConnectionRequestReceived> ("connection-request-received");
@@ -103,10 +109,25 @@ namespace Terraria_Server.Plugins
 	}
 	
 	public static class HookArgs
-	{
-		public struct NewConnection
-		{
-		}
+    {
+        public struct NewConnection
+        {
+        }
+
+        public struct ConsoleMessageReceived
+        {
+            public string Message { get; set; }
+        }
+
+        public struct ServerStateChange
+        {
+            public ServerState ServerChangeState { get; set; }
+        }
+
+        public struct PlayerTeleport
+        {
+            public Vector2  ToLocation  { get; set; }
+        }
 		
 		public struct PluginLoadRequest
 		{

@@ -4,6 +4,7 @@ using System.Threading;
 using System.IO;
 
 using Terraria_Server.Misc;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Logging
 {
@@ -161,7 +162,8 @@ namespace Terraria_Server.Logging
 						if (entry.message is string)
 						{
 							var str = (string) entry.message;
-							writer.WriteLine (str);
+                            writer.WriteLine(str);
+                            HandleConsoleHook(str);
 							backspace -= str.Length;
 						}
 						else if (entry.message is ProgressLogger)
@@ -185,14 +187,17 @@ namespace Terraria_Server.Logging
 							}
 							
 							backspace -= str.Length;
-							if (backspace <= 0)
-								writer.WriteLine (str);
-							else
-							{
-								writer.Write (str);
-								for (int j = 0; j < backspace; j++)
-									writer.Write (" ");
-							}
+                            if (backspace <= 0)
+                            {
+                                writer.WriteLine(str);
+                                HandleConsoleHook(str);
+                            }
+                            else
+                            {
+                                writer.Write(str);
+                                for (int j = 0; j < backspace; j++)
+                                    writer.Write(" ");
+                            }
 						}
 						
 						ResetColor ();
@@ -223,6 +228,20 @@ namespace Terraria_Server.Logging
 					throw;
 			}
 		}
+
+        void HandleConsoleHook(string ConsoleText)
+        {
+            var ctx = new HookContext()
+            {
+            };
+
+            var args = new HookArgs.ConsoleMessageReceived()
+            {
+                Message = ConsoleText
+            };
+
+            HookPoints.ConsoleMessageReceived.Invoke(ref ctx, ref args);
+        }
 	}
 	
 	public class FileOutputTarget : LogTarget

@@ -228,6 +228,18 @@ namespace Terraria_Server
 		
 		public static void StartServer()
 		{
+            var ctx = new HookContext
+            {
+                Sender = new ConsoleSender(),
+            };
+
+            var args = new HookArgs.ServerStateChange
+            {
+                ServerChangeState = ServerState.STARTING
+            };
+
+            HookPoints.ServerStateChange.Invoke(ref ctx, ref args);
+
 			if (serverThread == null)
 			{
 				serverThread = new ProgramThread ("Serv", NetPlay.ServerLoopLoop);
@@ -238,6 +250,18 @@ namespace Terraria_Server
 
 		public static void StopServer()
 		{
+            var ctx = new HookContext
+            {
+                Sender = new ConsoleSender(),
+            };
+
+            var args = new HookArgs.ServerStateChange
+            {
+                ServerChangeState = ServerState.STOPPING
+            };
+
+            HookPoints.ServerStateChange.Invoke(ref ctx, ref args);
+
 			//Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
             ProgramLog.Log("Disabling Plugins");
 			PluginManager.DisablePlugins();
