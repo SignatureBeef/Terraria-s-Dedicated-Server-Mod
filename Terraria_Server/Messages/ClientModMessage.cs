@@ -22,6 +22,9 @@ namespace Terraria_Server.Messages
             var player = Main.players[whoAmI];
             player.HasClientMod = true;
             ProgramLog.Log(player.Name + " has logged in with the TDCM Client");
+            
+            //Update Client with server data.
+            NetMessage.SendData(Packet.CLIENT_MOD, whoAmI);
         }
     }
 }

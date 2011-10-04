@@ -19,22 +19,29 @@ namespace TDSMExamplePlugin
          * @Developers
          * 
          * Plugins need to be in .NET 4.0
-         * Otherwise TDSM will be unable to load it.
+         * Otherwise TDSM will be unable to load it.       * 
+         * 
          */
 
+        //Resist statics within a plugin.
         public Properties properties;
         public bool spawningAllowed = false;
         public bool tileBreakageAllowed = false;
         public bool explosivesAllowed = false;
 
-        protected override void Initialized(object state)
+        TDSM_Plugin()
         {
+            /* Declare these in the constructor */
+
             Name = "TDSMPlugin Example";
             Description = "Plugin Example for TDSM.";
             Author = "DeathCradle";
             Version = "1";
             TDSMBuild = 36; //You put here the release this plugin was made/build for.
+        }
 
+        protected override void Initialized(object state)
+        {
             string pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "TDSM";
             //Create folder if it doesn't exist
             CreateDirectory(pluginFolder);

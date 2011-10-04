@@ -27,6 +27,10 @@ namespace Terraria_Server
         // Summary:
         //       Gets the OP list
         public static DataRegister OpList { get; set; }
+
+        public static bool AllowExplosions { get; set; }
+
+        public static bool AllowTDCMRPG { get; set; }
         
         public static void InitializeData(World NewWorld, int PlayerCap, string myWhiteList, string myBanList, string myOpList)
         {
@@ -50,6 +54,9 @@ namespace Terraria_Server
                     RejectedItems.Add(rejItem[i].Trim());
                 }
             }
+
+            AllowExplosions = Program.properties.AllowExplosions;
+            AllowTDCMRPG = Program.properties.AllowTDCMRPG;
         }
 
         // Summary:

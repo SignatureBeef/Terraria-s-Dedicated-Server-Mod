@@ -991,6 +991,9 @@ namespace Terraria_Server
 			Header(Packet.CLIENT_MOD, 4);
 			
 			Int((player.Op) ? 1 : 0);
+
+            //Tell whether RPG is allowed.
+            Int((Server.AllowTDCMRPG) ? 1 : 0);
 		}
 	}
 }

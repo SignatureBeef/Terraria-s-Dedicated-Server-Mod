@@ -29,6 +29,15 @@ namespace Regions
         public static int SelectorItem = 0;
         public static bool UsingPermissions = false;
 
+        Regions()
+        {
+            base.Name = "Regions";
+            base.Description = "A region plugin for TDSM";
+            base.Author = "DeathCradle";
+            base.Version = "1";
+            base.TDSMBuild = 36;
+        }
+
         public static string RegionsFolder
         {
             get
@@ -61,12 +70,6 @@ namespace Regions
 
         protected override void Initialized(object state)
         {
-            base.Name = "Regions";
-            base.Description = "A region plugin for TDSM";
-            base.Author = "DeathCradle";
-            base.Version = "1";
-            base.TDSMBuild = 36;
-
             if (!Directory.Exists(RegionsFolder))
                 Directory.CreateDirectory(RegionsFolder);
 

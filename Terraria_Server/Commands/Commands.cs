@@ -1319,9 +1319,11 @@ namespace Terraria_Server.Commands
         {
             args.ParseNone();
 
-            Program.properties.AllowExplosions = !Program.properties.AllowExplosions;
-            sender.sendMessage("Explosions are now " + ((Program.properties.AllowExplosions) ? "allowed" : "disabled") + "!");
+            Server.AllowExplosions = !Server.AllowExplosions;
+            Program.properties.AllowExplosions = Server.AllowExplosions;
             Program.properties.Save();
+
+            sender.sendMessage("Explosions are now " + ((Server.AllowExplosions) ? "allowed" : "disabled") + "!");
         }
         
 		public static void Refresh (ISender sender, ArgumentList args)

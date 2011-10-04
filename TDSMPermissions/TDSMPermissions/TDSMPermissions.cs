@@ -42,15 +42,17 @@ namespace TDSMPermissions
 		private string[] nodesToAdd = {
                                           "permissions.test"
                                       };
-
-        protected override void Initialized(object state)
+        TDSMPermissions()
         {
             Name = "TDSMPermissions";
             Description = "Permissions for TDSM.";
             Author = "Malkierian";
             Version = "1";
             TDSMBuild = 32;
+        }
 
+        protected override void Initialized(object state)
+        {
             plugin = this;
 
             pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "TDSMPermissions";
