@@ -1355,5 +1355,26 @@ namespace Terraria_Server.Commands
 			
 			NetMessage.SendTileSquare (player.whoAmi, (int) (player.Position.X/16), (int) (player.Position.Y/16), 32);
 		}
+
+        public static void ToggleRPGClients(ISender sender, ArgumentList args)
+        {
+            Server.AllowTDCMRPG = !Server.AllowTDCMRPG;
+            Program.properties.AllowTDCMRPG = Server.AllowTDCMRPG;
+
+            foreach (Player player in Main.players)
+            {
+                if (player.HasClientMod)
+                    NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+            }
+
+            if (!Server.OpList.Save())
+            {
+                Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+                return;
+            }
+
+            string message = String.Format("RPG Mode is now {0} on this server:", (Server.AllowTDCMRPG) ? "allowed" : "refused");
+            Server.notifyOps(message);
+        }
     }
 }

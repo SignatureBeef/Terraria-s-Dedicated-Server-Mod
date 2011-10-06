@@ -318,7 +318,36 @@ namespace Terraria_Server
 					default:
 						{
 							//Unknown packet :3
-							return 0;
+                            var ctx = new HookContext()
+                            {
+
+                            };
+
+                            var args = new HookArgs.UnkownSendPacket()
+                            {
+                                Message = msg,
+                                PacketId = packetId,
+                                RemoteClient = remoteClient,
+                                IgnoreClient = ignoreClient,
+                                Text = text,
+                                Number = number,
+                                Number2 = number2,
+                                Number3 = number3,
+                                Number4 = number4,
+                                Number5 =  number5
+                            };
+
+                            HookPoints.UnkownSendPacket.Invoke(ref ctx, ref args);
+
+                            /* Update Locals */
+                            msg = args.Message;
+                            remoteClient = args.RemoteClient;
+                            ignoreClient = args.IgnoreClient;
+
+                            if(ctx.Result != HookResult.IGNORE)
+                                return 0;
+                            else
+                                break;
 						}
 				}
 					
@@ -725,11 +754,16 @@ namespace Terraria_Server
 			sink.Position += 4;
 		}
 
+        public void Begin(int id)
+        {
+            lenAt = (int)sink.Position;
+            sink.Position += 4;
+            sink.WriteByte((byte)id);
+        }
+
 		public void Begin (Packet id)
 		{
-			lenAt = (int) sink.Position;
-			sink.Position += 4;
-			sink.WriteByte ((byte) id);
+            Begin((int)id);
 		}
 		
 		public void End ()
@@ -739,12 +773,17 @@ namespace Terraria_Server
 			bin.Write ((int) (pos - lenAt - 4));
 			sink.Position = pos;
 		}
-		
-		public void Header (Packet id, int length)
-		{
-			bin.Write (length + 1);
-			sink.WriteByte ((byte) id);
-		}
+
+        public void Header(Packet id, int length)
+        {
+            Header((int)id, length);
+        }
+
+        public void Header(int id, int length)
+        {
+            bin.Write(length + 1);
+            sink.WriteByte((byte)id);
+        }
 		
 		public void Byte (byte data)
 		{

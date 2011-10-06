@@ -18,8 +18,9 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.NewConnection>             NewConnection;
 
 		public static readonly HookPoint<HookArgs.ServerStateChange>         ServerStateChange;
-        public static readonly HookPoint<HookArgs.ConsoleMessageReceived>    ConsoleMessageReceived;		
+        public static readonly HookPoint<HookArgs.ConsoleMessageReceived>    ConsoleMessageReceived;
 		public static readonly HookPoint<HookArgs.PluginLoadRequest>         PluginLoadRequest;
+        public static readonly HookPoint<HookArgs.UnkownSendPacket>          UnkownSendPacket;
 		
 		public static readonly HookPoint<HookArgs.ConnectionRequestReceived> ConnectionRequestReceived;
 		public static readonly HookPoint<HookArgs.DisconnectReceived>        DisconnectReceived;
@@ -68,6 +69,7 @@ namespace Terraria_Server.Plugins
 		
 		static HookPoints ()
 		{
+            UnkownSendPacket          = new HookPoint<HookArgs.UnkownSendPacket>("UnkownSendPacket");
 			PlayerTeleport            = new HookPoint<HookArgs.PlayerTeleport> ("player-teleport");
             ConsoleMessageReceived    = new HookPoint<HookArgs.ConsoleMessageReceived>("console-message-received");
 			ServerStateChange         = new HookPoint<HookArgs.ServerStateChange> ("server-state-change");
@@ -110,6 +112,20 @@ namespace Terraria_Server.Plugins
 	
 	public static class HookArgs
     {
+        public struct UnkownSendPacket
+        {
+            public NetMessage   Message         { get; set; }
+            public int          PacketId        { get; set; }
+            public int          RemoteClient    { get; set; }
+            public int          IgnoreClient    { get; set; }
+            public string       Text            { get; set; }
+            public int          Number          { get; set; }
+            public float        Number2         { get; set; }
+            public float        Number3         { get; set; }
+            public float        Number4         { get; set; }
+            public int          Number5         { get; set; }
+        }
+
         public struct NewConnection
         {
         }

@@ -21,8 +21,8 @@ namespace Terraria_Server.Plugins
 	{
 		private static string pluginPath = String.Empty;
 		private static string libraryPath = String.Empty;
-		private static Dictionary<String, BasePlugin> plugins;
-		
+
+		public static Dictionary<String, BasePlugin> plugins;		
 		public static int PluginCount { get { return plugins.Count; } }
 		
 		/// <summary>

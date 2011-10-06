@@ -13,6 +13,7 @@ namespace TDSMPlugin.Commands
     {
         public static void ExampleCommand(ISender sender, ArgumentList args)
         {
+            TDSM_Plugin MyPlugin = (TDSM_Plugin)args.Plugin; //Get the plugin object who's assigned to the "tdsmpluginexample"
             int arg;
             //if the user enters /tdsmpluginexample -test 1, it will retreive the next value '1' and put into 'arg' as an integer.
             if (args.TryParseOne<int>("-test", out arg)) 

@@ -455,9 +455,16 @@ namespace Terraria_Server.Commands
                 .WithHelpText("Usage:    refresh")
                 .WithPermissionNode("tdsm.refresh")
                 .Calls (Commands.Refresh);
+
+            AddCommand("rpg")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Toggle whether RPG Client can use this server.")
+                .WithHelpText("Usage:    rpg")
+                .WithPermissionNode("tdsm.rpg")
+                .Calls(Commands.ToggleRPGClients);
         }
        
-        public readonly Dictionary<string, CommandInfo> serverCommands;
+        public readonly Dictionary<String, CommandInfo> serverCommands;
 
 		/// <summary>
 		/// Registers new command
@@ -655,6 +662,14 @@ namespace Terraria_Server.Commands
 					if (FindTokenCommand(command, out info))
 					{
 						hargs.Arguments = args;
+
+                        foreach (BasePlugin plg in PluginManager.plugins.Values)
+                        {
+                            if (plg.commands.ContainsKey(command))
+                            {
+                                args.Plugin = plg;
+                            }
+                        }
 						
 						HookPoints.Command.Invoke (ref ctx, ref hargs);
 						

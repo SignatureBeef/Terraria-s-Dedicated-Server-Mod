@@ -10,10 +10,10 @@ namespace Terraria_Server.Commands
 	}
 
 	public class ArgumentList : List<string>
-	{		
-		public ArgumentList ()
-		{
-		}
+	{
+        public object Plugin { get; set; }
+
+        public ArgumentList() { }
 		
 		static readonly Dictionary<System.Type, string> typeNames = new Dictionary<System.Type, string> ()
 		{

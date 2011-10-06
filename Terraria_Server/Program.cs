@@ -50,18 +50,6 @@ namespace Terraria_Server
 				System.Diagnostics.Debug.Listeners.Clear ();
 				System.Diagnostics.Debug.Listeners.Add (lis);
 
-                var ctx = new HookContext()
-                {
-                    Sender = new ConsoleSender()
-                };
-
-                var eArgs = new HookArgs.ServerStateChange()
-                {
-                    ServerChangeState = ServerState.INITIALIZING
-                };
-
-                HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
-
 				ProgramLog.Log ("Initializing " + MODInfo);
 
 				ProgramLog.Log ("Setting up Paths.");
@@ -170,7 +158,19 @@ namespace Terraria_Server
 					Collections.Registries.Projectile.Load (Collections.Registries.PROJECTILE_FILE);
 				
 				ProgramLog.Log("Loading plugins...");
-				Terraria_Server.Plugins.PluginManager.Initialize (Statics.PluginPath, Statics.LibrariesPath);
+                Terraria_Server.Plugins.PluginManager.Initialize(Statics.PluginPath, Statics.LibrariesPath);
+
+                var ctx = new HookContext()
+                {
+                    Sender = new ConsoleSender()
+                };
+
+                var eArgs = new HookArgs.ServerStateChange()
+                {
+                    ServerChangeState = ServerState.INITIALIZING
+                };
+
+                HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
 				PluginManager.LoadPlugins ();
 				ProgramLog.Log("Plugins loaded: " + PluginManager.PluginCount);
 				
