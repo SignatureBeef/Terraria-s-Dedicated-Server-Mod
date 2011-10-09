@@ -5,6 +5,7 @@ using System.Reflection;
 
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages
 {
@@ -69,10 +70,27 @@ namespace Terraria_Server.Messages
 							conn.Kick ("Invalid operation in this state.");
 						}
 					}
-					else if (state != SlotState.PLAYING) // this is what stock would do
-					{
-						conn.Kick (String.Format ("Message not understood ({0}).", pkt));
-					}
+                    else 
+                    {
+                        var ctx = new HookContext()
+                        {
+
+                        };
+                        var args = new HookArgs.UnkownReceivedPacket()
+                        {
+                            Conn = conn,
+                            Length = length,
+                            Start = start,
+                            ReadBuffer = readBuffer
+                        };
+
+                        //ProgramLog.Debug.Log("Received unknown packet {0}", pkt);
+
+                        HookPoints.UnkownReceivedPacket.Invoke(ref ctx, ref args);
+
+                        if (ctx.Result != HookResult.IGNORE && state != SlotState.PLAYING) // this is what stock would do
+                            conn.Kick(String.Format("Message not understood ({0}).", pkt));
+                    }
 				}
 			}
 			catch (Exception e)

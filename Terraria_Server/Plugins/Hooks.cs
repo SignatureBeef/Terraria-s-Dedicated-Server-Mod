@@ -21,6 +21,7 @@ namespace Terraria_Server.Plugins
         public static readonly HookPoint<HookArgs.ConsoleMessageReceived>    ConsoleMessageReceived;
 		public static readonly HookPoint<HookArgs.PluginLoadRequest>         PluginLoadRequest;
         public static readonly HookPoint<HookArgs.UnkownSendPacket>          UnkownSendPacket;
+        public static readonly HookPoint<HookArgs.UnkownReceivedPacket>      UnkownReceivedPacket;
 		
 		public static readonly HookPoint<HookArgs.ConnectionRequestReceived> ConnectionRequestReceived;
 		public static readonly HookPoint<HookArgs.DisconnectReceived>        DisconnectReceived;
@@ -69,7 +70,8 @@ namespace Terraria_Server.Plugins
 		
 		static HookPoints ()
 		{
-            UnkownSendPacket          = new HookPoint<HookArgs.UnkownSendPacket>("UnkownSendPacket");
+            UnkownReceivedPacket      = new HookPoint<HookArgs.UnkownReceivedPacket>("unkown-receive-packet");
+            UnkownSendPacket          = new HookPoint<HookArgs.UnkownSendPacket>("unkown-send-packet");
 			PlayerTeleport            = new HookPoint<HookArgs.PlayerTeleport> ("player-teleport");
             ConsoleMessageReceived    = new HookPoint<HookArgs.ConsoleMessageReceived>("console-message-received");
 			ServerStateChange         = new HookPoint<HookArgs.ServerStateChange> ("server-state-change");
@@ -112,6 +114,14 @@ namespace Terraria_Server.Plugins
 	
 	public static class HookArgs
     {
+        public struct UnkownReceivedPacket
+        {
+            public ClientConnection Conn        { get; set; }
+            public byte[]           ReadBuffer  { get; set; }
+            public int              Start       { get; set; }
+            public int              Length      { get; set; }
+        }
+
         public struct UnkownSendPacket
         {
             public NetMessage   Message         { get; set; }
