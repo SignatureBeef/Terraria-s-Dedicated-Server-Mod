@@ -42,7 +42,7 @@ namespace TDSMPermissions
 		private string[] nodesToAdd = {
                                           "permissions.test"
                                       };
-        TDSMPermissions()
+        public TDSMPermissions()
         {
             Name = "TDSMPermissions";
             Description = "Permissions for TDSM.";

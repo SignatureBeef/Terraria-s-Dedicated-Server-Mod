@@ -29,7 +29,7 @@ namespace Regions
         public static int SelectorItem = 0;
         public static bool UsingPermissions = false;
 
-        Regions()
+        public Regions()
         {
             base.Name = "Regions";
             base.Description = "A region plugin for TDSM";

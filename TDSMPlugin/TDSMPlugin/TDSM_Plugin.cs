@@ -29,7 +29,7 @@ namespace TDSMExamplePlugin
         public bool tileBreakageAllowed = false;
         public bool explosivesAllowed = false;
 
-        TDSM_Plugin()
+        public TDSM_Plugin()
         {
             /* Declare these in the constructor */
 
