@@ -32,5 +32,11 @@ namespace Regions.RegionWork
 
             selectionPlayers.Add(player.Name, selection);
         }
+
+        public void RemovePlayer(Player player)
+        {
+            if (isInSelectionlist(player))
+                selectionPlayers.Remove(player.Name);
+        }
     }
 }

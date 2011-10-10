@@ -114,6 +114,7 @@ namespace Regions
             Hook(HookPoints.PlayerWorldAlteration,  OnPlayerWorldAlteration);
             Hook(HookPoints.LiquidFlowReceived,     OnLiquidFlowReceived);
             Hook(HookPoints.ProjectileReceived,     OnProjectileReceived);
+            Hook(HookPoints.PlayerEnteredGame,      OnPlayerEnteredGame);
             Hook(HookPoints.DoorStateChanged,       OnDoorStateChange);
             Hook(HookPoints.ChestBreakReceived,     OnChestBreak);
             Hook(HookPoints.SignTextSet,            OnSignEdit);
@@ -151,11 +152,18 @@ namespace Regions
         
         #region Events
 
+            /* If a player left without finishing the region, Clear it or the next player can use it. */
+            void OnPlayerEnteredGame(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)
+            {
+                if (selection.isInSelectionlist(ctx.Player))
+                    selection.RemovePlayer(ctx.Player);
+            }
+
             void OnPlayerWorldAlteration(ref HookContext ctx, ref HookArgs.PlayerWorldAlteration args)
             {
                 Vector2 Position = new Vector2(args.X, args.Y);
 
-                if (args.TileWasPlaced && args.Type == SelectorItem && selection.isInSelectionlist(ctx.Player))
+                if (args.TileWasPlaced && args.Type == SelectorItem && selection.isInSelectionlist(ctx.Player) && ctx.Player.Op)
                 {
                     ctx.SetResult(HookResult.ERASE);
                     SelectorPos = !SelectorPos;

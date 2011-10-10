@@ -1,0 +1,5 @@
+﻿b3:
+	- Updated to b36 - new API
+	- Added On enter hook to clear selections
+	- Made sure only ops can use region select (during)
+	- Fixed a bug where it divided by 16...again
