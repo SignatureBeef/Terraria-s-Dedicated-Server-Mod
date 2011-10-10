@@ -47,7 +47,7 @@ namespace Regions
         {
             get
             {
-                return getValue("rectify", false);
+                return getValue("rectify", true);
             }
             set
             {

@@ -23,7 +23,7 @@ namespace Regions.RegionWork
 
         public bool IsValidRegion()
         {
-            bool LocationCheck = Server.isValidLocation(Point1) && Server.isValidLocation(Point2);
+            bool LocationCheck = Server.isValidLocation(Point1, false) && Server.isValidLocation(Point2, false);
             bool NameCheck = Name != null && Name.Trim().Length > 0;
             return NameCheck && LocationCheck;
         }
@@ -155,7 +155,7 @@ namespace Regions.RegionWork
                 "point2: {4},{5}\n" +
                 "users: {6}\n" +
                 "projectiles: {7}\n" +
-                "restricted: {8}" +
+                "restricted: {8}\n" +
                 "npcrestrict: {9}",
                 Name, Description, Point1.X, Point1.Y, Point2.X, Point2.Y, UserListToString(), ProjectileListToString(), Restricted, RestrictedNPCs);
         }

@@ -19,9 +19,12 @@ namespace Regions.RegionWork
 
             if (!Directory.Exists(saveFolder))
                 Directory.CreateDirectory(saveFolder);
+        }
 
+        public void LoadRegions()
+        {
             ProgramLog.Plugin.Log("Loading Regions.");
-            Regions = LoadRegions(saveFolder);
+            Regions = LoadRegions(SaveFolder);
             ProgramLog.Plugin.Log("Loaded {0} Regions.", Regions.Count);
         }
 

@@ -66,7 +66,7 @@ namespace Regions
         public Node TilePlace;
         public Node ProjectileUse;
 
-        public HookResult WorldAlter = HookResult.ERASE;
+        public HookResult WorldAlter = HookResult.IGNORE;
 
         protected override void Initialized(object state)
         {
@@ -76,7 +76,7 @@ namespace Regions
             rProperties = new Properties(RegionsFolder + Path.DirectorySeparatorChar + "regions.properties");
             rProperties.Load();
 
-            rProperties.AddHeaderLine("Use 'rectify=true' to ignore world alterations from");
+            rProperties.AddHeaderLine("Use 'rectify=false' to ignore world alterations from");
             rProperties.AddHeaderLine("players who are blocked; Possibly saving bandwidth.");
 
             rProperties.pushData();
@@ -115,6 +115,7 @@ namespace Regions
             Hook(HookPoints.LiquidFlowReceived,     OnLiquidFlowReceived);
             Hook(HookPoints.ProjectileReceived,     OnProjectileReceived);
             Hook(HookPoints.PlayerEnteredGame,      OnPlayerEnteredGame);
+            Hook(HookPoints.ServerStateChange,      OnServerStateChange);
             Hook(HookPoints.DoorStateChanged,       OnDoorStateChange);
             Hook(HookPoints.ChestBreakReceived,     OnChestBreak);
             Hook(HookPoints.SignTextSet,            OnSignEdit);
@@ -151,6 +152,12 @@ namespace Regions
         }
         
         #region Events
+
+            void OnServerStateChange(ref HookContext ctx, ref HookArgs.ServerStateChange args)
+            {
+                if (args.ServerChangeState == ServerState.LOADED)
+                    regionManager.LoadRegions();
+            }
 
             /* If a player left without finishing the region, Clear it or the next player can use it. */
             void OnPlayerEnteredGame(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)

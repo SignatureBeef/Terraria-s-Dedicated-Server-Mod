@@ -84,6 +84,10 @@ namespace Regions
                     {
                         ToggleOPRestrictions(sender, args);
                     }
+                    else if (args.TryPop("protectall"))
+                    {
+                        ProtectMap(sender, args);
+                    }
                 }
                 catch (CommandError e)
                 {
@@ -543,6 +547,50 @@ namespace Regions
             }
             else
                 throw new CommandError("Invalid arguments, Please review your command.");
+        }
+
+        public void ProtectMap(ISender sender, ArgumentList args)
+        {
+            Vector2 Start = new Vector2(0, 0);
+            Vector2 End = new Vector2(Main.maxTilesX, Main.maxTilesY);
+
+            bool Restrict = args.TryPop("-res");
+            bool RestrictNPC = args.TryPop("-npcres");
+
+            string rgnName = "all";
+            int count = 0;
+
+            while(regionManager.ContainsRegion(rgnName))
+            {
+                //if(regionManager.ContainsRegion(rgnName))
+                //{
+                    rgnName = "all" + count.ToString();
+                    count++;
+                //}
+                //else
+                //    break;
+            }
+
+            Region rgn = new Region();
+            rgn.Name = rgnName;
+            rgn.Description = "A Region that protects the entire map";
+            rgn.Point1 = Start;
+            rgn.Point2 = End;
+            rgn.Restricted = Restrict;
+            rgn.RestrictedNPCs = RestrictNPC;
+
+            if (rgn.IsValidRegion())
+            {
+                regionManager.Regions.Add(rgn);
+                if (regionManager.SaveRegion(rgn))
+                    sender.sendMessage("Region '" + rgnName + "' was successfully created.");
+                else
+                    sender.sendMessage("There was an issue while saving the region");
+            }
+            else
+            {
+                sender.sendMessage("There was an issue while creating the region");
+            }
         }
     }
 }
