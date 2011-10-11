@@ -274,6 +274,8 @@ namespace Terraria_Server
 		public int talkNPC = -1;
 		public int fallStart;
 		public int slowCount;
+        
+        public bool socialShadow { get; set; }
 
 		/// <summary>
 		/// Per-player plugin states, using object or name as key
@@ -2835,9 +2837,35 @@ namespace Terraria_Server
 					this.swimTime = 0;
 				}
 			}
-			this.head = this.armor[0].HeadSlot;
-			this.body = this.armor[1].BodySlot;
-			this.legs = this.armor[2].LegSlot;
+
+            this.head = this.armor[0].HeadSlot;
+            this.body = this.armor[1].BodySlot;
+            this.legs = this.armor[2].;
+            if (!this.hostile)
+            {
+                if (this.armor[8].HeadSlot >= 0)
+                {
+                    this.head = this.armor[8].HeadSlot;
+                }
+                if (this.armor[9].BodySlot >= 0)
+                {
+                    this.body = this.armor[9].BodySlot;
+                }
+                if (this.armor[10].LegSlot >= 0)
+                {
+                    this.legs = this.armor[10].LegSlot;
+                }
+            }
+            this.socialShadow = false;
+            if (this.head == 5 && this.body == 5 && this.legs == 5)
+            {
+                this.socialShadow = true;
+            }
+            if (this.head == 7 && this.body == 7 && this.legs == 7)
+            {
+                this.boneArmor = true;
+            }
+
 			this.bodyFrame.Width = 40;
 			this.bodyFrame.Height = 56;
 			this.legFrame.Width = 40;

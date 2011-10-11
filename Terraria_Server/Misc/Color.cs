@@ -72,5 +72,10 @@ namespace Terraria_Server.Misc
 			}
 		}
 
+        public override string ToString()
+        {
+            return "{R:" + R + " G:" + G + " B:" + B + " A:" + A + "}";
+        }
+
     }
 }

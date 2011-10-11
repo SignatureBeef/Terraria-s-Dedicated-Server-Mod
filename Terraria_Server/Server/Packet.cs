@@ -63,6 +63,7 @@
 		//custom
 		TILE_ROW_COMPRESSED = 240,
 //		TILE_SQUARE_COMPRESSED = 241,
-		CLIENT_MOD = 254,
+        CLIENT_MOD_SPAWN_NPC = 253,
+        CLIENT_MOD = 254,
 	}
 }

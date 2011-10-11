@@ -125,7 +125,7 @@
     <Compile Include="Definitions\Time.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
-    <Compile Include="Messages\ClientModMessage.cs" />
+    <Compile Include="Messages\TDCM\ClientModMessage.cs" />
     <Compile Include="Messages\DamageNPCMessage.cs" />
     <Compile Include="Messages\DoorUpdateMessage.cs" />
     <Compile Include="Messages\EnterZoneMessage.cs" />
@@ -158,6 +158,7 @@
     <Compile Include="Messages\StrikeNPCMessage.cs" />
     <Compile Include="Messages\StrikePlayerMessage.cs" />
     <Compile Include="Messages\SummonSkeletronMessage.cs" />
+    <Compile Include="Messages\TDCM\SpawnNPC.cs" />
     <Compile Include="Messages\TileBreakMessage.cs" />
     <Compile Include="Messages\TileSquareMessage.cs" />
     <Compile Include="Messages\UpdatePlayersMessage.cs" />
