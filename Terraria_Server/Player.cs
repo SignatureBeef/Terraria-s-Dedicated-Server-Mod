@@ -351,6 +351,32 @@ namespace Terraria_Server
 		/// Whether player is using a light orb
 		/// </summary>
 		public bool lightOrb { get; set; }
+
+        public float gravDir = 1f;
+
+        public bool gills { get; set; }
+
+        public bool gravControl { get; set; }
+
+        public int rocketTimeMax = 7;
+
+        public int rocketTime { get; set; }
+
+        public bool slowFall { get; set; }
+
+        public bool waterWalk { get; set; }
+
+        public bool lavaImmune { get; set; }
+
+        public bool findTreasure { get; set; }
+
+        public bool invis { get; set; }
+
+        public bool detectCreature { get; set; }
+
+        public bool nightVision { get; set; }
+
+        public bool thorns { get; set; }
 		
 		/// <summary>
 		/// Player class constructor
@@ -774,7 +800,7 @@ namespace Terraria_Server
 					switch (this.buffType[l])
 					{
 						case 1:
-							//this.lavaImmune = true;
+							this.lavaImmune = true;
 							this.fireWalk = true;
 							break;
 						
@@ -787,7 +813,7 @@ namespace Terraria_Server
 							break;
 						
 						case 4:
-							//this.gills = true;
+							this.gills = true;
 							break;
 						
 						case 5:
@@ -803,15 +829,15 @@ namespace Terraria_Server
 							break;
 						
 						case 8:
-							//this.slowFall = true;
+							this.slowFall = true;
 							break;
 						
 						case 9:
-							//this.findTreasure = true;
+							this.findTreasure = true;
 							break;
 						
 						case 10:
-							//this.invis = true;
+							this.invis = true;
 							break;
 						
 						case 11:
@@ -819,19 +845,19 @@ namespace Terraria_Server
 							break;
 						
 						case 12:
-							//this.nightVision = true;
+							this.nightVision = true;
 							break;
 						
 						case 13:
-							//this.enemySpawns = true;
+							this.enemySpawns = true;
 							break;
 						
 						case 14:
-							//this.thorns = true;
+							this.thorns = true;
 							break;
 							
 						case 15:
-							//this.waterWalk = true;
+							this.waterWalk = true;
 							break;
 						
 						case 16:
@@ -839,11 +865,11 @@ namespace Terraria_Server
 							break;
 						
 						case 17:
-							//this.detectCreature = true;
+							this.detectCreature = true;
 							break;
 						
 						case 18:
-							//this.gravControl = true;
+							this.gravControl = true;
 							break;
 						
 						case 19:
@@ -1025,7 +1051,7 @@ namespace Terraria_Server
 //                                }
 //                                this.fallStart = (int)(this.Position.Y / 16f);
 //                            }
-//                            if (this.Velocity.Y < 0f || this.rocketDelay > 0 || this.wet)
+//                            if (this.Velocity.Y < 0f || this.rocketDelay > 0 || this.wet || this.slowFall)
 //                            {
 //                                this.fallStart = (int)(this.Position.Y / 16f);
 //                            }
@@ -1089,6 +1115,19 @@ namespace Terraria_Server
 						this.blind = false;
 						this.onFire = false;
 						this.noItems = false;
+
+                        //1.06?
+                        this.gills = false;
+                        this.gravControl = false;
+                        this.slowFall = false;
+                        this.waterWalk = false;
+                        this.lavaImmune = false;
+                        this.findTreasure = false;
+                        this.invis = false;
+                        this.detectCreature = false;
+                        this.nightVision = false;
+                        this.enemySpawns = false;
+                        this.thorns = false;
 						
 						this.ApplyBuffs ();
 						
@@ -1443,7 +1482,7 @@ namespace Terraria_Server
                                     this.Velocity.X = this.Velocity.X - num5;
                                 }
                                 this.Velocity.X = this.Velocity.X - num4;
-                                if (itemAnimation == 0 || selectedItem.UseTurn)
+                                if (this.itemAnimation == 0 || this.inventory[this.selectedItemIndex].UseTurn)
                                 {
                                     this.direction = -1;
                                 }
@@ -1457,7 +1496,7 @@ namespace Terraria_Server
                                         this.Velocity.X = this.Velocity.X + num5;
                                     }
                                     this.Velocity.X = this.Velocity.X + num4;
-                                    if (this.itemAnimation == 0 || selectedItem.UseTurn)
+                                    if (this.itemAnimation == 0 || this.inventory[this.selectedItemIndex].UseTurn)
                                     {
                                         this.direction = 1;
                                     }
@@ -1466,7 +1505,7 @@ namespace Terraria_Server
                                 {
                                     if (this.controlLeft && this.Velocity.X > -num6)
                                     {
-                                        if (this.itemAnimation == 0 || selectedItem.UseTurn)
+                                        if (this.itemAnimation == 0 || this.inventory[this.selectedItemIndex].UseTurn)
                                         {
                                             this.direction = -1;
                                         }
@@ -1480,6 +1519,11 @@ namespace Terraria_Server
                                         }
                                         if (this.Velocity.X < -(num6 + num3) / 2f && this.Velocity.Y == 0f)
                                         {
+                                            int num21 = 0;
+                                            if (this.gravDir == -1f)
+                                            {
+                                                num21 -= this.Height;
+                                            }
                                             if (this.runSoundDelay == 0 && this.Velocity.Y == 0f)
                                             {
                                                 this.runSoundDelay = 9;
@@ -1490,7 +1534,7 @@ namespace Terraria_Server
                                     {
                                         if (this.controlRight && this.Velocity.X < num6)
                                         {
-                                            if (this.itemAnimation == 0 || selectedItem.UseTurn)
+                                            if (this.itemAnimation == 0 || this.inventory[this.selectedItemIndex].UseTurn)
                                             {
                                                 this.direction = 1;
                                             }
@@ -1504,6 +1548,11 @@ namespace Terraria_Server
                                             }
                                             if (this.Velocity.X > (num6 + num3) / 2f && this.Velocity.Y == 0f)
                                             {
+                                                int num23 = 0;
+                                                if (this.gravDir == -1f)
+                                                {
+                                                    num23 -= this.Height;
+                                                }
                                                 if (this.runSoundDelay == 0 && this.Velocity.Y == 0f)
                                                 {
                                                     this.runSoundDelay = 9;
@@ -1552,23 +1601,36 @@ namespace Terraria_Server
                                     }
                                 }
                             }
-							//if (this.gravControl)
-							//{ missing block
-							//}
-							//else
-							//{
-							//}
+                            if (this.gravControl)
+                            {
+                                if (this.controlUp && this.gravDir == 1f)
+                                {
+                                    this.gravDir = -1f;
+                                    this.fallStart = (int)(this.Position.Y / 16f);
+                                    this.jump = 0;
+                                }
+                                if (this.controlDown && this.gravDir == -1f)
+                                {
+                                    this.gravDir = 1f;
+                                    this.fallStart = (int)(this.Position.Y / 16f);
+                                    this.jump = 0;
+                                }
+                            }
+                            else
+                            {
+                                this.gravDir = 1f;
+                            }
                             if (this.controlJump)
                             {
                                 if (this.jump > 0)
                                 {
-                                    if (this.Velocity.Y > -Player.jumpSpeed + num2 * 2f)
+                                    if (this.Velocity.Y == 0f)
                                     {
                                         this.jump = 0;
                                     }
                                     else
                                     {
-                                        this.Velocity.Y = -Player.jumpSpeed;
+                                        this.Velocity.Y = -Player.jumpSpeed * this.gravDir;
                                         this.jump--;
                                     }
                                 }
@@ -1576,14 +1638,14 @@ namespace Terraria_Server
                                 {
                                     if ((this.Velocity.Y == 0f || this.jumpAgain || (this.wet && this.accFlipper)) && this.releaseJump)
                                     {
-                                        bool flag3 = false;
+                                        bool flag6 = false;
                                         if (this.wet && this.accFlipper)
                                         {
                                             if (this.swimTime == 0)
                                             {
                                                 this.swimTime = 30;
                                             }
-                                            flag3 = true;
+                                            flag6 = true;
                                         }
                                         this.jumpAgain = false;
                                         this.canRocket = false;
@@ -1592,15 +1654,20 @@ namespace Terraria_Server
                                         {
                                             this.jumpAgain = true;
                                         }
-                                        if (this.Velocity.Y == 0f || flag3)
+                                        if (this.Velocity.Y == 0f || flag6)
                                         {
-                                            this.Velocity.Y = -Player.jumpSpeed;
+                                            this.Velocity.Y = -Player.jumpSpeed * this.gravDir;
                                             this.jump = Player.jumpHeight;
                                         }
                                         else
                                         {
-                                            this.Velocity.Y = -Player.jumpSpeed;
-                                            this.jump = Player.jumpHeight / 2;
+                                            int num25 = this.Height;
+                                            if (this.gravDir == -1f)
+                                            {
+                                                num25 = 0;
+                                            }
+                                            this.Velocity.Y = -Player.jumpSpeed * this.gravDir;
+                                            this.jump = Player.jumpHeight / 2;                                           
                                         }
                                     }
                                 }
@@ -1612,33 +1679,38 @@ namespace Terraria_Server
                                 this.releaseJump = true;
                                 this.rocketRelease = true;
                             }
-//							if (this.doubleJump && !this.jumpAgain && ((this.gravDir == 1f && this.Velocity.Y < 0f) || (this.gravDir == -1f && this.Velocity.Y > 0f)) && !this.rocketBoots && !this.accFlipper)
-//							{
-//								int num29 = this.Height;
-//								if (this.gravDir == -1f)
-//								{
-//									num29 = -6;
-//								}
-//							}
-                            if (/*this.gravDir == 1f && */this.Velocity.Y > -Player.jumpSpeed && this.Velocity.Y != 0f)
+                            if (this.doubleJump && !this.jumpAgain && ((this.gravDir == 1f && this.Velocity.Y < 0f) || 
+                                (this.gravDir == -1f && this.Velocity.Y > 0f)) && !this.rocketBoots && !this.accFlipper)
+                            {
+                                int num29 = this.Height;
+                                if (this.gravDir == -1f)
+                                {
+                                    num29 = -6;
+                                }
+                            }
+                            if (((this.gravDir == 1f && this.Velocity.Y > -Player.jumpSpeed) || (this.gravDir == -1f && this.Velocity.Y < Player.jumpSpeed)) && this.Velocity.Y != 0f)
                             {
                                 this.canRocket = true;
                             }
+                            if (this.Velocity.Y == 0f)
+                            {
+                                this.rocketTime = this.rocketTimeMax;
+                            }
                             if (this.rocketBoots && this.controlJump && this.rocketDelay == 0 && this.canRocket && this.rocketRelease && !this.jumpAgain)
                             {
-//								if (this.rocketTime > 0)
-//								{
-//									this.rocketTime--;
-//									this.rocketDelay = 10;
-//									if (this.rocketDelay2 <= 0)
-//									{
-//										this.rocketDelay2 = 30;
-//									}
-//								}
-//								else
-//								{
-//									this.canRocket = false;
-//								}
+                                if (this.rocketTime > 0)
+                                {
+                                    this.rocketTime--;
+                                    this.rocketDelay = 10;
+                                    if (this.rocketDelay2 <= 0)
+                                    {
+                                        this.rocketDelay2 = 30;
+                                    }
+                                }
+                                else
+                                {
+                                    this.canRocket = false;
+                                }
                             }
                             if (this.rocketDelay2 > 0)
                             {
@@ -1648,33 +1720,104 @@ namespace Terraria_Server
                             {
                                 this.rocketFrame = false;
                             }
-                            
-                            //TODO: stuff below is not up to date
                             if (this.rocketDelay > 0)
                             {
+                                int num31 = this.Height;
+                                if (this.gravDir == -1f)
+                                {
+                                    num31 = 4;
+                                }
                                 this.rocketFrame = true;
                                 if (this.rocketDelay == 0)
                                 {
                                     this.releaseJump = true;
                                 }
                                 this.rocketDelay--;
-                                this.Velocity.Y = this.Velocity.Y - 0.1f;
-                                if (this.Velocity.Y > 0f)
+                                this.Velocity.Y = this.Velocity.Y - 0.1f * this.gravDir;
+                                if (this.gravDir == 1f)
                                 {
-                                    this.Velocity.Y = this.Velocity.Y - 0.3f;
+                                    if (this.Velocity.Y > 0f)
+                                    {
+                                        this.Velocity.Y = this.Velocity.Y - 0.5f;
+                                    }
+                                    else
+                                    {
+                                        if ((double)this.Velocity.Y > (double)(-(double)Player.jumpSpeed) * 0.5)
+                                        {
+                                            this.Velocity.Y = this.Velocity.Y - 0.1f;
+                                        }
+                                    }
+                                    if (this.Velocity.Y < -Player.jumpSpeed * 1.5f)
+                                    {
+                                        this.Velocity.Y = -Player.jumpSpeed * 1.5f;
+                                    }
                                 }
-                                if (this.Velocity.Y < -Player.jumpSpeed)
+                                else
                                 {
-                                    this.Velocity.Y = -Player.jumpSpeed;
+                                    if (this.Velocity.Y < 0f)
+                                    {
+                                        this.Velocity.Y = this.Velocity.Y + 0.5f;
+                                    }
+                                    else
+                                    {
+                                        if ((double)this.Velocity.Y < (double)Player.jumpSpeed * 0.5)
+                                        {
+                                            this.Velocity.Y = this.Velocity.Y + 0.1f;
+                                        }
+                                    }
+                                    if (this.Velocity.Y > Player.jumpSpeed * 1.5f)
+                                    {
+                                        this.Velocity.Y = Player.jumpSpeed * 1.5f;
+                                    }
                                 }
                             }
                             else
                             {
-                                this.Velocity.Y = this.Velocity.Y + num2;
+                                if (this.slowFall && ((!this.controlDown && this.gravDir == 1f) || (!this.controlUp && this.gravDir == -1f)))
+                                {
+                                    if ((this.controlUp && this.gravDir == 1f) || (this.controlDown && this.gravDir == -1f))
+                                    {
+                                        this.Velocity.Y = this.Velocity.Y + num2 / 10f * this.gravDir;
+                                    }
+                                    else
+                                    {
+                                        this.Velocity.Y = this.Velocity.Y + num2 / 3f * this.gravDir;
+                                    }
+                                }
+                                else
+                                {
+                                    this.Velocity.Y = this.Velocity.Y + num2 * this.gravDir;
+                                }
                             }
-                            if (this.Velocity.Y > num)
+                            if (this.gravDir == 1f)
                             {
-                                this.Velocity.Y = num;
+                                if (this.Velocity.Y > num)
+                                {
+                                    this.Velocity.Y = num;
+                                }
+                                if (this.slowFall && this.Velocity.Y > num / 3f && !this.controlDown)
+                                {
+                                    this.Velocity.Y = num / 3f;
+                                }
+                                if (this.slowFall && this.Velocity.Y > num / 5f && this.controlUp)
+                                {
+                                    this.Velocity.Y = num / 10f;
+                                }
+                            }
+                            else
+                            {
+                                if (this.Velocity.Y < -num)
+                                {
+                                    this.Velocity.Y = -num;
+                                }
+                                if (this.slowFall && this.Velocity.Y < -num / 3f && !this.controlUp)
+                                {
+                                    this.Velocity.Y = -num / 3f;
+                                }
+                                if (this.slowFall && this.Velocity.Y < -num / 5f && this.controlDown)
+                                {
+                                    this.Velocity.Y = -num / 10f;
+                                }
                             }
                         }
                         for (int num29 = 0; num29 < 200; num29++)
@@ -1978,6 +2121,7 @@ namespace Terraria_Server
 //                        }
                         if (this.grappling[0] >= 0)
                         {
+                            this.rocketTime = this.rocketTimeMax;
                             this.rocketDelay = 0;
                             this.rocketFrame = false;
                             this.canRocket = false;
@@ -2058,7 +2202,7 @@ namespace Terraria_Server
                         }
 						if (Collision.StickyTiles(this.Position, this.Velocity, this.Width, this.Height))
 						{
-//							if (this.whoAmi == Main.myPlayer && (this.velocity.X != 0f || this.velocity.Y != 0f))
+//							if (this.whoAmi == Main.myPlayer && (this.Velocity.X != 0f || this.Velocity.Y != 0f))
 //							{
 //								this.stickyBreak++;
 //								if (this.stickyBreak > Main.rand.Next(20, 100))
@@ -2112,18 +2256,27 @@ namespace Terraria_Server
                         {
                             this.stickyBreak = 0;
                         }
-                        bool flag6 = Collision.DrownCollision(this.Position, this.Width, this.Height); //FIXME: add gravDir
+                        bool flag9 = Collision.DrownCollision(this.Position, this.Width, this.Height); //FIXME: add gravDir
+                        if (this.armor[0].Type == 250)
+					    {
+						    flag9 = true;
+					    }
                         if (selectedItem.Type == 186)
                         {
                             try
                             {
-                                int num55 = (int)((this.Position.X + (float)(this.Width / 2) + (float)(6 * this.direction)) / 16f);
-                                int num56 = (int)((this.Position.Y - 44f) / 16f);
-                                if (Main.tile.At(num55, num56).Liquid < 128)
+                                int num77 = (int)((this.Position.X + (float)(this.Width / 2) + (float)(6 * this.direction)) / 16f);
+                                int num78 = 0;
+                                if (this.gravDir == -1f)
                                 {
-                                    if (!Main.tile.At(num55, num56).Active || !Main.tileSolid[(int)Main.tile.At(num55, num56).Type] || Main.tileSolidTop[(int)Main.tile.At(num55, num56).Type])
+                                    num78 = this.Height;
+                                }
+                                int num79 = (int)((this.Position.Y + (float)num78 - 44f * this.gravDir) / 16f);
+                                if (Main.tile.At(num77, num79).Liquid < 128)
+                                {
+                                    if (!Main.tile.At(num77, num79).Active || !Main.tileSolid[(int)Main.tile.At(num77, num79).Type] || Main.tileSolidTop[(int)Main.tile.At(num77, num79).Type])
                                     {
-                                        flag6 = false;
+                                        flag9 = false;
                                     }
                                 }
                             }
@@ -2131,67 +2284,33 @@ namespace Terraria_Server
                             {
                             }
                         }
-						//FIXME if (this.gills) flag6 = !flag6;
-#if CLIENT_CODE
-						if (Main.myPlayer == i)
-						{
-							if (flag6)
-							{
-								this.breathCD++;
-								int num80 = 7;
-								if (this.inventory[this.selectedItemIndex].Type == 186)
-								{
-									num80 *= 2;
-								}
-								if (this.armor[0].Type == 268)
-								{
-									num80 *= 4;
-								}
-								if (this.breathCD >= num80)
-								{
-									this.breathCD = 0;
-									this.breath--;
-									
-									if (this.breath <= 0)
-									{
-										this.lifeRegenTime = 0;
-										this.breath = 0;
-										this.statLife -= 2;
-										if (this.statLife <= 0)
-										{
-											this.statLife = 0;
-											this.KillMe(10.0, 0, false, Player.getDeathMessage(-1, -1, -1, 1));
-										}
-									}
-								}
-							}
-							else
-							{
-								this.breath += 3;
-								if (this.breath > this.breathMax)
-								{
-									this.breath = this.breathMax;
-								}
-								this.breathCD = 0;
-							}
-						}
-#endif //CLIENT_CODE
-						int num82 = this.Height;
-//						if (this.waterWalk) //FIXME
-//						{
-//							num82 -= 6;
-//						}
+                        if (this.gills)
+                            flag9 = !flag9;
+
+                        if (flag9 && Main.rand.Next(20) == 0 && !this.lavaWet)
+                        {
+                            int num81 = 0;
+                            if (this.gravDir == -1f)
+                            {
+                                num81 += this.Height - 12;
+                            }
+                        }
+                        int num82 = this.Height;
+                        if (this.waterWalk)
+                        {
+                            num82 -= 6;
+                        }
 						bool flag10 = Collision.LavaCollision(this.Position, this.Width, num82);
 						if (flag10)
 						{
 #if CLIENT_CODE
-							if (/*!this.lavaImmune && */Main.myPlayer == i && !this.immune)
+							if (!this.lavaImmune && Main.myPlayer == i && !this.immune)
 							{
 								this.AddBuff(24, 420, true);
 								this.Hurt(80, 0, false, false, Player.getDeathMessage(-1, -1, -1, 2), false);
 							}
-							this.lavaWet = true;
 #endif //CLIENT_CODE
+                            this.lavaWet = true;
 						}
                         bool flag8 = Collision.WetCollision(this.Position, this.Width, this.Height);
                         if (flag8)
@@ -2259,7 +2378,27 @@ namespace Terraria_Server
                         else
                         {
                             this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, this.controlDown, false);
+                            if (this.waterWalk)
+                            {
+                                this.Velocity = Collision.WaterCollision(this.Position, this.Velocity, this.Width, this.Height, this.controlDown, false);
+                            }
                             this.Position += this.Velocity;
+                        }
+                        if (this.Velocity.Y == 0f)
+                        {
+                            if (this.gravDir == 1f && Collision.up)
+                            {
+                                this.Velocity.Y = 0.01f;
+                                this.jump = 0;
+                            }
+                            else
+                            {
+                                if (this.gravDir == -1f && Collision.down)
+                                {
+                                    this.Velocity.Y = -0.01f;
+                                    this.jump = 0;
+                                }
+                            }
                         }
                         if (this.Position.X < Main.leftWorld + 336f + 16f)
                         {
@@ -2300,7 +2439,7 @@ namespace Terraria_Server
 					this.poisoned = false;
 					this.onFire = false;
 					this.blind = false;
-					//FIXME this.gravDir = 1f;
+				    this.gravDir = 1f;
 					for (int num92 = 0; num92 < 10; num92++)
 					{
 						this.buffTime[num92] = 0;
@@ -2930,16 +3069,31 @@ namespace Terraria_Server
 							{
 								if (selectedItem.UseStyle == 5)
 								{
-									float num = this.itemRotation * (float)this.direction;
-									this.bodyFrame.Y = this.bodyFrame.Height * 3;
-									if ((double)num < -0.75)
-									{
-										this.bodyFrame.Y = this.bodyFrame.Height * 2;
-									}
-									if ((double)num > 0.6)
-									{
-										this.bodyFrame.Y = this.bodyFrame.Height * 4;
-									}
+                                    if (this.inventory[this.selectedItemIndex].Type == 281)
+                                    {
+                                        this.bodyFrame.Y = this.bodyFrame.Height * 2;
+                                    }
+                                    else
+                                    {
+                                        float num4 = this.itemRotation * (float)this.direction;
+                                        this.bodyFrame.Y = this.bodyFrame.Height * 3;
+                                        if ((double)num4 < -0.75)
+                                        {
+                                            this.bodyFrame.Y = this.bodyFrame.Height * 2;
+                                            if (this.gravDir == -1f)
+                                            {
+                                                this.bodyFrame.Y = this.bodyFrame.Height * 4;
+                                            }
+                                        }
+                                        if ((double)num4 > 0.6)
+                                        {
+                                            this.bodyFrame.Y = this.bodyFrame.Height * 4;
+                                            if (this.gravDir == -1f)
+                                            {
+                                                this.bodyFrame.Y = this.bodyFrame.Height * 2;
+                                            }
+                                        }
+                                    }
 								}
 							}
 						}
@@ -2977,12 +3131,16 @@ namespace Terraria_Server
 							if (num3 < 0f && Math.Abs(num3) > Math.Abs(num2))
 							{
 								this.bodyFrame.Y = this.bodyFrame.Height * 2;
+                                if (this.gravDir == -1f)
+                                    this.bodyFrame.Y = this.bodyFrame.Height * 4;
 							}
 							else
 							{
 								if (num3 > 0f && Math.Abs(num3) > Math.Abs(num2))
 								{
 									this.bodyFrame.Y = this.bodyFrame.Height * 4;
+									if (this.gravDir == -1f)
+                                        this.bodyFrame.Y = this.bodyFrame.Height * 2;
 								}
 								else
 								{
@@ -3713,16 +3871,26 @@ namespace Terraria_Server
             {
                 if (Main.dedServ)
                 {
-                    itemLocation.X = Position.X + (float)Width * 0.5f + 20f * (float)direction;
+                    this.itemLocation.X = this.Position.X + (float)this.Width * 0.5f + 20f * (float)this.direction;
                 }
-                itemLocation.Y = Position.Y + 24f;
-                itemRotation = 0f;
+                this.itemLocation.Y = this.Position.Y + 24f;
+                this.itemRotation = 0f;
+                if (this.gravDir == -1f)
+                {
+                    this.itemRotation = -this.itemRotation;
+                    this.itemLocation.Y = this.Position.Y + (float)this.Height + (this.Position.Y - this.itemLocation.Y);
+                }
             }
             else if (selectedItem.HoldStyle == 2)
             {
-                itemLocation.X = Position.X + (float)Width * 0.5f + (float)(6 * direction);
-                itemLocation.Y = Position.Y + 16f;
-                itemRotation = 0.79f * (float)(-(float)direction);
+                this.itemLocation.X = this.Position.X + (float)this.Width * 0.5f + (float)(6 * this.direction);
+                this.itemLocation.Y = this.Position.Y + 16f;
+                this.itemRotation = 0.79f * (float)(-(float)this.direction);
+                if (this.gravDir == -1f)
+                {
+                    this.itemRotation = -this.itemRotation;
+                    this.itemLocation.Y = this.Position.Y + (float)this.Height + (this.Position.Y - this.itemLocation.Y);
+                }
             }
 
             releaseUseItem = !controlUseItem;
@@ -3849,8 +4017,8 @@ namespace Terraria_Server
 						{
 							damage = 2;
 						}
-						
-						// client-code snipped here
+
+                        // client-code snipped here
                     }
                     else if (selectedItem.UseStyle == 5)
                     {
@@ -4379,6 +4547,10 @@ namespace Terraria_Server
                     {
                         rectangle.X -= rectangle.Width;
                     }
+                    if (this.gravDir == 1f)
+                    {
+                        rectangle.Y -= rectangle.Height;
+                    }
                     rectangle.Y -= rectangle.Height;
                     if (selectedItem.UseStyle == 1)
                     {
@@ -4389,7 +4561,7 @@ namespace Terraria_Server
                                 rectangle.X -= (int)((double)rectangle.Width * 1.4 - (double)rectangle.Width);
                             }
                             rectangle.Width = (int)((double)rectangle.Width * 1.4);
-                            rectangle.Y += (int)((double)rectangle.Height * 0.5);
+                            rectangle.Y += (int)((double)rectangle.Height * 0.5 * (double)this.gravDir);
                             rectangle.Height = (int)((double)rectangle.Height * 1.1);
                         }
                         else
@@ -4401,7 +4573,7 @@ namespace Terraria_Server
                                     rectangle.X -= (int)((double)rectangle.Width * 1.2);
                                 }
                                 rectangle.Width *= 2;
-                                rectangle.Y -= (int)((double)rectangle.Height * 1.4 - (double)rectangle.Height);
+                                rectangle.Y -= (int)(((double)rectangle.Height * 1.4 - (double)rectangle.Height) * (double)this.gravDir);
                                 rectangle.Height = (int)((double)rectangle.Height * 1.4);
                             }
                         }
