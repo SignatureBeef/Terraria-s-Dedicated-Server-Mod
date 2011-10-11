@@ -2840,7 +2840,7 @@ namespace Terraria_Server
 
             this.head = this.armor[0].HeadSlot;
             this.body = this.armor[1].BodySlot;
-            this.legs = this.armor[2].;
+            this.legs = this.armor[2].LegSlot;
             if (!this.hostile)
             {
                 if (this.armor[8].HeadSlot >= 0)
