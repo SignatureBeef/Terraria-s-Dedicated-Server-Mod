@@ -88,6 +88,10 @@ namespace Regions
                     {
                         ProtectMap(sender, args);
                     }
+                    else if (args.TryPop("here"))
+                    {
+                        RegionHere(sender, args);
+                    }
                 }
                 catch (CommandError e)
                 {
@@ -148,9 +152,14 @@ namespace Regions
                 string Desc = "";
                 bool Restrict = args.TryPop("-res");
                 bool RestrictNPC = args.TryPop("-npcres");
+
+                string tempDesc = default(String);
+                if(args.TryParseOne<String>("-desc", out Desc))
+                {
+                    Desc = tempDesc;
+                }
                 
-                if (args.TryParseTwo<String, String>("-name", out Name, "-desc", out Desc)
-                    && Name.Trim().Length > 0)
+                if (args.TryParseOne<String>("-name", out Name) && Name.Trim().Length > 0)
                 {
                     var player = sender as Player;
                     if (selection.isInSelectionlist(player))
@@ -202,14 +211,17 @@ namespace Regions
 
         public void AddUser(ISender sender, ArgumentList args)
         {
-            string User = "", IP = "";
-            int Slot;
+            string User = "", IP = "", regionName = "";
+            int Slot = -1;
+
 
             //args.TryParseOne<String>("-ip", out IP); //Optional
 
             //IP or name?
-            if (args.TryParseTwo<String, Int32>("-name", out User, "-slot", out Slot) || 
-                args.TryParseTwo<String, Int32>("-ip", out User, "-slot", out Slot))
+            if (args.TryParseTwo<String, Int32>("-name", out User, "-slot", out Slot) ||
+                args.TryParseTwo<String, Int32>("-ip", out User, "-slot", out Slot) ||
+                args.TryParseTwo<String, String>("-name", out User, "-region", out regionName) ||
+                args.TryParseTwo<String, String>("-ip", out User, "-region", out regionName))
             {
                 string[] exceptions = new string[2];
                 if (User.Length > 0)
@@ -228,6 +240,19 @@ namespace Regions
                     {
                         region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -329,10 +354,11 @@ namespace Regions
 
         public void AddProjectile(ISender sender, ArgumentList args)
         {
-            string projectiles;
+            string projectiles, regionName = "";
             int Slot;
 
-            if (args.TryParseTwo<String, Int32>("-proj", out projectiles, "-slot", out Slot))
+            if (args.TryParseTwo<String, Int32>("-proj", out projectiles, "-slot", out Slot) ||
+                args.TryParseTwo<String, String>("-proj", out projectiles, "-region", out regionName))
             {
                 Region region = null;
                 for (int i = 0; i < regionManager.Regions.Count; i++)
@@ -341,6 +367,19 @@ namespace Regions
                     {
                         region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -429,8 +468,11 @@ namespace Regions
 
         public void ClearRegion(ISender sender, ArgumentList args)
         {
+            string regionName = "";
             int Slot;
-            if (args.TryParseOne<Int32>("-slot", out Slot))
+
+            if (args.TryParseOne<Int32>("-slot", out Slot) ||
+                args.TryParseOne<String>("-region", out regionName))
             {
                 Region region = null;
                 for (int i = 0; i < regionManager.Regions.Count; i++)
@@ -439,6 +481,19 @@ namespace Regions
                     {
                         region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -459,8 +514,11 @@ namespace Regions
 
         public void ClearProjectiles(ISender sender, ArgumentList args)
         {
+            string regionName = "";
             int Slot;
-            if (args.TryParseOne<Int32>("-slot", out Slot))
+
+            if (args.TryParseOne<Int32>("-slot", out Slot) ||
+                args.TryParseOne<String>("-region", out regionName))
             {
                 Region region = null;
                 for (int i = 0; i < regionManager.Regions.Count; i++)
@@ -469,6 +527,19 @@ namespace Regions
                     {
                         region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -489,8 +560,11 @@ namespace Regions
 
         public void ToggleNPCRestrictions(ISender sender, ArgumentList args)
         {
+            string regionName = "";
             int Slot;
-            if (args.TryParseOne<Int32>("-slot", out Slot))
+
+            if (args.TryParseOne<Int32>("-slot", out Slot) ||
+                args.TryParseOne<String>("-region", out regionName))
             {
                 Region region = null;
                 for (int i = 0; i < regionManager.Regions.Count; i++)
@@ -499,6 +573,19 @@ namespace Regions
                     {
                         region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -520,8 +607,11 @@ namespace Regions
 
         public void ToggleOPRestrictions(ISender sender, ArgumentList args)
         {
+            string regionName = "";
             int Slot;
-            if (args.TryParseOne<Int32>("-slot", out Slot))
+
+            if (args.TryParseOne<Int32>("-slot", out Slot) ||
+                args.TryParseOne<String>("-region", out regionName))
             {
                 Region region = null;
                 for (int i = 0; i < regionManager.Regions.Count; i++)
@@ -530,6 +620,19 @@ namespace Regions
                     {
                         region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -590,6 +693,19 @@ namespace Regions
             else
             {
                 sender.sendMessage("There was an issue while creating the region");
+            }
+        }
+
+        public void RegionHere(ISender sender, ArgumentList args)
+        {
+            if (sender is Player)
+            {                
+                var player = sender as Player;
+                foreach (Region region in regionManager.Regions)
+                {
+                    if(region.HasPoint(player.Position / 16))
+                        player.sendMessage("You are in Region '{0}'", ChatColor.Purple);
+                }
             }
         }
     }

@@ -13,7 +13,7 @@ namespace Terraria_Server
     public class UpdateManager
     {
         public static string UpdateList = "http://update.tdsm.org/updatelist.txt";
-        public static string UpdateLink = "http://update.tdsm.org/Terraria_Server.exe"; //Still hosted by Olympus, <3 Olympus Gaming! Check em out some time ;)
+        public static string UpdateLink = "http://update.tdsm.org/Terraria_Server.exe";
         public static string UpdateInfo = "http://update.tdsm.org/buildinfo.txt";
         public static string UpdateMDBLink = "http://update.tdsm.org/Terraria_Server.exe.mdb";
 

@@ -15,11 +15,21 @@ namespace Terraria_Server
     }
     
 	public static class ISenderExtensions
-	{
-		public static void Message (this ISender recpt, int sender, string message)
-		{
-			recpt.sendMessage (message, sender);
-		}
+    {
+        public static void Message(this ISender recpt, string message)
+        {
+            recpt.sendMessage(message);
+        }
+
+        public static void Message(this ISender recpt, string message, params object[] args)
+        {
+            recpt.sendMessage(message);
+        }
+
+        public static void Message(this ISender recpt, int sender, string message)
+        {
+            recpt.sendMessage(message, sender);
+        }
 		
 		public static void Message (this ISender recpt, int sender, Color color, string message)
 		{

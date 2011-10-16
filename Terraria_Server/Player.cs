@@ -5326,11 +5326,11 @@ namespace Terraria_Server
 			return Teleport ((int) (tx / 16), (int) (ty / 16));
 		}
 		
-		[Obsolete("Renamed to Player.Teleport")]
-		public bool teleportTo (float tx, float ty)
-		{
-			return Teleport ((int) (tx / 16), (int) (ty / 16));
-		}
+        //[Obsolete("Renamed to Player.Teleport")]
+        //public bool teleportTo (float tx, float ty)
+        //{
+        //    return Teleport ((int) (tx / 16), (int) (ty / 16));
+        //}
 		
 		private int teleportInProgress;
 		
@@ -5357,11 +5357,25 @@ namespace Terraria_Server
 			
 			return true;
 		}
-		
-		public bool Teleport (int tx, int ty)
-		{
-			return Teleport (tx, ty, false);
-		}
+
+        public bool Teleport(int tx, int ty)
+        {
+            return Teleport(tx, ty, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Location">Location in to Teleport to</param>
+        /// <param name="TileFormat">Whether to convert to Tile Format</param>
+        /// <returns></returns>
+        public bool Teleport(Vector2 Location, bool TileFormat = true)
+        {
+            if (!TileFormat)
+                return Teleport(Location.X, Location.Y);
+            else
+                return Teleport((int)Location.X, (int)Location.Y, false);
+        }
 		
 		internal bool Teleport (int tx, int ty, bool retrying)
 		{
@@ -5545,11 +5559,11 @@ namespace Terraria_Server
 			return Teleport ((int) (player.Position.X / 16), (int) (player.Position.Y / 16));
 		}
 		
-		[Obsolete("Renamed to Player.Teleport")]
-		public void teleportTo (Player player)
-		{
-			Teleport ((int) (player.Position.X / 16), (int) (player.Position.Y / 16));
-		}
+        //[Obsolete("Renamed to Player.Teleport")]
+        //public void teleportTo (Player player)
+        //{
+        //    Teleport ((int) (player.Position.X / 16), (int) (player.Position.Y / 16));
+        //}
 
 		/// <summary>
 		/// Gets a player's server password

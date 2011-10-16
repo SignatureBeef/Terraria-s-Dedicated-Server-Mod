@@ -272,7 +272,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Definitions\Items.xml" />
+    <EmbeddedResource Include="Definitions\Items.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Definitions\ItemsByName.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
