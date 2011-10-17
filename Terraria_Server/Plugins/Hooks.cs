@@ -234,6 +234,7 @@ namespace Terraria_Server.Plugins
 				player.shirtColor      = ShirtColor;
 				player.underShirtColor = UndershirtColor;
 				player.shoeColor       = ShoeColor;
+                player.pantsColor      = PantsColor;
 			}
 			
 			public static Color ParseColor (byte[] buf, int at)
