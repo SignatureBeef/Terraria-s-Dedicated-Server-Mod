@@ -7,20 +7,20 @@ using Terraria_Server.Misc;
 
 namespace TDSMPermissions.Definitions
 {
-	class User
+	public class User
 	{
-		public List<string> hasPerm;
-		public List<string> notHasPerm;
+		public List<String> hasPerm;
+        public List<String> notHasPerm;
 		public string prefix;
 		public string suffix;
 		public Color chatColor;
-		public List<string> group;
+        public List<String> group;
 
 		public User()
 		{
-			hasPerm = new List<string>();
-			notHasPerm = new List<string>();
-			group = new List<string>();
+            hasPerm = new List<String>();
+            notHasPerm = new List<String>();
+            group = new List<String>();
 			prefix = null;
 			suffix = null;
 			chatColor = ChatColor.AntiqueWhite;

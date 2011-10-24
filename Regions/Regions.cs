@@ -80,7 +80,7 @@ namespace Regions
             rProperties.AddHeaderLine("players who are blocked; Possibly saving bandwidth.");
 
             rProperties.pushData();
-            rProperties.Save();
+            rProperties.Save(false);
 
             if (rProperties.RectifyChanges)
                 WorldAlter = HookResult.RECTIFY;

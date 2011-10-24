@@ -11,6 +11,7 @@ using Terraria_Server.Commands;
 
 using YaTools.Yaml;
 using Terraria_Server.Plugins;
+using TDSMPermissions.Auth;
 
 namespace TDSMPermissions
 {
@@ -83,7 +84,7 @@ namespace TDSMPermissions
             //registerHook(Hooks.PLUGINS_LOADED);
 
             Hook(HookPoints.PluginsLoaded, OnPluginsLoaded);
-			Hook(HookPoints.PlayerEnteringGame, onPlayerJoin);
+            //Hook(HookPoints.PlayerEnteringGame, OnPlayerJoin);
 
             //Add Commands
 			AddCommand("permissions")
@@ -94,19 +95,28 @@ namespace TDSMPermissions
 			Program.permissionManager.AddNodes(nodesToAdd);
         }
 
-		void onPlayerJoin(ref HookContext ctx, ref HookArgs.PlayerEnteringGame args)
-		{
-			//ctx.Player.A = AccessLevel.OP;
-		}
+        //void OnPlayerJoin(ref HookContext ctx, ref HookArgs.PlayerEnteringGame args)
+        //{
+        //    //ctx.Player.A = AccessLevel.OP;
+        //}
 
         protected override void Disabled()
         {
             ProgramLog.Log(base.Name + " disabled.");
         }
 
+        [Hook(HookOrder.LATE)]
         void OnPluginsLoaded(ref HookContext ctx, ref HookArgs.PluginsLoaded args)
         {
             LoadPerms();
+
+            if (!Server.UsingLoginSystem)
+                Login.InitSystem();
+
+            if (Login.IsRestrictRunning())
+                ProgramLog.Plugin.Log("Your Server is now protected!");
+            else
+                ProgramLog.Plugin.Log("Your Server is vulnerable, Get an Authentication system!");
         }
 
         //public override void onPlayerPreLogin(Terraria_Server.Events.PlayerLoginEvent Event)
@@ -308,13 +318,13 @@ namespace TDSMPermissions
 
 		private void ProcessInheritance()
 		{
-			ProgramLog.Debug.Log("Processing group inheritances");
+            //ProgramLog.Debug.Log("Processing group inheritances");
 			foreach (Group group in groups)
 			{
-				ProgramLog.Debug.Log("Processing " + group.Name + "'s inheritance");
+                //ProgramLog.Debug.Log("Processing " + group.Name + "'s inheritance");
 				group.Inherits.ForEach(delegate (string s)
 				{
-					ProgramLog.Debug.Log("Group " + group.Name + " inherits from " + s);
+                    //ProgramLog.Debug.Log("Group " + group.Name + " inherits from " + s);
 					foreach (Group groupIn in groups)
 					{
 						if (groupIn.Name == s)
@@ -323,7 +333,7 @@ namespace TDSMPermissions
 							{
 								if (!group.permissions.ContainsKey(node))
 								{
-									ProgramLog.Debug.Log("Adding node " + node + " from " + s + " to " + group.Name);
+									//ProgramLog.Debug.Log("Adding node " + node + " from " + s + " to " + group.Name);
 									bool toggle = false;
 									groupIn.permissions.TryGetValue(node, out toggle);
 									group.permissions.Add(node, toggle);
@@ -347,7 +357,7 @@ namespace TDSMPermissions
 						{
 							 groups.Add(currentGroup);
 						}
-						else
+                        else if (!users.ContainsKey(currentUserName))
 						{
 							users.Add(currentUserName, currentUser);
 						}
@@ -431,8 +441,7 @@ namespace TDSMPermissions
 			User user;
             if (users.TryGetValue(player.Name, out user))
             {
-                if (user.hasPerm.Contains(node))
-                    return true;
+                return ((user.hasPerm.Contains(node) && player.AuthenticatedAs != null) || player.Op);
             }
             return false;
         }

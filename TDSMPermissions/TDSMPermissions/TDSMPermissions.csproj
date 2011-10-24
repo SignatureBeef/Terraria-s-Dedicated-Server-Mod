@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auth\Login.cs" />
     <Compile Include="Commands\PluginCommands.cs" />
     <Compile Include="Definitions\Group.cs" />
     <Compile Include="Definitions\User.cs" />

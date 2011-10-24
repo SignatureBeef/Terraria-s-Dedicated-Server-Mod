@@ -62,6 +62,9 @@ namespace RestrictPlugin
 		       
 		protected override void Initialized (object state)
 		{
+            //Probably should check for existing login systems, But i'm not sure what undead would prefer atm.
+            Server.UsingLoginSystem = true;
+
 			requests = new Dictionary <int, RegistrationRequest> ();
 			
 			string pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "Restrict";
@@ -74,11 +77,11 @@ namespace RestrictPlugin
 			var dummy2 = restrictGuests;
 			var dummy3 = restrictGuestsDoors;
 			var dummy4 = serverId;
-			properties.Save();
+			properties.Save(false);
 			
 			users = new PropertiesFile (pluginFolder + Path.DirectorySeparatorChar + "restrict_users.properties");
 			users.Load();
-			users.Save();
+            users.Save(false);
 			
 			AddCommand ("ru")
 				.WithDescription ("Register users or change their accounts")

@@ -15,9 +15,9 @@ namespace TDSMPermissions.Commands
     {
 		public static void PermissionsCommand(ISender sender, ArgumentList args)
 		{
-			if (Program.permissionManager.IsPermitted("permissions.test", (Player)sender))
-				sender.sendMessage("You have permission.");
+            bool perms = Program.permissionManager.IsPermitted("permissions.test", (Player)sender);
 
+            sender.sendMessage(String.Format("You {0}have permission.", (perms) ? "" : "don't "));
 		}
     }
 }

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
-using System.IO;
 using Terraria_Server;
-using Terraria_Server.Commands;
-using Terraria_Server.Logging;
 using TDSMPlugin.Commands;
-using Terraria_Server.Definitions;
 using Terraria_Server.Plugins;
+using Terraria_Server.Logging;
+using Terraria_Server.Commands;
+using Terraria_Server.Definitions;
 
 namespace TDSMExamplePlugin
 {
@@ -19,7 +15,7 @@ namespace TDSMExamplePlugin
          * @Developers
          * 
          * Plugins need to be in .NET 4.0
-         * Otherwise TDSM will be unable to load it.       * 
+         * Otherwise TDSM will be unable to load it.
          * 
          */
 

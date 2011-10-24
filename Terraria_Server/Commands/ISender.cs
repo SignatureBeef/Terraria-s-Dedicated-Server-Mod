@@ -23,7 +23,7 @@ namespace Terraria_Server
 
         public static void Message(this ISender recpt, string message, params object[] args)
         {
-            recpt.sendMessage(message);
+            recpt.sendMessage(String.Format(message, args));
         }
 
         public static void Message(this ISender recpt, int sender, string message)

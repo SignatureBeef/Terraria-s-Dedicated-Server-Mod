@@ -72,7 +72,7 @@ namespace Terraria_Server
             return false;
         }
 
-        public static bool performUpdate(string DownloadLink, string savePath, string backupPath, string myFile, int Update)
+        public static bool performUpdate(string DownloadLink, string savePath, string backupPath, string myFile, int Update, string header = "update ")
         {
             if (File.Exists(savePath)) //No download conflict, Please :3 (Looks at Mono)
             {
@@ -87,7 +87,7 @@ namespace Terraria_Server
                 }
             }
 
-            if (!MoveFile(myFile, backupPath))
+            if (File.Exists(myFile) && !MoveFile(myFile, backupPath))
             {
                 ProgramLog.Log ("Error moving current file!");
                 return false;
@@ -95,7 +95,7 @@ namespace Terraria_Server
 
             var download = new System.Net.WebClient();
             Exception error = null;
-            using (var prog = new ProgressLogger (100, "Downloading update " + Update.ToString() + "/" + MAX_UPDATES.ToString() + " from server"))
+            using (var prog = new ProgressLogger(100, "Downloading " + header + Update.ToString() + "/" + MAX_UPDATES.ToString() + " from server"))
             {
                 var signal = new System.Threading.AutoResetEvent (false);
                 

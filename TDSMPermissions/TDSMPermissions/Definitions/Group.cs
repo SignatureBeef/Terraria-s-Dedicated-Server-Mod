@@ -7,7 +7,7 @@ using Terraria_Server.Misc;
 
 namespace TDSMPermissions.Definitions
 {
-    class Group
+    public class Group
     {
         public struct _GroupInfo
         {

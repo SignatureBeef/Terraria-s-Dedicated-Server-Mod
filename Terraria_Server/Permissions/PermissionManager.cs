@@ -10,14 +10,14 @@ namespace Terraria_Server.Permissions
 	/// </summary>
 	public class PermissionManager
 	{
-		string[] TDSMnodes = {
-							"tdsm.admin", "tdsm.plugin", "tdsm.who",
-							"tdsm.me", "tdsm.say", "tdsm.slots", "tdsm.kick", "tdsm.ban",
-							"tdsm.unban", "tdsm.whitelist", "tdsm.rcon", "tdsm.status", "tdsm.time", "tdsm.help", "tdsm.give",
-							"tdsm.spawnnpc", "tdsm.tp", "tdsm.tphere", "tdsm.settle", "tdsm.op", "tdsm.deop", "tdsm.oplogin",
-							"tdsm.oplogout", "tdsm.npcspanws", "tdsm.restart", "tdsm.purge", "tdsm.plugins",
-							"tdsm.spawnboss", "tdsm.itemrej", "tdsm.explostions", "tdsm.maxplayers", "tdsm.q", "tdsm.refresh"
-		};
+        //string[] TDSMnodes = {
+        //                    "tdsm.admin", "tdsm.plugin", "tdsm.who",
+        //                    "tdsm.me", "tdsm.say", "tdsm.slots", "tdsm.kick", "tdsm.ban",
+        //                    "tdsm.unban", "tdsm.whitelist", "tdsm.rcon", "tdsm.status", "tdsm.time", "tdsm.help", "tdsm.give",
+        //                    "tdsm.spawnnpc", "tdsm.tp", "tdsm.tphere", "tdsm.settle", "tdsm.op", "tdsm.deop", "tdsm.oplogin",
+        //                    "tdsm.oplogout", "tdsm.npcspanws", "tdsm.restart", "tdsm.purge", "tdsm.plugins",
+        //                    "tdsm.spawnboss", "tdsm.itemrej", "tdsm.explostions", "tdsm.maxplayers", "tdsm.q", "tdsm.refresh"
+        //};
 
 		// these are stable APIs
 		/// <summary>
@@ -64,12 +64,12 @@ namespace Terraria_Server.Permissions
 		public List<String> ActiveNodes;
 
 		/// <summary>
-		/// Permission manager constructor.  Also adds internal TDSM nodes to ActiveNodes.
+		/// Permission manager constructor.  //Also adds internal TDSM nodes to ActiveNodes.
 		/// </summary>
 		public PermissionManager()
 		{
 			ActiveNodes = new List<String>();
-			AddNodes(TDSMnodes);
+            //AddNodes(TDSMnodes); //Not sure if this should be needed as the TDSM commands set their permission nodes themselves.
 		}
 	}
 }

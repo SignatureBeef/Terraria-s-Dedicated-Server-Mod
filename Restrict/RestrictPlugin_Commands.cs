@@ -67,7 +67,7 @@ namespace RestrictPlugin
 					
 					users.setValue (oname, null);
 					users.setValue (pname, val);
-					users.Save ();
+                    users.Save(false);
 					
 					if (player != null)
 					{
@@ -129,7 +129,7 @@ namespace RestrictPlugin
 						
 						users.setValue (oname, null);
 						users.setValue (pname, val);
-						users.Save ();
+                        users.Save(false);
 						
 						if (oldop && !op)
 						{
@@ -191,7 +191,7 @@ namespace RestrictPlugin
 				
 				users.setValue (pname, null);
 				users.setValue (oname, null);
-				users.Save ();
+                users.Save(false);
 				
 				sender.sendMessage ("restrict.ur: Unregistered user: " + name);
 			}
@@ -247,7 +247,7 @@ namespace RestrictPlugin
 					properties.setValue ("restrict-guests", rg.ToString());
 					properties.setValue ("restrict-guests-doors", rd.ToString());
 					properties.setValue ("server-id", si.ToString());
-					properties.Save ();
+                    properties.Save(false);
 				}
 				
 				if (reload)
@@ -290,7 +290,7 @@ namespace RestrictPlugin
 				var hash = Hash (rq.name, rq.password);
 				
 				users.setValue (pname, hash);
-				users.Save ();
+                users.Save(false);
 				
 				var player = FindPlayer (rq.name);
 				if (player != null) // TODO: verify IP address
@@ -428,7 +428,7 @@ namespace RestrictPlugin
 				
 				users.setValue (oname, null);
 				users.setValue (pname, hash);
-				users.Save ();
+                users.Save(false);
 				
 				sender.sendMessage ("<Restrict> Your new password is: " + password);
 				return;

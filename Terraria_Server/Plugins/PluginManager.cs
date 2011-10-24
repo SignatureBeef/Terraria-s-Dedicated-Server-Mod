@@ -863,5 +863,40 @@ namespace Terraria_Server.Plugins
 				}
 			}
 		}
+
+        public static PluginLoadStatus LoadAndInitPlugin(string Path)
+        {
+            var rPlg = LoadPluginFromDLL(Path);
+
+            if (rPlg == null)
+            {
+                ProgramLog.Error.Log("Plugin failed to load!");
+                return PluginLoadStatus.FAIL_LOAD;
+            }
+
+            if (!rPlg.InitializeAndHookUp())
+            {
+                ProgramLog.Error.Log("Failed to initialize plugin.");
+                return PluginLoadStatus.FAIL_INIT;
+            }
+
+            plugins.Add(rPlg.Name.ToLower().Trim(), rPlg);
+
+            if (!rPlg.Enable())
+            {
+                ProgramLog.Error.Log("Failed to enable plugin.");
+                return PluginLoadStatus.FAIL_ENABLE;
+            }
+
+            return PluginLoadStatus.SUCCESS;
+        }
 	}
+}
+
+public enum PluginLoadStatus : int
+{
+    FAIL_ENABLE,
+    FAIL_INIT,
+    FAIL_LOAD,
+    SUCCESS
 }
