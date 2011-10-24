@@ -49,7 +49,7 @@ namespace TDSMPermissions
             Description = "Permissions for TDSM.";
             Author = "Malkierian";
             Version = "1";
-            TDSMBuild = 32;
+            TDSMBuild = 36;
         }
 
         protected override void Initialized(object state)

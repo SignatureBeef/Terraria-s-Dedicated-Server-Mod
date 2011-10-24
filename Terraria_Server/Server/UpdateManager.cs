@@ -72,7 +72,7 @@ namespace Terraria_Server
             return false;
         }
 
-        public static bool performUpdate(string DownloadLink, string savePath, string backupPath, string myFile, int Update, string header = "update ")
+        public static bool performUpdate(string DownloadLink, string savePath, string backupPath, string myFile, int Update, int MaxUpdates, string header = "update ")
         {
             if (File.Exists(savePath)) //No download conflict, Please :3 (Looks at Mono)
             {
@@ -95,7 +95,14 @@ namespace Terraria_Server
 
             var download = new System.Net.WebClient();
             Exception error = null;
-            using (var prog = new ProgressLogger(100, "Downloading " + header + Update.ToString() + "/" + MAX_UPDATES.ToString() + " from server"))
+
+            string downloadText = "";
+            if (MaxUpdates > 1)
+                downloadText = "Downloading " + header + Update.ToString() + "/" + MaxUpdates.ToString() + " from server";
+            else
+                downloadText = "Downloading " + header + "from server";
+
+            using (var prog = new ProgressLogger(100, downloadText))
             {
                 var signal = new System.Threading.AutoResetEvent (false);
                 
@@ -147,8 +154,8 @@ namespace Terraria_Server
 
                 string myFile = System.AppDomain.CurrentDomain.FriendlyName;
 
-                performUpdate(UpdateLink, "Terraria_Server.upd", "Terraria_Server.bak", myFile, 1);
-                performUpdate(UpdateMDBLink, "Terraria_Server.upd.mdb", "Terraria_Server.bak.mdb", myFile + ".mdb", 2);
+                performUpdate(UpdateLink, "Terraria_Server.upd", "Terraria_Server.bak", myFile, 1, MAX_UPDATES);
+                performUpdate(UpdateMDBLink, "Terraria_Server.upd.mdb", "Terraria_Server.bak.mdb", myFile + ".mdb", 2, MAX_UPDATES);
 
                 Platform.PlatformType oldPlatform = Platform.Type; //Preserve old data if command args were used
                 Platform.InitPlatform(); //Reset Data of Platform for determinine exit/enter method.
