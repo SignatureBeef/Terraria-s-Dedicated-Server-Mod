@@ -5,6 +5,8 @@ namespace Terraria_Server
 {
     public static class Statics
     {
+        public const string TDCM_QUEST_GIVER = "Quest Giver";
+
         public const int BUILD = 36;
         public const int CURRENT_TERRARIA_RELEASE = 22;
         public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
@@ -23,11 +25,8 @@ namespace Terraria_Server
 		public static bool PermissionsEnabled = false;
 
         public static bool cmdMessages = true;
-        //public static bool keepRunning = false;
 		
 		public static volatile bool Exit = false;
-        //public static volatile bool IsActive = false;
-        //public static volatile bool serverStarted = false;
 
         public static string SavePath = Environment.CurrentDirectory;
 

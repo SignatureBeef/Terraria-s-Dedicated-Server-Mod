@@ -17,6 +17,8 @@ namespace TDSMExamplePlugin
          * Plugins need to be in .NET 4.0
          * Otherwise TDSM will be unable to load it.
          * 
+         * [TODO] Show example of Permission nodes
+         * 
          */
 
         //Resist statics within a plugin.
@@ -72,9 +74,7 @@ namespace TDSMExamplePlugin
 
             Main.stopSpawns = !spawningAllowed;
             if (Main.stopSpawns)
-            {
                 ProgramLog.Plugin.Log("Disabled NPC Spawning");
-            }
         }
 
         protected override void Disabled()

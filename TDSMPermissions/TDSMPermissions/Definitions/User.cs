@@ -25,5 +25,12 @@ namespace TDSMPermissions.Definitions
 			suffix = null;
 			chatColor = ChatColor.AntiqueWhite;
 		}
+
+        public void SetUserInfo(string Prefix, string Suffix, Color Color)
+        {
+            prefix = Prefix;
+            suffix = Suffix;
+            chatColor = Color;
+        }
 	}
 }

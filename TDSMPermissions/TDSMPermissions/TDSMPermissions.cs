@@ -17,13 +17,6 @@ namespace TDSMPermissions
 {
     public class TDSMPermissions : BasePlugin
     {
-        /*
-         * @Developers
-         * 
-         * Plugins need to be in .NET 4.0
-         * Otherwise TDSM will be unable to load it. 
-         */
-
         public Properties properties;
         public string pluginFolder;
         public string permissionsYML;
@@ -32,17 +25,20 @@ namespace TDSMPermissions
         public bool tileBreakageAllowed = false;
         public bool explosivesAllowed = false;
         public TDSMPermissions plugin;
+        public string defaultGroup;
+
         private List<Group> groups = new List<Group>();
         private Dictionary<String, User> users = new Dictionary<String, User>();
         private User currentUser = new User();
         private Group currentGroup;
-        public string defaultGroup;
         private YamlScanner sc;
         private bool inUsers;
         private String currentUserName = null;
-		private string[] nodesToAdd = {
-                                          "permissions.test"
-                                      };
+		private string[] nodesToAdd = 
+        {
+            "permissions.test"
+        };
+
         public TDSMPermissions()
         {
             Name = "TDSMPermissions";
@@ -65,27 +61,15 @@ namespace TDSMPermissions
             if (!File.Exists(permissionsYML))
                 File.Create(permissionsYML).Close();
 
-            //setup a new properties file
-            //properties = new Properties(pluginFolder + Path.DirectorySeparatorChar + "tdsmplugin.properties");
-            //properties.Load();
-            //properties.pushData(); //Creates default values if needed. [Out-Dated]
-            //properties.Save();
-
             //set internal permission check method to plugins handler
-            Program.permissionManager.isPermittedImpl = isPermitted;
+            Program.permissionManager.IsPermittedImpl = IsPermitted;
 			Statics.PermissionsEnabled = true;
         }
 
         protected override void Enabled()
         {
             ProgramLog.Log(base.Name + " enabled.");
-            //Register Hooks
-            //registerHook(Hooks.PLAYER_PRELOGIN);
-            //registerHook(Hooks.PLUGINS_LOADED);
-
-            Hook(HookPoints.PluginsLoaded, OnPluginsLoaded);
-            //Hook(HookPoints.PlayerEnteringGame, OnPlayerJoin);
-
+            
             //Add Commands
 			AddCommand("permissions")
 				.WithAccessLevel(AccessLevel.PLAYER)
@@ -95,14 +79,46 @@ namespace TDSMPermissions
 			Program.permissionManager.AddNodes(nodesToAdd);
         }
 
-        //void OnPlayerJoin(ref HookContext ctx, ref HookArgs.PlayerEnteringGame args)
-        //{
-        //    //ctx.Player.A = AccessLevel.OP;
-        //}
-
         protected override void Disabled()
         {
             ProgramLog.Log(base.Name + " disabled.");
+        }
+
+        //[Hook(HookOrder.NORMAL)]
+        //void PlayerEnteredGame(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)
+        //{
+        //    if (ctx.Player.AuthenticatedAs != null)
+        //    {
+        //        User usr;
+        //        if (users.TryGetValue(ctx.Player.Name, out usr))
+        //        {
+        //            //usr.chatColor.
+        //            ctx.Player.
+        //        }
+        //    }
+        //}
+
+        [Hook(HookOrder.NORMAL)]
+        void OnChat(ref HookContext ctx, ref HookArgs.PlayerChat args)
+        {
+            if (ctx.Player.AuthenticatedAs != null)
+            {
+                User usr;
+
+                if (users.TryGetValue(ctx.Player.Name, out usr))
+                {
+                    if (usr.chatColor != default(Color) && usr.chatColor != ChatColor.AntiqueWhite)
+                        args.Color = usr.chatColor;
+                    else if (usr.group.Count > 0)
+                    {
+                        Group grp = GetGroup(usr.group[0]);
+                        if (grp != null && grp.GroupInfo.color != default(Color) && grp.GroupInfo.color != ChatColor.AntiqueWhite)
+                            args.Color = grp.GroupInfo.color;
+                    }
+
+                    args.Message = usr.prefix + args.Message + usr.suffix;
+                }
+            }
         }
 
         [Hook(HookOrder.LATE)]
@@ -118,12 +134,7 @@ namespace TDSMPermissions
             else
                 ProgramLog.Plugin.Log("Your Server is vulnerable, Get an Authentication system!");
         }
-
-        //public override void onPlayerPreLogin(Terraria_Server.Events.PlayerLoginEvent Event)
-        //{
-        //	base.onPlayerPreLogin(Event);
-        //}
-
+        
         public void LoadPerms()
         {
             Token to;
@@ -224,6 +235,8 @@ namespace TDSMPermissions
                             }
 						}
 						currentUser.group.Add(group.Name);
+                        if (!users.ContainsKey(currentUserName))
+                            users.Add(currentUserName, currentUser);
                     }
 				}
             }
@@ -256,7 +269,7 @@ namespace TDSMPermissions
             bool Default;
             string Prefix;
             string Suffix;
-            Color color;
+            Color color = default(Color);
             while (sc.TokenText != "default")
             {
                 sc.NextToken();
@@ -299,11 +312,17 @@ namespace TDSMPermissions
 					if (sc.Token == Token.Outdent)
 						break;
 				}
-				if (sc.Token == Token.TextContent)
-					Color.TryParseRGB(sc.TokenText, out color);
-				else
-					color = ChatColor.White;
+                Color col;
+                if (sc.Token == Token.TextContent && Color.TryParseRGB(sc.TokenText, out col))
+                    color = col;
+                //else
+                //    color = ChatColor.White;
 			}
+
+            if (inUsers)
+                currentUser.SetUserInfo(Prefix, Suffix, color);
+            else
+                currentGroup.SetGroupInfo(Default, Prefix, Suffix, color);
         }
 
         private void ParseInheritance()
@@ -384,7 +403,8 @@ namespace TDSMPermissions
                         {
 							foreach (string s in Program.permissionManager.ActiveNodes)
                             {
-                                currentGroup.permissions.Add(s, toggle);
+                                if(!currentGroup.permissions.ContainsKey(s))
+                                    currentGroup.permissions.Add(s, toggle);
                             }
                         }
                         else if (tokenText.Contains("*"))
@@ -394,12 +414,15 @@ namespace TDSMPermissions
                             {
                                 if (s.Contains(temp))
                                 {
-                                    currentGroup.permissions.Add(s, toggle);
+                                    if (!currentGroup.permissions.ContainsKey(s))
+                                        currentGroup.permissions.Add(s, toggle);
                                 }
                             }
                         }
                     }
-                    currentGroup.permissions.Add(tokenText, toggle);
+
+                    if (!currentGroup.permissions.ContainsKey(tokenText))
+                        currentGroup.permissions.Add(tokenText, toggle);
                 }
                 else
                 {
@@ -436,7 +459,18 @@ namespace TDSMPermissions
             }
         }
 
-        public bool isPermitted(string node, Player player)
+        public Group GetGroup(string Name)
+        {
+            foreach (Group grp in groups)
+            {
+                if (grp.Name == Name)
+                    return grp;
+            }
+
+            return null;
+        }
+
+        public bool IsPermitted(string node, Player player)
         {
 			User user;
             if (users.TryGetValue(player.Name, out user))

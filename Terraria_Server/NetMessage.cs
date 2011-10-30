@@ -379,6 +379,19 @@ namespace Terraria_Server
 			}
 			return 0;
 		}
+
+        public static bool IsPacketInfoAllowed_TDCM(int packetId, int remoteClient, int number)
+        {
+            if (packetId == (int)Packet.NPC_INFO)
+            {
+                var player = Main.players[remoteClient];
+                var npc = Main.npcs[number];
+
+                return !(npc.Name == Statics.TDCM_QUEST_GIVER && !player.HasClientMod);
+            }
+
+            return true;
+        }
 		
 		public static void SendTileSquare(int whoAmi, int tileX, int tileY, int size)
 		{

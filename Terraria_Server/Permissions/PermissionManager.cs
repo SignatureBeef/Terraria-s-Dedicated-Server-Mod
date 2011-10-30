@@ -19,23 +19,34 @@ namespace Terraria_Server.Permissions
         //                    "tdsm.spawnboss", "tdsm.itemrej", "tdsm.explostions", "tdsm.maxplayers", "tdsm.q", "tdsm.refresh"
         //};
 
-		// these are stable APIs
-		/// <summary>
-		/// Permission check function.  Use this to check player permissions.
-		/// </summary>
-		/// <param name="node">Permission node to check</param>
-		/// <param name="player">Player to check for permission node</param>
-		/// <returns>True if player is permitted.  False if not.</returns>
-		public bool IsPermitted(string node, Player player)
-		{
-			return isPermittedImpl(node, player);
-		}
+        // these are stable APIs
+        /// <summary>
+        /// Permission check function.  Use this to check player permissions.
+        /// </summary>
+        /// <param name="node">Permission node to check</param>
+        /// <param name="player">Player to check for permission node</param>
+        /// <returns>True if player is permitted.  False if not.</returns>
+        public bool IsPermitted(string node, Player player)
+        {
+            return IsPermittedImpl(node, player);
+        }
+
+        /// <summary>
+        /// Permission check function.  Use this to check player permissions.
+        /// </summary>
+        /// <param name="node">Permission node to check</param>
+        /// <param name="player">Player to check for permission node</param>
+        /// <returns>True if player is permitted.  False if not.</returns>
+        public bool IsPermitted(Node node, Player player)
+        {
+            return IsPermittedImpl(node.Path, player);
+        }
 		
 		// this is only for the permissions plugin to set
 		/// <summary>
 		/// Permission check delegate.  Set only by permissions plugin.  Do no use this to check.
 		/// </summary>
-		public Func<String, Player, Boolean> isPermittedImpl;
+		public Func<String, Player, Boolean> IsPermittedImpl;
 
 		/// <summary>
 		/// Add permission nodes to the server's list of active nodes.  Global permission purposes.

@@ -8,7 +8,7 @@ namespace Terraria_Server.Permissions
 	/// <summary>
 	/// Permission node class.  Currently unused.
 	/// </summary>
-	public class Node
+	public struct Node
 	{
         private string stringNode;
 

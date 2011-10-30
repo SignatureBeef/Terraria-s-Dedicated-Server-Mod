@@ -156,6 +156,9 @@ namespace Terraria_Server
 					Collections.Registries.NPC.Load (Collections.Registries.NPC_FILE);
 				using (var prog = new ProgressLogger (1, "Loading projectile definitions"))
 					Collections.Registries.Projectile.Load (Collections.Registries.PROJECTILE_FILE);
+                                
+                commandParser = new CommandParser();
+                commandParser.ReadPermissionNodes();
 				
 				ProgramLog.Log("Loading plugins...");
                 Terraria_Server.Plugins.PluginManager.Initialize(Statics.PluginPath, Statics.LibrariesPath);
@@ -327,7 +330,6 @@ namespace Terraria_Server
 				
 				while (!NetPlay.ServerUp) { }
 
-                commandParser = new CommandParser();
 				ProgramLog.Console.Print ("You can now insert Commands.");
 
                 while (!Statics.Exit)

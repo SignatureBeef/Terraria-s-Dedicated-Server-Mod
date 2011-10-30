@@ -60,11 +60,14 @@ namespace Regions
 
         public Commands commands;
 
+        public Node ChestBreak;
+        public Node ChestOpen;
         public Node DoorChange;
         public Node LiquidFlow;
+        public Node ProjectileUse;
+        public Node SignEdit;
         public Node TileBreak;
         public Node TilePlace;
-        public Node ProjectileUse;
 
         public HookResult WorldAlter = HookResult.IGNORE;
 
@@ -118,23 +121,22 @@ namespace Regions
             Hook(HookPoints.ServerStateChange,      OnServerStateChange);
             Hook(HookPoints.DoorStateChanged,       OnDoorStateChange);
             Hook(HookPoints.ChestBreakReceived,     OnChestBreak);
+            Hook(HookPoints.ChestOpenReceived,      OnChestOpen);
+            Hook(HookPoints.PluginsLoaded,          OnPluginsLoaded);
             Hook(HookPoints.SignTextSet,            OnSignEdit);
 
-            UsingPermissions = isRunningPermissions();
-            if (UsingPermissions)
-                Log("Using Permissions.");
-            else
-                Log("No Permissions Found\nUsing Internal User System");
+            ChestBreak      = AddAndCreateNode("regions.chestbreak");
+            ChestOpen       = AddAndCreateNode("regions.chestopen");
+            DoorChange      = AddAndCreateNode("regions.doorchange");
+            LiquidFlow      = AddAndCreateNode("regions.liquidflow");
+            ProjectileUse   = AddAndCreateNode("regions.projectileuse");
+            SignEdit        = AddAndCreateNode("regions.signedit");
+            TileBreak       = AddAndCreateNode("regions.tilebreak");
+            TilePlace       = AddAndCreateNode("regions.tileplace");
         }
 
         protected override void Enabled()
-        {            
-            DoorChange      = Node.FromPath("regions.doorchange");
-            LiquidFlow      = Node.FromPath("regions.liquidflow");
-            TileBreak       = Node.FromPath("regions.tilebreak");
-            TilePlace       = Node.FromPath("regions.tileplace");
-            ProjectileUse   = Node.FromPath("regions.projectileuse");
-
+        {
             ProgramLog.Plugin.Log("Regions for TDSM #{0} enabled.", base.TDSMBuild);
         }
 
@@ -152,6 +154,15 @@ namespace Regions
         }
         
         #region Events
+
+            void OnPluginsLoaded(ref HookContext ctx, ref HookArgs.PluginsLoaded args)
+            {
+                UsingPermissions = isRunningPermissions();
+                if (UsingPermissions)
+                    Log("Using Permissions.");
+                else
+                    Log("No Permissions Found\nUsing Internal User System");
+            }
 
             void OnServerStateChange(ref HookContext ctx, ref HookArgs.ServerStateChange args)
             {
@@ -287,7 +298,26 @@ namespace Regions
                             }
                         }
                     }
-                }  
+                }
+            }
+
+            void OnChestOpen(ref HookContext ctx, ref HookArgs.ChestOpenReceived args)
+            {
+                foreach (Region rgn in regionManager.Regions)
+                {
+                    if (rgn.HasPoint(new Vector2(args.X, args.Y)))
+                    {
+                        if (ctx.Sender is Player)
+                        {
+                            if (IsRestrictedForUser(ctx.Player, rgn, DoorChange))
+                            {
+                                ctx.SetResult(HookResult.RECTIFY);
+                                ctx.Player.sendMessage("You cannot edit this object!", ChatColor.Red);
+                                return;
+                            }
+                        }
+                    }
+                }
             }
 
             void OnSignEdit(ref HookContext ctx, ref HookArgs.SignTextSet args)
@@ -300,7 +330,7 @@ namespace Regions
                         {
                             if (IsRestrictedForUser(ctx.Player, rgn, DoorChange))
                             {
-                                ctx.SetResult(HookResult.RECTIFY);
+                                ctx.SetResult(HookResult.IGNORE);
                                 ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
                                 return;
                             }
@@ -312,14 +342,14 @@ namespace Regions
 
         public bool isRunningPermissions()
         {
-            return Program.permissionManager.isPermittedImpl != null;
+            return Program.permissionManager.IsPermittedImpl != null;
         }
 
         public bool IsRestrictedForUser(Player player, Region region, Node node)
         {
             if (UsingPermissions)
             {
-                return Program.permissionManager.isPermittedImpl(node.Path, player);
+                return Program.permissionManager.IsPermittedImpl(node.Path, player);
             }
 
             return region.IsRestrictedForUser(player);

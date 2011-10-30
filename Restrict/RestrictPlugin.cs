@@ -13,6 +13,7 @@ using Terraria_Server.Logging;
 using System.IO;
 
 using NDesk.Options;
+using Terraria_Server.Permissions;
 
 namespace RestrictPlugin
 {
@@ -45,12 +46,21 @@ namespace RestrictPlugin
 		{
 			get { return properties.getValue ("restrict-guests-doors", true); }
 		}
-		
+        		
 		string serverId
 		{
 			get { return properties.getValue ("server-id", "tdsm"); }
 		}
-		
+
+
+        public Node ChestBreak;
+        public Node ChestOpen;
+        public Node DoorChange;
+        public Node LiquidFlow;
+        public Node ProjectileUse;
+        public Node SignEdit;
+        public Node WorldAlter;
+
 		public RestrictPlugin ()
 		{
 			Name = "Restrict";
@@ -94,6 +104,7 @@ namespace RestrictPlugin
 				.WithHelpText ("Options:")
 				.WithHelpText ("    -o    make the player an operator")
 				.WithHelpText ("    -f    force action even if player isn't online")
+                .WithPermissionNode("restrict.ru")
 				.Calls (LockUsers<ISender, ArgumentList>(this.RegisterCommand));
 
 			
@@ -102,7 +113,8 @@ namespace RestrictPlugin
 				.WithHelpText ("Deleting users:")
 				.WithHelpText ("    ur [-f] <name>")
 				.WithHelpText ("Options:")
-				.WithHelpText ("    -f    force action even if player isn't online")
+                .WithHelpText("    -f    force action even if player isn't online")
+                .WithPermissionNode("restrict.ur")
 				.Calls (LockUsers<ISender, ArgumentList>(this.UnregisterCommand));
 			
 			AddCommand ("ro")
@@ -116,7 +128,8 @@ namespace RestrictPlugin
 				.WithHelpText ("    -g    allow guests to enter the game")
 				.WithHelpText ("    -r    restrict guests' ability to alter tiles")
 				.WithHelpText ("    -s    set the server identifier used in hashing passwords")
-				.WithHelpText ("    -L    reload the user database from disk")
+                .WithHelpText("    -L    reload the user database from disk")
+                .WithPermissionNode("restrict.ro")
 				.Calls (LockUsers<ISender, ArgumentList>(this.OptionsCommand));
 			
 			AddCommand ("rr")
@@ -125,20 +138,31 @@ namespace RestrictPlugin
 				.WithHelpText ("       rr -g #     grant a registration request")
 				.WithHelpText ("       rr grant #")
 				.WithHelpText ("       rr -d #     deny a registration request")
-				.WithHelpText ("       rr deny #")
+                .WithHelpText("       rr deny #")
+                .WithPermissionNode("restrict.rr")
 				.Calls (LockUsers<ISender, ArgumentList>(this.RequestsCommand));
 			
 			AddCommand ("pass")
 				.WithDescription ("Change your password")
 				.WithAccessLevel (AccessLevel.PLAYER)
-				.WithHelpText ("Usage: /pass yourpassword")
+                .WithHelpText("Usage: /pass yourpassword")
+                .WithPermissionNode("restrict.pass")
 				.Calls (LockUsers<ISender, string>(this.PlayerPassCommand));
 				
 			AddCommand ("reg")
 				.WithDescription ("Submit a registration request")
 				.WithAccessLevel (AccessLevel.PLAYER)
-				.WithHelpText ("Usage: /reg yourpassword")
+                .WithHelpText("Usage: /reg yourpassword")
+                .WithPermissionNode("restrict.reg")
 				.Calls (LockUsers<ISender, string>(this.PlayerRegCommand));
+
+            ChestBreak      = AddAndCreateNode("restrict.chestbreak");
+            ChestOpen       = AddAndCreateNode("restrict.chestopen");
+            DoorChange      = AddAndCreateNode("restrict.doorchange");
+            LiquidFlow      = AddAndCreateNode("restrict.liquidflow");
+            ProjectileUse   = AddAndCreateNode("restrict.projectileuse");
+            SignEdit        = AddAndCreateNode("restrict.signedit");
+            WorldAlter      = AddAndCreateNode("restrict.worldalter");
 		}
 		
 		Action<T, U> LockUsers<T, U> (Action<T, U> callback)
@@ -329,7 +353,12 @@ namespace RestrictPlugin
 				ctx.SetResult (HookResult.IGNORE);
 				player.sendMessage ("<Restrict> You are not allowed to edit signs as a guest.");
 				player.sendMessage ("<Restrict> Type \"/reg password\" to request registration.");
-			}
+            }
+            else if (IsRestrictedForUser(ctx.Player, SignEdit))
+            {
+                ctx.SetResult(HookResult.IGNORE);
+                player.sendMessage("<Restrict> You are not allowed to edit signs without permissions.");
+            }
 		}
 		
 		[Hook(HookOrder.EARLY)]
@@ -354,7 +383,12 @@ namespace RestrictPlugin
 				ctx.SetResult (HookResult.RECTIFY);
 				player.sendMessage ("<Restrict> You are not allowed to alter the world as a guest.");
 				player.sendMessage ("<Restrict> Type \"/reg password\" to request registration.");
-			}
+            }
+            else if (IsRestrictedForUser(ctx.Player, WorldAlter))
+            {
+                ctx.SetResult(HookResult.RECTIFY);
+                player.sendMessage("<Restrict> You are not allowed to alter the world without permissions.");
+            }
 		}
 		
 		[Hook(HookOrder.EARLY)]
@@ -376,7 +410,12 @@ namespace RestrictPlugin
 				ctx.SetResult (HookResult.RECTIFY);
 				player.sendMessage ("<Restrict> You are not allowed to alter the world as a guest.");
 				player.sendMessage ("<Restrict> Type \"/reg password\" to request registration.");
-			}
+            }
+            else if (IsRestrictedForUser(ctx.Player, ChestBreak))
+            {
+                ctx.SetResult(HookResult.RECTIFY);
+                player.sendMessage("<Restrict> You are not allowed to alter the world without permissions.");
+            }
 		}
 
 		[Hook(HookOrder.EARLY)]
@@ -398,7 +437,12 @@ namespace RestrictPlugin
 				ctx.SetResult (HookResult.IGNORE);
 				player.sendMessage ("<Restrict> You are not allowed to open chests as a guest.");
 				player.sendMessage ("<Restrict> Type \"/reg password\" to request registration.");
-			}
+            }
+            else if (IsRestrictedForUser(ctx.Player, ChestOpen))
+            {
+                ctx.SetResult(HookResult.RECTIFY);
+                player.sendMessage("<Restrict> You are not allowed to open chests without permissions.");
+            }
 		}
 		
 		[Hook(HookOrder.LATE)]
@@ -420,7 +464,12 @@ namespace RestrictPlugin
 				ctx.SetResult (HookResult.RECTIFY);
 				player.sendMessage ("<Restrict> You are not allowed to alter the world as a guest.");
 				player.sendMessage ("<Restrict> Type \"/reg password\" to request registration.");
-			}
+            }
+            else if (IsRestrictedForUser(ctx.Player, LiquidFlow))
+            {
+                ctx.SetResult(HookResult.RECTIFY);
+                player.sendMessage("<Restrict> You are not allowed to alter the world without permissions.");
+            }
 		}
 		
 		[Hook(HookOrder.EARLY)]
@@ -440,7 +489,7 @@ namespace RestrictPlugin
 			
 			if (! restrictGuests) return;
 			
-			if (player.AuthenticatedAs == null)
+			//if (player.AuthenticatedAs == null)
 			{
 				switch (args.Type)
 				{
@@ -458,8 +507,14 @@ namespace RestrictPlugin
 					case ProjectileType.GLOWSTICK:
 					case ProjectileType.GLOWSTICK_STICKY:
 						ctx.SetResult (HookResult.ERASE);
-						player.sendMessage ("<Restrict> You are not allowed to use this projectile as a guest.");
-						player.sendMessage ("<Restrict> Type \"/reg password\" to request registration.");
+                        if (player.AuthenticatedAs == null)
+                        {
+                            player.sendMessage("<Restrict> You are not allowed to use this projectile as a guest.");
+                            player.sendMessage("<Restrict> Type \"/reg password\" to request registration.");
+                        }
+                        else if (IsRestrictedForUser(ctx.Player, ProjectileUse))
+                            player.sendMessage("<Restrict> You are not allowed to use this projectile without permissions.");
+
 						return;
 					default:
 						break;
@@ -472,7 +527,7 @@ namespace RestrictPlugin
 		[Hook(HookOrder.EARLY)]
 		void OnDoorStateChanged (ref HookContext ctx, ref HookArgs.DoorStateChanged args)
 		{
-			if ((!restrictGuests) || (!restrictGuestsDoors)) return;
+            if ((!restrictGuests) || (!restrictGuestsDoors)) return;
 			
 			var player = ctx.Player;
 			
@@ -484,6 +539,24 @@ namespace RestrictPlugin
 				player.sendMessage ("<Restrict> You are not allowed to open and close doors as a guest.");
 				player.sendMessage ("<Restrict> Type \"/reg password\" to request registration.");
 			}
-		}
+            else if (IsRestrictedForUser(ctx.Player, DoorChange))
+            {
+                ctx.SetResult(HookResult.RECTIFY);
+                player.sendMessage("<Restrict> You are not allowed to open and close doors without permissions.");
+            }
+        }
+
+#region Permissions
+
+        public bool isRunningPermissions()
+        {
+            return Program.permissionManager.IsPermittedImpl != null;
+        }
+
+        public bool IsRestrictedForUser(Player player, Node node)
+        {
+            return (isRunningPermissions()) ? Program.permissionManager.IsPermittedImpl(node.Path, player) : false;
+        }
+#endregion
     }
 }

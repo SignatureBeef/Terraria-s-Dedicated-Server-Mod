@@ -466,6 +466,21 @@ namespace Terraria_Server.Commands
        
         public readonly Dictionary<String, CommandInfo> serverCommands;
 
+        /// <summary>
+        /// Reads active permission nodes, Player only.
+        /// </summary>
+        public void ReadPermissionNodes()
+        {
+            foreach (CommandInfo info in serverCommands.Values)
+            {
+                if (info.accessLevel == AccessLevel.PLAYER)
+                {
+                    if (info.node.Trim().Length > 0 && !Program.permissionManager.ActiveNodes.Contains(info.node))
+                        Program.permissionManager.ActiveNodes.Add(info.node);
+                }
+            }
+        }
+
 		/// <summary>
 		/// Registers new command
 		/// </summary>
@@ -516,7 +531,7 @@ namespace Terraria_Server.Commands
         }
 
 		/// <summary>
-		/// Determines entity's ability to use command.  YUsed when permissions plugin is running.
+		/// Determines entity's ability to use command. Used when permissions plugin is running.
 		/// </summary>
 		/// <param name="cmd">Command to check</param>
 		/// <param name="sender">Sender entity to check against</param>
@@ -527,7 +542,7 @@ namespace Terraria_Server.Commands
         }
 
 		/// <summary>
-		/// Determines the access level of the sender.  Used when no permissions plugin is found.
+		/// Determines the access level of the sender. Used when no permissions plugin is found.
 		/// </summary>
 		/// <param name="acc">Access level to check against</param>
 		/// <param name="sender">Sender to check</param>
@@ -555,8 +570,8 @@ namespace Terraria_Server.Commands
 			if (cmd.node == null || sender is ConsoleSender || sender.Op)
 				return true;
 
-            if (sender is Player && Program.permissionManager.isPermittedImpl != null && Statics.PermissionsEnabled)
-				return Program.permissionManager.isPermittedImpl(cmd.node, sender as Player);
+            if (sender is Player && Program.permissionManager.IsPermittedImpl != null && Statics.PermissionsEnabled)
+				return Program.permissionManager.IsPermittedImpl(cmd.node, sender as Player);
             
             return false;
         }

@@ -30,7 +30,7 @@ namespace TDSMPermissions.Auth
 
                 PluginLoadStatus loadStatus = PluginManager.LoadAndInitPlugin(dll);
                 if (loadStatus != PluginLoadStatus.SUCCESS)
-                    ProgramLog.Error.Log("Restrict failed to install!\nLoad result: {0}", (int)loadStatus); 
+                    ProgramLog.Error.Log("Restrict failed to install!\nLoad result: {0}", loadStatus); 
             }
         }
 
