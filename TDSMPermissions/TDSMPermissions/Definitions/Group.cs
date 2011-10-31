@@ -12,8 +12,10 @@ namespace TDSMPermissions.Definitions
         public struct _GroupInfo
         {
             public bool Default;
+            public bool CanBuild;
             public string Prefix;
             public string Suffix;
+            public string Seperator;
             public Color color;
         }
 
@@ -31,14 +33,17 @@ namespace TDSMPermissions.Definitions
             GroupInfo.Suffix = null;
             GroupInfo.color = ChatColor.Aqua;
             GroupInfo.Default = false;
+            GroupInfo.Seperator = " : ";
         }
 
-        public void SetGroupInfo(bool Default, string prefix, string suffix, Color color)
+        public void SetGroupInfo(bool Default, bool canBuild, string prefix, string suffix, string seperator, Color color)
         {
             GroupInfo.Default = Default;
             GroupInfo.Prefix = prefix;
             GroupInfo.Suffix = suffix;
+            GroupInfo.Seperator = seperator;
             GroupInfo.color = color;
+            GroupInfo.CanBuild = canBuild;
         }
     }
 }

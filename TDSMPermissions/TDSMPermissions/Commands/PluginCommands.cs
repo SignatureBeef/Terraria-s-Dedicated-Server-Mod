@@ -13,11 +13,6 @@ namespace TDSMPermissions.Commands
 {
     public class PluginCommands
     {
-		public static void PermissionsCommand(ISender sender, ArgumentList args)
-		{
-            bool perms = Program.permissionManager.IsPermitted("permissions.test", (Player)sender);
-
-            sender.sendMessage(String.Format("You {0}have permission.", (perms) ? "" : "don't "));
-		}
+		//[TODO] Add some permission manager commands
     }
 }

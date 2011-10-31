@@ -50,35 +50,13 @@ namespace TDSMPermissions
         protected override void Enabled()
         {
             ProgramLog.Log(base.Name + " enabled.");
-            
-            //Add Commands
-			AddCommand("permissions")
-				.WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("Test command")
-				.Calls(Commands.PluginCommands.PermissionsCommand);
-
-            Program.permissionManager.AddNodes(Permissions.nodesToAdd);
         }
 
         protected override void Disabled()
         {
             ProgramLog.Log(base.Name + " disabled.");
         }
-
-        //[Hook(HookOrder.NORMAL)]
-        //void PlayerEnteredGame(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)
-        //{
-        //    if (ctx.Player.AuthenticatedAs != null)
-        //    {
-        //        User usr;
-        //        if (users.TryGetValue(ctx.Player.Name, out usr))
-        //        {
-        //            //usr.chatColor.
-        //            ctx.Player.
-        //        }
-        //    }
-        //}
-
+        
         [Hook(HookOrder.NORMAL)]
         void OnChat(ref HookContext ctx, ref HookArgs.PlayerChat args)
         {
@@ -87,16 +65,43 @@ namespace TDSMPermissions
                 User usr;
                 if (Permissions.users.TryGetValue(ctx.Player.Name, out usr))
                 {
-                    if (usr.chatColor != default(Color) && usr.chatColor != ChatColor.AntiqueWhite)
-                        args.Color = usr.chatColor;
-                    else if (usr.group.Count > 0)
-                    {
-                        Group grp = Permissions.GetGroup(usr.group[0]);
-                        if (grp != null && grp.GroupInfo.color != default(Color) && grp.GroupInfo.color != ChatColor.AntiqueWhite)
-                            args.Color = grp.GroupInfo.color;
-                    }
+                    Color col;
+                    if (Chat.TryGetChatColor(usr, out col))
+                        args.Color = col;
 
-                    args.Message = usr.prefix + args.Message + usr.suffix;
+                    string prefix;
+                    if (Chat.TryGetChatPrefix(usr, out prefix))
+                        usr.prefix = prefix;
+
+                    string suffix;
+                    if (Chat.TryGetChatSuffix(usr, out suffix))
+                        usr.suffix = suffix;
+
+                    string seperator;
+                    Chat.TryGetChatSeperator(usr, out seperator);
+                    
+                    ctx.SetResult(HookResult.IGNORE);
+                    Server.notifyAll(
+                        String.Concat(usr.prefix, ctx.Player.Name, seperator, args.Message, usr.suffix)
+                        , args.Color, false
+                    );
+                }
+            }
+            else if (ctx.Player.AuthenticatedAs == null)
+            {
+                Group dGrp = Permissions.GetDefaultGroup();
+                if (dGrp != null)
+                {
+                    if (Chat.IsValidColor(dGrp.GroupInfo.color))
+                        args.Color = dGrp.GroupInfo.color;
+
+                    ctx.SetResult(HookResult.IGNORE);
+                    Server.notifyAll(
+                        String.Concat(  dGrp.GroupInfo.Prefix, ctx.Player.Name, 
+                                        dGrp.GroupInfo.Seperator, args.Message, 
+                                        dGrp.GroupInfo.Suffix)
+                        , args.Color, false
+                    );
                 }
             }
         }
@@ -132,5 +137,79 @@ namespace TDSMPermissions
                 Directory.CreateDirectory(dirPath);
             }
         }
+    }
+}
+
+public static class Chat
+{
+    public static Color DEFAULT_CHATCOLOR = ChatColor.AntiqueWhite;
+
+    public static bool IsValidColor(Color color)
+    {
+        return color != default(Color) && color != DEFAULT_CHATCOLOR;
+    }
+
+    public static bool TryGetChatColor(User user, out Color color)
+    {
+        color = default(Color);
+
+        if (IsValidColor(user.chatColor))
+            color = user.chatColor;
+        else if (user.group.Count > 0)
+        {
+            Group grp = Permissions.GetGroup(user.group[0]);
+            if (grp != null && IsValidColor(grp.GroupInfo.color))
+                color = grp.GroupInfo.color;
+        }
+
+        return color != default(Color);
+    }
+
+    public static bool TryGetChatPrefix(User user, out string prefix)
+    {
+        prefix = default(String);
+
+        if (user.prefix != default(String) && user.prefix.Trim().Length > 0)
+            prefix = user.prefix;
+        else if (user.group.Count > 0)
+        {
+            Group grp = Permissions.GetGroup(user.group[0]);
+            if (grp != null && grp.GroupInfo.Prefix != default(String) && grp.GroupInfo.Prefix.Trim().Length > 0)
+                prefix = grp.GroupInfo.Prefix;
+        }
+
+        return prefix != default(String);
+    }
+
+    public static bool TryGetChatSuffix(User user, out string suffix)
+    {
+        suffix = default(String);
+
+        if (user.suffix != default(String) && user.suffix.Trim().Length > 0)
+            suffix = user.suffix;
+        else if (user.group.Count > 0)
+        {
+            Group grp = Permissions.GetGroup(user.group[0]);
+            if (grp != null && grp.GroupInfo.Suffix != default(String) && grp.GroupInfo.Suffix.Trim().Length > 0)
+                suffix = grp.GroupInfo.Suffix;
+        }
+
+        return suffix != default(String);
+    }
+
+    public static bool TryGetChatSeperator(User user, out string seperator)
+    {
+        seperator = default(String);
+
+        if (user.seperator != default(String) && user.seperator.Trim().Length > 0)
+            seperator = user.seperator;
+        else if (user.group.Count > 0)
+        {
+            Group grp = Permissions.GetGroup(user.group[0]);
+            if (grp != null && grp.GroupInfo.Seperator != default(String) && grp.GroupInfo.Seperator.Trim().Length > 0)
+                seperator = grp.GroupInfo.Seperator;
+        }
+
+        return seperator != default(String);
     }
 }

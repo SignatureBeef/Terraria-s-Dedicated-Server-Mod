@@ -11,8 +11,10 @@ namespace TDSMPermissions.Definitions
 	{
 		public List<String> hasPerm;
         public List<String> notHasPerm;
-		public string prefix;
-		public string suffix;
+        public string prefix;
+        public string suffix;
+        public string seperator;
+        public bool CanBuild;
 		public Color chatColor;
         public List<String> group;
 
@@ -26,11 +28,13 @@ namespace TDSMPermissions.Definitions
 			chatColor = ChatColor.AntiqueWhite;
 		}
 
-        public void SetUserInfo(string Prefix, string Suffix, Color Color)
+        public void SetUserInfo(string Prefix, string Suffix, string Seperator, bool canBuild, Color Color)
         {
             prefix = Prefix;
             suffix = Suffix;
             chatColor = Color;
+            seperator = Seperator;
+            CanBuild = canBuild;
         }
 	}
 }
