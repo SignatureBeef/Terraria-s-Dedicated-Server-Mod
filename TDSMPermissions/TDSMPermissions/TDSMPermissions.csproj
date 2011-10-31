@@ -59,6 +59,7 @@
     <Compile Include="Commands\PluginCommands.cs" />
     <Compile Include="Definitions\Group.cs" />
     <Compile Include="Definitions\User.cs" />
+    <Compile Include="Perms\Permissions.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="TDSMPermissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
