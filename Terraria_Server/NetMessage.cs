@@ -359,10 +359,7 @@ namespace Terraria_Server
 				//var bytes = msg.Output;
 				if (remoteClient == -1)
 				{
-                    //if (packetId == (int)Packet.NPC_INFO)
-                    //    BroadcastExcept(msg.Output, ignoreClient, packetId, number);
-                    //else
-                        msg.BroadcastExcept(ignoreClient);
+                    msg.BroadcastExcept(ignoreClient);
 //					for (int num11 = 0; num11 < 256; num11++)
 //					{
 //						if (num11 != ignoreClient && Netplay.slots[num11].state >= SlotState.PLAYING && Netplay.slots[num11].Connected)
@@ -375,8 +372,7 @@ namespace Terraria_Server
 				}
 				else if (NetPlay.slots[remoteClient].Connected)
 				{
-                    //if(IsPacketInfoAllowed_TDCM(packetId, remoteClient, number))
-                        msg.Send (remoteClient);
+                    msg.Send (remoteClient);
 					//NetMessage.buffer[remoteClient].spamCount++;
 					//Netplay.slots[remoteClient].Send (bytes);
 				}
@@ -388,29 +384,6 @@ namespace Terraria_Server
 			}
 			return 0;
 		}
-
-        /* Not needed, Was an asumption that stock whould shit itself ifsent an unknown name :P */
-        /*public static bool IsPacketInfoAllowed_TDCM(int packetId, int remoteClient, int number)
-        {
-            if (packetId == (int)Packet.NPC_INFO)
-            {
-                var player = Main.players[remoteClient];
-                var npc = Main.npcs[number];
-
-                bool rs = (npc.Name == Statics.TDCM_QUEST_GIVER && player.HasClientMod);
-
-                return (npc.Name == Statics.TDCM_QUEST_GIVER && player.HasClientMod);
-            }
-
-            return true;
-        }*/
-
-        public static void UpdateMessage_TDCM(int number, string npcName, ref NetMessage msg, out byte[] buff)
-        {
-            msg.NPCInfo(number, npcName);
-            buff = msg.Output;
-            //msg.Clear();
-        }
 		
 		public static void SendTileSquare(int whoAmi, int tileX, int tileY, int size)
 		{
@@ -440,18 +413,7 @@ namespace Terraria_Server
 				catch (NullReferenceException) {}
 			}
 		}
-        
-        /*public static void BroadcastExcept(byte[] bytes, int i, int packet, int number)
-        {
-            for (int k = 0; k < 255; k++)
-            {
-                if (NetPlay.slots[k].state >= SlotState.PLAYING && NetPlay.slots[k].Connected && k != i && IsPacketInfoAllowed_TDCM(packet, k, number))
-                {
-                    NetPlay.slots[k].Send(bytes);
-                }
-            }
-        }*/
-		
+        		
 		public static void Broadcast (byte[] bytes)
 		{
 			//ProgramLog.Debug.Log ("Broadcast, {0} {1}", Netplay.slots[0].state, Netplay.slots[0].Connected);

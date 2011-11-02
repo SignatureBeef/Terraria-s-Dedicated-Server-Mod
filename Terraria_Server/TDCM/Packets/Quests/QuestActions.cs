@@ -70,9 +70,9 @@ namespace Terraria_Server.TDCM.Packets.Quests
             int SkeletronId = NPC.NewNPC(((int)location.X), ((int)location.Y * 16), (int)NPCType.N21_SKELETON);
 
             NPC npc = Main.npcs[SkeletronId];
-            npc.life = npc.life / 100;
+            npc.life = npc.life / reduceBy;
             npc.lifeMax = npc.life;
-            npc.damage = npc.damage / 100;
+            npc.damage = npc.damage / reduceBy;
 
             npc.target = player.whoAmi;
             npc.ai[3] = 1f;
