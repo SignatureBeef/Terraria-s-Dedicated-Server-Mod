@@ -111,13 +111,10 @@ namespace Terraria_Server.WorldMod
 			WorldModify.gen = true;
 			resetGen();
 			if (seed > 0)
-			{
-				WorldModify.genRand = new Random(seed);
-			}
+                WorldModify.genRand = new Random(seed);
 			else
-			{
-				WorldModify.genRand = new Random((int)DateTime.Now.Ticks);
-			}
+                WorldModify.genRand = new Random((int)DateTime.Now.Ticks);
+
 			Main.worldID = WorldModify.genRand.Next(Int32.MaxValue);
 			int num = 0;
 			int num2 = 0;
@@ -130,14 +127,11 @@ namespace Terraria_Server.WorldMod
 			double num7 = num4;
 			rockLayer = num4;
 			int Direction = 0;
+
 			if (WorldModify.genRand.Next(2) == 0)
-			{
-				Direction = -1;
-			}
+                Direction = -1;
 			else
-			{
-				Direction = 1;
-			}
+                Direction = 1;
 
 			using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Generating world terrain"))
 			{
@@ -146,81 +140,63 @@ namespace Terraria_Server.WorldMod
 					prog.Value = TerrainX;
 
 					if (TerrainY < terrarainMaxY)
-					{
-						terrarainMaxY = TerrainY;
-					}
+                        terrarainMaxY = TerrainY;
+
 					if (TerrainY > worldSurface)
-					{
-						worldSurface = TerrainY;
-					}
+                        worldSurface = TerrainY;
+
 					if (num4 < num7)
-					{
-						num7 = num4;
-					}
+                        num7 = num4;
+
 					if (num4 > rockLayer)
-					{
-						rockLayer = num4;
-					}
+                        rockLayer = num4;
+
 					if (num2 <= 0)
 					{
 						num = WorldModify.genRand.Next(0, 5);
 						num2 = WorldModify.genRand.Next(5, 40);
 						if (num == 0)
-						{
-							num2 *= (int)((double)WorldModify.genRand.Next(5, 30) * 0.2);
-						}
+                            num2 *= (int)((double)WorldModify.genRand.Next(5, 30) * 0.2);
 					}
 					num2--;
 					if (num == 0)
 					{
 						while (WorldModify.genRand.Next(0, 7) == 0)
-						{
-							TerrainY += (double)WorldModify.genRand.Next(-1, 2);
-						}
+                            TerrainY += (double)WorldModify.genRand.Next(-1, 2);
 					}
 					else if (num == 1)
 					{
 						while (WorldModify.genRand.Next(0, 4) == 0)
-						{
-							TerrainY -= 1.0;
-						}
+                            TerrainY -= 1.0;
+
 						while (WorldModify.genRand.Next(0, 10) == 0)
-						{
-							TerrainY += 1.0;
-						}
+                            TerrainY += 1.0;
 					}
 					else if (num == 2)
 					{
 						while (WorldModify.genRand.Next(0, 4) == 0)
-						{
-							TerrainY += 1.0;
-						}
+                            TerrainY += 1.0;
+
 						while (WorldModify.genRand.Next(0, 10) == 0)
-						{
-							TerrainY -= 1.0;
-						}
+                            TerrainY -= 1.0;
 					}
 					else if (num == 3)
 					{
 						while (WorldModify.genRand.Next(0, 2) == 0)
-						{
-							TerrainY -= 1.0;
-						}
+                            TerrainY -= 1.0;
+
 						while (WorldModify.genRand.Next(0, 6) == 0)
-						{
-							TerrainY += 1.0;
-						}
+                            TerrainY += 1.0;
+
 					}
 					else if (num == 4)
 					{
 						while (WorldModify.genRand.Next(0, 2) == 0)
-						{
-							TerrainY += 1.0;
-						}
+                            TerrainY += 1.0;
+
 						while (WorldModify.genRand.Next(0, 5) == 0)
-						{
-							TerrainY -= 1.0;
-						}
+                            TerrainY -= 1.0;
+
 					}
 					if (TerrainY < (double)Main.maxTilesY * 0.15)
 					{
@@ -237,18 +213,16 @@ namespace Terraria_Server.WorldMod
 						TerrainY = (double)Main.maxTilesY * 0.25;
 						num2 = 1;
 					}
+
 					while (WorldModify.genRand.Next(0, 3) == 0)
-					{
-						num4 += (double)WorldModify.genRand.Next(-2, 3);
-					}
+                        num4 += (double)WorldModify.genRand.Next(-2, 3);
+
 					if (num4 < TerrainY + (double)Main.maxTilesY * 0.05)
-					{
-						num4 += 1.0;
-					}
+                        num4 += 1.0;
+
 					if (num4 > TerrainY + (double)Main.maxTilesY * 0.35)
-					{
-						num4 -= 1.0;
-					}
+                        num4 -= 1.0;
+
 					int terrainY = 0;
 					while ((double)terrainY < TerrainY)
 					{
@@ -286,18 +260,23 @@ namespace Terraria_Server.WorldMod
 			WorldModify.lavaLine = WorldModify.waterLine + WorldModify.genRand.Next(50, 80);
 
             AddSand(Direction);
+
             GenerateHills();
+
             PutDirtBehindDirt();
+
             PlaceRocksWithinDirt();
+
             PlaceDirtWithinRocks(num7);
+
             AddClay();
+
             MakeRandomHoles();
+
             GenerateSmallCaves();
             GenerateLargeCaves();
             GenerateSurfaceCaves();
-
             GenerateJungle(Direction);
-
             GenerateFloatingIslands();
 
             AddMushroomPatches();
@@ -319,15 +298,11 @@ namespace Terraria_Server.WorldMod
 			int y = 0;
 
 			if (numDungeons >= 2) //Custom Dungeons (0 allowed?)
-			{
-				numDungeons = 2; //Limt dungeons at 2, May not fit?
-			}
+                numDungeons = 2; //Limt dungeons at 2, May not fit?
 			else //1 dungeon
 			{
 				if (Direction != -1)
-				{
-					x = x2; //X axis = right
-				}
+                    x = x2; //X axis = right
 			}
 
 			for (int dnum = 0; dnum < numDungeons; dnum++)
@@ -342,9 +317,7 @@ namespace Terraria_Server.WorldMod
 			}
 
 			if (Direction != -1)
-			{
-				Direction = 1;
-			}
+                Direction = 1;
 
             MakeWorldEvil();
 
@@ -395,13 +368,11 @@ namespace Terraria_Server.WorldMod
 				flag21 = false;
 				num256++;
 				if ((double)Main.spawnTileY > Main.worldSurface)
-				{
-					flag21 = true;
-				}
+                    flag21 = true;
+
 				if (Main.tile.At(Main.spawnTileX, Main.spawnTileY - 1).Liquid > 0)
-				{
-					flag21 = true;
-				}
+                    flag21 = true;
+
 			}
 			int num259 = 10;
 			while ((double)Main.spawnTileY > Main.worldSurface)
@@ -420,8 +391,10 @@ namespace Terraria_Server.WorldMod
 				num259++;
 			}
 
+            ProgramLog.Log("Adding NPC's...");
+            NPC.SpawnGuide();
+            NPC.SpawnTDCMQuestGiver();
 
-            PlaceGuide();
             PlantSunflowers();
             PlantTrees();
             PlantHerbs();
@@ -2603,16 +2576,7 @@ namespace Terraria_Server.WorldMod
                 }
             } // end cacti
         }
-
-
-        public static void PlaceGuide()
-        {
-            int GuideIndex = NPC.NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, 22, 0);
-            Main.npcs[GuideIndex].homeTileX = Main.spawnTileX;
-            Main.npcs[GuideIndex].homeTileY = Main.spawnTileY;
-            Main.npcs[GuideIndex].direction = 1;
-            Main.npcs[GuideIndex].homeless = true;
-        }
+               
 
         public static void PlantSunflowers()
         {

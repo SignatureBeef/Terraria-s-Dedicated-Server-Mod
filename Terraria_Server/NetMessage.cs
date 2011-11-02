@@ -8,6 +8,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
 using Terraria_Server.Plugins;
+using Terraria_Server.TDCM;
 
 namespace Terraria_Server
 {
@@ -309,11 +310,15 @@ namespace Terraria_Server
 						
 					case (int)Packet.PLAYER_ADD_BUFF:
 						msg.PlayerAddBuff (number, (int)number2, (int)number3);
-						break;
-					
-					case (int)Packet.CLIENT_MOD:
-						msg.ClientMod(remoteClient);
-						break;
+                        break;
+
+                    case (int)Packet.CLIENT_MOD:
+                        msg.ClientMod(remoteClient);
+                        break;
+
+                    case (int)Packet.CLIENT_MOD_SPAWN_NPC:
+                        msg.RpgNPCSpawned(number);
+                        break;
 						
 					default:
 						{
@@ -354,7 +359,10 @@ namespace Terraria_Server
 				//var bytes = msg.Output;
 				if (remoteClient == -1)
 				{
-					msg.BroadcastExcept (ignoreClient);
+                    //if (packetId == (int)Packet.NPC_INFO)
+                    //    BroadcastExcept(msg.Output, ignoreClient, packetId, number);
+                    //else
+                        msg.BroadcastExcept(ignoreClient);
 //					for (int num11 = 0; num11 < 256; num11++)
 //					{
 //						if (num11 != ignoreClient && Netplay.slots[num11].state >= SlotState.PLAYING && Netplay.slots[num11].Connected)
@@ -367,7 +375,8 @@ namespace Terraria_Server
 				}
 				else if (NetPlay.slots[remoteClient].Connected)
 				{
-					msg.Send (remoteClient);
+                    //if(IsPacketInfoAllowed_TDCM(packetId, remoteClient, number))
+                        msg.Send (remoteClient);
 					//NetMessage.buffer[remoteClient].spamCount++;
 					//Netplay.slots[remoteClient].Send (bytes);
 				}
@@ -380,17 +389,27 @@ namespace Terraria_Server
 			return 0;
 		}
 
-        public static bool IsPacketInfoAllowed_TDCM(int packetId, int remoteClient, int number)
+        /* Not needed, Was an asumption that stock whould shit itself ifsent an unknown name :P */
+        /*public static bool IsPacketInfoAllowed_TDCM(int packetId, int remoteClient, int number)
         {
             if (packetId == (int)Packet.NPC_INFO)
             {
                 var player = Main.players[remoteClient];
                 var npc = Main.npcs[number];
 
-                return !(npc.Name == Statics.TDCM_QUEST_GIVER && !player.HasClientMod);
+                bool rs = (npc.Name == Statics.TDCM_QUEST_GIVER && player.HasClientMod);
+
+                return (npc.Name == Statics.TDCM_QUEST_GIVER && player.HasClientMod);
             }
 
             return true;
+        }*/
+
+        public static void UpdateMessage_TDCM(int number, string npcName, ref NetMessage msg, out byte[] buff)
+        {
+            msg.NPCInfo(number, npcName);
+            buff = msg.Output;
+            //msg.Clear();
         }
 		
 		public static void SendTileSquare(int whoAmi, int tileX, int tileY, int size)
@@ -421,6 +440,17 @@ namespace Terraria_Server
 				catch (NullReferenceException) {}
 			}
 		}
+        
+        /*public static void BroadcastExcept(byte[] bytes, int i, int packet, int number)
+        {
+            for (int k = 0; k < 255; k++)
+            {
+                if (NetPlay.slots[k].state >= SlotState.PLAYING && NetPlay.slots[k].Connected && k != i && IsPacketInfoAllowed_TDCM(packet, k, number))
+                {
+                    NetPlay.slots[k].Send(bytes);
+                }
+            }
+        }*/
 		
 		public static void Broadcast (byte[] bytes)
 		{

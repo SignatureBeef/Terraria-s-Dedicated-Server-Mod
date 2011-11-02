@@ -38,7 +38,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -59,6 +58,7 @@
     <Compile Include="Commands\PluginCommands.cs" />
     <Compile Include="Definitions\Group.cs" />
     <Compile Include="Definitions\User.cs" />
+    <Compile Include="Perms\Chat.cs" />
     <Compile Include="Perms\Permissions.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="TDSMPermissions.cs" />

@@ -13,15 +13,13 @@ namespace TDSMPermissions.Perms
 {
     public static class Permissions
     {
-        public static string                    defaultGroup    { get; set; }
-
-        public static List<Group>               groups          { get; set; }
-        public static Dictionary<String, User>  users           { get; set; }
-        public static User                      currentUser     { get; set; }
-        public static Group                     currentGroup    { get; set; }
-        public static YamlScanner               sc              { get; set; }
-        public static bool                      inUsers         { get; set; }
-        public static string                    currentUserName { get; set; }
+        public  static List<Group>              groups          { get; set; }
+        public  static Dictionary<String, User> users           { get; set; }
+        private static User                     currentUser     { get; set; }
+        private static Group                    currentGroup    { get; set; }
+        private static YamlScanner              sc              { get; set; }
+        private static bool                     inUsers         { get; set; }
+        private static string                   currentUserName { get; set; }
 
         static Permissions()
         {
@@ -29,7 +27,6 @@ namespace TDSMPermissions.Perms
             users = new Dictionary<String, User>();
             currentUser = new User();
         }
-
 
         public static void LoadPerms(string permissionsYML)
         {
@@ -182,8 +179,8 @@ namespace TDSMPermissions.Perms
             WaitNext(sc, "default");
 
             Default = Convert.ToBoolean(GetNextToken(sc));
-            if (Default)
-                defaultGroup = currentGroup.Name;
+            //if (Default)
+            //    defaultGroup = currentGroup.Name;
 
             WaitNext(sc, "prefix");
             Prefix = GetNextToken(sc);
@@ -288,8 +285,8 @@ namespace TDSMPermissions.Perms
                 bool toggle = !sc.TokenText.Contains("-");
                 string tokenText = sc.TokenText;
 
-                if (toggle)
-                    tokenText = sc.TokenText.Substring(1, sc.TokenText.Length - 1);
+                //if (toggle)
+                //    tokenText = sc.TokenText.Substring(1, sc.TokenText.Length - 1);
 
                 if (!inUsers)
                 {

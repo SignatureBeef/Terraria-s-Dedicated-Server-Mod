@@ -6,6 +6,7 @@ using Terraria_Server.Plugins;
 using Terraria_Server.Logging;
 using Terraria_Server.Commands;
 using Terraria_Server.Definitions;
+using Terraria_Server.Permissions;
 
 namespace TDSMExamplePlugin
 {
@@ -17,15 +18,15 @@ namespace TDSMExamplePlugin
          * Plugins need to be in .NET 4.0
          * Otherwise TDSM will be unable to load it.
          * 
-         * [TODO] Show example of Permission nodes
-         * 
          */
 
-        //Resist statics within a plugin.
+        //Resist statics within a plugin. (Plugins are passed in command args as an object, See PluginCommands.cs)
         public Properties properties;
         public bool spawningAllowed = false;
         public bool tileBreakageAllowed = false;
         public bool explosivesAllowed = false;
+
+        public Node ExampleChatNode = Node.FromPath("tdsmexamplenode.chat");
 
         public TDSM_Plugin()
         {
@@ -61,8 +62,14 @@ namespace TDSMExamplePlugin
             ProgramLog.Plugin.Log(base.Name + " enabled.");
 
             //Register Hooks            
-            Hook(HookPoints.PlayerWorldAlteration, OnPlayerWorldAlteration);
-            Hook(HookPoints.ProjectileReceived, HookOrder.FIRST, OnReceiveProjectile); //Priorites
+            Hook(HookPoints.PlayerWorldAlteration,                  OnPlayerWorldAlteration);
+            Hook(HookPoints.ProjectileReceived, HookOrder.FIRST,    OnReceiveProjectile); //Priorites
+
+            /*
+             * Look at the alternate method 'OnChat' using HookAttributes
+             *      You will not be required to add the following when using the Attribute.
+                Hook(HookPoints.PlayerChat, HookOrder.NORMAL,    OnChat);
+             */
 
             //Add Commands
             AddCommand("tdsmpluginexample")
@@ -111,8 +118,24 @@ namespace TDSMExamplePlugin
             }
         }
 
+        [Hook(HookOrder.NORMAL)]
+        void OnChat(ref HookContext ctx, ref HookArgs.PlayerChat args)
+        {
+            //Merely an example of HookAttribute (Above, 'Hook(...)') and Permissions
+
+            if (IsRestrictedForUser(ctx.Player, ExampleChatNode))
+            {
+                //Player is not allowed
+            }
+            else
+            {
+                //Player is allowed
+            }
+        }
+
 #endregion
 
+#region Misc
         private static void CreateDirectory(string dirPath)
         {
             if (!Directory.Exists(dirPath))
@@ -120,6 +143,20 @@ namespace TDSMExamplePlugin
                 Directory.CreateDirectory(dirPath);
             }
         }
+#endregion
 
+#region Permissions
+        /* Checks whether a Permissions Handler is taken place */
+        public bool IsRunningPermissions()
+        {
+            return Program.permissionManager.IsPermittedImpl != null;
+        }
+
+        /* If a Permissions Handler is found, It checks if they are permitted, Else they are not (false). */
+        public bool IsRestrictedForUser(Player player, Node node)
+        {
+            return (IsRunningPermissions()) ? Program.permissionManager.IsPermittedImpl(node.Path, player) : false;
+        }
+#endregion        
     }
 }

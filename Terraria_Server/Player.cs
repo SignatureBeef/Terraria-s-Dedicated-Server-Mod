@@ -11,6 +11,7 @@ using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
 using System.Net;
 using Terraria_Server.Networking;
+using Terraria_Server.TDCM;
 
 namespace Terraria_Server
 {
@@ -28,6 +29,16 @@ namespace Terraria_Server
 		/// Whether this player is using TDCM
 		/// </summary>
         public bool HasClientMod = false;
+
+        /// <summary>
+        /// If using tRPG, This will be set with their quest NPC name
+        /// </summary>
+        public string QuestNPCName { get; set; }
+
+        /// <summary>
+        /// Contains the current quest of the player if using tRPG
+        /// </summary>
+        public int CurrentQuest { get; set; }
 
 		/// <summary>
 		/// String representation of this player's IP address
@@ -442,6 +453,8 @@ namespace Terraria_Server
 			magicDamage = 1f;
 			meleeSpeed = 1f;
 			moveSpeed = 1f;
+
+            CurrentQuest = -1;
 		}
 		
 		/// <summary>

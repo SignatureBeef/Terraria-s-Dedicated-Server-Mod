@@ -570,7 +570,7 @@ namespace Terraria_Server
 			Byte (item.Owner);
 		}
 		
-		public void NPCInfo (int npcId)
+		public void NPCInfo (int npcId, string NPCName = null)
 		{
 			var npc = Main.npcs[npcId];
 			
@@ -595,8 +595,11 @@ namespace Terraria_Server
 			
 			for (int i = 0; i < NPC.MAX_AI; i++)
 				Float (npc.ai[i]);
-			
-			String (npc.Name);
+
+            if (NPCName == null)
+                String(npc.Name);
+            else
+                String(NPCName);
 			
 			End ();
 		}
@@ -983,19 +986,28 @@ namespace Terraria_Server
 			Byte (type);
 			Short (time);
 		}
-		
-		public void ClientMod(int PlayerID)
-		{
-			//Let them know they are op
-			var player = Main.players[PlayerID];
-			Header(Packet.CLIENT_MOD, 4);
-			
-			Int((player.Op) ? 1 : 0);
+
+        public void ClientMod(int PlayerID)
+        {
+            //Let them know they are op
+            var player = Main.players[PlayerID];
+            Header(Packet.CLIENT_MOD, 4);
+
+            Int((player.Op) ? 1 : 0);
 
             //Tell whether RPG is allowed.
             Int((Server.AllowTDCMRPG) ? 1 : 0);
 
             End();
-		}
+        }
+
+        public void RpgNPCSpawned(int npcId)
+        {
+            Header(Packet.CLIENT_MOD_SPAWN_NPC, 4);
+
+            Int(npcId);
+
+            End();
+        }
 	}
 }

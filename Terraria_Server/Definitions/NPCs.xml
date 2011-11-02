@@ -1151,4 +1151,17 @@
     <knockBackResist>0.7</knockBackResist>
     <value>200</value>
   </NPC>
+  <NPC>
+    <Name>Quest Giver</Name>
+    <Type>22</Type>
+    <friendly>true</friendly>
+    <knockBackResist>0.5</knockBackResist>
+    <townNPC>true</townNPC>
+    <aiStyle>7</aiStyle>
+    <damage>10</damage>
+    <defense>15</defense>
+    <Height>40</Height>
+    <lifeMax>250</lifeMax>
+    <Width>18</Width>
+  </NPC>
 </ArrayOfNPC>

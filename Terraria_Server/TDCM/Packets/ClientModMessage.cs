@@ -2,8 +2,9 @@
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
+using Terraria_Server.Messages;
 
-namespace Terraria_Server.Messages.TDCM
+namespace Terraria_Server.TDCM.Packets
 {
     /*
      * TDCM Will be using authentication upon release.

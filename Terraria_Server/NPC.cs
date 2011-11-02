@@ -7,6 +7,7 @@ using Terraria_Server.Commands;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
@@ -15,7 +16,9 @@ namespace Terraria_Server
 	/// </summary>
     public class NPC : BaseEntity, ISender
     {
-		
+        internal delegate void NPCSpawn(int npcId);
+        internal static event NPCSpawn NPCSpawnHandler;
+
 		bool ISender.Op
 		{
 			get { return false; }
@@ -5458,7 +5461,7 @@ namespace Terraria_Server
                                 {
                                     NPC.NewNPC(x * 16 + 8, y * 16, 46, 0);
                                 }
-                                else if (num22 > Main.maxTilesX / 3 && num20 == 2 && Main.rand.Next(300) == 0 && !NPC.AnyNPCs(50))
+                                else if (num22 > Main.maxTilesX / 3 && num20 == 2 && Main.rand.Next(300) == 0 && !NPC.IsNPCSummoned(50))
                                 {
                                     npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 50, 0);
                                 }
@@ -5517,7 +5520,7 @@ namespace Terraria_Server
                         }
                         else if (y > Main.maxTilesY - 190)
                         {
-                            if (Main.rand.Next(40) == 0 && !NPC.AnyNPCs(39))
+                            if (Main.rand.Next(40) == 0 && !NPC.IsNPCSummoned(39))
                             {
                                 npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 39, 1);
                             }
@@ -5819,6 +5822,9 @@ namespace Terraria_Server
 					//TODO: move elsewhere
 					NetMessage.SendData(25, -1, -1, npc.Name + " has awoken!", 255, 175f, 75f, 255f);
 				}
+
+                if (NPCSpawnHandler != null)
+                    NPCSpawnHandler.Invoke(id);
 				
 				return id;
 			}
@@ -5834,7 +5840,11 @@ namespace Terraria_Server
 			int id = FindNPCSlot (start);
 			if (id >= 0)
 			{
-				NewNPC (x, y, hnpc ?? Registries.NPC.Create (name), id);
+                NewNPC(x, y, hnpc ?? Registries.NPC.Create(name), id);
+
+                if (NPCSpawnHandler != null)
+                    NPCSpawnHandler.Invoke(id);
+
 				return id;
 			}
 			return MAX_NPCS;
@@ -5851,7 +5861,7 @@ namespace Terraria_Server
 			}
 			return -1;
 		}
-		
+
         public static int NewNPC(int x, int y, NPC npc, int npcIndex)
         {
             npc.Position.X = (float)(x - npc.Width / 2);
@@ -6550,23 +6560,6 @@ namespace Terraria_Server
                 }
                 return;
             }
-        }
-
-		/// <summary>
-		/// Checks if there are any active NPCs of specified type
-		/// </summary>
-		/// <param name="Type">Type of NPC to check for</param>
-		/// <returns>True if active, false if not</returns>
-        public static bool AnyNPCs(int Type)
-        {
-            for (int i = 0; i < MAX_NPCS; i++)
-            {
-                if (Main.npcs[i].Active && Main.npcs[i].Type == Type)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
 		/// <summary>
@@ -11665,6 +11658,77 @@ namespace Terraria_Server
             npc.Velocity.X = (float)(num189 * npc.direction);
             npc.Velocity.Y = (float)(num189 * npc.directionY);
             return;
+        }
+
+        /// <summary>
+        /// Checks if there are any active NPCs of specified type
+        /// </summary>
+        /// <param name="Id">Id of NPC to check for</param>
+        /// <returns>True if active, false if not</returns>
+        public static bool IsNPCSummoned(int Id)
+        {
+            for (int i = 0; i < Main.npcs.Length; i++)
+            {
+                NPC npc = Main.npcs[i];
+                if (npc != null && npc.Active && npc.whoAmI == Id)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if there are any active NPCs of specified name
+        /// </summary>
+        /// <param name="Name">Name of NPC to check for</param>
+        /// <returns>True if active, false if not</returns>
+        public static bool IsNPCSummoned(string Name)
+        {
+            int Id;
+            return TryFindNPCByName(Name, out Id);
+        }
+
+        public static bool TryFindNPCByName(string Name, out int Id)
+        {
+            Id = default(Int32);
+
+            for (int i = 0; i < Main.npcs.Length; i++)
+            {
+                NPC npc = Main.npcs[i];
+                if (npc != null && npc.Active && npc.Name == Name)
+                {
+                    Id = npc.whoAmI;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static void SpawnGuide()
+        {
+            int GuideIndex = NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, 22, 0);
+            Main.npcs[GuideIndex].homeTileX = Main.spawnTileX;
+            Main.npcs[GuideIndex].homeTileY = Main.spawnTileY;
+            Main.npcs[GuideIndex].direction = 1;
+            Main.npcs[GuideIndex].homeless = true;
+        }
+
+        public static void SpawnTDCMQuestGiver()
+        {
+            if (IsNPCSummoned(Statics.TDCM_QUEST_GIVER) || !Program.properties.AllowTDCMRPG)
+                return;
+
+            Vector2 Spawn = World.GetRandomClearTile(Main.spawnTileX, Main.spawnTileY, 100, true, 100, 50);
+
+            int npcIndex = NewNPC((int)Spawn.X * 16, (int)Spawn.Y * 16, 22, 0);
+            Main.npcs[npcIndex].Name = Statics.TDCM_QUEST_GIVER;
+            Main.npcs[npcIndex].homeTileX = (int)Spawn.X;
+            Main.npcs[npcIndex].homeTileY = (int)Spawn.Y;
+            Main.npcs[npcIndex].direction = 1;
+            Main.npcs[npcIndex].homeless = true;
+
+            ProgramLog.Debug.Log(
+                String.Format("{0} spawned at {1},{2}.", Statics.TDCM_QUEST_GIVER, Spawn.X, Spawn.Y)
+            );
         }
     }
 }

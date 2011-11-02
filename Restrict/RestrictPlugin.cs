@@ -547,15 +547,14 @@ namespace RestrictPlugin
         }
 
 #region Permissions
-
-        public bool isRunningPermissions()
+        public bool IsRunningPermissions()
         {
             return Program.permissionManager.IsPermittedImpl != null;
         }
 
         public bool IsRestrictedForUser(Player player, Node node)
         {
-            return (isRunningPermissions()) ? Program.permissionManager.IsPermittedImpl(node.Path, player) : false;
+            return (IsRunningPermissions()) ? !Program.permissionManager.IsPermittedImpl(node.Path, player) : false;
         }
 #endregion
     }

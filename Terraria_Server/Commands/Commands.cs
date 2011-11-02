@@ -27,31 +27,24 @@ namespace Terraria_Server.Commands
 		public static void Exit(ISender sender, ArgumentList args)
 		{
             int AccessLevel = Program.properties.ExitAccessLevel;
-            if (AccessLevel == -1)
+            if (AccessLevel == -1 && sender is Player)
             {
-                if (sender is Player) // || sender is RConSender) //Requested for Rcon Users.
-                {
                     sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
                     return;
-                }
             }
-            else
+            else if (!CommandParser.CheckAccessLevel((AccessLevel)AccessLevel, sender))
             {
-                if (!CommandParser.CheckAccessLevel((AccessLevel)AccessLevel, sender))
-                {
-                    sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
-                    return;
-                }
+                sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+                return;
             }
-
-
+            
 			args.ParseNone();
 
 			Server.notifyOps("Exiting on request.", false);
 			NetPlay.StopServer();
 			Statics.Exit = true;
 
-            //throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
+            throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
 		}
 
 		/// <summary>

@@ -6,8 +6,8 @@ using System.Text;
 namespace Terraria_Server.Misc
 {
     /// <summary>
-    /// Used to break "Console.ReadLine()" when a player or such stops the server
-    /// Otherwise the Command Loop will hand at Console.ReadLine until data is inputted.
+    /// Used to break "Console.ReadLine()" when a player or another entity stops the server
+    /// Otherwise the Command Loop will hang at Console.ReadLine until data is inputted.
     /// </summary>
     public class ExitException : Exception
     {

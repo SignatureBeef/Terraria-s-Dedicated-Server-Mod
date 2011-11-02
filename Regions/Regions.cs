@@ -114,16 +114,19 @@ namespace Regions
                 .WithPermissionNode("regions") //Need another method to split the commands up.
                 .Calls(commands.Region);
             
-            Hook(HookPoints.PlayerWorldAlteration,  OnPlayerWorldAlteration);
-            Hook(HookPoints.LiquidFlowReceived,     OnLiquidFlowReceived);
-            Hook(HookPoints.ProjectileReceived,     OnProjectileReceived);
-            Hook(HookPoints.PlayerEnteredGame,      OnPlayerEnteredGame);
-            Hook(HookPoints.ServerStateChange,      OnServerStateChange);
-            Hook(HookPoints.DoorStateChanged,       OnDoorStateChange);
-            Hook(HookPoints.ChestBreakReceived,     OnChestBreak);
-            Hook(HookPoints.ChestOpenReceived,      OnChestOpen);
-            Hook(HookPoints.PluginsLoaded,          OnPluginsLoaded);
-            Hook(HookPoints.SignTextSet,            OnSignEdit);
+            /*  
+             * These are replaced by [Hook(HookOrder.*)]
+                Hook(HookPoints.PlayerWorldAlteration,  OnPlayerWorldAlteration);
+                Hook(HookPoints.LiquidFlowReceived,     OnLiquidFlowReceived);
+                Hook(HookPoints.ProjectileReceived,     OnProjectileReceived);
+                Hook(HookPoints.PlayerEnteredGame,      OnPlayerEnteredGame);
+                Hook(HookPoints.ServerStateChange,      OnServerStateChange);
+                Hook(HookPoints.DoorStateChanged,       OnDoorStateChange);
+                Hook(HookPoints.ChestBreakReceived,     OnChestBreak);
+                Hook(HookPoints.ChestOpenReceived,      OnChestOpen);
+                Hook(HookPoints.PluginsLoaded,          OnPluginsLoaded);
+                Hook(HookPoints.SignTextSet,            OnSignEdit);
+            */
 
             ChestBreak      = AddAndCreateNode("regions.chestbreak");
             ChestOpen       = AddAndCreateNode("regions.chestopen");
@@ -155,28 +158,32 @@ namespace Regions
         
         #region Events
 
+            [Hook(HookOrder.NORMAL)]
             void OnPluginsLoaded(ref HookContext ctx, ref HookArgs.PluginsLoaded args)
             {
-                UsingPermissions = isRunningPermissions();
+                UsingPermissions = IsRunningPermissions();
                 if (UsingPermissions)
                     Log("Using Permissions.");
                 else
                     Log("No Permissions Found\nUsing Internal User System");
             }
 
+            [Hook(HookOrder.NORMAL)]
             void OnServerStateChange(ref HookContext ctx, ref HookArgs.ServerStateChange args)
             {
                 if (args.ServerChangeState == ServerState.LOADED)
                     regionManager.LoadRegions();
             }
-
-            /* If a player left without finishing the region, Clear it or the next player can use it. */
+                    
+            [Hook(HookOrder.NORMAL)]
             void OnPlayerEnteredGame(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)
             {
+                /* If a player left without finishing the region, Clear it or the next player can use it. */
                 if (selection.isInSelectionlist(ctx.Player))
                     selection.RemovePlayer(ctx.Player);
             }
 
+            [Hook(HookOrder.NORMAL)]
             void OnPlayerWorldAlteration(ref HookContext ctx, ref HookArgs.PlayerWorldAlteration args)
             {
                 Vector2 Position = new Vector2(args.X, args.Y);
@@ -214,6 +221,7 @@ namespace Regions
                 }
             }
 
+            [Hook(HookOrder.NORMAL)]
             void OnLiquidFlowReceived(ref HookContext ctx, ref HookArgs.LiquidFlowReceived args)
             {
                 Vector2 Position = new Vector2(args.X, args.Y);
@@ -232,6 +240,7 @@ namespace Regions
                 }
             }
 
+            [Hook(HookOrder.NORMAL)]
             void OnProjectileReceived(ref HookContext ctx, ref HookArgs.ProjectileReceived args)
             {
                 Vector2 Position = new Vector2(args.X, args.Y);
@@ -255,6 +264,7 @@ namespace Regions
                 }
             }
 
+            [Hook(HookOrder.NORMAL)]
             void OnDoorStateChange(ref HookContext ctx, ref HookArgs.DoorStateChanged args)
             {
                 foreach (Region rgn in regionManager.Regions)
@@ -282,6 +292,7 @@ namespace Regions
                 }  
             }
 
+            [Hook(HookOrder.NORMAL)]
             void OnChestBreak(ref HookContext ctx, ref HookArgs.ChestBreakReceived args)
             {
                 foreach (Region rgn in regionManager.Regions)
@@ -301,6 +312,7 @@ namespace Regions
                 }
             }
 
+            [Hook(HookOrder.NORMAL)]
             void OnChestOpen(ref HookContext ctx, ref HookArgs.ChestOpenReceived args)
             {
                 foreach (Region rgn in regionManager.Regions)
@@ -320,6 +332,7 @@ namespace Regions
                 }
             }
 
+            [Hook(HookOrder.NORMAL)]
             void OnSignEdit(ref HookContext ctx, ref HookArgs.SignTextSet args)
             {
                 foreach (Region rgn in regionManager.Regions)
@@ -340,7 +353,7 @@ namespace Regions
             }
         #endregion
 
-        public bool isRunningPermissions()
+        public bool IsRunningPermissions()
         {
             return Program.permissionManager.IsPermittedImpl != null;
         }
@@ -349,7 +362,7 @@ namespace Regions
         {
             if (UsingPermissions)
             {
-                return Program.permissionManager.IsPermittedImpl(node.Path, player);
+                return !Program.permissionManager.IsPermittedImpl(node.Path, player);
             }
 
             return region.IsRestrictedForUser(player);
