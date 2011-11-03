@@ -276,6 +276,19 @@ namespace RestrictPlugin
 			int num;
 			if (args.TryParseOne ("-g", out num) || args.TryParseOne ("grant", out num))
 			{
+                if (args.TryPop("-all"))
+                {
+                    for (int i = 0; i < requests.Count; i++)
+                    {
+                        RegistrationRequest req = requests.Values.ElementAt(i);
+                        RegisterUser(i, req, false);
+                    }
+
+                    Server.notifyOps(
+                        String.Format("<Restrict> Registration request granted for {0} user(s).", requests.Count)
+                    , true);
+                }
+
 				RegistrationRequest rq;
 				
 				if (! requests.TryGetValue (num, out rq))
@@ -283,30 +296,8 @@ namespace RestrictPlugin
 					sender.sendMessage ("restrict.rr: No such registration request");
 					return;
 				}
-				
-				requests.Remove (num);
-				
-				var pname = NameTransform (rq.name);
-				var hash = Hash (rq.name, rq.password);
-				
-				users.setValue (pname, hash);
-                users.Save(false);
-				
-				var player = FindPlayer (rq.name);
-				if (player != null) // TODO: verify IP address
-				{
-					player.AuthenticatedAs = rq.name;
-					player.sendMessage ("<Restrict> You are now registered.");
-				}
-				
-				Server.notifyOps ("<Restrict> Registration request granted for: " + rq.name, true);
-				
-				var duplicates = requests.Where (kv => kv.Value.name == rq.name).ToArray();
-				foreach (var kv in duplicates)
-				{
-					// deny other requests for the same name
-					requests.Remove (kv.Key);
-				}
+
+                RegisterUser(num, rq);
 			}
 			else if (args.TryParseOne ("-d", out num) || args.TryParseOne ("deny", out num))
 			{
@@ -463,6 +454,34 @@ namespace RestrictPlugin
 			
 			requestCount += 1;
 		}
+
+        void RegisterUser(int num, RegistrationRequest rq, bool WritetoConsole = true)
+        {
+            requests.Remove(num);
+
+            var pname = NameTransform(rq.name);
+            var hash = Hash(rq.name, rq.password);
+
+            users.setValue(pname, hash);
+            users.Save(false);
+
+            var player = FindPlayer(rq.name);
+            if (player != null) // TODO: verify IP address
+            {
+                player.AuthenticatedAs = rq.name;
+                player.sendMessage("<Restrict> You are now registered.");
+            }
+
+            if(WritetoConsole)
+                Server.notifyOps("<Restrict> Registration request granted for: " + rq.name, true);
+
+            var duplicates = requests.Where(kv => kv.Value.name == rq.name).ToArray();
+            foreach (var kv in duplicates)
+            {
+                // deny other requests for the same name
+                requests.Remove(kv.Key);
+            }
+        }
 	}
 }
 

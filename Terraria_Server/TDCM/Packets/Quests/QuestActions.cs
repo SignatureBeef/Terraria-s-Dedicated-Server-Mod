@@ -9,16 +9,11 @@ namespace Terraria_Server.TDCM.Packets.Quests
 {
     public static class QuestActions
     {
-        static QuestActions()
-        {
-            NPC.NPCSpawnHandler += new NPC.NPCSpawn(NPC_NPCSpawnHandler);
-        }
-
         /// <summary>
         /// Aimed to increase the spawn rate of NPC's when a player is in a certain Quest
         /// </summary>
         /// <param name="npcId"></param>
-        static void NPC_NPCSpawnHandler(int npcId)
+        public static void NPC_NPCSpawnHandler(int npcId)
         {
             var npc = Main.npcs[npcId];
 

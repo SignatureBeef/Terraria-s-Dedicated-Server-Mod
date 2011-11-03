@@ -21,6 +21,7 @@ namespace Terraria_Server.TDCM.Packets
         public SpawnNPC()
         {
             ValidStates = SlotState.SENDING_TILES | SlotState.PLAYING;
+            NPC.NPCSpawnHandler += new NPC.NPCSpawn(QuestActions.NPC_NPCSpawnHandler);
         }
 
         public override Packet GetPacket()

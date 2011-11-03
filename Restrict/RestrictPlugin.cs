@@ -52,7 +52,6 @@ namespace RestrictPlugin
 			get { return properties.getValue ("server-id", "tdsm"); }
 		}
 
-
         public Node ChestBreak;
         public Node ChestOpen;
         public Node DoorChange;

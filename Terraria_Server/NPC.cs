@@ -11725,6 +11725,7 @@ namespace Terraria_Server
             Main.npcs[npcIndex].homeTileY = (int)Spawn.Y;
             Main.npcs[npcIndex].direction = 1;
             Main.npcs[npcIndex].homeless = true;
+            //Main.npcs[npcIndex].dontTakeDamage = true;
 
             ProgramLog.Debug.Log(
                 String.Format("{0} spawned at {1},{2}.", Statics.TDCM_QUEST_GIVER, Spawn.X, Spawn.Y)

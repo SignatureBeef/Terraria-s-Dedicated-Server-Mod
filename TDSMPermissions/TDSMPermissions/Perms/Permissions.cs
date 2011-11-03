@@ -126,7 +126,14 @@ namespace TDSMPermissions.Perms
                         }
                         currentUser.group.Add(group.Name);
                         if (!users.ContainsKey(currentUserName))
-                            users.Add(currentUserName, currentUser);
+                        {
+                            string[] sUsers = currentUserName.Split(',');
+
+                            foreach (string usr in sUsers)
+                            {
+                                users.Add(usr, currentUser);
+                            }
+                        }
                     }
                 }
             }
