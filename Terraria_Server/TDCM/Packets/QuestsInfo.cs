@@ -22,7 +22,6 @@ namespace Terraria_Server.TDCM.Packets
 
         public override void Process(ClientConnection conn,  byte[] readBuffer, int length, int num)
         {
-            //TODO Fix me then update, I fucked it. :)
             QNPC_Types qType    = (QNPC_Types)readBuffer[num++];
             int QuestID         = readBuffer[num++];
             if (QuestID == 255)
@@ -50,7 +49,7 @@ namespace Terraria_Server.TDCM.Packets
                 return;
             }
 
-            if(QuestID > (int)QuestType.QUESTS_END || QuestID <= (int)QuestType.NO_QUEST)
+            if(QuestID > (int)QuestType.QUESTS_END || QuestID < (int)QuestType.NO_QUEST)
             {
                 conn.Kick("Uknown Quest ID.");
                 return;
