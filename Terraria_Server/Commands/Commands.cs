@@ -1369,5 +1369,17 @@ namespace Terraria_Server.Commands
             string message = String.Format("RPG Mode is now {0} on this server:", (Server.AllowTDCMRPG) ? "allowed" : "refused");
             Server.notifyOps(message);
         }
+
+        public static void SpawnQuestGiver(ISender sender, ArgumentList args)
+        {
+            if (!Server.AllowTDCMRPG)
+                throw new CommandError("You cannot spawn the Quest Giver without allowing TDCM Clients!");
+
+            int npcId;
+            if (NPC.TryFindNPCByName(Statics.TDCM_QUEST_GIVER, out npcId))
+                throw new CommandError("The Quest Giver is already spawned!");
+
+            NPC.SpawnTDCMQuestGiver();
+        }
     }
 }

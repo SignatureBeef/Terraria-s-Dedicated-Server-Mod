@@ -454,7 +454,7 @@ namespace Terraria_Server.Commands
                 .WithDescription ("Redownload the area around you from the server.")
                 .WithHelpText("Usage:    refresh")
                 .WithPermissionNode("tdsm.refresh")
-                .Calls (Commands.Refresh);
+                .Calls(Commands.Refresh);
 
             AddCommand("rpg")
                 .WithAccessLevel(AccessLevel.OP)
@@ -462,6 +462,13 @@ namespace Terraria_Server.Commands
                 .WithHelpText("Usage:    rpg")
                 .WithPermissionNode("tdsm.rpg")
                 .Calls(Commands.ToggleRPGClients);
+
+            AddCommand("spawngiver")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Spawn a TDCM Quest Giver.")
+                .WithHelpText("Usage:    spawngiver")
+                .WithPermissionNode("tdsm.spawngiver")
+                .Calls(Commands.SpawnQuestGiver);
         }
        
         public readonly Dictionary<String, CommandInfo> serverCommands;

@@ -54,7 +54,7 @@ namespace Terraria_Server.TDCM.Packets
                 else if (type >= QuestType.DARK_MAGE_1 && type < QuestType.PALADIN_1)
                     CheckQuest(QuestNPCNames.DARK_MAGE, player, type);
                 else if (type >= QuestType.PALADIN_1 && type < QuestType.QUESTS_END)
-                    CheckQuest(QuestNPCNames.DARK_MAGE, player, type);
+                    CheckQuest(QuestNPCNames.PALADIN, player, type);
                 else
                     player.Kick("TDCM Quest Packet Forgery.");
             }
