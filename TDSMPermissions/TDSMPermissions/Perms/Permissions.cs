@@ -185,9 +185,14 @@ namespace TDSMPermissions.Perms
 
             WaitNext(sc, "default");
 
-            Default = Convert.ToBoolean(GetNextToken(sc));
-            //if (Default)
-            //    defaultGroup = currentGroup.Name;
+			try
+			{
+				Default = Convert.ToBoolean(GetNextToken(sc));
+			}
+			catch
+			{
+				Default = false;
+			}
 
             WaitNext(sc, "prefix");
             Prefix = GetNextToken(sc);
@@ -200,7 +205,14 @@ namespace TDSMPermissions.Perms
 
             WaitNext(sc, "build");
             string RE = GetNextToken(sc);
-            CanBuild = Convert.ToBoolean(RE);
+			try
+			{
+				CanBuild = Convert.ToBoolean(RE);
+			}
+			catch
+			{
+				CanBuild = true;
+			}
 
             while (sc.TokenText != "color")
             {
