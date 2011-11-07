@@ -112,6 +112,9 @@ namespace Terraria_Server.Plugins
 		internal int currentlyPaused;
 		internal ManualResetEvent pauseSignal;
 		
+		[ThreadStatic]
+		internal static bool threadInHook;
+		
 		internal protected static object editLock = new object(); //we use it recursively
 		
 		internal void Pause (ManualResetEvent signal) //.Set() the signal to unpause
@@ -294,6 +297,8 @@ namespace Terraria_Server.Plugins
 			
 			try
 			{
+				threadInHook = true;
+				
 				for (int i = 0; i < len; i++)
 				{
 					if (hooks[i].plugin.IsEnabled)
@@ -316,6 +321,8 @@ namespace Terraria_Server.Plugins
 			}
 			finally
 			{
+				threadInHook = false;
+				
 				if (locked)
 					Interlocked.Decrement (ref currentlyExecuting);
 			}

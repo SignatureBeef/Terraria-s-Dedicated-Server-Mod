@@ -1981,7 +1981,10 @@ namespace Terraria_Server.WorldMod
 			int num2 = 0;
 			if (WorldModify.genRand.Next(40) == 0)
 			{
-				num2 = WorldModify.genRand.Next((int)(Main.rockLayer + (double)Main.maxTilesY) / 2, Main.maxTilesY - 20);
+				var start = (int)(Main.rockLayer + (double)Main.maxTilesY) / 2;
+				var end = Main.maxTilesY - 20;
+				if (end >= start)
+					num2 = WorldModify.genRand.Next(start, end);
 			}
 			else if (WorldModify.genRand.Next(10) == 0)
 			{
