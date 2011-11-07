@@ -6,6 +6,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Plugins;
 using Terraria_Server.Definitions.Tile;
 using Terraria_Server.WorldMod;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
@@ -15,7 +16,10 @@ namespace Terraria_Server.Messages
         {
             return Packet.TILE_BREAK;
         }
-
+		
+		
+		static SandboxEditor<PlayerSandbox> staticEditor = new SandboxEditor<PlayerSandbox> (new PlayerSandbox ());
+		
         public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             var slot = NetPlay.slots[whoAmI];
@@ -36,119 +40,151 @@ namespace Terraria_Server.Messages
 				return;
 			}
 			
-			var player = Main.players[whoAmI];
-			
-			var ctx = new HookContext
+			if (! NetPlay.slots[whoAmI].tileSection[NetPlay.GetSectionX(x), NetPlay.GetSectionY(y)])
 			{
-				Connection = NetPlay.slots[whoAmI].conn,
-				Sender = player,
-				Player = player,
-			};
-			
-			var args = new HookArgs.PlayerWorldAlteration
-			{
-				X = x, Y = y,
-				Action = tileAction,
-				Type = tileType,
-				Style = style,
-			};
-			
-			HookPoints.PlayerWorldAlteration.Invoke (ref ctx, ref args);
-			
-			if (ctx.CheckForKick ())
-				return;
-				
-			if (ctx.Result == HookResult.IGNORE)
-				return;
-			
-			if (ctx.Result == HookResult.RECTIFY)
-			{
-				NetMessage.SendTileSquare(whoAmI, x, y, 1); // FIXME
+				ProgramLog.Debug.Log ("{0} @ {1}: {2} attempted to alter world in unloaded tile.");
 				return;
 			}
 			
-			if (! args.TypeChecked)
-			{
-				switch (tileAction)
-				{
-					case 1:
-					case 4:
-						if (tileType >= Main.MAX_TILE_SETS)
-						{
-							slot.Kick ("Invalid tile type received from client.");
-							return;
-						}
-						break;
-					
-					case 3:
-						if (tileType >= Main.MAX_WALL_SETS)
-						{
-							slot.Kick ("Invalid wall type received from client.");
-							return;
-						}
-						break;
-				}
-			}
-			
-			if (!failFlag)
-			{
-				if (tileAction == 0 || tileAction == 2 || tileAction == 4)
-				{
-					NetPlay.slots[whoAmI].spamDelBlock += 1f;
-				}
-				else if (tileAction == 1 || tileAction == 3)
-				{
-					NetPlay.slots[whoAmI].spamAddBlock += 1f;
-				}
-			}
-
-			if (!NetPlay.slots[whoAmI].tileSection[NetPlay.GetSectionX(x), NetPlay.GetSectionY(y)])
-			{
-				failFlag = true;
-			}
+			var editor = staticEditor; //new SandboxEditor<PlayerSandbox> ();
+			var sandbox = editor.Sandbox;
 			
 			lock (WorldModify.playerEditLock)
 			{
+				sandbox.Initialize ();
+				var player = Main.players[whoAmI];
+				
 				switch (tileAction)
 				{
 					case 0:
-						WorldModify.KillTile(x, y, failFlag, false, false);
+						editor.KillTile(x, y, failFlag, false, false);
 						break;
 						
 					case 1:
-						if (WorldModify.PlaceTile(x, y, (int)tileType, false, true, whoAmI, style))
+						
+						if (editor.PlaceTile (x, y, (int)tileType, false, false, whoAmI, style))
 						{
 							if (tileType == 15 && player.direction == 1)
 							{
-								Main.tile.At(x, y).AddFrameX (18);
-								Main.tile.At(x, y - 1).AddFrameX (18);
+								sandbox.SetFrameXAt (x, y, (short)(sandbox.FrameXAt (x, y) + 18));
+								sandbox.SetFrameXAt (x, y - 1, (short)(sandbox.FrameXAt (x, y - 1) + 18));
 							}
 							else if (tileType == 106)
 							{
-								WorldModify.SquareTileFrame (x, y, true);
+								editor.SquareTileFrame (x, y, true);
 							}
 						}
+
 						break;
 						
 					case 2:
-						WorldModify.KillWall(x, y, failFlag);
+						editor.KillWall(x, y, failFlag);
 						break;
 						
 					case 3:
-						WorldModify.PlaceWall(x, y, (int)tileType, false);
+						editor.PlaceWall(x, y, (int)tileType, false);
 						break;
 						
 					case 4:
-						WorldModify.KillTile(x, y, failFlag, false, true);
+						editor.KillTile(x, y, failFlag, false, true);
 						break;
 				}
+				
+//				if (sandbox.ChangedTileCount == 0)
+//					return;
+				
+				var ctx = new HookContext
+				{
+					Connection = NetPlay.slots[whoAmI].conn,
+					Sender = player,
+					Player = player,
+				};
+				
+				var args = new HookArgs.PlayerWorldAlteration
+				{
+					X = x, Y = y,
+					Action = tileAction,
+					Type = tileType,
+					Style = style,
+					Sandbox = sandbox,
+				};
+				
+				HookPoints.PlayerWorldAlteration.Invoke (ref ctx, ref args);
+				
+				if (ctx.CheckForKick ())
+					return;
+					
+				if (ctx.Result == HookResult.IGNORE)
+					return;
+				
+				if (ctx.Result != HookResult.RECTIFY)
+				{
+					if (! args.TypeChecked)
+					{
+						switch (tileAction)
+						{
+							case 1:
+							case 4:
+								if (tileType >= Main.MAX_TILE_SETS)
+								{
+									slot.Kick ("Invalid tile type received from client.");
+									return;
+								}
+								break;
+							
+							case 3:
+								if (tileType >= Main.MAX_WALL_SETS)
+								{
+									slot.Kick ("Invalid wall type received from client.");
+									return;
+								}
+								break;
+						}
+					}
+					
+					if (!failFlag)
+					{
+						if (tileAction == 0 || tileAction == 2 || tileAction == 4)
+						{
+							NetPlay.slots[whoAmI].spamDelBlock += 1f;
+						}
+						else if (tileAction == 1 || tileAction == 3)
+						{
+							NetPlay.slots[whoAmI].spamAddBlock += 1f;
+						}
+					}
+					
+					NetMessage.SendData(17, -1, whoAmI, "", (int)tileAction, (float)x, (float)y, (float)tileType, style);
+					
+					sandbox.Apply ();
+					
+					return;
+				}
+				
+				lock (player.rowsToRectify)
+				{
+					foreach (var kv in sandbox.changedRows)
+					{
+						int y0 = kv.Key;
+						var x1 = kv.Value.Min;
+						var x2 = kv.Value.Max;
+						uint row;
+						if (player.rowsToRectify.TryGetValue ((ushort) y0, out row))
+						{
+							player.rowsToRectify[(ushort) y0] = (uint) (Math.Min (x1, row >> 16) << 16) | (uint) (Math.Max (x2, row & 0xffff));
+						}
+						else
+						{
+							player.rowsToRectify[(ushort) y0] = (uint) (x1 << 16) | (uint) x2;
+						}
+					}
+				}
 			}
-
-            NetMessage.SendData(17, -1, whoAmI, "", (int)tileAction, (float)x, (float)y, (float)tileType, style);
-            if (tileAction == 1 && tileType == 53)
-            {
-                NetMessage.SendTileSquare(-1, x, y, 1);
-            }
+			
+//            if (tileAction == 1 && tileType == 53)
+//            {
+//                NetMessage.SendTileSquare(-1, x, y, 1);
+//            }
         }
     }
 }

@@ -1,4 +1,4 @@
-
+using System.Threading;
 using System.Diagnostics;
 using System;
 using System.Text;
@@ -487,6 +487,88 @@ namespace Terraria_Server
                 //NetMessage.SyncPlayers();
                 Main.NetplayCounter = 0;
             }
+			if (Main.NetplayCounter % 30 == 0)
+			{
+				for (int i = 0; i < 255; i++)
+				{
+					var player = Main.players[i];
+					var rows = player.rowsToRectify;
+					if (player.Active && rows.Count > 0)
+					{
+						bool locked = false;
+						try
+						{
+							locked = Monitor.TryEnter (rows);
+							if (!locked)
+							{
+								//ProgramLog.Debug.Log ("not acquired!");
+								continue;
+							}
+							
+							var conn = player.Connection;
+							if (conn == null) continue;
+							
+							int Y1 = int.MaxValue;
+							int Y2 = 0;
+							int X1 = int.MaxValue;
+							int X2 = 0;
+							
+							var msg = NetMessage.PrepareThreadInstance ();
+							bool warn = false;
+							
+							if (rows.Count <= 150)
+							{
+								foreach (var kv in rows)
+								{
+									var y = kv.Key;
+									var x1 = (int) (kv.Value >> 16);
+									var x2 = (int) (kv.Value & 0xffff);
+									
+									if (x1 > x2) continue;
+									
+									var len = x2 - x1 + 1;
+									
+									if (len > 200)
+									{
+										warn = true;
+										break;
+									}
+									
+									if (y < Y1) Y1 = y;
+									if (y > Y2) Y2 = y;
+									if (x1 < X1) X1 = x1;
+									if (x2 > X2) X2 = x2;
+									
+									if (conn.CompressionVersion == 1)
+										msg.TileRowCompressed (len, x1, y);
+									else
+										msg.SendTileRow (len, x1, y);
+								}
+							}
+							else
+								warn = true;
+							
+							rows.Clear ();
+							
+							if (warn)
+							{
+								msg.Clear ();
+								msg.PlayerChat (255, "<Server> Your view of the map is out of sync.", 255, 128, 128);
+								msg.Send (conn);
+							}
+							else if (msg.Written > 0)
+							{
+								msg.SendTileConfirm (X1 / 200, Y1 / 150, X2 / 200, Y2 / 150);
+								msg.Send (conn);
+							}
+						}
+						finally
+						{
+							if (locked) Monitor.Exit (rows);
+						}
+					}
+				}
+			}
             for (int i = 0; i < 255; i++)
             {
                 if (Main.players[i].Active && NetPlay.slots[i].state >= SlotState.CONNECTED)
