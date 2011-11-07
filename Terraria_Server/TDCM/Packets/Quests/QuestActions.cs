@@ -122,8 +122,8 @@ namespace Terraria_Server.TDCM.Packets.Quests
                 Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
                 int mHeadId = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), (int)NPCType.N23_METEOR_HEAD);
 
-                Main.npcs[mHeadId].damage = Main.npcs[mHeadId].damage / 2;
-                Main.npcs[mHeadId].target = player.whoAmi;
+                //Main.npcs[mHeadId].damage = Main.npcs[mHeadId].damage / 2;
+                //Main.npcs[mHeadId].target = player.whoAmi;
 
                 NetMessage.SendData(Packet.CLIENT_MOD_SPAWN_NPC, player.whoAmi, -1, "", mHeadId);
             }
