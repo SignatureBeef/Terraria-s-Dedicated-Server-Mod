@@ -289,11 +289,11 @@ namespace TDSMPermissions.Perms
                     }
                 }
 
-                bool toggle = !sc.TokenText.Contains("-");
+                bool toggle = !(sc.TokenText[0] == '-');
                 string tokenText = sc.TokenText;
 
-                //if (toggle)
-                //    tokenText = sc.TokenText.Substring(1, sc.TokenText.Length - 1);
+                if (!toggle)
+                    tokenText = sc.TokenText.Trim('-');
 
                 if (!inUsers)
                 {
