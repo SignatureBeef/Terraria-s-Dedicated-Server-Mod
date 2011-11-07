@@ -159,10 +159,14 @@ namespace TDSMPermissions.Perms
             }
         }
 
-        public static void WaitNext(YamlScanner sc, string node)
+        public static bool WaitNext(YamlScanner sc, string node)
         {
-            while (sc.TokenText != node && sc.Token != Token.EndOfStream)
+            while (sc.TokenText != node && sc.Token != Token.EndOfStream && sc.Token != Token.Outdent)
                 sc.NextToken();
+			if (sc.Token == Token.Outdent)
+				return false;
+			else
+				return true;
         }
 
         public const string CrLf = "\r\n";
@@ -176,42 +180,49 @@ namespace TDSMPermissions.Perms
 
         public static void ProcessInfo()
         {
-            bool Default;
-            bool CanBuild;
-            string Prefix;
-            string Suffix;
-            string Seperator;
+            bool Default = false;
+            bool CanBuild = false;
+            string Prefix = "";
+            string Suffix = "";
+            string Seperator = "";
             Color color = default(Color);
 
-            WaitNext(sc, "default");
-
-			try
+			if (WaitNext(sc, "default"))
 			{
-				Default = Convert.ToBoolean(GetNextToken(sc));
+				try
+				{
+					Default = Convert.ToBoolean(GetNextToken(sc));
+				}
+				catch
+				{
+				}
 			}
-			catch
+
+			if (WaitNext(sc, "prefix"))
 			{
-				Default = false;
+				Prefix = GetNextToken(sc);
 			}
 
-            WaitNext(sc, "prefix");
-            Prefix = GetNextToken(sc);
-
-            WaitNext(sc, "suffix");
-            Suffix = GetNextToken(sc);
-
-            WaitNext(sc, "seperator");
-            Seperator = GetNextToken(sc);
-
-            WaitNext(sc, "build");
-            string RE = GetNextToken(sc);
-			try
+			if (WaitNext(sc, "suffix"))
 			{
-				CanBuild = Convert.ToBoolean(RE);
+				Suffix = GetNextToken(sc);
 			}
-			catch
+
+			if (WaitNext(sc, "seperator"))
 			{
-				CanBuild = true;
+				Seperator = GetNextToken(sc);
+			}
+
+			if (WaitNext(sc, "build"))
+			{
+				string RE = GetNextToken(sc);
+				try
+				{
+					CanBuild = Convert.ToBoolean(RE);
+				}
+				catch
+				{
+				}
 			}
 
             while (sc.TokenText != "color")
