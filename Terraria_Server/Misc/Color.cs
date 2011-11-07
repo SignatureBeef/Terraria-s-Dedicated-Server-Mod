@@ -1,32 +1,22 @@
 ﻿
 namespace Terraria_Server.Misc
 {
-    public struct Color // TODO: change fields to bytes, delete A
+    public struct Color
     {
-        public int R;
-        public int G;
-        public int B;
-        public int A;
+        public byte R;
+        public byte G;
+        public byte B;
 
         public Color(int r, int g, int b)
         {
-            this.R = r;
-            this.G = g;
-            this.B = b;
-            this.A = 0;
-        }
-
-        public Color(int r, int g, int b, int a)
-        {
-            this.R = r;
-            this.G = g;
-            this.B = b;
-            this.A = a;
+            this.R = (byte)r;
+            this.G = (byte)g;
+            this.B = (byte)b;
         }
         
 		public static bool TryParseRGB (string rgb, out Color color)
 		{
-			color = new Color (255, 255, 255, 255);
+			color = new Color (255, 255, 255);
 			
 			if (rgb.Length == 7 && rgb[0] == '#')
 			{
@@ -47,9 +37,9 @@ namespace Terraria_Server.Misc
 					shift += 4;
 				}
 				
-				color.R = val >> 16;
-				color.G = (val >> 8) & 0xff;
-				color.B = val & 0xff;
+				color.R = (byte)(val >> 16);
+				color.G = (byte)((val >> 8) & 0xff);
+                color.B = (byte)(val & 0xff);
 				
 				return true;
 			}
@@ -59,19 +49,42 @@ namespace Terraria_Server.Misc
 				
 				if (split.Length != 3) return false;
 				
-				if (! int.TryParse (split[0], out color.R))
-					return false;
-					
-				if (! int.TryParse (split[1], out color.G))
+				if (! byte.TryParse (split[0], out color.R))
 					return false;
 
-				if (! int.TryParse (split[2], out color.B))
+                if (! byte.TryParse(split[1], out color.G))
+					return false;
+
+                if (! byte.TryParse(split[2], out color.B))
 					return false;
 				
 				return true;
 			}
-			return false;
 		}
 
+        public override string ToString()
+        {
+            return "{R:" + R + " G:" + G + " B:" + B + "}";
+        }
+
+        public static bool operator !=(Color color1, Color color2)
+        {
+            return (color1.B != color2.B || color1.G != color2.G || color1.R != color2.R);
+        }
+
+        public static bool operator ==(Color color1, Color color2)
+        {
+            return (color1.B == color2.B && color1.G == color2.G && color1.R == color2.R);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

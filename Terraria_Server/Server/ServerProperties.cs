@@ -9,6 +9,7 @@ namespace Terraria_Server
     {
 #region Default Values
         private const bool      DEFAULT_ALLOW_EXPLOSIONS        = true;
+        private const bool      DEFAULT_ALLOW_TDCMRPG           = true;
         private const bool      DEFAULT_AUTOMATIC_UPDATES       = false;
         private const bool      DEFAULT_BUFFER_LIQUID_UPDATES   = false;
         private const int       DEFAULT_EXIT_USERS              = -1;
@@ -41,6 +42,7 @@ namespace Terraria_Server
 
 #region Key Values
         private const string    ALLOW_EXPLOSIONS                = "explosions";
+        private const string    ALLOW_TDCMRPG                   = "allow-tdcmrpg";
         private const string    AUTOMATIC_UPDATES               = "allowupdates";
         private const string    BUFFER_LIQUID_UPDATES           = "buffer-liquid-updates";
         private const string    EXIT_USERS                      = "exitaccesslevel";
@@ -83,6 +85,7 @@ namespace Terraria_Server
         {
             object temp = null;
             temp = AllowExplosions;
+            temp = AllowTDCMRPG;
             temp = AutomaticUpdates;
             temp = BufferLiquidUpdates;
             temp = DungeonAmount;
@@ -537,6 +540,12 @@ namespace Terraria_Server
         {
             get { return getValue(EXIT_USERS, DEFAULT_EXIT_USERS); }
             set { setValue(EXIT_USERS, value); }
+        }
+
+        public bool AllowTDCMRPG
+        {
+            get { return getValue(ALLOW_TDCMRPG, DEFAULT_ALLOW_TDCMRPG); }
+            set { setValue(ALLOW_TDCMRPG, value); }
         }
     }
 }

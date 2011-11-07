@@ -13,19 +13,15 @@ namespace TDSMPlugin.Commands
     {
         public static void ExampleCommand(ISender sender, ArgumentList args)
         {
-            int arg;
+            TDSM_Plugin MyPlugin = (TDSM_Plugin)args.Plugin; //Get the plugin object who's assigned to the "tdsmpluginexample"
+            
             //if the user enters /tdsmpluginexample -test 1, it will retreive the next value '1' and put into 'arg' as an integer.
-            if (args.TryParseOne<int>("-test", out arg)) 
-            {
+            int arg;
+            if (args.TryParseOne<int>("-test", out arg))
                 sender.sendMessage(sender.Name + " Argument: " + arg);
-                sender.sendMessage(
-                        String.Join("    {0} v{1}", TDSM_Plugin.tdsmPlugin.Name, TDSM_Plugin.tdsmPlugin.Version)
-                    );
-            }
             else
             {
-                //For new people, I would not really expect you to understand the following.
-                //If needed I can simplify this down...
+                //For new people to .NET, I would not really expect you to understand everything just yet.
                 string Platform = Terraria_Server.Definitions.Platform.Type.ToString();
                 switch (Terraria_Server.Definitions.Platform.Type)
                 {
@@ -39,6 +35,7 @@ namespace TDSMPlugin.Commands
                         Platform = "Windows";
                         break;
                 }
+
                 (sender as Player).sendMessage("TDSM Plugin Example, Running OS: " + Platform, ChatColor.DarkGreen);
             }                
         }

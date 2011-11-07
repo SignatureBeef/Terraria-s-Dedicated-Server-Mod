@@ -9,14 +9,14 @@ namespace Regions.RegionWork
 {
     public class Selection
     {
-        public static Dictionary<String, Vector2[]> selectionPlayers = new Dictionary<String, Vector2[]>();
+        public Dictionary<String, Vector2[]> selectionPlayers = new Dictionary<String, Vector2[]>();
 
-        public static bool isInSelectionlist(Player player)
+        public bool isInSelectionlist(Player player)
         {
             return selectionPlayers.ContainsKey(player.Name);
         }
 
-        public static Vector2[] GetSelection(Player player)
+        public Vector2[] GetSelection(Player player)
         {
             Vector2[] selections = null;
             if (isInSelectionlist(player) && selectionPlayers.TryGetValue(player.Name, out selections))
@@ -25,7 +25,7 @@ namespace Regions.RegionWork
                 return null;
         }
 
-        public static void SetSelection(Player player, Vector2[] selection)
+        public void SetSelection(Player player, Vector2[] selection)
         {
             if (isInSelectionlist(player))
                 selectionPlayers.Remove(player.Name);
@@ -33,5 +33,10 @@ namespace Regions.RegionWork
             selectionPlayers.Add(player.Name, selection);
         }
 
+        public void RemovePlayer(Player player)
+        {
+            if (isInSelectionlist(player))
+                selectionPlayers.Remove(player.Name);
+        }
     }
 }

@@ -184,11 +184,23 @@ namespace Terraria_Server.Messages
 				ProgramLog.Debug.Log ("Repossessing projectile ({0}, {1}, {2}, {3}).", vX, vY, ai0, ai1);
 #endif
 				// transfer ownership
-				var msg = NetMessage.PrepareThreadInstance ();
-				msg.EraseProjectile (projectileIdentity, projectileOwner);
-				projectile.Repossess ();
-				msg.Projectile (projectile);
-				msg.Send (whoAmI);
+                //var msg = NetMessage.PrepareThreadInstance ();
+                //msg.EraseProjectile (projectileIdentity, projectileOwner);
+                //projectile.Repossess ();
+                //msg.Projectile (projectile);
+                //msg.Send (whoAmI);
+
+                /* temp, Until Repossessing is complete, At the moment if killed by a repossessed projectile
+                 * the client wont be killed, the death text will fire once, thereafter they cannot 
+                 * be killed via explosives. */
+                if (Server.RejectedItems.Contains(args.TypeByte.ToString()) || 
+                    Server.RejectedItems.Contains(projectile.Name) ||
+                    !Program.properties.AllowExplosions)
+                {
+                    var msg = NetMessage.PrepareThreadInstance();
+                    msg.EraseProjectile(projectileIdentity, projectileOwner);
+                    msg.Send(whoAmI);
+                }
 			}
 			
 //            int projectileIndex = getProjectileIndex(projectileOwner, projectileIdentity);

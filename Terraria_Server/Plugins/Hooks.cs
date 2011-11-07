@@ -16,8 +16,12 @@ namespace Terraria_Server.Plugins
 	public static class HookPoints
 	{
 		public static readonly HookPoint<HookArgs.NewConnection>             NewConnection;
-		
+
+		public static readonly HookPoint<HookArgs.ServerStateChange>         ServerStateChange;
+        public static readonly HookPoint<HookArgs.ConsoleMessageReceived>    ConsoleMessageReceived;
 		public static readonly HookPoint<HookArgs.PluginLoadRequest>         PluginLoadRequest;
+        public static readonly HookPoint<HookArgs.UnkownSendPacket>          UnkownSendPacket;
+        public static readonly HookPoint<HookArgs.UnkownReceivedPacket>      UnkownReceivedPacket;
 		
 		public static readonly HookPoint<HookArgs.ConnectionRequestReceived> ConnectionRequestReceived;
 		public static readonly HookPoint<HookArgs.DisconnectReceived>        DisconnectReceived;
@@ -27,6 +31,7 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.StateUpdateReceived>       StateUpdateReceived;
 		public static readonly HookPoint<HookArgs.InventoryItemReceived>     InventoryItemReceived;
 		public static readonly HookPoint<HookArgs.ObituaryReceived>          ObituaryReceived;
+		public static readonly HookPoint<HookArgs.PlayerTeleport>            PlayerTeleport;
 		
 		public static readonly HookPoint<HookArgs.PlayerWorldAlteration>     PlayerWorldAlteration;
 		
@@ -65,6 +70,11 @@ namespace Terraria_Server.Plugins
 		
 		static HookPoints ()
 		{
+            UnkownReceivedPacket      = new HookPoint<HookArgs.UnkownReceivedPacket>("unkown-receive-packet");
+            UnkownSendPacket          = new HookPoint<HookArgs.UnkownSendPacket>("unkown-send-packet");
+			PlayerTeleport            = new HookPoint<HookArgs.PlayerTeleport> ("player-teleport");
+            ConsoleMessageReceived    = new HookPoint<HookArgs.ConsoleMessageReceived>("console-message-received");
+			ServerStateChange         = new HookPoint<HookArgs.ServerStateChange> ("server-state-change");
 			NewConnection             = new HookPoint<HookArgs.NewConnection> ("new-connection");
 			PluginLoadRequest         = new HookPoint<HookArgs.PluginLoadRequest> ("plugin-load-request");
 			ConnectionRequestReceived = new HookPoint<HookArgs.ConnectionRequestReceived> ("connection-request-received");
@@ -103,10 +113,47 @@ namespace Terraria_Server.Plugins
 	}
 	
 	public static class HookArgs
-	{
-		public struct NewConnection
-		{
-		}
+    {
+        public struct UnkownReceivedPacket
+        {
+            public ClientConnection Conn        { get; set; }
+            public byte[]           ReadBuffer  { get; set; }
+            public int              Start       { get; set; }
+            public int              Length      { get; set; }
+        }
+
+        public struct UnkownSendPacket
+        {
+            public NetMessage   Message         { get; set; }
+            public int          PacketId        { get; set; }
+            public int          RemoteClient    { get; set; }
+            public int          IgnoreClient    { get; set; }
+            public string       Text            { get; set; }
+            public int          Number          { get; set; }
+            public float        Number2         { get; set; }
+            public float        Number3         { get; set; }
+            public float        Number4         { get; set; }
+            public int          Number5         { get; set; }
+        }
+
+        public struct NewConnection
+        {
+        }
+
+        public struct ConsoleMessageReceived
+        {
+            public string Message { get; set; }
+        }
+
+        public struct ServerStateChange
+        {
+            public ServerState ServerChangeState { get; set; }
+        }
+
+        public struct PlayerTeleport
+        {
+            public Vector2  ToLocation  { get; set; }
+        }
 		
 		public struct PluginLoadRequest
 		{
@@ -187,6 +234,7 @@ namespace Terraria_Server.Plugins
 				player.shirtColor      = ShirtColor;
 				player.underShirtColor = UndershirtColor;
 				player.shoeColor       = ShoeColor;
+                player.pantsColor      = PantsColor;
 			}
 			
 			public static Color ParseColor (byte[] buf, int at)

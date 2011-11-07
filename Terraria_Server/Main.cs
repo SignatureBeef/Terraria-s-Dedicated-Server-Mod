@@ -35,7 +35,7 @@ namespace Terraria_Server
         public static bool stopSpawns = false;
 		public static bool ignoreErrors = true;
 		public static bool webProtect = false;
-		private static bool webAuth = false;
+		//private static bool webAuth = false;
 		public static float leftWorld = 0f;
 		public static float rightWorld = 134400f;
 		public static float topWorld = 0f;
@@ -44,8 +44,8 @@ namespace Terraria_Server
 		public static int maxTilesY = -1; //(int)Main.bottomWorld / 16 + 1;
 		public static int maxSectionsX = Main.maxTilesX / 200;
 		public static int maxSectionsY = Main.maxTilesY / 150;
-		[Obsolete("Replaced by SlotManager.MaxSlots")]
-		public static int maxNetplayers = 254;
+		//[Obsolete("Replaced by SlotManager.MaxSlots")]
+		//public static int maxNetplayers = 254;
 		public static int dungeonX;
 		public static int dungeonY;
 		public static Liquid[] liquid = new Liquid[Liquid.resLiquid];
@@ -973,39 +973,6 @@ namespace Terraria_Server
 				num = 1.0;
 			}
 			return num;
-		}
-		
-        public static void getAuth()
-		{
-			try
-			{
-                string requestUriString = "";
-				StringBuilder StringBuilder = new StringBuilder();
-				byte[] array = new byte[8192];
-				HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(requestUriString);
-				HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-				Stream responseStream = httpWebResponse.GetResponseStream();
-				int num;
-				do
-				{
-					num = responseStream.Read(array, 0, array.Length);
-					if (num != 0)
-					{
-                        string @String = Encoding.ASCII.GetString(array, 0, num);
-						StringBuilder.Append(@String);
-					}
-				}
-				while (num > 0);
-                string a = StringBuilder.ToString();
-				if (a == "")
-				{
-					Main.webAuth = true;
-				}
-			}
-			catch
-			{
-				
-			}
 		}
 
 		// these be locks

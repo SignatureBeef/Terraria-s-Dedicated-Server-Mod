@@ -12,16 +12,21 @@ using Terraria_Server.WorldMod;
 using System.Security.Policy;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugins;
+using Terraria_Server.Permissions;
 
 namespace Terraria_Server
 {
 	public class Program
-	{
+    {
+
+#pragma warning disable 618
+
         public const string VERSION_NUMBER = "v1.0.6.1";
 
 		public static ProgramThread updateThread = null;
 		public static ServerProperties properties = null;
 		public static CommandParser commandParser = null;
+		public static PermissionManager permissionManager = null;
 
         public static void Main(string[] args)
 		{
@@ -44,7 +49,7 @@ namespace Terraria_Server
 				System.Diagnostics.Trace.Listeners.Add (lis);
 				System.Diagnostics.Debug.Listeners.Clear ();
 				System.Diagnostics.Debug.Listeners.Add (lis);
-				
+
 				ProgramLog.Log ("Initializing " + MODInfo);
 
 				ProgramLog.Log ("Setting up Paths.");
@@ -139,6 +144,9 @@ namespace Terraria_Server
 				
 				ProgramLog.Log ("Starting remote console server");
 				RemoteConsole.RConServer.Start ("rcon_logins.properties");
+
+				ProgramLog.Log("Starting permissions manager");
+				permissionManager = new PermissionManager();
 				
 				ProgramLog.Log ("Preparing Server Data...");
 				
@@ -148,9 +156,24 @@ namespace Terraria_Server
 					Collections.Registries.NPC.Load (Collections.Registries.NPC_FILE);
 				using (var prog = new ProgressLogger (1, "Loading projectile definitions"))
 					Collections.Registries.Projectile.Load (Collections.Registries.PROJECTILE_FILE);
+                                
+                commandParser = new CommandParser();
+                commandParser.ReadPermissionNodes();
 				
 				ProgramLog.Log("Loading plugins...");
-				Terraria_Server.Plugins.PluginManager.Initialize (Statics.PluginPath, Statics.LibrariesPath);
+                Terraria_Server.Plugins.PluginManager.Initialize(Statics.PluginPath, Statics.LibrariesPath);
+
+                var ctx = new HookContext()
+                {
+                    Sender = new ConsoleSender()
+                };
+
+                var eArgs = new HookArgs.ServerStateChange()
+                {
+                    ServerChangeState = ServerState.INITIALIZING
+                };
+
+                HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
 				PluginManager.LoadPlugins ();
 				ProgramLog.Log("Plugins loaded: " + PluginManager.PluginCount);
 				
@@ -170,6 +193,19 @@ namespace Terraria_Server
 						Console.ReadKey(true);
 						return;
 					}
+
+                    ctx = new HookContext
+                    {
+                        Sender = new WorldSender(),
+                    };
+
+                    eArgs = new HookArgs.ServerStateChange
+                    {
+                        ServerChangeState = ServerState.GENERATING
+                    };
+
+                    HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
+
 					ProgramLog.Log ("Generating world '{0}'", worldFile);
 
                     string seed = properties.Seed;
@@ -219,6 +255,18 @@ namespace Terraria_Server
                     WorldGen.GenerateWorld(seed);
 					WorldIO.saveWorld(worldFile, true);
 				}
+                
+                ctx = new HookContext
+                {
+                    Sender = new WorldSender(),
+                };
+
+                eArgs = new HookArgs.ServerStateChange
+                {
+                    ServerChangeState = ServerState.LOADING
+                };
+
+                HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
 				
 				// TODO: read map size from world file instead of config
 				int worldXtiles = properties.GetMapSizes()[0];
@@ -262,6 +310,18 @@ namespace Terraria_Server
 				Terraria_Server.Main.maxSectionsY = worldYtiles / 150;
 
                 WorldIO.LoadWorld(Server.World.SavePath);
+                
+                ctx = new HookContext
+                {
+                    Sender = new WorldSender(),
+                };
+
+                eArgs = new HookArgs.ServerStateChange
+                {
+                    ServerChangeState = ServerState.LOADED
+                };
+
+                HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
 
 				updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
 
@@ -270,7 +330,6 @@ namespace Terraria_Server
 				
 				while (!NetPlay.ServerUp) { }
 
-                commandParser = new CommandParser();
 				ProgramLog.Console.Print ("You can now insert Commands.");
 
                 while (!Statics.Exit)
@@ -335,7 +394,7 @@ namespace Terraria_Server
 			RemoteConsole.RConServer.Stop ();
 		}
 
-		private static bool SetupPaths()
+        private static bool SetupPaths()
 		{
             try
             {
@@ -669,11 +728,8 @@ namespace Terraria_Server
 		{
 			try
 			{
-
                 if (Terraria_Server.Main.rand == null)
-				{
                     Terraria_Server.Main.rand = new Random((int)DateTime.Now.Ticks);
-				}
 				
 				bool hibernate = properties.StopUpdatesWhenEmpty;
 	
@@ -729,13 +785,11 @@ namespace Terraria_Server
 						stopwatch.Start();
 	
 						if (leftOver > 1000.0)
-						{
-							leftOver = 1000.0;
-						}
+                            leftOver = 1000.0;
+
 						if (NetPlay.anyClients || (hibernate == false))
-						{
                             Terraria_Server.Main.Update(stopwatch);
-						}
+
 						double num9 = (double)stopwatch.ElapsedMilliseconds + leftOver;
 						if (num9 < serverProcessAverage)
 						{

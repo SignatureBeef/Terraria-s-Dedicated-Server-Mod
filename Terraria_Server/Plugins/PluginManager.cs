@@ -21,8 +21,8 @@ namespace Terraria_Server.Plugins
 	{
 		private static string pluginPath = String.Empty;
 		private static string libraryPath = String.Empty;
-		private static Dictionary<String, BasePlugin> plugins;
-		
+
+		public static Dictionary<String, BasePlugin> plugins;		
 		public static int PluginCount { get { return plugins.Count; } }
 		
 		/// <summary>
@@ -119,8 +119,8 @@ namespace Terraria_Server.Plugins
 		/// <summary>
 		/// PluginManager class constructor
 		/// </summary>
-		/// <param name="pluginPath">Path to plugin directory</param>
-		/// <param name="libraryPath">Path to library directory</param>
+		/// <param name="_pluginPath">Path to plugin directory</param>
+		/// <param name="_libraryPath">Path to library directory</param>
 		public static void Initialize (string _pluginPath, string _libraryPath)
 		{
 			pluginPath = _pluginPath;
@@ -863,5 +863,40 @@ namespace Terraria_Server.Plugins
 				}
 			}
 		}
+
+        public static PluginLoadStatus LoadAndInitPlugin(string Path)
+        {
+            var rPlg = LoadPluginFromDLL(Path);
+
+            if (rPlg == null)
+            {
+                ProgramLog.Error.Log("Plugin failed to load!");
+                return PluginLoadStatus.FAIL_LOAD;
+            }
+
+            if (!rPlg.InitializeAndHookUp())
+            {
+                ProgramLog.Error.Log("Failed to initialize plugin.");
+                return PluginLoadStatus.FAIL_INIT;
+            }
+
+            plugins.Add(rPlg.Name.ToLower().Trim(), rPlg);
+
+            if (!rPlg.Enable())
+            {
+                ProgramLog.Error.Log("Failed to enable plugin.");
+                return PluginLoadStatus.FAIL_ENABLE;
+            }
+
+            return PluginLoadStatus.SUCCESS;
+        }
 	}
+}
+
+public enum PluginLoadStatus : int
+{
+    FAIL_ENABLE,
+    FAIL_INIT,
+    FAIL_LOAD,
+    SUCCESS
 }

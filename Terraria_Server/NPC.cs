@@ -7,6 +7,7 @@ using Terraria_Server.Commands;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
@@ -15,7 +16,9 @@ namespace Terraria_Server
 	/// </summary>
     public class NPC : BaseEntity, ISender
     {
-		
+        internal delegate void NPCSpawn(int npcId);
+        internal static event NPCSpawn NPCSpawnHandler;
+
 		bool ISender.Op
 		{
 			get { return false; }
@@ -4123,20 +4126,20 @@ namespace Terraria_Server
             }
             while (num == -1)
             {
-                int num2 = -1;
+                int buffId = -1;
                 for (int j = 0; j < 5; j++)
                 {
                     if (!Main.debuff[this.buffType[j]])
                     {
-                        num2 = j;
+                        buffId = j;
                         break;
                     }
                 }
-                if (num2 == -1)
+                if (buffId == -1)
                 {
                     return;
                 }
-                for (int k = num2; k < 5; k++)
+                for (int k = buffId; k < 5; k++)
                 {
                     if (this.buffType[k] == 0)
                     {
@@ -4146,7 +4149,7 @@ namespace Terraria_Server
                 }
                 if (num == -1)
                 {
-                    this.DelBuff(num2);
+                    this.DelBuff(buffId);
                 }
             }
             this.buffType[num] = type;
@@ -4964,8 +4967,8 @@ namespace Terraria_Server
 
             bool flag = false;
             bool flag2 = false;
-            int num = 0;
-            int num2 = 0;
+            int x = 0;
+            int y = 0;
             int num3 = 0;
             for (int i = 0; i < 255; i++)
             {
@@ -5174,8 +5177,8 @@ namespace Terraria_Server
                                 if (!flag3 && (double)num14 < Main.worldSurface * 0.30000001192092896 && !flag5 && ((double)num13 < (double)Main.maxTilesX * 0.35 || (double)num13 > (double)Main.maxTilesX * 0.65))
                                 {
                                     byte arg_986_0 = Main.tile.At(num13, num14).Type;
-                                    num = num13;
-                                    num2 = num14;
+                                    x = num13;
+                                    y = num14;
                                     flag = true;
                                     flag2 = true;
                                 }
@@ -5189,8 +5192,8 @@ namespace Terraria_Server
                                             if (num13 < num9 || num13 > num10 || l < num11 || l > num12)
                                             {
                                                 byte arg_9F4_0 = Main.tile.At(num13, l).Type;
-                                                num = num13;
-                                                num2 = l;
+                                                x = num13;
+                                                y = l;
                                                 flag = true;
                                                 break;
                                             }
@@ -5206,10 +5209,10 @@ namespace Terraria_Server
                                 {
                                     goto IL_ACE;
                                 }
-                                int num15 = num - NPC.spawnSpaceX / 2;
-                                int num16 = num + NPC.spawnSpaceX / 2;
-                                int num17 = num2 - NPC.spawnSpaceY;
-                                int num18 = num2;
+                                int num15 = x - NPC.spawnSpaceX / 2;
+                                int num16 = x + NPC.spawnSpaceX / 2;
+                                int num17 = y - NPC.spawnSpaceY;
+                                int num18 = y;
                                 if (num15 < 0)
                                 {
                                     flag = false;
@@ -5261,7 +5264,7 @@ namespace Terraria_Server
                     }
                     if (flag)
                     {
-                        Rectangle rectangle = new Rectangle(num * 16, num2 * 16, 16, 16);
+                        Rectangle rectangle = new Rectangle(x * 16, y * 16, 16, 16);
                         for (int num19 = 0; num19 < 255; num19++)
                         {
                             if (Main.players[num19].Active)
@@ -5276,11 +5279,11 @@ namespace Terraria_Server
                     }
                     if (flag)
                     {
-                        if (Main.players[j].zoneDungeon && (!Main.tileDungeon[(int)Main.tile.At(num, num2).Type] || Main.tile.At(num, num2 - 1).Wall == 0))
+                        if (Main.players[j].zoneDungeon && (!Main.tileDungeon[(int)Main.tile.At(x, y).Type] || Main.tile.At(x, y - 1).Wall == 0))
                         {
                             flag = false;
                         }
-                        if (Main.tile.At(num, num2 - 1).Liquid > 0 && Main.tile.At(num, num2 - 2).Liquid > 0 && !Main.tile.At(num, num2 - 1).Lava)
+                        if (Main.tile.At(x, y - 1).Liquid > 0 && Main.tile.At(x, y - 2).Liquid > 0 && !Main.tile.At(x, y - 1).Lava)
                         {
                             flag4 = true;
                         }
@@ -5288,70 +5291,70 @@ namespace Terraria_Server
                     if (flag)
                     {
                         flag = false;
-                        int num20 = (int)Main.tile.At(num, num2).Type;
+                        int num20 = (int)Main.tile.At(x, y).Type;
                         int npcIndex = 1000;
                         if (flag2)
                         {
-                            NPC.NewNPC(num * 16 + 8, num2 * 16, 48, 0);
+                            NPC.NewNPC(x * 16 + 8, y * 16, 48, 0);
                         }
                         else if (flag3)
                         {
                             if (Main.rand.Next(9) == 0)
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 29, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 29, 0);
                             }
                             else if (Main.rand.Next(5) == 0)
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 26, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 26, 0);
                             }
                             else if (Main.rand.Next(3) == 0)
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 27, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 27, 0);
                             }
                             else
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 28, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 28, 0);
                             }
                         }
-                        else if (flag4 && (num < 250 || num > Main.maxTilesX - 250) && num20 == 53 && (double)num2 < Main.rockLayer)
+                        else if (flag4 && (x < 250 || x > Main.maxTilesX - 250) && num20 == 53 && (double)y < Main.rockLayer)
                         {
                             if (Main.rand.Next(8) == 0)
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 65, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 65, 0);
                             }
                             if (Main.rand.Next(3) == 0)
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 67, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 67, 0);
                             }
                             else
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 64, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 64, 0);
                             }
                         }
-                        else if (flag4 && (((double)num2 > Main.rockLayer && Main.rand.Next(2) == 0) || num20 == 60))
+                        else if (flag4 && (((double)y > Main.rockLayer && Main.rand.Next(2) == 0) || num20 == 60))
                         {
-                            NPC.NewNPC(num * 16 + 8, num2 * 16, 58, 0);
+                            NPC.NewNPC(x * 16 + 8, y * 16, 58, 0);
                         }
-                        else if (flag4 && (double)num2 > Main.worldSurface && Main.rand.Next(3) == 0)
+                        else if (flag4 && (double)y > Main.worldSurface && Main.rand.Next(3) == 0)
                         {
-                            NPC.NewNPC(num * 16 + 8, num2 * 16, 63, 0);
+                            NPC.NewNPC(x * 16 + 8, y * 16, 63, 0);
                         }
                         else if (flag4 && Main.rand.Next(4) == 0)
                         {
                             if (Main.players[j].zoneEvil)
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 57, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 57, 0);
                             }
                             else
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 55, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 55, 0);
                             }
                         }
                         else if (flag5)
                         {
                             if (flag4)
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 55, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 55, 0);
                             }
                             else
                             {
@@ -5359,34 +5362,34 @@ namespace Terraria_Server
                                 {
                                     return;
                                 }
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 46, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 46, 0);
                             }
                         }
                         else if (Main.players[j].zoneDungeon)
                         {
                             if (!NPC.downedBoss3)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 68, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 68, 0);
                             }
                             else if (Main.rand.Next(43) == 0)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 71, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 71, 0);
                             }
-                            else if (Main.rand.Next(3) == 0 && !NPC.NearSpikeBall(num, num2))
+                            else if (Main.rand.Next(3) == 0 && !NPC.NearSpikeBall(x, y))
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 70, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 70, 0);
                             }
                             else if (Main.rand.Next(5) == 0)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 72, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 72, 0);
                             }
                             else if (Main.rand.Next(7) == 0)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 34, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 34, 0);
                             }
                             else if (Main.rand.Next(7) == 0)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 32, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 32, 0);
                             }
                             else
                             {
@@ -5395,28 +5398,28 @@ namespace Terraria_Server
                                     what = "Big Boned";
                                 else if (Main.rand.Next(5) == 0)
                                     what = "Short Bones";
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
                             }
                         }
                         else if (Main.players[j].zoneMeteor)
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 23, 0);
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 23, 0);
                         }
                         else if (Main.players[j].zoneEvil && Main.rand.Next(50) == 0)
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 7, 1);
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 7, 1);
                         }
                         else if (num20 == 60 && Main.rand.Next(500) == 0 && !Main.dayTime)
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 52, 0);
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 52, 0);
                         }
-                        else if (num20 == 60 && (double)num2 > (Main.worldSurface + Main.rockLayer) / 2.0)
+                        else if (num20 == 60 && (double)y > (Main.worldSurface + Main.rockLayer) / 2.0)
                         {
                             if (Main.rand.Next(3) == 0)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 43, 0);
-                                Main.npcs[npcIndex].ai[0] = (float)num;
-                                Main.npcs[npcIndex].ai[1] = (float)num2;
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 43, 0);
+                                Main.npcs[npcIndex].ai[0] = (float)x;
+                                Main.npcs[npcIndex].ai[1] = (float)y;
                                 Main.npcs[npcIndex].netUpdate = true;
                             }
                             else
@@ -5426,18 +5429,18 @@ namespace Terraria_Server
                                     what = "Little Stinger";
                                 else if (Main.rand.Next(4) == 0)
                                     what = "Big Stinger";
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
                             }
                         }
                         else if (num20 == 60 && Main.rand.Next(4) == 0)
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 51, 0);
                         }
                         else if (num20 == 60 && Main.rand.Next(8) == 0)
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 56, 0);
-                            Main.npcs[npcIndex].ai[0] = (float)num;
-                            Main.npcs[npcIndex].ai[1] = (float)num2;
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 56, 0);
+                            Main.npcs[npcIndex].ai[0] = (float)x;
+                            Main.npcs[npcIndex].ai[1] = (float)y;
                             Main.npcs[npcIndex].netUpdate = true;
                         }
                         else if ((num20 == 22 && Main.players[j].zoneEvil) || num20 == 23 || num20 == 25)
@@ -5447,32 +5450,32 @@ namespace Terraria_Server
                                 what = "Little Eater";
                             else if (Main.rand.Next(3) == 0)
                                 what = "Big Eater";
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
                         }
-                        else if ((double)num2 <= Main.worldSurface)
+                        else if ((double)y <= Main.worldSurface)
                         {
                             if (Main.dayTime)
                             {
-                                int num22 = Math.Abs(num - Main.spawnTileX);
+                                int num22 = Math.Abs(x - Main.spawnTileX);
                                 if (num22 < Main.maxTilesX / 3 && Main.rand.Next(10) == 0 && num20 == 2)
                                 {
-                                    NPC.NewNPC(num * 16 + 8, num2 * 16, 46, 0);
+                                    NPC.NewNPC(x * 16 + 8, y * 16, 46, 0);
                                 }
-                                else if (num22 > Main.maxTilesX / 3 && num20 == 2 && Main.rand.Next(300) == 0 && !NPC.AnyNPCs(50))
+                                else if (num22 > Main.maxTilesX / 3 && num20 == 2 && Main.rand.Next(300) == 0 && !NPC.IsNPCSummoned(50))
                                 {
-                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 50, 0);
+                                    npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 50, 0);
                                 }
                                 else if (num20 == 53 && Main.rand.Next(5) == 0 && !flag4)
                                 {
-                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 69, 0);
+                                    npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 69, 0);
                                 }
                                 else if (num20 == 53 && !flag4)
                                 {
-                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 61, 0);
+                                    npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 61, 0);
                                 }
                                 else if (num22 > Main.maxTilesX / 3 && Main.rand.Next(20) == 0)
 								{
-									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 73, 0);
+									npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 73, 0);
 								}
                                 else
                                 {
@@ -5483,27 +5486,27 @@ namespace Terraria_Server
 										what = "Green Slime";
 									else if (Main.rand.Next(10) == 0 && num22 > 400)
 										what = "Purple Slime";
-									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
+									npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
                                 }
                             }
                             else if (Main.rand.Next(6) == 0 || (Main.moonPhase == 4 && Main.rand.Next(2) == 0))
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 2, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 2, 0);
                             }
                             else if (Main.rand.Next(250) == 0 && Main.bloodMoon)
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 53, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 53, 0);
                             }
                             else
                             {
-                                NPC.NewNPC(num * 16 + 8, num2 * 16, 3, 0);
+                                NPC.NewNPC(x * 16 + 8, y * 16, 3, 0);
                             }
                         }
-                        else if ((double)num2 <= Main.rockLayer)
+                        else if ((double)y <= Main.rockLayer)
                         {
                             if (Main.rand.Next(50) == 0)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 10, 1);
                             }
                             else
                             {
@@ -5512,76 +5515,76 @@ namespace Terraria_Server
                                     what = "Yellow Slime";
                                 else if (Main.rand.Next(2) == 0)
                                     what = "Blue Slime";
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
                             }
                         }
-                        else if (num2 > Main.maxTilesY - 190)
+                        else if (y > Main.maxTilesY - 190)
                         {
-                            if (Main.rand.Next(40) == 0 && !NPC.AnyNPCs(39))
+                            if (Main.rand.Next(40) == 0 && !NPC.IsNPCSummoned(39))
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 39, 1);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 39, 1);
                             }
                             else if (Main.rand.Next(14) == 0)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 24, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 24, 0);
                             }
                             else if (Main.rand.Next(10) == 0)
                             {
                                 if (Main.rand.Next(10) == 0)
                                 {
-                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 66, 0);
+                                    npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 66, 0);
                                 }
                                 else
                                 {
-                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 62, 0);
+                                    npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 62, 0);
                                 }
                             }
                             else if (Main.rand.Next(3) == 0)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 59, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 59, 0);
                             }
                             else
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 60, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 60, 0);
                             }
                         }
                         else if (Main.rand.Next(55) == 0)
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 10, 1);
                         }
                         else if (Main.rand.Next(10) == 0)
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 16, 0);
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 16, 0);
                         }
                         else if (Main.rand.Next(4) == 0)
                         {
                             string what = "Black Slime";
                             if (Main.players[j].zoneJungle)
                                 what = "Jungle Slime";
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
                         }
                         else if (Main.rand.Next(2) == 0)
                         {
-                            if ((double)num2 > (Main.rockLayer + (double)Main.maxTilesY) / 2.0 && Main.rand.Next(700) == 0)
+                            if ((double)y > (Main.rockLayer + (double)Main.maxTilesY) / 2.0 && Main.rand.Next(700) == 0)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 45, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 45, 0);
                             }
                             else if (Main.rand.Next(15) == 0)
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 44, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 44, 0);
                             }
                             else
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 21, 0);
+                                npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 21, 0);
                             }
                         }
                         else if (Main.players[j].zoneJungle)
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 51, 0);
                         }
                         else
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 49, 0);
+                            npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 49, 0);
                         }
                         if (Main.npcs[npcIndex].type == NPCType.N01_BLUE_SLIME && Main.rand.Next(250) == 0)
                         {
@@ -5610,55 +5613,60 @@ namespace Terraria_Server
                 return;
 
             bool flag = false;
-            int num = 0;
-            int num2 = 0;
-            int num3 = (int)(player.Position.X / 16f) - NPC.spawnRangeX * 3;
-            int num4 = (int)(player.Position.X / 16f) + NPC.spawnRangeX * 3;
-            int num5 = (int)(player.Position.Y / 16f) - NPC.spawnRangeY * 3;
-            int num6 = (int)(player.Position.Y / 16f) + NPC.spawnRangeY * 3;
-            int num7 = (int)(player.Position.X / 16f) - NPC.safeRangeX;
-            int num8 = (int)(player.Position.X / 16f) + NPC.safeRangeX;
-            int num9 = (int)(player.Position.Y / 16f) - NPC.safeRangeY;
-            int num10 = (int)(player.Position.Y / 16f) + NPC.safeRangeY;
-            if (num3 < 0)
+            int x = 0;
+            int y = 0;
+            int minX = (int)(player.Position.X / 16f) - NPC.spawnRangeX * 3;
+            int maxX = (int)(player.Position.X / 16f) + NPC.spawnRangeX * 3;
+            int minY = (int)(player.Position.Y / 16f) - NPC.spawnRangeY * 3;
+            int maxY = (int)(player.Position.Y / 16f) + NPC.spawnRangeY * 3;
+            int xLeft = (int)(player.Position.X / 16f) - NPC.safeRangeX;
+            int xRight = (int)(player.Position.X / 16f) + NPC.safeRangeX;
+            int yLeft = (int)(player.Position.Y / 16f) - NPC.safeRangeY;
+            int yRight = (int)(player.Position.Y / 16f) + NPC.safeRangeY;
+            if (minX < 0)
             {
-                num3 = 0;
+                minX = 0;
             }
-            if (num4 >= Main.maxTilesX)
+            if (maxX >= Main.maxTilesX)
             {
-                num4 = Main.maxTilesX - 1;
+                maxX = Main.maxTilesX - 1;
             }
-            if (num5 < 0)
+            if (minY < 0)
             {
-                num5 = 0;
+                minY = 0;
             }
-            if (num6 >= Main.maxTilesY)
+            if (maxY >= Main.maxTilesY)
             {
-                num6 = Main.maxTilesY - 1;
+                maxY = Main.maxTilesY - 1;
             }
             for (int i = 0; i < 1000; i++)
             {
                 int j = 0;
                 while (j < 100)
                 {
-                    int num11 = Main.rand.Next(num3, num4);
-                    int num12 = Main.rand.Next(num5, num6);
-                    if (Main.tile.At(num11, num12).Active && Main.tileSolid[(int)Main.tile.At(num11, num12).Type])
+                    int tileX = Main.rand.Next(minX, maxX);
+                    int tileY = Main.rand.Next(minY, maxY);
+                    if (Main.tile.At(tileX, tileY).Active && Main.tileSolid[(int)Main.tile.At(tileX, tileY).Type])
                     {
-                        goto IL_2E1;
-                    }
-                    if (Main.tile.At(num11, num12).Wall != 1)
-                    {
-                        int k = num12;
-                        while (k < Main.maxTilesY)
+                        if (!flag && !flag)
                         {
-                            if (Main.tile.At(num11, k).Active && Main.tileSolid[(int)Main.tile.At(num11, k).Type])
+                            j++;
+                            continue;
+                        }
+                        break;
+                    }
+                    if (Main.tile.At(tileX, tileY).Wall != 1)
+                    {
+                        int yTile = tileY;
+                        while (yTile < Main.maxTilesY)
+                        {
+                            if (Main.tile.At(tileX, yTile).Active && Main.tileSolid[(int)Main.tile.At(tileX, yTile).Type])
                             {
-                                if (num11 < num7 || num11 > num8 || k < num9 || k > num10)
+                                if (tileX < xLeft || tileX > xRight || yTile < yLeft || yTile > yRight)
                                 {
-                                    byte arg_220_0 = Main.tile.At(num11, k).Type;
-                                    num = num11;
-                                    num2 = k;
+                                    //byte arg_220_0 = Main.tile.At(tileX, y).Type;
+                                    x = tileX;
+                                    y = yTile;
                                     flag = true;
                                     break;
                                 }
@@ -5666,38 +5674,43 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                k++;
+                                yTile++;
                             }
                         }
                         if (!flag)
                         {
-                            goto IL_2E1;
+                            if (!flag && !flag)
+                            {
+                                j++;
+                                continue;
+                            }
+                            break;
                         }
-                        int num13 = num - NPC.spawnSpaceX / 2;
-                        int num14 = num + NPC.spawnSpaceX / 2;
-                        int num15 = num2 - NPC.spawnSpaceY;
-                        int num16 = num2;
-                        if (num13 < 0)
+                        int spawnMinX = x - NPC.spawnSpaceX / 2;
+                        int spawnMaxX = x + NPC.spawnSpaceX / 2;
+                        int spawnMinY = y - NPC.spawnSpaceY;
+                        int spawnMaxY = y;
+                        if (spawnMinX < 0)
                         {
                             flag = false;
                         }
-                        if (num14 >= Main.maxTilesX)
+                        if (spawnMaxX >= Main.maxTilesX)
                         {
                             flag = false;
                         }
-                        if (num15 < 0)
+                        if (spawnMinY < 0)
                         {
                             flag = false;
                         }
-                        if (num16 >= Main.maxTilesY)
+                        if (spawnMaxY >= Main.maxTilesY)
                         {
                             flag = false;
                         }
                         if (flag)
                         {
-                            for (int l = num13; l < num14; l++)
+                            for (int l = spawnMinX; l < spawnMaxX; l++)
                             {
-                                for (int m = num15; m < num16; m++)
+                                for (int m = spawnMinY; m < spawnMaxY; m++)
                                 {
                                     if (Main.tile.At(l, m).Active && Main.tileSolid[(int)Main.tile.At(l, m).Type])
                                     {
@@ -5706,23 +5719,18 @@ namespace Terraria_Server
                                     }
                                 }
                             }
-                            goto IL_2E1;
                         }
-                        goto IL_2E1;
-                    }
-                IL_2E7:
-                    j++;
-                    continue;
-                IL_2E1:
-                    if (!flag && !flag)
-                    {
-                        goto IL_2E7;
-                    }
-                    break;
+                        if (!flag && !flag)
+                        {
+                            j++;
+                            continue;
+                        }
+                        break;
+                    }                    
                 }
                 if (flag)
                 {
-                    Rectangle rectangle = new Rectangle(num * 16, num2 * 16, 16, 16);
+                    Rectangle rectangle = new Rectangle(x * 16, y * 16, 16, 16);
                     for (int n = 0; n < 255; n++)
                     {
                         if (Main.players[n].Active)
@@ -5742,7 +5750,7 @@ namespace Terraria_Server
             }
             if (flag)
             {
-                int npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
+                int npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, Type, 1);
                 Main.npcs[npcIndex].target = playerIndex;
                 string str = Main.npcs[npcIndex].Name;
                 if (Main.npcs[npcIndex].type == NPCType.N13_EATER_OF_WORLDS_HEAD)
@@ -5814,6 +5822,9 @@ namespace Terraria_Server
 					//TODO: move elsewhere
 					NetMessage.SendData(25, -1, -1, npc.Name + " has awoken!", 255, 175f, 75f, 255f);
 				}
+
+                if (NPCSpawnHandler != null)
+                    NPCSpawnHandler.Invoke(id);
 				
 				return id;
 			}
@@ -5829,7 +5840,11 @@ namespace Terraria_Server
 			int id = FindNPCSlot (start);
 			if (id >= 0)
 			{
-				NewNPC (x, y, hnpc ?? Registries.NPC.Create (name), id);
+                NewNPC(x, y, hnpc ?? Registries.NPC.Create(name), id);
+
+                if (NPCSpawnHandler != null)
+                    NPCSpawnHandler.Invoke(id);
+
 				return id;
 			}
 			return MAX_NPCS;
@@ -5846,7 +5861,7 @@ namespace Terraria_Server
 			}
 			return -1;
 		}
-		
+
         public static int NewNPC(int x, int y, NPC npc, int npcIndex)
         {
             npc.Position.X = (float)(x - npc.Width / 2);
@@ -5923,8 +5938,9 @@ namespace Terraria_Server
 
 		/// <summary>
 		/// Damages the NPC
-		/// </summary>
-		/// <param name="Damage">Damage to calculate</param>
+        /// </summary>
+        /// <param name="aggressor">Sender who struck the NPC</param>
+        /// <param name="Damage">Damage to calculate</param>
         /// <param name="knockBack">Knockback amount</param>
         /// <param name="hitDirection">Direction of strike</param>
         /// <param name="crit">If the hit was critical</param>
@@ -5971,10 +5987,10 @@ namespace Terraria_Server
             {
                 return 0.0;
             }
-            double num = Main.CalculateDamage(Damage, this.defense);
-            if (crit) num *= 2.0;
+            double damage = Main.CalculateDamage(Damage, this.defense);
+            if (crit) damage *= 2.0;
 
-            if (num >= 1.0)
+            if (damage >= 1.0)
             {
                 this.justHit = true;
                 if (this.townNPC)
@@ -5990,57 +6006,57 @@ namespace Terraria_Server
                     this.ai[0] = 400f;
                     this.TargetClosest(true);
                 }
-                this.life -= (int)num;
+                this.life -= (int)damage;
                 if (knockBack > 0f && this.knockBackResist > 0f)
                 {
-					float num2 = knockBack * this.knockBackResist;
+					float vel = knockBack * this.knockBackResist;
 					if (crit)
 					{
-						num2 *= 1.4f;
+						vel *= 1.4f;
 					}
-					if (num * 10.0 < (double)this.lifeMax)
+					if (damage * 10.0 < (double)this.lifeMax)
 					{
-						if (hitDirection < 0 && this.Velocity.X > -num2)
+						if (hitDirection < 0 && this.Velocity.X > -vel)
 						{
 							if (this.Velocity.X > 0f)
 							{
-								this.Velocity.X = this.Velocity.X - num2;
+								this.Velocity.X = this.Velocity.X - vel;
 							}
-							this.Velocity.X = this.Velocity.X - num2;
-							if (this.Velocity.X < -num2)
+							this.Velocity.X = this.Velocity.X - vel;
+							if (this.Velocity.X < -vel)
 							{
-								this.Velocity.X = -num2;
+								this.Velocity.X = -vel;
 							}
 						}
 						else
 						{
-							if (hitDirection > 0 && this.Velocity.X < num2)
+							if (hitDirection > 0 && this.Velocity.X < vel)
 							{
 								if (this.Velocity.X < 0f)
 								{
-									this.Velocity.X = this.Velocity.X + num2;
+									this.Velocity.X = this.Velocity.X + vel;
 								}
-								this.Velocity.X = this.Velocity.X + num2;
-								if (this.Velocity.X > num2)
+								this.Velocity.X = this.Velocity.X + vel;
+								if (this.Velocity.X > vel)
 								{
-									this.Velocity.X = num2;
+									this.Velocity.X = vel;
 								}
 							}
 						}
 						if (!this.noGravity)
 						{
-							num2 *= -0.75f;
+							vel *= -0.75f;
 						}
 						else
 						{
-							num2 *= -0.5f;
+							vel *= -0.5f;
 						}
-						if (this.Velocity.Y > num2)
+						if (this.Velocity.Y > vel)
 						{
-							this.Velocity.Y = this.Velocity.Y + num2;
-							if (this.Velocity.Y < num2)
+							this.Velocity.Y = this.Velocity.Y + vel;
+							if (this.Velocity.Y < vel)
 							{
-								this.Velocity.Y = num2;
+								this.Velocity.Y = vel;
 							}
 						}
 					}
@@ -6048,16 +6064,16 @@ namespace Terraria_Server
 					{
 						if (!this.noGravity)
 						{
-							this.Velocity.Y = -num2 * 0.75f * this.knockBackResist;
+							this.Velocity.Y = -vel * 0.75f * this.knockBackResist;
 						}
 						else
 						{
-							this.Velocity.Y = -num2 * 0.5f * this.knockBackResist;
+							this.Velocity.Y = -vel * 0.5f * this.knockBackResist;
 						}
-						this.Velocity.X = num2 * (float)hitDirection * this.knockBackResist;
+						this.Velocity.X = vel * (float)hitDirection * this.knockBackResist;
 					}
                 }
-                this.HitEffect(hitDirection, num);
+                this.HitEffect(hitDirection, damage);
 
                 if (this.life <= 0)
                 {
@@ -6078,7 +6094,7 @@ namespace Terraria_Server
                         Main.invasionSize--;
                     }
                 }
-                return num;
+                return damage;
             }
             return 0.0;
         }
@@ -6324,23 +6340,23 @@ namespace Terraria_Server
             if (this.boss)
             {
                 //boss kill
-                int BossType = 0;
+                //int BossType = 0;
                 if (this.type == NPCType.N04_EYE_OF_CTHULU)
                 {
                     NPC.downedBoss1 = true;
-                    BossType = 1;
+                    //BossType = 1;
                 }
                 if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
                 {
                     NPC.downedBoss2 = true;
                     this.Name = "Eater of Worlds";
-                    BossType = 2;
+                    //BossType = 2;
                 }
                 if (this.type == NPCType.N35_SKELETRON_HEAD)
                 {
                     NPC.downedBoss3 = true;
                     this.Name = "Skeletron";
-                    BossType = 3;
+                    //BossType = 3;
                 }
                 int stack4 = Main.rand.Next(5, 16);
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 28, stack4, false);
@@ -6373,89 +6389,89 @@ namespace Terraria_Server
                     }
                 }
             }
-            float num2 = this.value;
-            num2 *= 1f + (float)Main.rand.Next(-20, 21) * 0.01f;
+            float stackModifier = this.value;
+            stackModifier *= 1f + (float)Main.rand.Next(-20, 21) * 0.01f;
             if (Main.rand.Next(5) == 0)
             {
-                num2 *= 1f + (float)Main.rand.Next(5, 11) * 0.01f;
+                stackModifier *= 1f + (float)Main.rand.Next(5, 11) * 0.01f;
             }
             if (Main.rand.Next(10) == 0)
             {
-                num2 *= 1f + (float)Main.rand.Next(10, 21) * 0.01f;
+                stackModifier *= 1f + (float)Main.rand.Next(10, 21) * 0.01f;
             }
             if (Main.rand.Next(15) == 0)
             {
-                num2 *= 1f + (float)Main.rand.Next(15, 31) * 0.01f;
+                stackModifier *= 1f + (float)Main.rand.Next(15, 31) * 0.01f;
             }
             if (Main.rand.Next(20) == 0)
             {
-                num2 *= 1f + (float)Main.rand.Next(20, 41) * 0.01f;
+                stackModifier *= 1f + (float)Main.rand.Next(20, 41) * 0.01f;
             }
-            while ((int)num2 > 0)
+            while ((int)stackModifier > 0)
             {
-                if (num2 > 1000000f)
+                if (stackModifier > 1000000f)
                 {
-                    int num3 = (int)(num2 / 1000000f);
-                    if (num3 > 50 && Main.rand.Next(2) == 0)
+                    int stack = (int)(stackModifier / 1000000f);
+                    if (stack > 50 && Main.rand.Next(2) == 0)
                     {
-                        num3 /= Main.rand.Next(3) + 1;
+                        stack /= Main.rand.Next(3) + 1;
                     }
                     if (Main.rand.Next(2) == 0)
                     {
-                        num3 /= Main.rand.Next(3) + 1;
+                        stack /= Main.rand.Next(3) + 1;
                     }
-                    num2 -= (float)(1000000 * num3);
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 74, num3, false);
+                    stackModifier -= (float)(1000000 * stack);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 74, stack, false);
                 }
                 else
                 {
-                    if (num2 > 10000f)
+                    if (stackModifier > 10000f)
                     {
-                        int num4 = (int)(num2 / 10000f);
-                        if (num4 > 50 && Main.rand.Next(2) == 0)
+                        int stack = (int)(stackModifier / 10000f);
+                        if (stack > 50 && Main.rand.Next(2) == 0)
                         {
-                            num4 /= Main.rand.Next(3) + 1;
+                            stack /= Main.rand.Next(3) + 1;
                         }
                         if (Main.rand.Next(2) == 0)
                         {
-                            num4 /= Main.rand.Next(3) + 1;
+                            stack /= Main.rand.Next(3) + 1;
                         }
-                        num2 -= (float)(10000 * num4);
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 73, num4, false);
+                        stackModifier -= (float)(10000 * stack);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 73, stack, false);
                     }
                     else
                     {
-                        if (num2 > 100f)
+                        if (stackModifier > 100f)
                         {
-                            int num5 = (int)(num2 / 100f);
-                            if (num5 > 50 && Main.rand.Next(2) == 0)
+                            int stack = (int)(stackModifier / 100f);
+                            if (stack > 50 && Main.rand.Next(2) == 0)
                             {
-                                num5 /= Main.rand.Next(3) + 1;
+                                stack /= Main.rand.Next(3) + 1;
                             }
                             if (Main.rand.Next(2) == 0)
                             {
-                                num5 /= Main.rand.Next(3) + 1;
+                                stack /= Main.rand.Next(3) + 1;
                             }
-                            num2 -= (float)(100 * num5);
-                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 72, num5, false);
+                            stackModifier -= (float)(100 * stack);
+                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 72, stack, false);
                         }
                         else
                         {
-                            int num6 = (int)num2;
-                            if (num6 > 50 && Main.rand.Next(2) == 0)
+                            int stack = (int)stackModifier;
+                            if (stack > 50 && Main.rand.Next(2) == 0)
                             {
-                                num6 /= Main.rand.Next(3) + 1;
+                                stack /= Main.rand.Next(3) + 1;
                             }
                             if (Main.rand.Next(2) == 0)
                             {
-                                num6 /= Main.rand.Next(4) + 1;
+                                stack /= Main.rand.Next(4) + 1;
                             }
-                            if (num6 < 1)
+                            if (stack < 1)
                             {
-                                num6 = 1;
+                                stack = 1;
                             }
-                            num2 -= (float)num6;
-                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 71, num6, false);
+                            stackModifier -= (float)stack;
+                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 71, stack, false);
                         }
                     }
                 }
@@ -6473,10 +6489,10 @@ namespace Terraria_Server
             {
                 if (this.life > 0)
                 {
-                    int num = 0;
-                    while ((double)num < dmg / (double)this.lifeMax * 100.0)
+                    int pointlessInteger = 0;
+                    while ((double)pointlessInteger < dmg / (double)this.lifeMax * 100.0)
                     {
-                        num++;
+                        pointlessInteger++;
                     }
                 }
                 else
@@ -6547,23 +6563,6 @@ namespace Terraria_Server
         }
 
 		/// <summary>
-		/// Checks if there are any active NPCs of specified type
-		/// </summary>
-		/// <param name="Type">Type of NPC to check for</param>
-		/// <returns>True if active, false if not</returns>
-        public static bool AnyNPCs(int Type)
-        {
-            for (int i = 0; i < MAX_NPCS; i++)
-            {
-                if (Main.npcs[i].Active && Main.npcs[i].Type == Type)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-		/// <summary>
 		/// Method used to spawn Skeletron
 		/// </summary>
         public static void SpawnSkeletron()
@@ -6574,8 +6573,8 @@ namespace Terraria_Server
             bool flag = true;
             bool flag2 = false;
             Vector2 vector = default(Vector2);
-            int num = 0;
-            int num2 = 0;
+            int width = 0;
+            int height = 0;
             for (int i = 0; i < MAX_NPCS; i++)
             {
                 if (Main.npcs[i].Active && Main.npcs[i].type == NPCType.N35_SKELETRON_HEAD)
@@ -6591,15 +6590,15 @@ namespace Terraria_Server
                     flag2 = true;
                     Main.npcs[j].ai[3] = 1f;
                     vector = Main.npcs[j].Position;
-                    num = Main.npcs[j].Width;
-                    num2 = Main.npcs[j].Height;
+                    width = Main.npcs[j].Width;
+                    height = Main.npcs[j].Height;
 
                     NetMessage.SendData(23, -1, -1, "", j);
                 }
             }
             if (flag && flag2)
             {
-                int npcIndex = NPC.NewNPC((int)vector.X + num / 2, (int)vector.Y + num2 / 2, 35, 0);
+                int npcIndex = NPC.NewNPC((int)vector.X + width / 2, (int)vector.Y + height / 2, 35, 0);
                 Main.npcs[npcIndex].netUpdate = true;
                 NetMessage.SendData(25, -1, -1, "Skeletron has awoken!", 255, 175f, 75f, 255f);
             }
@@ -6690,12 +6689,12 @@ namespace Terraria_Server
                         npc.Transform (57);
                     }
                 }
-                float num = 10f;
-                float num2 = 0.3f;
+                float maxVel = 10f;
+                float vel = 0.3f;
                 if (npc.wet)
                 {
-                    num2 = 0.2f;
-                    num = 7f;
+                    vel = 0.2f;
+                    maxVel = 7f;
                 }
                 if (npc.soundDelay > 0)
                 {
@@ -6719,10 +6718,10 @@ namespace Terraria_Server
                 }
                 if (!npc.noGravity)
                 {
-                    npc.Velocity.Y = npc.Velocity.Y + num2;
-                    if (npc.Velocity.Y > num)
+                    npc.Velocity.Y = npc.Velocity.Y + vel;
+                    if (npc.Velocity.Y > maxVel)
                     {
-                        npc.Velocity.Y = num;
+                        npc.Velocity.Y = maxVel;
                     }
                 }
                 if ((double)npc.Velocity.X < 0.005 && (double)npc.Velocity.X > -0.005)
@@ -6751,16 +6750,16 @@ namespace Terraria_Server
                                 Rectangle rectangle2 = new Rectangle((int)Main.npcs[k].Position.X, (int)Main.npcs[k].Position.Y, Main.npcs[k].Width, Main.npcs[k].Height);
                                 if (rectangle.Intersects(rectangle2))
                                 {
-                                    int num3 = Main.npcs[k].damage;
-                                    int num4 = 6;
-                                    int num5 = 1;
+                                    int damage = Main.npcs[k].damage;
+                                    int knockBack = 6;
+                                    int direction = 1;
                                     if (Main.npcs[k].Position.X + (float)(Main.npcs[k].Width / 2) > npc.Position.X + (float)(npc.Width / 2))
                                     {
-                                        num5 = -1;
+                                        direction = -1;
                                     }
-									if (Main.npcs[i].StrikeNPC (Main.npcs[k], num3, (float)num4, num5))
+									if (Main.npcs[i].StrikeNPC (Main.npcs[k], damage, (float)knockBack, direction))
 									{
-										NetMessage.SendData(28, -1, -1, "", i, (float)num3, (float)num4, (float)num5);
+										NetMessage.SendData(28, -1, -1, "", i, (float)damage, (float)knockBack, (float)direction);
 										npc.netUpdate = true;
 										npc.immune[255] = 30;
 									}
@@ -6879,11 +6878,11 @@ namespace Terraria_Server
 						if (npc.type == NPCType.N72_BLAZING_WHEEL)
 						{
 							Vector2 vector2 = new Vector2(npc.Position.X + (float)(npc.Width / 2), npc.Position.Y + (float)(npc.Height / 2));
-							int num14 = 12;
-							int num15 = 12;
-							vector2.X -= (float)(num14 / 2);
-							vector2.Y -= (float)(num15 / 2);
-							npc.Velocity = Collision.TileCollision(vector2, npc.Velocity, num14, num15, true, true);
+							int width = 12;
+							int height = 12;
+							vector2.X -= (float)(width / 2);
+							vector2.Y -= (float)(height / 2);
+							npc.Velocity = Collision.TileCollision(vector2, npc.Velocity, width, height, true, true);
 						}
 						else
 						{
@@ -7957,129 +7956,127 @@ namespace Terraria_Server
                 npc.ai[2] = 0f;
                 return;
             }
-            int num4 = (int)((npc.Position.X + (float)(npc.Width / 2) + (float)(15 * npc.direction)) / 16f);
-            int num5 = (int)((npc.Position.Y + (float)npc.Height - 15f) / 16f);
+            int tileX = (int)((npc.Position.X + (float)(npc.Width / 2) + (float)(15 * npc.direction)) / 16f);
+            int tileY = (int)((npc.Position.Y + (float)npc.Height - 15f) / 16f);
 
-            bool flag3 = true;
-            if (npc.Type == 47 || npc.Type == 67)
+            if (!(npc.Type == 47 || npc.Type == 67))
             {
-                flag3 = false;
-            }
-            if (Main.tile.At(num4, num5 - 1).Active && Main.tile.At(num4, num5 - 1).Type == 10 && flag3)
-            {
-                npc.ai[2] += 1f;
-                npc.ai[3] = 0f;
-                if (npc.ai[2] >= 60f)
+                if (Main.tile.At(tileX, tileY - 1).Active && Main.tile.At(tileX, tileY - 1).Type == 10)
                 {
-                    if (!Main.bloodMoon && npc.Type == 3)
+                    npc.ai[2] += 1f;
+                    npc.ai[3] = 0f;
+                    if (npc.ai[2] >= 60f)
                     {
-                        npc.ai[1] = 0f;
-                    }
-                    npc.Velocity.X = 0.5f * (float)(-(float)npc.direction);
-                    npc.ai[1] += 1f;
-                    if (npc.Type == 27)
-                    {
-                        npc.ai[1] += 1f;
-                    }
-                    if (npc.Type == 31)
-                    {
-                        npc.ai[1] += 6f;
-                    }
-                    npc.ai[2] = 0f;
-                    bool flag4 = false;
-                    if (npc.ai[1] >= 10f)
-                    {
-                        flag4 = true;
-                        npc.ai[1] = 10f;
-                    }
-                    WorldModify.KillTile(num4, num5 - 1, true, false, false);
-                    if (flag4)
-                    {
-                        if (npc.Type == 26)
+                        if (!Main.bloodMoon && npc.Type == 3)
                         {
-                            WorldModify.KillTile(num4, num5 - 1, false, false, false);
-                            NetMessage.SendData(17, -1, -1, "", 0, (float)num4, (float)(num5 - 1), 0f, 0);
-                            return;
+                            npc.ai[1] = 0f;
                         }
-                        else
+                        npc.Velocity.X = 0.5f * (float)(-(float)npc.direction);
+                        npc.ai[1] += 1f;
+                        if (npc.Type == 27)
                         {
-                            bool flag5 = WorldModify.OpenDoor(num4, num5, npc.direction, npc);
-                            if (!flag5)
+                            npc.ai[1] += 1f;
+                        }
+                        if (npc.Type == 31)
+                        {
+                            npc.ai[1] += 6f;
+                        }
+                        npc.ai[2] = 0f;
+                        bool flag4 = false;
+                        if (npc.ai[1] >= 10f)
+                        {
+                            flag4 = true;
+                            npc.ai[1] = 10f;
+                        }
+                        WorldModify.KillTile(tileX, tileY - 1, true, false, false);
+                        if (flag4)
+                        {
+                            if (npc.Type == 26)
                             {
-                                npc.ai[3] = (float)num3;
-                                npc.netUpdate = true;
-                            }
-                            else
-                            {
-                                NetMessage.SendData(19, -1, -1, "", 0, (float)num4, (float)num5, (float)npc.direction, 0);
+                                WorldModify.KillTile(tileX, tileY - 1, false, false, false);
+                                NetMessage.SendData(17, -1, -1, "", 0, (float)tileX, (float)(tileY - 1), 0f, 0);
                                 return;
                             }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if ((npc.Velocity.X < 0f && npc.spriteDirection == -1) || (npc.Velocity.X > 0f && npc.spriteDirection == 1))
-                {
-                    if (Main.tile.At(num4, num5 - 2).Active && Main.tileSolid[(int)Main.tile.At(num4, num5 - 2).Type])
-                    {
-                        if (Main.tile.At(num4, num5 - 3).Active && Main.tileSolid[(int)Main.tile.At(num4, num5 - 3).Type])
-                        {
-                            npc.Velocity.Y = -8f;
-                            npc.netUpdate = true;
-                        }
-                        else
-                        {
-                            npc.Velocity.Y = -7f;
-                            npc.netUpdate = true;
-                        }
-                    }
-                    else
-                    {
-                        if (Main.tile.At(num4, num5 - 1).Active && Main.tileSolid[(int)Main.tile.At(num4, num5 - 1).Type])
-                        {
-                            npc.Velocity.Y = -6f;
-                            npc.netUpdate = true;
-                        }
-                        else
-                        {
-                            if (Main.tile.At(num4, num5).Active && Main.tileSolid[(int)Main.tile.At(num4, num5).Type])
-                            {
-                                npc.Velocity.Y = -5f;
-                                npc.netUpdate = true;
-                            }
                             else
                             {
-                                if (npc.directionY < 0 && npc.Type != 67 && (!Main.tile.At(num4, num5 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num4, num5 + 1).Type]) && (!Main.tile.At(num4 + npc.direction, num5 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num4 + npc.direction, num5 + 1).Type]))
+                                bool flag5 = WorldModify.OpenDoor(tileX, tileY, npc.direction, npc);
+                                if (!flag5)
                                 {
-                                    npc.Velocity.Y = -8f;
-                                    npc.Velocity.X = npc.Velocity.X * 1.5f;
+                                    npc.ai[3] = (float)num3;
                                     npc.netUpdate = true;
                                 }
                                 else
                                 {
-                                    npc.ai[1] = 0f;
-                                    npc.ai[2] = 0f;
+                                    NetMessage.SendData(19, -1, -1, "", 0, (float)tileX, (float)tileY, (float)npc.direction, 0);
+                                    return;
                                 }
                             }
                         }
                     }
                 }
-                if ((npc.Type == 31 || npc.Type == 47) && npc.Velocity.Y == 0f && Math.Abs(npc.Position.X + (float)(npc.Width / 2) - (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2))) < 100f && Math.Abs(npc.Position.Y + (float)(npc.Height / 2) - (Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2))) < 50f && ((npc.direction > 0 && npc.Velocity.X >= 1f) || (npc.direction < 0 && npc.Velocity.X <= -1f)))
+                else
                 {
-                    npc.Velocity.X = npc.Velocity.X * 2f;
-                    if (npc.Velocity.X > 3f)
+                    if ((npc.Velocity.X < 0f && npc.spriteDirection == -1) || (npc.Velocity.X > 0f && npc.spriteDirection == 1))
                     {
-                        npc.Velocity.X = 3f;
+                        if (Main.tile.At(tileX, tileY - 2).Active && Main.tileSolid[(int)Main.tile.At(tileX, tileY - 2).Type])
+                        {
+                            if (Main.tile.At(tileX, tileY - 3).Active && Main.tileSolid[(int)Main.tile.At(tileX, tileY - 3).Type])
+                            {
+                                npc.Velocity.Y = -8f;
+                                npc.netUpdate = true;
+                            }
+                            else
+                            {
+                                npc.Velocity.Y = -7f;
+                                npc.netUpdate = true;
+                            }
+                        }
+                        else
+                        {
+                            if (Main.tile.At(tileX, tileY - 1).Active && Main.tileSolid[(int)Main.tile.At(tileX, tileY - 1).Type])
+                            {
+                                npc.Velocity.Y = -6f;
+                                npc.netUpdate = true;
+                            }
+                            else
+                            {
+                                if (Main.tile.At(tileX, tileY).Active && Main.tileSolid[(int)Main.tile.At(tileX, tileY).Type])
+                                {
+                                    npc.Velocity.Y = -5f;
+                                    npc.netUpdate = true;
+                                }
+                                else
+                                {
+                                    if (npc.directionY < 0 && npc.Type != 67 && (!Main.tile.At(tileX, tileY + 1).Active || !Main.tileSolid[(int)Main.tile.At(tileX, tileY + 1).Type]) && (!Main.tile.At(tileX + npc.direction, tileY + 1).Active || !Main.tileSolid[(int)Main.tile.At(tileX + npc.direction, tileY + 1).Type]))
+                                    {
+                                        npc.Velocity.Y = -8f;
+                                        npc.Velocity.X = npc.Velocity.X * 1.5f;
+                                        npc.netUpdate = true;
+                                    }
+                                    else
+                                    {
+                                        npc.ai[1] = 0f;
+                                        npc.ai[2] = 0f;
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if (npc.Velocity.X < -3f)
+                    if ((npc.Type == 31 || npc.Type == 47) && npc.Velocity.Y == 0f && Math.Abs(npc.Position.X + (float)(npc.Width / 2) - (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2))) < 100f && Math.Abs(npc.Position.Y + (float)(npc.Height / 2) - (Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2))) < 50f && ((npc.direction > 0 && npc.Velocity.X >= 1f) || (npc.direction < 0 && npc.Velocity.X <= -1f)))
                     {
-                        npc.Velocity.X = -3f;
+                        npc.Velocity.X = npc.Velocity.X * 2f;
+                        if (npc.Velocity.X > 3f)
+                        {
+                            npc.Velocity.X = 3f;
+                        }
+                        if (npc.Velocity.X < -3f)
+                        {
+                            npc.Velocity.X = -3f;
+                        }
+                        npc.Velocity.Y = -4f;
+                        npc.netUpdate = true;
+                        return;
                     }
-                    npc.Velocity.Y = -4f;
-                    npc.netUpdate = true;
-                    return;
                 }
             }
         }
@@ -11661,6 +11658,78 @@ namespace Terraria_Server
             npc.Velocity.X = (float)(num189 * npc.direction);
             npc.Velocity.Y = (float)(num189 * npc.directionY);
             return;
+        }
+
+        /// <summary>
+        /// Checks if there are any active NPCs of specified type
+        /// </summary>
+        /// <param name="Id">Id of NPC to check for</param>
+        /// <returns>True if active, false if not</returns>
+        public static bool IsNPCSummoned(int Id)
+        {
+            for (int i = 0; i < Main.npcs.Length; i++)
+            {
+                NPC npc = Main.npcs[i];
+                if (npc != null && npc.Active && npc.whoAmI == Id)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if there are any active NPCs of specified name
+        /// </summary>
+        /// <param name="Name">Name of NPC to check for</param>
+        /// <returns>True if active, false if not</returns>
+        public static bool IsNPCSummoned(string Name)
+        {
+            int Id;
+            return TryFindNPCByName(Name, out Id);
+        }
+
+        public static bool TryFindNPCByName(string Name, out int Id)
+        {
+            Id = default(Int32);
+
+            for (int i = 0; i < Main.npcs.Length; i++)
+            {
+                NPC npc = Main.npcs[i];
+                if (npc != null && npc.Active && npc.Name == Name)
+                {
+                    Id = npc.whoAmI;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static void SpawnGuide()
+        {
+            int GuideIndex = NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, 22, 0);
+            Main.npcs[GuideIndex].homeTileX = Main.spawnTileX;
+            Main.npcs[GuideIndex].homeTileY = Main.spawnTileY;
+            Main.npcs[GuideIndex].direction = 1;
+            Main.npcs[GuideIndex].homeless = true;
+        }
+
+        public static void SpawnTDCMQuestGiver()
+        {
+            if (IsNPCSummoned(Statics.TDCM_QUEST_GIVER) || !Program.properties.AllowTDCMRPG)
+                return;
+
+            Vector2 Spawn = World.GetRandomClearTile(Main.spawnTileX, Main.spawnTileY, 100, true, 100, 50);
+
+            int npcIndex = NewNPC((int)Spawn.X * 16, (int)Spawn.Y * 16, 22, 0);
+            Main.npcs[npcIndex].Name = Statics.TDCM_QUEST_GIVER;
+            Main.npcs[npcIndex].homeTileX = (int)Spawn.X;
+            Main.npcs[npcIndex].homeTileY = (int)Spawn.Y;
+            Main.npcs[npcIndex].direction = 1;
+            Main.npcs[npcIndex].homeless = true;
+            //Main.npcs[npcIndex].dontTakeDamage = true;
+
+            ProgramLog.Debug.Log(
+                String.Format("{0} spawned at {1},{2}.", Statics.TDCM_QUEST_GIVER, Spawn.X, Spawn.Y)
+            );
         }
     }
 }

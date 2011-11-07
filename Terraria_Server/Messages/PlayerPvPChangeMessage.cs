@@ -55,15 +55,9 @@ namespace Terraria_Server.Messages
 			
 			player.hostile = pvp;
 			
-            string message;
-            if(player.hostile)
-            {
-                message = " has enabled PvP!";
-            }
-            else
-            {
-                message = " has disabled PvP!";
-            }
+            string message = (player.hostile) ? " has enabled PvP!" : " has disabled PvP!";
+
+            NetMessage.SendData(30, -1, whoAmI, "", whoAmI);
             NetMessage.SendData(25, -1, -1, player.Name + message, 255, (float)Main.teamColor[player.team].R, (float)Main.teamColor[player.team].G, (float)Main.teamColor[player.team].B);
         }
     }

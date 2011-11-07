@@ -128,8 +128,8 @@ namespace Terraria_Server.Networking
 //		public static long TotalOutgoingBytes { get { return totalBytesBuffered; } }
 //		public static long TotalOutgoingBytesUnbuffered { get { return totalBytesUnbuffered; } }
 		
-		static long totalBytesBuffered;
-		static long totalBytesUnbuffered;
+		//static long totalBytesBuffered;
+		//static long totalBytesUnbuffered;
 		
 		public virtual void Send (byte[] bytes)
 		{

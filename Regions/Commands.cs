@@ -11,7 +11,11 @@ namespace Regions
 {
     public class Commands
     {
-        public static void Region(ISender sender, ArgumentList args)
+        public RegionManager regionManager { get; set; }
+        public Selection selection { get; set; }
+        public Regions RegionsPlugin { get; set; }
+
+        public void Region(ISender sender, ArgumentList args)
         {
             /* Meh [START] */
             string Command;
@@ -27,10 +31,10 @@ namespace Regions
                     {
                         if (sender is Player)
                         {
-                            Vector2[] selection = Selection.GetSelection(sender as Player);
-                            if (selection == null
-                                || (selection[0] == null || selection[0] == default(Vector2))
-                                || (selection[1] == null || selection[1] == default(Vector2)))
+                            Vector2[] selected = selection.GetSelection(sender as Player);
+                            if (selected == null
+                                || (selected[0] == null || selected[0] == default(Vector2))
+                                || (selected[1] == null || selected[1] == default(Vector2)))
                             {
                                 sender.sendMessage("Please select a region first!", 255);
                                 return;
@@ -80,6 +84,14 @@ namespace Regions
                     {
                         ToggleOPRestrictions(sender, args);
                     }
+                    else if (args.TryPop("protectall"))
+                    {
+                        ProtectMap(sender, args);
+                    }
+                    else if (args.TryPop("here"))
+                    {
+                        RegionHere(sender, args);
+                    }
                 }
                 catch (CommandError e)
                 {
@@ -113,26 +125,26 @@ namespace Regions
             /* Meh [END] */
         }
 
-        public static void SelectionToolToggle(ISender sender, ArgumentList args)
+        public void SelectionToolToggle(ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
                 var player = sender as Player;
-                if (Selection.isInSelectionlist(player))
+                if (selection.isInSelectionlist(player))
                 {
-                    Selection.selectionPlayers.Remove(player.Name);
+                    selection.selectionPlayers.Remove(player.Name);
                     player.sendMessage("You have turned off the Selection Tool", ChatColor.Red);
                 }
                 else
                 {
-                    Selection.selectionPlayers.Add(player.Name, new Vector2[] { default(Vector2), default(Vector2) });
+                    selection.selectionPlayers.Add(player.Name, new Vector2[] { default(Vector2), default(Vector2) });
                     player.sendMessage("You have turned on the Selection Tool", ChatColor.Green);
                 }
             }
 
         }
 
-        public static void Create(ISender sender, ArgumentList args)
+        public void Create(ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
@@ -140,27 +152,32 @@ namespace Regions
                 string Desc = "";
                 bool Restrict = args.TryPop("-res");
                 bool RestrictNPC = args.TryPop("-npcres");
+
+                string tempDesc = default(String);
+                if(args.TryParseOne<String>("-desc", out Desc))
+                {
+                    Desc = tempDesc;
+                }
                 
-                if (args.TryParseTwo<String, String>("-name", out Name, "-desc", out Desc)
-                    && Name.Trim().Length > 0)
+                if (args.TryParseOne<String>("-name", out Name) && Name.Trim().Length > 0)
                 {
                     var player = sender as Player;
-                    if (Selection.isInSelectionlist(player))
+                    if (selection.isInSelectionlist(player))
                     {
-                        Vector2[] regionAxis = Selection.GetSelection(player);
+                        Vector2[] regionAxis = selection.GetSelection(player);
 
                         Region rgn = new Region();
                         rgn.Name = Name;
                         rgn.Description = Desc;
-                        rgn.Point1 = regionAxis[0] / 16;
-                        rgn.Point2 = regionAxis[1] / 16;
+                        rgn.Point1 = regionAxis[0];
+                        rgn.Point2 = regionAxis[1];
                         rgn.Restricted = Restrict;
                         rgn.RestrictedNPCs = RestrictNPC;
 
                         if (rgn.IsValidRegion())
                         {
-                            Regions.regionManager.Regions.Add(rgn);
-                            if(Regions.regionManager.SaveRegion(rgn))
+                            regionManager.Regions.Add(rgn);
+                            if(regionManager.SaveRegion(rgn))
                                 player.sendMessage("Region '" + Name + "' was successfully created.", ChatColor.Green);
                             else
                                 player.sendMessage("There was an issue while saving the region", ChatColor.Red);
@@ -182,26 +199,29 @@ namespace Regions
             }
         }
 
-        public static void List(ISender sender, ArgumentList args)
+        public void List(ISender sender, ArgumentList args)
         {
-            for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+            for (int i = 0; i < regionManager.Regions.Count; i++)
             {
-                sender.Message(255, "Slot {0} : {1} [ {2} ] ({3},{4})", i, Regions.regionManager.Regions[i].Name,
-                    Regions.regionManager.Regions[i].Description,
-                        Regions.regionManager.Regions[i].Point1.X, Regions.regionManager.Regions[i].Point1.Y);
+                sender.Message(255, "Slot {0} : {1} [ {2} ] ({3},{4})", i, regionManager.Regions[i].Name,
+                    regionManager.Regions[i].Description,
+                        regionManager.Regions[i].Point1.X, regionManager.Regions[i].Point1.Y);
             }
         }
 
-        public static void AddUser(ISender sender, ArgumentList args)
+        public void AddUser(ISender sender, ArgumentList args)
         {
-            string User = "", IP = "";
-            int Slot;
+            string User = "", IP = "", regionName = "";
+            int Slot = -1;
+
 
             //args.TryParseOne<String>("-ip", out IP); //Optional
 
             //IP or name?
-            if (args.TryParseTwo<String, Int32>("-name", out User, "-slot", out Slot) || 
-                args.TryParseTwo<String, Int32>("-ip", out User, "-slot", out Slot))
+            if (args.TryParseTwo<String, Int32>("-name", out User, "-slot", out Slot) ||
+                args.TryParseTwo<String, Int32>("-ip", out User, "-slot", out Slot) ||
+                args.TryParseTwo<String, String>("-name", out User, "-region", out regionName) ||
+                args.TryParseTwo<String, String>("-ip", out User, "-region", out regionName))
             {
                 string[] exceptions = new string[2];
                 if (User.Length > 0)
@@ -214,12 +234,25 @@ namespace Regions
                 }
 
                 Region region = null;
-                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                for (int i = 0; i < regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
                     {
-                        region = Regions.regionManager.Regions[i];
+                        region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -239,11 +272,11 @@ namespace Regions
 
                 if (usersAdded > 0)
                 {
-                    if (Regions.regionManager.SaveRegion(region))
+                    if (regionManager.SaveRegion(region))
                     {
                         sender.sendMessage(String.Format("{0} users were added to {1}", usersAdded, region.Name),
                         255, 0, 255);
-                        Regions.Log(sender.Name + " created region {0} with {1} user/s", region.Name, usersAdded);
+                        RegionsPlugin.Log(sender.Name + " created region {0} with {1} user/s", region.Name, usersAdded);
                     }
                     else
                         sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
@@ -255,7 +288,7 @@ namespace Regions
                 throw new CommandError("Invalid arguments, Please review your command.");
         }
 
-        public static void RemoveUser(ISender sender, ArgumentList args)
+        public void RemoveUser(ISender sender, ArgumentList args)
         {
             string User = "", IP = "";
             int Slot;
@@ -276,11 +309,11 @@ namespace Regions
                 }
 
                 Region region = null;
-                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                for (int i = 0; i < regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
                     {
-                        region = Regions.regionManager.Regions[i];
+                        region = regionManager.Regions[i];
                         break;
                     }
                 }
@@ -304,7 +337,7 @@ namespace Regions
 
                 if (usersRemoved > 0)
                 {
-                    if (Regions.regionManager.SaveRegion(region))
+                    if (regionManager.SaveRegion(region))
                     {
                         sender.sendMessage(String.Format("{0} users were added to {1}", usersRemoved, region.Name),
                         255, 0, 255);
@@ -319,20 +352,34 @@ namespace Regions
                 throw new CommandError("Invalid arguments, Please review your command.");
         }
 
-        public static void AddProjectile(ISender sender, ArgumentList args)
+        public void AddProjectile(ISender sender, ArgumentList args)
         {
-            string projectiles;
+            string projectiles, regionName = "";
             int Slot;
 
-            if (args.TryParseTwo<String, Int32>("-proj", out projectiles, "-slot", out Slot))
+            if (args.TryParseTwo<String, Int32>("-proj", out projectiles, "-slot", out Slot) ||
+                args.TryParseTwo<String, String>("-proj", out projectiles, "-region", out regionName))
             {
                 Region region = null;
-                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                for (int i = 0; i < regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
                     {
-                        region = Regions.regionManager.Regions[i];
+                        region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -351,7 +398,7 @@ namespace Regions
 
                 if (Count > 0)
                 {
-                    if (Regions.regionManager.SaveRegion(region))
+                    if (regionManager.SaveRegion(region))
                     {
                         string Proj = (projectiles == "*") ? "All" : Count.ToString();
                         sender.sendMessage(String.Format("{0} projectiles were blocked in Region '{1}'", Proj, region.Name),
@@ -367,7 +414,7 @@ namespace Regions
                 throw new CommandError("Please review your command");
         }
 
-        public static void RemoveProjectile(ISender sender, ArgumentList args)
+        public void RemoveProjectile(ISender sender, ArgumentList args)
         {
             string projectiles;
             int Slot;
@@ -375,11 +422,11 @@ namespace Regions
             if (args.TryParseTwo<String, Int32>("-proj", out projectiles, "-slot", out Slot))
             {
                 Region region = null;
-                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                for (int i = 0; i < regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
                     {
-                        region = Regions.regionManager.Regions[i];
+                        region = regionManager.Regions[i];
                         break;
                     }
                 }
@@ -403,7 +450,7 @@ namespace Regions
 
                 if (Count > 0)
                 {
-                    if (Regions.regionManager.SaveRegion(region))
+                    if (regionManager.SaveRegion(region))
                     {
                         string Proj = (projectiles == "*") ? "All" : Count.ToString();
                         sender.sendMessage(String.Format("{0} projectiles were unblocked in Region '{1}'", Proj, region.Name),
@@ -419,18 +466,34 @@ namespace Regions
                 throw new CommandError("Please review your command");
         }
 
-        public static void ClearRegion(ISender sender, ArgumentList args)
+        public void ClearRegion(ISender sender, ArgumentList args)
         {
+            string regionName = "";
             int Slot;
-            if (args.TryParseOne<Int32>("-slot", out Slot))
+
+            if (args.TryParseOne<Int32>("-slot", out Slot) ||
+                args.TryParseOne<String>("-region", out regionName))
             {
                 Region region = null;
-                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                for (int i = 0; i < regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
                     {
-                        region = Regions.regionManager.Regions[i];
+                        region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -438,7 +501,7 @@ namespace Regions
                     throw new CommandError("Specified Region Slot was incorrect.");
 
                 region.UserList.Clear();
-                if (Regions.regionManager.SaveRegion(region))
+                if (regionManager.SaveRegion(region))
                 {
                     sender.sendMessage(String.Format("Successfully cleared Players from Region '{0}'", region.Name), 255, 0, 255);
                 }
@@ -449,18 +512,34 @@ namespace Regions
                 throw new CommandError("Invalid arguments, Please review your command.");
         }
 
-        public static void ClearProjectiles(ISender sender, ArgumentList args)
+        public void ClearProjectiles(ISender sender, ArgumentList args)
         {
+            string regionName = "";
             int Slot;
-            if (args.TryParseOne<Int32>("-slot", out Slot))
+
+            if (args.TryParseOne<Int32>("-slot", out Slot) ||
+                args.TryParseOne<String>("-region", out regionName))
             {
                 Region region = null;
-                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                for (int i = 0; i < regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
                     {
-                        region = Regions.regionManager.Regions[i];
+                        region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -468,7 +547,7 @@ namespace Regions
                     throw new CommandError("Specified Region Slot was incorrect.");
 
                 region.ProjectileList.Clear();
-                if (Regions.regionManager.SaveRegion(region))
+                if (regionManager.SaveRegion(region))
                 {
                     sender.sendMessage(String.Format("Successfully cleared Projectiles from Region '{0}'", region.Name), 255, 0, 255);
                 }
@@ -479,18 +558,34 @@ namespace Regions
                 throw new CommandError("Invalid arguments, Please review your command.");
         }
 
-        public static void ToggleNPCRestrictions(ISender sender, ArgumentList args)
+        public void ToggleNPCRestrictions(ISender sender, ArgumentList args)
         {
+            string regionName = "";
             int Slot;
-            if (args.TryParseOne<Int32>("-slot", out Slot))
+
+            if (args.TryParseOne<Int32>("-slot", out Slot) ||
+                args.TryParseOne<String>("-region", out regionName))
             {
                 Region region = null;
-                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                for (int i = 0; i < regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
                     {
-                        region = Regions.regionManager.Regions[i];
+                        region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -499,7 +594,7 @@ namespace Regions
 
                 region.RestrictedNPCs = !region.RestrictedNPCs;
                 region.ProjectileList.Clear();
-                if (Regions.regionManager.SaveRegion(region))
+                if (regionManager.SaveRegion(region))
                 {
                     sender.sendMessage(String.Format("NPC Restrictions is now {0} in Region '{1}'", (region.RestrictedNPCs) ? "on" : "off", region.Name), 255, 0, 255);
                 }
@@ -510,18 +605,34 @@ namespace Regions
                 throw new CommandError("Invalid arguments, Please review your command.");
         }
 
-        public static void ToggleOPRestrictions(ISender sender, ArgumentList args)
+        public void ToggleOPRestrictions(ISender sender, ArgumentList args)
         {
+            string regionName = "";
             int Slot;
-            if (args.TryParseOne<Int32>("-slot", out Slot))
+
+            if (args.TryParseOne<Int32>("-slot", out Slot) ||
+                args.TryParseOne<String>("-region", out regionName))
             {
                 Region region = null;
-                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                for (int i = 0; i < regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
                     {
-                        region = Regions.regionManager.Regions[i];
+                        region = regionManager.Regions[i];
                         break;
+                    }
+                }
+
+                //[TODO] TEST ME
+                if (region == null && regionName.Length > 0)
+                {
+                    for (int i = 0; i < regionManager.Regions.Count; i++)
+                    {
+                        if (regionManager.Regions[i].Name.Trim().ToLower().Replace(" ", "").Equals(regionName.ToLower()))
+                        {
+                            region = regionManager.Regions[i];
+                            break;
+                        }
                     }
                 }
 
@@ -530,7 +641,7 @@ namespace Regions
 
                 region.Restricted = !region.Restricted;
                 region.ProjectileList.Clear();
-                if (Regions.regionManager.SaveRegion(region))
+                if (regionManager.SaveRegion(region))
                 {
                     sender.sendMessage(String.Format("OP Restrictions is now {0} in Region '{1}'", (region.Restricted) ? "on" : "off", region.Name), 255, 0, 255);
                 }
@@ -539,6 +650,63 @@ namespace Regions
             }
             else
                 throw new CommandError("Invalid arguments, Please review your command.");
+        }
+
+        public void ProtectMap(ISender sender, ArgumentList args)
+        {
+            Vector2 Start = new Vector2(0, 0);
+            Vector2 End = new Vector2(Main.maxTilesX, Main.maxTilesY);
+
+            bool Restrict = args.TryPop("-res");
+            bool RestrictNPC = args.TryPop("-npcres");
+
+            string rgnName = "all";
+            int count = 0;
+
+            while(regionManager.ContainsRegion(rgnName))
+            {
+                //if(regionManager.ContainsRegion(rgnName))
+                //{
+                    rgnName = "all" + count.ToString();
+                    count++;
+                //}
+                //else
+                //    break;
+            }
+
+            Region rgn = new Region();
+            rgn.Name = rgnName;
+            rgn.Description = "A Region that protects the entire map";
+            rgn.Point1 = Start;
+            rgn.Point2 = End;
+            rgn.Restricted = Restrict;
+            rgn.RestrictedNPCs = RestrictNPC;
+
+            if (rgn.IsValidRegion())
+            {
+                regionManager.Regions.Add(rgn);
+                if (regionManager.SaveRegion(rgn))
+                    sender.sendMessage("Region '" + rgnName + "' was successfully created.");
+                else
+                    sender.sendMessage("There was an issue while saving the region");
+            }
+            else
+            {
+                sender.sendMessage("There was an issue while creating the region");
+            }
+        }
+
+        public void RegionHere(ISender sender, ArgumentList args)
+        {
+            if (sender is Player)
+            {                
+                var player = sender as Player;
+                foreach (Region region in regionManager.Regions)
+                {
+                    if(region.HasPoint(player.Position / 16))
+                        player.sendMessage("You are in Region '{0}'", ChatColor.Purple);
+                }
+            }
         }
     }
 }

@@ -11,12 +11,12 @@ namespace Terraria_Server.Misc
 	//           so it's just an AutoResetEvent for now
 	{
 		readonly AutoResetEvent handle;
-		volatile bool signalled;
+		//volatile bool signalled;
 		
 		public ProducerConsumerSignal (bool initial)
 		{
 			handle = new AutoResetEvent (initial);
-			signalled = false;
+			//signalled = false;
 		}
 		
 		public void Signal ()

@@ -17,7 +17,6 @@ namespace Terraria_Server.Misc
 
     public class BackupManager
     {
-
         public static BackupIOReturn LoadWorld(string Name)
         {
             WorldIO.LoadWorld(Statics.WorldPath + Path.DirectorySeparatorChar + Name);

@@ -5,31 +5,28 @@ using System.Text;
 
 namespace Terraria_Server.Permissions
 {
-	public class Node
+	/// <summary>
+	/// Permission node class.  Currently unused.
+	/// </summary>
+	public struct Node
 	{
         private string stringNode;
 
 		// these are stable APIs
 		public string Path { get { return stringNode; } }
 
-        public Node FromPath(string node)
+        public static Node FromPath(string node)
 		{
-			return new Node { stringNode = node };
+			return new Node(node);
 		}
 
-		public bool IsPermitted(Player player)
+		/// <summary>
+		/// Node class constructor.
+		/// </summary>
+		/// <param name="node">New text path to create node from</param>
+		public Node(string node)
 		{
-			return isPermittedImpl(this, player);
+			stringNode = node;
 		}
-
-		// this is only for the permissions plugin to set
-		public static Func<Node, Player, bool> isPermittedImpl;
-
-        public void AddNode(string node)
-		{
-			ActiveNodes.Add(node);
-		}
-
-		public static List<String> ActiveNodes;
 	}
 }

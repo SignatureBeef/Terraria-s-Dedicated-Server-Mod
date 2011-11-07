@@ -10,10 +10,10 @@ namespace Terraria_Server.Commands
 	}
 
 	public class ArgumentList : List<string>
-	{		
-		public ArgumentList ()
-		{
-		}
+	{
+        public object Plugin { get; set; }
+
+        public ArgumentList() { }
 		
 		static readonly Dictionary<System.Type, string> typeNames = new Dictionary<System.Type, string> ()
 		{
@@ -204,6 +204,12 @@ namespace Terraria_Server.Commands
 			
 			if (player != null)
 				return player;
+
+            var matches = Server.FindPlayerByPart(this[at]);
+            if (matches.Count == 1)
+            {
+                return matches.ToArray()[0];
+            }
 			
 			throw new CommandError ("A connected player's name was expected for argument {0}.", at + 1);
 		}
@@ -218,6 +224,13 @@ namespace Terraria_Server.Commands
 			
 			if (val != null)
 				return true;
+
+            var matches = Server.FindPlayerByPart(this[at]);
+            if (matches.Count == 1)
+            {
+                val = matches.ToArray()[0];
+                return true;
+            }
 			
 			return false;
 		}

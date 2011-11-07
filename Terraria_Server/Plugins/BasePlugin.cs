@@ -6,6 +6,7 @@ using System.Linq;
 
 using Terraria_Server.Commands;
 using Terraria_Server.Logging;
+using Terraria_Server.Permissions;
 
 namespace Terraria_Server.Plugins
 {
@@ -168,6 +169,24 @@ namespace Terraria_Server.Plugins
 				}
 			}
 		}
+
+        public void AddNode(string Node)
+        {
+            if (!Program.permissionManager.ActiveNodes.Contains(Node))
+                Program.permissionManager.ActiveNodes.Add(Node);
+        }
+
+        public void AddNode(Node Node)
+        {
+            AddNode(Node.Path);
+        }
+
+        public Node AddAndCreateNode(string Path)
+        {
+            Node node = new Node(Path);
+            AddNode(Path);
+            return node;
+        }
 		
 		/// <summary>
 		/// Adds new command to the server's command list

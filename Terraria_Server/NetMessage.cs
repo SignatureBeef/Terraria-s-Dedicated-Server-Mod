@@ -8,6 +8,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
 using Terraria_Server.Plugins;
+using Terraria_Server.TDCM;
 
 namespace Terraria_Server
 {
@@ -309,23 +310,56 @@ namespace Terraria_Server
 						
 					case (int)Packet.PLAYER_ADD_BUFF:
 						msg.PlayerAddBuff (number, (int)number2, (int)number3);
-						break;
-					
-					case (int)Packet.CLIENT_MOD:
-						msg.ClientMod(remoteClient);
-						break;
+                        break;
+
+                    case (int)Packet.CLIENT_MOD:
+                        msg.ClientMod(remoteClient);
+                        break;
+
+                    case (int)Packet.CLIENT_MOD_SPAWN_NPC:
+                        msg.RpgNPCSpawned(number);
+                        break;
 						
 					default:
 						{
 							//Unknown packet :3
-							return 0;
+                            var ctx = new HookContext()
+                            {
+
+                            };
+
+                            var args = new HookArgs.UnkownSendPacket()
+                            {
+                                Message = msg,
+                                PacketId = packetId,
+                                RemoteClient = remoteClient,
+                                IgnoreClient = ignoreClient,
+                                Text = text,
+                                Number = number,
+                                Number2 = number2,
+                                Number3 = number3,
+                                Number4 = number4,
+                                Number5 =  number5
+                            };
+
+                            HookPoints.UnkownSendPacket.Invoke(ref ctx, ref args);
+
+                            /* Update Locals */
+                            msg = args.Message;
+                            remoteClient = args.RemoteClient;
+                            ignoreClient = args.IgnoreClient;
+
+                            if(ctx.Result != HookResult.IGNORE)
+                                return 0;
+                            else
+                                break;
 						}
 				}
 					
 				//var bytes = msg.Output;
 				if (remoteClient == -1)
 				{
-					msg.BroadcastExcept (ignoreClient);
+                    msg.BroadcastExcept(ignoreClient);
 //					for (int num11 = 0; num11 < 256; num11++)
 //					{
 //						if (num11 != ignoreClient && Netplay.slots[num11].state >= SlotState.PLAYING && Netplay.slots[num11].Connected)
@@ -338,7 +372,7 @@ namespace Terraria_Server
 				}
 				else if (NetPlay.slots[remoteClient].Connected)
 				{
-					msg.Send (remoteClient);
+                    msg.Send (remoteClient);
 					//NetMessage.buffer[remoteClient].spamCount++;
 					//Netplay.slots[remoteClient].Send (bytes);
 				}
@@ -379,7 +413,7 @@ namespace Terraria_Server
 				catch (NullReferenceException) {}
 			}
 		}
-		
+        		
 		public static void Broadcast (byte[] bytes)
 		{
 			//ProgramLog.Debug.Log ("Broadcast, {0} {1}", Netplay.slots[0].state, Netplay.slots[0].Connected);
@@ -725,11 +759,16 @@ namespace Terraria_Server
 			sink.Position += 4;
 		}
 
+        public void Begin(int id)
+        {
+            lenAt = (int)sink.Position;
+            sink.Position += 4;
+            sink.WriteByte((byte)id);
+        }
+
 		public void Begin (Packet id)
 		{
-			lenAt = (int) sink.Position;
-			sink.Position += 4;
-			sink.WriteByte ((byte) id);
+            Begin((int)id);
 		}
 		
 		public void End ()
@@ -739,12 +778,17 @@ namespace Terraria_Server
 			bin.Write ((int) (pos - lenAt - 4));
 			sink.Position = pos;
 		}
-		
-		public void Header (Packet id, int length)
-		{
-			bin.Write (length + 1);
-			sink.WriteByte ((byte) id);
-		}
+
+        public void Header(Packet id, int length)
+        {
+            Header((int)id, length);
+        }
+
+        public void Header(int id, int length)
+        {
+            bin.Write(length + 1);
+            sink.WriteByte((byte)id);
+        }
 		
 		public void Byte (byte data)
 		{

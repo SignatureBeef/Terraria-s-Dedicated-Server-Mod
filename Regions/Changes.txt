@@ -1,0 +1,9 @@
+﻿b3:
+	- Updated to b36 - new API
+	- Added On enter hook to clear selections
+	- Made sure only ops can use region select (during)
+	- Fixed a bug where it divided by 16...again
+	- A new command to protect the map
+	- A new command to see what Region(s) a player is in
+	- Removed descriptions from creating regions
+	- Added names to adding commands (TODO, Removing)

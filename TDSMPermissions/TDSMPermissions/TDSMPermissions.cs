@@ -4,55 +4,36 @@ using System.Collections.Generic;
 
 using Terraria_Server;
 using Terraria_Server.Misc;
-using Terraria_Server.Plugin;
 using Terraria_Server.Logging;
+using Terraria_Server.Plugins;
+using Terraria_Server.Commands;
 using Terraria_Server.Permissions;
+
+using TDSMPermissions.Auth;
+using TDSMPermissions.Perms;
 using TDSMPermissions.Definitions;
 
 using YaTools.Yaml;
 
 namespace TDSMPermissions
 {
-    public class TDSMPermissions : Plugin
+    public class TDSMPermissions : BasePlugin
     {
-        /*
-         * @Developers
-         * 
-         * Plugins need to be in .NET 4.0
-         * Otherwise TDSM will be unable to load it. 
-         * 
-         * As of June 16, 1:15 AM, TDSM should now load Plugins Dynamically.
-         */
-
         public Properties properties;
         public string pluginFolder;
         public string permissionsYML;
 
-        public bool spawningAllowed = false;
-        public bool tileBreakageAllowed = false;
-        public bool explosivesAllowed = false;
-        public static TDSMPermissions plugin;
-		private List<Group> groups = new List<Group>();
-		private Dictionary<String, List<String>> users;
-		private Group currentGroup;
-		public string defaultGroup;
-        private YamlScanner sc;
-		private bool inUsers;
-		private String currentUser;
-		private List<String> userNodes;
-
-		private bool inGroups = false;
-
-        public override void Load()
+        public TDSMPermissions()
         {
             Name = "TDSMPermissions";
             Description = "Permissions for TDSM.";
             Author = "Malkierian";
             Version = "1";
-            TDSMBuild = 32;
+            TDSMBuild = 36;
+        }
 
-            plugin = this;
-
+        protected override void Initialized(object state)
+        {
             pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "TDSMPermissions";
             permissionsYML = pluginFolder + Path.DirectorySeparatorChar + "permissions.yml";
 
@@ -62,221 +43,110 @@ namespace TDSMPermissions
             if (!File.Exists(permissionsYML))
                 File.Create(permissionsYML).Close();
 
-            //setup a new properties file
-			//properties = new Properties(pluginFolder + Path.DirectorySeparatorChar + "tdsmplugin.properties");
-			//properties.Load();
-			//properties.pushData(); //Creates default values if needed. [Out-Dated]
-			//properties.Save();
-
-            //read properties data
-			Node.isPermittedImpl = this.isPermitted;
-			LoadPerms();
+            //set internal permission check method to plugins handler
+            Program.permissionManager.IsPermittedImpl = IsPermitted;
+			Statics.PermissionsEnabled = true;
         }
 
-        public override void Enable()
+        protected override void Enabled()
         {
             ProgramLog.Log(base.Name + " enabled.");
-            //Register Hooks
-			registerHook(Hooks.PLAYER_PRELOGIN);
-
-            //Add Commands
         }
 
-        public override void Disable()
+        protected override void Disabled()
         {
             ProgramLog.Log(base.Name + " disabled.");
         }
+        
+        [Hook(HookOrder.NORMAL)]
+        void OnChat(ref HookContext ctx, ref HookArgs.PlayerChat args)
+        {
+            if (ctx.Player.AuthenticatedAs != null)
+            {
+                User usr;
+                if (Permissions.users.TryGetValue(ctx.Player.Name, out usr))
+                {
+                    Color col;
+                    if (Chat.TryGetChatColor(usr, out col))
+                        args.Color = col;
 
-		//public override void onPlayerPreLogin(Terraria_Server.Events.PlayerLoginEvent Event)
-		//{
-		//    base.onPlayerPreLogin(Event);
-		//}
+                    string prefix;
+                    if (Chat.TryGetChatPrefix(usr, out prefix))
+                        usr.prefix = prefix;
 
-		public void LoadPerms()
-		{
-			Token to;
-            TextReader re = File.OpenText(permissionsYML);
-            
-            sc = new YamlScanner();
-            sc.SetSource(re);
+                    string suffix;
+                    if (Chat.TryGetChatSuffix(usr, out suffix))
+                        usr.suffix = suffix;
 
-			inUsers = false;
+                    string seperator;
+                    Chat.TryGetChatSeperator(usr, out seperator);
+                    
+                    ctx.SetResult(HookResult.IGNORE);
+                    Server.notifyAll(
+                        String.Concat(usr.prefix, ctx.Player.Name, seperator, args.Message, usr.suffix)
+                        , args.Color, false
+                    );
+                }
+            }
+            else if (ctx.Player.AuthenticatedAs == null)
+            {
+                Group dGrp = Permissions.GetDefaultGroup();
+                if (dGrp != null)
+                {
+                    if (Chat.IsValidColor(dGrp.GroupInfo.color))
+                        args.Color = dGrp.GroupInfo.color;
 
-			while ((to = sc.NextToken()) != Token.EndOfStream)
-			{
-				switch (to)
-				{
-					case Token.TextContent:
-						{
-							switch (sc.TokenText)
-							{
-								case "info":
-									{
-										ProcessInfo();
-										break;
-									}
-								case "permissions":
-									{
-										ProcessPermissions();
-										break;
-									}
-								case "inheritance":
-									{
-										ProcessInheritance();
-										break;
-									}
-								case "groups":
-									{
-										break;
-									}
-								default:
-									break;
-							}
-							break;
-						}
-					case Token.IndentSpaces:
-						{
-							ProcessIndent();
-							break;
-						}
-					case Token.Outdent:
-					case Token.ValueIndicator:
-					case Token.BlockSeqNext:
-					case Token.Comma:
-					case Token.Escape:
-					case Token.InconsistentIndent:
-					case Token.Unexpected:
-					case Token.DoubleQuote:
-					case Token.SingleQuote:
-					case Token.EscapedLineBreak:
-					default:
-						break;
-				}
-			}
-		}
+                    ctx.SetResult(HookResult.IGNORE);
+                    Server.notifyAll(
+                        String.Concat(  dGrp.GroupInfo.Prefix, ctx.Player.Name, 
+                                        dGrp.GroupInfo.Seperator, args.Message, 
+                                        dGrp.GroupInfo.Suffix)
+                        , args.Color, false
+                    );
+                }
+            }
+        }
 
-		private void ProcessIndent()
-		{
-            string tokenText = sc.TokenText;
-			if (sc.NextToken() == Token.IndentSpaces)
-				tokenText += sc.TokenText;
-			if (tokenText == "    ")
-			{
-				while (sc.NextToken() != Token.TextContent)
-				{
-				}
-				if (!inUsers)
-				{
-					currentGroup = new Group(sc.TokenText);
-				}
-				else
-				{
-					currentUser = sc.TokenText;
-				}
-			}
-		}
+        [Hook(HookOrder.LATE)]
+        void OnPluginsLoaded(ref HookContext ctx, ref HookArgs.PluginsLoaded args)
+        {
+            Permissions.LoadPerms(permissionsYML);
 
-		private void ProcessInfo()
-		{
-			bool Default;
-            string Prefix;
-            string Suffix;
-			Color color;
-			while (sc.TokenText != "default")
-			{
-				sc.NextToken();
-			}
-			while (sc.NextToken() != Token.TextContent)
-			{ }
-			Default = Convert.ToBoolean(sc.TokenText);
-			if (Default)
-			{
-				defaultGroup = currentGroup.Name;
-			}
-			while (sc.TokenText != "prefix")
-			{
-				sc.NextToken();
-			}
-			while (sc.NextToken() != Token.TextContent)
-			{ }
-			Prefix = sc.TokenText;
-			while (sc.TokenText != "suffix")
-			{
-				sc.NextToken();
-			}
-			while (sc.NextToken() != Token.TextContent)
-			{ }
-			Suffix = sc.TokenText;
-			//while (sc.TokenText != "color")
-			//{
-			//    sc.NextToken();
-			//}
-			//ProgramLog.Debug.Log("Color token found");
-			//while (sc.NextToken() != Token.TextContent)
-			//{ }
-			//color = GetChatColor(sc.TokenText);
-			currentGroup.SetGroupInfo(Default, Prefix, Suffix, ChatColor.Tan);
-		}
+            if (!Server.UsingLoginSystem)
+                Login.InitSystem();
 
-		private void ProcessInheritance()
-		{
-			while (sc.NextToken() != Token.TextContent)
-			{
-				if (sc.Token == Token.Outdent)
-					return;
-			}
-			if (sc.TokenText == "permissions")
-			{
-				ProcessPermissions();
-				return;
-			}
-			while (sc.Token != Token.Outdent)
-			{
-				if (sc.Token == Token.TextContent)
-				{
-					currentGroup.Inherits.Add(sc.TokenText);
-				}
-			}
-		}
+            if (Login.IsRestrictRunning())
+                ProgramLog.Plugin.Log("Your Server is now protected!");
+            else
+                ProgramLog.Plugin.Log("Your Server is vulnerable, Get an Authentication system!");
+        }               
 
-		private void ProcessPermissions()
-		{
-			while (sc.NextToken() != Token.Outdent)
-			{
-				while (sc.NextToken() != Token.TextContent)
-				{
-					if (sc.Token == Token.Outdent)
-						return;
-				}
-				bool toggle;
-                string tokenText;
-				if (sc.TokenText.Contains("-"))
-				{
-					toggle = false;
-					tokenText = sc.TokenText.Substring(1, sc.TokenText.Length - 1);
-				}
-				else
-				{
-					toggle = true;
-					tokenText = sc.TokenText;
-				}
-				if (!inUsers)
-				{
-					currentGroup.permissions.Add(tokenText, toggle);
-				}
-				else
-				{
-					userNodes.Add(tokenText);
-				}
-				ProgramLog.Debug.Log("Node " + tokenText + " added with " + toggle + " status");
-			}
-			groups.Add(currentGroup);
-		}
+        //This is what TDSM will check.
+        public bool IsPermitted(string node, Player player)
+        {
+			User user;
+            if (Permissions.users.TryGetValue(player.Name, out user))
+                return ((player.AuthenticatedAs != null && IsUserAllowed(node, user)) || player.Op);
 
-		public bool isPermitted(Node node, Player player)
-		{
-			return false;
-		}
+            return false;
+        }
+
+        public bool IsUserAllowed(string Node, User user)
+        {
+            if (user.hasPerm.Contains(Node) || user.hasPerm.Contains("*"))
+                return true;
+
+            Group grp;
+            foreach (string group in user.group)
+            {
+                grp = Permissions.GetGroup(group);
+
+                if (grp != null && grp.permissions != null && (grp.permissions.ContainsKey(Node) || grp.permissions.ContainsKey("*")))
+                    return true;
+            }
+
+            return false;
+        }
 
         private static void CreateDirectory(string dirPath)
         {
@@ -285,6 +155,5 @@ namespace TDSMPermissions
                 Directory.CreateDirectory(dirPath);
             }
         }
-
     }
 }

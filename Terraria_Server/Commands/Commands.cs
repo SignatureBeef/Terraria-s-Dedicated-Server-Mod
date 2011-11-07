@@ -27,31 +27,24 @@ namespace Terraria_Server.Commands
 		public static void Exit(ISender sender, ArgumentList args)
 		{
             int AccessLevel = Program.properties.ExitAccessLevel;
-            if (AccessLevel == -1)
+            if (AccessLevel == -1 && sender is Player)
             {
-                if (sender is Player) // || sender is RConSender) //Requested for Rcon Users.
-                {
                     sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
                     return;
-                }
             }
-            else
+            else if (!CommandParser.CheckAccessLevel((AccessLevel)AccessLevel, sender))
             {
-                if (!CommandParser.CheckAccessLevel((AccessLevel)AccessLevel, sender))
-                {
-                    sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
-                    return;
-                }
+                sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+                return;
             }
-
-
+            
 			args.ParseNone();
 
 			Server.notifyOps("Exiting on request.", false);
 			NetPlay.StopServer();
 			Statics.Exit = true;
 
-            //throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
+            throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
 		}
 
 		/// <summary>
@@ -214,11 +207,16 @@ namespace Terraria_Server.Commands
 		/// <param name="message">Message to send</param>
 		public static void Say(ISender sender, string message)
 		{
-			ProgramLog.Chat.Log("<" + sender.Name + "> " + message);
+			/*ProgramLog.Chat.Log("<" + sender.Name + "> " + message);
 			if (sender is Player)
 				NetMessage.SendData(25, -1, -1, "<" + sender.Name + "> " + message, 255, 255, 255, 255);
 			else
-				NetMessage.SendData(25, -1, -1, "<" + sender.Name + "> " + message, 255, 238, 180, 238);
+				NetMessage.SendData(25, -1, -1, "<" + sender.Name + "> " + message, 255, 238, 180, 238);*/
+
+            // 'Say' should be used for Server Messages, OP's only. This is used on many large servers to notify
+            // Users for a quick restart (example), So the OP will most likely be in game, unless it's major.
+            ProgramLog.Chat.Log("<" + sender.Name + "> " + ((sender is ConsoleSender) ? "" : "SERVER: ") + message);
+            NetMessage.SendData(25, -1, -1, "SERVER: " + message, 255, 238, 130, 238);
 		}
 
 		/// <summary>
@@ -233,12 +231,14 @@ namespace Terraria_Server.Commands
 			WorldIO.saveWorld(Server.World.SavePath, false);
 			while (WorldModify.saveLock)
 			{
+                Thread.Sleep(100);
 			}
 
 			Server.notifyOps("Saving Data...", true);
 
 			Server.BanList.Save();
 			Server.WhiteList.Save();
+            Server.OpList.Save();
 
 			Server.notifyOps("Saving Complete.", true);
 		}
@@ -375,43 +375,28 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Ban(ISender sender, ArgumentList args)
 		{
-			if (args != null && args.Count > 0)
-			{
-				//We now should check to make sure they are off the server...
-				Player banee = Server.GetPlayerByName(args[0]);
+            Player banee;
+            string playerName = null;
 
-				if (banee == null)
-				{
-					foreach (Player player in Main.players)
-					{
-						var ip = NetPlay.slots[player.whoAmi].remoteAddress.Split(':')[0];
-						if (ip == args[0])
-						{
-							banee = player;
-						}
-					}
-				}
+            if (args.TryGetOnlinePlayer(0, out banee))
+            {
+                playerName = banee.Name;
+                banee.Kick("You have been banned from this Server.");
+                Server.BanList.addException(NetPlay.slots[banee.whoAmi].
+                        remoteAddress.Split(':')[0]);
+            }
+            else if(!args.TryGetString(0, out playerName))
+            {
+                throw new CommandError("A player or IP was expected.");
+            }
 
-				Server.BanList.addException(args[0]);
+            Server.BanList.addException(playerName);
 
-				if (banee != null)
-				{
-					banee.Kick("You have been banned from this Server.");
-					Server.BanList.addException(NetPlay.slots[banee.whoAmi].
-						remoteAddress.Split(':')[0]);
-				}
-
-
-				Server.notifyOps(args[0] + " has been banned {" + sender.Name + "}", true);
-				if (!Server.BanList.Save())
-				{
-					Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
-				}
-			}
-			else
-			{
-				sender.sendMessage("Please review that command");
-			}
+            Server.notifyOps(playerName + " has been banned {" + sender.Name + "}", true);
+            if (!Server.BanList.Save())
+            {
+                Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+            }
 		}
 
 		/// <summary>
@@ -421,21 +406,20 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void UnBan(ISender sender, ArgumentList args)
 		{
-			if (args != null && args.Count > 0)
-			{
-				Server.BanList.removeException(args[0]);
+            string playerName;
+            if (!args.TryGetString(0, out playerName))
+            {
+                throw new CommandError("A player or IP was expected.");
+            }
 
-				Server.notifyOps(args[0] + " has been unbanned {" + sender.Name + "}", true);
+            Server.BanList.removeException(playerName);
 
-				if (!Server.BanList.Save())
-				{
-					Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
-				}
-			}
-			else
-			{
-				sender.sendMessage("Please review that command");
-			}
+            Server.notifyOps(playerName + " has been unbanned {" + sender.Name + "}", true);
+
+            if (!Server.BanList.Save())
+            {
+                Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+            }
 		}
 
 		/// <summary>
@@ -537,115 +521,48 @@ namespace Terraria_Server.Commands
 		/// </summary>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Give(ISender sender, ArgumentList args)
+        public static void Give(ISender sender, ArgumentList args)
 		{
 			// /give <player> <stack> <name> 
-			if (args.Count > 2 && args[0] != null && args[1] != null && args[2] != null &&
-				args[0].Trim().Length > 0 && args[1].Trim().Length > 0 && args[2].Trim().Length > 0)
-			{
-                string playerName = args[0].Trim();
-                string itemName = String.Join(" ", args);
-				itemName = itemName.Remove(0, itemName.IndexOf(" " + args[2]));
 
-				Player player = Server.GetPlayerByName(playerName);
-				if (player != null)
-				{
-					Item[] items = new Item[Main.maxItemTypes];
-					for (int i = 0; i < Main.maxItemTypes; i++)
-					{
-						items[i] = Registries.Item.Create(i);
-					}
+            Player receiver = args.GetOnlinePlayer(0);
+            int stack = args.GetInt(1);
+            string NameOrId = args.GetString(2);
 
-					Item item = null;
-					itemName = itemName.Replace(" ", "").ToLower();
-					for (int i = 0; i < Main.maxItemTypes; i++)
-					{
-						if (items[i].Name != null)
-						{
-                            string genItemName = items[i].Name.Replace(" ", "").Trim().ToLower();
-							if (genItemName == itemName)
-							{
-								item = items[i];
-							}
-						}
-					}
+            List<Int32> itemlist;
+            if (Server.TryFindItemByName(NameOrId, out itemlist) && itemlist.Count > 0)
+            {
+                if (itemlist.Count > 1)
+                    throw new CommandError("There were {0} Items found regarding the specified name", itemlist.Count);
 
-					int itemType = -1;
-					bool assumed = false;
-					if (item != null)
-					{
-						itemType = item.Type;
-					}
-					else
-					{
-						int assumedItem;
-						try
-						{
-							assumedItem = Int32.Parse(itemName);
-						}
-						catch (Exception)
-						{
-							sender.sendMessage("Item '" + itemName + "' not found!");
-							return;
-						}
+                foreach (int id in itemlist)
+                    receiver.GiveItem(id, stack, sender);
+            }
+            else
+            {
+                int Id = -1;
+                try
+                {
+                    Id = Int32.Parse(NameOrId);
+                }
+                catch
+                {
+                    throw new CommandError("There were {0} Items found regarding the specified Item Id/Name", itemlist.Count);
+                }
 
-						for (int i = 0; i < Main.maxItemTypes; i++)
-						{
-							if (items[i].Type == assumedItem)
-							{
-								itemType = items[i].Type;
-								assumed = true;
-								break;
-							}
-						}
+                if (Server.TryFindItemByType(Id, out itemlist) && itemlist.Count > 0)
+                {
+                    if (itemlist.Count > 1)
+                        throw new CommandError("There were {0} Items found regarding the specified Type Id", itemlist.Count);
 
-						if (!assumed)
-						{
-							sender.sendMessage("Item '" + itemName + "' not found!");
-							return;
-						}
-					}
-
-					//Clear Data
-					for (int i = 0; i < Main.maxItemTypes; i++)
-					{
-						items[i] = null;
-					}
-					items = null;
-
-					if (itemType != -1)
-					{
-
-						int stackSize;
-						try
-						{
-							stackSize = Int32.Parse(args[1]);
-						}
-						catch (Exception)
-						{
-							stackSize = 1;
-						}
-
-						Item.NewItem((int)player.Position.X, (int)player.Position.Y, player.Width, player.Height, itemType, stackSize, false);
-
-						Server.notifyOps("Giving " + player.Name + " some " + itemType.ToString() + " {" + sender.Name + "}", true);
-
-						return;
-					}
-				}
-				else
-				{
-					sender.sendMessage("Player '" + playerName + "' not found!");
-					return;
-				}
-			}
-			else
-			{
-				goto ERROR;
-			}
-
-		ERROR:
-			sender.sendMessage("Command Error!");
+                    foreach (int id in itemlist)
+                        receiver.GiveItem(id, stack, sender);
+                }
+                else
+                {
+                    throw new CommandError("There were no Items found regarding the specified Item Id/Name");
+                }
+            }            
 		}
 
 		/// <summary>
@@ -873,36 +790,29 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void OpPlayer(ISender sender, ArgumentList args)
 		{
-			if (args.Count > 1)
-			{
-                string Password = args[args.Count - 1];
-                string player = String.Join(" ", args);
-				player = player.Remove(player.IndexOf(Password), Password.Length).Trim().ToLower();
+            var playerName = args.GetString(0);
+            var password = args.GetString(1);
+            Player player;
+            if (args.TryGetOnlinePlayer(0, out player))
+            {
+                playerName = player.Name;
 
-                Server.notifyOps("Opping " + player + " {" + sender.Name + "}", true);
-                Server.OpList.addException(player + ":" + Password, true, player.Length + 1);
+                player.sendMessage("You are now OP!", ChatColor.Green);
+                player.Op = true;
+                if (player.HasClientMod)
+                {
+                    NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+                }
+            }
 
-                if (!Server.OpList.Save())
-				{
-                    Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
-					return;
-				}
+            Server.notifyOps("Opping " + playerName + " {" + sender.Name + "}", true);
+            Server.OpList.addException(playerName + ":" + password, true, playerName.Length + 1);
 
-                Player playerInstance = Server.GetPlayerByName(player);
-				if (playerInstance != null)
-				{
-					playerInstance.sendMessage("You are now OP!", ChatColor.Green);
-                    playerInstance.Op = true;
-                    if (playerInstance.HasClientMod)
-                    {
-                        NetMessage.SendData(Packet.CLIENT_MOD, playerInstance.whoAmi);
-                    }
-				}
-			}
-			else
-			{
-				sender.sendMessage("Please review that command");
-			}
+            if (!Server.OpList.Save())
+            {
+                Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+                return;
+            }
 		}
 
 		/// <summary>
@@ -912,47 +822,35 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void DeopPlayer(ISender sender, ArgumentList args)
 		{
-			if (args.Count > 0)
-			{
-                string player = String.Join(" ", args).Trim();
+            var playerName = args.GetString(0);
+            Player player;
+            if (args.TryGetOnlinePlayer(0, out player))
+            {
+                playerName = player.Name;
 
-                Server.notifyOps("De-Opping " + player + " {" + sender.Name + "}", true);
-
-				if (Player.isInOpList(player))
-				{
-					Server.OpList.removeException(player + ":" + Player.GetPlayerPassword(player));
-				}
-
-                if (!Server.OpList.Save())
-				{
-                    Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
-					return;
-				}
-
-                Player playerInstance = Server.GetPlayerByName(player);
-				if (playerInstance != null)
+                if (Player.isInOpList(playerName))
                 {
+                    player.sendMessage("You have been De-Opped!.", ChatColor.Green);
+                }
 
-                    if (playerInstance.Op && playerInstance.HasClientMod) //Deop the client too
-                    {
-                        playerInstance.Op = false;
-                        if (playerInstance.HasClientMod)
-                        {
-                            NetMessage.SendData(Packet.CLIENT_MOD, playerInstance.whoAmi);
-                        }
-                    }
-                    else
-                    {
-                        playerInstance.Op = false;
-                    }
+                player.Op = false;
+                if (player.HasClientMod)
+                {
+                    NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+                }
+            }
 
-					playerInstance.sendMessage("You have been De-Opped!.", ChatColor.Green);
-				}
-			}
-			else
-			{
-				sender.sendMessage("Please review that command");
-			}
+            if (Player.isInOpList(playerName))
+            {
+                Server.notifyOps("De-Opping " + playerName + " {" + sender.Name + "}", true);
+                Server.OpList.removeException(playerName + ":" + Player.GetPlayerPassword(playerName));
+            }
+
+            if (!Server.OpList.Save())
+            {
+                Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+                return;
+            }
 		}
 
 		/// <summary>
@@ -970,16 +868,18 @@ namespace Terraria_Server.Commands
 				{
 					if (player.Password.Equals(Password))
 					{
+                        Server.notifyOps("{0} Logged in as OP.", true, player.Name);
 						player.Op = true;
 						player.sendMessage("Successfully Logged in as OP.", ChatColor.DarkGreen);
-
+                        
                         if (player.HasClientMod)
                         {
                             NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
                         }
 					}
 					else
-					{
+                    {
+                        Server.notifyOps("{0} Failed to log in as OP due to incorrect password.", true, player.Name);
 						player.sendMessage("Incorrect OP Password.", ChatColor.DarkRed);
 					}
 				}
@@ -1004,6 +904,8 @@ namespace Terraria_Server.Commands
 				{
                     player.Op = false;
                     player.sendMessage("Successfully Logged Out.", ChatColor.DarkRed);
+
+                    Server.notifyOps("{0} logged out.", true, player.Name);
 
                     if (player.HasClientMod)
                     {
@@ -1410,9 +1312,11 @@ namespace Terraria_Server.Commands
         {
             args.ParseNone();
 
-            Program.properties.AllowExplosions = !Program.properties.AllowExplosions;
-            sender.sendMessage("Explosions are now " + ((Program.properties.AllowExplosions) ? "allowed" : "disabled") + "!");
+            Server.AllowExplosions = !Server.AllowExplosions;
+            Program.properties.AllowExplosions = Server.AllowExplosions;
             Program.properties.Save();
+
+            sender.sendMessage("Explosions are now " + ((Server.AllowExplosions) ? "allowed" : "disabled") + "!");
         }
         
 		public static void Refresh (ISender sender, ArgumentList args)
@@ -1444,5 +1348,38 @@ namespace Terraria_Server.Commands
 			
 			NetMessage.SendTileSquare (player.whoAmi, (int) (player.Position.X/16), (int) (player.Position.Y/16), 32);
 		}
+
+        public static void ToggleRPGClients(ISender sender, ArgumentList args)
+        {
+            Server.AllowTDCMRPG = !Server.AllowTDCMRPG;
+            Program.properties.AllowTDCMRPG = Server.AllowTDCMRPG;
+
+            foreach (Player player in Main.players)
+            {
+                if (player.HasClientMod)
+                    NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+            }
+
+            if (!Server.OpList.Save())
+            {
+                Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+                return;
+            }
+
+            string message = String.Format("RPG Mode is now {0} on this server:", (Server.AllowTDCMRPG) ? "allowed" : "refused");
+            Server.notifyOps(message);
+        }
+
+        public static void SpawnQuestGiver(ISender sender, ArgumentList args)
+        {
+            if (!Server.AllowTDCMRPG)
+                throw new CommandError("You cannot spawn the Quest Giver without allowing TDCM Clients!");
+
+            int npcId;
+            if (NPC.TryFindNPCByName(Statics.TDCM_QUEST_GIVER, out npcId))
+                throw new CommandError("The Quest Giver is already spawned!");
+
+            NPC.SpawnTDCMQuestGiver();
+        }
     }
 }

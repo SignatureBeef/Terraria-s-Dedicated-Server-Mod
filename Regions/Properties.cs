@@ -15,6 +15,7 @@ namespace Regions
         public void pushData()
         {
             object temp = SelectionToolID;
+            temp = RectifyChanges;
         }
 
         /*public List<String> BlockedProjectiles
@@ -39,6 +40,18 @@ namespace Regions
             set
             {
                 setValue("selectionblockid", value);
+            }
+        }
+
+        public bool RectifyChanges
+        {
+            get
+            {
+                return getValue("rectify", true);
+            }
+            set
+            {
+                setValue("rectify", value);
             }
         }
     }

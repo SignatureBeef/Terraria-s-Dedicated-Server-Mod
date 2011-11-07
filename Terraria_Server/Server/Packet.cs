@@ -63,6 +63,11 @@
 		//custom
 		TILE_ROW_COMPRESSED = 240,
 //		TILE_SQUARE_COMPRESSED = 241,
-		CLIENT_MOD = 254,
+
+        //TDCM
+        CLIENT_MOD_SPAWN_NPC = 251,
+        CLIENT_MOD_QUESTG_INFO = 252,
+        //Essentials has 253
+        CLIENT_MOD = 254,
 	}
 }

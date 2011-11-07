@@ -129,12 +129,12 @@ namespace Terraria_Server
             }
         }
 
-        public bool isTileValid(int TileX, int TileY)
+        public static bool IsTileValid(int TileX, int TileY)
         {
-            return (TileX >= 0 && TileX <= maxTilesX && TileY >= 0 && TileY <= maxTilesY);
+            return (TileX >= 0 && TileX <= Main.maxTilesX && TileY >= 0 && TileY <= Main.maxTilesY);
         }
 
-        public bool isTileClear(int TileX, int TileY)
+        public static bool IsTileClear(int TileX, int TileY)
         {
             return (!Main.tile.At(TileX, TileY).Active);
         }
@@ -159,8 +159,8 @@ namespace Terraria_Server
                 {
                     tileLocation.X = TileX + ((Main.rand.Next(RangeX * -1, RangeX)) / 2);
                     tileLocation.Y = TileY + ((Main.rand.Next(RangeY * -1, RangeY)) / 2);
-                    if ((Server.World.isTileValid((int)tileLocation.X, (int)tileLocation.Y) && 
-                        Server.World.isTileClear((int)tileLocation.X, (int)tileLocation.Y)))
+                    if ((World.IsTileValid((int)tileLocation.X, (int)tileLocation.Y) && 
+                        World.IsTileClear((int)tileLocation.X, (int)tileLocation.Y)))
                     {
                         break;
                     }
