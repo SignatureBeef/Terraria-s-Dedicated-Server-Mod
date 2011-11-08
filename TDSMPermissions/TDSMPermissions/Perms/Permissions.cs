@@ -6,6 +6,7 @@ using TDSMPermissions.Definitions;
 using YaTools.Yaml;
 using System.IO;
 using Terraria_Server.Misc;
+using Terraria_Server.Logging;
 using Terraria_Server;
 using System.Threading;
 
@@ -184,75 +185,74 @@ namespace TDSMPermissions.Perms
             bool CanBuild = false;
             string Prefix = "";
             string Suffix = "";
-            string Seperator = "";
+            string Seperator = ": ";
             Color color = default(Color);
+			int Rank = -1;
 
-			if (WaitNext(sc, "default"))
+			while (sc.Token != Token.Outdent && sc.Token != Token.EndOfStream)
 			{
-				try
+				switch (sc.TokenText.ToLower())
 				{
-					Default = Convert.ToBoolean(GetNextToken(sc));
+					case "default":
+						{
+							try
+							{
+								Default = Convert.ToBoolean(GetNextToken(sc));
+							}
+							catch
+							{
+							}
+							break;
+						}
+					case "prefix":
+						{
+							Prefix = GetNextToken(sc);
+							break;
+						}
+					case "suffix":
+						{
+							Suffix = GetNextToken(sc);
+							break;
+						}
+					case "separator":
+						{
+							Seperator = GetNextToken(sc);
+							break;
+						}
+					case "build":
+						{
+							string RE = GetNextToken(sc);
+							try
+							{
+								CanBuild = Convert.ToBoolean(RE);
+							}
+							catch
+							{
+							}
+							break;
+						}
+					case "color":
+						{
+							Color col;
+							string token = GetNextToken(sc);
+							if (Color.TryParseRGB(sc.TokenText, out col))
+								color = col;
+							break;
+						}
+					case "rank":
+						{
+							Rank = Convert.ToInt32(GetNextToken(sc));
+							break;
+						}
+
 				}
-				catch
-				{
-				}
+				sc.NextToken();
 			}
-
-			if (WaitNext(sc, "prefix"))
-			{
-				Prefix = GetNextToken(sc);
-			}
-
-			if (WaitNext(sc, "suffix"))
-			{
-				Suffix = GetNextToken(sc);
-			}
-
-			if (WaitNext(sc, "seperator"))
-			{
-				Seperator = GetNextToken(sc);
-			}
-
-			if (WaitNext(sc, "build"))
-			{
-				string RE = GetNextToken(sc);
-				try
-				{
-					CanBuild = Convert.ToBoolean(RE);
-				}
-				catch
-				{
-				}
-			}
-
-            while (sc.TokenText != "color")
-            {
-                sc.NextToken();
-                if (sc.Token == Token.Outdent)
-                {
-                    color = Chat.DEFAULT_CHATCOLOR;
-                    break;
-                }
-            }
-
-            if (sc.Token == Token.TextContent && sc.TokenText == "color")
-            {
-                while (sc.NextToken() != Token.TextContent)
-                {
-                    if (sc.Token == Token.Outdent)
-                        break;
-                }
-                Color col;
-                if (sc.Token == Token.TextContent && Color.TryParseRGB(sc.TokenText, out col))
-                    color = col;
-                //else
-                //    color = ChatColor.White;
-            }
 
             if (inUsers)
                 currentUser.SetUserInfo(Prefix, Suffix, Seperator, CanBuild, color);
             else
-                currentGroup.SetGroupInfo(Default, CanBuild, Prefix, Suffix, Seperator, color);
+                currentGroup.SetGroupInfo(Default, CanBuild, Prefix, Suffix, Seperator, color, Rank);
         }
 
         public static void ParseInheritance()
