@@ -6,6 +6,7 @@ using TDSMPermissions.Definitions;
 using YaTools.Yaml;
 using System.IO;
 using Terraria_Server.Misc;
+using Terraria_Server.Logging;
 using Terraria_Server;
 using System.Threading;
 
@@ -161,7 +162,7 @@ namespace TDSMPermissions.Perms
 
         public static void WaitNext(YamlScanner sc, string node)
         {
-            while (sc.TokenText != node && sc.Token != Token.EndOfStream)
+            while (sc.TokenText != node && sc.Token != Token.EndOfStream && sc.Token != Token.Outdent)
                 sc.NextToken();
         }
 
@@ -176,72 +177,78 @@ namespace TDSMPermissions.Perms
 
         public static void ProcessInfo()
         {
-            bool Default;
-            bool CanBuild;
-            string Prefix;
-            string Suffix;
-            string Seperator;
-            Color color = default(Color);
+            bool Default = false;
+            bool CanBuild = false;
+            string Prefix = "";
+            string Suffix = "";
+            string Seperator = ": ";
+            Color color = new Color(255, 255, 255);
+			int Rank = -1;
 
-            WaitNext(sc, "default");
-
-			try
+			while (sc.Token != Token.Outdent && sc.Token != Token.EndOfStream)
 			{
-				Default = Convert.ToBoolean(GetNextToken(sc));
+				switch (sc.TokenText.ToLower())
+				{
+					case "default":
+						{
+							try
+							{
+								Default = Convert.ToBoolean(GetNextToken(sc));
+							}
+							catch
+							{
+							}
+							break;
+						}
+					case "prefix":
+						{
+							Prefix = GetNextToken(sc);
+							break;
+						}
+					case "suffix":
+						{
+							Suffix = GetNextToken(sc);
+							break;
+						}
+					case "separator":
+						{
+							Seperator = GetNextToken(sc);
+							break;
+						}
+					case "build":
+						{
+							string RE = GetNextToken(sc);
+							try
+							{
+								CanBuild = Convert.ToBoolean(RE);
+							}
+							catch
+							{
+							}
+							break;
+						}
+					case "color":
+						{
+							Color col;
+							string token = GetNextToken(sc);
+							if (Color.TryParseRGB(sc.TokenText, out col))
+								color = col;
+							break;
+						}
+					case "rank":
+						{
+							Rank = Convert.ToInt32(GetNextToken(sc));
+							break;
+						}
+
+				}
+				sc.NextToken();
 			}
-			catch
-			{
-				Default = false;
-			}
-
-            WaitNext(sc, "prefix");
-            Prefix = GetNextToken(sc);
-
-            WaitNext(sc, "suffix");
-            Suffix = GetNextToken(sc);
-
-            WaitNext(sc, "seperator");
-            Seperator = GetNextToken(sc);
-
-            WaitNext(sc, "build");
-            string RE = GetNextToken(sc);
-			try
-			{
-				CanBuild = Convert.ToBoolean(RE);
-			}
-			catch
-			{
-				CanBuild = true;
-			}
-
-            while (sc.TokenText != "color")
-            {
-                sc.NextToken();
-                if (sc.Token == Token.Outdent)
-                {
-                    color = Chat.DEFAULT_CHATCOLOR;
-                    break;
-                }
-            }
-
-            if (sc.Token == Token.TextContent && sc.TokenText == "color")
-            {
-                while (sc.NextToken() != Token.TextContent)
-                {
-                    if (sc.Token == Token.Outdent)
-                        break;
-                }
-                Color col;
-                if (sc.Token == Token.TextContent && Color.TryParseRGB(sc.TokenText, out col))
-                    color = col;
-                //else
-                //    color = ChatColor.White;
-            }
 
             if (inUsers)
                 currentUser.SetUserInfo(Prefix, Suffix, Seperator, CanBuild, color);
             else
-                currentGroup.SetGroupInfo(Default, CanBuild, Prefix, Suffix, Seperator, color);
+                currentGroup.SetGroupInfo(Default, CanBuild, Prefix, Suffix, Seperator, color, Rank);
         }
 
         public static void ParseInheritance()
