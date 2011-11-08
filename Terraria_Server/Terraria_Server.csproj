@@ -249,6 +249,10 @@
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Server\WorldSender.cs" />
     <Compile Include="Commands\Sender.cs" />
+    <Compile Include="WorldMod\Sandbox.cs" />
+    <Compile Include="WorldMod\SandboxEditor.cs" />
+    <Compile Include="WorldMod\PlayerSandbox.cs" />
+    <Compile Include="WorldMod\SideEffect.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

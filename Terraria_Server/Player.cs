@@ -1,15 +1,17 @@
-using Terraria_Server.Commands;
 using System;
-using Terraria_Server.Plugins;
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
+using System.Collections.Generic;
+using System.Net;
+
+using Terraria_Server.Plugins;
+using Terraria_Server.Commands;
 using Terraria_Server.Misc;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
-using System.Net;
 using Terraria_Server.Networking;
 using Terraria_Server.TDCM;
 
@@ -325,6 +327,8 @@ namespace Terraria_Server
 		public int ghostFrame { get; set; } // not sure if those are used by us
 		public int ghostFrameCounter { get; set; }
 		public bool hbLocked { get; set; }
+		
+		internal Dictionary<ushort, uint> rowsToRectify = new Dictionary<ushort, uint> ();
 		
 		private float maxRegenDelay;
 		
@@ -3357,11 +3361,12 @@ namespace Terraria_Server
 			if (this.immune) return 0.0;
 			
 			var proj = aggressor as Projectile;
+			var plr = aggressor as Player;
 			
 			var ctx = new HookContext
 			{
 				Sender = aggressor,
-				Player = proj != null ? (proj.Creator as Player) : (aggressor as Player),
+				Player = proj != null ? (proj.Creator as Player) : plr,
 			};
 			
 			ctx.Connection = ctx.Player != null ? ctx.Player.Connection : null;
@@ -3393,6 +3398,8 @@ namespace Terraria_Server
 				}
 				return 0.0;
 			}
+			
+			NetMessage.SendData (26, -1, plr != null ? plr.whoAmi : -1, args.Obituary, whoAmi, args.HitDirection, args.Damage, args.Pvp ? 1 : 0, args.Critical ? 1 : 0);
 			
 			return HurtInternal (args.Damage, args.HitDirection, args.Pvp, args.Quiet, args.Obituary, args.Critical);
 		}

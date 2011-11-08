@@ -62,7 +62,7 @@ namespace Terraria_Server.Plugins
 		
 		internal bool HasRunningCommands
 		{
-			get { return (runningCommands - pausedCommands) > 0; }
+			get { return (runningCommands - pausedCommands - threadInCommand) > 0; }
 		}
 		
 		internal volatile bool initialized;
@@ -380,160 +380,106 @@ namespace Terraria_Server.Plugins
 				
 				var signal = new ManualResetEvent (false);
 				
-				try
+				lock (HookPoint.editLock) try
 				{
-					// commands or hooks that begin running after this get paused
-					commandPauseSignal = signal;
-					
-					foreach (var hook in hooks)
+					using (this.Pause())
 					{
-						hook.Pause (signal);
-					}
-					
-					// wait for commands that may have already been running to finish
-					while (HasRunningCommands)
-					{
-						Thread.Sleep (10);
-					}
-					
-					ProgramLog.Debug.Log ("Plugin's commands paused...");
-					
-					// wait for hooks that may have already been running to finish
-					var pausing = new LinkedList<HookPoint> (hooks);
-					
-					// pausing hooks is more disruptive than pausing commands,
-					// so we spinwait instead of sleeping
-					var wait = new SpinWait ();
-					while (pausing.Count > 0)
-					{
-						wait.SpinOnce ();
-						var link = pausing.First;
-						while (link != null)
-						{
-							if (link.Value.AllPaused)
-							{
-								var x = link;
-								link = link.Next;
-								pausing.Remove (x);
-								paused.AddFirst (x);
-							}
-							else
-							{
-								link = link.Next;
-							}
-						}
-					}
-					
-					ProgramLog.Debug.Log ("Plugin's hooks paused...");
-					
-					//Thread.Sleep (10000);
-					
-					// initialize new instance with saved state
-					if (saveState)
-						savedState = Suspend ();
-					
-					ProgramLog.Debug.Log ("Initializing new plugin instance...");
-					if (! newPlugin.Initialize (savedState))
-					{
+						// initialize new instance with saved state
 						if (saveState)
-							Resume (savedState);
-						return false;
-					}
-					
-					// point of no return, if the new plugin fails now,
-					// blame the author
-					// because it's time to dispose the old plugin
-					noreturn = true;
-					
-					// use command objects from the old plugin, because command invocations
-					// may be paused inside them, this way when they unpause
-					// they run the new plugin's methods
-					lock (commands)
-					{
-						ProgramLog.Debug.Log ("Replacing commands...");
+							savedState = Suspend ();
 						
-						var prefixes = newPlugin.commands.Keys.ToArray();
-						
-						var done = new HashSet<CommandInfo> ();
-						
-						foreach (var prefix in prefixes)
+						ProgramLog.Debug.Log ("Initializing new plugin instance...");
+						if (! newPlugin.Initialize (savedState))
 						{
-							CommandInfo oldCmd;
-							if (commands.TryGetValue (prefix, out oldCmd))
+							if (saveState)
+								Resume (savedState);
+							return false;
+						}
+						
+						// point of no return, if the new plugin fails now,
+						// blame the author
+						// because it's time to dispose the old plugin
+						noreturn = true;
+						
+						// use command objects from the old plugin, because command invocations
+						// may be paused inside them, this way when they unpause
+						// they run the new plugin's methods
+						lock (commands)
+						{
+							ProgramLog.Debug.Log ("Replacing commands...");
+							
+							var prefixes = newPlugin.commands.Keys.ToArray();
+							
+							var done = new HashSet<CommandInfo> ();
+							
+							foreach (var prefix in prefixes)
 							{
-//								ProgramLog.Debug.Log ("Replacing command {0}.", prefix);
-								var newCmd = newPlugin.commands[prefix];
-								
-								newPlugin.commands[prefix] = oldCmd;
-								commands.Remove (prefix);
-								
-								if (done.Contains (oldCmd)) continue;
-								
-								oldCmd.InitFrom (newCmd);
-								done.Add (oldCmd);
-								
-								oldCmd.AfterEvent += newPlugin.NotifyAfterCommand;
-								oldCmd.BeforeEvent += newPlugin.NotifyBeforeCommand;
-								
-								// garbage
-								newCmd.ClearCallbacks ();
-								newCmd.ClearEvents ();
+								CommandInfo oldCmd;
+								if (commands.TryGetValue (prefix, out oldCmd))
+								{
+	//								ProgramLog.Debug.Log ("Replacing command {0}.", prefix);
+									var newCmd = newPlugin.commands[prefix];
+									
+									newPlugin.commands[prefix] = oldCmd;
+									commands.Remove (prefix);
+									
+									if (done.Contains (oldCmd)) continue;
+									
+									oldCmd.InitFrom (newCmd);
+									done.Add (oldCmd);
+									
+									oldCmd.AfterEvent += newPlugin.NotifyAfterCommand;
+									oldCmd.BeforeEvent += newPlugin.NotifyBeforeCommand;
+									
+									// garbage
+									newCmd.ClearCallbacks ();
+									newCmd.ClearEvents ();
+								}
+							}
+							
+							foreach (var kv in commands)
+							{
+								var cmd = kv.Value;
+								ProgramLog.Debug.Log ("Clearing command {0}.", kv.Key);
+								cmd.ClearCallbacks ();
+							}
+							commands.Clear ();
+						}
+						
+						// replace hook subscriptions from the old plugin with new ones
+						// in the exact same spots in the invocation chains
+						lock (newPlugin.desiredHooks)
+						{
+							ProgramLog.Debug.Log ("Replacing hooks...");
+							
+							foreach (var h in newPlugin.desiredHooks)
+							{
+								if (hooks.Contains (h.hookPoint))
+								{
+									h.hookPoint.Replace (this, newPlugin, h.callback, h.order);
+									hooks.Remove (h.hookPoint);
+									newPlugin.hooks.Add (h.hookPoint);
+								}
+								else
+								{
+									// this adds the hook to newPlugin.hooks
+									h.hookPoint.HookBase (newPlugin, h.callback, h.order);
+								}
 							}
 						}
 						
-						foreach (var kv in commands)
-						{
-							var cmd = kv.Value;
-							ProgramLog.Debug.Log ("Clearing command {0}.", kv.Key);
-							cmd.ClearCallbacks ();
-						}
-						commands.Clear ();
-					}
-					
-					// replace hook subscriptions from the old plugin with new ones
-					// in the exact same spots in the invocation chains
-					lock (newPlugin.desiredHooks)
-					{
-						ProgramLog.Debug.Log ("Replacing hooks...");
+						ProgramLog.Debug.Log ("Disabling old plugin instance...");
+						Disable ();
 						
-						foreach (var h in newPlugin.desiredHooks)
+						ProgramLog.Debug.Log ("Enabling new plugin instance...");
+						if (newPlugin.Enable ())
 						{
-							if (hooks.Contains (h.hookPoint))
-							{
-								h.hookPoint.Replace (this, newPlugin, h.callback, h.order);
-								hooks.Remove (h.hookPoint);
-								newPlugin.hooks.Add (h.hookPoint);
-							}
-							else
-							{
-								// this adds the hook to newPlugin.hooks
-								h.hookPoint.HookBase (newPlugin, h.callback, h.order);
-							}
+							result = true;
 						}
-					}
-					
-					ProgramLog.Debug.Log ("Disabling old plugin instance...");
-					Disable ();
-					
-					ProgramLog.Debug.Log ("Enabling new plugin instance...");
-					if (newPlugin.Enable ())
-					{
-						result = true;
 					}
 				}
-				finally // unpause
+				finally
 				{
-					ProgramLog.Debug.Log ("Unpausing everything...");
-					
-					commandPauseSignal = null;
-					
-					foreach (var hook in paused)
-					{
-						hook.CancelPause ();
-					}
-					
-					signal.Set ();
-					
 					Server.notifyAll ("<Server> Done.", Misc.ChatColor.White, true);
 					
 					// clean up remaining hooks
@@ -546,6 +492,100 @@ namespace Terraria_Server.Plugins
 			}
 			
 			return result;
+		}
+		
+		/// <summary>
+		/// Pause all hook and command invocations of this plugin.
+		/// This method should only be called by the plugin itself and should always be used
+		/// in a using statement.
+		/// <example>
+		///     using (this.Pause ())
+		///     {
+		///         // code
+		///     }
+		/// </example>
+		/// </summary>
+		protected PauseContext Pause ()
+		{
+			return new PauseContext (this);
+		}
+		
+		protected class PauseContext : IDisposable
+		{
+			BasePlugin plugin;
+			ManualResetEvent signal;
+			LinkedList<HookPoint> paused;
+			
+			internal PauseContext (BasePlugin plugin)
+			{
+				this.plugin = plugin;
+				
+				signal = new ManualResetEvent (false);
+				paused = new LinkedList<HookPoint> ();
+				
+				Monitor.Enter (HookPoint.editLock);
+				
+				// commands or hooks that begin running after this get paused
+				plugin.commandPauseSignal = signal;
+				
+				foreach (var hook in plugin.hooks)
+				{
+					hook.Pause (signal);
+				}
+				
+				// wait for commands that may have already been running to finish
+				while (plugin.HasRunningCommands)
+				{
+					Thread.Sleep (10);
+				}
+				
+				ProgramLog.Debug.Log ("Plugin {0} commands paused...", plugin.Name ?? "???");
+				
+				// wait for hooks that may have already been running to finish
+				var pausing = new LinkedList<HookPoint> (plugin.hooks);
+				
+				// pausing hooks is more disruptive than pausing commands,
+				// so we spinwait instead of sleeping
+				var wait = new SpinWait ();
+				var min = HookPoint.threadInHook ? 1 : 0;
+				while (pausing.Count > min)
+				{
+					wait.SpinOnce ();
+					var link = pausing.First;
+					while (link != null)
+					{
+						if (link.Value.AllPaused)
+						{
+							var x = link;
+							link = link.Next;
+							pausing.Remove (x);
+							paused.AddFirst (x);
+						}
+						else
+						{
+							link = link.Next;
+						}
+					}
+				}
+				
+				ProgramLog.Debug.Log ("Plugin {0} hooks paused...", plugin.Name ?? "???");
+			}
+			
+			public void Dispose ()
+			{
+				ProgramLog.Debug.Log ("Unpausing everything related to plugin {0}...", plugin.Name ?? "???");
+				
+				plugin.commandPauseSignal = null;
+				
+				foreach (var hook in paused)
+				{
+					hook.CancelPause ();
+				}
+				
+				signal.Set ();
+				
+				Monitor.Exit (HookPoint.editLock);
+			}
 		}
 		
 		internal bool NotifyWorldLoaded ()
@@ -567,6 +607,9 @@ namespace Terraria_Server.Plugins
 			return true;
 		}
 		
+		[ThreadStatic]
+		internal static int threadInCommand;
+		
 		internal void NotifyBeforeCommand (CommandInfo cmd)
 		{
 			Interlocked.Increment (ref runningCommands);
@@ -578,11 +621,14 @@ namespace Terraria_Server.Plugins
 				signal.WaitOne ();
 				Interlocked.Decrement (ref pausedCommands);
 			}
+			
+			threadInCommand = 1;
 		}
 		
 		internal void NotifyAfterCommand (CommandInfo cmd)
 		{
 			Interlocked.Decrement (ref runningCommands);
+			threadInCommand = 0;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace Terraria_Server
 {
@@ -60,12 +61,12 @@ namespace Terraria_Server
 		}
 
 		public byte Wall {
-			get { return Main.tile.data [x, y].wall; }
+			get { return Main.tile.data [x, y].Wall; }
 		}
 		
 		public void SetWall (byte value)
 		{
-			Main.tile.data [x, y].wall = value;
+			Main.tile.data [x, y].Wall = value;
 		}
 
 		public byte Liquid {
@@ -110,40 +111,40 @@ namespace Terraria_Server
 		}
 
 		public byte FrameNumber {
-			get { return Main.tile.data [x, y].frameNumber; }
+			get { return Main.tile.data [x, y].FrameNumber; }
 		}
 
 		public void SetFrameNumber (byte value)
 		{
-			Main.tile.data [x, y].frameNumber = value;
+			Main.tile.data [x, y].FrameNumber = value;
 		}
 
 		public short FrameX {
-			get { return Main.tile.data [x, y].frameX; }
+			get { return Main.tile.data [x, y].FrameX; }
 		}
 		
 		public void SetFrameX (short value)
 		{
-			Main.tile.data [x, y].frameX = value;
+			Main.tile.data [x, y].FrameX = value;
 		}
 		
 		public void AddFrameX (int value)
 		{
-			Main.tile.data [x, y].frameX = (short) (Main.tile.data [x, y].frameX + value);
+			Main.tile.data [x, y].FrameX = (short) (Main.tile.data [x, y].FrameX + value);
 		}
 
 		public short FrameY {
-			get { return Main.tile.data [x, y].frameY; }
+			get { return Main.tile.data [x, y].FrameY; }
 		}
 		
 		public void SetFrameY (short value)
 		{
-			Main.tile.data [x, y].frameY = value;
+			Main.tile.data [x, y].FrameY = value;
 		}
 		
 		public void AddFrameY (int value)
 		{
-			Main.tile.data [x, y].frameY = (short) (Main.tile.data [x, y].frameY + value);
+			Main.tile.data [x, y].FrameY = (short) (Main.tile.data [x, y].FrameY + value);
 		}
 	}
 	
@@ -160,13 +161,18 @@ namespace Terraria_Server
 	[StructLayout(LayoutKind.Sequential, Pack=1)]
 	public struct TileData
 	{
-		internal short frameX;
-		internal short frameY;
-		internal byte type;
-		internal byte wall;
-		internal byte liquid;
-		internal byte frameNumber;
+//		static byte[] frameEnc = new byte [65535];
+//		static byte[] frameDec = new byte [255];
+//		static int framesEncoded;
+//		static Dictionary<int, int> frameOverflow = new Dictionary<int, int> ();
+		
+		
 		internal TileFlags flags;
+		internal byte type;
+		byte wall;
+		byte frameX;
+		byte frameY;
+		internal byte liquid;
 		
 		internal void SetFlag (TileFlags f, bool value)
 		{
@@ -196,28 +202,44 @@ namespace Terraria_Server
 
 		public byte FrameNumber {
 			get {
-				return this.frameNumber;
+				return (byte) (wall >> 6);
 			}
 			set {
-				frameNumber = value;
+				wall = (byte) ((wall & 63) | (value << 6));
 			}
 		}
 
 		public short FrameX {
-			get {
-				return this.frameX;
+			get
+			{
+				if (frameX == 255)
+					return -1;
+				else
+					return (short) (frameX << 1);
 			}
-			set {
-				frameX = value;
+			set
+			{
+				if (value == -1)
+					frameX = 255;
+				else
+					frameX = (byte) (value >> 1);
 			}
 		}
 
 		public short FrameY {
-			get {
-				return this.frameY;
+			get
+			{
+				if (frameY == 255)
+					return -1;
+				else
+					return (short) (frameY << 1);
 			}
-			set {
-				frameY = value;
+			set
+			{
+				if (value == -1)
+					frameY = 255;
+				else
+					frameY = (byte) (value >> 1);
 			}
 		}
 
@@ -268,10 +290,10 @@ namespace Terraria_Server
 
 		public byte Wall {
 			get {
-				return this.wall;
+				return (byte) (wall & 63);
 			}
 			set {
-				wall = value;
+				wall = (byte) ((wall & ~63) | (value & 63));
 			}
 		}
 	}

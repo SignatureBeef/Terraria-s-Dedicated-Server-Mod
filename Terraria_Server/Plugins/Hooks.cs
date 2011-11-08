@@ -407,6 +407,8 @@ namespace Terraria_Server.Plugins
 			
 			public bool   TypeChecked { get; set; }
 			
+			public WorldMod.PlayerSandbox Sandbox { get; internal set; }
+			
 			public bool TileWasRemoved
 			{
 				get { return Action == 0 || Action == 4 || Action == 100; }

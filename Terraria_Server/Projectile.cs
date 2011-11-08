@@ -625,9 +625,11 @@ namespace Terraria_Server
                                     int dmg = Main.DamageVar (this.damage);
                                     
                                     if (!playerIt.immune) this.StatusPvP (playerIt);
-                                    playerIt.Hurt (this, dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), crit);
+                                    
+                                    var crea = Creator as Player;
+                                    playerIt.Hurt (this, dmg, this.direction, true, false, Player.getDeathMessage(this.Owner < 255 ? this.Owner : (crea == null ? 255 : crea.whoAmi), -1, this.whoAmI, -1), crit);
                                                                         
-                                    NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), i, (float)this.direction, (float)dmg, 1f, crit ? 1 : 0);
+                                    //NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), i, (float)this.direction, (float)dmg, 1f, crit ? 1 : 0);
 
                                     this.playerImmune[i] = 40;
                                     if (this.penetrate > 0)
