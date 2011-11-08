@@ -160,14 +160,10 @@ namespace TDSMPermissions.Perms
             }
         }
 
-        public static bool WaitNext(YamlScanner sc, string node)
+        public static void WaitNext(YamlScanner sc, string node)
         {
             while (sc.TokenText != node && sc.Token != Token.EndOfStream && sc.Token != Token.Outdent)
                 sc.NextToken();
-			if (sc.Token == Token.Outdent || sc.Token == Token.EndOfStream)
-				return false;
-			else
-				return true;
         }
 
         public const string CrLf = "\r\n";
