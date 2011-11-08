@@ -182,7 +182,7 @@ namespace TDSMPermissions.Perms
             string Prefix = "";
             string Suffix = "";
             string Seperator = ": ";
-            Color color = default(Color);
+            Color color = new Color(255, 255, 255);
 			int Rank = -1;
 
 			while (sc.Token != Token.Outdent && sc.Token != Token.EndOfStream)
