@@ -163,7 +163,7 @@ namespace TDSMPermissions.Perms
         {
             while (sc.TokenText != node && sc.Token != Token.EndOfStream && sc.Token != Token.Outdent)
                 sc.NextToken();
-			if (sc.Token == Token.Outdent)
+			if (sc.Token == Token.Outdent || sc.Token == Token.EndOfStream)
 				return false;
 			else
 				return true;
