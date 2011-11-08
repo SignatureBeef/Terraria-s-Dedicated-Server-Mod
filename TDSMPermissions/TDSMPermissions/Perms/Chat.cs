@@ -23,10 +23,18 @@ namespace TDSMPermissions.Perms
             if (IsValidColor(user.chatColor))
                 color = user.chatColor;
             else if (user.group.Count > 0)
-            {
-                Group grp = Permissions.GetGroup(user.group[0]);
-                if (grp != null && IsValidColor(grp.GroupInfo.color))
-                    color = grp.GroupInfo.color;
+			{
+				int prevRank = 0;
+				for (int i = 0; i < user.group.Count; i++)
+				{
+					Group grp = Permissions.GetGroup(user.group[i]);
+					if (grp != null && IsValidColor(grp.GroupInfo.color))
+						if (grp.GroupInfo.rank != -1 && grp.GroupInfo.rank > prevRank)
+						{
+							color = grp.GroupInfo.color;
+							prevRank = grp.GroupInfo.rank;
+						}
+				}
             }
 
             return color != default(Color);
@@ -40,9 +48,17 @@ namespace TDSMPermissions.Perms
                 prefix = user.prefix;
             else if (user.group.Count > 0)
             {
-                Group grp = Permissions.GetGroup(user.group[0]);
-                if (grp != null && grp.GroupInfo.Prefix != default(String) && grp.GroupInfo.Prefix.Trim().Length > 0)
-                    prefix = grp.GroupInfo.Prefix;
+				int prevRank = 0;
+				for (int i = 0; i < user.group.Count; i++)
+				{
+					Group grp = Permissions.GetGroup(user.group[i]);
+					if (grp != null && grp.GroupInfo.Prefix != default(String) && grp.GroupInfo.Prefix.Trim().Length > 0)
+						if (grp.GroupInfo.rank != -1 && grp.GroupInfo.rank > prevRank)
+						{
+							prefix = grp.GroupInfo.Prefix;
+							prevRank = grp.GroupInfo.rank;
+						}
+				}
             }
 
             return prefix != default(String);
@@ -56,9 +72,17 @@ namespace TDSMPermissions.Perms
                 suffix = user.suffix;
             else if (user.group.Count > 0)
             {
-                Group grp = Permissions.GetGroup(user.group[0]);
-                if (grp != null && grp.GroupInfo.Suffix != default(String) && grp.GroupInfo.Suffix.Trim().Length > 0)
-                    suffix = grp.GroupInfo.Suffix;
+				int prevRank = 0;
+                for (int i = 0; i < user.group.Count; i++)
+				{
+					Group grp = Permissions.GetGroup(user.group[i]);
+					if (grp != null && grp.GroupInfo.Suffix != default(String) && grp.GroupInfo.Suffix.Trim().Length > 0)
+						if (grp.GroupInfo.rank != -1 && grp.GroupInfo.rank > prevRank)
+						{
+							suffix = grp.GroupInfo.Suffix;
+							prevRank = grp.GroupInfo.rank;
+						}
+				}
             }
 
             return suffix != default(String);
@@ -72,9 +96,17 @@ namespace TDSMPermissions.Perms
                 seperator = user.seperator;
             else if (user.group.Count > 0)
             {
-                Group grp = Permissions.GetGroup(user.group[0]);
-                if (grp != null && grp.GroupInfo.Seperator != default(String) && grp.GroupInfo.Seperator.Trim().Length > 0)
-                    seperator = grp.GroupInfo.Seperator;
+                int prevRank = 0;
+				for (int i = 0; i < user.group.Count; i++)
+				{
+					Group grp = Permissions.GetGroup(user.group[i]);
+					if (grp != null && grp.GroupInfo.Seperator != default(String) && grp.GroupInfo.Seperator.Trim().Length > 0)
+						if (grp.GroupInfo.rank != -1 && grp.GroupInfo.rank > prevRank)
+						{
+							seperator = grp.GroupInfo.Seperator;
+							prevRank = grp.GroupInfo.rank;
+						}
+				}
             }
 
             return seperator != default(String);
