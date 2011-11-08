@@ -17,6 +17,7 @@ namespace TDSMPermissions.Definitions
             public string Suffix;
             public string Seperator;
             public Color color;
+			public int rank;
         }
 
         public List<String> Inherits;
@@ -36,7 +37,7 @@ namespace TDSMPermissions.Definitions
             GroupInfo.Seperator = " : ";
         }
 
-        public void SetGroupInfo(bool Default, bool canBuild, string prefix, string suffix, string seperator, Color color)
+        public void SetGroupInfo(bool Default, bool canBuild, string prefix, string suffix, string seperator, Color color, int rank)
         {
             GroupInfo.Default = Default;
             GroupInfo.Prefix = prefix;
@@ -44,6 +45,7 @@ namespace TDSMPermissions.Definitions
             GroupInfo.Seperator = seperator;
             GroupInfo.color = color;
             GroupInfo.CanBuild = canBuild;
+			GroupInfo.rank = rank;
         }
     }
 }
