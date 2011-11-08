@@ -413,9 +413,9 @@ namespace Terraria_Server.Commands
                 .WithDescription("Summon a Boss to the world. <Any Combination>")
                 .WithDescription("  (No if no player is entered it will be a random online player)")
                 .WithDescription("  (-night is mainly for Eye of Cthulu, but will set time to night for any Boss.)")
-                .WithHelpText("Usage:    spawnboss -<eye, skeletron, eater, kingslime>")
-                .WithHelpText("          spawnboss -eye -night")
-                .WithHelpText("          spawnboss -eater -eye...")
+                .WithHelpText("Usage:    spawnboss <eye, skeletron, eater, kingslime>")
+                .WithHelpText("          spawnboss eye night")
+                .WithHelpText("          spawnboss eater eye...")
                 .WithHelpText("          spawnboss <boss> -player <name>")
                 .WithPermissionNode("tdsm.spawnboss")
                 .Calls(Commands.SummonBoss);

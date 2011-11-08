@@ -65,10 +65,11 @@ namespace Terraria_Server.TDCM.Packets
         }
 
         /// <summary>
-        /// Check's whether the Player meets requirements
+        /// Check's whether the Player meets requirements and processes from there.
         /// </summary>
         /// <param name="QuestGiverName"></param>
         /// <param name="player"></param>
+        /// <param name="type"></param>
         public void CheckQuest(string QuestGiverName, Player player, QuestType type)
         {
             if (QuestGiverName != player.QuestNPCName)

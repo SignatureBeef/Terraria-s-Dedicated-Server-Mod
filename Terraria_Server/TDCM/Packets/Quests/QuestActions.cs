@@ -56,13 +56,16 @@ namespace Terraria_Server.TDCM.Packets.Quests
 
             int players = Networking.ClientConnection.All.Count;
             if (players > 0)
-                reduceBy -= reduceBy / players;
+                reduceBy -= players / 100;
 
             if (players >= 15) //If there are alot of players on, They can have the full health.
-                reduceBy = 0;
+                reduceBy = 1;
 
-            Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 75, 50);
-            int SkeletronId = NPC.NewNPC(((int)location.X), ((int)location.Y * 16), (int)NPCType.N21_SKELETON);
+            if (reduceBy < 1)
+                reduceBy = 1;
+
+            /*Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 75, 50);
+            int SkeletronId = NPC.NewNPC(((int)location.X), ((int)location.Y * 16), (int)NPCType.N35_SKELETRON_HEAD);
 
             NPC npc = Main.npcs[SkeletronId];
             npc.life = npc.life / reduceBy;
@@ -81,6 +84,31 @@ namespace Terraria_Server.TDCM.Packets.Quests
             if (npc.damage < 0)
                 npc.damage = 1;
 
+            npc.netUpdate = true;
+            Main.npcs[SkeletronId] = npc; */
+
+
+            Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
+            int SkeletronId = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), (int)NPCType.N35_SKELETRON_HEAD);
+
+            NPC npc = Main.npcs[SkeletronId];
+            npc.life = npc.life / reduceBy;
+            npc.lifeMax = npc.life;
+            npc.damage = npc.damage / reduceBy;
+
+            npc.target = player.whoAmi;
+            npc.ai[3] = 1f;
+
+            if (npc.life < 1)
+                npc.life = 1;
+
+            if (npc.lifeMax < 1)
+                npc.lifeMax = 1;
+
+            if (npc.damage < 1)
+                npc.damage = 1;
+
+            npc.netUpdate = true;
             Main.npcs[SkeletronId] = npc;
 
             //Tell the client which NPC to look for.
@@ -91,11 +119,11 @@ namespace Terraria_Server.TDCM.Packets.Quests
         {
             for (int i = 0; i < 10; i++)
             {
-                Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 75, 50);
-                int mHeadId = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), 23); //23 = Meteor Head
+                Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
+                int mHeadId = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), (int)NPCType.N23_METEOR_HEAD);
 
-                Main.npcs[mHeadId].damage = Main.npcs[mHeadId].damage / 2;
-                Main.npcs[mHeadId].target = player.whoAmi;
+                //Main.npcs[mHeadId].damage = Main.npcs[mHeadId].damage / 2;
+                //Main.npcs[mHeadId].target = player.whoAmi;
 
                 NetMessage.SendData(Packet.CLIENT_MOD_SPAWN_NPC, player.whoAmi, -1, "", mHeadId);
             }
