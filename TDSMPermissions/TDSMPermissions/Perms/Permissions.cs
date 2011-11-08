@@ -370,9 +370,22 @@ namespace TDSMPermissions.Perms
             return null;
         }
 
+        public static User GetUser(Func<KeyValuePair<String, User>, Boolean> predicate)
+        {
+            foreach (KeyValuePair<String, User> pair in users.Where(predicate))
+                return pair.Value;
+
+            return null;
+        }
+
         public static Group GetGroup(string Name)
         {
             return GetGroup(x => x.Name == Name);
+        }
+
+        public static User GetUser(string Name)
+        {
+            return GetUser(x => x.Key == Name);
         }
 
         public static Group GetDefaultGroup()

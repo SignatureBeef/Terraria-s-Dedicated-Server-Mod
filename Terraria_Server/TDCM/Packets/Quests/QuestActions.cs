@@ -33,7 +33,7 @@ namespace Terraria_Server.TDCM.Packets.Quests
         public static void SpawnNPCByName(string Name, NPC Npc)
         {
             Vector2 randLoc = World.GetRandomClearTile(
-                ((int)Npc.Position.X / 16), ((int)Npc.Position.Y / 16), 100, true, 100, 50);
+                ((int)Npc.Position.X / 16), ((int)Npc.Position.Y / 16), 100, true, 100, 10);
 
             NPC.NewNPC((int)randLoc.X * 16, (int)randLoc.Y * 16, Name, 0);
         }
@@ -135,8 +135,7 @@ namespace Terraria_Server.TDCM.Packets.Quests
             {
                 Vector2 spawnPos = World.GetRandomClearTile((int)(player.Position.X / 16), (int)(player.Position.Y / 16), 100, true, 75, 50);
 
-                int eId = NPC.NewNPC((int)spawnPos.X * 16, (int)spawnPos.Y * 16, 6);
-                Main.npcs[eId].SetDefaults("Little Eater");
+                int eId = NPC.NewNPC((int)spawnPos.X * 16, (int)spawnPos.Y * 16, "Little Eater");
                 Main.npcs[eId].target = player.whoAmi;
 
                 NetMessage.SendData(Packet.CLIENT_MOD_SPAWN_NPC, player.whoAmi, -1, "", eId);

@@ -17,7 +17,7 @@ using YaTools.Yaml;
 
 namespace TDSMPermissions
 {
-    public class TDSMPermissions : BasePlugin
+    public partial class TDSMPermissions : BasePlugin
     {
         public Properties properties;
         public string pluginFolder;
@@ -46,6 +46,13 @@ namespace TDSMPermissions
             //set internal permission check method to plugins handler
             Program.permissionManager.IsPermittedImpl = IsPermitted;
 			Statics.PermissionsEnabled = true;
+
+            AddCommand("permsadd")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("permissions.permsadd")
+                .WithDescription("Add permissions to a Player.")
+                .WithHelpText("Usage: ")
+                .Calls(Perms_Add);
         }
 
         protected override void Enabled()

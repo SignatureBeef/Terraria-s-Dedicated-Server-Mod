@@ -272,23 +272,25 @@ namespace RestrictPlugin
 		}
 
 		void RequestsCommand (ISender sender, ArgumentList args)
-		{
+        {
+            if (args.TryPop("-all") && args.TryPop("-g"))
+            {
+                int total = requests.Count;
+                for (int i = 0; i < total; i++)
+                {
+                    RegistrationRequest req = requests.Values.ElementAt(i);
+                    RegisterUser(i, req, false);
+                }
+
+                Server.notifyOps(
+                    String.Format("<Restrict> Registration request granted for {0} user(s).", total)
+                , true);
+                return;
+            }
+
 			int num;
 			if (args.TryParseOne ("-g", out num) || args.TryParseOne ("grant", out num))
 			{
-                if (args.TryPop("-all"))
-                {
-                    for (int i = 0; i < requests.Count; i++)
-                    {
-                        RegistrationRequest req = requests.Values.ElementAt(i);
-                        RegisterUser(i, req, false);
-                    }
-
-                    Server.notifyOps(
-                        String.Format("<Restrict> Registration request granted for {0} user(s).", requests.Count)
-                    , true);
-                }
-
 				RegistrationRequest rq;
 				
 				if (! requests.TryGetValue (num, out rq))
