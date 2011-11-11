@@ -422,7 +422,7 @@ namespace Terraria_Server.Commands
 
             AddCommand("itemrej")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Add or remove an item form the whitelist.")
+                .WithDescription("Add or remove an item from the whitelist.")
                 .WithHelpText("Usage:    itemrej -add/-remove <id:name>")
                 .WithPermissionNode("tdsm.itemrej")
                 .Calls(Commands.ItemRejection);
