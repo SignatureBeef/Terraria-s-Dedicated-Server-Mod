@@ -7,7 +7,7 @@ namespace Terraria_Server
     {
         public const string TDCM_QUEST_GIVER = "Quest Giver";
 
-        public const int BUILD = 36;
+        public const int BUILD = 37;
         public const int CURRENT_TERRARIA_RELEASE = 22;
         public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
 

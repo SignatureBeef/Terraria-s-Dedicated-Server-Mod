@@ -34,7 +34,7 @@ namespace Regions
             base.Name = "Regions";
             base.Description = "A region plugin for TDSM";
             base.Author = "DeathCradle";
-            base.Version = "1";
+            base.Version = "4";
             base.TDSMBuild = 36;
         }
 
