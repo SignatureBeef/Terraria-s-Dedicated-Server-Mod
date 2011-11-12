@@ -6,6 +6,7 @@ using Terraria_Server.Commands;
 using Terraria_Server;
 using Terraria_Server.Misc;
 using Regions.RegionWork;
+using Terraria_Server.Permissions;
 
 namespace Regions
 {
@@ -15,9 +16,20 @@ namespace Regions
         public Selection selection { get; set; }
         public Regions RegionsPlugin { get; set; }
 
+        public Node Node_Select;
+        public Node Node_Create;
+        public Node Node_User;
+        public Node Node_List;
+        public Node Node_Projectile;
+        public Node Node_Npcres;
+        public Node Node_Opres;
+        public Node Node_Here;
+        public Node Node_ProtectAll;
+
         public void Region(ISender sender, ArgumentList args)
         {
             /* Meh [START] */
+            bool ignoreError = false;
             string Command;
             if (args.TryGetString(0, out Command))
             {
@@ -25,13 +37,24 @@ namespace Regions
                 {
                     if (args.TryPop("select"))
                     {
+                        if (sender is Player && RegionsPlugin.IsRestricted(Node_Select, sender as Player))
+                            throw new CommandError("You do not have permissions for this command.");
+
                         SelectionToolToggle(sender, args);
                     }
                     else if (args.TryPop("create"))
                     {
                         if (sender is Player)
                         {
-                            Vector2[] selected = selection.GetSelection(sender as Player);
+                            var player = sender as Player;
+
+                            if (RegionsPlugin.IsRestricted(Node_Create, player))
+                            {
+                                ignoreError = true;
+                                throw new CommandError("You do not have permissions for this command.");
+                            }
+
+                            Vector2[] selected = selection.GetSelection(player);
                             if (selected == null
                                 || (selected[0] == null || selected[0] == default(Vector2))
                                 || (selected[1] == null || selected[1] == default(Vector2)))
@@ -44,6 +67,12 @@ namespace Regions
                     }
                     else if (args.TryPop("user"))
                     {
+                        if (sender is Player && RegionsPlugin.IsRestricted(Node_User, sender as Player))
+                        {
+                            ignoreError = true;
+                            throw new CommandError("You do not have permissions for this command.");
+                        }
+
                         bool add = args.TryPop("add");
                         bool remove = args.TryPop("remove");
                         bool clear = args.TryPop("clear");
@@ -59,10 +88,19 @@ namespace Regions
                     }
                     else if (args.TryPop("list"))
                     {
+                        if (sender is Player && RegionsPlugin.IsRestricted(Node_List, sender as Player))
+                            throw new CommandError("You do not have permissions for this command.");
+
                         List(sender, args);
                     }
                     else if (args.TryPop("projectile"))
                     {
+                        if (sender is Player && RegionsPlugin.IsRestricted(Node_Projectile, sender as Player))
+                        {
+                            ignoreError = true;
+                            throw new CommandError("You do not have permissions for this command.");
+                        }
+
                         bool add = args.TryPop("add");
                         bool remove = args.TryPop("remove");
                         bool clear = args.TryPop("clear");
@@ -78,23 +116,38 @@ namespace Regions
                     }
                     else if (args.TryPop("npcres"))
                     {
+                        if (sender is Player && RegionsPlugin.IsRestricted(Node_Npcres, sender as Player))
+                            throw new CommandError("You do not have permissions for this command.");
+
                         ToggleNPCRestrictions(sender, args);
                     }
                     else if (args.TryPop("opres"))
                     {
+                        if (sender is Player && RegionsPlugin.IsRestricted(Node_Opres, sender as Player))
+                            throw new CommandError("You do not have permissions for this command.");
+
                         ToggleOPRestrictions(sender, args);
                     }
                     else if (args.TryPop("protectall"))
                     {
+                        if (sender is Player && RegionsPlugin.IsRestricted(Node_ProtectAll, sender as Player))
+                            throw new CommandError("You do not have permissions for this command.");
+
                         ProtectMap(sender, args);
                     }
                     else if (args.TryPop("here"))
                     {
+                        if (sender is Player && RegionsPlugin.IsRestricted(Node_Here, sender as Player))
+                            throw new CommandError("You do not have permissions for this command.");
+
                         RegionHere(sender, args);
                     }
                 }
                 catch (CommandError e)
                 {
+                    if (ignoreError)
+                        return;
+
                     switch (Command)
                     {
                         //case "select":
@@ -699,8 +752,9 @@ namespace Regions
         public void RegionHere(ISender sender, ArgumentList args)
         {
             if (sender is Player)
-            {                
+            {        
                 var player = sender as Player;
+
                 foreach (Region region in regionManager.Regions)
                 {
                     if(region.HasPoint(player.Position / 16))

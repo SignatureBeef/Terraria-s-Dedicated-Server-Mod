@@ -99,6 +99,15 @@ namespace Regions
             commands.RegionsPlugin = this;
             commands.selection = selection;
 
+            commands.Node_Create = Node.FromPath("region.create");
+            commands.Node_Here = Node.FromPath("region.here");
+            commands.Node_List = Node.FromPath("region.list");
+            commands.Node_Npcres = Node.FromPath("region.npcres");
+            commands.Node_Opres = Node.FromPath("region.opres");
+            commands.Node_Projectile = Node.FromPath("region.projectile");
+            commands.Node_ProtectAll = Node.FromPath("region.protectall");
+            commands.Node_Select = Node.FromPath("region.select");
+            commands.Node_User = Node.FromPath("region.user");
 
             AddCommand("region")
                 .WithAccessLevel(AccessLevel.OP)
@@ -356,6 +365,11 @@ namespace Regions
         public bool IsRunningPermissions()
         {
             return Program.permissionManager.IsPermittedImpl != null;
+        }
+
+        public bool IsRestricted(Node Node, Player player)
+        {
+            return (UsingPermissions) ? !Program.permissionManager.IsPermittedImpl(Node.Path, player) : false;
         }
 
         public bool IsRestrictedForUser(Player player, Region region, Node node)
