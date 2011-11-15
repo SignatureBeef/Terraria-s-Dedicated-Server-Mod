@@ -26,7 +26,7 @@ namespace Terraria_Server.TDCM.Packets.Quests
 
         public static void CheckAndSpawn(QuestType Type, string Name, NPC Npc)
         {
-            if (IsAnyUsingQuest(Type) && Main.rand.Next(0, 2) == 1)
+            if (IsAnyUsingQuest(Type) && Main.rand.Next(0, 3) == 1)
                 SpawnNPCByName(Name, Npc);
         }
 

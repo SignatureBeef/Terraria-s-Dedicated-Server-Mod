@@ -34,7 +34,7 @@ namespace Regions
             base.Name = "Regions";
             base.Description = "A region plugin for TDSM";
             base.Author = "DeathCradle";
-            base.Version = "4";
+            base.Version = "6";
             base.TDSMBuild = 36;
         }
 
@@ -99,15 +99,15 @@ namespace Regions
             commands.RegionsPlugin = this;
             commands.selection = selection;
 
-            commands.Node_Create = Node.FromPath("region.create");
-            commands.Node_Here = Node.FromPath("region.here");
-            commands.Node_List = Node.FromPath("region.list");
-            commands.Node_Npcres = Node.FromPath("region.npcres");
-            commands.Node_Opres = Node.FromPath("region.opres");
-            commands.Node_Projectile = Node.FromPath("region.projectile");
-            commands.Node_ProtectAll = Node.FromPath("region.protectall");
-            commands.Node_Select = Node.FromPath("region.select");
-            commands.Node_User = Node.FromPath("region.user");
+            commands.Node_Create        = Node.FromPath("region.create");
+            commands.Node_Here          = Node.FromPath("region.here");
+            commands.Node_List          = Node.FromPath("region.list");
+            commands.Node_Npcres        = Node.FromPath("region.npcres");
+            commands.Node_Opres         = Node.FromPath("region.opres");
+            commands.Node_Projectile    = Node.FromPath("region.projectile");
+            commands.Node_ProtectAll    = Node.FromPath("region.protectall");
+            commands.Node_Select        = Node.FromPath("region.select");
+            commands.Node_User          = Node.FromPath("region.user");
 
             AddCommand("region")
                 .WithAccessLevel(AccessLevel.OP)
@@ -122,29 +122,15 @@ namespace Regions
                 .WithDescription("Region Management.")
                 .WithPermissionNode("regions") //Need another method to split the commands up.
                 .Calls(commands.Region);
-            
-            /*  
-             * These are replaced by [Hook(HookOrder.*)]
-                Hook(HookPoints.PlayerWorldAlteration,  OnPlayerWorldAlteration);
-                Hook(HookPoints.LiquidFlowReceived,     OnLiquidFlowReceived);
-                Hook(HookPoints.ProjectileReceived,     OnProjectileReceived);
-                Hook(HookPoints.PlayerEnteredGame,      OnPlayerEnteredGame);
-                Hook(HookPoints.ServerStateChange,      OnServerStateChange);
-                Hook(HookPoints.DoorStateChanged,       OnDoorStateChange);
-                Hook(HookPoints.ChestBreakReceived,     OnChestBreak);
-                Hook(HookPoints.ChestOpenReceived,      OnChestOpen);
-                Hook(HookPoints.PluginsLoaded,          OnPluginsLoaded);
-                Hook(HookPoints.SignTextSet,            OnSignEdit);
-            */
 
-            ChestBreak      = AddAndCreateNode("regions.chestbreak");
-            ChestOpen       = AddAndCreateNode("regions.chestopen");
-            DoorChange      = AddAndCreateNode("regions.doorchange");
-            LiquidFlow      = AddAndCreateNode("regions.liquidflow");
-            ProjectileUse   = AddAndCreateNode("regions.projectileuse");
-            SignEdit        = AddAndCreateNode("regions.signedit");
-            TileBreak       = AddAndCreateNode("regions.tilebreak");
-            TilePlace       = AddAndCreateNode("regions.tileplace");
+            ChestBreak      = AddAndCreateNode("region.chestbreak");
+            ChestOpen       = AddAndCreateNode("region.chestopen");
+            DoorChange      = AddAndCreateNode("region.doorchange");
+            LiquidFlow      = AddAndCreateNode("region.liquidflow");
+            ProjectileUse   = AddAndCreateNode("region.projectileuse");
+            SignEdit        = AddAndCreateNode("region.signedit");
+            TileBreak       = AddAndCreateNode("region.tilebreak");
+            TilePlace       = AddAndCreateNode("region.tileplace");
         }
 
         protected override void Enabled()
@@ -199,7 +185,7 @@ namespace Regions
 
                 if (args.TileWasPlaced && args.Type == SelectorItem && selection.isInSelectionlist(ctx.Player) && ctx.Player.Op)
                 {
-                    ctx.SetResult(HookResult.ERASE);
+                    ctx.SetResult(HookResult.RECTIFY);
                     SelectorPos = !SelectorPos;
 
                     Vector2[] mousePoints = selection.GetSelection(ctx.Player);
@@ -282,10 +268,11 @@ namespace Regions
                     {
                         if (ctx.Sender is Player)
                         {
-                            if (IsRestrictedForUser(ctx.Player, rgn, DoorChange))
+                            Player player = ctx.Sender as Player;
+                            if (IsRestrictedForUser(player, rgn, DoorChange))
                             {
                                 ctx.SetResult(HookResult.RECTIFY);
-                                ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
+                                player.sendMessage("You cannot edit this area!", ChatColor.Red);
                                 return;
                             }
                         }
@@ -362,21 +349,34 @@ namespace Regions
             }
         #endregion
 
-        public bool IsRunningPermissions()
+        public static bool IsRunningPermissions()
         {
             return Program.permissionManager.IsPermittedImpl != null;
         }
 
-        public bool IsRestricted(Node Node, Player player)
+        public static bool IsRestricted(Node node, Player player)
         {
-            return (UsingPermissions) ? !Program.permissionManager.IsPermittedImpl(Node.Path, player) : false;
+            if (IsRunningPermissions())
+            {
+                var isPermitted = Program.permissionManager.IsPermittedImpl(node.Path, player);
+                var isOp = player.Op;
+
+                return !isPermitted && !isOp;
+            }
+
+            return !player.Op;
         }
 
-        public bool IsRestrictedForUser(Player player, Region region, Node node)
+        public static bool IsRestrictedForUser(Player player, Region region, Node node)
         {
             if (UsingPermissions)
             {
-                return !Program.permissionManager.IsPermittedImpl(node.Path, player);
+                var Allowed = Program.permissionManager.IsPermittedImpl(node.Path, player);
+
+                if (!Allowed)
+                    return region.IsRestrictedForUser(player);
+
+                return !Allowed;
             }
 
             return region.IsRestrictedForUser(player);

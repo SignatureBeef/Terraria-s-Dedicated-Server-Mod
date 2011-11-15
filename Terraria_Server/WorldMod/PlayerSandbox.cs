@@ -437,9 +437,9 @@ namespace Terraria_Server.WorldMod
 		public void RevertAt (int x, int y)
 		{
 			uint k = (uint) (x << 16) | (uint) y;
-			
-			if (changedTiles.Remove (k))
-				;//count -= 1;
+
+            if (changedTiles.Remove(k)) { }
+				//count -= 1;
 		}
 		
 		public void SetTileAt (int x, int y, TileData data)

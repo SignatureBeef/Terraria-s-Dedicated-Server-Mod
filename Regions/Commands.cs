@@ -26,6 +26,22 @@ namespace Regions
         public Node Node_Here;
         public Node Node_ProtectAll;
 
+        public static bool TryFindArg(ArgumentList args, string literal, out string Arg)
+        {
+            Arg = String.Empty;
+
+            for (int i = 0; i < args.Count; i++)
+            {
+                if (args[i] == literal && (i + 1) < args.Count)
+                {
+                    Arg = args[i + 1];
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public void Region(ISender sender, ArgumentList args)
         {
             /* Meh [START] */
@@ -37,7 +53,7 @@ namespace Regions
                 {
                     if (args.TryPop("select"))
                     {
-                        if (sender is Player && RegionsPlugin.IsRestricted(Node_Select, sender as Player))
+                        if (sender is Player && Regions.IsRestricted(Node_Select, sender as Player))
                             throw new CommandError("You do not have permissions for this command.");
 
                         SelectionToolToggle(sender, args);
@@ -48,7 +64,7 @@ namespace Regions
                         {
                             var player = sender as Player;
 
-                            if (RegionsPlugin.IsRestricted(Node_Create, player))
+                            if (Regions.IsRestricted(Node_Create, player))
                             {
                                 ignoreError = true;
                                 throw new CommandError("You do not have permissions for this command.");
@@ -67,7 +83,7 @@ namespace Regions
                     }
                     else if (args.TryPop("user"))
                     {
-                        if (sender is Player && RegionsPlugin.IsRestricted(Node_User, sender as Player))
+                        if (sender is Player && Regions.IsRestricted(Node_User, sender as Player))
                         {
                             ignoreError = true;
                             throw new CommandError("You do not have permissions for this command.");
@@ -88,14 +104,14 @@ namespace Regions
                     }
                     else if (args.TryPop("list"))
                     {
-                        if (sender is Player && RegionsPlugin.IsRestricted(Node_List, sender as Player))
+                        if (sender is Player && Regions.IsRestricted(Node_List, sender as Player))
                             throw new CommandError("You do not have permissions for this command.");
 
                         List(sender, args);
                     }
                     else if (args.TryPop("projectile"))
                     {
-                        if (sender is Player && RegionsPlugin.IsRestricted(Node_Projectile, sender as Player))
+                        if (sender is Player && Regions.IsRestricted(Node_Projectile, sender as Player))
                         {
                             ignoreError = true;
                             throw new CommandError("You do not have permissions for this command.");
@@ -116,28 +132,28 @@ namespace Regions
                     }
                     else if (args.TryPop("npcres"))
                     {
-                        if (sender is Player && RegionsPlugin.IsRestricted(Node_Npcres, sender as Player))
+                        if (sender is Player && Regions.IsRestricted(Node_Npcres, sender as Player))
                             throw new CommandError("You do not have permissions for this command.");
 
                         ToggleNPCRestrictions(sender, args);
                     }
                     else if (args.TryPop("opres"))
                     {
-                        if (sender is Player && RegionsPlugin.IsRestricted(Node_Opres, sender as Player))
+                        if (sender is Player && Regions.IsRestricted(Node_Opres, sender as Player))
                             throw new CommandError("You do not have permissions for this command.");
 
                         ToggleOPRestrictions(sender, args);
                     }
                     else if (args.TryPop("protectall"))
                     {
-                        if (sender is Player && RegionsPlugin.IsRestricted(Node_ProtectAll, sender as Player))
+                        if (sender is Player && Regions.IsRestricted(Node_ProtectAll, sender as Player))
                             throw new CommandError("You do not have permissions for this command.");
 
                         ProtectMap(sender, args);
                     }
                     else if (args.TryPop("here"))
                     {
-                        if (sender is Player && RegionsPlugin.IsRestricted(Node_Here, sender as Player))
+                        if (sender is Player && Regions.IsRestricted(Node_Here, sender as Player))
                             throw new CommandError("You do not have permissions for this command.");
 
                         RegionHere(sender, args);
@@ -173,8 +189,9 @@ namespace Regions
                             throw e; //Unknown Error or an command with no args
                     }
                 }
-            } else
-                sender.sendMessage("Region Commands: select, create, user, list.", 255);            
+            }
+            else
+                sender.sendMessage("Region Commands: select, create, user, list.", 255);
             /* Meh [END] */
         }
 
@@ -201,18 +218,18 @@ namespace Regions
         {
             if (sender is Player)
             {
-                string Name = "";
-                string Desc = "";
+                string Name = String.Empty;
+                string Desc = String.Empty;
                 bool Restrict = args.TryPop("-res");
                 bool RestrictNPC = args.TryPop("-npcres");
 
-                string tempDesc = default(String);
-                if(args.TryParseOne<String>("-desc", out Desc))
+                string tempDesc = String.Empty;
+                if (TryFindArg(args, "-desc", out Desc))
                 {
                     Desc = tempDesc;
                 }
-                
-                if (args.TryParseOne<String>("-name", out Name) && Name.Trim().Length > 0)
+
+                if (TryFindArg(args, "-name", out Name) && Name.Trim().Length > 0)
                 {
                     var player = sender as Player;
                     if (selection.isInSelectionlist(player))
@@ -230,7 +247,7 @@ namespace Regions
                         if (rgn.IsValidRegion())
                         {
                             regionManager.Regions.Add(rgn);
-                            if(regionManager.SaveRegion(rgn))
+                            if (regionManager.SaveRegion(rgn))
                                 player.sendMessage("Region '" + Name + "' was successfully created.", ChatColor.Green);
                             else
                                 player.sendMessage("There was an issue while saving the region", ChatColor.Red);
@@ -346,7 +363,7 @@ namespace Regions
             string User = "", IP = "";
             int Slot;
 
-            args.TryParseOne<String>("-ip", out IP); //Optional
+            TryFindArg(args, "-ip", out IP); //Optional
 
             //IP or name?
             if (args.TryParseTwo<String, Int32>("-name", out User, "-slot", out Slot))
@@ -397,7 +414,7 @@ namespace Regions
                     }
                     else
                         sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
-                }                   
+                }
                 else
                     throw new CommandError("A user was not able to be removed from a Region.");
             }
@@ -495,7 +512,7 @@ namespace Regions
                         string projectile = proj.Trim().ToLower().Replace(" ", "");
                         while (region.ProjectileList.Contains(projectile))
                         {
-                            if(region.ProjectileList.Remove(projectile))
+                            if (region.ProjectileList.Remove(projectile))
                                 Count++;
                         }
                     }
@@ -716,12 +733,12 @@ namespace Regions
             string rgnName = "all";
             int count = 0;
 
-            while(regionManager.ContainsRegion(rgnName))
+            while (regionManager.ContainsRegion(rgnName))
             {
                 //if(regionManager.ContainsRegion(rgnName))
                 //{
-                    rgnName = "all" + count.ToString();
-                    count++;
+                rgnName = "all" + count.ToString();
+                count++;
                 //}
                 //else
                 //    break;
@@ -752,12 +769,12 @@ namespace Regions
         public void RegionHere(ISender sender, ArgumentList args)
         {
             if (sender is Player)
-            {        
+            {
                 var player = sender as Player;
 
                 foreach (Region region in regionManager.Regions)
                 {
-                    if(region.HasPoint(player.Position / 16))
+                    if (region.HasPoint(player.Position / 16))
                         player.sendMessage("You are in Region '{0}'", ChatColor.Purple);
                 }
             }
