@@ -91,7 +91,7 @@ namespace TDSMPermissions
                     ctx.SetResult(HookResult.IGNORE);
                     Server.notifyAll(
                         String.Concat(usr.prefix, ctx.Player.Name, seperator, args.Message, usr.suffix)
-                        , args.Color, false
+                        , args.Color
                     );
                 }
             }
@@ -108,7 +108,7 @@ namespace TDSMPermissions
                         String.Concat(  dGrp.GroupInfo.Prefix, ctx.Player.Name, 
                                         dGrp.GroupInfo.Seperator, args.Message, 
                                         dGrp.GroupInfo.Suffix)
-                        , args.Color, false
+                        , args.Color
                     );
                 }
             }
