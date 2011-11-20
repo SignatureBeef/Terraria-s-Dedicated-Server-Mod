@@ -405,7 +405,7 @@ namespace Terraria_Server
 			
 			for (int i = 0; i < MAX_INVENTORY; i++)
 			{
-				if (i < 8)
+				if (i < 11)
 				{
 					this.armor[i] = new Item();
 					this.armor[i].Name = "";
