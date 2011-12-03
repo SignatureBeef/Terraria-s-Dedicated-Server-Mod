@@ -78,7 +78,6 @@ namespace Terraria_Server
 			}
             catch (Exception exception)
 			{
-                //Main.statusText = exception.ToString();
                 ProgramLog.Error.Log("Error Starting the Server: {0}", exception);
 				NetPlay.disconnect = true;
 			}

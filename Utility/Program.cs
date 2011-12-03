@@ -15,14 +15,79 @@ namespace Terraria_Utilities
     {
         private const string WELCOME_MESSAGE = "This application exists to provide utility functionality for breaking "
             + "down the\nTerraria Server. Please be aware that many of the facilities existing within\nthis application "
-            + "will quickly become outdated and are not intended for long\nterm usage.\n\nPlease enter the namespace "
-            + "of the existing utilty you would like to run.";
+            + "will quickly become outdated and are not intended for long\nterm usage.\n";
 
         static void Main(string[] args)
         {
             Console.WriteLine(WELCOME_MESSAGE);
-            Serializer.Serialize(typeof(Item), Serializer.ITEM_IGNORE_FIELDS);
+
+            var location ="E:\\TerrariaServer.exe";   
+
+            Console.Write("Updating Assemblies...");
+
+            /* Update Reference */
+            foreach (var set in new string[] { "Item", "NPC", "Projectile" })
+            {
+                Serializer.UpdateAssembly(location, "Terraria." + set);
+            }
+
+            Console.Write("Ok\nSerializing...");
+
+            var typeSet = GetSet();
+
+            /* Serialize */
+            foreach (var set in typeSet)
+                Serializer.Serialize(set.TypeReference, set.IgnoreFields, set.TypeReference.GetMethod("SetDefaults", set.SetDefaults), set.TypeReference == typeof(Terraria.Projectile));
+
             Console.ReadLine();
+        }
+
+        public static TypeSets[] GetSet()
+        {
+            return new TypeSets[]
+            {
+                /* Items */
+                new TypeSets()
+                {
+                    IgnoreFields = new string[]
+                    {
+                        "Active", "Stack", "UseSound", "Owner", 
+                        "NoUseGraphic", "Alpha", "Color", "Accessory", 
+                        "Material", "Vanity", "ManaIncrease"
+                    },
+                    TypeReference = typeof(Terraria.Item),
+                    SetDefaults = new Type[] { typeof(Int32), typeof(Boolean) }
+                },
+
+                /* NPC */
+                new TypeSets()
+                {
+                    IgnoreFields = new string[]
+                    {
+                        "Immune", "Ai", "Active", "Direction", "Oldtarget", "Target", "Life", "OldPos"
+                    },
+                    TypeReference = typeof(Terraria.NPC),
+                    SetDefaults = new Type[] { typeof(Int32), typeof(float) }
+                },
+                
+                /* Projectile */
+                new TypeSets()
+                {
+                    IgnoreFields = new string[]
+                    {
+                        "Ai", "PlayerImmune", "Type", "Active"
+                    },
+                    TypeReference = typeof(Terraria.Projectile),
+                    SetDefaults = new Type[] { typeof(Int32) }
+                }
+            };
+        }
+
+        public struct TypeSets
+        {
+            public String[] IgnoreFields    { get; set; }
+            public Type     TypeReference   { get; set; }
+            public Type[]   SetDefaults     { get; set; }
         }
     }
 }

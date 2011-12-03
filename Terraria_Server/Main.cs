@@ -51,7 +51,6 @@ namespace Terraria_Server
 		public static Liquid[] liquid = new Liquid[Liquid.resLiquid];
 		public static LiquidBuffer[] liquidBuffer = new LiquidBuffer[10000];
 		public static bool dedServ = true;
-        //public static string statusText = "";
         public static string worldName = "";
 		public static int worldID;
 		public static double worldSurface;

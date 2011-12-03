@@ -80,12 +80,12 @@ namespace Terraria_Utilities.Serialize
 					{
 						writer.WriteString("false");
 					}
-				}
-				else if (type.IsPrimitive || type.Equals(typeof(String)))
-				{
-					writer.WriteString(nodeValue.ToString());
-				}
-				else
+                }
+                else if (type.IsPrimitive || type.Equals(typeof(String)))
+                {
+                    writer.WriteString(nodeValue.ToString());
+                }
+				else if(!type.IsArray)
 				{
 					DiffSerializer innerSerializer = new DiffSerializer(type, null, true);
 					innerSerializer.WriteObject(writer, nodeValue);

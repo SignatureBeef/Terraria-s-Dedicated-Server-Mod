@@ -41,7 +41,7 @@ namespace Terraria_Server.Messages
 			{
 				InventorySlot = readBuffer[num++],
 				Amount = readBuffer[num++],
-				Name = Networking.StringCache.FindOrMake (new ArraySegment<byte> (readBuffer, num, length - 4)),
+				Name = Networking.StringCache.FindOrMake (new ArraySegment<Byte> (readBuffer, num, length - 4)),
 			};
 			
 			HookPoints.InventoryItemReceived.Invoke (ref ctx, ref args);
@@ -57,14 +57,14 @@ namespace Terraria_Server.Messages
 			var stack = args.Amount;
 			
 			var item = Registries.Item.Create (itemName, stack);
-			
-			if (inventorySlot < 44)
+
+            if (inventorySlot < (Player.MAX_INVENTORY - 1))
 			{
 				player.inventory[inventorySlot] = item;
 			}
 			else
 			{
-				player.armor[inventorySlot - 44] = item;
+                player.armor[inventorySlot - (Player.MAX_INVENTORY - 1)] = item;
 			}
 			
 			if (ctx.Result != HookResult.CONTINUE)

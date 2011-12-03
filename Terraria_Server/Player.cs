@@ -22,10 +22,10 @@ namespace Terraria_Server
 	/// </summary>
 	public class Player : BaseEntity, ISender
     {
-        private const int MAX_INVENTORY = 44;
-        private const int MAX_HEALTH = 400;
-        private const int MAX_MANA = 360;
-        private const int MAX_ITEMS = 255;
+        public const int MAX_INVENTORY = 49;
+        public const int MAX_HEALTH = 400;
+        public const int MAX_MANA = 360;
+        public const int MAX_ITEMS = 255;
 
 		/// <summary>
 		/// Whether this player is using TDCM
