@@ -146,6 +146,15 @@ namespace Terraria_Server
 		{
 			Main.tile.data [x, y].FrameY = (short) (Main.tile.data [x, y].FrameY + value);
 		}
+		
+		public bool Wire {
+			get { return Main.tile.data [x, y].Wire; }
+		}
+
+		public void SetWire (bool value)
+		{
+			Main.tile.data [x, y].Wire = value;
+		}
 	}
 	
 	[Flags]
@@ -156,6 +165,7 @@ namespace Terraria_Server
 		CheckingLiquid = 4,
 		SkipLiquid = 8,
 		Lava = 16,
+		Wire = 32,
 	}
 	
 	[StructLayout(LayoutKind.Sequential, Pack=1)]
@@ -294,6 +304,15 @@ namespace Terraria_Server
 			}
 			set {
 				wall = (byte) ((wall & ~63) | (value & 63));
+			}
+		}
+		
+		public bool Wire {
+			get {
+				return (flags & TileFlags.Wire) != 0;
+			}
+			set {
+				SetFlag (TileFlags.Wire, value);
 			}
 		}
 	}

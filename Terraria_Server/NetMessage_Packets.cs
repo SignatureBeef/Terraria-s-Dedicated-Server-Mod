@@ -77,7 +77,7 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		public void InventoryData (int playerId, int invId, string text = "")
+		public void InventoryData (int playerId, int invId, int prefix)
 		{
 			var player = Main.players[playerId];
 			
@@ -86,12 +86,18 @@ namespace Terraria_Server
 			Byte (playerId);
 			Byte (invId);
 			
-			if (invId < 44)
-				Byte (Math.Max (0, player.inventory[invId].Stack));
+			Item item;
+			
+			if (invId < 49)
+				item = player.inventory[invId];
 			else
-				Byte (Math.Max (0, player.armor[invId - 44].Stack));
-				
-			String (text ?? "");
+				item = player.armor[invId - 49];
+			
+			Byte (Math.Max (0, item.Stack));
+			
+			Byte (prefix);
+			
+			Byte (item.NetID);
 			
 			End ();
 		}
@@ -162,9 +168,10 @@ namespace Terraria_Server
 			var liquid = tile.Liquid;
 			
 			if (active)          flags += 1;
-			if (tile.Lighted)    flags += 2;
+			//if (tile.Lighted)    flags += 2; //UNUSED
 			if (wall > 0)        flags += 4;
 			if (liquid > 0)      flags += 8;
+			if (tile.Wire)       flags += 16;
 			
 			Byte (flags);
 			
@@ -359,7 +366,37 @@ namespace Terraria_Server
 			
 			for (int col = firstColumn; col < firstColumn + numColumns; col++)
 			{
-				Tile (col, row);
+				var tile = Main.tile.At (col, row).Data;
+				
+				Tile (tile);
+				Short (0);
+				
+				continue; //FIXME: make this work
+				int run = 0;
+				
+				for (int i = col + 1; i < firstColumn + numColumns; i++)
+				{
+					var tile2 = Main.tile.At (i, row).Data;
+					
+					if (tile.Active != tile2.Active) break;
+					
+					if (tile.Active)
+					{
+						if (tile.Type != tile2.Type) break;
+						
+						if (Main.tileFrameImportant[tile.Type])
+						{
+							if (tile.FrameX != tile2.FrameX || tile.FrameY != tile2.FrameY) break;
+						}
+					}
+					
+					if (tile.Wall != tile2.Wall || tile.Liquid != tile2.Liquid || tile.Lava != tile2.Lava || tile.Wire != tile2.Wire)
+						break;
+					
+					run += 1;
+				}
+				
+				Short (run);
 			}
 			
 			End ();
@@ -551,11 +588,12 @@ namespace Terraria_Server
 			Float (item.Velocity.Y);
 			
 			Byte (item.Stack);
+			Byte (item.Prefix);
 			
 			if (item.Active && item.Stack > 0)
-				String (item.Name ?? "0");
+				Short (item.NetID);
 			else
-				String ("0");
+				Short (0);
 			
 			End ();
 		}
@@ -570,7 +608,7 @@ namespace Terraria_Server
 			Byte (item.Owner);
 		}
 		
-		public void NPCInfo (int npcId, string NPCName = null)
+		public void NPCInfo (int npcId)
 		{
 			var npc = Main.npcs[npcId];
 			
@@ -589,17 +627,14 @@ namespace Terraria_Server
 			Byte (npc.directionY + 1);
 			
 			if (npc.Active)
-				Short (npc.life);
+				Int (npc.life);
 			else
-				Short (0);
+				Int (0);
 			
 			for (int i = 0; i < NPC.MAX_AI; i++)
 				Float (npc.ai[i]);
-
-            if (NPCName == null)
-                String(npc.Name);
-            else
-                String(NPCName);
+			
+			Short (npc.NetID);
 			
 			End ();
 		}
@@ -731,10 +766,15 @@ namespace Terraria_Server
 			Begin (Packet.CHEST_ITEM);
 			
 			Short (chestId);
+			
 			Byte (itemId);
 			Byte (item.Stack);
+			Byte (item.Prefix);
 			
-			String (item.Name ?? "");
+			if (item.Name == null)
+				Short (0);
+			else
+				Short (item.NetID);
 			
 			End ();
 		}
@@ -776,7 +816,7 @@ namespace Terraria_Server
 		{
 			var player = Main.players[playerId];
 			
-			Header (Packet.ENTER_ZONE, 5);
+			Header (Packet.ENTER_ZONE, 6);
 			
 			Byte (playerId);
 			
@@ -784,6 +824,7 @@ namespace Terraria_Server
 			Byte (player.zoneMeteor);
 			Byte (player.zoneDungeon);
 			Byte (player.zoneJungle);
+			Byte (player.zoneHoly);
 		}
 		
 		public void PasswordRequest ()
@@ -934,12 +975,12 @@ namespace Terraria_Server
 			}
 		}
 		
-		public void SummonSkeletron (int playerId)
+		public void SummonSkeletron (int action, int param)
 		{
 			Header (Packet.SUMMON_SKELETRON, 2);
 			
-			Byte (playerId);
-			Byte (2);
+			Byte (action);
+			Byte (param);
 		}
 		
 		public void ChestUnlock (int playerId, int param, int x, int y)
@@ -972,7 +1013,7 @@ namespace Terraria_Server
 			for (int i = 0; i < 5; i++)
 			{
 				Byte (npc.buffType[i]);
-				Short (npc.buffTime[i]);
+				Int (npc.buffTime[i]);
 			}
 			
 			End ();
@@ -985,6 +1026,50 @@ namespace Terraria_Server
 			Byte (playerId);
 			Byte (type);
 			Short (time);
+		}
+		
+		public void NPCName (int id, string text)
+		{
+			Begin (Packet.NPC_NAME);
+			
+			Short (id);
+			String (text);
+			
+			End ();
+		}
+		
+		public void WorldBalance (int good, int evil)
+		{
+			Header (Packet.WORLD_BALANCE, 2);
+			
+			Byte (good);
+			Byte (evil);
+		}
+		
+		public void PlayHarp (int playerId, float note)
+		{
+			Header (Packet.PLAY_HARP, 5);
+			
+			Byte (playerId);
+			Float (note);
+		}
+		
+		public void HitSwitch (int x, int y)
+		{
+			Header (Packet.HIT_SWITCH, 8);
+			
+			Int (x);
+			Int (y);
+		}
+		
+		public void NPCHome (int npcId, int homeTileX, int homeTileY, bool homeless)
+		{
+			Header (Packet.NPC_HOME, 7);
+			
+			Short (npcId);
+			Short (homeTileX);
+			Short (homeTileY);
+			Byte (homeless);
 		}
 
         public void ClientMod(int PlayerID)

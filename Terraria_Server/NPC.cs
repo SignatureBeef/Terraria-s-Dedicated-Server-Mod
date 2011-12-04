@@ -279,6 +279,9 @@ namespace Terraria_Server
 		/// Index number for Main.npcs[]
 		/// </summary>
 		[DontClone] public int whoAmI;
+		
+		// temporary, replace with actual variable when we have the values in registries
+		public short NetID { get { return (short)Type; } }
         
 		/// <summary>
 		/// NPC Constructor.  Sets many defaults

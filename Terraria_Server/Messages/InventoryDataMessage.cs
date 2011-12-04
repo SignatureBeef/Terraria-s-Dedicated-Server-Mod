@@ -41,7 +41,9 @@ namespace Terraria_Server.Messages
 			{
 				InventorySlot = readBuffer[num++],
 				Amount = readBuffer[num++],
-				Name = Networking.StringCache.FindOrMake (new ArraySegment<Byte> (readBuffer, num, length - 4)),
+				Prefix = readBuffer[num++],
+				NetID = BitConverter.ToInt16 (readBuffer, num),
+				//Name = Networking.StringCache.FindOrMake (new ArraySegment<Byte> (readBuffer, num, length - 4)),
 			};
 			
 			HookPoints.InventoryItemReceived.Invoke (ref ctx, ref args);
@@ -56,15 +58,18 @@ namespace Terraria_Server.Messages
 			var inventorySlot = args.InventorySlot;
 			var stack = args.Amount;
 			
-			var item = Registries.Item.Create (itemName, stack);
+			if (args.NetID < 0) return; // FIXME
+			
+			var item = Registries.Item.Create (args.NetID, stack);
+			item.Prefix = (byte)args.Prefix;
 
-            if (inventorySlot < (Player.MAX_INVENTORY - 1))
+			if (inventorySlot < Player.MAX_INVENTORY)
 			{
 				player.inventory[inventorySlot] = item;
 			}
 			else
 			{
-                player.armor[inventorySlot - (Player.MAX_INVENTORY - 1)] = item;
+				player.armor[inventorySlot - Player.MAX_INVENTORY] = item;
 			}
 			
 			if (ctx.Result != HookResult.CONTINUE)
@@ -76,7 +81,7 @@ namespace Terraria_Server.Messages
 				}
 			}
 			
-			NetMessage.SendData(5, -1, whoAmI, itemName, playerIndex, (float)inventorySlot);
+			NetMessage.SendData(5, -1, whoAmI, itemName, playerIndex, (float)inventorySlot, args.Prefix);
         }
     }
 }

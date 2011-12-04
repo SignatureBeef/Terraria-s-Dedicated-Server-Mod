@@ -377,6 +377,8 @@ namespace Terraria_Server.Plugins
 			public int    InventorySlot { get; set; }
 			public int    Amount        { get; set; }
 			public string Name          { get; set; }
+			public int    Prefix        { get; set; }
+			public int    NetID         { get; set; }
 		}
 		
 		public struct ObituaryReceived

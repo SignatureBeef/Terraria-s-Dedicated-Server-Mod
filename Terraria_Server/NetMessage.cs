@@ -109,7 +109,7 @@ namespace Terraria_Server
 						break;
 						
 					case (int)Packet.INVENTORY_DATA:
-						msg.InventoryData (number, (byte)number2, text);
+						msg.InventoryData (number, (byte)number2, (int)number3);
 						break;
 						
 					case (int)Packet.WORLD_REQUEST:
@@ -293,7 +293,7 @@ namespace Terraria_Server
 						break;
 					
 					case (int)Packet.SUMMON_SKELETRON:
-						msg.SummonSkeletron ((byte) number);
+						msg.SummonSkeletron ((byte) number, (byte) number2);
 						break;
 					
 					case (int)Packet.CHEST_UNLOCK:
@@ -671,14 +671,14 @@ namespace Terraria_Server
 			PlayerBuffs (i);
 			PlayerData (i);
 			
-			for (int k = 0; k < 44 /*bar only*/; k++)
+			for (int k = 0; k < 49 /*bar only*/; k++)
 			{
-				InventoryData (i, k, player.inventory[k].Name);
+				InventoryData (i, k, player.inventory[k].Prefix);
 			}
 			
 			for (int k = 0; k < 11; k++)
 			{
-				InventoryData (i, k+44, player.armor[k].Name);
+				InventoryData (i, k+49, player.armor[k].Prefix);
 			}
 		}
 		

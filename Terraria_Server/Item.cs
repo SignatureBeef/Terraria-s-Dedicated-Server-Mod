@@ -201,6 +201,10 @@ namespace Terraria_Server
 		/// </summary>
 		public bool Wet;
 		public byte WetCount;
+		
+		// temporary, until we actually add these
+		public short NetID { get { return (short)Type; } }
+		public byte Prefix;
 
 		/// <summary>
 		/// Item class contstructor

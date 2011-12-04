@@ -97,6 +97,7 @@ namespace Terraria_Server
 		/// Whether player is currently in a jungle zone
 		/// </summary>
 		public bool zoneJungle;
+		public bool zoneHoly;
 		/// <summary>
 		/// Whether player is wearing bone armor
 		/// </summary>
