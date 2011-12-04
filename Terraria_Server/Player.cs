@@ -26,6 +26,9 @@ namespace Terraria_Server
         public const int MAX_HEALTH = 400;
         public const int MAX_MANA = 360;
         public const int MAX_ITEMS = 255;
+        public const int NUM_ARMOR_HEAD = 44;
+        public const int NUM_ARMOR_BODY = 25;
+        public const int NUM_ARMOR_LEGS = 24;
 
 		/// <summary>
 		/// Whether this player is using TDCM

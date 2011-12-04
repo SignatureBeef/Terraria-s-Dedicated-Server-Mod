@@ -40,6 +40,7 @@ namespace Terraria_Server.Collections
 					//ProgramLog.Debug.Log ("Created entity {0}, {1}", t.Type, t.Name);
 					
 					t.Name = String.Intern (t.Name);
+					if (t.NetID == 0) t.NetID = (short)t.Type;
 					//Networking.StringCache.Add (System.Text.Encoding.ASCII.GetBytes (t.Name), t.Name);
 					Networking.StringCache.Add (t.Name);
 					

@@ -5214,7 +5214,7 @@ namespace Terraria_Server.WorldMod
 				WorldModify.spawnDelay = 0;
 				if (WorldModify.spawnNPC != 37)
 				{
-					for (int i = 0; i < 1000; i++)
+					for (int i = 0; i < NPC.MAX_NPCS; i++)
 					{
                         if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].townNPC)
 						{

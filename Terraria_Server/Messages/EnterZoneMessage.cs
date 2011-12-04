@@ -27,6 +27,7 @@ namespace Terraria_Server.Messages
             player.zoneMeteor = (readBuffer[num++] != 0);
             player.zoneDungeon = (readBuffer[num++] != 0);
             player.zoneJungle = (readBuffer[num++] != 0);
+            player.zoneHoly = (readBuffer[num++] != 0);
 
             NetMessage.SendData(36, -1, whoAmI, "", playerIndex);
         }

@@ -630,6 +630,9 @@ namespace Terraria_Server.Commands
 				int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), fclass.Name);
 				//Registries.NPC.Alter(Main.npcs[npcIndex], fclass.Name);
 				realNPCName = Main.npcs[npcIndex].Name;
+//				var npc = Main.npcs[npcIndex];
+//				Console.WriteLine ("Name: {0}, Type: {1}, NetID: {2}, Scale: {3}, Height: {4}, Width: {5}, Ghost: {6}, Flying: {7}, Life: {8}/{9}, Debuffs: {10}/{11}",
+//					npc.Name, npc.Type, npc.NetID, npc.scale, npc.Height, npc.Width, npc.noTileCollide, npc.noGravity, npc.life, npc.lifeMax, string.Join(",", npc.buffType), string.Join(",", npc.buffTime));
 			}
 			Server.notifyOps("Spawned " + NPCAmount.ToString() + " of " +
 					realNPCName + " {" + player.Name + "}", true);

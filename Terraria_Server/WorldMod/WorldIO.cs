@@ -107,15 +107,15 @@ namespace Terraria_Server.WorldMod
 			
 			using (var prog = new ProgressLogger(12212 + Liquid.resLiquid - 1, "Resetting game objects"))
 			{
-				for (int num3 = 0; num3 < 200; num3++)
+				for (int num3 = 0; num3 < 201; num3++)
 				{
 					Main.item[num3] = null;
+					Main.npcs[num3] = null;
 				}
 				prog.Value++;
 				
 				for (int num4 = 0; num4 < 1000; num4++)
 				{
-					Main.npcs[num4] = null;
 					Main.projectile[num4] = null;
 					Main.chest[num4] = null;
 					Main.sign[num4] = null;
@@ -137,14 +137,15 @@ namespace Terraria_Server.WorldMod
 				GC.Collect ();
 				prog.Value += 10;
 
-				for (int num3 = 0; num3 < 200; num3++)
+				for (int num3 = 0; num3 < 201; num3++)
 				{
 					Main.item[num3] = new Item();
+					Main.npcs[num3] = new NPC();
 					prog.Value++;
 				}
-				for (int num4 = 0; num4 < 1000; num4++)
+				for (int num4 = 0; num4 < 1001; num4++)
 				{
-					Main.npcs[num4] = new NPC();
+					
 					prog.Value++;
 				}
 //				for (int num5 = 0; num5 < 1000; num5++)

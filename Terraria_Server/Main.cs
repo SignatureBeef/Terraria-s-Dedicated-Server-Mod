@@ -18,19 +18,19 @@ namespace Terraria_Server
         //public static bool npcChatRelease = false;
         //public static bool npcChatFocus1 = false;
         //public static bool npcChatFocus2 = false;
-        public const int MAX_TILE_SETS = 107;
-        public const int MAX_WALL_SETS = 21;
+        public const int MAX_TILE_SETS = 145;
+        public const int MAX_WALL_SETS = 29;
+        public const int MAX_BUFFS = 40;
         
         public static Item trashItem { get; set; }
-        public static bool[] debuff = new bool[27];
+        public static bool[] debuff = new bool[MAX_BUFFS];
         public const int maxItemText = 100;
         public const int MAX_PLAYERS = 255;
         public const int maxChests = 1000;
-        public const int maxItemTypes = 364;
-        public const int maxProjectileTypes = 55;
+        public const int maxItemTypes = 586;
+        public const int maxProjectileTypes = 109;
         public const int maxProjectiles = 1000;
         public const int maxNPCTypes = 74;
-        public const int maxInventory = 44;
         public const double dayLength = 54000.0;
         public static bool stopSpawns = false;
 		public static bool ignoreErrors = true;
@@ -81,8 +81,6 @@ namespace Terraria_Server
 		public static bool[] tileNoAttach = new bool[Main.MAX_TILE_SETS];
 		public static bool[] tileNoFail = new bool[Main.MAX_TILE_SETS];
 		public static bool[] tileFrameImportant = new bool[Main.MAX_TILE_SETS];
-		public static int[] backgroundWidth = new int[7];
-		public static int[] backgroundHeight = new int[7];
 
 		[ThreadStatic]
 		static Random threadRand;
@@ -1031,6 +1029,12 @@ namespace Terraria_Server
 				
 				for (int i = 0; i < NPC.MAX_NPCS; i++)
 				{
+//					if (Main.npcs[i] == null)
+//					{
+//						ProgramLog.Debug.Log ("NPC[{0}] is null", i);
+//						continue;
+//					}
+					
 					try
 					{
 						NPC.UpdateNPC(i);
@@ -1057,6 +1061,12 @@ namespace Terraria_Server
 				
 				for (int i = 0; i < 1000; i++)
 				{
+//					if (Main.projectile[i] == null)
+//					{
+//						ProgramLog.Debug.Log ("Projectile[{0}] is null", i);
+//						continue;
+//					}
+					
 					try
 					{
 					    Main.projectile[i].Update(i);
@@ -1082,6 +1092,12 @@ namespace Terraria_Server
 				
 				for (int i = 0; i < 200; i++)
 				{
+//					if (Main.item[i] == null)
+//					{
+//						ProgramLog.Debug.Log ("Item[{0}] is null", i);
+//						continue;
+//					}
+					
 					try
 					{
 						Main.item[i].UpdateItem(i);

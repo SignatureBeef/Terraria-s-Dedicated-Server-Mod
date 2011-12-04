@@ -155,6 +155,8 @@ namespace Terraria_Server.Definitions
         [XmlEnum(Name = "72")]
         N72_BLAZING_WHEEL,
         [XmlEnum(Name = "73")]
-        N73_GOBLIN_SCOUT
+        N73_GOBLIN_SCOUT,
+        [XmlEnum(Name = "74")]
+        N74_BIRD
     }
 }
