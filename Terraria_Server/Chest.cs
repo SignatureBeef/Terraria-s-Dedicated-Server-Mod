@@ -32,9 +32,7 @@ namespace Terraria_Server
         public Chest()
         {
             for (int i = 0; i < contents.Length; i++)
-            {
                 this.contents[i] = new Item();
-            }
         }
 
         public bool hasContents()
@@ -42,9 +40,7 @@ namespace Terraria_Server
             foreach (Item item in contents)
             {
                 if (item.Type > 0 && item.Stack > 0)
-                {
                     return true;
-                }
             }
             return false;
         }
@@ -60,13 +56,9 @@ namespace Terraria_Server
 					if (player.Active && player.chest == i)
 					{
 						if (Math.Abs (player.Position.X/16 - chest.x) < 7 && Math.Abs (player.Position.Y/16 - chest.y) < 7)
-						{
 							return index;
-						}
 						else
-						{
-							player.chest = -1;
-						}
+                            player.chest = -1;
 					}
 					index++;
 				}
@@ -76,12 +68,10 @@ namespace Terraria_Server
 
         public static int FindChest(int X, int Y)
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < Main.maxChests; i++)
             {
                 if (Main.chest[i] != null && Main.chest[i].x == X && Main.chest[i].y == Y)
-                {
                     return i;
-                }
             }
             return -1;
         }
@@ -90,11 +80,9 @@ namespace Terraria_Server
         {
             //Opposite logic of find chest in that if the chest is found we now return -1.
             if (FindChest(X, Y) != -1)
-            {
                 return -1;
-            }
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < Main.maxChests; i++)
             {
                 if (Main.chest[i] == null)
                 {
@@ -102,9 +90,8 @@ namespace Terraria_Server
                     Main.chest[i].x = X;
                     Main.chest[i].y = Y;
                     for (int j = 0; j < Chest.MAX_ITEMS; j++)
-                    {
                         Main.chest[i].contents[j] = new Item();
-                    }
+
                     return i;
                 }
             }
@@ -115,15 +102,11 @@ namespace Terraria_Server
         {
             int chestIndex = FindChest(X, Y);
             if (chestIndex == -1)
-            {
                 return true;
-            }
 
             Chest chestToDestroy = Main.chest[chestIndex];
             if (chestToDestroy.hasContents())
-            {
                 return false;
-            }
 
             Main.chest[chestIndex] = null;
             return true;

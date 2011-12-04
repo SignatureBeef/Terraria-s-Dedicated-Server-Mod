@@ -10,7 +10,7 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server.WorldMod
 {
-	public class WorldGen
+	public static class WorldGen
     {
         public static bool mudWall { get; set; }
 		private static int maxDRooms = 100;
@@ -616,7 +616,6 @@ namespace Terraria_Server.WorldMod
 
         public static void PlaceRocksWithinDirt()
         {
-
             var Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0002);
             var Max2 = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0045);
             using (var rockProg = new ProgressLogger((Max * 2) + Max2, "Placing rocks within the dirt"))
@@ -2575,8 +2574,7 @@ namespace Terraria_Server.WorldMod
                     }
                 }
             } // end cacti
-        }
-               
+        }               
 
         public static void PlantSunflowers()
         {
@@ -7139,5 +7137,10 @@ namespace Terraria_Server.WorldMod
 			}
 			return false;
 		}
+
+        public static void hitSwitch(int i, int j)
+        {
+
+        }
     }
 }

@@ -173,7 +173,7 @@ namespace Terraria_Server
 		[DeepClone] public ushort[] immune = new ushort[256];
 		[DeepClone] public int[] buffType = new int[5];
 		[DeepClone] public int[] buffTime = new int[5];
-		[DeepClone] public bool[] buffImmune = new bool[27];
+		[DeepClone] public bool[] buffImmune = new bool[40];
 		
 		public bool PoisonImmunity
 		{

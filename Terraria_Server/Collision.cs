@@ -220,7 +220,6 @@ namespace Terraria_Server
 
         public static bool LavaCollision(Vector2 Position, int Width, int Height)
         {
-            int num = Height - 2;
             int left = (int)(Position.X / 16f) - 1;
             int right = (int)((Position.X + (float)Width) / 16f) + 2;
             int top = (int)(Position.Y / 16f) - 1;
@@ -251,11 +250,11 @@ namespace Terraria_Server
                         vector.X = (float)(i * 16);
                         vector.Y = (float)(j * 16);
                         int num6 = 16;
-                        float num7 = (float)(256 - Main.tile.At(i, j).Liquid);
+                        float num7 = (float)(0 - Main.tile.At(i, j).Liquid);
                         num7 /= 32f;
                         vector.Y += num7 * 2f;
                         num6 -= (int)(num7 * 2f);
-                        if (Position.X + (float)Width > vector.X && Position.X < vector.X + 16f && Position.Y + (float)num > vector.Y && Position.Y < vector.Y + (float)num6)
+                        if (Position.X + (float)Width > vector.X && Position.X < vector.X + 16f && Position.Y + (float)Height > vector.Y && Position.Y < vector.Y + (float)num6)
                         {
                             return true;
                         }
@@ -538,8 +537,7 @@ namespace Terraria_Server
             }
             return result;
         }
-
-
+        
         public static void HitTiles(Vector2 Position, Vector2 Velocity, int Width, int Height)
         {
             Vector2 nextPos = Position + Velocity;
@@ -612,62 +610,51 @@ namespace Terraria_Server
                         Vector2 vector2;
                         vector2.X = (float)(i * 16);
                         vector2.Y = (float)(j * 16);
-                        int num5 = 0;
+                        int Y = 0;
                         int type = (int)Main.tile.At(i, j).Type;
                         if (type == 32 || type == 69 || type == 80)
                         {
                             if (Position.X + (float)Width > vector2.X && Position.X < vector2.X + 16f && Position.Y + (float)Height > vector2.Y && (double)Position.Y < (double)vector2.Y + 16.01)
                             {
-                                int num6 = 1;
+                                int directionX = 1;
                                 if (Position.X + (float)(Width / 2) < vector2.X + 8f)
-                                {
-                                    num6 = -1;
-                                }
-                                num5 = 10;
+                                    directionX = -1;
+
+                                Y = 10;
                                 if (type == 69)
-                                {
-                                    num5 = 25;
-								}
+                                    Y = 17;
 								else if (type == 80)
-								{
-									num5 = 6;
-								}
+                                    Y = 6;
 								if (type == 32 || type == 69)
-								{
-									WorldModify.KillTile(i, j, false, false, false);
-								}
-                                return new Vector2((float)num6, (float)num5);
+                                    WorldModify.KillTile(i, j, false, false, false);								
+
+                                return new Vector2((float)directionX, (float)Y);
                             }
                         }
-                        else if (type == 53 || type == 59 || type == 57)
+                        else if (type == 53 || type == 112 || type == 116 || type == 123)
                         {
                             if (Position.X + (float)Width - 2f >= vector2.X && Position.X + 2f <= vector2.X + 16f && Position.Y + (float)Height - 2f >= vector2.Y && Position.Y + 2f <= vector2.Y + 16f)
                             {
-                                int num7 = 1;
+                                int directionX = 1;
                                 if (Position.X + (float)(Width / 2) < vector2.X + 8f)
-                                {
-                                    num7 = -1;
-                                }
-                                num5 = 20;
-                                return new Vector2((float)num7, (float)num5);
+                                    directionX = -1;
+
+                                Y = 20;
+                                return new Vector2((float)directionX, (float)Y);
                             }
                         }
                         else if (Position.X + (float)Width >= vector2.X && Position.X <= vector2.X + 16f && Position.Y + (float)Height >= vector2.Y && (double)Position.Y <= (double)vector2.Y + 16.01)
                         {
-                            int num8 = 1;
+                            int directionX = 1;
                             if (Position.X + (float)(Width / 2) < vector2.X + 8f)
-                            {
-                                num8 = -1;
-                            }
+                                directionX = -1;
+
                             if (!fireImmune && (type == 37 || type == 58 || type == 76))
-                            {
-                                num5 = 20;
-                            }
+                                Y = 20;
                             if (type == 48)
-                            {
-                                num5 = 40;
-                            }
-                            return new Vector2((float)num8, (float)num5);
+                                Y = 40;
+
+                            return new Vector2((float)directionX, (float)Y);
                         }
                     }
                 }
@@ -742,6 +729,48 @@ namespace Terraria_Server
                     if (Main.tile.At(i, j).Active && Main.tileSolid[(int)Main.tile.At(i, j).Type] && !Main.tileSolidTop[(int)Main.tile.At(i, j).Type])
                     {
                         return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public static bool SwitchTiles(Vector2 Position, int Width, int Height, Vector2 oldPosition)
+        {
+            int num = (int)(Position.X / 16f) - 1;
+            int num2 = (int)((Position.X + (float)Width) / 16f) + 2;
+            int num3 = (int)(Position.Y / 16f) - 1;
+            int num4 = (int)((Position.Y + (float)Height) / 16f) + 2;
+            if (num < 0)
+            {
+                num = 0;
+            }
+            if (num2 > Main.maxTilesX)
+            {
+                num2 = Main.maxTilesX;
+            }
+            if (num3 < 0)
+            {
+                num3 = 0;
+            }
+            if (num4 > Main.maxTilesY)
+            {
+                num4 = Main.maxTilesY;
+            }
+            for (int i = num; i < num2; i++)
+            {
+                for (int j = num3; j < num4; j++)
+                {
+                    if (Main.tile.At(i, j).Active && Main.tile.At(i, j).Type == 135)
+                    {
+                        Vector2 vector;
+                        vector.X = (float)(i * 16);
+                        vector.Y = (float)(j * 16 + 12);
+                        if (Position.X + (float)Width > vector.X && Position.X < vector.X + 16f && Position.Y + (float)Height > vector.Y && (double)Position.Y < (double)vector.Y + 4.01 && (oldPosition.X + (float)Width <= vector.X || oldPosition.X >= vector.X + 16f || oldPosition.Y + (float)Height <= vector.Y || (double)oldPosition.Y >= (double)vector.Y + 16.01))
+                        {
+                            WorldGen.hitSwitch(i, j);
+                            NetMessage.SendData(59, -1, -1, "", i, (float)j, 0f, 0f, 0);
+                            return true;
+                        }
                     }
                 }
             }

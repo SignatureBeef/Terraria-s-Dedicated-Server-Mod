@@ -117,7 +117,10 @@ namespace Terraria_Utilities
                 {
                     IgnoreFields = new string[]
                     {
-                        "Immune", "Ai", "Active", "Direction", "Oldtarget", "Target", "Life", "OldPos"
+                        "Immune", "Ai", "Active", "Direction", 
+                        "Oldtarget", "Target", "Life", "OldPos",
+                        "buffType", "buffTime", "buffImmune", "color",
+                        "localAI", "position"
                     },
                     TypeReference = typeof(Terraria.NPC),
                     SetDefaults = new Type[] { typeof(Int32), typeof(float) },
@@ -141,7 +144,10 @@ namespace Terraria_Utilities
                 {
                     IgnoreFields = new string[]
                     {
-                        "Immune", "Ai", "Active", "Direction", "Oldtarget", "Target", "Life", "OldPos"
+                        "Immune", "Ai", "Active", "Direction", 
+                        "Oldtarget", "Target", "Life", "OldPos",
+                        "buffType", "buffTime", "buffImmune", "color",
+                        "localAI", "position"
                     },
                     TypeReference = typeof(Terraria.NPC),
                     SetDefaults = new Type[] { typeof(String) },

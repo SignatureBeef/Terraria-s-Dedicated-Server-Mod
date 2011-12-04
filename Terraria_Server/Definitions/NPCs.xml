@@ -1,13 +1,9 @@
 <ArrayOfNPC>
   <NPC>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>24</Width>
     <Height>18</Height>
     <Type>1</Type>
-    <localAI/>
     <aiStyle>1</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>7</damage>
@@ -19,12 +15,6 @@
     <lifeMax>25</lifeMax>
     <Name>Blue Slime</Name>
     <displayName/>
-    <color>
-      <G>80</G>
-      <B>255</B>
-      <A>100</A>
-      <PackedValue>1694453760</PackedValue>
-    </color>
     <alpha>175</alpha>
     <oldTarget>255</oldTarget>
     <netUpdate>true</netUpdate>
@@ -34,13 +24,9 @@
   <NPC>
     <Name>Demon Eye</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>30</Width>
     <Height>32</Height>
     <Type>2</Type>
-    <localAI/>
     <aiStyle>2</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>18</damage>
@@ -60,13 +46,9 @@
   <NPC>
     <Name>Zombie</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>3</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>14</damage>
@@ -87,13 +69,9 @@
     <Name>Eye of Cthulhu</Name>
     <netSkip>-2</netSkip>
     <npcSlots>5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>100</Width>
     <Height>110</Height>
     <Type>4</Type>
-    <localAI/>
     <aiStyle>4</aiStyle>
     <timeLeft>22500</timeLeft>
     <damage>15</damage>
@@ -116,13 +94,9 @@
   <NPC>
     <Name>Servant of Cthulhu</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>20</Width>
     <Height>20</Height>
     <Type>5</Type>
-    <localAI/>
     <aiStyle>5</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>12</damage>
@@ -140,13 +114,9 @@
   <NPC>
     <Name>Eater of Souls</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>30</Width>
     <Height>30</Height>
     <Type>6</Type>
-    <localAI/>
     <aiStyle>5</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>22</damage>
@@ -169,13 +139,9 @@
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
     <npcSlots>3.5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>22</Height>
     <Type>7</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>31</damage>
@@ -199,13 +165,9 @@
     <Name>Devourer Body</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>22</Height>
     <Type>8</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>16</damage>
@@ -229,13 +191,9 @@
     <Name>Devourer Tail</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>22</Height>
     <Type>9</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>13</damage>
@@ -259,13 +217,9 @@
     <Name>Giant Worm Head</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>14</Width>
     <Height>14</Height>
     <Type>10</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>8</damage>
@@ -287,13 +241,9 @@
     <Name>Giant Worm Body</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>14</Width>
     <Height>14</Height>
     <Type>11</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>4</damage>
@@ -317,13 +267,9 @@
     <Name>Giant Worm Tail</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>14</Width>
     <Height>14</Height>
     <Type>12</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>4</damage>
@@ -348,13 +294,9 @@
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
     <npcSlots>5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>38</Width>
     <Height>38</Height>
     <Type>13</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>22</damage>
@@ -378,13 +320,9 @@
     <Name>Eater of Worlds Body</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>38</Width>
     <Height>38</Height>
     <Type>14</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>13</damage>
@@ -408,13 +346,9 @@
     <Name>Eater of Worlds Tail</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>38</Width>
     <Height>38</Height>
     <Type>15</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>11</damage>
@@ -438,13 +372,9 @@
     <Name>Mother Slime</Name>
     <netSkip>-2</netSkip>
     <npcSlots>2</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>45</Width>
     <Height>30</Height>
     <Type>16</Type>
-    <localAI/>
     <aiStyle>1</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -455,10 +385,6 @@
     <soundKilled>1</soundKilled>
     <lifeMax>90</lifeMax>
     <displayName/>
-    <color>
-      <A>50</A>
-      <PackedValue>838860800</PackedValue>
-    </color>
     <alpha>120</alpha>
     <scale>1.25</scale>
     <knockBackResist>0.6</knockBackResist>
@@ -470,13 +396,9 @@
   <NPC>
     <Name>Merchant</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>17</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -497,13 +419,9 @@
   <NPC>
     <Name>Nurse</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>18</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -524,13 +442,9 @@
   <NPC>
     <Name>Arms Dealer</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>19</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -551,13 +465,9 @@
   <NPC>
     <Name>Dryad</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>20</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -578,13 +488,9 @@
   <NPC>
     <Name>Skeleton</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>21</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -604,13 +510,9 @@
   <NPC>
     <Name>Guide</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>22</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -631,13 +533,9 @@
   <NPC>
     <Name>Meteor Head</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>22</Height>
     <Type>23</Type>
-    <localAI/>
     <aiStyle>5</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -660,13 +558,9 @@
     <Name>Fire Imp</Name>
     <netSkip>-2</netSkip>
     <npcSlots>3</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>24</Type>
-    <localAI/>
     <aiStyle>8</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>30</damage>
@@ -687,13 +581,9 @@
   <NPC>
     <Name>Burning Sphere</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>16</Width>
     <Height>16</Height>
     <Type>25</Type>
-    <localAI/>
     <aiStyle>9</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>30</damage>
@@ -713,13 +603,9 @@
   <NPC>
     <Name>Goblin Peon</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>16</Width>
     <Height>35</Height>
     <Type>26</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>12</damage>
@@ -740,13 +626,9 @@
   <NPC>
     <Name>Goblin Thief</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>17</Width>
     <Height>37</Height>
     <Type>27</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -767,13 +649,9 @@
   <NPC>
     <Name>Goblin Warrior</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>19</Width>
     <Height>44</Height>
     <Type>28</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>25</damage>
@@ -794,13 +672,9 @@
   <NPC>
     <Name>Goblin Sorcerer</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>29</Type>
-    <localAI/>
     <aiStyle>8</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -820,13 +694,9 @@
   <NPC>
     <Name>Chaos Ball</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>16</Width>
     <Height>16</Height>
     <Type>30</Type>
-    <localAI/>
     <aiStyle>9</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -846,13 +716,9 @@
   <NPC>
     <Name>Angry Bones</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>31</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>26</damage>
@@ -873,13 +739,9 @@
     <Name>Dark Caster</Name>
     <netSkip>-2</netSkip>
     <npcSlots>2</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>32</Type>
-    <localAI/>
     <aiStyle>8</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -899,13 +761,9 @@
   <NPC>
     <Name>Water Sphere</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>16</Width>
     <Height>16</Height>
     <Type>33</Type>
-    <localAI/>
     <aiStyle>9</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -926,13 +784,9 @@
     <Name>Cursed Skull</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.75</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>26</Width>
     <Height>28</Height>
     <Type>34</Type>
-    <localAI/>
     <aiStyle>10</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>35</damage>
@@ -955,13 +809,9 @@
     <Name>Skeletron Head</Name>
     <netSkip>-2</netSkip>
     <npcSlots>6</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>80</Width>
     <Height>102</Height>
     <Type>35</Type>
-    <localAI/>
     <aiStyle>11</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>32</damage>
@@ -984,13 +834,9 @@
   <NPC>
     <Name>Skeletron Hand</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>52</Width>
     <Height>52</Height>
     <Type>36</Type>
-    <localAI/>
     <aiStyle>12</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -1011,13 +857,9 @@
   <NPC>
     <Name>Old Man</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>37</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -1038,13 +880,9 @@
   <NPC>
     <Name>Demolitionist</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>38</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -1067,13 +905,9 @@
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
     <npcSlots>6</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>22</Height>
     <Type>39</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>30</damage>
@@ -1097,13 +931,9 @@
     <Name>Bone Serpent Body</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>22</Height>
     <Type>40</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>15</damage>
@@ -1127,13 +957,9 @@
     <Name>Bone Serpent Tail</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>22</Height>
     <Type>41</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -1156,13 +982,9 @@
   <NPC>
     <Name>Hornet</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>34</Width>
     <Height>32</Height>
     <Type>42</Type>
-    <localAI/>
     <aiStyle>5</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>34</damage>
@@ -1183,13 +1005,9 @@
   <NPC>
     <Name>Man Eater</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>30</Width>
     <Height>30</Height>
     <Type>43</Type>
-    <localAI/>
     <aiStyle>13</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>42</damage>
@@ -1211,13 +1029,9 @@
   <NPC>
     <Name>Undead Miner</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>44</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>22</damage>
@@ -1237,13 +1051,9 @@
   <NPC>
     <Name>Tim</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>45</Type>
-    <localAI/>
     <aiStyle>8</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -1263,13 +1073,9 @@
   <NPC>
     <Name>Bunny</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>20</Height>
     <Type>46</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <soundHit>1</soundHit>
@@ -1283,13 +1089,9 @@
   <NPC>
     <Name>Corrupt Bunny</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>20</Height>
     <Type>47</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -1308,13 +1110,9 @@
   <NPC>
     <Name>Harpy</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>24</Width>
     <Height>34</Height>
     <Type>48</Type>
-    <localAI/>
     <aiStyle>14</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>25</damage>
@@ -1335,13 +1133,9 @@
     <Name>Cave Bat</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>18</Height>
     <Type>49</Type>
-    <localAI/>
     <aiStyle>14</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>13</damage>
@@ -1361,13 +1155,9 @@
   <NPC>
     <Name>King Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>122</Width>
     <Height>115</Height>
     <Type>50</Type>
-    <localAI/>
     <aiStyle>15</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -1391,13 +1181,9 @@
     <Name>Jungle Bat</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>18</Height>
     <Type>51</Type>
-    <localAI/>
     <aiStyle>14</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -1417,13 +1203,9 @@
   <NPC>
     <Name>Doctor Bones</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>52</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -1443,13 +1225,9 @@
   <NPC>
     <Name>The Groom</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>53</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>14</damage>
@@ -1469,13 +1247,9 @@
   <NPC>
     <Name>Clothier</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>54</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -1496,13 +1270,9 @@
   <NPC>
     <Name>Goldfish</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>20</Width>
     <Height>18</Height>
     <Type>55</Type>
-    <localAI/>
     <aiStyle>16</aiStyle>
     <timeLeft>750</timeLeft>
     <soundHit>1</soundHit>
@@ -1518,13 +1288,9 @@
   <NPC>
     <Name>Snatcher</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>30</Width>
     <Height>30</Height>
     <Type>56</Type>
-    <localAI/>
     <aiStyle>13</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>25</damage>
@@ -1546,13 +1312,9 @@
   <NPC>
     <Name>Corrupt Goldfish</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>20</Height>
     <Type>57</Type>
-    <localAI/>
     <aiStyle>16</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>30</damage>
@@ -1573,13 +1335,9 @@
     <Name>Piranha</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>20</Height>
     <Type>58</Type>
-    <localAI/>
     <aiStyle>16</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>25</damage>
@@ -1599,13 +1357,9 @@
   <NPC>
     <Name>Lava Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>26</Width>
     <Height>19</Height>
     <Type>59</Type>
-    <localAI/>
     <aiStyle>1</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>15</damage>
@@ -1628,13 +1382,9 @@
     <Name>Hellbat</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>24</Width>
     <Height>19</Height>
     <Type>60</Type>
-    <localAI/>
     <aiStyle>14</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>35</damage>
@@ -1656,13 +1406,9 @@
   <NPC>
     <Name>Vulture</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>36</Width>
     <Height>36</Height>
     <Type>61</Type>
-    <localAI/>
     <aiStyle>17</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>15</damage>
@@ -1683,13 +1429,9 @@
     <Name>Demon</Name>
     <netSkip>-2</netSkip>
     <npcSlots>2</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>28</Width>
     <Height>48</Height>
     <Type>62</Type>
-    <localAI/>
     <aiStyle>14</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>32</damage>
@@ -1710,13 +1452,9 @@
   <NPC>
     <Name>Blue Jellyfish</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>26</Width>
     <Height>26</Height>
     <Type>63</Type>
-    <localAI/>
     <aiStyle>18</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -1737,13 +1475,9 @@
   <NPC>
     <Name>Pink Jellyfish</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>26</Width>
     <Height>26</Height>
     <Type>64</Type>
-    <localAI/>
     <aiStyle>18</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>30</damage>
@@ -1764,13 +1498,9 @@
   <NPC>
     <Name>Shark</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>100</Width>
     <Height>24</Height>
     <Type>65</Type>
-    <localAI/>
     <aiStyle>16</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -1792,13 +1522,9 @@
     <Name>Voodoo Demon</Name>
     <netSkip>-2</netSkip>
     <npcSlots>2</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>28</Width>
     <Height>48</Height>
     <Type>66</Type>
-    <localAI/>
     <aiStyle>14</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>32</damage>
@@ -1819,13 +1545,9 @@
   <NPC>
     <Name>Crab</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>28</Width>
     <Height>20</Height>
     <Type>67</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -1844,13 +1566,9 @@
   <NPC>
     <Name>Dungeon Guardian</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>80</Width>
     <Height>102</Height>
     <Type>68</Type>
-    <localAI/>
     <aiStyle>11</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>9000</damage>
@@ -1871,13 +1589,9 @@
   <NPC>
     <Name>Antlion</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>24</Width>
     <Height>24</Height>
     <Type>69</Type>
-    <localAI/>
     <aiStyle>19</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -1899,13 +1613,9 @@
     <Name>Spike Ball</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.3</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>51</Width>
     <Height>51</Height>
     <Type>70</Type>
-    <localAI/>
     <aiStyle>20</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>32</damage>
@@ -1929,13 +1639,9 @@
     <Name>Dungeon Slime</Name>
     <netSkip>-2</netSkip>
     <npcSlots>2</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>45</Width>
     <Height>30</Height>
     <Type>71</Type>
-    <localAI/>
     <aiStyle>1</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>30</damage>
@@ -1958,13 +1664,9 @@
     <Name>Blazing Wheel</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.3</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>40</Width>
     <Height>40</Height>
     <Type>72</Type>
-    <localAI/>
     <aiStyle>21</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>24</damage>
@@ -1988,13 +1690,9 @@
   <NPC>
     <Name>Goblin Scout</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>17</Width>
     <Height>37</Height>
     <Type>73</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -2015,13 +1713,9 @@
   <NPC>
     <Name>Bird</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>14</Width>
     <Height>14</Height>
     <Type>74</Type>
-    <localAI/>
     <aiStyle>24</aiStyle>
     <timeLeft>750</timeLeft>
     <soundHit>1</soundHit>
@@ -2036,13 +1730,9 @@
   <NPC>
     <Name>Pixie</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>20</Width>
     <Height>20</Height>
     <Type>75</Type>
-    <localAI/>
     <aiStyle>22</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>55</damage>
@@ -2063,13 +1753,9 @@
   <NPC>
     <Name>Armored Skeleton</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>77</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>60</damage>
@@ -2089,13 +1775,9 @@
   <NPC>
     <Name>Mummy</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>78</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>50</damage>
@@ -2115,13 +1797,9 @@
   <NPC>
     <Name>Dark Mummy</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>79</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>60</damage>
@@ -2141,13 +1819,9 @@
   <NPC>
     <Name>Light Mummy</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>80</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>55</damage>
@@ -2167,13 +1841,9 @@
   <NPC>
     <Name>Corrupt Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>44</Width>
     <Height>33</Height>
     <Type>81</Type>
-    <localAI/>
     <aiStyle>1</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>55</damage>
@@ -2194,13 +1864,9 @@
   <NPC>
     <Name>Wraith</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>24</Width>
     <Height>44</Height>
     <Type>82</Type>
-    <localAI/>
     <aiStyle>22</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>75</damage>
@@ -2223,13 +1889,9 @@
   <NPC>
     <Name>Cursed Hammer</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>40</Width>
     <Height>40</Height>
     <Type>83</Type>
-    <localAI/>
     <aiStyle>23</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>80</damage>
@@ -2249,13 +1911,9 @@
   <NPC>
     <Name>Enchanted Sword</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>40</Width>
     <Height>40</Height>
     <Type>84</Type>
-    <localAI/>
     <aiStyle>23</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>80</damage>
@@ -2275,13 +1933,9 @@
   <NPC>
     <Name>Mimic</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>24</Width>
     <Height>24</Height>
     <Type>85</Type>
-    <localAI/>
     <aiStyle>25</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>80</damage>
@@ -2301,13 +1955,9 @@
   <NPC>
     <Name>Unicorn</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>46</Width>
     <Height>42</Height>
     <Type>86</Type>
-    <localAI/>
     <aiStyle>26</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>65</damage>
@@ -2329,13 +1979,9 @@
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
     <npcSlots>5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>32</Width>
     <Height>32</Height>
     <Type>87</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>80</damage>
@@ -2358,13 +2004,9 @@
     <Name>Wyvern Legs</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>32</Width>
     <Height>32</Height>
     <Type>88</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -2387,13 +2029,9 @@
     <Name>Wyvern Body</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>32</Width>
     <Height>32</Height>
     <Type>89</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -2416,13 +2054,9 @@
     <Name>Wyvern Body 2</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>32</Width>
     <Height>32</Height>
     <Type>90</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -2445,13 +2079,9 @@
     <Name>Wyvern Body 3</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>32</Width>
     <Height>32</Height>
     <Type>91</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -2474,13 +2104,9 @@
     <Name>Wyvern Tail</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>32</Width>
     <Height>32</Height>
     <Type>92</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -2503,13 +2129,9 @@
     <Name>Giant Bat</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>26</Width>
     <Height>20</Height>
     <Type>93</Type>
-    <localAI/>
     <aiStyle>14</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>70</damage>
@@ -2529,13 +2151,9 @@
   <NPC>
     <Name>Corruptor</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>44</Width>
     <Height>44</Height>
     <Type>94</Type>
-    <localAI/>
     <aiStyle>5</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>60</damage>
@@ -2557,13 +2175,9 @@
     <Name>Digger Head</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>19</Width>
     <Height>19</Height>
     <Type>95</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>45</damage>
@@ -2588,13 +2202,9 @@
     <Name>Digger Body</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>19</Width>
     <Height>19</Height>
     <Type>96</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>28</damage>
@@ -2619,13 +2229,9 @@
     <Name>Digger Tail</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>19</Width>
     <Height>19</Height>
     <Type>97</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>26</damage>
@@ -2651,13 +2257,9 @@
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
     <npcSlots>3.5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>22</Height>
     <Type>98</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>70</damage>
@@ -2681,13 +2283,9 @@
     <Name>Seeker Body</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>22</Height>
     <Type>99</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>55</damage>
@@ -2711,13 +2309,9 @@
     <Name>Seeker Tail</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>22</Width>
     <Height>22</Height>
     <Type>100</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -2740,13 +2334,9 @@
   <NPC>
     <Name>Clinger</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>30</Width>
     <Height>30</Height>
     <Type>101</Type>
-    <localAI/>
     <aiStyle>13</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>70</damage>
@@ -2770,13 +2360,9 @@
     <Name>Angler Fish</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>20</Height>
     <Type>102</Type>
-    <localAI/>
     <aiStyle>16</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>80</damage>
@@ -2796,13 +2382,9 @@
   <NPC>
     <Name>Green Jellyfish</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>26</Width>
     <Height>26</Height>
     <Type>103</Type>
-    <localAI/>
     <aiStyle>18</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>80</damage>
@@ -2823,13 +2405,9 @@
   <NPC>
     <Name>Werewolf</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>104</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>70</damage>
@@ -2849,13 +2427,9 @@
   <NPC>
     <Name>Bound Goblin</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>16</Width>
     <Height>30</Height>
     <Type>105</Type>
-    <localAI/>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
     <defense>15</defense>
@@ -2875,13 +2449,9 @@
   <NPC>
     <Name>Bound Wizard</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>106</Type>
-    <localAI/>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
     <defense>15</defense>
@@ -2900,13 +2470,9 @@
   <NPC>
     <Name>Goblin Tinkerer</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>16</Width>
     <Height>35</Height>
     <Type>107</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -2928,13 +2494,9 @@
   <NPC>
     <Name>Wizard</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>108</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -2955,13 +2517,9 @@
   <NPC>
     <Name>Clown</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>34</Width>
     <Height>78</Height>
     <Type>109</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>50</damage>
@@ -2981,13 +2539,9 @@
   <NPC>
     <Name>Skeleton Archer</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>110</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>55</damage>
@@ -3007,13 +2561,9 @@
   <NPC>
     <Name>Goblin Archer</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>17</Width>
     <Height>37</Height>
     <Type>111</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -3034,13 +2584,9 @@
   <NPC>
     <Name>Vile Spit</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>14</Width>
     <Height>14</Height>
     <Type>112</Type>
-    <localAI/>
     <aiStyle>9</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>65</damage>
@@ -3061,13 +2607,9 @@
     <Name>Wall of Flesh</Name>
     <netSkip>-2</netSkip>
     <npcSlots>10</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>120</Width>
     <Height>120</Height>
     <Type>113</Type>
-    <localAI/>
     <aiStyle>27</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>50</damage>
@@ -3092,13 +2634,9 @@
   <NPC>
     <Name>Wall of Flesh Eye</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>120</Width>
     <Height>120</Height>
     <Type>114</Type>
-    <localAI/>
     <aiStyle>28</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>50</damage>
@@ -3120,13 +2658,9 @@
   <NPC>
     <Name>The Hungry</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>30</Width>
     <Height>30</Height>
     <Type>115</Type>
-    <localAI/>
     <aiStyle>29</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>30</damage>
@@ -3148,13 +2682,9 @@
   <NPC>
     <Name>The Hungry II</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>30</Width>
     <Height>32</Height>
     <Type>116</Type>
-    <localAI/>
     <aiStyle>2</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>30</damage>
@@ -3174,13 +2704,9 @@
     <Name>Leech Head</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>14</Width>
     <Height>14</Height>
     <Type>117</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>26</damage>
@@ -3203,13 +2729,9 @@
     <Name>Leech Body</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>14</Width>
     <Height>14</Height>
     <Type>118</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>22</damage>
@@ -3232,13 +2754,9 @@
     <Name>Leech Tail</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>14</Width>
     <Height>14</Height>
     <Type>119</Type>
-    <localAI/>
     <aiStyle>6</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>18</damage>
@@ -3260,13 +2778,9 @@
   <NPC>
     <Name>Chaos Elemental</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>120</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -3286,13 +2800,9 @@
   <NPC>
     <Name>Slimer</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>44</Width>
     <Height>33</Height>
     <Type>121</Type>
-    <localAI/>
     <aiStyle>14</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>45</damage>
@@ -3312,13 +2822,9 @@
   <NPC>
     <Name>Gastropod</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>20</Width>
     <Height>20</Height>
     <Type>122</Type>
-    <localAI/>
     <aiStyle>22</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>60</damage>
@@ -3339,13 +2845,9 @@
   <NPC>
     <Name>Bound Mechanic</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>16</Width>
     <Height>30</Height>
     <Type>123</Type>
-    <localAI/>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
     <defense>15</defense>
@@ -3365,13 +2867,9 @@
   <NPC>
     <Name>Mechanic</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>124</Type>
-    <localAI/>
     <aiStyle>7</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>10</damage>
@@ -3393,13 +2891,9 @@
     <Name>Retinazer</Name>
     <netSkip>-2</netSkip>
     <npcSlots>5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>100</Width>
     <Height>110</Height>
     <Type>125</Type>
-    <localAI/>
     <aiStyle>30</aiStyle>
     <timeLeft>22500</timeLeft>
     <damage>50</damage>
@@ -3423,13 +2917,9 @@
     <Name>Spazmatism</Name>
     <netSkip>-2</netSkip>
     <npcSlots>5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>100</Width>
     <Height>110</Height>
     <Type>126</Type>
-    <localAI/>
     <aiStyle>31</aiStyle>
     <timeLeft>22500</timeLeft>
     <damage>50</damage>
@@ -3453,13 +2943,9 @@
     <Name>Skeletron Prime</Name>
     <netSkip>-2</netSkip>
     <npcSlots>6</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>80</Width>
     <Height>102</Height>
     <Type>127</Type>
-    <localAI/>
     <aiStyle>32</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>50</damage>
@@ -3483,13 +2969,9 @@
     <Name>Prime Cannon</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>52</Width>
     <Height>52</Height>
     <Type>128</Type>
-    <localAI/>
     <aiStyle>35</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>30</damage>
@@ -3511,13 +2993,9 @@
     <Name>Prime Saw</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>52</Width>
     <Height>52</Height>
     <Type>129</Type>
-    <localAI/>
     <aiStyle>33</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>52</damage>
@@ -3539,13 +3017,9 @@
     <Name>Prime Vice</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>52</Width>
     <Height>52</Height>
     <Type>130</Type>
-    <localAI/>
     <aiStyle>34</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>45</damage>
@@ -3567,13 +3041,9 @@
     <Name>Prime Laser</Name>
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>52</Width>
     <Height>52</Height>
     <Type>131</Type>
-    <localAI/>
     <aiStyle>36</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>29</damage>
@@ -3594,13 +3064,9 @@
   <NPC>
     <Name>Bald Zombie</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>132</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>14</damage>
@@ -3620,13 +3086,9 @@
   <NPC>
     <Name>Wandering Eye</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>30</Width>
     <Height>32</Height>
     <Type>133</Type>
-    <localAI/>
     <aiStyle>2</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -3648,13 +3110,9 @@
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
     <npcSlots>5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>47</Width>
     <Height>47</Height>
     <Type>134</Type>
-    <localAI/>
     <aiStyle>37</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>60</damage>
@@ -3679,13 +3137,9 @@
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
     <npcSlots>5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>47</Width>
     <Height>47</Height>
     <Type>135</Type>
-    <localAI/>
     <aiStyle>37</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -3710,13 +3164,9 @@
     <netSkip>-2</netSkip>
     <netAlways>true</netAlways>
     <npcSlots>5</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>47</Width>
     <Height>47</Height>
     <Type>136</Type>
-    <localAI/>
     <aiStyle>37</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>20</damage>
@@ -3739,13 +3189,9 @@
   <NPC>
     <Name>Illuminant Bat</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>26</Width>
     <Height>20</Height>
     <Type>137</Type>
-    <localAI/>
     <aiStyle>14</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>75</damage>
@@ -3765,13 +3211,9 @@
   <NPC>
     <Name>Illuminant Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>25</Width>
     <Height>18</Height>
     <Type>138</Type>
-    <localAI/>
     <aiStyle>1</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>70</damage>
@@ -3793,13 +3235,9 @@
   <NPC>
     <Name>Probe</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>30</Width>
     <Height>30</Height>
     <Type>139</Type>
-    <localAI/>
     <aiStyle>5</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>50</damage>
@@ -3820,13 +3258,9 @@
   <NPC>
     <Name>Possessed Armor</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>18</Width>
     <Height>40</Height>
     <Type>140</Type>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>55</damage>
@@ -3846,13 +3280,9 @@
   <NPC>
     <Name>Toxic Sludge</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>37</Width>
     <Height>30</Height>
     <Type>141</Type>
-    <localAI/>
     <aiStyle>1</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>50</damage>
@@ -3874,9 +3304,6 @@
   <NPC>
     <Name>Green Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>2</X>
       <Y>1</Y>
@@ -3910,9 +3337,6 @@
   <NPC>
     <Name>Pinky</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>5</X>
       <Y>8</Y>
@@ -3949,9 +3373,6 @@
   <NPC>
     <Name>Baby Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>2</X>
       <Y>1</Y>
@@ -3985,9 +3406,6 @@
   <NPC>
     <Name>Black Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>24</Width>
     <Height>18</Height>
     <Inherits>Blue Slime</Inherits>
@@ -4015,9 +3433,6 @@
   <NPC>
     <Name>Purple Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>-2</X>
       <Y>-3</Y>
@@ -4053,9 +3468,6 @@
   <NPC>
     <Name>Red Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <Width>24</Width>
     <Height>18</Height>
     <Inherits>Blue Slime</Inherits>
@@ -4085,9 +3497,6 @@
   <NPC>
     <Name>Yellow Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>-2</X>
       <Y>-3</Y>
@@ -4122,9 +3531,6 @@
   <NPC>
     <Name>Jungle Slime</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>-1</X>
       <Y>-1</Y>
@@ -4161,9 +3567,6 @@
     <Name>Little Eater</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.85</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>3</X>
       <Y>5</Y>
@@ -4194,9 +3597,6 @@
     <Name>Big Eater</Name>
     <netSkip>-2</netSkip>
     <npcSlots>1.15</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>-2</X>
       <Y>-4</Y>
@@ -4204,7 +3604,6 @@
     <Width>34</Width>
     <Height>34</Height>
     <Inherits>Eater of Souls</Inherits>
-    <localAI/>
     <aiStyle>5</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>25</damage>
@@ -4226,9 +3625,6 @@
   <NPC>
     <Name>Short Bones</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>1</X>
       <Y>5</Y>
@@ -4236,7 +3632,6 @@
     <Width>16</Width>
     <Height>35</Height>
     <Inherits>Angry Bones</Inherits>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>23</damage>
@@ -4258,9 +3653,6 @@
     <Name>Big Boned</Name>
     <netSkip>-2</netSkip>
     <npcSlots>2</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>-1</X>
       <Y>-5</Y>
@@ -4268,7 +3660,6 @@
     <Width>20</Width>
     <Height>45</Height>
     <Inherits>Angry Bones</Inherits>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>32</damage>
@@ -4290,9 +3681,6 @@
     <Name>Little Stinger</Name>
     <netSkip>-2</netSkip>
     <npcSlots>0.85</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>3</X>
       <Y>5</Y>
@@ -4300,7 +3688,6 @@
     <Width>28</Width>
     <Height>27</Height>
     <Inherits>Hornet</Inherits>
-    <localAI/>
     <aiStyle>5</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>28</damage>
@@ -4323,9 +3710,6 @@
     <Name>Big Stinger</Name>
     <netSkip>-2</netSkip>
     <npcSlots>1.2</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>-3</X>
       <Y>-6</Y>
@@ -4333,7 +3717,6 @@
     <Width>40</Width>
     <Height>38</Height>
     <Inherits>Hornet</Inherits>
-    <localAI/>
     <aiStyle>5</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>40</damage>
@@ -4355,9 +3738,6 @@
   <NPC>
     <Name>Slimeling</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>10</X>
       <Y>15</Y>
@@ -4365,7 +3745,6 @@
     <Width>24</Width>
     <Height>18</Height>
     <Inherits>Corrupt Slime</Inherits>
-    <localAI/>
     <aiStyle>1</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>45</damage>
@@ -4387,9 +3766,6 @@
   <NPC>
     <Name>Slimer2</Name>
     <netSkip>-2</netSkip>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>5</X>
       <Y>7</Y>
@@ -4397,7 +3773,6 @@
     <Width>35</Width>
     <Height>26</Height>
     <Inherits>Corrupt Slime</Inherits>
-    <localAI/>
     <aiStyle>1</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>45</damage>
@@ -4420,9 +3795,6 @@
     <Name>Heavy Skeleton</Name>
     <netSkip>-2</netSkip>
     <npcSlots>2</npcSlots>
-    <buffType/>
-    <buffTime/>
-    <buffImmune/>
     <position>
       <X>-1</X>
       <Y>-5</Y>
@@ -4430,7 +3802,6 @@
     <Width>20</Width>
     <Height>44</Height>
     <Inherits>Armored Skeleton</Inherits>
-    <localAI/>
     <aiStyle>3</aiStyle>
     <timeLeft>750</timeLeft>
     <damage>75</damage>
