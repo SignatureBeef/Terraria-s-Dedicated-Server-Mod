@@ -492,19 +492,19 @@ namespace RestrictPlugin
 			{
 				switch (args.Type)
 				{
-					case ProjectileType.POWDER_PURIFICATION:
-					case ProjectileType.POWDER_VILE:
-					case ProjectileType.BOMB:
-					case ProjectileType.BOMB_STICKY:
-					case ProjectileType.DYNAMITE:
-					case ProjectileType.GRENADE:
-					case ProjectileType.BALL_SAND_DROP:
-					case ProjectileType.BALL_MUD:
-					case ProjectileType.BALL_ASH:
-					case ProjectileType.BALL_SAND_GUN:
-					case ProjectileType.TOMBSTONE:
-					case ProjectileType.GLOWSTICK:
-					case ProjectileType.GLOWSTICK_STICKY:
+					case ProjectileType.N10_PURIFICATION_POWDER:
+					case ProjectileType.N11_VILE_POWDER:
+					case ProjectileType.N28_BOMB:
+					case ProjectileType.N37_STICKY_BOMB:
+					case ProjectileType.N29_DYNAMITE:
+					case ProjectileType.N30_GRENADE:
+					case ProjectileType.N31_SAND_BALL:
+					case ProjectileType.N39_MUD_BALL:
+					case ProjectileType.N40_ASH_BALL:
+					case ProjectileType.N42_SAND_BALL:
+					case ProjectileType.N43_TOMBSTONE:
+					case ProjectileType.N50_GLOWSTICK:
+					case ProjectileType.N53_STICKY_GLOWSTICK:
 						ctx.SetResult (HookResult.ERASE);
                         if (player.AuthenticatedAs == null)
                         {

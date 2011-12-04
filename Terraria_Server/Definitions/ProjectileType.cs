@@ -11,125 +11,233 @@ namespace Terraria_Server.Definitions
     /// </summary>
     public enum ProjectileType : int
     {
-        [XmlEnum(Name = "0")]
-        UNKNOWN,
         [XmlEnum(Name = "1")]
-        ARROW_WOODEN,
+        N0_UNKNOWN,
+        [XmlEnum(Name = "1")]
+        N1_WOODEN_ARROW,
         [XmlEnum(Name = "2")]
-        ARROW_FIRE,
+        N2_FIRE_ARROW,
         [XmlEnum(Name = "3")]
-        SHURIKEN,
+        N3_SHURIKEN,
         [XmlEnum(Name = "4")]
-        ARROW_UNHOLY,
+        N4_UNHOLY_ARROW,
         [XmlEnum(Name = "5")]
-        ARROW_JESTER,
+        N5_JESTERS_ARROW,
         [XmlEnum(Name = "6")]
-        BOOMERANG_ENCHANTED,
+        N6_ENCHANTED_BOOMERANG,
         [XmlEnum(Name = "7")]
-        VILETHORN,
+        N7_VILETHORN,
         [XmlEnum(Name = "8")]
-        VILETHORN_B,
+        N8_VILETHORN,
         [XmlEnum(Name = "9")]
-        STARFURY,
+        N9_STARFURY,
         [XmlEnum(Name = "10")]
-        POWDER_PURIFICATION,
+        N10_PURIFICATION_POWDER,
         [XmlEnum(Name = "11")]
-        POWDER_VILE,
+        N11_VILE_POWDER,
         [XmlEnum(Name = "12")]
-        FALLEN_STAR,
+        N12_FALLING_STAR,
         [XmlEnum(Name = "13")]
-        HOOK,
+        N13_HOOK,
         [XmlEnum(Name = "14")]
-        BALL_MUSKET,
+        N14_BULLET,
         [XmlEnum(Name = "15")]
-        BALL_OF_FIRE,
+        N15_BALL_OF_FIRE,
         [XmlEnum(Name = "16")]
-        MISSILE_MAGIC,
+        N16_MAGIC_MISSILE,
         [XmlEnum(Name = "17")]
-        BALL_DIRT,
+        N17_DIRT_BALL,
         [XmlEnum(Name = "18")]
-        ORB_OF_LIGHT,
+        N18_ORB_OF_LIGHT,
         [XmlEnum(Name = "19")]
-        FLAMARANG,
+        N19_FLAMARANG,
         [XmlEnum(Name = "20")]
-        LASER_GREEN,
+        N20_GREEN_LASER,
         [XmlEnum(Name = "21")]
-        BONE,
+        N21_BONE,
         [XmlEnum(Name = "22")]
-        STREAM_WATER,
+        N22_WATER_STREAM,
         [XmlEnum(Name = "23")]
-        HARPOON,
+        N23_HARPOON,
         [XmlEnum(Name = "24")]
-        BALL_SPIKY,
+        N24_SPIKY_BALL,
         [XmlEnum(Name = "25")]
-        BALL_O_HURT,
+        N25_BALL_O_HURT,
         [XmlEnum(Name = "26")]
-        BLUE_MOON,
+        N26_BLUE_MOON,
         [XmlEnum(Name = "27")]
-        BOLT_WATER,
+        N27_WATER_BOLT,
         [XmlEnum(Name = "28")]
-        BOMB,
+        N28_BOMB,
         [XmlEnum(Name = "29")]
-        DYNAMITE,
+        N29_DYNAMITE,
         [XmlEnum(Name = "30")]
-        GRENADE,
+        N30_GRENADE,
         [XmlEnum(Name = "31")]
-        BALL_SAND_DROP,
+        N31_SAND_BALL,
         [XmlEnum(Name = "32")]
-        WHIP_IVY,
+        N32_IVY_WHIP,
         [XmlEnum(Name = "33")]
-        CHAKRUM_THORN,
+        N33_THORN_CHAKRUM,
         [XmlEnum(Name = "34")]
-        FLAMELASH,
+        N34_FLAMELASH,
         [XmlEnum(Name = "35")]
-        SUNFURY,
+        N35_SUNFURY,
         [XmlEnum(Name = "36")]
-        SHOT_METEOR,
+        N36_METEOR_SHOT,
         [XmlEnum(Name = "37")]
-        BOMB_STICKY,
+        N37_STICKY_BOMB,
         [XmlEnum(Name = "38")]
-        FEATHER_HARPY,
+        N38_HARPY_FEATHER,
         [XmlEnum(Name = "39")]
-        BALL_MUD,
+        N39_MUD_BALL,
         [XmlEnum(Name = "40")]
-        BALL_ASH,
+        N40_ASH_BALL,
         [XmlEnum(Name = "41")]
-        ARROW_HELLFIRE,
+        N41_HELLFIRE_ARROW,
         [XmlEnum(Name = "42")]
-        BALL_SAND_GUN,
+        N42_SAND_BALL,
         [XmlEnum(Name = "43")]
-        TOMBSTONE,
+        N43_TOMBSTONE,
         [XmlEnum(Name = "44")]
-        SICKLE_DEMON,
+        N44_DEMON_SICKLE,
         [XmlEnum(Name = "45")]
-        SCYTHE_DEMON,
+        N45_DEMON_SCYTHE,
         [XmlEnum(Name = "46")]
-        LANCE_DARK,
+        N46_DARK_LANCE,
         [XmlEnum(Name = "47")]
-        TRIDENT,
+        N47_TRIDENT,
         [XmlEnum(Name = "48")]
-        KNIFE_THROWING,
+        N48_THROWING_KNIFE,
         [XmlEnum(Name = "49")]
-        SPEAR,
+        N49_SPEAR,
         [XmlEnum(Name = "50")]
-        GLOWSTICK,
+        N50_GLOWSTICK,
         [XmlEnum(Name = "51")]
-        SEED,
+        N51_SEED,
         [XmlEnum(Name = "52")]
-        BOOMERANG_WOODEN,
+        N52_WOODEN_BOOMERANG,
         [XmlEnum(Name = "53")]
-        GLOWSTICK_STICKY,
+        N53_STICKY_GLOWSTICK,
         [XmlEnum(Name = "54")]
-        KNIFE_POISONED,
+        N54_POISONED_KNIFE,
         [XmlEnum(Name = "55")]
-        STINGER,
+        N55_STINGER,
+        [XmlEnum(Name = "56")]
+        N56_EBONSAND_BALL,
+        [XmlEnum(Name = "57")]
+        N57_COBALT_CHAINSAW,
+        [XmlEnum(Name = "58")]
+        N58_MYTHRIL_CHAINSAW,
+        [XmlEnum(Name = "59")]
+        N59_COBALT_DRILL,
+        [XmlEnum(Name = "60")]
+        N60_MYTHRIL_DRILL,
+        [XmlEnum(Name = "61")]
+        N61_ADAMANTITE_CHAINSAW,
+        [XmlEnum(Name = "62")]
+        N62_ADAMANTITE_DRILL,
+        [XmlEnum(Name = "63")]
+        N63_THE_DAO_OF_POW,
+        [XmlEnum(Name = "64")]
+        N64_MYTHRIL_HALBERD,
+        [XmlEnum(Name = "65")]
+        N65_EBONSAND_BALL,
+        [XmlEnum(Name = "66")]
+        N66_ADAMANTITE_GLAIVE,
+        [XmlEnum(Name = "67")]
+        N67_PEARL_SAND_BALL,
+        [XmlEnum(Name = "68")]
+        N68_PEARL_SAND_BALL,
+        [XmlEnum(Name = "69")]
+        N69_HOLY_WATER,
+        [XmlEnum(Name = "70")]
+        N70_UNHOLY_WATER,
+        [XmlEnum(Name = "71")]
+        N71_GRAVEL_BALL,
+        [XmlEnum(Name = "72")]
+        N72_BLUE_FAIRY,
+        [XmlEnum(Name = "73")]
+        N73_HOOK,
+        [XmlEnum(Name = "74")]
+        N74_HOOK,
+        [XmlEnum(Name = "75")]
+        N75_HAPPY_BOMB,
+        [XmlEnum(Name = "76")]
+        N76_NOTE,
+        [XmlEnum(Name = "77")]
+        N77_NOTE,
+        [XmlEnum(Name = "78")]
+        N78_NOTE,
+        [XmlEnum(Name = "79")]
+        N79_RAINBOW,
+        [XmlEnum(Name = "80")]
+        N80_ICE_BLOCK,
+        [XmlEnum(Name = "81")]
+        N81_WOODEN_ARROW,
+        [XmlEnum(Name = "82")]
+        N82_FLAMING_ARROW,
+        [XmlEnum(Name = "83")]
+        N83_EYE_LASER,
+        [XmlEnum(Name = "84")]
+        N84_PINK_LASER,
+        [XmlEnum(Name = "85")]
+        N85_FLAMES,
+        [XmlEnum(Name = "86")]
+        N86_PINK_FAIRY,
+        [XmlEnum(Name = "87")]
+        N87_PINK_FAIRY,
+        [XmlEnum(Name = "88")]
+        N88_PURPLE_LASER,
+        [XmlEnum(Name = "89")]
+        N89_CRYSTAL_BULLET,
+        [XmlEnum(Name = "90")]
+        N90_CRYSTAL_SHARD,
+        [XmlEnum(Name = "91")]
+        N91_HOLY_ARROW,
+        [XmlEnum(Name = "92")]
+        N92_HALLOW_STAR,
+        [XmlEnum(Name = "93")]
+        N93_MAGIC_DAGGER,
+        [XmlEnum(Name = "94")]
+        N94_CRYSTAL_STORM,
+        [XmlEnum(Name = "95")]
+        N95_CURSED_FLAME,
+        [XmlEnum(Name = "96")]
+        N96_CURSED_FLAME,
+        [XmlEnum(Name = "97")]
+        N97_COBALT_NAGINATA,
+        [XmlEnum(Name = "98")]
+        N98_POISON_DART,
+        [XmlEnum(Name = "99")]
+        N99_BOULDER,
+        [XmlEnum(Name = "100")]
+        N100_DEATH_LASER,
+        [XmlEnum(Name = "101")]
+        N101_EYE_FIRE,
+        [XmlEnum(Name = "102")]
+        N102_BOMB,
+        [XmlEnum(Name = "103")]
+        N103_CURSED_ARROW,
+        [XmlEnum(Name = "104")]
+        N104_CURSED_BULLET,
+        [XmlEnum(Name = "105")]
+        N105_GUNGNIR,
+        [XmlEnum(Name = "106")]
+        N106_LIGHT_DISC,
+        [XmlEnum(Name = "107")]
+        N107_HAMDRAX,
+        [XmlEnum(Name = "108")]
+        N108_EXPLOSIVES,
     }
     
 	public static class ProjectileTypeExtensions
 	{
 		public static bool IsHighExplosive (this ProjectileType type)
 		{
-			return type == ProjectileType.DYNAMITE || type == ProjectileType.BOMB || type == ProjectileType.BOMB_STICKY;
+			return  type == ProjectileType.N29_DYNAMITE || 
+                    type == ProjectileType.N102_BOMB || 
+                    type == ProjectileType.N37_STICKY_BOMB;
 		}
 	}
 }

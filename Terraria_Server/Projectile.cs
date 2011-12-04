@@ -300,37 +300,37 @@ namespace Terraria_Server
 		{
 			switch (this.type)
 			{
-				case ProjectileType.ARROW_FIRE:
+				case ProjectileType.N2_FIRE_ARROW:
 					if (Main.rand.Next(3) == 0)
 						npc.AddBuff(24, 180, false);
 					break;
 				
-				case ProjectileType.BALL_OF_FIRE:
+				case ProjectileType.N15_BALL_OF_FIRE:
 					if (Main.rand.Next(2) == 0)
 						npc.AddBuff(24, 300, false);
 					break;
 					
-				case ProjectileType.FLAMARANG:
+				case ProjectileType.N19_FLAMARANG:
 					if (Main.rand.Next(5) == 0)
 						npc.AddBuff(24, 180, false);
 					break;
 					
-				case ProjectileType.FLAMELASH:
+				case ProjectileType.N34_FLAMELASH:
 					if (Main.rand.Next(2) == 0)
 						npc.AddBuff(24, 240, false);
 					break;
 					
-				case ProjectileType.SUNFURY:
+				case ProjectileType.N35_SUNFURY:
 					if (Main.rand.Next(4) == 0)
 						npc.AddBuff(24, 180, false);
 					break;
 					
-				case ProjectileType.CHAKRUM_THORN:
+				case ProjectileType.N33_THORN_CHAKRUM:
 					if (Main.rand.Next(5) == 0)
 						npc.AddBuff(20, 420, false);
 					break;
 					
-				case ProjectileType.KNIFE_POISONED:
+				case ProjectileType.N54_POISONED_KNIFE:
 					if (Main.rand.Next(2) == 0)
 						npc.AddBuff(20, 600, false);
 					break;
@@ -342,37 +342,37 @@ namespace Terraria_Server
 		{
 			switch (this.type)
 			{
-				case ProjectileType.ARROW_FIRE:
+				case ProjectileType.N2_FIRE_ARROW:
 					if (Main.rand.Next(3) == 0)
 						player.AddBuff(24, 180, false);
 					break;
 				
-				case ProjectileType.BALL_OF_FIRE:
+				case ProjectileType.N15_BALL_OF_FIRE:
 					if (Main.rand.Next(2) == 0)
 						player.AddBuff(24, 300, false);
 					break;
 					
-				case ProjectileType.FLAMARANG:
+				case ProjectileType.N19_FLAMARANG:
 					if (Main.rand.Next(5) == 0)
 						player.AddBuff(24, 180, false);
 					break;
 					
-				case ProjectileType.FLAMELASH:
+				case ProjectileType.N34_FLAMELASH:
 					if (Main.rand.Next(2) == 0)
 						player.AddBuff(24, 240, false);
 					break;
 					
-				case ProjectileType.SUNFURY:
+				case ProjectileType.N35_SUNFURY:
 					if (Main.rand.Next(4) == 0)
 						player.AddBuff(24, 180, false);
 					break;
 					
-				case ProjectileType.CHAKRUM_THORN:
+				case ProjectileType.N33_THORN_CHAKRUM:
 					if (Main.rand.Next(5) == 0)
 						player.AddBuff(20, 420, false);
 					break;
 					
-				case ProjectileType.KNIFE_POISONED:
+				case ProjectileType.N54_POISONED_KNIFE:
 					if (Main.rand.Next(2) == 0)
 						player.AddBuff(20, 600, false);
 					break;
@@ -384,12 +384,12 @@ namespace Terraria_Server
 		{
 			switch (this.type)
 			{
-				case ProjectileType.STINGER:
+				case ProjectileType.N55_STINGER:
 					if (Main.rand.Next(3) == 0)
 						player.AddBuff(20, 600, true);
 					break;
 					
-				case ProjectileType.SICKLE_DEMON:
+				case ProjectileType.N44_DEMON_SICKLE:
 					if (Main.rand.Next(3) == 0)
 						player.AddBuff(22, 900, true);
 					break;
@@ -406,13 +406,13 @@ namespace Terraria_Server
             Player player = Main.players[playerIndex];
 
             Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
-            if (this.friendly && this.type != ProjectileType.ORB_OF_LIGHT)
+            if (this.friendly && this.type != ProjectileType.N18_ORB_OF_LIGHT)
             {
                 var creat = Creator as Player;
                 if (this.Owner == playerIndex)// || (Owner == 255 && creat != null && creat.whoAmi == playerIndex))
                 {
                     if (creat != null) player = creat;
-                    if ((this.aiStyle == 16 || this.type == ProjectileType.ARROW_HELLFIRE) && this.timeLeft <= 1)
+                    if ((this.aiStyle == 16 || this.type == ProjectileType.N41_HELLFIRE_ARROW) && this.timeLeft <= 1)
                     {
                         if (player.Active && !player.dead && !player.immune && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].Width, Main.players[this.Owner].Height, player.Position, player.Width, player.Height)))
                         {
@@ -478,13 +478,16 @@ namespace Terraria_Server
                             if (npc.Active && !npc.dontTakeDamage && (!npc.friendly || (npc.type == NPCType.N22_GUIDE && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || npc.immune[this.Owner] == 0))
                             {
                                 bool flag = false;
-                                if (this.type == ProjectileType.POWDER_VILE && (npc.type == NPCType.N47_CORRUPT_BUNNY || npc.type == NPCType.N57_CORRUPT_GOLDFISH))
+                                if (this.type == ProjectileType.N11_VILE_POWDER && 
+                                    (npc.type == NPCType.N47_CORRUPT_BUNNY || 
+                                    npc.type == NPCType.N57_CORRUPT_GOLDFISH))
                                 {
                                     flag = true;
                                 }
                                 else
                                 {
-                                    if (this.type == ProjectileType.BALL_SAND_DROP && npc.type == NPCType.N69_ANTLION)
+                                    if (this.type == ProjectileType.N31_SAND_BALL && 
+                                        npc.type == NPCType.N69_ANTLION)
                                     {
                                         flag = true;
                                     }
@@ -521,7 +524,7 @@ namespace Terraria_Server
                                                 }
                                             }
                                         }
-                                        if (this.type == ProjectileType.ARROW_HELLFIRE && this.timeLeft > 1)
+                                        if (this.type == ProjectileType.N41_HELLFIRE_ARROW && this.timeLeft > 1)
                                         {
                                             this.timeLeft = 1;
                                         }
@@ -611,7 +614,7 @@ namespace Terraria_Server
                                             }
                                         }
                                     }
-                                    if (this.type == ProjectileType.ARROW_HELLFIRE && this.timeLeft > 1)
+                                    if (this.type == ProjectileType.N41_HELLFIRE_ARROW && this.timeLeft > 1)
                                     {
                                         this.timeLeft = 1;
                                     }
@@ -659,7 +662,7 @@ namespace Terraria_Server
                         }
                     }
                 }
-                if (this.type == ProjectileType.POWDER_VILE)
+                if (this.type == ProjectileType.N11_VILE_POWDER)
                 {
                     NPC npc;
                     for (int i = 0; i < NPC.MAX_NPCS; i++)
@@ -801,13 +804,20 @@ namespace Terraria_Server
                 {
                     Vector2 value2 = this.Velocity;
                     bool flag3 = true;
-                    if (this.type == ProjectileType.STARFURY || this.type == ProjectileType.FALLEN_STAR || this.type == ProjectileType.BALL_OF_FIRE || this.type == ProjectileType.HOOK || this.type == ProjectileType.BALL_SAND_DROP || this.type == ProjectileType.BALL_MUD || this.type == ProjectileType.BALL_ASH)
+                    if (this.type == ProjectileType.N9_STARFURY || 
+                        this.type == ProjectileType.N12_FALLING_STAR || 
+                        this.type == ProjectileType.N15_BALL_OF_FIRE || 
+                        this.type == ProjectileType.N13_HOOK|| 
+                        this.type == ProjectileType.N31_SAND_BALL || 
+                        this.type == ProjectileType.N39_MUD_BALL || 
+                        this.type == ProjectileType.N40_ASH_BALL)
                     {
                         flag3 = false;
                     }
                     if (this.aiStyle == 10)
                     {
-                        if (this.type == ProjectileType.BALL_SAND_GUN || (this.type == ProjectileType.BALL_SAND_DROP && this.ai[0] == 2f))
+                        if (this.type == ProjectileType.N42_SAND_BALL || 
+                            (this.type == ProjectileType.N65_EBONSAND_BALL && this.ai[0] == 2f))
                         {
                             this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, flag3, flag3);
                         }
@@ -849,7 +859,7 @@ namespace Terraria_Server
                     }
                     if (value2 != this.Velocity)
                     {
-                        if (this.type == ProjectileType.SHOT_METEOR)
+                        if (this.type == ProjectileType.N36_METEOR_SHOT)
                         {
                             if (this.penetrate > 1)
                             {
@@ -915,7 +925,7 @@ namespace Terraria_Server
 								else if (this.aiStyle == 3 || this.aiStyle == 13)
                                 {
                                     Collision.HitTiles(this.Position, this.Velocity, this.Width, this.Height);
-                                    if (this.type == ProjectileType.CHAKRUM_THORN)
+                                    if (this.type == ProjectileType.N33_THORN_CHAKRUM)
                                     {
                                         if (this.Velocity.X != value2.X)
                                         {
@@ -949,7 +959,7 @@ namespace Terraria_Server
                                         }
                                         else
                                         {
-                                            if (this.type == ProjectileType.BALL_MUSKET && this.Velocity.Y > 4f)
+                                            if (this.type == ProjectileType.N14_BULLET && this.Velocity.Y > 4f)
                                             {
                                                 if (this.Velocity.Y != value2.Y)
                                                 {
@@ -970,7 +980,7 @@ namespace Terraria_Server
                                     {
                                         if (this.aiStyle == 14)
                                         {
-                                            if (this.type == ProjectileType.GLOWSTICK)
+                                            if (this.type == ProjectileType.N50_GLOWSTICK)
                                             {
                                                 if (this.Velocity.X != value2.X)
                                                 {
@@ -1000,7 +1010,7 @@ namespace Terraria_Server
                                                 if (this.Velocity.X != value2.X)
                                                 {
                                                     this.Velocity.X = value2.X * -0.4f;
-                                                    if (this.type == ProjectileType.DYNAMITE)
+                                                    if (this.type == ProjectileType.N29_DYNAMITE)
                                                     {
                                                         this.Velocity.X = this.Velocity.X * 0.8f;
                                                     }
@@ -1008,7 +1018,7 @@ namespace Terraria_Server
                                                 if (this.Velocity.Y != value2.Y && (double)value2.Y > 0.7)
                                                 {
                                                     this.Velocity.Y = value2.Y * -0.4f;
-                                                    if (this.type == ProjectileType.DYNAMITE)
+                                                    if (this.type == ProjectileType.N29_DYNAMITE)
                                                     {
                                                         this.Velocity.Y = this.Velocity.Y * 0.8f;
                                                     }
@@ -1026,7 +1036,7 @@ namespace Terraria_Server
                         }
                     }
                 }
-                if (this.type == ProjectileType.VILETHORN || this.type == ProjectileType.VILETHORN_B)
+                if (this.type == ProjectileType.N7_VILETHORN || this.type == ProjectileType.N8_VILETHORN)
                 {
                     goto IL_D48;
                 }
@@ -1089,7 +1099,8 @@ namespace Terraria_Server
         {
             if (this.aiStyle == 1)
             {
-                if (this.type == ProjectileType.LASER_GREEN || this.type == ProjectileType.BALL_MUSKET || this.type == ProjectileType.SHOT_METEOR)
+                if (this.type == ProjectileType.N20_GREEN_LASER || this.type == ProjectileType.N14_BULLET || 
+                    this.type == ProjectileType.N36_METEOR_SHOT)
                 {
                     if (this.alpha > 0)
                     {
@@ -1100,7 +1111,12 @@ namespace Terraria_Server
                         this.alpha = 0;
                     }
                 }
-                if (this.type != ProjectileType.ARROW_JESTER && this.type != ProjectileType.BALL_MUSKET && this.type != ProjectileType.LASER_GREEN && this.type != ProjectileType.SHOT_METEOR && this.type != ProjectileType.FEATHER_HARPY && this.type != ProjectileType.STINGER)
+                if (this.type != ProjectileType.N5_JESTERS_ARROW && 
+                    this.type != ProjectileType.N14_BULLET && 
+                    this.type != ProjectileType.N20_GREEN_LASER && 
+                    this.type != ProjectileType.N36_METEOR_SHOT && 
+                    this.type != ProjectileType.N38_HARPY_FEATHER && 
+                    this.type != ProjectileType.N55_STINGER)
                 {
                     this.ai[0] += 1f;
                 }
@@ -1129,7 +1145,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if (this.type == ProjectileType.KNIFE_THROWING || this.type == ProjectileType.KNIFE_POISONED)
+                        if (this.type == ProjectileType.N48_THROWING_KNIFE || this.type == ProjectileType.N54_POISONED_KNIFE)
                         {
                             this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
                         }
@@ -1138,7 +1154,7 @@ namespace Terraria_Server
                     {
                         this.Velocity.Y = 16f;
                     }
-                    if (this.type == ProjectileType.KNIFE_POISONED && Main.rand.Next(20) == 0)
+                    if (this.type == ProjectileType.N54_POISONED_KNIFE && Main.rand.Next(20) == 0)
                     {
                         return;
                     }
@@ -1166,14 +1182,14 @@ namespace Terraria_Server
                             this.tileCollide = false;
                             float num4 = 9f;
                             float num5 = 0.4f;
-                            if (this.type == ProjectileType.FLAMARANG)
+                            if (this.type == ProjectileType.N19_FLAMARANG)
                             {
                                 num4 = 13f;
                                 num5 = 0.6f;
                             }
                             else
                             {
-                                if (this.type == ProjectileType.CHAKRUM_THORN)
+                                if (this.type == ProjectileType.N33_THORN_CHAKRUM)
                                 {
                                     num4 = 15f;
                                     num5 = 0.8f;
@@ -1255,7 +1271,7 @@ namespace Terraria_Server
                                     this.ai[1] += 1f;
                                     this.Position += this.Velocity * 1f;
                                 }
-                                if (this.type == ProjectileType.VILETHORN && Main.myPlayer == this.Owner)
+                                if (this.type == ProjectileType.N7_VILETHORN && Main.myPlayer == this.Owner)
                                 {
                                     int num9 = (int)this.type;
                                     if (this.ai[1] >= 6f)
@@ -1332,7 +1348,7 @@ namespace Terraria_Server
                                 {
                                     this.ai[1] = 1f;
                                 }
-                                if (this.type == ProjectileType.POWDER_PURIFICATION)
+                                if (this.type == ProjectileType.N10_PURIFICATION_POWDER)
                                 {
                                     int num11 = (int)(this.Position.X / 16f) - 1;
                                     int num12 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
@@ -1400,7 +1416,7 @@ namespace Terraria_Server
                                     this.rotation = (float)Math.Atan2((double)num16, (double)num15) - 1.57f;
                                     if (this.ai[0] == 0f)
                                     {
-                                        if ((num17 > 300f && this.type == ProjectileType.HOOK) || (num17 > 400f && this.type == ProjectileType.WHIP_IVY))
+                                        if ((num17 > 300f && this.type == ProjectileType.N13_HOOK) || (num17 > 400f && this.type == ProjectileType.N32_IVY_WHIP))
                                         {
                                             this.ai[0] = 1f;
                                         }
@@ -1495,7 +1511,7 @@ namespace Terraria_Server
                                     if (this.ai[0] == 1f)
                                     {
                                         float num27 = 11f;
-                                        if (this.type == ProjectileType.WHIP_IVY)
+                                        if (this.type == ProjectileType.N32_IVY_WHIP)
                                         {
                                             num27 = 15f;
                                         }
@@ -1563,7 +1579,7 @@ namespace Terraria_Server
                                 {
                                     if (this.aiStyle == 8)
                                     {
-                                        if (this.type != ProjectileType.BOLT_WATER)
+                                        if (this.type != ProjectileType.N27_WATER_BOLT)
                                         {
                                             this.ai[1] += 1f;
                                         }
@@ -1590,7 +1606,7 @@ namespace Terraria_Server
                                                     this.Kill();
                                                 }
                                             }
-                                            if (this.type == ProjectileType.FLAMELASH)
+                                            if (this.type == ProjectileType.N34_FLAMELASH)
                                             {
                                                 this.rotation += 0.3f * (float)this.direction;
                                             }
@@ -1622,12 +1638,14 @@ namespace Terraria_Server
                                                 }
                                                 if (this.ai[0] == 1f)
                                                 {
-                                                    if (this.type == ProjectileType.BALL_SAND_GUN)
+                                                    if (this.type == ProjectileType.N42_SAND_BALL ||
+                                                        this.type == ProjectileType.N65_EBONSAND_BALL ||
+                                                        this.type == ProjectileType.N68_PEARL_SAND_BALL)
                                                     {
                                                         this.ai[1] += 1f;
-                                                        if (this.ai[1] >= 15f)
+                                                        if (this.ai[1] >= 60f)
                                                         {
-                                                            this.ai[1] = 15f;
+                                                            this.ai[1] = 60f;
                                                             this.Velocity.Y = this.Velocity.Y + 0.2f;
                                                         }
                                                     }
@@ -1800,7 +1818,7 @@ namespace Terraria_Server
                                                     {
                                                         if (this.aiStyle == 14)
                                                         {
-                                                            if (this.type == ProjectileType.GLOWSTICK_STICKY)
+                                                            if (this.type == ProjectileType.N53_STICKY_GLOWSTICK)
                                                             {
                                                                 try
                                                                 {
@@ -1979,7 +1997,7 @@ namespace Terraria_Server
                                                         {
                                                             if (this.aiStyle == 16)
                                                             {
-                                                                if (this.type == ProjectileType.BOMB_STICKY)
+                                                                if (this.type == ProjectileType.N37_STICKY_BOMB)
                                                                 {
                                                                     try
                                                                     {
@@ -2029,7 +2047,8 @@ namespace Terraria_Server
                                                                 {
                                                                     this.ai[1] = 0f;
                                                                     this.alpha = 255;
-                                                                    if (this.type == ProjectileType.BOMB || this.type == ProjectileType.BOMB_STICKY)
+                                                                    if (this.type == ProjectileType.N28_BOMB || 
+                                                                        this.type == ProjectileType.N37_STICKY_BOMB)
                                                                     {
                                                                         this.Position.X = this.Position.X + (float)(this.Width / 2);
                                                                         this.Position.Y = this.Position.Y + (float)(this.Height / 2);
@@ -2042,7 +2061,7 @@ namespace Terraria_Server
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (this.type == ProjectileType.DYNAMITE)
+                                                                        if (this.type == ProjectileType.N29_DYNAMITE)
                                                                         {
                                                                             this.Position.X = this.Position.X + (float)(this.Width / 2);
                                                                             this.Position.Y = this.Position.Y + (float)(this.Height / 2);
@@ -2055,7 +2074,7 @@ namespace Terraria_Server
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (this.type == ProjectileType.GRENADE)
+                                                                            if (this.type == ProjectileType.N30_GRENADE)
                                                                             {
                                                                                 this.Position.X = this.Position.X + (float)(this.Width / 2);
                                                                                 this.Position.Y = this.Position.Y + (float)(this.Height / 2);
@@ -2070,22 +2089,22 @@ namespace Terraria_Server
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (this.type != ProjectileType.GRENADE && Main.rand.Next(4) == 0)
+                                                                    if (this.type != ProjectileType.N30_GRENADE && Main.rand.Next(4) == 0)
                                                                     {
-                                                                        if (this.type != ProjectileType.GRENADE)
+                                                                        if (this.type != ProjectileType.N30_GRENADE)
                                                                         {
                                                                             this.damage = 0;
                                                                         }
                                                                     }
                                                                 }
                                                                 this.ai[0] += 1f;
-                                                                if ((this.type == ProjectileType.GRENADE && this.ai[0] > 10f) || (this.type != ProjectileType.GRENADE && this.ai[0] > 5f))
+                                                                if ((this.type == ProjectileType.N30_GRENADE && this.ai[0] > 10f) || (this.type != ProjectileType.N30_GRENADE && this.ai[0] > 5f))
                                                                 {
                                                                     this.ai[0] = 10f;
                                                                     if (this.Velocity.Y == 0f && this.Velocity.X != 0f)
                                                                     {
                                                                         this.Velocity.X = this.Velocity.X * 0.97f;
-                                                                        if (this.type == ProjectileType.DYNAMITE)
+                                                                        if (this.type == ProjectileType.N29_DYNAMITE)
                                                                         {
                                                                             this.Velocity.X = this.Velocity.X * 0.99f;
                                                                         }
@@ -2147,7 +2166,7 @@ namespace Terraria_Server
                                                             {
                                                                 if (this.aiStyle == 18)
                                                                 {
-                                                                    if (this.ai[1] == 0f && this.type == ProjectileType.SICKLE_DEMON)
+                                                                    if (this.ai[1] == 0f && this.type == ProjectileType.N44_DEMON_SICKLE)
                                                                     {
                                                                         this.ai[1] = 1f;
                                                                     }
@@ -2173,7 +2192,7 @@ namespace Terraria_Server
                                                                     Main.players[this.Owner].itemTime = Main.players[this.Owner].itemAnimation;
                                                                     this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
                                                                     this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
-                                                                    if (this.type == ProjectileType.LANCE_DARK)
+                                                                    if (this.type == ProjectileType.N46_DARK_LANCE)
                                                                     {
                                                                         if (this.ai[0] == 0f)
                                                                         {
@@ -2191,7 +2210,7 @@ namespace Terraria_Server
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (this.type == ProjectileType.TRIDENT)
+                                                                        if (this.type == ProjectileType.N47_TRIDENT)
                                                                         {
                                                                             if (this.ai[0] == 0f)
                                                                             {
@@ -2209,7 +2228,7 @@ namespace Terraria_Server
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (this.type == ProjectileType.SPEAR)
+                                                                            if (this.type == ProjectileType.N49_SPEAR)
                                                                             {
                                                                                 if (this.ai[0] == 0f)
                                                                                 {
@@ -2261,17 +2280,17 @@ namespace Terraria_Server
             this.timeLeft = 0;
             switch(this.type)
             {
-                case ProjectileType.BALL_MUSKET:
-                case ProjectileType.LASER_GREEN:
-                case ProjectileType.SHOT_METEOR:
+                case ProjectileType.N14_BULLET:
+                case ProjectileType.N20_GREEN_LASER:
+                case ProjectileType.N36_METEOR_SHOT:
                     {
                         Collision.HitTiles(this.Position, this.Velocity, this.Width, this.Height);
                     }
                     break;
                     
-                case ProjectileType.BOMB:
-                case ProjectileType.GRENADE:
-                case ProjectileType.BOMB_STICKY:
+                case ProjectileType.N28_BOMB:
+                case ProjectileType.N30_GRENADE:
+                case ProjectileType.N37_STICKY_BOMB:
                     {
                         this.Position.X = this.Position.X + (float)(this.Width / 2);
                         this.Position.Y = this.Position.Y + (float)(this.Height / 2);
@@ -2281,8 +2300,8 @@ namespace Terraria_Server
                         this.Position.Y = this.Position.Y - (float)(this.Height / 2);
                     }
                     break;
-                    
-                case ProjectileType.DYNAMITE:
+
+                case ProjectileType.N29_DYNAMITE:
                     {
                         this.Position.X = this.Position.X + (float)(this.Width / 2);
                         this.Position.Y = this.Position.Y + (float)(this.Height / 2);
@@ -2300,7 +2319,7 @@ namespace Terraria_Server
                     }
                     break;
                     
-                case ProjectileType.ARROW_HELLFIRE:
+                case ProjectileType.N41_HELLFIRE_ARROW:
                     {
                         if (this.Owner == Main.myPlayer)
                         {
@@ -2322,7 +2341,9 @@ namespace Terraria_Server
             if (this.Owner == Main.myPlayer)
             {
                 bool explode = false;
-                if (this.type == ProjectileType.BOMB || this.type == ProjectileType.DYNAMITE || this.type == ProjectileType.BOMB_STICKY)
+                if (this.type == ProjectileType.N28_BOMB || 
+                    this.type == ProjectileType.N29_DYNAMITE || 
+                    this.type == ProjectileType.N37_STICKY_BOMB)
                 {
 					var ctx = new HookContext
 					{
@@ -2345,7 +2366,7 @@ namespace Terraria_Server
                 if (explode)
                 {
                     int num38 = 3;
-                    if (this.type == ProjectileType.DYNAMITE)
+                    if (this.type == ProjectileType.N29_DYNAMITE)
                     {
                         num38 = 7;
                     }
@@ -2398,7 +2419,7 @@ namespace Terraria_Server
                                 if (Main.tile.At(num48, num49).Active)
                                 {
                                     flag2 = false;
-                                    if (this.type == ProjectileType.BOMB || this.type == ProjectileType.BOMB_STICKY)
+                                    if (this.type == ProjectileType.N28_BOMB || this.type == ProjectileType.N37_STICKY_BOMB)
                                     {
                                         if (!Main.tileSolid[(int)Main.tile.At(num48, num49).Type] || Main.tileSolidTop[(int)Main.tile.At(num48, num49).Type] || Main.tile.At(num48, num49).Type == 0 || Main.tile.At(num48, num49).Type == 1 || Main.tile.At(num48, num49).Type == 2 || Main.tile.At(num48, num49).Type == 23 || Main.tile.At(num48, num49).Type == 30 || Main.tile.At(num48, num49).Type == 40 || Main.tile.At(num48, num49).Type == 6 || Main.tile.At(num48, num49).Type == 7 || Main.tile.At(num48, num49).Type == 8 || Main.tile.At(num48, num49).Type == 9 || Main.tile.At(num48, num49).Type == 10 || Main.tile.At(num48, num49).Type == 53 || Main.tile.At(num48, num49).Type == 54 || Main.tile.At(num48, num49).Type == 57 || Main.tile.At(num48, num49).Type == 59 || Main.tile.At(num48, num49).Type == 60 || Main.tile.At(num48, num49).Type == 63 || Main.tile.At(num48, num49).Type == 64 || Main.tile.At(num48, num49).Type == 65 || Main.tile.At(num48, num49).Type == 66 || Main.tile.At(num48, num49).Type == 67 || Main.tile.At(num48, num49).Type == 68 || Main.tile.At(num48, num49).Type == 70 || Main.tile.At(num48, num49).Type == 37)
                                         {
@@ -2407,7 +2428,7 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (this.type == ProjectileType.DYNAMITE)
+                                        if (this.type == ProjectileType.N29_DYNAMITE)
                                         {
                                             flag2 = true;
                                         }
@@ -2456,26 +2477,26 @@ namespace Terraria_Server
                     int num55 = (int)(this.Position.Y + (float)(this.Width / 2)) / 16;
                     int num56 = 0;
                     int num57 = 2;
-                    if (this.type == ProjectileType.BALL_SAND_DROP)
+                    if (this.type == ProjectileType.N31_SAND_BALL)
                     {
                         num56 = 53;
                         num57 = 0;
                     }
-                    if (this.type == ProjectileType.BALL_SAND_GUN)
+                    if (this.type == ProjectileType.N42_SAND_BALL)
                     {
                         num56 = 53;
                         num57 = 0;
                     }
                     else
                     {
-                        if (this.type == ProjectileType.BALL_MUD)
+                        if (this.type == ProjectileType.N39_MUD_BALL)
                         {
                             num56 = 59;
                             num57 = 176;
                         }
                         else
                         {
-                            if (this.type == ProjectileType.BALL_ASH)
+                            if (this.type == ProjectileType.N40_ASH_BALL)
                             {
                                 num56 = 57;
                                 num57 = 172;
@@ -2505,11 +2526,11 @@ namespace Terraria_Server
                         }
                     }
                 }
-                if (this.type == ProjectileType.ARROW_WOODEN && Main.rand.Next(2) == 0)
+                if (this.type == ProjectileType.N1_WOODEN_ARROW && Main.rand.Next(2) == 0)
                 {
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 40, 1, false);
                 }
-                if (this.type == ProjectileType.ARROW_FIRE && Main.rand.Next(2) == 0)
+                if (this.type == ProjectileType.N2_FIRE_ARROW && Main.rand.Next(2) == 0)
                 {
                     if (Main.rand.Next(3) == 0)
                     {
@@ -2520,35 +2541,35 @@ namespace Terraria_Server
                         num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 40, 1, false);
                     }
                 }
-                if (this.type == ProjectileType.GLOWSTICK && Main.rand.Next(3) == 0)
+                if (this.type == ProjectileType.N50_GLOWSTICK && Main.rand.Next(3) == 0)
                 {
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 282, 1, false);
                 }
-                if (this.type == ProjectileType.GLOWSTICK_STICKY && Main.rand.Next(3) == 0)
+                if (this.type == ProjectileType.N53_STICKY_GLOWSTICK && Main.rand.Next(3) == 0)
                 {
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 286, 1, false);
                 }
-                if (this.type == ProjectileType.KNIFE_THROWING && Main.rand.Next(2) == 0)
+                if (this.type == ProjectileType.N48_THROWING_KNIFE && Main.rand.Next(2) == 0)
                 {
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 279, 1, false);
                 }
-                if (this.type == ProjectileType.KNIFE_POISONED && Main.rand.Next(2) == 0)
+                if (this.type == ProjectileType.N54_POISONED_KNIFE && Main.rand.Next(2) == 0)
                 {
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 287, 1, false);
                 }
-                if (this.type == ProjectileType.SHURIKEN && Main.rand.Next(2) == 0)
+                if (this.type == ProjectileType.N3_SHURIKEN && Main.rand.Next(2) == 0)
                 {
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 42, 1, false);
                 }
-                if (this.type == ProjectileType.ARROW_UNHOLY && Main.rand.Next(2) == 0)
+                if (this.type == ProjectileType.N4_UNHOLY_ARROW && Main.rand.Next(2) == 0)
                 {
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 47, 1, false);
                 }
-                if (this.type == ProjectileType.FALLEN_STAR && this.damage > 100)
+                if (this.type == ProjectileType.N12_FALLING_STAR && this.damage > 100)
                 {
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 75, 1, false);
                 }
-                if (this.type == ProjectileType.BONE && Main.rand.Next(2) == 0)
+                if (this.type == ProjectileType.N21_BONE && Main.rand.Next(2) == 0)
                 {
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 154, 1, false);
                 }

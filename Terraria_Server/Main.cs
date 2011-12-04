@@ -888,7 +888,7 @@ namespace Terraria_Server
                                         {
                                             num12 += Main.players[i].inventory[j].Stack * 1000000;
                                         }
-                                        if (Main.players[i].inventory[j].Ammo == ProjectileType.BALL_MUSKET || Main.players[i].inventory[j].UseAmmo == ProjectileType.BALL_MUSKET)
+                                        if (Main.players[i].inventory[j].Ammo == ProjectileType.N14_BULLET || Main.players[i].inventory[j].UseAmmo == ProjectileType.N14_BULLET)
                                         {
                                             flag3 = true;
                                         }

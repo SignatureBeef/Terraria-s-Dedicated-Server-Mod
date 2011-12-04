@@ -3347,7 +3347,7 @@ namespace Terraria_Server
                                                                             num128 *= num130;
                                                                             num129 *= num130;
                                                                             int num131 = 15;
-                                                                            ProjectileType num132 = ProjectileType.FEATHER_HARPY;
+                                                                            ProjectileType num132 = ProjectileType.N38_HARPY_FEATHER;
                                                                             int num133 = Projectile.NewProjectile(vector18.X, vector18.Y, num128, num129, num132, num131, 0f, Main.myPlayer);
                                                                             Main.projectile[num133].timeLeft = 300;
                                                                         }
@@ -3373,7 +3373,7 @@ namespace Terraria_Server
                                                                             num135 *= num137;
                                                                             num136 *= num137;
                                                                             int num138 = 25;
-                                                                            ProjectileType num139 = ProjectileType.SICKLE_DEMON;
+                                                                            ProjectileType num139 = ProjectileType.N44_DEMON_SICKLE;
                                                                             int num140 = Projectile.NewProjectile(vector19.X, vector19.Y, num135, num136, num139, num138, 0f, Main.myPlayer);
                                                                             Main.projectile[num140].timeLeft = 300;
                                                                             return;

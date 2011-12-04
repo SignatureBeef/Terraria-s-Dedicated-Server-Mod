@@ -108,9 +108,9 @@ namespace TDSMExamplePlugin
             if (!explosivesAllowed)
             {
                 int type = (int)args.Type;
-                if (type == (int)ProjectileType.BOMB /* 28 */ || 
-                    type == (int)ProjectileType.DYNAMITE /* 29 */ ||
-                    type == (int)ProjectileType.BOMB_STICKY /* 37 */)
+                if (type == (int)ProjectileType.N28_BOMB /* 28 */ || 
+                    type == (int)ProjectileType.N29_DYNAMITE /* 29 */ ||
+                    type == (int)ProjectileType.N37_STICKY_BOMB /* 37 */)
                 {
                     Log("Cancelled Explosive usage of Player: " + ctx.Player.Name);
                     ctx.SetResult(HookResult.ERASE);

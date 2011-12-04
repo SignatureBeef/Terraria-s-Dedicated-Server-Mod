@@ -3516,7 +3516,9 @@ namespace Terraria_Server
                 {
                     num += (float)Main.rand.Next(-30, 31) * 0.1f;
                 }
-                int num2 = Projectile.NewProjectile(this.Position.X + (float)(this.Width / 2), this.Position.Y + (float)(this.head / 2), (float)Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + num, (float)Main.rand.Next(-40, -20) * 0.1f, ProjectileType.TOMBSTONE, 50, 0f, Main.myPlayer);
+                int num2 = Projectile.NewProjectile(this.Position.X + (float)(this.Width / 2), 
+                    this.Position.Y + (float)(this.head / 2), (float)Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + num, 
+                    (float)Main.rand.Next(-40, -20) * 0.1f, ProjectileType.N43_TOMBSTONE, 50, 0f, Main.myPlayer);
                 Main.projectile[num2].miscText = this.Name + deathText;
                 if (Main.myPlayer == this.whoAmi)
                 {
@@ -3750,7 +3752,9 @@ namespace Terraria_Server
 				{
 					flag = false;
 				}
-                if (selectedItem.Shoot == ProjectileType.BOOMERANG_ENCHANTED || selectedItem.Shoot == ProjectileType.FLAMARANG || selectedItem.Shoot == ProjectileType.CHAKRUM_THORN)
+                if (selectedItem.Shoot == ProjectileType.N6_ENCHANTED_BOOMERANG || 
+                    selectedItem.Shoot == ProjectileType.N19_FLAMARANG || 
+                    selectedItem.Shoot == ProjectileType.N33_THORN_CHAKRUM)
                 {
                     for (int j = 0; j < Main.maxProjectiles; j++)
                     {
@@ -3760,7 +3764,7 @@ namespace Terraria_Server
                         }
                     }
                 }
-				if (selectedItem.Shoot == ProjectileType.HOOK || selectedItem.Shoot == ProjectileType.WHIP_IVY)
+				if (selectedItem.Shoot == ProjectileType.N13_HOOK || selectedItem.Shoot == ProjectileType.N32_IVY_WHIP)
 				{
 					for (int k = 0; k < 1000; k++)
 					{
@@ -3857,7 +3861,7 @@ namespace Terraria_Server
 					}
                 }
 
-                if (flag && selectedItem.Shoot == ProjectileType.ORB_OF_LIGHT)
+                if (flag && selectedItem.Shoot == ProjectileType.N18_ORB_OF_LIGHT)
                 {
                     for (int j = 0; j < 1000; j++)
                     {
@@ -3927,7 +3931,8 @@ namespace Terraria_Server
                     ProjectileType shoot = selectedItem.Shoot;
                     float shootSpeed = selectedItem.ShootSpeed;
                     
-					if (selectedItem.Melee && shoot != ProjectileType.BALL_O_HURT && shoot != ProjectileType.BLUE_MOON && shoot != ProjectileType.SUNFURY)
+					if (selectedItem.Melee && shoot != ProjectileType.N25_BALL_O_HURT && shoot != 
+                        ProjectileType.N26_BLUE_MOON && shoot != ProjectileType.N35_SUNFURY)
 					{
 						shootSpeed /= this.meleeSpeed;
 					}
@@ -3935,7 +3940,7 @@ namespace Terraria_Server
                     bool flag2 = false;
                     int damage = dmg;
                     float knockBack = selectedItem.KnockBack;
-                    if (shoot == ProjectileType.HOOK || shoot == ProjectileType.WHIP_IVY)
+                    if (shoot == ProjectileType.N13_HOOK || shoot == ProjectileType.N32_IVY_WHIP)
                     {
                         grappling[0] = -1;
                         grapCount = 0;
@@ -3943,7 +3948,7 @@ namespace Terraria_Server
                         {
                             if (Main.projectile[j].Active && Main.projectile[j].Owner == i)
                             {
-                                if (Main.projectile[j].type == ProjectileType.HOOK)
+                                if (Main.projectile[j].type == ProjectileType.N13_HOOK)
                                 {
                                     Main.projectile[j].Kill();
                                 }
@@ -3993,7 +3998,7 @@ namespace Terraria_Server
 								damage += item.damage;
 							}
 
-							if (selectedItem.UseAmmo == ProjectileType.ARROW_WOODEN && this.archery)
+							if (selectedItem.UseAmmo == ProjectileType.N1_WOODEN_ARROW && this.archery)
 							{
 								if (shootSpeed < 20f)
 								{
@@ -5503,10 +5508,10 @@ namespace Terraria_Server
 			foreach (var proj in Main.projectile)
 			{
 				if (proj.Active && proj.Owner == whoAmi
-					&& (proj.type == ProjectileType.HOOK || proj.type == ProjectileType.WHIP_IVY))
+					&& (proj.type == ProjectileType.N13_HOOK || proj.type == ProjectileType.N32_IVY_WHIP))
 				{
 					proj.Active = false;
-					proj.type = ProjectileType.UNKNOWN;
+					proj.type = ProjectileType.N0_UNKNOWN;
 					msg.Projectile (proj);
 				}
 			}

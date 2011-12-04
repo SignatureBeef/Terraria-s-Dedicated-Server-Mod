@@ -5808,7 +5808,7 @@ namespace Terraria_Server.WorldMod
 					num58 = (float)num53 / num58;
 					num56 *= num58;
 					num57 *= num58;
-					Projectile.NewProjectile(vector.X, vector.Y, num56, num57, ProjectileType.FALLEN_STAR, 1000, 10f, Main.myPlayer);
+					Projectile.NewProjectile(vector.X, vector.Y, num56, num57, ProjectileType.N12_FALLING_STAR, 1000, 10f, Main.myPlayer);
 				}
 			}
 		}

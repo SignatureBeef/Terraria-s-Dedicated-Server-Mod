@@ -7,32 +7,58 @@ using Terraria_Server;
 using Terraria_Server.Definitions;
 using System.Threading;
 using Mono.Cecil;
+using System.Collections.Generic;
 
 namespace Terraria_Utilities.Serialize
 {
-    public class Serializer
+    public enum InvokeType
     {
-        public static void Serialize(Type type, string[] ignoreFields, MethodInfo SetDefaults, bool Projectile = false)
+        ITEM_NPC,
+        PROJECTILE,
+        ITEM_NPC_BY_NAME
+    }
+
+    public class Serializer
+    {        
+        /// <summary>
+        /// Supports Serialization of NPC, Items & Projectiles.
+        /// It also supports multiple formats by specifing the Method.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="ignoreFields"></param>
+        /// <param name="SetDefaults"></param>
+        /// <param name="invokeType"></param>
+        /// <param name="input"></param>
+        public static Dictionary<Int32, String> Serialize(Type type, string[] ignoreFields, MethodInfo SetDefaults, InvokeType invokeType = InvokeType.ITEM_NPC, string[] inputs = null, int MaxObjects = 1000)
         {
+            var FilePath = (invokeType == InvokeType.ITEM_NPC_BY_NAME) ? type.Name + "sByName.xml" : type.Name + "s.xml";
+            if (File.Exists(FilePath))
+                File.Delete(FilePath);
+
             DiffSerializer serializer = new DiffSerializer(type, ignoreFields);
-            FileStream fs = new FileStream(type.Name + "s.xml", FileMode.OpenOrCreate);
+            FileStream fs = new FileStream(FilePath, FileMode.OpenOrCreate);
 			XmlWriterSettings ws = new XmlWriterSettings();
 			ws.Indent = true;
             XmlDictionaryWriter.Create(fs, ws);
             XmlDictionaryWriter writer = XmlDictionaryWriter.CreateTextWriter(fs);
             writer.WriteStartElement("ArrayOf" + type.Name);
+
+            var returnData = new Dictionary<Int32, String>();
             int count = 0;
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < MaxObjects; i++)
             {
                 object obj = Activator.CreateInstance(type);
+
                 try
                 {
-                    if(!Projectile)
+                    if(invokeType == InvokeType.ITEM_NPC)
                         SetDefaults.Invoke(obj, new object[] { i, null });
+                    else if (invokeType == InvokeType.ITEM_NPC_BY_NAME)
+                        SetDefaults.Invoke(obj, new object[] { inputs[i] });
                     else
                         SetDefaults.Invoke(obj, new object[] { i });
                 }
-                catch // (Exception e) //Usually catches player data which is not set
+                catch //(Exception e) //Usually catches player data which is not set
                 {
                     //Console.WriteLine("[Error] {0}", e.Message);
                 }
@@ -62,17 +88,21 @@ namespace Terraria_Utilities.Serialize
                     Console.WriteLine("Processing `{0}`...", value);
                     serializer.WriteObject(writer, obj);
                     count++;
+                    returnData.Add(count, value);
                 }
-                Thread.Sleep(10);
+                Thread.Sleep(5);
             }
 			writer.WriteString("\n");
             writer.WriteEndElement();
             writer.Close();
             fs.Close();
+
             Console.WriteLine("Found {0} {1}s.", count, type.Name);
+
+            return returnData;
         }
 
-        public static void UpdateAssembly(string ModulePath, string Type)
+        public static void UpdateAssembly(string ModulePath, string Type, List<String> caseFeilds)
         {            
             AssemblyDefinition module = AssemblyFactory.GetAssembly(ModulePath);
             TypeDefinition def = module.MainModule.Types[Type];
@@ -80,14 +110,25 @@ namespace Terraria_Utilities.Serialize
 
             /* This method renames the Variables to how we have them */
             foreach (FieldDefinition field in def.Fields)
-                field.Name = ReplaceFirst(field.Name);
+            {
+                if (caseFeilds.Contains(field.Name) || caseFeilds.Contains("*"))
+                    field.Name = ReplaceFirst(field.Name);
+            }
+
+            //module.MainModule.Types["WorldGen"].IsPublic = true;
 
             AssemblyFactory.SaveAssembly(module, ModulePath);
         }
 
-        public static string ReplaceFirst(string val)
+        public static string ReplaceFirst(string val, bool upper = true)
         {
-            var first = val.Substring(0, 1).ToUpper();
+            var first = String.Empty;
+
+            if(upper)
+                first = val.Substring(0, 1).ToUpper();
+            else
+                first = val.Substring(0, 1).ToLower();
+
             return first + val.Remove(0, 1);
         }
     }

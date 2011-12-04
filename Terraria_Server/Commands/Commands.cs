@@ -1080,7 +1080,7 @@ namespace Terraria_Server.Commands
 					foreach (var projectile in Main.projectile)
 					{
 						projectile.Active = false;
-						projectile.type = ProjectileType.UNKNOWN;
+						projectile.type = ProjectileType.N0_UNKNOWN;
 
 						msg.Projectile(projectile);
 					}

@@ -134,13 +134,15 @@ namespace Terraria_Server.Messages
 					NetPlay.slots[whoAmI].Kick ("Invalid projectile.");
 					return;
 				}
-				else if (type == (int)ProjectileType.FEATHER_HARPY || type == (int)ProjectileType.STINGER || type == (int)ProjectileType.SICKLE_DEMON)
+				else if (type == (int)ProjectileType.N38_HARPY_FEATHER || 
+                    type == (int)ProjectileType.N55_STINGER || 
+                    type == (int)ProjectileType.N44_DEMON_SICKLE)
 				{
 					args.CleanupProjectile ();
 					NetPlay.slots[whoAmI].Kick ("Projectile cheat detected.");
 					return;
 				}
-				else if (type == (int)ProjectileType.HARPOON)
+				else if (type == (int)ProjectileType.N23_HARPOON)
 				{
 					args.CleanupProjectile ();
 					if (Math.Abs (vX) + Math.Abs (vY) < 1e-4) // ideally, we'd want to figure out all projectiles that never have 0 velocity

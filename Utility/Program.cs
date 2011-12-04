@@ -2,6 +2,10 @@
 using Terraria_Server;
 using Terraria_Server.Collections;
 using Terraria_Utilities.Serialize;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml.Serialization;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Utilities
 {
@@ -17,27 +21,75 @@ namespace Terraria_Utilities
             + "down the\nTerraria Server. Please be aware that many of the facilities existing within\nthis application "
             + "will quickly become outdated and are not intended for long\nterm usage.\n";
 
+        static Type Item        = typeof(Terraria.Item);
+        static Type NPC         = typeof(Terraria.NPC);
+        static Type Projectile  = typeof(Terraria.Projectile);
+
         static void Main(string[] args)
         {
             Console.WriteLine(WELCOME_MESSAGE);
 
-            var location ="E:\\TerrariaServer.exe";   
+            var location = "E:\\TerrariaServer.exe";
+            var typeSet = GetSet();
+            var upperCase = GetUppercaseFields();
 
             Console.Write("Updating Assemblies...");
 
             /* Update Reference */
-            foreach (var set in new string[] { "Item", "NPC", "Projectile" })
+            var i = 0;
+            foreach (var name_space in new string[] { Item.FullName, NPC.FullName, Projectile.FullName })
             {
-                Serializer.UpdateAssembly(location, "Terraria." + set);
+                /* Add extra fields from ignored lists incase we forgot some */
+                foreach (var field in typeSet[i++].IgnoreFields)
+                {
+                    char letter = field.ToCharArray()[0];
+                    if (Char.IsUpper(letter))
+                    {
+                        /* Add both; Lower & Upper - Lazy IDC */
+                        upperCase[name_space].Add(field);
+                        upperCase[name_space].Add(Serializer.ReplaceFirst(field, false));
+                    }
+                }
+                Serializer.UpdateAssembly(location, name_space, upperCase[name_space]);
             }
 
             Console.Write("Ok\nSerializing...");
-
-            var typeSet = GetSet();
+            Terraria.Main.dedServ = true; //Set this to true, We don't need the GUI shit.
 
             /* Serialize */
             foreach (var set in typeSet)
-                Serializer.Serialize(set.TypeReference, set.IgnoreFields, set.TypeReference.GetMethod("SetDefaults", set.SetDefaults), set.TypeReference == typeof(Terraria.Projectile));
+            {
+                var data = Serializer.Serialize(   
+                                        set.TypeReference, set.IgnoreFields, 
+                                        set.TypeReference.GetMethod("SetDefaults", set.SetDefaults), set.InvokeType, 
+                                        set.EntityObjNames, (set.EntityObjNames != null) ? set.EntityObjNames.Length : 1000
+                );
+
+                var ClassName = set.TypeReference.Name + "Type";
+                var writer = new StreamWriter(ClassName + ".cs");
+
+                Console.Write("Saving {0}...", ClassName);
+                var l = String.Format("public enum {0} : int", ClassName);
+                writer.WriteLine(l);
+                writer.WriteLine("{");
+                foreach (var pair in data)
+                {
+                    var val = pair.Key;
+                    var name = pair.Value.ToUpper().Replace(" ", "_").Replace("'", "");
+                    var line = String.Format("\tN{0}_{1},", pair.Key, name);
+                    var attribute = String.Format("\t[XmlEnum(Name = \"{0}\")]", val);
+
+                    writer.WriteLine(attribute);
+                    writer.WriteLine(line);
+                }
+                writer.WriteLine("}");
+
+                writer.Flush();
+                writer.Close();
+                writer.Dispose();
+
+                Console.WriteLine("Ok");
+            }
 
             Console.ReadLine();
         }
@@ -46,7 +98,7 @@ namespace Terraria_Utilities
         {
             return new TypeSets[]
             {
-                /* Items */
+                /* Items - Int32 */
                 new TypeSets()
                 {
                     IgnoreFields = new string[]
@@ -56,10 +108,11 @@ namespace Terraria_Utilities
                         "Material", "Vanity", "ManaIncrease"
                     },
                     TypeReference = typeof(Terraria.Item),
-                    SetDefaults = new Type[] { typeof(Int32), typeof(Boolean) }
+                    SetDefaults = new Type[] { typeof(Int32), typeof(Boolean) },
+                    InvokeType = InvokeType.ITEM_NPC
                 },
 
-                /* NPC */
+                /* NPC - Int32 */
                 new TypeSets()
                 {
                     IgnoreFields = new string[]
@@ -67,7 +120,8 @@ namespace Terraria_Utilities
                         "Immune", "Ai", "Active", "Direction", "Oldtarget", "Target", "Life", "OldPos"
                     },
                     TypeReference = typeof(Terraria.NPC),
-                    SetDefaults = new Type[] { typeof(Int32), typeof(float) }
+                    SetDefaults = new Type[] { typeof(Int32), typeof(float) },
+                    InvokeType = InvokeType.ITEM_NPC
                 },
                 
                 /* Projectile */
@@ -75,19 +129,90 @@ namespace Terraria_Utilities
                 {
                     IgnoreFields = new string[]
                     {
-                        "Ai", "PlayerImmune", "Type", "Active"
+                        "Ai", "PlayerImmune", "Active"
                     },
                     TypeReference = typeof(Terraria.Projectile),
-                    SetDefaults = new Type[] { typeof(Int32) }
+                    SetDefaults = new Type[] { typeof(Int32) },
+                    InvokeType = InvokeType.PROJECTILE
+                },
+
+                /* NPC - String */
+                new TypeSets()
+                {
+                    IgnoreFields = new string[]
+                    {
+                        "Immune", "Ai", "Active", "Direction", "Oldtarget", "Target", "Life", "OldPos"
+                    },
+                    TypeReference = typeof(Terraria.NPC),
+                    SetDefaults = new Type[] { typeof(String) },
+                    EntityObjNames = new string[]
+                    {
+                        "Green Slime", "Pinky", "Baby Slime", "Black Slime",
+                        "Purple Slime", "Red Slime", "Yellow Slime", "Jungle Slime",
+                        "Little Eater", "Big Eater", "Short Bones", "Big Boned",
+                        "Little Stinger", "Big Stinger", "Slimeling", "Slimer2",
+                        "Heavy Skeleton"
+                    },
+                    InvokeType = InvokeType.ITEM_NPC_BY_NAME
+                },
+
+                /* Items - String */
+                new TypeSets()
+                {
+                    IgnoreFields = new string[]
+                    {
+                        "Active", "Stack", "UseSound", "Owner", 
+                        "NoUseGraphic", "Alpha", "Color", "Accessory", 
+                        "Material", "Vanity", "ManaIncrease"
+                    },
+                    TypeReference = typeof(Terraria.Item),
+                    SetDefaults = new Type[] { typeof(String) },
+                    EntityObjNames = new string[]
+                    {
+                        "Gold Pickaxe", "Gold Broadsword", "Gold Shortsword", "Gold Axe",
+                        "Gold Hammer", "Gold Bow", "Silver Pickaxe", "Silver Broadsword",
+                        "Silver Shortsword", "Silver Axe", "Silver Hammer", "Silver Bow",
+                        "Copper Pickaxe", "Copper Broadsword", "Copper Shortsword", "Copper Axe",
+                        "Copper Hammer", "Copper Bow", "Blue Phasesaber", "Red Phasesaber",
+                        "Green Phasesaber", "Purple Phasesaber", "White Phasesaber", "Yellow Phasesaber"
+                    },
+                    InvokeType = InvokeType.ITEM_NPC_BY_NAME
+                }
+            };
+        }
+
+        public static Dictionary<String, List<String>> GetUppercaseFields()
+        {
+            return new Dictionary<String, List<String>>
+            {
+                {
+                    Item.FullName, new List<String>() { "*" }
+                },
+                {   NPC.FullName, 
+                    new List<String>()
+                    {
+                        "type", "name", "width", "height", 
+                        "inherits", "poisonImmunity", "burningImmunity", 
+                        "scaleDamage", "scaleDefense", "scaleLifeMax", "scaleValue", 
+                        "scaleKnockBackResist", "scaleSlots", "netID"
+                    }
+                },
+                {   Projectile.FullName, 
+                    new List<String>()
+                    {
+                        "type", "name", "width", "height"
+                    }
                 }
             };
         }
 
         public struct TypeSets
         {
-            public String[] IgnoreFields    { get; set; }
-            public Type     TypeReference   { get; set; }
-            public Type[]   SetDefaults     { get; set; }
+            public String[]     IgnoreFields    { get; set; }
+            public Type         TypeReference   { get; set; }
+            public Type[]       SetDefaults     { get; set; }
+            public String[]     EntityObjNames  { get; set; }
+            public InvokeType   InvokeType      { get; set; }
         }
     }
 }
