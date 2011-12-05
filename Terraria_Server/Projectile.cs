@@ -1099,8 +1099,10 @@ namespace Terraria_Server
         {
             if (this.aiStyle == 1)
             {
-                if (this.type == ProjectileType.N20_GREEN_LASER || this.type == ProjectileType.N14_BULLET || 
-                    this.type == ProjectileType.N36_METEOR_SHOT)
+                if (this.type == ProjectileType.N20_GREEN_LASER || this.type == ProjectileType.N14_BULLET ||
+                    this.type == ProjectileType.N36_METEOR_SHOT || this.type == ProjectileType.N83_EYE_LASER ||
+                    this.type == ProjectileType.N84_PINK_LASER || this.type == ProjectileType.N89_CRYSTAL_BULLET ||
+                    this.type == ProjectileType.N100_DEATH_LASER || this.type == ProjectileType.N104_CURSED_BULLET)
                 {
                     if (this.alpha > 0)
                     {
@@ -1111,19 +1113,43 @@ namespace Terraria_Server
                         this.alpha = 0;
                     }
                 }
+                if (this.type == ProjectileType.N88_PURPLE_LASER)
+                {
+                    if (this.alpha > 0)
+                        this.alpha -= 10;
+                    if (this.alpha < 0)
+                        this.alpha = 0;
+                }
                 if (this.type != ProjectileType.N5_JESTERS_ARROW && 
                     this.type != ProjectileType.N14_BULLET && 
                     this.type != ProjectileType.N20_GREEN_LASER && 
                     this.type != ProjectileType.N36_METEOR_SHOT && 
-                    this.type != ProjectileType.N38_HARPY_FEATHER && 
-                    this.type != ProjectileType.N55_STINGER)
+                    this.type != ProjectileType.N38_HARPY_FEATHER &&
+                    this.type != ProjectileType.N83_EYE_LASER &&
+                    this.type != ProjectileType.N84_PINK_LASER &&
+                    this.type != ProjectileType.N88_PURPLE_LASER &&
+                    this.type != ProjectileType.N89_CRYSTAL_BULLET &&
+                    this.type != ProjectileType.N98_POISON_DART &&
+                    this.type != ProjectileType.N100_DEATH_LASER &&
+                    this.type != ProjectileType.N104_CURSED_BULLET)
                 {
                     this.ai[0] += 1f;
                 }
-                if (this.ai[0] >= 15f)
+                if (this.type == ProjectileType.N81_WOODEN_ARROW || this.type == ProjectileType.N91_HOLY_ARROW)
                 {
-                    this.ai[0] = 15f;
-                    this.Velocity.Y = this.Velocity.Y + 0.1f;
+                    if (this.ai[0] >= 20f)
+                    {
+                        this.ai[0] = 20f;
+                        this.Velocity.Y = this.Velocity.Y + 0.07f;
+                    }
+                }
+                else
+                {
+                    if (this.ai[0] >= 15f)
+                    {
+                        this.ai[0] = 15f;
+                        this.Velocity.Y = this.Velocity.Y + 0.1f;
+                    }
                 }
                 this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
                 if (this.Velocity.Y > 16f)
@@ -1137,17 +1163,30 @@ namespace Terraria_Server
                 if (this.aiStyle == 2)
                 {
                     this.rotation += (Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y)) * 0.03f * (float)this.direction;
-                    this.ai[0] += 1f;
-                    if (this.ai[0] >= 20f)
+
+                    if (this.type == ProjectileType.N69_HOLY_WATER || this.type == ProjectileType.N70_UNHOLY_WATER)
                     {
-                        this.Velocity.Y = this.Velocity.Y + 0.4f;
-                        this.Velocity.X = this.Velocity.X * 0.97f;
+                        this.ai[0] += 1f;
+                        if (this.ai[0] >= 10f)
+                        {
+                            this.Velocity.Y = this.Velocity.Y + 0.25f;
+                            this.Velocity.X = this.Velocity.X * 0.99f;
+                        }
                     }
                     else
                     {
-                        if (this.type == ProjectileType.N48_THROWING_KNIFE || this.type == ProjectileType.N54_POISONED_KNIFE)
+                        this.ai[0] += 1f;
+                        if (this.ai[0] >= 20f)
                         {
-                            this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
+                            this.Velocity.Y = this.Velocity.Y + 0.4f;
+                            this.Velocity.X = this.Velocity.X * 0.97f;
+                        }
+                        else
+                        {
+                            if (this.type == ProjectileType.N48_THROWING_KNIFE || this.type == ProjectileType.N54_POISONED_KNIFE)
+                            {
+                                this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
+                            }
                         }
                     }
                     if (this.Velocity.Y > 16f)
@@ -1170,11 +1209,23 @@ namespace Terraria_Server
                         if (this.ai[0] == 0f)
                         {
                             this.ai[1] += 1f;
-                            if (this.ai[1] >= 30f)
+                            if(this.type == ProjectileType.N106_LIGHT_DISC)
                             {
-                                this.ai[0] = 1f;
-                                this.ai[1] = 0f;
-                                this.netUpdate = true;
+                                if (this.ai[1] >= 45f)
+                                {
+                                    this.ai[0] = 1f;
+                                    this.ai[1] = 0f;
+                                    this.netUpdate = true;
+                                }
+                            }
+                            else
+                            {
+                                if (this.ai[1] >= 30f)
+                                {
+                                    this.ai[0] = 1f;
+                                    this.ai[1] = 0f;
+                                    this.netUpdate = true;
+                                }
                             }
                         }
                         else
@@ -1187,13 +1238,15 @@ namespace Terraria_Server
                                 num4 = 13f;
                                 num5 = 0.6f;
                             }
-                            else
+                            else if (this.type == ProjectileType.N33_THORN_CHAKRUM)
                             {
-                                if (this.type == ProjectileType.N33_THORN_CHAKRUM)
-                                {
-                                    num4 = 15f;
-                                    num5 = 0.8f;
-                                }
+                                num4 = 15f;
+                                num5 = 0.8f;
+                            }
+                            else if (this.type == ProjectileType.N106_LIGHT_DISC)
+                            {
+                                num4 = 16f;
+                                num5 = 1.2f;
                             }
                             Vector2 vector = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
                             float num6 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector.X;
@@ -1253,6 +1306,11 @@ namespace Terraria_Server
                                 }
                             }
                         }
+                        if(this.type == ProjectileType.N106_LIGHT_DISC)
+                        {
+                            this.rotation += 0.3f * (float)this.direction;
+                            return;
+                        }
                         this.rotation += 0.4f * (float)this.direction;
                         return;
                     }
@@ -1300,15 +1358,25 @@ namespace Terraria_Server
                     {
                         if (this.aiStyle == 5)
                         {
-							if (this.ai[1] == 0f && !Collision.SolidCollision(this.Position, this.Width, this.Height))
-							{
-								this.ai[1] = 1f;
-								this.netUpdate = true;
-							}
-							if (this.ai[1] != 0f)
-							{
-								this.tileCollide = true;
-							}
+                            if (this.type == ProjectileType.N92_HALLOW_STAR)
+                            {
+                                if (this.Position.Y > this.ai[1])
+                                {
+                                    this.tileCollide = true;
+                                }
+                            }
+                            else
+                            {
+                                if (this.ai[1] == 0f && !Collision.SolidCollision(this.Position, this.Width, this.Height))
+                                {
+                                    this.ai[1] = 1f;
+                                    this.netUpdate = true;
+                                }
+                                if (this.ai[1] != 0f)
+                                {
+                                    this.tileCollide = true;
+                                }
+                            }
                             if (this.soundDelay == 0)
                             {
                                 this.soundDelay = 20 + Main.rand.Next(40);
@@ -1329,7 +1397,7 @@ namespace Terraria_Server
                                 this.ai[0] = 1f;
                             }
                             this.rotation += (Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y)) * 0.01f * (float)this.direction;
-							if (this.ai[1] == 1f)
+							if (this.ai[1] == 1f || this.type == ProjectileType.N92_HALLOW_STAR)
 							{
 								this.light = 0.9f;
 							}
@@ -1348,7 +1416,7 @@ namespace Terraria_Server
                                 {
                                     this.ai[1] = 1f;
                                 }
-                                if (this.type == ProjectileType.N10_PURIFICATION_POWDER)
+                                if (this.type == ProjectileType.N10_PURIFICATION_POWDER || this.type == ProjectileType.N11_VILE_POWDER)
                                 {
                                     int num11 = (int)(this.Position.X / 16f) - 1;
                                     int num12 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
@@ -1382,17 +1450,47 @@ namespace Terraria_Server
                                                 && (Program.properties.TileSquareMessages != "accept" || Main.myPlayer == this.Owner)
                                                 && Main.tile.At(l, m).Active)
                                             {
-                                                if (Main.tile.At(l, m).Type == 23)
+                                                if (this.type == ProjectileType.N10_PURIFICATION_POWDER)
                                                 {
-                                                    Main.tile.At(l, m).SetType (2);
-                                                    WorldModify.SquareTileFrame(l, m, true);
-                                                    NetMessage.SendTileSquare(-1, l - 1, m - 1, 3);
+                                                    if (Main.tile.At(l, m).Type == 23)
+                                                    {
+                                                        Main.tile.At(l, m).SetType(2);
+                                                        WorldModify.SquareTileFrame(l, m, true);
+                                                        NetMessage.SendTileSquare(-1, l, m, 1);
+                                                    }
+                                                    if (Main.tile.At(l, m).Type == 25)
+                                                    {
+                                                        Main.tile.At(l, m).SetType(1);
+                                                        WorldModify.SquareTileFrame(l, m, true);
+                                                        NetMessage.SendTileSquare(-1, l, m, 1);
+                                                    }
+                                                    if (Main.tile.At(l, m).Type == 112)
+                                                    {
+                                                        Main.tile.At(l, m).SetType(53);
+                                                        WorldModify.SquareTileFrame(l, m, true);
+                                                        NetMessage.SendTileSquare(-1, l, m, 1);
+                                                    }
                                                 }
-                                                if (Main.tile.At(l, m).Type == 25)
+                                                else if(this.type == ProjectileType.N11_VILE_POWDER)
                                                 {
-                                                    Main.tile.At(l, m).SetType (1);
-                                                    WorldModify.SquareTileFrame(l, m, true);
-                                                    NetMessage.SendTileSquare(-1, l - 1, m - 1, 3);
+                                                    if (Main.tile.At(l, m).Type == 109)
+                                                    {
+                                                        Main.tile.At(l, m).SetType(2);
+                                                        WorldModify.SquareTileFrame(l, m, true);
+                                                        NetMessage.SendTileSquare(-1, l, m, 1);
+                                                    }
+                                                    if (Main.tile.At(l, m).Type == 116)
+                                                    {
+                                                        Main.tile.At(l, m).SetType(53);
+                                                        WorldModify.SquareTileFrame(l, m, true);
+                                                        NetMessage.SendTileSquare(-1, l, m, 1);
+                                                    }
+                                                    if (Main.tile.At(l, m).Type == 117)
+                                                    {
+                                                        Main.tile.At(l, m).SetType(1);
+                                                        WorldModify.SquareTileFrame(l, m, true);
+                                                        NetMessage.SendTileSquare(-1, l, m, 1);
+                                                    }
                                                 }
                                             }
                                         }
@@ -1460,21 +1558,35 @@ namespace Terraria_Server
                                                         int num23 = 0;
                                                         int num24 = -1;
                                                         int num25 = 100000;
-                                                        for (int num26 = 0; num26 < 1000; num26++)
+                                                        if(this.type == ProjectileType.N73_HOOK || this.type == ProjectileType.N74_HOOK)
                                                         {
-                                                            if (Main.projectile[num26].Active && Main.projectile[num26].Owner == this.Owner && Main.projectile[num26].aiStyle == 7)
+                                                            for (int num31 = 0; num31 < 1000; num31++)
                                                             {
-                                                                if (Main.projectile[num26].timeLeft < num25)
+                                                                if (num31 != this.whoAmI && Main.projectile[num31].Active && Main.projectile[num31].Owner == this.Owner &&
+                                                                    Main.projectile[num31].aiStyle == 7 && Main.projectile[num31].ai[0] == 2f)
                                                                 {
-                                                                    num24 = num26;
-                                                                    num25 = Main.projectile[num26].timeLeft;
+                                                                    Main.projectile[num31].Kill();
                                                                 }
-                                                                num23++;
                                                             }
                                                         }
-                                                        if (num23 > 3)
+                                                        else
                                                         {
-                                                            Main.projectile[num24].Kill();
+                                                            for (int num26 = 0; num26 < 1000; num26++)
+                                                            {
+                                                                if (Main.projectile[num26].Active && Main.projectile[num26].Owner == this.Owner && Main.projectile[num26].aiStyle == 7)
+                                                                {
+                                                                    if (Main.projectile[num26].timeLeft < num25)
+                                                                    {
+                                                                        num24 = num26;
+                                                                        num25 = Main.projectile[num26].timeLeft;
+                                                                    }
+                                                                    num23++;
+                                                                }
+                                                            }
+                                                            if (num23 > 3)
+                                                            {
+                                                                Main.projectile[num24].Kill();
+                                                            }
                                                         }
                                                     }
 													var plr = Creator as Player;
@@ -1514,6 +1626,10 @@ namespace Terraria_Server
                                         if (this.type == ProjectileType.N32_IVY_WHIP)
                                         {
                                             num27 = 15f;
+                                        }
+                                        if(this.type == ProjectileType.N73_HOOK || this.type == ProjectileType.N74_HOOK)
+                                        {
+                                            num27 = 17f;
                                         }
                                         if (num17 < 24f)
                                         {
@@ -1579,7 +1695,11 @@ namespace Terraria_Server
                                 {
                                     if (this.aiStyle == 8)
                                     {
-                                        if (this.type != ProjectileType.N27_WATER_BOLT)
+                                        if(this.type == ProjectileType.N96_CURSED_FLAME && this.ai[0] == 0f)
+                                        {
+                                            this.ai[0] = 1f;
+                                        }
+                                        if (this.type != ProjectileType.N27_WATER_BOLT && this.type != ProjectileType.N96_CURSED_FLAME)
                                         {
                                             this.ai[1] += 1f;
                                         }
@@ -1687,19 +1807,51 @@ namespace Terraria_Server
                                             {
                                                 if (this.aiStyle == 11)
                                                 {
-                                                    this.rotation += 0.02f;
+                                                    if (this.type == ProjectileType.N72_BLUE_FAIRY || this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
+                                                    {
+                                                        if (this.Velocity.X > 0f)
+                                                        {
+                                                            this.direction = -1;
+                                                        }
+                                                        else if (this.Velocity.X < 0f)
+                                                        {
+                                                            this.direction = 1;
+                                                        }
+                                                        this.rotation = this.Velocity.X * 0.1f;
+                                                    }
+                                                    else
+                                                    {
+                                                        this.rotation += 0.02f;
+                                                    }
                                                     if (Main.myPlayer == this.Owner)
                                                     {
-														if (Main.players[this.Owner].lightOrb)
-														{
-															this.timeLeft = 2;
-														}
+                                                        if (this.type == ProjectileType.N72_BLUE_FAIRY || this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
+                                                        {
+                                                           // [TODO] 1.1 : double check the player class
+                                                            if (Main.players[this.Owner].fairy)
+                                                            {
+                                                                this.timeLeft = 2;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (Main.players[this.Owner].lightOrb)
+                                                            {
+                                                                this.timeLeft = 2;
+                                                            }
+                                                        }
                                                         if (Main.players[this.Owner].dead)
                                                         {
                                                             this.Kill();
                                                             return;
                                                         }
                                                         float num51 = 2.5f;
+                                                        int num81 = 70;
+                                                        if (this.type == ProjectileType.N72_BLUE_FAIRY || this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
+                                                        {
+                                                            num51 = 3.5f;
+                                                            num81 = 40;
+                                                        }
                                                         Vector2 vector8 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
                                                         float num52 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector8.X;
                                                         float num53 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector8.Y;
@@ -1711,23 +1863,26 @@ namespace Terraria_Server
                                                             this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
                                                             return;
                                                         }
-                                                        if (num54 > 64f)
+                                                        if (num54 > (float)num81)
                                                         {
                                                             num54 = num51 / num54;
                                                             num52 *= num54;
                                                             num53 *= num54;
-                                                            if (num52 != this.Velocity.X || num53 != this.Velocity.Y)
-                                                            {
-                                                                this.netUpdate = true;
-                                                            }
+                                                            // [TODO] 1.1 - double check this area of code in aiStyle 11
+                                                            // Commented out in 1.1
+                                                            //if (num52 != this.Velocity.X || num53 != this.Velocity.Y)
+                                                            //{
+                                                            //   this.netUpdate = true;
+                                                            //}
                                                             this.Velocity.X = num52;
                                                             this.Velocity.Y = num53;
                                                             return;
                                                         }
-                                                        if (this.Velocity.X != 0f || this.Velocity.Y != 0f)
-                                                        {
-                                                            this.netUpdate = true;
-                                                        }
+                                                        // Commented out in 1.1
+                                                        //if (this.Velocity.X != 0f || this.Velocity.Y != 0f)
+                                                        //{
+                                                        //    this.netUpdate = true;
+                                                        //}
                                                         this.Velocity.X = 0f;
                                                         this.Velocity.Y = 0f;
                                                         return;
@@ -1883,7 +2038,11 @@ namespace Terraria_Server
                                                                 this.Velocity.Y = this.Velocity.Y + 0.2f;
                                                             }
                                                             this.rotation += this.Velocity.X * 0.1f;
-                                                            return;
+                                                            if (this.Velocity.Y > 16f)
+                                                            {
+                                                                this.Velocity.Y = 16f;
+                                                                return;
+                                                            }
                                                         }
                                                         if (this.aiStyle == 15)
                                                         {
@@ -1911,8 +2070,13 @@ namespace Terraria_Server
 
                                                             if (this.ai[0] == 0f)
                                                             {
+                                                                float num98 = 160f;
+                                                                if (this.type == ProjectileType.N63_THE_DAO_OF_POW)
+                                                                {
+                                                                    num98 *= 1.5f;
+                                                                }
                                                                 this.tileCollide = true;
-                                                                if (num75 > 160f)
+                                                                if (num75 > num98)
                                                                 {
                                                                     this.ai[0] = 1f;
                                                                     this.netUpdate = true;
@@ -1937,13 +2101,20 @@ namespace Terraria_Server
 																	var owner = Main.players[this.Owner];
 																	float num76 = 14f / owner.meleeSpeed;
 																	float num77 = 0.9f / owner.meleeSpeed;
+                                                                    float num101 = 300f;
+                                                                    if (this.type == ProjectileType.N63_THE_DAO_OF_POW)
+                                                                    {
+                                                                        num101 *= 1.5f;
+                                                                        num76 *= 1.5f;
+                                                                        num77 *= 1.5f;
+                                                                    }
 																	Math.Abs(num73);
 																	Math.Abs(num74);
 																	if (this.ai[1] == 1f)
 																	{
 																		this.tileCollide = false;
 																	}
-																	if (!owner.channel || num75 > 300f || !this.tileCollide)
+																	if (!owner.channel || num75 > num101 || !this.tileCollide)
 																	{
 																		this.ai[1] = 1f;
 																		if (this.tileCollide)
@@ -1997,6 +2168,14 @@ namespace Terraria_Server
                                                         {
                                                             if (this.aiStyle == 16)
                                                             {
+                                                                if(this.type == ProjectileType.N108_EXPLOSIVES)
+                                                                {
+                                                                    this.ai[0] += 1f;
+                                                                    if (this.ai[0] > 3f)
+                                                                    {
+                                                                        this.Kill();
+                                                                    }
+                                                                }
                                                                 if (this.type == ProjectileType.N37_STICKY_BOMB)
                                                                 {
                                                                     try
@@ -2043,12 +2222,38 @@ namespace Terraria_Server
                                                                     {
                                                                     }
                                                                 }
+                                                                if( this.type == ProjectileType.N102_BOMB)
+                                                                {
+                                                                    // [TODO] 1.1 - double check this code
+                                                                    if (this.Velocity.Y > 10f)
+                                                                    {
+                                                                        this.Velocity.Y = 10f;
+                                                                    }
+                                                                    if (this.ai[0] == 0f)
+                                                                    {
+                                                                        this.ai[0] = 1f;
+                                                                    }
+                                                                    if (this.Velocity.Y == 0f)
+                                                                    {
+                                                                        this.Position.X = this.Position.X + (float)(this.Width / 2);
+                                                                        this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                                                                        this.Width = 128;
+                                                                        this.Height = 128;
+                                                                        this.Position.X = this.Position.X - (float)(this.Width / 2);
+                                                                        this.Position.Y = this.Position.Y - (float)(this.Height / 2);
+                                                                        this.damage = 40;
+                                                                        this.knockBack = 8f;
+                                                                        this.timeLeft = 3;
+                                                                        this.netUpdate = true;
+                                                                    }
+                                                                }
                                                                 if (this.Owner == Main.myPlayer && this.timeLeft <= 3)
                                                                 {
                                                                     this.ai[1] = 0f;
                                                                     this.alpha = 255;
                                                                     if (this.type == ProjectileType.N28_BOMB || 
-                                                                        this.type == ProjectileType.N37_STICKY_BOMB)
+                                                                        this.type == ProjectileType.N37_STICKY_BOMB ||
+                                                                        this.type == ProjectileType.N75_HAPPY_BOMB)
                                                                     {
                                                                         this.Position.X = this.Position.X + (float)(this.Width / 2);
                                                                         this.Position.Y = this.Position.Y + (float)(this.Height / 2);
@@ -2089,12 +2294,9 @@ namespace Terraria_Server
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (this.type != ProjectileType.N30_GRENADE && Main.rand.Next(4) == 0)
+                                                                    if (this.type != ProjectileType.N30_GRENADE && this.type != ProjectileType.N108_EXPLOSIVES)
                                                                     {
-                                                                        if (this.type != ProjectileType.N30_GRENADE)
-                                                                        {
-                                                                            this.damage = 0;
-                                                                        }
+                                                                        this.damage = 0;
                                                                     }
                                                                 }
                                                                 this.ai[0] += 1f;
@@ -2210,6 +2412,22 @@ namespace Terraria_Server
                                                                     }
                                                                     else
                                                                     {
+                                                                        if (this.type == ProjectileType.N105_GUNGNIR)
+                                                                        {
+                                                                            if (this.ai[0] == 0f)
+                                                                            {
+                                                                                this.ai[0] = 3f;
+                                                                                this.netUpdate = true;
+                                                                            }
+                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
+                                                                            {
+                                                                                this.ai[0] -= 2.4f;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                this.ai[0] += 2.1f;
+                                                                            }
+                                                                        }
                                                                         if (this.type == ProjectileType.N47_TRIDENT)
                                                                         {
                                                                             if (this.ai[0] == 0f)
@@ -2226,23 +2444,52 @@ namespace Terraria_Server
                                                                                 this.ai[0] += 0.9f;
                                                                             }
                                                                         }
-                                                                        else
+                                                                        else if (this.type == ProjectileType.N49_SPEAR)
                                                                         {
-                                                                            if (this.type == ProjectileType.N49_SPEAR)
+                                                                            if (this.ai[0] == 0f)
                                                                             {
-                                                                                if (this.ai[0] == 0f)
-                                                                                {
-                                                                                    this.ai[0] = 4f;
-                                                                                    this.netUpdate = true;
-                                                                                }
-                                                                                if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
-                                                                                {
-                                                                                    this.ai[0] -= 1.1f;
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    this.ai[0] += 0.85f;
-                                                                                }
+                                                                                this.ai[0] = 4f;
+                                                                                this.netUpdate = true;
+                                                                            }
+                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
+                                                                            {
+                                                                                this.ai[0] -= 1.1f;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                this.ai[0] += 0.85f;
+                                                                            }
+                                                                        }
+                                                                        else if (this.type == ProjectileType.N64_MYTHRIL_HALBERD)
+                                                                        {
+                                                                            if (this.ai[0] == 0f)
+                                                                            {
+                                                                                this.ai[0] = 3f;
+                                                                                this.netUpdate = true;
+                                                                            }
+                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
+                                                                            {
+                                                                                this.ai[0] -= 1.9f;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                this.ai[0] += 1.7f;
+                                                                            }
+                                                                        }
+                                                                        else if(this.type == ProjectileType.N66_ADAMANTITE_GLAIVE || this.type == ProjectileType.N97_COBALT_NAGINATA)
+                                                                        {
+                                                                            if (this.ai[0] == 0f)
+                                                                            {
+                                                                                this.ai[0] = 3f;
+                                                                                this.netUpdate = true;
+                                                                            }
+                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
+                                                                            {
+                                                                                this.ai[0] -= 2.1f;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                this.ai[0] += 1.9f;
                                                                             }
                                                                         }
                                                                     }
@@ -2253,6 +2500,8 @@ namespace Terraria_Server
                                                                     }
                                                                     this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 2.355f;
                                                                 }
+
+                                                                // [TODO] 1.1 add aistyles 20 - 25
                                                             }
                                                         }
                                                     }
