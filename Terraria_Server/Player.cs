@@ -371,6 +371,9 @@ namespace Terraria_Server
 		/// </summary>
 		public bool lightOrb { get; set; }
 
+        // [TODO] 1.1
+        public bool fairy { get; set; }
+
         public float gravDir = 1f;
 
         public bool gills { get; set; }
