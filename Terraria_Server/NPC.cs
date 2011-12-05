@@ -11892,6 +11892,69 @@ namespace Terraria_Server
                 String.Format("{0} spawned at {1},{2}.", Statics.TDCM_QUEST_GIVER, Spawn.X, Spawn.Y)
             );
         }
+
+        /// <summary>
+        /// Server Only
+        /// </summary>
+        /// <param name="pos"></param>
+        public static void SpawnWOF(Vector2 pos)
+        {
+            if (pos.Y / 16f < (float)(Main.maxTilesY - 205))
+                return;
+
+            if (Main.Wof >= 0)
+            {
+                ProgramLog.Log("Attempt to call SpawnWOF with an existing Entity.");
+                return;
+            }
+
+            Player.FindClosest(pos, 16, 16);
+            int direction = 1;
+            if (pos.X / 16f > (float)(Main.maxTilesX / 2))
+                direction = -1;
+
+            bool playerOrSuitable = false;
+            int findX = (int)pos.X;
+            while (!playerOrSuitable)
+            {
+                playerOrSuitable = true;
+
+                foreach (var ply in Main.players)
+                {
+                    if (ply.Active && ply.Position.X > (float)(findX - 1200) && ply.Position.X < (float)(findX + 1200))
+                    {
+                        findX -= direction * 16;
+                        playerOrSuitable = false;
+                    }
+                }
+
+                if (findX / 16 < 20 || findX / 16 > Main.maxTilesX - 20)
+                    playerOrSuitable = true;
+            }
+            int posY = (int)pos.Y;
+            int posX = findX / 16;
+            int tileY = posY / 16;
+            int nextY = 0;
+            try
+            {
+                while (WorldModify.SolidTile(posX, tileY - nextY) || Main.tile.At(posX, tileY - nextY).Liquid >= 100)
+                {
+                    if (!WorldModify.SolidTile(posX, tileY + nextY) && Main.tile.At(posX, tileY + nextY).Liquid < 100)
+                    {
+                        tileY += nextY;
+                        posY = tileY * 16;
+                        int num7 = NPC.NewNPC(findX, posY, 113, 0);
+                        if (Main.npcs[num7].DisplayName == String.Empty)
+                            Main.npcs[num7].DisplayName = Main.npcs[num7].Name;
+
+                        NetMessage.SendData(25, -1, -1, Main.npcs[num7].DisplayName + " has awoken!", 255, 175f, 75f, 255f, 0);
+                    }
+                    nextY++;
+                }
+                tileY -= nextY;
+            }
+            catch { }
+        }
     }
 }
 

@@ -21,7 +21,7 @@ namespace Terraria_Server
 
 #pragma warning disable 618
 
-        public const string VERSION_NUMBER = "v1.0.6.1";
+        public const string VERSION_NUMBER = "v1.1";
 
 		public static ProgramThread updateThread = null;
 		public static ServerProperties properties = null;

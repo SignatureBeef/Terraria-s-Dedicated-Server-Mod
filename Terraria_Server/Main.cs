@@ -91,8 +91,7 @@ namespace Terraria_Server
 			{
 				if (threadRand == null) threadRand = new Random ((int)DateTime.Now.Ticks);
 				return threadRand;
-			}
-			
+			}			
 			set
 			{
 			}
@@ -124,80 +123,14 @@ namespace Terraria_Server
 		public static int invasionWarn = 0;
         public static int[] npcFrameCount = new int[]
 		{
-			1, 
-			2, 
-			2, 
-			3, 
-			6, 
-			2, 
-			2, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			2, 
-			16, 
-			14, 
-			16, 
-			14, 
-			15, 
-			16, 
-			2, 
-			10, 
-			1, 
-			16, 
-			16, 
-			16, 
-			3, 
-			1, 
-			15, 
-			3, 
-			1, 
-			3, 
-			1, 
-			1, 
-			16, 
-			16, 
-			1, 
-			1, 
-			1, 
-			3, 
-			3, 
-			15, 
-			3, 
-			7, 
-			7, 
-			4, 
-			5, 
-			5, 
-			5, 
-			3, 
-			3, 
-			16, 
-			6, 
-			3, 
-			6, 
-			6, 
-			2, 
-			5, 
-			3, 
-			2, 
-			7, 
-			7, 
-			4, 
-			2, 
-			8, 
-			1, 
-			5, 
-			1, 
-			2, 
-			4, 
-			16
+			1, 2, 2, 3, 6, 2, 2, 1, 1 ,1, 
+			1, 1, 1, 1, 1, 1, 2, 16, 14, 16, 
+			14, 15, 16, 2, 10, 1, 16, 16, 16, 3, 
+			1, 15, 3, 1, 3, 1, 1, 16, 16, 1, 
+			1, 1, 3, 3, 15, 3, 7, 7, 4, 5, 
+			5, 5, 3, 3, 16, 6, 3, 6, 6, 2, 5, 
+			3, 2, 7, 7, 4, 2, 8, 1, 5, 1, 
+			2, 4, 16
 		};
 		public static int timeOut = 120;
 		public static int NetplayCounter;
@@ -1025,7 +958,10 @@ namespace Terraria_Server
 				{
 					player.activeNPCs = 0;
 					player.townNPCs = 0;
-				}
+                }
+
+                if (Main.Wof >= 0 && !Main.npcs[Main.Wof].Active)
+                    Main.Wof = -1;
 				
 				for (int i = 0; i < NPC.MAX_NPCS; i++)
 				{
@@ -1173,5 +1109,7 @@ namespace Terraria_Server
 			}
 			LastServerUpdateTime = s.Elapsed - start;
 		}
+
+        public static int Wof { get; set; }
     }
 }

@@ -27,16 +27,19 @@ namespace Terraria_Server
         /// </summary>
         public static World World { get; set; }
         
-        // Summary:
-        //      Gets the White list 
+        /// <summary>
+        /// Gets the White list
+        /// </summary>
         public static DataRegister WhiteList { get; set; }
 
-        // Summary:
-        //       Gets the Ban list
+        /// <summary>
+        /// Gets the Ban list
+        /// </summary>
         public static DataRegister BanList { get; set; }
 
-        // Summary:
-        //       Gets the OP list
+        /// <summary>
+        /// Gets the OP list
+        /// </summary>
         public static DataRegister OpList { get; set; }
 
         /// <summary>
@@ -84,9 +87,12 @@ namespace Terraria_Server
             AllowTDCMRPG = Program.properties.AllowTDCMRPG;
         }
 
-        // Summary:
-        //       Gets a specified Online Player
-        //       Input name must already be cleaned of spaces
+        /// <summary>
+        /// Gets a specified Online Player
+        /// Input name must already be cleaned of spaces
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static Player GetPlayerByName(string name)
         {
             string lowercaseName = name.ToLower();
@@ -100,8 +106,11 @@ namespace Terraria_Server
             return null;
         }
         
-        // Summary:
-        //       Send a message to all online OPs
+        /// <summary>
+        /// Send a message to all online OPs
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <param name="writeToConsole"></param>
         public static void notifyOps(string Message, bool writeToConsole = true)
         {
             if (Statics.cmdMessages)
@@ -131,8 +140,11 @@ namespace Terraria_Server
             notifyOps(String.Format(format, args), writeToConsole);
         }
 
-        // Summary:
-        //       Sends a Message to all Connected Clients
+        /// <summary>
+        /// Sends a Message to all Connected Clients
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <param name="writeToConsole"></param>
         public static void notifyAll(string Message, bool writeToConsole = true)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, 238f, 130f, 238f);
@@ -142,8 +154,12 @@ namespace Terraria_Server
             }
         }
 
-        // Summary:
-        //       Sends a Message to all Connected Clients
+        /// <summary>
+        /// Sends a Message to all Connected Clients
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <param name="ChatColour"></param>
+        /// <param name="writeToConsole"></param>
         public static void notifyAll(string Message, Color ChatColour, bool writeToConsole = true)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, ChatColour.R, ChatColour.G, ChatColour.B);
@@ -153,8 +169,10 @@ namespace Terraria_Server
             }
         }
 
-        // Summary:
-        //       Get the array of Active NPCs
+        /// <summary>
+        /// Get the array of Active NPCs
+        /// </summary>
+        /// <returns></returns>
         public static NPC[] ActiveNPCs()
         {
             NPC[] npcs = null;
@@ -185,8 +203,10 @@ namespace Terraria_Server
             return npcs;
         }
 
-        // Summary:
-        //       Gets the total of all active NPCs
+        /// <summary>
+        /// Gets the total of all active NPCs
+        /// </summary>
+        /// <returns></returns>
         public static int ActiveNPCCount()
         {
             int npcCount = 0;
@@ -200,8 +220,9 @@ namespace Terraria_Server
             return npcCount;
         }
 
-        // Summary:
-        //       Gets/Sets the maximum allowed NPCs
+        /// <summary>
+        /// Gets/Sets the maximum allowed NPCs
+        /// </summary>
         public static int MaxNPCs
         {
             get
@@ -215,8 +236,9 @@ namespace Terraria_Server
             }
         }
 
-        // Summary:
-        //       Gets/Sets the max spawn rate of NPCs\
+        /// <summary>
+        /// Gets/Sets the max spawn rate of NPCs
+        /// </summary>
         public static int SpawnRate
         {
             get
@@ -300,7 +322,7 @@ namespace Terraria_Server
         }
         
         /// <summary>
-        /// Tries to find an item by Type or name
+        /// Tries to find an item by Type or Name via Definitions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ItemIdOrName"></param>
@@ -310,52 +332,58 @@ namespace Terraria_Server
         {
             ItemList = new List<Int32>();
 
-            Item[] items = new Item[Main.maxItemTypes];
-            for (int i = 0; i < Main.maxItemTypes; i++)
+            foreach (var pair in Registries.Item.TypesById)
             {
-                items[i] = Registries.Item.Create(i);
-            }
+                var items = pair.Value as List<Item>;
 
-            string cleanedName = ItemIdOrName.ToString();
-            int itemID = -1;
-            if (ItemIdOrName is String)
-            {
-                cleanedName = cleanedName.Replace(" ", "").ToLower();
-            }
-            else if (ItemIdOrName is Int32)
-            {
-                itemID = Int32.Parse(ItemIdOrName.ToString());
-            }
-
-            for (int i = 0; i < Main.maxItemTypes; i++)
-            {
-                if (ItemIdOrName is String)
+                if (ItemIdOrName is Int32)
                 {
-                    if (items[i].Name != null)
+                    var itemT = Int32.Parse(ItemIdOrName.ToString());
+
+                    foreach (var item in items)
                     {
-                        string fndItemName = items[i].Name.Replace(" ", "").Trim().ToLower();
-                        if (fndItemName == cleanedName)
-                        {
-                            ItemList.Add(items[i].Type);
-                        }
+                        var type = item.Type;
+                        if (type == itemT && !ItemList.Contains(type))
+                            ItemList.Add(type);
                     }
                 }
-                else if (ItemIdOrName is Int32)
+                else if (ItemIdOrName is String)
                 {
-                    if (items[i].Type == itemID)
+                    var findItem = CleanName(ItemIdOrName as String);
+
+                    foreach (var item in items)
                     {
-                        ItemList.Add(items[i].Type);
+                        var type = item.Type;
+                        var curItem = CleanName(item.Name);
+
+                        if (curItem == findItem && !ItemList.Contains(type))
+                            ItemList.Add(type);
                     }
                 }
-                
             }
 
-            //Clear Data
-            for (int i = 0; i < Main.maxItemTypes; i++)
+            foreach (var pair in Registries.Item.TypesByName)
             {
-                items[i] = null;
+                var item = pair.Value as Item;
+
+                if (ItemIdOrName is Int32)
+                {
+                    var itemT = Int32.Parse(ItemIdOrName.ToString());
+                    var type = item.Type;
+
+                    if (type == itemT && !ItemList.Contains(type))
+                        ItemList.Add(type);
+                }
+                else if (ItemIdOrName is String)
+                {
+                    var type = item.Type;
+                    var findItem = CleanName(ItemIdOrName as String);
+                    var curItem = CleanName(item.Name);
+
+                    if (curItem == findItem && !ItemList.Contains(type))
+                        ItemList.Add(type);
+                }
             }
-            items = null;
 
             return ItemList.Count > 0;
         }
@@ -382,5 +410,14 @@ namespace Terraria_Server
             return TryFindItem(ItemName, out ItemList);
         }
 
+        /// <summary>
+        /// Used to clean the names of Items or NPC's for parsing
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string CleanName(string input)
+        {
+            return input.Replace(" ", String.Empty).ToLower();
+        }
     }
 }

@@ -59,9 +59,10 @@ namespace Terraria_Server.Messages
 			var stack = args.Amount;
 			
 			if (args.NetID < 0) return; // FIXME
-			
-			var item = Registries.Item.Create (args.NetID, stack);
+
+			var item = Item.netDefaults(args.NetID);
 			item.SetPrefix (args.Prefix);
+			item.Stack = stack;
 
 			if (inventorySlot < Player.MAX_INVENTORY)
 			{

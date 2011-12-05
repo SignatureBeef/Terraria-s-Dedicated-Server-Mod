@@ -11,7 +11,7 @@ using Terraria_Server.Networking;
 
 namespace Terraria_Server.WorldMod
 {
-	public class WorldModify
+	public static class WorldModify
 	{
 		private const int RECTANGLE_OFFSET = 25;
 		private const int TILE_OFFSET = 15;
@@ -84,6 +84,12 @@ namespace Terraria_Server.WorldMod
 		public static int bestY = 0;
 		public static int hiScore = 0;
 		public static int ficount;
+
+        public static bool SolidTile(int x, int y)
+        {
+            var Tile = Main.tile.At(x, y);
+            return Tile.Active && Main.tileSolid[(int)Tile.Type] && !Main.tileSolidTop[(int)Tile.Type];
+        }
 		
 		public static bool InvokeAlterationHook (ISender sender, Player player, int x, int y, byte action, byte type = 0, byte style = 0)
 		{

@@ -27,12 +27,15 @@ namespace Terraria_Server.Messages
             float y2 = BitConverter.ToSingle(readBuffer, num);
             num += 4;
             byte stackSize = readBuffer[num++];
+            byte Prefix = readBuffer[num++];
 
-            string String4 = Networking.StringCache.FindOrMake (new ArraySegment<byte> (readBuffer, num, length - num + start));
+            short itemId = BitConverter.ToInt16(readBuffer, num);
+
+            //string String4 = Networking.StringCache.FindOrMake (new ArraySegment<byte> (readBuffer, num, length - num + start));
 
             Item item = Main.item[(int)itemIndex];
-            
-            if (String4 == "0")
+
+            if (itemId == 0)
             {
                 if (itemIndex < 200)
                 {
@@ -45,12 +48,13 @@ namespace Terraria_Server.Messages
                 bool isNewItem = (itemIndex == 200);
                 if(isNewItem)
                 {
-                    Item newItem = Registries.Item.Create(String4);
+                    Item newItem = Item.netDefaults(itemId);
                     itemIndex = (short)Item.NewItem((int)num39, (int)num40, newItem.Width, newItem.Height, newItem.Type, (int)stackSize, true);
                 }
 
-                Main.item[(int)itemIndex] = Registries.Item.Create(String4);
+                Main.item[(int)itemIndex] = Item.netDefaults(itemId);
                 item = Main.item[(int)itemIndex];
+                item.Prefix = Prefix;
                 item.Stack = (int)stackSize;
                 item.Position.X = num39;
                 item.Position.Y = num40;

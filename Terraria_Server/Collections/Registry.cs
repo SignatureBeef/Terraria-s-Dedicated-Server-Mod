@@ -11,12 +11,28 @@ namespace Terraria_Server.Collections
 {
     public class Registry<T> where T : IRegisterableEntity
     {
-        protected Dictionary<int, List<T>> typeLookup = new Dictionary<int, List<T>>();
-        protected Dictionary<string, T> nameLookup = new Dictionary<string, T>();
+        protected Dictionary<Int32, List<T>> typeLookup = new Dictionary<Int32, List<T>>();
+        protected Dictionary<String, T> nameLookup = new Dictionary<String, T>();
 
         protected string DEFINITIONS = "Terraria_Server.Definitions.";
 
         private readonly T defaultValue;
+
+        public Dictionary<Int32, List<T>> TypesById
+        {
+            get
+            {
+                return typeLookup;
+            }
+        }
+
+        public Dictionary<String, T> TypesByName
+        {
+            get
+            {
+                return nameLookup;
+            }
+        }
 
         public Registry ()
         {

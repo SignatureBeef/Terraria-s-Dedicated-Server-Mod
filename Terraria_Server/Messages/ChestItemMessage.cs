@@ -24,9 +24,10 @@ namespace Terraria_Server.Messages
             {
                 Main.chest[chestIndex] = new Chest();
             }
-            
-            var item = Registries.Item.Create (netID, stackSize);
+			
+            var item = Item.netDefaults(netID);
             item.SetPrefix (prefix);
+            item.Stack = stackSize;
             Main.chest[chestIndex].contents[contentsIndex] = item;
         }
     }
