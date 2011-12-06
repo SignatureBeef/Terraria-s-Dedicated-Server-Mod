@@ -205,8 +205,27 @@ namespace Terraria_Server
 		
 		public byte Prefix;
 
-		//[ToDo] Keep refactoring and implement the ReuseDelay and w/e else I added.
-		public bool SetPrefix (int prefix)
+		/// <summary>
+		/// Item class contstructor
+		/// </summary>
+		public Item()
+		{
+			BodySlot = -1;
+			CreateTile = -1;
+			CreateWall = -1;
+			Damage = -1;
+			LegSlot = -1;
+			HeadSlot = -1;
+			MaxStack = 1;
+			Owner = 255;
+			Scale = 1f;
+			ToolTip = null;
+			UseTime = 100;
+			UseAnimation = 100;
+		}
+
+		//[ToDo] Implement the ReuseDelay and w/e else I added.
+		public bool SetPrefix(int prefix)
 		{
 			Prefix = (byte)prefix;
 
@@ -214,24 +233,24 @@ namespace Terraria_Server
 				return false;
 
 			int _pre = prefix;
-			float num2 = 1f;
-			float num3 = 1f;
-			float num4 = 1f;
-			float num5 = 1f;
-			float num6 = 1f;
-			float num7 = 1f;
-			int num8 = 0;
-			bool flag = true;
-			while (flag)
+			float _dmgMod = 1f;
+			float _kncMod = 1f;
+			float _useMod = 1f;
+			float _sclMod = 1f;
+			float _shtMod = 1f;
+			float _mnaMod = 1f;
+			int _ctlMod = 0;
+			bool valsNotSet = true;
+			while (valsNotSet)
 			{
-				num2 = 1f;
-				num3 = 1f;
-				num4 = 1f;
-				num5 = 1f;
-				num6 = 1f;
-				num7 = 1f;
-				num8 = 0;
-				flag = false;
+				_dmgMod = 1f;
+				_kncMod = 1f;
+				_useMod = 1f;
+				_sclMod = 1f;
+				_shtMod = 1f;
+				_mnaMod = 1f;
+				_ctlMod = 0;
+				valsNotSet = false;
 
 				if (_pre == -1 && Main.rand.Next(4) == 0)
 					_pre = 0;
@@ -241,11 +260,11 @@ namespace Terraria_Server
 
 				if (_pre == -1 || _pre == -2 || _pre == -3)
 				{
-					if (Type == 1 || Type == 4 || Type == 6 || Type == 7 || Type == 10 || Type == 24 || 
-						Type == 45 || Type == 46 || Type == 103 || Type == 104 || Type == 121 || Type == 122 || 
-						Type == 155 || Type == 190 || Type == 196 || Type == 198 || Type == 199 || Type == 200 || 
-						Type == 201 || Type == 202 || Type == 203 || Type == 204 || Type == 213 || Type == 217 || 
-						Type == 273 || Type == 367 || Type == 368 || Type == 426 || Type == 482 || Type == 483 || 
+					if (Type == 1 || Type == 4 || Type == 6 || Type == 7 || Type == 10 || Type == 24 ||
+						Type == 45 || Type == 46 || Type == 103 || Type == 104 || Type == 121 || Type == 122 ||
+						Type == 155 || Type == 190 || Type == 196 || Type == 198 || Type == 199 || Type == 200 ||
+						Type == 201 || Type == 202 || Type == 203 || Type == 204 || Type == 213 || Type == 217 ||
+						Type == 273 || Type == 367 || Type == 368 || Type == 426 || Type == 482 || Type == 483 ||
 						Type == 484)
 					{
 						int _randPre = Main.rand.Next(40);
@@ -279,8 +298,8 @@ namespace Terraria_Server
 					}
 					else
 					{
-						if (Type == 162 || Type == 163 || Type == 220 || Type == 274 || Type == 277 || Type == 280 || 
-							Type == 383 || Type == 384 || Type == 385 || Type == 386 || Type == 387 || Type == 388 || 
+						if (Type == 162 || Type == 163 || Type == 220 || Type == 274 || Type == 277 || Type == 280 ||
+							Type == 383 || Type == 384 || Type == 385 || Type == 386 || Type == 387 || Type == 388 ||
 							Type == 389 || Type == 390 || Type == 406 || Type == 537 || Type == 550 || Type == 579)
 						{
 							int _randPre = Main.rand.Next(14);
@@ -307,373 +326,122 @@ namespace Terraria_Server
 										_pre = 57;
 										break;
 								}
-							}							
+							}
 						}
 						else
 						{
-							if (Type == 39 || Type == 44 || Type == 95 || Type == 96 || Type == 98 || Type == 99 || Type == 120 || Type == 164 || Type == 197 || Type == 219 || Type == 266 || Type == 281 || Type == 434 || Type == 435 || Type == 436 || Type == 481 || Type == 506 || Type == 533 || Type == 534 || Type == 578)
+							if (Type == 39 || Type == 44 || Type == 95 || Type == 96 || Type == 98 || Type == 99 || 
+								Type == 120 || Type == 164 || Type == 197 || Type == 219 || Type == 266 || Type == 281 || 
+								Type == 434 || Type == 435 || Type == 436 || Type == 481 || Type == 506 || Type == 533 || 
+								Type == 534 || Type == 578)
 							{
-								int num11 = Main.rand.Next(36);
-								if (num11 == 0)
+								int _randPre = Main.rand.Next(36);
+
+								if (_randPre >= 0 && _randPre <= 9)
+									_pre = _randPre + 16;
+								else if (_randPre >= 11 && _randPre <= 13)
+									_pre = _randPre + 25;
+								else if (_randPre >= 14 && _randPre <= 16)
+									_pre = _randPre + 39;
+								else if (_randPre >= 17 && _randPre <= 18)
+									_pre = _randPre + 22;
+								else if (_randPre >= 22 && _randPre <= 31)
+									_pre = _randPre + 20;
+								else if (_randPre >= 32 && _randPre <= 34)
+									_pre = _randPre + 27;
+								else
 								{
-									_pre = 16;
-								}
-								if (num11 == 1)
-								{
-									_pre = 17;
-								}
-								if (num11 == 2)
-								{
-									_pre = 18;
-								}
-								if (num11 == 3)
-								{
-									_pre = 19;
-								}
-								if (num11 == 4)
-								{
-									_pre = 20;
-								}
-								if (num11 == 5)
-								{
-									_pre = 21;
-								}
-								if (num11 == 6)
-								{
-									_pre = 22;
-								}
-								if (num11 == 7)
-								{
-									_pre = 23;
-								}
-								if (num11 == 8)
-								{
-									_pre = 24;
-								}
-								if (num11 == 9)
-								{
-									_pre = 25;
-								}
-								if (num11 == 10)
-								{
-									_pre = 58;
-								}
-								if (num11 == 11)
-								{
-									_pre = 36;
-								}
-								if (num11 == 12)
-								{
-									_pre = 37;
-								}
-								if (num11 == 13)
-								{
-									_pre = 38;
-								}
-								if (num11 == 14)
-								{
-									_pre = 53;
-								}
-								if (num11 == 15)
-								{
-									_pre = 54;
-								}
-								if (num11 == 16)
-								{
-									_pre = 55;
-								}
-								if (num11 == 17)
-								{
-									_pre = 39;
-								}
-								if (num11 == 18)
-								{
-									_pre = 40;
-								}
-								if (num11 == 19)
-								{
-									_pre = 56;
-								}
-								if (num11 == 20)
-								{
-									_pre = 41;
-								}
-								if (num11 == 21)
-								{
-									_pre = 57;
-								}
-								if (num11 == 22)
-								{
-									_pre = 42;
-								}
-								if (num11 == 23)
-								{
-									_pre = 43;
-								}
-								if (num11 == 24)
-								{
-									_pre = 44;
-								}
-								if (num11 == 25)
-								{
-									_pre = 45;
-								}
-								if (num11 == 26)
-								{
-									_pre = 46;
-								}
-								if (num11 == 27)
-								{
-									_pre = 47;
-								}
-								if (num11 == 28)
-								{
-									_pre = 48;
-								}
-								if (num11 == 29)
-								{
-									_pre = 49;
-								}
-								if (num11 == 30)
-								{
-									_pre = 50;
-								}
-								if (num11 == 31)
-								{
-									_pre = 51;
-								}
-								if (num11 == 32)
-								{
-									_pre = 59;
-								}
-								if (num11 == 33)
-								{
-									_pre = 60;
-								}
-								if (num11 == 34)
-								{
-									_pre = 61;
-								}
-								if (num11 == 35)
-								{
-									_pre = 82;
+									switch (_randPre)
+									{
+										case 10:
+											_pre = 58;
+											break;
+										case 19:
+											_pre = 56;
+											break;
+										case 20:
+											_pre = 41;
+											break;
+										case 21:
+											_pre = 57;
+											break;
+										case 35:
+											_pre = 82;
+											break;
+									}
 								}
 							}
 							else
 							{
-								if (Type == 64 || Type == 65 || Type == 112 || Type == 113 || Type == 127 || Type == 157 || Type == 218 || Type == 272 || Type == 494 || Type == 495 || Type == 496 || Type == 514 || Type == 517 || Type == 518 || Type == 519)
+								if (Type == 64 || Type == 65 || Type == 112 || Type == 113 || Type == 127 || Type == 157 || 
+									Type == 218 || Type == 272 || Type == 494 || Type == 495 || Type == 496 || Type == 514 || 
+									Type == 517 || Type == 518 || Type == 519)
 								{
-									int num12 = Main.rand.Next(36);
-									if (num12 == 0)
+									int _randPre = Main.rand.Next(36);
+
+									if (_randPre >= 0 && _randPre <= 9)
+										_pre = _randPre + 26;
+									else if (_randPre >= 11 && _randPre <= 13)
+										_pre = _randPre + 25;
+									else if (_randPre >= 14 && _randPre <= 16)
+										_pre = _randPre + 39;
+									else if (_randPre >= 17 && _randPre <= 18)
+										_pre = _randPre + 22;
+									else if (_randPre >= 19 && _randPre <= 21)
+										_pre = _randPre + 21;
+									else if (_randPre >= 22 && _randPre <= 31)
+										_pre = _randPre + 20;
+									else if (_randPre >= 32 && _randPre <= 34)
+										_pre = _randPre + 27;
+									else
 									{
-										_pre = 26;
-									}
-									if (num12 == 1)
-									{
-										_pre = 27;
-									}
-									if (num12 == 2)
-									{
-										_pre = 28;
-									}
-									if (num12 == 3)
-									{
-										_pre = 29;
-									}
-									if (num12 == 4)
-									{
-										_pre = 30;
-									}
-									if (num12 == 5)
-									{
-										_pre = 31;
-									}
-									if (num12 == 6)
-									{
-										_pre = 32;
-									}
-									if (num12 == 7)
-									{
-										_pre = 33;
-									}
-									if (num12 == 8)
-									{
-										_pre = 34;
-									}
-									if (num12 == 9)
-									{
-										_pre = 35;
-									}
-									if (num12 == 10)
-									{
-										_pre = 52;
-									}
-									if (num12 == 11)
-									{
-										_pre = 36;
-									}
-									if (num12 == 12)
-									{
-										_pre = 37;
-									}
-									if (num12 == 13)
-									{
-										_pre = 38;
-									}
-									if (num12 == 14)
-									{
-										_pre = 53;
-									}
-									if (num12 == 15)
-									{
-										_pre = 54;
-									}
-									if (num12 == 16)
-									{
-										_pre = 55;
-									}
-									if (num12 == 17)
-									{
-										_pre = 39;
-									}
-									if (num12 == 18)
-									{
-										_pre = 40;
-									}
-									if (num12 == 19)
-									{
-										_pre = 56;
-									}
-									if (num12 == 20)
-									{
-										_pre = 41;
-									}
-									if (num12 == 21)
-									{
-										_pre = 57;
-									}
-									if (num12 == 22)
-									{
-										_pre = 42;
-									}
-									if (num12 == 23)
-									{
-										_pre = 43;
-									}
-									if (num12 == 24)
-									{
-										_pre = 44;
-									}
-									if (num12 == 25)
-									{
-										_pre = 45;
-									}
-									if (num12 == 26)
-									{
-										_pre = 46;
-									}
-									if (num12 == 27)
-									{
-										_pre = 47;
-									}
-									if (num12 == 28)
-									{
-										_pre = 48;
-									}
-									if (num12 == 29)
-									{
-										_pre = 49;
-									}
-									if (num12 == 30)
-									{
-										_pre = 50;
-									}
-									if (num12 == 31)
-									{
-										_pre = 51;
-									}
-									if (num12 == 32)
-									{
-										_pre = 59;
-									}
-									if (num12 == 33)
-									{
-										_pre = 60;
-									}
-									if (num12 == 34)
-									{
-										_pre = 61;
-									}
-									if (num12 == 35)
-									{
-										_pre = 83;
+										switch (_randPre)
+										{
+											case 10:
+												_pre = 52;
+												break;
+											case 35:
+												_pre = 83;
+												break;
+										}
 									}
 								}
 								else
 								{
 									if (Type == 55 || Type == 119 || Type == 191 || Type == 284)
 									{
-										int num13 = Main.rand.Next(14);
-										if (num13 == 0)
+										int _randPre = Main.rand.Next(14);
+
+										if (_randPre >= 0 && _randPre <= 2)
+											_pre = _randPre + 36;
+										else if (_randPre >= 3 && _randPre <= 5)
+											_pre = _randPre + 50;
+										else if (_randPre >= 6 && _randPre <= 7)
+											_pre = _randPre + 33;
+										else if (_randPre >= 11 && _randPre <= 13)
+											_pre = _randPre + 48;
+										else
 										{
-											_pre = 36;
-										}
-										if (num13 == 1)
-										{
-											_pre = 37;
-										}
-										if (num13 == 2)
-										{
-											_pre = 38;
-										}
-										if (num13 == 3)
-										{
-											_pre = 53;
-										}
-										if (num13 == 4)
-										{
-											_pre = 54;
-										}
-										if (num13 == 5)
-										{
-											_pre = 55;
-										}
-										if (num13 == 6)
-										{
-											_pre = 39;
-										}
-										if (num13 == 7)
-										{
-											_pre = 40;
-										}
-										if (num13 == 8)
-										{
-											_pre = 56;
-										}
-										if (num13 == 9)
-										{
-											_pre = 41;
-										}
-										if (num13 == 10)
-										{
-											_pre = 57;
-										}
-										if (num13 == 11)
-										{
-											_pre = 59;
-										}
-										if (num13 == 12)
-										{
-											_pre = 60;
-										}
-										if (num13 == 13)
-										{
-											_pre = 61;
-										}
+											switch (_randPre)
+											{
+												case 8:
+													_pre = 56;
+													break;
+												case 9:
+													_pre = 41;
+													break;
+												case 10:
+													_pre = 57;
+													break;
+											}
+										}										
 									}
 									else
 									{
-										if (!Accessory || Type == 267 || Type == 562 || Type == 563 || Type == 564 || Type == 565 || Type == 566 || Type == 567 || Type == 568 || Type == 569 || Type == 570 || Type == 571 || Type == 572 || Type == 573 || Type == 574 || Type == 576)
+										if (!Accessory || 
+											Type == 267 || Type == 562 || Type == 563 || Type == 564 || Type == 565 || Type == 566 || 
+											Type == 567 || Type == 568 || Type == 569 || Type == 570 || Type == 571 || Type == 572 || 
+											Type == 573 || Type == 574 || Type == 576)
 										{
 											return false;
 										}
@@ -688,638 +456,338 @@ namespace Terraria_Server
 				{
 					return true;
 				}
-				if (prefix == -1 && (_pre == 7 || _pre == 8 || _pre == 9 || _pre == 10 || _pre == 11 || _pre == 22 || _pre == 23 || _pre == 24 || _pre == 29 || _pre == 30 || _pre == 31 || _pre == 39 || _pre == 40 || _pre == 56 || _pre == 41 || _pre == 47 || _pre == 48 || _pre == 49) && Main.rand.Next(3) != 0)
+				if (prefix == -1 && 
+					(_pre == 7 || _pre == 8 || _pre == 9 || _pre == 10 || _pre == 11 || _pre == 22 || 
+					_pre == 23 || _pre == 24 || _pre == 29 || _pre == 30 || _pre == 31 || _pre == 39 || 
+					_pre == 40 || _pre == 56 || _pre == 41 || _pre == 47 || _pre == 48 || _pre == 49) 
+					&& Main.rand.Next(3) != 0)
 				{
 					_pre = 0;
 				}
-				if (_pre == 1)
+
+				switch (_pre)
 				{
-					num5 = 1.12f;
+					case 1:
+						_sclMod = 1.12f;
+						break;
+					case 2:
+						_sclMod = 1.18f;
+						break;
+					case 3:
+						_dmgMod = 1.05f;
+						_ctlMod = 2;
+						_sclMod = 1.05f;
+						break;
+					case 4:
+						_dmgMod = 1.1f;
+						_sclMod = 1.1f;
+						_kncMod = 1.1f;
+						break;
+					case 5:
+						_dmgMod = 1.15f;
+						break;
+					case 6:
+						_dmgMod = 1.1f;
+						break;
+					case 7:
+						_sclMod = 0.82f;
+						break;
+					case 8:
+						_kncMod = 0.85f;
+						_dmgMod = 0.85f;
+						_sclMod = 0.87f;
+						break;
+					case 9:
+						_sclMod = 0.9f;
+						break;
+					case 10:
+						_dmgMod = 0.85f;
+						break;
+					case 11:
+						_useMod = 1.1f;
+						_kncMod = 0.9f;
+						_sclMod = 0.9f;
+						break;
+					case 12:
+						_kncMod = 1.1f;
+						_dmgMod = 1.05f;
+						_sclMod = 1.1f;
+						_useMod = 1.15f;
+						break;
+					case 13:
+						_kncMod = 0.8f;
+						_dmgMod = 0.9f;
+						_sclMod = 1.1f;
+						break;
+					case 14:
+						_kncMod = 1.15f;
+						_useMod = 1.1f;
+						break;
+					case 15:
+						_kncMod = 0.9f;
+						_useMod = 0.85f;
+						break;
+					case 16:
+						_dmgMod = 1.1f;
+						_ctlMod = 3;
+						break;
+					case 17:
+						_useMod = 0.85f;
+						_shtMod = 1.1f;
+						break;
+					case 18:
+						_useMod = 0.9f;
+						_shtMod = 1.15f;
+						break;
+					case 19:
+						_kncMod = 1.15f;
+						_shtMod = 1.05f;
+						break;
+					case 20:
+						_kncMod = 1.05f;
+						_shtMod = 1.05f;
+						_dmgMod = 1.1f;
+						_useMod = 0.95f;
+						_ctlMod = 2;
+						break;
+					case 21:
+						_kncMod = 1.15f;
+						_dmgMod = 1.1f;
+						break;
+					case 22:
+						_kncMod = 0.9f;
+						_shtMod = 0.9f;
+						_dmgMod = 0.85f;
+						break;
+					case 23:
+						_useMod = 1.15f;
+						_shtMod = 0.9f;
+						break;
+					case 24:
+						_useMod = 1.1f;
+						_kncMod = 0.8f;
+						break;
+					case 25:
+						_useMod = 1.1f;
+						_dmgMod = 1.15f;
+						_ctlMod = 1;
+						break;
+					case 26:
+						_mnaMod = 0.85f;
+						_dmgMod = 1.1f;
+						break;
+					case 27:
+						_mnaMod = 0.85f;
+						break;
+					case 28:
+						_mnaMod = 0.85f;
+						_dmgMod = 1.15f;
+						_kncMod = 1.05f;
+						break;
+					case 29:
+						_mnaMod = 1.1f;
+						break;
+					case 30:
+						_mnaMod = 1.2f;
+						_dmgMod = 0.9f;
+						break;
+					case 31:
+						_kncMod = 0.9f;
+						_dmgMod = 0.9f;
+						break;
+					case 32:
+						_mnaMod = 1.15f;
+						_dmgMod = 1.1f;
+						break;
+					case 33:
+						_mnaMod = 1.1f;
+						_kncMod = 1.1f;
+						_useMod = 0.9f;
+						break;
+					case 34:
+						_mnaMod = 0.9f;
+						_kncMod = 1.1f;
+						_useMod = 1.1f;
+						_dmgMod = 1.1f;
+						break;
+					case 35:
+						_mnaMod = 1.2f;
+						_dmgMod = 1.15f;
+						_kncMod = 1.15f;
+						break;
+					case 36:
+						_ctlMod = 3;
+						break;
+					case 37:
+						_dmgMod = 1.1f;
+						_ctlMod = 3;
+						_kncMod = 1.1f;
+						break;
+					case 38:
+						_kncMod = 1.15f;
+						break;
+					case 39:
+						_dmgMod = 0.7f;
+						_kncMod = 0.8f;
+						break;
+					case 40:
+						_dmgMod = 0.85f;
+						break;
+					case 41:
+						_kncMod = 0.85f;
+						_dmgMod = 0.9f;
+						break;
+					case 42:
+						_useMod = 0.9f;
+						break;
+					case 43:
+						_dmgMod = 1.1f;
+						_useMod = 0.9f;
+						break;
+					case 44:
+						_useMod = 0.9f;
+						_ctlMod = 3;
+						break;
+					case 45:
+						_useMod = 0.95f;
+						break;
+					case 46:
+						_ctlMod = 3;
+						_useMod = 0.94f;
+						_dmgMod = 1.07f;
+						break;
+					case 47:
+						_useMod = 1.15f;
+						break;
+					case 48:
+						_useMod = 1.2f;
+						break;
+					case 49:
+						_useMod = 1.08f;
+						break;
+					case 50:
+						_dmgMod = 0.8f;
+						_useMod = 1.15f;
+						break;
+					case 51:
+						_kncMod = 0.9f;
+						_useMod = 0.9f;
+						_dmgMod = 1.05f;
+						_ctlMod = 2;
+						break;
+					case 52:
+						_mnaMod = 0.9f;
+						_dmgMod = 0.9f;
+						_useMod = 0.9f;
+						break;
+					case 53:
+						_dmgMod = 1.1f;
+						break;
+					case 54:
+						_kncMod = 1.15f;
+						break;
+					case 55:
+						_kncMod = 1.15f;
+						_dmgMod = 1.05f;
+						break;
+					case 56:
+						_kncMod = 0.8f;
+						break;
+					case 57:
+						_kncMod = 0.9f;
+						_dmgMod = 1.18f;
+						break;
+					case 58:
+						_useMod = 0.85f;
+						_dmgMod = 0.85f;
+						break;
+					case 59:
+						_kncMod = 1.15f;
+						_dmgMod = 1.15f;
+						_ctlMod = 5;
+						break;
+					case 60:
+						_dmgMod = 1.15f;
+						_ctlMod = 5;
+						break;
+					case 61:
+						_ctlMod = 5;
+						break;
+					case 81:
+						_kncMod = 1.15f;
+						_dmgMod = 1.15f;
+						_ctlMod = 5;
+						_useMod = 0.9f;
+						_sclMod = 1.1f;
+						break;
+					case 82:
+						_kncMod = 1.15f;
+						_dmgMod = 1.15f;
+						_ctlMod = 5;
+						_useMod = 0.9f;
+						_shtMod = 1.1f;
+						break;
+					case 83:
+						_kncMod = 1.15f;
+						_dmgMod = 1.15f;
+						_ctlMod = 5;
+						_useMod = 0.9f;
+						_mnaMod = 0.9f;
+						break;
 				}
-				else
-				{
-					if (_pre == 2)
-					{
-						num5 = 1.18f;
-					}
-					else
-					{
-						if (_pre == 3)
-						{
-							num2 = 1.05f;
-							num8 = 2;
-							num5 = 1.05f;
-						}
-						else
-						{
-							if (_pre == 4)
-							{
-								num2 = 1.1f;
-								num5 = 1.1f;
-								num3 = 1.1f;
-							}
-							else
-							{
-								if (_pre == 5)
-								{
-									num2 = 1.15f;
-								}
-								else
-								{
-									if (_pre == 6)
-									{
-										num2 = 1.1f;
-									}
-									else
-									{
-										if (_pre == 81)
-										{
-											num3 = 1.15f;
-											num2 = 1.15f;
-											num8 = 5;
-											num4 = 0.9f;
-											num5 = 1.1f;
-										}
-										else
-										{
-											if (_pre == 7)
-											{
-												num5 = 0.82f;
-											}
-											else
-											{
-												if (_pre == 8)
-												{
-													num3 = 0.85f;
-													num2 = 0.85f;
-													num5 = 0.87f;
-												}
-												else
-												{
-													if (_pre == 9)
-													{
-														num5 = 0.9f;
-													}
-													else
-													{
-														if (_pre == 10)
-														{
-															num2 = 0.85f;
-														}
-														else
-														{
-															if (_pre == 11)
-															{
-																num4 = 1.1f;
-																num3 = 0.9f;
-																num5 = 0.9f;
-															}
-															else
-															{
-																if (_pre == 12)
-																{
-																	num3 = 1.1f;
-																	num2 = 1.05f;
-																	num5 = 1.1f;
-																	num4 = 1.15f;
-																}
-																else
-																{
-																	if (_pre == 13)
-																	{
-																		num3 = 0.8f;
-																		num2 = 0.9f;
-																		num5 = 1.1f;
-																	}
-																	else
-																	{
-																		if (_pre == 14)
-																		{
-																			num3 = 1.15f;
-																			num4 = 1.1f;
-																		}
-																		else
-																		{
-																			if (_pre == 15)
-																			{
-																				num3 = 0.9f;
-																				num4 = 0.85f;
-																			}
-																			else
-																			{
-																				if (_pre == 16)
-																				{
-																					num2 = 1.1f;
-																					num8 = 3;
-																				}
-																				else
-																				{
-																					if (_pre == 17)
-																					{
-																						num4 = 0.85f;
-																						num6 = 1.1f;
-																					}
-																					else
-																					{
-																						if (_pre == 18)
-																						{
-																							num4 = 0.9f;
-																							num6 = 1.15f;
-																						}
-																						else
-																						{
-																							if (_pre == 19)
-																							{
-																								num3 = 1.15f;
-																								num6 = 1.05f;
-																							}
-																							else
-																							{
-																								if (_pre == 20)
-																								{
-																									num3 = 1.05f;
-																									num6 = 1.05f;
-																									num2 = 1.1f;
-																									num4 = 0.95f;
-																									num8 = 2;
-																								}
-																								else
-																								{
-																									if (_pre == 21)
-																									{
-																										num3 = 1.15f;
-																										num2 = 1.1f;
-																									}
-																									else
-																									{
-																										if (_pre == 82)
-																										{
-																											num3 = 1.15f;
-																											num2 = 1.15f;
-																											num8 = 5;
-																											num4 = 0.9f;
-																											num6 = 1.1f;
-																										}
-																										else
-																										{
-																											if (_pre == 22)
-																											{
-																												num3 = 0.9f;
-																												num6 = 0.9f;
-																												num2 = 0.85f;
-																											}
-																											else
-																											{
-																												if (_pre == 23)
-																												{
-																													num4 = 1.15f;
-																													num6 = 0.9f;
-																												}
-																												else
-																												{
-																													if (_pre == 24)
-																													{
-																														num4 = 1.1f;
-																														num3 = 0.8f;
-																													}
-																													else
-																													{
-																														if (_pre == 25)
-																														{
-																															num4 = 1.1f;
-																															num2 = 1.15f;
-																															num8 = 1;
-																														}
-																														else
-																														{
-																															if (_pre == 58)
-																															{
-																																num4 = 0.85f;
-																																num2 = 0.85f;
-																															}
-																															else
-																															{
-																																if (_pre == 26)
-																																{
-																																	num7 = 0.85f;
-																																	num2 = 1.1f;
-																																}
-																																else
-																																{
-																																	if (_pre == 27)
-																																	{
-																																		num7 = 0.85f;
-																																	}
-																																	else
-																																	{
-																																		if (_pre == 28)
-																																		{
-																																			num7 = 0.85f;
-																																			num2 = 1.15f;
-																																			num3 = 1.05f;
-																																		}
-																																		else
-																																		{
-																																			if (_pre == 83)
-																																			{
-																																				num3 = 1.15f;
-																																				num2 = 1.15f;
-																																				num8 = 5;
-																																				num4 = 0.9f;
-																																				num7 = 0.9f;
-																																			}
-																																			else
-																																			{
-																																				if (_pre == 29)
-																																				{
-																																					num7 = 1.1f;
-																																				}
-																																				else
-																																				{
-																																					if (_pre == 30)
-																																					{
-																																						num7 = 1.2f;
-																																						num2 = 0.9f;
-																																					}
-																																					else
-																																					{
-																																						if (_pre == 31)
-																																						{
-																																							num3 = 0.9f;
-																																							num2 = 0.9f;
-																																						}
-																																						else
-																																						{
-																																							if (_pre == 32)
-																																							{
-																																								num7 = 1.15f;
-																																								num2 = 1.1f;
-																																							}
-																																							else
-																																							{
-																																								if (_pre == 33)
-																																								{
-																																									num7 = 1.1f;
-																																									num3 = 1.1f;
-																																									num4 = 0.9f;
-																																								}
-																																								else
-																																								{
-																																									if (_pre == 34)
-																																									{
-																																										num7 = 0.9f;
-																																										num3 = 1.1f;
-																																										num4 = 1.1f;
-																																										num2 = 1.1f;
-																																									}
-																																									else
-																																									{
-																																										if (_pre == 35)
-																																										{
-																																											num7 = 1.2f;
-																																											num2 = 1.15f;
-																																											num3 = 1.15f;
-																																										}
-																																										else
-																																										{
-																																											if (_pre == 52)
-																																											{
-																																												num7 = 0.9f;
-																																												num2 = 0.9f;
-																																												num4 = 0.9f;
-																																											}
-																																											else
-																																											{
-																																												if (_pre == 36)
-																																												{
-																																													num8 = 3;
-																																												}
-																																												else
-																																												{
-																																													if (_pre == 37)
-																																													{
-																																														num2 = 1.1f;
-																																														num8 = 3;
-																																														num3 = 1.1f;
-																																													}
-																																													else
-																																													{
-																																														if (_pre == 38)
-																																														{
-																																															num3 = 1.15f;
-																																														}
-																																														else
-																																														{
-																																															if (_pre == 53)
-																																															{
-																																																num2 = 1.1f;
-																																															}
-																																															else
-																																															{
-																																																if (_pre == 54)
-																																																{
-																																																	num3 = 1.15f;
-																																																}
-																																																else
-																																																{
-																																																	if (_pre == 55)
-																																																	{
-																																																		num3 = 1.15f;
-																																																		num2 = 1.05f;
-																																																	}
-																																																	else
-																																																	{
-																																																		if (_pre == 59)
-																																																		{
-																																																			num3 = 1.15f;
-																																																			num2 = 1.15f;
-																																																			num8 = 5;
-																																																		}
-																																																		else
-																																																		{
-																																																			if (_pre == 60)
-																																																			{
-																																																				num2 = 1.15f;
-																																																				num8 = 5;
-																																																			}
-																																																			else
-																																																			{
-																																																				if (_pre == 61)
-																																																				{
-																																																					num8 = 5;
-																																																				}
-																																																				else
-																																																				{
-																																																					if (_pre == 39)
-																																																					{
-																																																						num2 = 0.7f;
-																																																						num3 = 0.8f;
-																																																					}
-																																																					else
-																																																					{
-																																																						if (_pre == 40)
-																																																						{
-																																																							num2 = 0.85f;
-																																																						}
-																																																						else
-																																																						{
-																																																							if (_pre == 56)
-																																																							{
-																																																								num3 = 0.8f;
-																																																							}
-																																																							else
-																																																							{
-																																																								if (_pre == 41)
-																																																								{
-																																																									num3 = 0.85f;
-																																																									num2 = 0.9f;
-																																																								}
-																																																								else
-																																																								{
-																																																									if (_pre == 57)
-																																																									{
-																																																										num3 = 0.9f;
-																																																										num2 = 1.18f;
-																																																									}
-																																																									else
-																																																									{
-																																																										if (_pre == 42)
-																																																										{
-																																																											num4 = 0.9f;
-																																																										}
-																																																										else
-																																																										{
-																																																											if (_pre == 43)
-																																																											{
-																																																												num2 = 1.1f;
-																																																												num4 = 0.9f;
-																																																											}
-																																																											else
-																																																											{
-																																																												if (_pre == 44)
-																																																												{
-																																																													num4 = 0.9f;
-																																																													num8 = 3;
-																																																												}
-																																																												else
-																																																												{
-																																																													if (_pre == 45)
-																																																													{
-																																																														num4 = 0.95f;
-																																																													}
-																																																													else
-																																																													{
-																																																														if (_pre == 46)
-																																																														{
-																																																															num8 = 3;
-																																																															num4 = 0.94f;
-																																																															num2 = 1.07f;
-																																																														}
-																																																														else
-																																																														{
-																																																															if (_pre == 47)
-																																																															{
-																																																																num4 = 1.15f;
-																																																															}
-																																																															else
-																																																															{
-																																																																if (_pre == 48)
-																																																																{
-																																																																	num4 = 1.2f;
-																																																																}
-																																																																else
-																																																																{
-																																																																	if (_pre == 49)
-																																																																	{
-																																																																		num4 = 1.08f;
-																																																																	}
-																																																																	else
-																																																																	{
-																																																																		if (_pre == 50)
-																																																																		{
-																																																																			num2 = 0.8f;
-																																																																			num4 = 1.15f;
-																																																																		}
-																																																																		else
-																																																																		{
-																																																																			if (_pre == 51)
-																																																																			{
-																																																																				num3 = 0.9f;
-																																																																				num4 = 0.9f;
-																																																																				num2 = 1.05f;
-																																																																				num8 = 2;
-																																																																			}
-																																																																		}
-																																																																	}
-																																																																}
-																																																															}
-																																																														}
-																																																													}
-																																																												}
-																																																											}
-																																																										}
-																																																									}
-																																																								}
-																																																							}
-																																																						}
-																																																					}
-																																																				}
-																																																			}
-																																																		}
-																																																	}
-																																																}
-																																															}
-																																														}
-																																													}
-																																												}
-																																											}
-																																										}
-																																									}
-																																								}
-																																							}
-																																						}
-																																					}
-																																				}
-																																			}
-																																		}
-																																	}
-																																}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				if (num2 != 1f && Math.Round((double)((float)this.damage * num2)) == (double)this.damage)
-				{
-					flag = true;
-					_pre = -1;
-				}
-				if (num4 != 1f && Math.Round((double)((float)UseAnimation * num4)) == (double)UseAnimation)
-				{
-					flag = true;
-					_pre = -1;
-				}
-				if (num7 != 1f && Math.Round((double)((float)Mana * num7)) == (double)Mana)
-				{
-					flag = true;
-					_pre = -1;
-				}
-				if (num3 != 1f && KnockBack == 0f)
-				{
-					flag = true;
-					_pre = -1;
-				}
-				if (prefix == -2 && _pre == 0)
+				
+				var dmg = _dmgMod != 1f && Math.Round((double)((float)damage * _dmgMod)) == (double)damage;
+				var ani = _useMod != 1f && Math.Round((double)((float)UseAnimation * _useMod)) == (double)UseAnimation;
+				var mna = _mnaMod != 1f && Math.Round((double)((float)Mana * _mnaMod)) == (double)Mana;
+				var knc = _kncMod != 1f && KnockBack == 0f;
+				var pfx = prefix == -2 && _pre == 0;
+
+				if (dmg || ani || mna || knc || pfx)
 				{
 					_pre = -1;
-					flag = true;
+					valsNotSet = true;
 				}
 			}
-			this.damage = (int)Math.Round((double)((float)this.damage * num2));
-			UseAnimation = (int)Math.Round((double)((float)UseAnimation * num4));
-			UseTime = (int)Math.Round((double)((float)UseTime * num4));
-			ReUseDelay = (int)Math.Round((double)((float)ReUseDelay * num4));
-			Mana = (int)Math.Round((double)((float)Mana * num7));
-			KnockBack *= num3;
-			this.scale *= num5;
-			ShootSpeed *= num6;
-			Critical += num8;
-			float num14 = 1f * num2 * (2f - num4) * (2f - num7) * num5 * num3 * num6 * (1f + (float)Critical * 0.02f);
+
+			damage = (int)Math.Round((double)((float)damage * _dmgMod));
+			UseAnimation = (int)Math.Round((double)((float)UseAnimation * _useMod));
+			UseTime = (int)Math.Round((double)((float)UseTime * _useMod));
+			ReUseDelay = (int)Math.Round((double)((float)ReUseDelay * _useMod));
+			Mana = (int)Math.Round((double)((float)Mana * _mnaMod));
+			KnockBack *= _kncMod;
+			scale *= _sclMod;
+			ShootSpeed *= _shtMod;
+			Critical += _ctlMod;
+
+			float _curMod = 1f * _dmgMod * (2f - _useMod) * (2f - _mnaMod) * _sclMod * _kncMod * _shtMod * (1f + (float)Critical * 0.02f);
 			if (_pre == 62 || _pre == 69 || _pre == 73 || _pre == 77)
-			{
-				num14 *= 1.05f;
-			}
+				_curMod *= 1.05f;
 			if (_pre == 63 || _pre == 70 || _pre == 74 || _pre == 78 || _pre == 67)
-			{
-				num14 *= 1.1f;
-			}
+				_curMod *= 1.1f;
 			if (_pre == 64 || _pre == 71 || _pre == 75 || _pre == 79 || _pre == 66)
-			{
-				num14 *= 1.15f;
-			}
+				_curMod *= 1.15f;
 			if (_pre == 65 || _pre == 72 || _pre == 76 || _pre == 80 || _pre == 68)
-			{
-				num14 *= 1.2f;
-			}
-			if ((double)num14 >= 1.2)
-			{
+				_curMod *= 1.2f;
+			
+
+			if ((double)_curMod >= 1.2)
 				Rare += 2;
-			}
-			else
-			{
-				if ((double)num14 >= 1.05)
-				{
-					Rare++;
-				}
-				else
-				{
-					if ((double)num14 <= 0.8)
-					{
-						Rare -= 2;
-					}
-					else
-					{
-						if ((double)num14 <= 0.95)
-						{
-							Rare--;
-						}
-					}
-				}
-			}
+			else if ((double)_curMod >= 1.05)
+				Rare++;
+			else if ((double)_curMod <= 0.8)
+				Rare -= 2;
+			else if ((double)_curMod <= 0.95)
+				Rare--;
+
 			if (Rare < -1)
-			{
 				Rare = -1;
-			}
 			if (Rare > 6)
-			{
 				Rare = 6;
-			}
-			num14 *= num14;
-			Value = (int)((float)Value * num14);
+
+			_curMod *= _curMod;
+			Value = (int)((float)Value * _curMod);
 			Prefix = (byte)_pre;
 			return true;
-		}
-
-		/// <summary>
-		/// Item class contstructor
-		/// </summary>
-		public Item()
-		{
-			BodySlot = -1;
-			CreateTile = -1;
-			CreateWall = -1;
-			Damage = -1;
-			LegSlot = -1;
-			HeadSlot = -1;
-			MaxStack = 1;
-			Owner = 255;
-			Scale = 1f;
-			ToolTip = null;
-			UseTime = 100;
-			UseAnimation = 100;
 		}
 
 		public string AffixName()
