@@ -65,6 +65,9 @@ namespace Terraria_Server
 		public static int helpText = 0;
         public static int evilTiles;
 
+        // [TODO] 1.1
+        public static float harpNote = 0f;
+
 		public static bool[] tileMergeDirt = new bool[Main.MAX_TILE_SETS];
 		public static bool[] tileCut = new bool[Main.MAX_TILE_SETS];
 		public static bool[] tileAlch = new bool[Main.MAX_TILE_SETS];
