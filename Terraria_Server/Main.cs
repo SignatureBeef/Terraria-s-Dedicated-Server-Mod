@@ -18,9 +18,10 @@ namespace Terraria_Server
         //public static bool npcChatRelease = false;
         //public static bool npcChatFocus1 = false;
         //public static bool npcChatFocus2 = false;
-        public const int MAX_TILE_SETS = 145;
-        public const int MAX_WALL_SETS = 29;
-        public const int MAX_BUFFS = 40;
+		public const Int32 MAX_TILE_SETS = 145;
+		public const Int32 MAX_WALL_SETS = 29;
+		public const Int32 MAX_BUFFS = 40;
+		public const Int32 MAX_NAMES = 142;
         
         public static Item trashItem { get; set; }
         public static bool[] debuff = new bool[MAX_BUFFS];
@@ -81,6 +82,8 @@ namespace Terraria_Server
 		public static bool[] tileNoAttach = new bool[Main.MAX_TILE_SETS];
 		public static bool[] tileNoFail = new bool[Main.MAX_TILE_SETS];
 		public static bool[] tileFrameImportant = new bool[Main.MAX_TILE_SETS];
+
+		public static string[] chrName = new string[MAX_NAMES];
 
 		[ThreadStatic]
 		static Random threadRand;
@@ -285,7 +288,9 @@ namespace Terraria_Server
             Main.teamColor[1] = new Color(230, 40, 20);
             Main.teamColor[2] = new Color(20, 200, 30);
             Main.teamColor[3] = new Color(75, 90, 255);
-            Main.teamColor[4] = new Color(200, 180, 0);
+			Main.teamColor[4] = new Color(200, 180, 0);
+
+			NPC.SetNames();
 
 			NetPlay.Init();
 		}
@@ -909,6 +914,8 @@ namespace Terraria_Server
 		public static object updatingNPCs = new object();
 		public static object updatingItems = new object();
 		public static object updatingProjectiles = new object();
+		public static int WallOfFlesh_B;
+		public static int WallOfFlesh_T;
 		
 		public static TimeSpan LastPlayerUpdateTime { get; private set; }
 		public static TimeSpan LastNPCUpdateTime { get; private set; }
@@ -960,8 +967,8 @@ namespace Terraria_Server
 					player.townNPCs = 0;
                 }
 
-                if (Main.Wof >= 0 && !Main.npcs[Main.Wof].Active)
-                    Main.Wof = -1;
+                if (Main.WallOfFlesh >= 0 && !Main.npcs[Main.WallOfFlesh].Active)
+                    Main.WallOfFlesh = -1;
 				
 				for (int i = 0; i < NPC.MAX_NPCS; i++)
 				{
@@ -1110,6 +1117,6 @@ namespace Terraria_Server
 			LastServerUpdateTime = s.Elapsed - start;
 		}
 
-        public static int Wof { get; set; }
+        public static int WallOfFlesh { get; set; }
     }
 }

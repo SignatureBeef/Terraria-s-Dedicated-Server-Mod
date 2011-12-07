@@ -319,6 +319,9 @@ namespace Terraria_Server
                     case (int)Packet.CLIENT_MOD_SPAWN_NPC:
                         msg.RpgNPCSpawned(number);
                         break;
+					case (int)Packet.NPC_NAME:
+						msg.NPCName(number, Main.chrName[number]);
+						break;
 						
 					default:
 						{

@@ -1266,7 +1266,7 @@ namespace Terraria_Server
                                     if (Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
                                     {
                                         NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
-                                        NPC.SpawnWOF(Position);
+                                        NPC.SpawnWallOfFlesh(Position);
                                     }
 								}
 							}
@@ -1433,7 +1433,7 @@ namespace Terraria_Server
 			return this.Name == compareItem.Name;
 		}
 
-		public float ReUseDelay { get; set; }
+		public int ReUseDelay;
 
 		public int Critical { get; set; }
 

@@ -92,6 +92,21 @@ namespace Terraria_Server.Messages
                 }
             }
             NetMessage.SendData(49, whoAmI);
+			
+			//[ToDo] Implement tGood, tEvil in WorldGen
+			//NetMessage.SendData(57, whoAmI);
+
+			//Send NPC Names...
+			NetMessage.SendData(56, whoAmI, -1, String.Empty, 17);
+			NetMessage.SendData(56, whoAmI, -1, String.Empty, 18);
+			NetMessage.SendData(56, whoAmI, -1, String.Empty, 19);
+			NetMessage.SendData(56, whoAmI, -1, String.Empty, 20);
+			NetMessage.SendData(56, whoAmI, -1, String.Empty, 22);
+			NetMessage.SendData(56, whoAmI, -1, String.Empty, 38);
+			NetMessage.SendData(56, whoAmI, -1, String.Empty, 54);
+			NetMessage.SendData(56, whoAmI, -1, String.Empty, 107);
+			NetMessage.SendData(56, whoAmI, -1, String.Empty, 108);
+			NetMessage.SendData(56, whoAmI, -1, String.Empty, 124);
         }
     }
 }

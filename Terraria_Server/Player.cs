@@ -3749,8 +3749,13 @@ namespace Terraria_Server
                 {
                     itemAnimation = 0;
                 }
-            }
-
+			}
+			if (this.itemAnimation == 0 && ReUseDelay > 0)
+			{
+				this.itemAnimation = ReUseDelay;
+				this.itemTime = ReUseDelay;
+				ReUseDelay = 0;
+			}			
             if (controlUseItem && itemAnimation == 0 && releaseUseItem && selectedItem.UseStyle > 0)
             {
                 bool flag = true;
@@ -3864,6 +3869,7 @@ namespace Terraria_Server
 					{
 						this.itemAnimation = selectedItem.UseAnimation;
 						this.itemAnimationMax = selectedItem.UseAnimation;
+						ReUseDelay = selectedItem.ReUseDelay;
 					}
                 }
 
@@ -5704,5 +5710,7 @@ namespace Terraria_Server
             if(NotifyOps)
                 Server.notifyOps("Giving " + this.Name + " some " + ItemId.ToString() + " {" + sender.Name + "}", true);
         }
-    }
+
+		public int ReUseDelay { get; set; }
+	}
 }
