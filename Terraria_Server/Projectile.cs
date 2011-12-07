@@ -2500,8 +2500,374 @@ namespace Terraria_Server
                                                                     }
                                                                     this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 2.355f;
                                                                 }
-
-                                                                // [TODO] 1.1 add aistyles 20 - 25
+                                                                if (this.aiStyle == 20)
+                                                                {
+                                                                    if (this.soundDelay <= 0)
+                                                                    {
+                                                                        this.soundDelay = 30;
+                                                                    }
+                                                                    if (Main.myPlayer == this.Owner)
+                                                                    {
+                                                                        if (!Main.players[this.Owner].channel)
+                                                                        {
+                                                                            this.Kill();
+                                                                        }
+                                                                    }
+                                                                    if (this.Velocity.X > 0f)
+                                                                    {
+                                                                        Main.players[this.Owner].direction = 1;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (this.Velocity.X < 0f)
+                                                                        {
+                                                                            Main.players[this.Owner].direction = -1;
+                                                                        }
+                                                                    }
+                                                                    Main.players[this.Owner].direction = this.direction;
+                                                                    Main.players[this.Owner].heldProj = this.whoAmI;
+                                                                    Main.players[this.Owner].itemTime = 2;
+                                                                    Main.players[this.Owner].itemAnimation = 2;
+                                                                    this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
+                                                                    this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
+                                                                    this.rotation = (float)(Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.5700000524520874);
+                                                                    if (Main.players[this.Owner].direction == 1)
+                                                                    {
+                                                                        Main.players[this.Owner].itemRotation = (float)Math.Atan2((double)(this.Velocity.Y * (float)this.direction), (double)(this.Velocity.X * (float)this.direction));
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        Main.players[this.Owner].itemRotation = (float)Math.Atan2((double)(this.Velocity.Y * (float)this.direction), (double)(this.Velocity.X * (float)this.direction));
+                                                                    }
+                                                                    this.Velocity.X = this.Velocity.X * (1f + (float)Main.rand.Next(-3, 4) * 0.01f);
+                                                                    if (Main.rand.Next(6) == 0)
+                                                                    {
+                                                                        return;
+                                                                    }
+                                                                }
+                                                                else if (this.aiStyle == 21)
+                                                                {
+                                                                    this.rotation = this.Velocity.X * 0.1f;
+                                                                    if (this.ai[1] == 1f)
+                                                                    {
+                                                                        this.ai[1] = 0f;
+                                                                        Main.harpNote = this.ai[0];
+                                                                        return;
+                                                                    }
+                                                                }
+                                                                else if (this.aiStyle == 22)
+                                                                {
+                                                                    if (this.Velocity.X == 0f && this.Velocity.Y == 0f)
+                                                                    {
+                                                                        this.alpha = 255;
+                                                                    }
+                                                                    if (this.ai[1] < 0f)
+                                                                    {
+                                                                        if (this.Velocity.X > 0f)
+                                                                        {
+                                                                            this.rotation += 0.3f;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            this.rotation -= 0.3f;
+                                                                        }
+                                                                        int num125 = (int)(this.Position.X / 16f) - 1;
+                                                                        int num126 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
+                                                                        int num127 = (int)(this.Position.Y / 16f) - 1;
+                                                                        int num128 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
+                                                                        if (num125 < 0)
+                                                                        {
+                                                                            num125 = 0;
+                                                                        }
+                                                                        if (num126 > Main.maxTilesX)
+                                                                        {
+                                                                            num126 = Main.maxTilesX;
+                                                                        }
+                                                                        if (num127 < 0)
+                                                                        {
+                                                                            num127 = 0;
+                                                                        }
+                                                                        if (num128 > Main.maxTilesY)
+                                                                        {
+                                                                            num128 = Main.maxTilesY;
+                                                                        }
+                                                                        int num129 = (int)this.Position.X + 4;
+                                                                        int num130 = (int)this.Position.Y + 4;
+                                                                        for (int num131 = num125; num131 < num126; num131++)
+                                                                        {
+                                                                            for (int num132 = num127; num132 < num128; num132++)
+                                                                            {
+                                                                                if (Main.tile.At(num131, num132).Exists && Main.tile.At(num131, num132).Active && Main.tile.At(num131, num132).Type != 127 && 
+                                                                                    Main.tileSolid[(int)Main.tile.At(num131, num132).Type] && !Main.tileSolidTop[(int)Main.tile.At(num131, num132).Type])
+                                                                                {
+                                                                                    Vector2 vector15;
+                                                                                    vector15.X = (float)(num131 * 16);
+                                                                                    vector15.Y = (float)(num132 * 16);
+                                                                                    if ((float)(num129 + 8) > vector15.X && (float)num129 < vector15.X + 16f &&
+                                                                                        (float)(num130 + 8) > vector15.Y && (float)num130 < vector15.Y + 16f)
+                                                                                    {
+                                                                                        this.Kill();
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        return;
+                                                                    }
+                                                                    if (this.ai[0] < 0f)
+                                                                    {
+                                                                        int num137 = (int)this.Position.X / 16;
+                                                                        int num138 = (int)this.Position.Y / 16;
+                                                                        if (!Main.tile.At(num137, num138).Exists || !Main.tile.At(num137, num138).Active)
+                                                                        {
+                                                                            this.Kill();
+                                                                        }
+                                                                        this.ai[0] -= 1f;
+                                                                        if (this.ai[0] <= -300f && (Main.myPlayer == this.Owner) && Main.tile.At(num137, num138).Active && Main.tile.At(num137, num138).Type == 127)
+                                                                        {
+                                                                            WorldModify.KillTile(num137, num138, false, false, false);
+                                                                            NetMessage.SendData(17, -1, -1, "", 0, (float)num137, (float)num138, 0f, 0);
+                                                                            this.Kill();
+                                                                            return;
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        int num139 = (int)(this.Position.X / 16f) - 1;
+                                                                        int num140 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
+                                                                        int num141 = (int)(this.Position.Y / 16f) - 1;
+                                                                        int num142 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
+                                                                        if (num139 < 0)
+                                                                        {
+                                                                            num139 = 0;
+                                                                        }
+                                                                        if (num140 > Main.maxTilesX)
+                                                                        {
+                                                                            num140 = Main.maxTilesX;
+                                                                        }
+                                                                        if (num141 < 0)
+                                                                        {
+                                                                            num141 = 0;
+                                                                        }
+                                                                        if (num142 > Main.maxTilesY)
+                                                                        {
+                                                                            num142 = Main.maxTilesY;
+                                                                        }
+                                                                        int num143 = (int)this.Position.X + 4;
+                                                                        int num144 = (int)this.Position.Y + 4;
+                                                                        for (int num145 = num139; num145 < num140; num145++)
+                                                                        {
+                                                                            for (int num146 = num141; num146 < num142; num146++)
+                                                                            {
+                                                                                if (Main.tile.At(num145, num146).Exists && Main.tile.At(num145, num146).Active && Main.tile.At(num145, num146).Type != 127 
+                                                                                    && Main.tileSolid[(int)Main.tile.At(num145, num146).Type] && !Main.tileSolidTop[(int)Main.tile.At(num145, num146).Type])
+                                                                                {
+                                                                                    Vector2 vector16;
+                                                                                    vector16.X = (float)(num145 * 16);
+                                                                                    vector16.Y = (float)(num146 * 16);
+                                                                                    if ((float)(num143 + 8) > vector16.X && (float)num143 < vector16.X + 16f && 
+                                                                                        (float)(num144 + 8) > vector16.Y && (float)num144 < vector16.Y + 16f)
+                                                                                    {
+                                                                                        this.Kill();
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        if (this.lavaWet)
+                                                                        {
+                                                                            this.Kill();
+                                                                        }
+                                                                        if (this.Active)
+                                                                        {
+                                                                            int num148 = (int)this.ai[0];
+                                                                            int num149 = (int)this.ai[1];
+                                                                            if (this.Velocity.X > 0f)
+                                                                            {
+                                                                                this.rotation += 0.3f;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                this.rotation -= 0.3f;
+                                                                            }
+                                                                            if (Main.myPlayer == this.Owner)
+                                                                            {
+                                                                                int num150 = (int)((this.Position.X + (float)(this.Width / 2)) / 16f);
+                                                                                int num151 = (int)((this.Position.Y + (float)(this.Height / 2)) / 16f);
+                                                                                bool flag2 = false;
+                                                                                if (num150 == num148 && num151 == num149)
+                                                                                {
+                                                                                    flag2 = true;
+                                                                                }
+                                                                                if (((this.Velocity.X <= 0f && num150 <= num148) || (this.Velocity.X >= 0f && num150 >= num148)) &&
+                                                                                    ((this.Velocity.Y <= 0f && num151 <= num149) || (this.Velocity.Y >= 0f && num151 >= num149)))
+                                                                                {
+                                                                                    flag2 = true;
+                                                                                }
+                                                                                if (flag2)
+                                                                                {
+                                                                                    if (WorldModify.PlaceTile(num148, num149, 127, false, false, this.Owner, 0))
+                                                                                    {
+                                                                                        NetMessage.SendData(17, -1, -1, "", 1, (float)((int)this.ai[0]), (float)((int)this.ai[1]), 127f, 0);
+                                                                                        this.damage = 0;
+                                                                                        this.ai[0] = -1f;
+                                                                                        this.Velocity *= 0f;
+                                                                                        this.alpha = 255;
+                                                                                        this.Position.X = (float)(num148 * 16);
+                                                                                        this.Position.Y = (float)(num149 * 16);
+                                                                                        this.netUpdate = true;
+                                                                                        return;
+                                                                                    }
+                                                                                    this.ai[1] = -1f;
+                                                                                    return;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                else if (this.aiStyle == 23)
+                                                                {
+                                                                    if (this.timeLeft > 60)
+                                                                    {
+                                                                        this.timeLeft = 60;
+                                                                    }
+                                                                    if (this.ai[0] > 7f)
+                                                                    {
+                                                                        this.ai[0] += 1f;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        this.ai[0] += 1f;
+                                                                    }
+                                                                    this.rotation += 0.3f * (float)this.direction;
+                                                                    return;
+                                                                }
+                                                                else if (this.aiStyle == 24)
+                                                                {
+                                                                    this.light = this.scale * 0.5f;
+                                                                    this.rotation += this.Velocity.X * 0.2f;
+                                                                    this.ai[1] += 1f;
+                                                                    if (this.type == ProjectileType.N94_CRYSTAL_STORM)
+                                                                    {
+                                                                        this.Velocity *= 0.985f;
+                                                                        if (this.ai[1] > 130f)
+                                                                        {
+                                                                            this.scale -= 0.05f;
+                                                                            if ((double)this.scale <= 0.2)
+                                                                            {
+                                                                                this.scale = 0.2f;
+                                                                                this.Kill();
+                                                                                return;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        this.Velocity *= 0.96f;
+                                                                        if (this.ai[1] > 15f)
+                                                                        {
+                                                                            this.scale -= 0.05f;
+                                                                            if ((double)this.scale <= 0.2)
+                                                                            {
+                                                                                this.scale = 0.2f;
+                                                                                this.Kill();
+                                                                                return;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                else if (this.aiStyle == 25)
+                                                                {
+                                                                    if (this.ai[0] != 0f && this.Velocity.Y <= 0f && this.Velocity.X == 0f)
+                                                                    {
+                                                                        float num157 = 0.5f;
+                                                                        int i2 = (int)((this.Position.X - 8f) / 16f);
+                                                                        int num158 = (int)(this.Position.Y / 16f);
+                                                                        bool flag3 = false;
+                                                                        bool flag4 = false;
+                                                                        if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
+                                                                        {
+                                                                            flag3 = true;
+                                                                        }
+                                                                        i2 = (int)((this.Position.X + (float)this.Width + 8f) / 16f);
+                                                                        if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
+                                                                        {
+                                                                            flag4 = true;
+                                                                        }
+                                                                        if (flag3)
+                                                                        {
+                                                                            this.Velocity.X = num157;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (flag4)
+                                                                            {
+                                                                                this.Velocity.X = -num157;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                i2 = (int)((this.Position.X - 8f - 16f) / 16f);
+                                                                                num158 = (int)(this.Position.Y / 16f);
+                                                                                flag3 = false;
+                                                                                flag4 = false;
+                                                                                if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
+                                                                                {
+                                                                                    flag3 = true;
+                                                                                }
+                                                                                i2 = (int)((this.Position.X + (float)this.Width + 8f + 16f) / 16f);
+                                                                                if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
+                                                                                {
+                                                                                    flag4 = true;
+                                                                                }
+                                                                                if (flag3)
+                                                                                {
+                                                                                    this.Velocity.X = num157;
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (flag4)
+                                                                                    {
+                                                                                        this.Velocity.X = -num157;
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        i2 = (int)((this.Position.X + 4f) / 16f);
+                                                                                        num158 = (int)((this.Position.Y + (float)this.Height + 8f) / 16f);
+                                                                                        if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
+                                                                                        {
+                                                                                            flag3 = true;
+                                                                                        }
+                                                                                        if (!flag3)
+                                                                                        {
+                                                                                            this.Velocity.X = num157;
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            this.Velocity.X = -num157;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    this.rotation += this.Velocity.X * 0.06f;
+                                                                    this.ai[0] = 1f;
+                                                                    if (this.Velocity.Y > 16f)
+                                                                    {
+                                                                        this.Velocity.Y = 16f;
+                                                                    }
+                                                                    if (this.Velocity.Y <= 6f)
+                                                                    {
+                                                                        if (this.Velocity.X > 0f && this.Velocity.X < 7f)
+                                                                        {
+                                                                            this.Velocity.X = this.Velocity.X + 0.05f;
+                                                                        }
+                                                                        if (this.Velocity.X < 0f && this.Velocity.X > -7f)
+                                                                        {
+                                                                            this.Velocity.X = this.Velocity.X - 0.05f;
+                                                                        }
+                                                                    }
+                                                                    this.Velocity.Y = this.Velocity.Y + 0.3f;
+                                                                }
+                                                                // [TODO] 1.1  double check aistyles 20 - 25
                                                             }
                                                         }
                                                     }
