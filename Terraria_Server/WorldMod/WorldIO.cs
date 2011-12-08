@@ -190,10 +190,11 @@ namespace Terraria_Server.WorldMod
             try
             {
 				WorldModify.saveLock = true;
-                while (WorldIO.hardLock)
-                {
-                    WorldModify.statusText = "Setting hard mode...";
-                }
+                //while (WorldIO.hardLock)
+                //{
+                //    WorldModify.statusText = "Setting hard mode...";
+                //    Thread.Sleep(100);
+                //}
 				lock (padlock)
 				{
 					bool value = Main.dayTime;
