@@ -16623,6 +16623,15 @@ namespace Terraria_Server
 			if (Main.chrName[19] == String.Empty)
 				Main.chrName[19] = _name;
 		}
+
+
+        // [TODO] 1.1
+        public static bool downedClown { get; set; }
+        public static bool downedGoblins { get; set; }
+        public static bool savedMech { get; set; }
+        public static bool savedWizard { get; set; }
+        public static bool savedGoblin { get; set; }
+
     }
 }
 

@@ -190,6 +190,11 @@ namespace Terraria_Server.WorldMod
             try
             {
 				WorldModify.saveLock = true;
+                //while (WorldIO.hardLock)
+                //{
+                //    WorldModify.statusText = "Setting hard mode...";
+                //    Thread.Sleep(100);
+                //}
 				lock (padlock)
 				{
 					bool value = Main.dayTime;
@@ -234,9 +239,16 @@ namespace Terraria_Server.WorldMod
 							binaryWriter.Write(NPC.downedBoss1);
 							binaryWriter.Write(NPC.downedBoss2);
 							binaryWriter.Write(NPC.downedBoss3);
+                            binaryWriter.Write(NPC.savedGoblin);
+                            binaryWriter.Write(NPC.savedWizard);
+                            binaryWriter.Write(NPC.savedMech);
+                            binaryWriter.Write(NPC.downedGoblins);
+                            binaryWriter.Write(NPC.downedClown);
 							binaryWriter.Write(WorldModify.shadowOrbSmashed);
 							binaryWriter.Write(WorldModify.spawnMeteor);
 							binaryWriter.Write((byte)WorldModify.shadowOrbCount);
+                            binaryWriter.Write(WorldModify.altarCount);
+                            binaryWriter.Write(Main.hardMode);
 							binaryWriter.Write(Main.invasionDelay);
 							binaryWriter.Write(Main.invasionSize);
 							binaryWriter.Write(Main.invasionType);
@@ -262,7 +274,7 @@ namespace Terraria_Server.WorldMod
 											}
 										}
 
-										binaryWriter.Write(tile.Lighted);
+										//binaryWriter.Write(tile.Lighted);
 										if (Main.tile.At(x, y).Wall > 0)
 										{
 											binaryWriter.Write(true);
@@ -283,6 +295,15 @@ namespace Terraria_Server.WorldMod
 										{
 											binaryWriter.Write(false);
 										}
+                                        binaryWriter.Write(tile.Wire);
+                                        int num2 = 1;
+                                        while (y + num2 < Main.maxTilesY && tile.Equals(Main.tile.At(x, y + num2)))
+                                        {
+                                            num2++;
+                                        }
+                                        num2--;
+                                        binaryWriter.Write((short)num2);
+                                        y += num2;
 									}
 								}
 							}
@@ -310,6 +331,7 @@ namespace Terraria_Server.WorldMod
 										if (chest.contents[l].Stack > 0)
 										{
 											binaryWriter.Write(chest.contents[l].Name);
+                                            binaryWriter.Write(chest.contents[l].Prefix);
 										}
 									}
 								}
@@ -333,7 +355,7 @@ namespace Terraria_Server.WorldMod
 							}
 
 							NPC npc;
-							for (int i = 0; i < 1000; i++)
+							for (int i = 0; i < NPC.MAX_NPCS; i++)
 							{
 								npc = Main.npcs[i];
 								if (npc.Active && npc.townNPC)
@@ -349,6 +371,16 @@ namespace Terraria_Server.WorldMod
 							}
 
 							binaryWriter.Write(false);
+                            binaryWriter.Write(Main.chrName[17]);
+                            binaryWriter.Write(Main.chrName[18]);
+                            binaryWriter.Write(Main.chrName[19]);
+                            binaryWriter.Write(Main.chrName[20]);
+                            binaryWriter.Write(Main.chrName[22]);
+                            binaryWriter.Write(Main.chrName[54]);
+                            binaryWriter.Write(Main.chrName[38]);
+                            binaryWriter.Write(Main.chrName[107]);
+                            binaryWriter.Write(Main.chrName[108]);
+                            binaryWriter.Write(Main.chrName[124]);
 							binaryWriter.Write(true);
 							binaryWriter.Write(Main.worldName);
 							binaryWriter.Write(Main.worldID);
@@ -457,9 +489,28 @@ namespace Terraria_Server.WorldMod
 							NPC.downedBoss1 = binaryReader.ReadBoolean();
 							NPC.downedBoss2 = binaryReader.ReadBoolean();
 							NPC.downedBoss3 = binaryReader.ReadBoolean();
+                            if (Terraria_Release >= 29)
+                            {
+                                NPC.savedGoblin = binaryReader.ReadBoolean();
+                                NPC.savedWizard = binaryReader.ReadBoolean();
+                                if (Terraria_Release >= 34)
+                                {
+                                    NPC.savedMech = binaryReader.ReadBoolean();
+                                }
+                                NPC.downedGoblins = binaryReader.ReadBoolean();
+                            }
+                            if (Terraria_Release >= 32)
+                            {
+                                NPC.downedClown = binaryReader.ReadBoolean();
+                            }
 							WorldModify.shadowOrbSmashed = binaryReader.ReadBoolean();
 							WorldModify.spawnMeteor = binaryReader.ReadBoolean();
 							WorldModify.shadowOrbCount = (int)binaryReader.ReadByte();
+                            if (Terraria_Release >= 23)
+                            {
+                                WorldModify.altarCount = binaryReader.ReadInt32();
+                                Main.hardMode = binaryReader.ReadBoolean();
+                            }
 							Main.invasionDelay = binaryReader.ReadInt32();
 							Main.invasionSize = binaryReader.ReadInt32();
 							Main.invasionType = binaryReader.ReadInt32();
@@ -488,7 +539,10 @@ namespace Terraria_Server.WorldMod
 												Main.tile.At(j, k).SetFrameY(-1);
 											}
 										}
-										Main.tile.At(j, k).SetLighted(binaryReader.ReadBoolean());
+                                        if (Terraria_Release <= 25)
+									    {
+										    Main.tile.At(j, k).SetLighted(binaryReader.ReadBoolean());          
+									    }
 										if (binaryReader.ReadBoolean())
 										{
 											Main.tile.At(j, k).SetWall(binaryReader.ReadByte());
@@ -500,6 +554,29 @@ namespace Terraria_Server.WorldMod
 											Main.tile.At(j, k).SetLiquid(binaryReader.ReadByte());
 											Main.tile.At(j, k).SetLava(binaryReader.ReadBoolean());
 										}
+                                        if (Terraria_Release >= 33)
+                                        {
+                                            Main.tile.At(j, k).SetWire( binaryReader.ReadBoolean());
+                                        }
+                                        if (Terraria_Release >= 25)
+                                        {
+                                            int num3 = (int)binaryReader.ReadInt16();
+                                            if (num3 > 0)
+                                            {
+                                                for (int l = k + 1; l < k + num3 + 1; l++)
+                                                {
+                                                    Main.tile.At(j, l).SetActive ( Main.tile.At(j, k).Active);
+                                                    Main.tile.At(j, l).SetType ( Main.tile.At(j, k).Type);
+                                                    Main.tile.At(j, l).SetWall ( Main.tile.At(j, k).Wall);
+                                                    Main.tile.At(j, l).SetFrameX ( Main.tile.At(j, k).FrameX);
+                                                    Main.tile.At(j, l).SetFrameY ( Main.tile.At(j, k).FrameY);
+                                                    Main.tile.At(j, l).SetLiquid ( Main.tile.At(j, k).Liquid);
+                                                    Main.tile.At(j, l).SetLava ( Main.tile.At(j, k).Lava);
+                                                    Main.tile.At(j, l).SetWire ( Main.tile.At(j, k).Wire);
+                                                }
+                                                k += num3;
+                                            }
+                                        }
 									}
 								}
 							}
@@ -519,6 +596,11 @@ namespace Terraria_Server.WorldMod
 										{
                                             string defaults = Item.VersionName(binaryReader.ReadString(), Terraria_Release);
 											Main.chest[l].contents[m] = Registries.Item.Create(defaults, stack);
+                                            Main.chest[m].contents[m].Stack = (int)stack;
+                                            if (Terraria_Release >= 36)
+                                            {
+                                                Main.chest[m].contents[m].SetPrefix((int)binaryReader.ReadByte());
+                                            }
 										}
 									}
 								}
@@ -553,6 +635,22 @@ namespace Terraria_Server.WorldMod
 								flag = binaryReader.ReadBoolean();
 								num5++;
 							}
+                            if (Terraria_Release >= 31)
+                            {
+                                Main.chrName[17] = binaryReader.ReadString();
+                                Main.chrName[18] = binaryReader.ReadString();
+                                Main.chrName[19] = binaryReader.ReadString();
+                                Main.chrName[20] = binaryReader.ReadString();
+                                Main.chrName[22] = binaryReader.ReadString();
+                                Main.chrName[54] = binaryReader.ReadString();
+                                Main.chrName[38] = binaryReader.ReadString();
+                                Main.chrName[107] = binaryReader.ReadString();
+                                Main.chrName[108] = binaryReader.ReadString();
+                                if (Terraria_Release >= 35)
+                                {
+                                    Main.chrName[124] = binaryReader.ReadString();
+                                }
+                            }
 							if (Terraria_Release >= 7)
 							{
 								bool flag2 = binaryReader.ReadBoolean();
@@ -578,33 +676,40 @@ namespace Terraria_Server.WorldMod
 							if (!WorldModify.loadFailed && WorldModify.loadSuccess)
 							{
 								WorldModify.gen = true;
+                                for (int num9 = 0; num9 < Main.maxTilesX; num9++)
+                                {
+                                    float num10 = (float)num9 / (float)Main.maxTilesX;
+                                    WorldModify.statusText = "Checking tile alignment: " + (int)(num10 * 100f + 1f) + "%";
+                                    WorldModify.CountTiles(num9);
+                                }
 								WorldModify.waterLine = Main.maxTilesY;
+                                NPC.SetNames();
 								Liquid.QuickWater(2, -1, -1);
 								WorldModify.WaterCheck();
-								int num7 = 0;
+								int num11 = 0;
 								Liquid.quickSettle = true;
-								int num8 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
-								float num9 = 0f;
+								int num12 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+								float num13 = 0f;
 
 								using (var prog = new ProgressLogger(100, "Settling liquids"))
-									while (Liquid.numLiquid > 0 && num7 < 100000)
+									while (Liquid.numLiquid > 0 && num11 < 100000)
 									{
-										num7++;
-										float num10 = (float)(num8 - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer)) / (float)num8;
-										if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > num8)
+										num11++;
+										float num14 = (float)(num12 - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer)) / (float)num12;
+										if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > num12)
 										{
-											num8 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+											num12 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
 										}
-										if (num10 > num9)
+										if (num14 > num13)
 										{
-											num9 = num10;
+											num13 = num14;
 										}
 										else
 										{
-											num10 = num9;
+											num14 = num13;
 										}
 
-										prog.Value = (int)(num10 * 50f + 50f);
+										prog.Value = (int)(num14 * 50f + 50f);
 
 										Liquid.UpdateLiquid();
 									}
@@ -654,5 +759,8 @@ namespace Terraria_Server.WorldMod
 			
 			HookPoints.WorldLoaded.Invoke (ref ctx, ref args);
 		}
-	}
+
+
+        public static bool hardLock { get; set; }
+    }
 }
