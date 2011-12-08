@@ -10562,5 +10562,57 @@ namespace Terraria_Server.WorldMod
                 }
             }
         }
+
+        // [TODO] 1.1 - here down
+        public static int altarCount { get; set; }
+
+        public static int totalEvil = 0;
+        public static int totalGood = 0;
+        public static int totalSolid = 0;
+        public static int totalEvil2 = 0;
+        public static int totalGood2 = 0;
+        public static int totalSolid2 = 0;
+        public static byte tEvil = 0;
+        public static byte tGood = 0;
+
+        public static void CountTiles(int X)
+        {
+            if (X == 0)
+            {
+                totalEvil = totalEvil2;
+                totalSolid = totalSolid2;
+                totalGood = totalGood2;
+                float num = (float)totalGood / (float)totalSolid;
+                num = (float)Math.Round((double)(num * 100f));
+                float num2 = (float)totalEvil / (float)totalSolid;
+                num2 = (float)Math.Round((double)(num2 * 100f));
+                tGood = (byte)num;
+                tEvil = (byte)num2;
+                NetMessage.SendData(57, -1, -1, "", 0, 0f, 0f, 0f, 0);
+            }
+            for (int i = 0; i < Main.maxTilesY; i++)
+            {
+                int num3 = 1;
+                if ((double)i <= Main.worldSurface)
+                {
+                    num3 *= 5;
+                }
+                if (WorldModify.SolidTile(X, i))
+                {
+                    if (Main.tile.At(X, i).Type == 109 || Main.tile.At(X, i).Type == 116 || Main.tile.At(X, i).Type == 117)
+                    {
+                        totalGood2 += num3;
+                    }
+                    else
+                    {
+                        if (Main.tile.At(X, i).Type == 23 || Main.tile.At(X, i).Type == 25 || Main.tile.At(X, i).Type == 112)
+                        {
+                            totalEvil2 += num3;
+                        }
+                    }
+                    totalSolid2 += num3;
+                }
+            }
+        }
     }
 }
