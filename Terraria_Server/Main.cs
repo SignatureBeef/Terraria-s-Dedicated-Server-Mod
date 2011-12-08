@@ -1121,5 +1121,8 @@ namespace Terraria_Server
 		}
 
         public static int WallOfFlesh { get; set; }
+
+        // [TODO] 1.1
+        public static bool hardMode { get; set; }
     }
 }

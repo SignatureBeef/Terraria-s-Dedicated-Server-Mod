@@ -334,7 +334,36 @@ namespace Terraria_Server
 					if (Main.rand.Next(2) == 0)
 						npc.AddBuff(20, 600, false);
 					break;
-					
+
+                case ProjectileType.N63_THE_DAO_OF_POW:
+                    if (Main.rand.Next(2) == 0)
+                        npc.AddBuff(31, 120, false);
+                    break;
+
+                case ProjectileType.N85_FLAMES:
+                    if (Main.rand.Next(2) == 0)
+                        npc.AddBuff(24, 1200, false);
+                    break;
+
+                case ProjectileType.N95_CURSED_FLAME:
+                    if (Main.rand.Next(2) == 0)
+                        npc.AddBuff(39, 420, false);
+                    break;
+
+                case ProjectileType.N103_CURSED_ARROW:
+                    if (Main.rand.Next(2) == 0)
+                        npc.AddBuff(39, 420, false);
+                    break;
+
+                case ProjectileType.N104_CURSED_BULLET:
+                    if (Main.rand.Next(2) == 0)
+                        npc.AddBuff(39, 420, false);
+                    break;
+
+                case ProjectileType.N98_POISON_DART:
+                    if (Main.rand.Next(2) == 0)
+                        npc.AddBuff(20, 600, false);
+                    break;
 			}
 		}
 		
@@ -376,7 +405,22 @@ namespace Terraria_Server
 					if (Main.rand.Next(2) == 0)
 						player.AddBuff(20, 600, false);
 					break;
-					
+                case ProjectileType.N63_THE_DAO_OF_POW:
+                    if (Main.rand.Next(3) != 0)
+                        player.AddBuff(31, 120, true);
+                    break;
+                case ProjectileType.N85_FLAMES:
+                    player.AddBuff(24, 1200, false);
+                    break;
+                case (ProjectileType.N95_CURSED_FLAME):
+                    player.AddBuff(39, 420, true);
+                    break;
+                case (ProjectileType.N103_CURSED_ARROW):
+                    player.AddBuff(39, 420, true);
+                    break;
+                case (ProjectileType.N104_CURSED_BULLET):
+                    player.AddBuff(39, 420, true);
+                    break;
 			}
 		}
 		
@@ -393,7 +437,21 @@ namespace Terraria_Server
 					if (Main.rand.Next(3) == 0)
 						player.AddBuff(22, 900, true);
 					break;
-					
+				case ProjectileType.N82_FLAMING_ARROW:
+                    if (Main.rand.Next(3) == 0)
+                        player.AddBuff(24, 420, true);
+                    break;
+                case ProjectileType.N96_CURSED_FLAME:
+                    if (Main.rand.Next(3) == 0)
+                        player.AddBuff(39, 480, true);
+                    break;
+                case ProjectileType.N101_EYE_FIRE:
+                    if (Main.rand.Next(3) == 0)
+                        player.AddBuff(39, 480, true);
+                    break;
+                case ProjectileType.N98_POISON_DART:
+                    player.AddBuff(20, 600, true);
+                    break;
 			}
 		}
 
@@ -402,17 +460,30 @@ namespace Terraria_Server
         /// </summary>
         public void Damage()
         {
+            if (this.type == ProjectileType.N18_ORB_OF_LIGHT || this.type == ProjectileType.N72_BLUE_FAIRY ||
+                this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
+            {
+                return;
+            }
             int playerIndex = Main.myPlayer;
             Player player = Main.players[playerIndex];
 
             Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            if (this.type == ProjectileType.N85_FLAMES|| this.type == ProjectileType.N101_EYE_FIRE)
+            {
+                int num = 30;
+                rectangle.X -= num;
+                rectangle.Y -= num;
+                rectangle.Width += num * 2;
+                rectangle.Height += num * 2;
+            }
             if (this.friendly && this.type != ProjectileType.N18_ORB_OF_LIGHT)
             {
                 var creat = Creator as Player;
                 if (this.Owner == playerIndex)// || (Owner == 255 && creat != null && creat.whoAmi == playerIndex))
                 {
                     if (creat != null) player = creat;
-                    if ((this.aiStyle == 16 || this.type == ProjectileType.N41_HELLFIRE_ARROW) && this.timeLeft <= 1)
+                    if ((this.aiStyle == 16 || this.type == ProjectileType.N41_HELLFIRE_ARROW) && (this.timeLeft <= 1 || this.type == ProjectileType.N108_EXPLOSIVES))
                     {
                         if (player.Active && !player.dead && !player.immune && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].Width, Main.players[this.Owner].Height, player.Position, player.Width, player.Height)))
                         {
@@ -434,38 +505,42 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    int num = (int)(this.Position.X / 16f);
-                    int num2 = (int)((this.Position.X + (float)this.Width) / 16f) + 1;
-                    int num3 = (int)(this.Position.Y / 16f);
-                    int num4 = (int)((this.Position.Y + (float)this.Height) / 16f) + 1;
-                    if (num < 0)
+                    if (this.type != ProjectileType.N69_HOLY_WATER && this.type != ProjectileType.N70_UNHOLY_WATER &&
+                        this.type != ProjectileType.N10_PURIFICATION_POWDER && this.type != ProjectileType.N11_VILE_POWDER)
                     {
-                        num = 0;
-                    }
-                    if (num2 > Main.maxTilesX)
-                    {
-                        num2 = Main.maxTilesX;
-                    }
-                    if (num3 < 0)
-                    {
-                        num3 = 0;
-                    }
-                    if (num4 > Main.maxTilesY)
-                    {
-                        num4 = Main.maxTilesY;
-                    }
-                    for (int i = num; i < num2; i++)
-                    {
-                        for (int j = num3; j < num4; j++)
+                        int num = (int)(this.Position.X / 16f);
+                        int num2 = (int)((this.Position.X + (float)this.Width) / 16f) + 1;
+                        int num3 = (int)(this.Position.Y / 16f);
+                        int num4 = (int)((this.Position.Y + (float)this.Height) / 16f) + 1;
+                        if (num < 0)
                         {
-                            if (Main.tile.At(i, j + 1).Exists && Main.tileCut[(int)Main.tile.At(i, j).Type] && Main.tile.At(i, j + 1).Type != 78)
+                            num = 0;
+                        }
+                        if (num2 > Main.maxTilesX)
+                        {
+                            num2 = Main.maxTilesX;
+                        }
+                        if (num3 < 0)
+                        {
+                            num3 = 0;
+                        }
+                        if (num4 > Main.maxTilesY)
+                        {
+                            num4 = Main.maxTilesY;
+                        }
+                        for (int i = num; i < num2; i++)
+                        {
+                            for (int j = num3; j < num4; j++)
                             {
-								var plr = Creator as Player;
-								if (plr == null || WorldModify.InvokeAlterationHook (this, plr, i, j, 0))
-								{
-									WorldModify.KillTile(i, j, false, false, false);
-									NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
-								}
+                                if (Main.tile.At(i, j + 1).Exists && Main.tileCut[(int)Main.tile.At(i, j).Type] && Main.tile.At(i, j + 1).Type != 78)
+                                {
+                                    var plr = Creator as Player;
+                                    if (plr == null || WorldModify.InvokeAlterationHook(this, plr, i, j, 0))
+                                    {
+                                        WorldModify.KillTile(i, j, false, false, false);
+                                        NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
+                                    }
+                                }
                             }
                         }
                     }
@@ -2898,6 +2973,9 @@ namespace Terraria_Server
                 case ProjectileType.N14_BULLET:
                 case ProjectileType.N20_GREEN_LASER:
                 case ProjectileType.N36_METEOR_SHOT:
+                case ProjectileType.N83_EYE_LASER:
+                case ProjectileType.N84_PINK_LASER:
+                case ProjectileType.N100_DEATH_LASER:
                     {
                         Collision.HitTiles(this.Position, this.Velocity, this.Width, this.Height);
                     }
@@ -2906,6 +2984,8 @@ namespace Terraria_Server
                 case ProjectileType.N28_BOMB:
                 case ProjectileType.N30_GRENADE:
                 case ProjectileType.N37_STICKY_BOMB:
+                case ProjectileType.N75_HAPPY_BOMB:
+                case ProjectileType.N102_BOMB:
                     {
                         this.Position.X = this.Position.X + (float)(this.Width / 2);
                         this.Position.Y = this.Position.Y + (float)(this.Height / 2);
@@ -2924,7 +3004,11 @@ namespace Terraria_Server
                         this.Height = 200;
                         this.Position.X = this.Position.X - (float)(this.Width / 2);
                         this.Position.Y = this.Position.Y - (float)(this.Height / 2);
-                        
+                    }
+                    break;
+
+                case ProjectileType.N108_EXPLOSIVES:
+                        {
                         this.Position.X = this.Position.X + (float)(this.Width / 2);
                         this.Position.Y = this.Position.Y + (float)(this.Height / 2);
                         this.Width = 10;
@@ -2949,7 +3033,76 @@ namespace Terraria_Server
                         }
                     }
                     break;
-                    
+                
+                case ProjectileType.N80_ICE_BLOCK:
+                    {
+                        int num16 = (int)this.Position.X / 16;
+                        int num17 = (int)this.Position.Y / 16;
+                        if (!Main.tile.At(num16, num17).Exists)
+                        {
+                            Main.tile.CreateTileAt(num16, num17);
+                        }
+                        if (Main.tile.At(num16, num17).Type == 127 && Main.tile.At(num16, num17).Active)
+                        {
+                            WorldModify.KillTile(num16, num17, false, false, false);
+                        }
+                    }
+                    break;
+
+                case ProjectileType.N89_CRYSTAL_BULLET:
+                    {
+                        if (this.Owner == Main.myPlayer)
+                        {
+                            for (int num12 = 0; num12 < 3; num12++)
+                            {
+                                float num13 = -this.Velocity.X * (float)Main.rand.Next(40, 70) * 0.01f + (float)Main.rand.Next(-20, 21) * 0.4f;
+                                float num14 = -this.Velocity.Y * (float)Main.rand.Next(40, 70) * 0.01f + (float)Main.rand.Next(-20, 21) * 0.4f;
+                                Projectile.NewProjectile(this.Position.X + num13, this.Position.Y + num14, num13, num14, 90, (int)((double)this.damage * 0.6), 0f, this.Owner);
+                            }
+                        }
+                    }
+                    break;
+
+                case ProjectileType.N91_HOLY_ARROW:
+                    {
+                        float x = this.Position.X + (float)Main.rand.Next(-400, 400);
+                        float y = this.Position.Y - (float)Main.rand.Next(600, 900);
+                        Vector2 vector = new Vector2(x, y);
+                        float num4 = this.Position.X + (float)(this.Width / 2) - vector.X;
+                        float num5 = this.Position.Y + (float)(this.Height / 2) - vector.Y;
+                        int num6 = 22;
+                        float num7 = (float)Math.Sqrt((double)(num4 * num4 + num5 * num5));
+                        num7 = (float)num6 / num7;
+                        num4 *= num7;
+                        num5 *= num7;
+                        int num8 = (int)((float)this.damage * 0.5f);
+                        int num9 = Projectile.NewProjectile(x, y, num4, num5, 92, num8, this.knockBack, this.Owner);
+                        Main.projectile[num9].ai[1] = this.Position.Y;
+                        Main.projectile[num9].ai[0] = 1f;
+                    }
+                    break;
+
+                case ProjectileType.N92_HALLOW_STAR:
+                    {
+                        float x_2 = this.Position.X + (float)Main.rand.Next(-400, 400);
+                        float y_2 = this.Position.Y - (float)Main.rand.Next(600, 900);
+                        Vector2 vector_2 = new Vector2(x_2, y_2);
+                        float num4_2 = this.Position.X + (float)(this.Width / 2) - vector_2.X;
+                        float num5_2 = this.Position.Y + (float)(this.Height / 2) - vector_2.Y;
+                        int num6_2 = 22;
+                        float num7_2 = (float)Math.Sqrt((double)(num4_2 * num4_2 + num5_2 * num5_2));
+                        num7_2 = (float)num6_2 / num7_2;
+                        num4_2 *= num7_2;
+                        num5_2 *= num7_2;
+                        int num9_2 = Projectile.NewProjectile(x_2, y_2, num4_2, num5_2, 92, this.damage, this.knockBack, this.Owner);
+                        Main.projectile[num9_2].ai[1] = this.Position.Y;
+                    }
+                    break;
+
+                case ProjectileType.N99_BOULDER:
+                    this.Velocity *= 1.9f;
+                    break;
+
                 default:
                     break;
             }
@@ -2958,7 +3111,9 @@ namespace Terraria_Server
                 bool explode = false;
                 if (this.type == ProjectileType.N28_BOMB || 
                     this.type == ProjectileType.N29_DYNAMITE || 
-                    this.type == ProjectileType.N37_STICKY_BOMB)
+                    this.type == ProjectileType.N37_STICKY_BOMB ||
+                    this.type == ProjectileType.N75_HAPPY_BOMB ||
+                    this.type == ProjectileType.N108_EXPLOSIVES)
                 {
 					var ctx = new HookContext
 					{
@@ -2984,6 +3139,10 @@ namespace Terraria_Server
                     if (this.type == ProjectileType.N29_DYNAMITE)
                     {
                         num38 = 7;
+                    }
+                    if (this.type == ProjectileType.N108_EXPLOSIVES)
+                    {
+                        num38 = 10;
                     }
                     int num39 = (int)(this.Position.X / 16f - (float)num38);
                     int num40 = (int)(this.Position.X / 16f + (float)num38);
@@ -3020,61 +3179,52 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    for (int num48 = num39; num48 <= num40; num48++)
+                    for (int num89 = num39; num89 <= num40; num89++)
                     {
-                        for (int num49 = num41; num49 <= num42; num49++)
+                        for (int num90 = num41; num90 <= num42; num90++)
                         {
-                            float num50 = Math.Abs((float)num48 - this.Position.X / 16f);
-                            float num51 = Math.Abs((float)num49 - this.Position.Y / 16f);
+                            float num50 = Math.Abs((float)num89 - this.Position.X / 16f);
+                            float num51 = Math.Abs((float)num90 - this.Position.Y / 16f);
                             double num52 = Math.Sqrt((double)(num50 * num50 + num51 * num51));
                             int alter = -1;
                             if (num52 < (double)num38)
                             {
                                 bool flag2 = true;
-                                if (Main.tile.At(num48, num49).Active)
+                                if (Main.tile.At(num89, num90).Exists && Main.tile.At(num89, num90).Active)
                                 {
-                                    flag2 = false;
-                                    if (this.type == ProjectileType.N28_BOMB || this.type == ProjectileType.N37_STICKY_BOMB)
-                                    {
-                                        if (!Main.tileSolid[(int)Main.tile.At(num48, num49).Type] || Main.tileSolidTop[(int)Main.tile.At(num48, num49).Type] || Main.tile.At(num48, num49).Type == 0 || Main.tile.At(num48, num49).Type == 1 || Main.tile.At(num48, num49).Type == 2 || Main.tile.At(num48, num49).Type == 23 || Main.tile.At(num48, num49).Type == 30 || Main.tile.At(num48, num49).Type == 40 || Main.tile.At(num48, num49).Type == 6 || Main.tile.At(num48, num49).Type == 7 || Main.tile.At(num48, num49).Type == 8 || Main.tile.At(num48, num49).Type == 9 || Main.tile.At(num48, num49).Type == 10 || Main.tile.At(num48, num49).Type == 53 || Main.tile.At(num48, num49).Type == 54 || Main.tile.At(num48, num49).Type == 57 || Main.tile.At(num48, num49).Type == 59 || Main.tile.At(num48, num49).Type == 60 || Main.tile.At(num48, num49).Type == 63 || Main.tile.At(num48, num49).Type == 64 || Main.tile.At(num48, num49).Type == 65 || Main.tile.At(num48, num49).Type == 66 || Main.tile.At(num48, num49).Type == 67 || Main.tile.At(num48, num49).Type == 68 || Main.tile.At(num48, num49).Type == 70 || Main.tile.At(num48, num49).Type == 37)
-                                        {
-                                            flag2 = true;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (this.type == ProjectileType.N29_DYNAMITE)
-                                        {
-                                            flag2 = true;
-                                        }
-                                    }
-                                    if (Main.tileDungeon[(int)Main.tile.At(num48, num49).Type] || Main.tile.At(num48, num49).Type == 26 || Main.tile.At(num48, num49).Type == 58 || Main.tile.At(num48, num49).Type == 21)
+                                    if (Main.tileDungeon[(int)Main.tile.At(num89, num90).Type] || Main.tile.At(num89, num90).Type == 21 || 
+                                    Main.tile.At(num89, num90).Type == 26 || Main.tile.At(num89, num90).Type == 107 ||
+                                    Main.tile.At(num89, num90).Type == 108 || Main.tile.At(num89, num90).Type == 111) 
                                     {
                                         flag2 = false;
                                     }
+                                    if (!Main.hardMode && Main.tile.At(num89, num90).Type == 58)
+                                    {
+                                        flag2 = false;
+                                    }                                 
                                     if (flag2)
                                     {
                                         alter = 0;
                                     }
                                 }
-                                if (flag2 && Main.tile.At(num48, num49).Exists && Main.tile.At(num48, num49).Wall > 0 && flag)
+                                if (flag2 && Main.tile.At(num89, num90).Exists && Main.tile.At(num89, num90).Wall > 0 && flag)
                                 {
                                     alter = alter == 0 ? 100 : 2;
                                 }
 								if (alter >= 0)
 								{
 									var plr = Creator as Player;
-									if (plr == null || WorldModify.InvokeAlterationHook (this, plr, num48, num49, (byte)alter))
+									if (plr == null || WorldModify.InvokeAlterationHook (this, plr, num89, num90, (byte)alter))
 									{
 										if (alter == 0 || alter == 100)
 										{
-											WorldModify.KillTile(num48, num49, false, false, false);
-											NetMessage.SendData(17, -1, -1, "", 0, (float)num48, (float)num49, 0f, 0);
+											WorldModify.KillTile(num89, num90, false, false, false);
+											NetMessage.SendData(17, -1, -1, "", 0, (float)num89, (float)num90, 0f, 0);
 										}
 										if (alter == 2 || alter == 100)
 										{
-											WorldModify.KillWall(num48, num49, false);
-											NetMessage.SendData(17, -1, -1, "", 2, (float)num48, (float)num49, 0f, 0);
+											WorldModify.KillWall(num89, num90, false);
+											NetMessage.SendData(17, -1, -1, "", 2, (float)num89, (float)num90, 0f, 0);
 										}
 									}
 								}
@@ -3085,109 +3235,270 @@ namespace Terraria_Server
                 
                 NetMessage.SendData(29, -1, -1, "", this.identity, (float)this.Owner);
 
-                int num53 = -1;
+                int num96 = -1;
                 if (this.aiStyle == 10)
                 {
                     int num54 = (int)(this.Position.X + (float)(this.Width / 2)) / 16;
                     int num55 = (int)(this.Position.Y + (float)(this.Width / 2)) / 16;
-                    int num56 = 0;
-                    int num57 = 2;
+                    int num99 = 0;
+                    int num100 = 2;
                     if (this.type == ProjectileType.N31_SAND_BALL)
                     {
-                        num56 = 53;
-                        num57 = 0;
+                        num99 = 53;
+                        num100 = 0;
                     }
-                    if (this.type == ProjectileType.N42_SAND_BALL)
+                    else if (this.type == ProjectileType.N42_SAND_BALL)
                     {
-                        num56 = 53;
-                        num57 = 0;
+                        num99 = 53;
+                        num100 = 0;
                     }
-                    else
+                    else if (this.type == ProjectileType.N39_MUD_BALL)
                     {
-                        if (this.type == ProjectileType.N39_MUD_BALL)
-                        {
-                            num56 = 59;
-                            num57 = 176;
-                        }
-                        else
-                        {
-                            if (this.type == ProjectileType.N40_ASH_BALL)
-                            {
-                                num56 = 57;
-                                num57 = 172;
-                            }
-                        }
+                        num99 = 59;
+                        num100 = 176;
+                    }
+                    else if (this.type == ProjectileType.N40_ASH_BALL)
+                    {
+                        num99 = 57;
+                        num100 = 172;
+                    }
+                    else if (this.type == ProjectileType.N56_EBONSAND_BALL)
+                    {
+                        num99 = 112;
+                        num100 = 0;
+                    }
+                    else if (this.type == ProjectileType.N65_EBONSAND_BALL)
+                    {
+                        num99 = 112;
+                        num100 = 0;
+                    }
+                    else if (this.type == ProjectileType.N67_PEARL_SAND_BALL)
+                    {
+                        num99 = 116;
+                        num100 = 0;
+                    }
+                    else if (this.type == ProjectileType.N68_PEARL_SAND_BALL)
+                    {
+                        num99 = 116;
+                        num100 = 0;
+                    }
+                    else if (this.type == ProjectileType.N71_GRAVEL_BALL)
+                    {
+                        num99 = 123;
+                        num100 = 0;
                     }
                     if (!Main.tile.At(num54, num55).Active)
                     {
-                        WorldModify.PlaceTile(num54, num55, num56, false, true, -1, 0);
-                        if (Main.tile.At(num54, num55).Active && (int)Main.tile.At(num54, num55).Type == num56)
+                        WorldModify.PlaceTile(num54, num55, num99, false, true, -1, 0);
+                        if (Main.tile.At(num54, num55).Active && (int)Main.tile.At(num54, num55).Type == num99)
                         {
-                            NetMessage.SendData(17, -1, -1, "", 1, (float)num54, (float)num55, (float)num56);
+                            NetMessage.SendData(17, -1, -1, "", 1, (float)num54, (float)num55, (float)num99);
                         }
                         else
                         {
-                            if (num57 > 0)
+                            if (num100 > 0)
                             {
-                                num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, num57, 1, false);
+                                num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, num100, 1, false);
                             }
                         }
                     }
                     else
                     {
-                        if (num57 > 0)
+                        if (num100 > 0)
                         {
-                            num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, num57, 1, false);
+                            num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, num100, 1, false);
                         }
                     }
                 }
                 if (this.type == ProjectileType.N1_WOODEN_ARROW && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 40, 1, false);
+                    num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 40, 1, false);
+                }
+                if (this.type == ProjectileType.N103_CURSED_ARROW && Main.rand.Next(6) == 0)
+                {
+                    if (Main.rand.Next(3) == 0)
+                    {
+                        num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 545, 1, false);
+                    }
+                    else
+                    {
+                        num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 40, 1, false);
+                    }
                 }
                 if (this.type == ProjectileType.N2_FIRE_ARROW && Main.rand.Next(2) == 0)
                 {
                     if (Main.rand.Next(3) == 0)
                     {
-                        num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 41, 1, false);
+                        num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 41, 1, false);
                     }
                     else
                     {
-                        num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 40, 1, false);
+                        num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 40, 1, false);
                     }
+                }
+                if (this.type == ProjectileType.N91_HOLY_ARROW && Main.rand.Next(6) == 0)
+                {
+                    num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 516, 1, false);
                 }
                 if (this.type == ProjectileType.N50_GLOWSTICK && Main.rand.Next(3) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 282, 1, false);
+                    num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 282, 1, false);
                 }
                 if (this.type == ProjectileType.N53_STICKY_GLOWSTICK && Main.rand.Next(3) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 286, 1, false);
+                    num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 286, 1, false);
                 }
                 if (this.type == ProjectileType.N48_THROWING_KNIFE && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 279, 1, false);
+                    num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 279, 1, false);
                 }
                 if (this.type == ProjectileType.N54_POISONED_KNIFE && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 287, 1, false);
+                    num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 287, 1, false);
                 }
                 if (this.type == ProjectileType.N3_SHURIKEN && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 42, 1, false);
+                    num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 42, 1, false);
                 }
                 if (this.type == ProjectileType.N4_UNHOLY_ARROW && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 47, 1, false);
+                    num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 47, 1, false);
                 }
                 if (this.type == ProjectileType.N12_FALLING_STAR && this.damage > 100)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 75, 1, false);
+                    num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 75, 1, false);
                 }
                 if (this.type == ProjectileType.N21_BONE && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 154, 1, false);
+                    num96 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 154, 1, false);
                 }
+
+                if (this.type == ProjectileType.N69_HOLY_WATER || this.type == ProjectileType.N70_UNHOLY_WATER)
+                {
+                    int num101 = (int)(this.Position.X + (float)(this.Width / 2)) / 16;
+                    int num102 = (int)(this.Position.Y + (float)(this.Height / 2)) / 16;
+                    for (int num103 = num101 - 4; num103 <= num101 + 4; num103++)
+                    {
+                        for (int num104 = num102 - 4; num104 <= num102 + 4; num104++)
+                        {
+                            if (Math.Abs(num103 - num101) + Math.Abs(num104 - num102) < 6)
+                            {
+                                if (this.type == ProjectileType.N69_HOLY_WATER)
+                                {
+                                    switch (Main.tile.At(num103, num104).Type)
+                                    {
+                                        case 2:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(109);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+                                        case 1:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(117);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+                                        case 53:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(116);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+                                        case 23:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(109);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+                                        case 25:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(117);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+                                        case 112:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(116);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+
+                                        default:
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    switch (Main.tile.At(num103, num104).Type)
+                                    {
+                                        case 2:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(23);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+
+                                        case 1:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(25);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+
+                                        case 53:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(112);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+
+                                        case 109:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(23);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+
+                                        case 117:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(25);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+
+                                        case 116:
+                                            {
+                                                Main.tile.At(num103, num104).SetType(112);
+                                                WorldModify.SquareTileFrame(num103, num104, true);
+                                                NetMessage.SendTileSquare(-1, num103, num104, 1);
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+               //if (num96 >= 0)
+               // {
+               //     NetMessage.SendData(21, -1, -1, "", num96, 0f, 0f, 0f, 0);
+               // }
             }
             this.Active = false;
             Reset (whoAmI);
