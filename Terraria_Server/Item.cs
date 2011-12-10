@@ -1328,7 +1328,7 @@ namespace Terraria_Server
 		/// <param name="stack">How big of a stack to create. Default 1</param>
 		/// <param name="noBroadcast">Whether to broadcast item creation or not. Default false</param>
 		/// <returns>New item index value</returns>
-		public static int NewItem(int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false)
+		public static int NewItem(int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false, int pfix = 0)
 		{
 			if (WorldModify.gen)
                 return 0;
@@ -1362,6 +1362,7 @@ namespace Terraria_Server
 			}
 
 			Main.item[itemIndex] = Registries.Item.Create(type, stack);
+			Main.item[itemIndex].Prefix = pfix;
 			Main.item[itemIndex].Position.X = (float)(X + Width / 2 - Main.item[itemIndex].Width / 2);
 			Main.item[itemIndex].Position.Y = (float)(Y + Height / 2 - Main.item[itemIndex].Height / 2);
 			Main.item[itemIndex].Wet = Collision.WetCollision(Main.item[itemIndex].Position, Main.item[itemIndex].Width, Main.item[itemIndex].Height);

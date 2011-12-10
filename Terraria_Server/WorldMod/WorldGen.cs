@@ -2636,7 +2636,7 @@ namespace Terraria_Server.WorldMod
                 num269++;
             }
 
-            AddTrees();
+            WorldModify.AddTrees();
         }
 
         public static void PlantHerbs()
@@ -7096,20 +7096,7 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
-
-		public static void AddTrees()
-		{
-			for (int i = 1; i < Main.maxTilesX - 1; i++)
-			{
-				int num = 20;
-				while ((double)num < Main.worldSurface)
-				{
-					WorldModify.GrowTree(i, num);
-					num++;
-				}
-			}
-		}
-
+		
 		public static bool GrowEpicTree(int x, int y)
 		{
 			int freeTilesAbove = y;

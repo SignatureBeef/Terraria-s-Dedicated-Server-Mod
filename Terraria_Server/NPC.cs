@@ -13223,7 +13223,6 @@ namespace Terraria_Server
 						}
 						npc.rotation += npc.ai[2];
 						npc.ai[1] += 1f;
-						Color newColor;
 						if (npc.ai[1] == 100f)
 						{
 							npc.ai[0] += 1f;
@@ -13235,11 +13234,8 @@ namespace Terraria_Server
 						Vector2 arg_1529F_0 = npc.Position;
 						int arg_1529F_1 = npc.Width;
 						int arg_1529F_2 = npc.Height;
-						int arg_1529F_3 = 5;
 						float arg_1529F_4 = (float)Main.rand.Next(-30, 31) * 0.2f;
 						float arg_1529F_5 = (float)Main.rand.Next(-30, 31) * 0.2f;
-						int arg_1529F_6 = 0;
-						newColor = default(Color);
 
 						npc.Velocity.X = npc.Velocity.X * 0.98f;
 						npc.Velocity.Y = npc.Velocity.Y * 0.98f;
@@ -13684,7 +13680,6 @@ namespace Terraria_Server
 						}
 						npc.rotation += npc.ai[2];
 						npc.ai[1] += 1f;
-						Color newColor;
 						if (npc.ai[1] == 100f)
 						{
 							npc.ai[0] += 1f;
@@ -16622,6 +16617,30 @@ namespace Terraria_Server
 
 			if (Main.chrName[19] == String.Empty)
 				Main.chrName[19] = _name;
+		}
+
+		public static bool MechSpawn(float x, float y, int type)
+		{
+			int found = 0;
+			int num2 = 0;
+			int num3 = 0;
+			for (int i = 0; i < 200; i++)
+			{
+				if (Main.npcs[i].Active && Main.npcs[i].Type == type)
+				{
+					found++;
+					Vector2 vector = new Vector2(x, y);
+					float _x = Main.npcs[i].Position.X - vector.X;
+					float _y = Main.npcs[i].Position.Y - vector.Y;
+					float _srt = (float)Math.Sqrt((double)(_x * _x + _y * _y));
+					if (_srt < 200f)
+						num2++;
+
+					if (_srt < 600f)
+						num3++;
+				}
+			}
+			return num2 < 3 && num3 < 6 && found < 10;
 		}
     }
 }
