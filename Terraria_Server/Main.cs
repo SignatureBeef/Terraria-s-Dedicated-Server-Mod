@@ -145,6 +145,9 @@ namespace Terraria_Server
 		public static int maxItemUpdates = 10;
 		public static bool autoPass = false;
 		
+		public static int zoneX = 99;
+		public static int zoneY = 87;
+		
         public static void Initialize()
 		{
             //if (Main.webProtect)

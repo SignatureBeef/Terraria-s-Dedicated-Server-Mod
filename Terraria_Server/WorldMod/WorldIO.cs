@@ -12,7 +12,7 @@ using Terraria_Server.Networking;
 
 namespace Terraria_Server.WorldMod
 {
-	public class WorldIO
+	public static class WorldIO
 	{
 		private static object padlock = new object();
 		public static bool worldCleared = false;
@@ -333,7 +333,7 @@ namespace Terraria_Server.WorldMod
 							}
 
 							NPC npc;
-							for (int i = 0; i < 1000; i++)
+							for (int i = 0; i < Main.npcs.Length; i++)
 							{
 								npc = Main.npcs[i];
 								if (npc.Active && npc.townNPC)

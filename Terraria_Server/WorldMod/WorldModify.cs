@@ -11,6 +11,20 @@ using Terraria_Server.Networking;
 
 namespace Terraria_Server.WorldMod
 {
+	public enum NPCMove_Result
+	{
+		NOT_VALID,
+		REQUIRED_LIGHT,
+		REQUIRED_DOOR,
+		REQUIRED_CHAIR,
+		REQUIRED_TABLE,
+		REQUIRED_MULTIPLE, //Use the variables roomTorch etc
+		NOT_SUITABLE,
+		OCCUPIED,
+		CORRUPTED,
+		SUITABLE
+	}
+
 	public static class WorldModify
 	{
 		private const int RECTANGLE_OFFSET = 25;
@@ -85,6 +99,83 @@ namespace Terraria_Server.WorldMod
 		public static int hiScore = 0;
 		public static int ficount;
 
+		//NPC Moving Checks
+		public static bool roomChair { get; set; }
+		public static bool roomDoor { get; set; }
+		public static bool roomTable { get; set; }
+		public static bool roomTorch { get; set; }
+
+		//Client code i think, But might still work if a Plugin uses it.
+		public static NPCMove_Result MoveNPC(int x, int y, int n)
+		{
+			if (!StartRoomCheck(x, y))
+				return NPCMove_Result.NOT_VALID;
+
+			if (!RoomNeeds(spawnNPC))
+			{
+				var moveResult = NPCMove_Result.REQUIRED_MULTIPLE;
+				var amount = 0;
+
+				if (!roomTorch)
+				{
+					amount++;
+					moveResult = NPCMove_Result.REQUIRED_LIGHT;
+				}
+				if (!roomDoor)
+				{
+					amount++;
+					moveResult = NPCMove_Result.REQUIRED_DOOR;
+				}
+				if (!roomTable)
+				{
+					amount++;
+					moveResult = NPCMove_Result.REQUIRED_TABLE;
+				}
+				if (!roomChair)
+				{
+					amount++;
+					moveResult = NPCMove_Result.REQUIRED_CHAIR;
+				}
+				if (amount > 1)
+					return NPCMove_Result.REQUIRED_MULTIPLE;
+
+				return moveResult;
+			}
+
+			ScoreRoom(-1);
+
+			if (hiScore <= 0)
+			{
+				if (roomOccupied)
+					return NPCMove_Result.OCCUPIED;
+				else if (roomEvil)
+					return NPCMove_Result.CORRUPTED;
+				else
+					return NPCMove_Result.NOT_SUITABLE;
+			}
+
+			return NPCMove_Result.SUITABLE;
+		}
+
+		public static void MoveRoom(int x, int y, int NPCIndex)
+		{
+			spawnNPC = Main.npcs[NPCIndex].Type;
+			Main.npcs[NPCIndex].homeless = true;
+			SpawnNPC(x, y);
+		}
+
+		public static bool RoomNeeds(int npcType)
+		{
+			roomChair = houseTile[15] || houseTile[79] || houseTile[89] || houseTile[102];
+			roomDoor = houseTile[10] || houseTile[11] || houseTile[19];
+			roomTable = houseTile[14] || houseTile[18] || houseTile[87] || houseTile[88] || houseTile[90] || houseTile[101];
+			roomTorch = houseTile[4] || houseTile[33] || houseTile[34] || houseTile[35] || houseTile[36] || houseTile[42] || houseTile[49] || houseTile[93] || houseTile[95] || houseTile[98] || houseTile[100];
+
+			canSpawn = roomChair && roomTable && roomDoor && roomTorch;
+
+			return canSpawn;
+		}
+
         public static bool SolidTile(int x, int y)
         {
             var Tile = Main.tile.At(x, y);
@@ -128,28 +219,24 @@ namespace Terraria_Server.WorldMod
 		public static void SpawnNPC(int x, int y)
 		{
 			if (Main.wallHouse[(int)Main.tile.At(x, y).Wall])
-			{
-				WorldModify.canSpawn = true;
-			}
-			if (!WorldModify.canSpawn)
-			{
+				canSpawn = true;
+
+			if (!canSpawn)
 				return;
-			}
-			if (!WorldModify.StartRoomCheck(x, y))
-			{
+
+			if (!StartRoomCheck(x, y))
 				return;
-			}
-			if (!WorldModify.RoomNeeds(WorldModify.spawnNPC))
-			{
+
+			if (!RoomNeeds(spawnNPC))
 				return;
-			}
-			WorldModify.ScoreRoom(-1);
-			if (WorldModify.hiScore > 0)
+
+			ScoreRoom(-1);
+			if (hiScore > 0)
 			{
 				int npcIndex = -1;
-				for (int i = 0; i < 1000; i++)
+				for (int i = 0; i < Main.npcs.Length; i++)
 				{
-					if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].Type == WorldModify.spawnNPC)
+					if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].Type == spawnNPC)
 					{
                         npcIndex = i;
 						break;
@@ -157,8 +244,8 @@ namespace Terraria_Server.WorldMod
 				}
                 if (npcIndex == -1)
 				{
-					int posX = WorldModify.bestX;
-					int posY = WorldModify.bestY;
+					int posX = bestX;
+					int posY = bestY;
 					bool flag = true;
                     Rectangle value = new Rectangle(posX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, posY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                     for (int j = 0; j < 255; j++)
@@ -183,16 +270,16 @@ namespace Terraria_Server.WorldMod
 							{
 								if (l == 0)
 								{
-                                    posX = WorldModify.bestX + k;
+                                    posX = bestX + k;
 								}
 								else
 								{
-                                    posX = WorldModify.bestX - k;
+                                    posX = bestX - k;
 								}
                                 if (posX > 10 && posX < Main.maxTilesX - 10)
 								{
-									int num4 = WorldModify.bestY - k;
-									double num5 = (double)(WorldModify.bestY + k);
+									int num4 = bestY - k;
+									double num5 = (double)(bestY + k);
 									if (num4 < 10)
 									{
 										num4 = 10;
@@ -244,16 +331,16 @@ namespace Terraria_Server.WorldMod
 							}
 						}
 					}
-                    int townNPCIndex = NPC.NewNPC(posX * 16, posY * 16, WorldModify.spawnNPC, 1);
-					Main.npcs[townNPCIndex].homeTileX = WorldModify.bestX;
-					Main.npcs[townNPCIndex].homeTileY = WorldModify.bestY;
-                    if (posX < WorldModify.bestX)
+                    int townNPCIndex = NPC.NewNPC(posX * 16, posY * 16, spawnNPC, 1);
+					Main.npcs[townNPCIndex].homeTileX = bestX;
+					Main.npcs[townNPCIndex].homeTileY = bestY;
+                    if (posX < bestX)
 					{
 						Main.npcs[townNPCIndex].direction = 1;
 					}
 					else
 					{
-                        if (posX > WorldModify.bestX)
+                        if (posX > bestX)
 						{
 							Main.npcs[townNPCIndex].direction = -1;
 						}
@@ -264,32 +351,13 @@ namespace Terraria_Server.WorldMod
 				}
 				else
 				{
-					WorldModify.spawnNPC = 0;
-					Main.npcs[npcIndex].homeTileX = WorldModify.bestX;
-                    Main.npcs[npcIndex].homeTileY = WorldModify.bestY;
+					spawnNPC = 0;
+					Main.npcs[npcIndex].homeTileX = bestX;
+                    Main.npcs[npcIndex].homeTileY = bestY;
                     Main.npcs[npcIndex].homeless = false;
 				}
-				WorldModify.spawnNPC = 0;
+				spawnNPC = 0;
 			}
-		}
-		
-		public static bool RoomNeeds(int npcType)
-		{
-            if ((WorldModify.houseTile[15] || WorldModify.houseTile[79] || WorldModify.houseTile[89] || WorldModify.houseTile[102]) &&
-                (WorldModify.houseTile[14] || WorldModify.houseTile[18] || WorldModify.houseTile[87] || WorldModify.houseTile[88] ||
-                    WorldModify.houseTile[90] || WorldModify.houseTile[101]) &&
-                (WorldModify.houseTile[4] || WorldModify.houseTile[33] || WorldModify.houseTile[34] || WorldModify.houseTile[35] ||
-                    WorldModify.houseTile[36] || WorldModify.houseTile[42] || WorldModify.houseTile[49] || WorldModify.houseTile[93] ||
-                        WorldModify.houseTile[95] || WorldModify.houseTile[98] || WorldModify.houseTile[100]) &&
-                (WorldModify.houseTile[10] || WorldModify.houseTile[11] || WorldModify.houseTile[19]))
-            {
-				WorldModify.canSpawn = true;
-			}
-			else
-			{
-				WorldModify.canSpawn = false;
-			}
-			return WorldModify.canSpawn;
 		}
 		
 		public static void QuickFindHome(int npc)
@@ -348,55 +416,51 @@ namespace Terraria_Server.WorldMod
 		
 		public static void ScoreRoom(int ignoreNPC = -1)
 		{
-			for (int i = 0; i < 1000; i++)
+			roomOccupied = false;
+			roomEvil = false;
+			for (int i = 0; i < Main.npcs.Length; i++)
 			{
 				if (Main.npcs[i].Active && Main.npcs[i].townNPC && ignoreNPC != i && !Main.npcs[i].homeless)
 				{
-					for (int j = 0; j < WorldModify.numRoomTiles; j++)
+					for (int j = 0; j < numRoomTiles; j++)
 					{
-						if (Main.npcs[i].homeTileX == WorldModify.roomX[j] && Main.npcs[i].homeTileY == WorldModify.roomY[j])
+						if (Main.npcs[i].homeTileX == roomX[j] && Main.npcs[i].homeTileY == roomY[j])
 						{
-							bool flag = false;
-							for (int k = 0; k < WorldModify.numRoomTiles; k++)
+							for (int k = 0; k < numRoomTiles; k++)
 							{
-								if (Main.npcs[i].homeTileX == WorldModify.roomX[k] && Main.npcs[i].homeTileY - 1 == WorldModify.roomY[k])
+								if (Main.npcs[i].homeTileX == roomX[k] && Main.npcs[i].homeTileY - 1 == roomY[k])
 								{
-									flag = true;
-									break;
+									roomOccupied = true;
+									hiScore = -1;
+									return;
 								}
-							}
-							if (flag)
-							{
-								WorldModify.hiScore = -1;
-								return;
 							}
 						}
 					}
 				}
 			}
-			WorldModify.hiScore = 0;
+
+			hiScore = 0;
+
 			int num = 0;
 			int num2 = 0;
-			int num3 = WorldModify.roomX1 - NPC.sWidth / 2 / 16 - 1 - 21;
-			int num4 = WorldModify.roomX2 + NPC.sWidth / 2 / 16 + 1 + 21;
-			int num5 = WorldModify.roomY1 - NPC.sHeight / 2 / 16 - 1 - 21;
-			int num6 = WorldModify.roomY2 + NPC.sHeight / 2 / 16 + 1 + 21;
+			int num3 = roomX1 - Main.zoneX / 2 / 16 - 1 - 45;
+			int num4 = roomX2 + Main.zoneX / 2 / 16 + 1 + 45;
+			int num5 = roomY1 - Main.zoneY / 2 / 16 - 1 - 45;
+			int num6 = roomY2 + Main.zoneY / 2 / 16 + 1 + 45;
+
 			if (num3 < 0)
-			{
 				num3 = 0;
-			}
+
 			if (num4 >= Main.maxTilesX)
-			{
 				num4 = Main.maxTilesX - 1;
-			}
+
 			if (num5 < 0)
-			{
 				num5 = 0;
-			}
+
 			if (num6 > Main.maxTilesX)
-			{
 				num6 = Main.maxTilesX;
-			}
+
 			for (int l = num3 + 1; l < num4; l++)
 			{
 				for (int m = num5 + 2; m < num6 + 2; m++)
@@ -404,33 +468,28 @@ namespace Terraria_Server.WorldMod
 					if (Main.tile.At(l, m).Active)
 					{
 						if (Main.tile.At(l, m).Type == 23 || Main.tile.At(l, m).Type == 24 || Main.tile.At(l, m).Type == 25 || Main.tile.At(l, m).Type == 32)
-						{
 							Main.evilTiles++;
-						}
-						else
-						{
-							if (Main.tile.At(l, m).Type == 27)
-							{
-								Main.evilTiles -= 5;
-							}
-						}
+						else if (Main.tile.At(l, m).Type == 27)
+							Main.evilTiles -= 5;
 					}
 				}
 			}
 			if (num2 < 50)
-			{
 				num2 = 0;
-			}
+
 			int num7 = -num2;
 			if (num7 <= -250)
 			{
-				WorldModify.hiScore = num7;
+				hiScore = num7;
+				roomEvil = true;
 				return;
 			}
-			num3 = WorldModify.roomX1;
-			num4 = WorldModify.roomX2;
-			num5 = WorldModify.roomY1;
-			num6 = WorldModify.roomY2;
+
+			num3 = roomX1;
+			num4 = roomX2;
+			num5 = roomY1;
+			num6 = roomY2;
+
 			for (int n = num3 + 1; n < num4; n++)
 			{
 				for (int num8 = num5 + 2; num8 < num6 + 2; num8++)
@@ -447,40 +506,27 @@ namespace Terraria_Server.WorldMod
 									if (Main.tile.At(num9, num10).Active)
 									{
 										if (num9 == n)
-										{
 											num -= 15;
-										}
 										else if (Main.tile.At(num9, num10).Type == 10 || Main.tile.At(num9, num10).Type == 11)
-										{
 											num -= 20;
-										}
 										else if (Main.tileSolid[(int)Main.tile.At(num9, num10).Type])
-										{
 											num -= 5;
-										}
 										else
-										{
 											num += 5;
-										}
 									}
 								}
 							}
-							if (num > WorldModify.hiScore)
+							if (num > hiScore)
 							{
-								bool flag2 = false;
-								for (int num11 = 0; num11 < WorldModify.numRoomTiles; num11++)
+								for (int num11 = 0; num11 < numRoomTiles; num11++)
 								{
-									if (WorldModify.roomX[num11] == n && WorldModify.roomY[num11] == num8)
+									if (roomX[num11] == n && roomY[num11] == num8)
 									{
-										flag2 = true;
+										hiScore = num;
+										bestX = n;
+										bestY = num8;
 										break;
 									}
-								}
-								if (flag2)
-								{
-									WorldModify.hiScore = num;
-									WorldModify.bestX = n;
-									WorldModify.bestY = num8;
 								}
 							}
 						}
@@ -2278,11 +2324,6 @@ namespace Terraria_Server.WorldMod
 				Main.tile.At(x, y + 1).SetFrameX (frameX);
 				Main.tile.At(x, y + 1).SetType ((byte)type);
 			}
-		}
-
-		private static TileRef GetTile(int x, int y)
-		{
-			return Main.tile.At(x, y);
 		}
 
 		public static void Check1x2Top(int x, int y, byte type)
@@ -4195,7 +4236,7 @@ namespace Terraria_Server.WorldMod
 			{
 				for (int modY = y - 1; modY < y + 1; modY++)
 				{
-					TileRef tile = GetTile(modX, modY);
+					TileRef tile = Main.tile.At(modX, modY);
 					if (tile.Active || tile.Lava)
 					{
 						flag = false;
@@ -10562,5 +10603,9 @@ namespace Terraria_Server.WorldMod
                 }
             }
         }
-    }
+
+		public static bool roomOccupied { get; set; }
+
+		public static bool roomEvil { get; set; }
+	}
 }

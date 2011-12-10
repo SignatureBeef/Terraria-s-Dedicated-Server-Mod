@@ -127,6 +127,7 @@
     <Compile Include="Definitions\Time.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
+    <Compile Include="Messages\NPCHomeMessage.cs" />
     <Compile Include="TDCM\Packets\ClientModMessage.cs" />
     <Compile Include="Messages\DamageNPCMessage.cs" />
     <Compile Include="Messages\DoorUpdateMessage.cs" />
