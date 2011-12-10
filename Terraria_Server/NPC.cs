@@ -16642,6 +16642,14 @@ namespace Terraria_Server
 			}
 			return num2 < 3 && num3 < 6 && found < 10;
 		}
+
+        // [TODO] 1.1
+        public static bool downedClown { get; set; }
+        public static bool downedGoblins { get; set; }
+        public static bool savedMech { get; set; }
+        public static bool savedWizard { get; set; }
+        public static bool savedGoblin { get; set; }
+
     }
 }
 

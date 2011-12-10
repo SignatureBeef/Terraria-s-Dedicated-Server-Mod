@@ -94,6 +94,10 @@ namespace Terraria_Server
             }
         }
 
+        // [TODO] 1.1 -- are these really neccesary ?
+        public Vector2[] oldPos;
+        public Vector2 lastPosition;
+
         /// <summary>
         /// Projectile's visibility, 255 == fully visible, 0 == invisible
         /// </summary>
@@ -216,6 +220,13 @@ namespace Terraria_Server
             miscText = "";
             Width = (int)((float)this.Width * this.scale);
             Height = (int)((float)this.Height * this.scale);
+
+            oldPos = new Vector2[10];
+            for (int k = 0; k < oldPos.Length; k++)
+            {
+                oldPos[k].X = 0f;
+                oldPos[k].Y = 0f;
+            }
         }
 
         /// <summary>
@@ -847,6 +858,29 @@ namespace Terraria_Server
                         Reset (i);
                         return;
                     }
+                    if (this.wet && !this.lavaWet)
+                    {
+                        if (this.type == ProjectileType.N85_FLAMES ||
+                            this.type == ProjectileType.N15_BALL_OF_FIRE ||
+                            this.type == ProjectileType.N34_FLAMELASH)
+                        {
+                            this.Kill();
+                        }
+                        if (this.type == ProjectileType.N2_FIRE_ARROW)
+                        {
+                            this.type = ProjectileType.N1_WOODEN_ARROW;
+                            this.light = 0f;
+                        }
+                    }
+                    if (this.type == ProjectileType.N80_ICE_BLOCK)
+                    {
+                        flag2 = false;
+                        this.wet = false;
+                        if (flag && this.ai[0] >= 0f)
+                        {
+                            this.Kill();
+                        }
+                    }
                     if (flag2)
                     {
                         if (this.wetCount == 0)
@@ -875,6 +909,7 @@ namespace Terraria_Server
                         this.wetCount -= 1;
                     }
                 }
+                this.lastPosition = this.Position;
                 if (this.tileCollide)
                 {
                     Vector2 value2 = this.Velocity;
@@ -892,7 +927,9 @@ namespace Terraria_Server
                     if (this.aiStyle == 10)
                     {
                         if (this.type == ProjectileType.N42_SAND_BALL || 
-                            (this.type == ProjectileType.N65_EBONSAND_BALL && this.ai[0] == 2f))
+                            this.type == ProjectileType.N65_EBONSAND_BALL ||
+                            this.type == ProjectileType.N68_PEARL_SAND_BALL ||
+                            (this.type == ProjectileType.N31_SAND_BALL && this.ai[0] == 2f))
                         {
                             this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, flag3, flag3);
                         }
@@ -934,7 +971,30 @@ namespace Terraria_Server
                     }
                     if (value2 != this.Velocity)
                     {
-                        if (this.type == ProjectileType.N36_METEOR_SHOT)
+                        if(this.type == ProjectileType.N94_CRYSTAL_STORM)
+                        {
+                            if (this.Velocity.X != value2.X)
+                            {
+                                this.Velocity.X = -value2.X;
+                            }
+                            if (this.Velocity.Y != value2.Y)
+                            {
+                                this.Velocity.Y = -value2.Y;
+                            }
+                        }
+                        else if(this.type == ProjectileType.N99_BOULDER)
+                        {
+                            if (this.Velocity.Y != value2.Y && value2.Y > 5f)
+                            {
+                                Collision.HitTiles(this.Position, this.Velocity, this.Width, this.Height);
+                                this.Velocity.Y = -value2.Y * 0.2f;
+                            }
+                            if (this.Velocity.X != value2.X)
+                            {
+                                this.Kill();
+                            }
+                        }
+                        else if (this.type == ProjectileType.N36_METEOR_SHOT)
                         {
                             if (this.penetrate > 1)
                             {
@@ -956,6 +1016,17 @@ namespace Terraria_Server
                         }
                         else
                         {
+                            if (this.aiStyle == 21)
+                            {
+                                if (this.Velocity.X != value2.X)
+                                {
+                                    this.Velocity.X = -value2.X;
+                                }
+                                if (this.Velocity.Y != value2.Y)
+                                {
+                                    this.Velocity.Y = -value2.Y;
+                                }
+                            } 
                             if (this.aiStyle == 17)
                             {
                                 if (this.Velocity.X != value2.X)
@@ -1024,7 +1095,7 @@ namespace Terraria_Server
                                 }
                                 else
                                 {
-                                    if (this.aiStyle == 8)
+                                    if (this.aiStyle == 8 && this.type != ProjectileType.N96_CURSED_FLAME)
                                     {
                                         this.ai[0] += 1f;
                                         if (this.ai[0] >= 5f)
@@ -1034,7 +1105,7 @@ namespace Terraria_Server
                                         }
                                         else
                                         {
-                                            if (this.type == ProjectileType.N14_BULLET && this.Velocity.Y > 4f)
+                                            if (this.type == ProjectileType.N15_BALL_OF_FIRE && this.Velocity.Y > 4f)
                                             {
                                                 if (this.Velocity.Y != value2.Y)
                                                 {
@@ -1138,6 +1209,18 @@ namespace Terraria_Server
                     return;
                 }
                 this.Damage();
+                if (this.type == ProjectileType.N99_BOULDER)
+                {
+                    Collision.SwitchTiles(this.Position, this.Width, this.Height, this.lastPosition);
+                }
+                if (this.type == ProjectileType.N94_CRYSTAL_STORM)
+                {
+                    for (int num12 = this.oldPos.Length - 1; num12 > 0; num12--)
+                    {
+                        this.oldPos[num12] = this.oldPos[num12 - 1];
+                    }
+                    this.oldPos[0] = this.Position;
+                }
                 this.timeLeft--;
                 if (this.timeLeft <= 0)
                 {
