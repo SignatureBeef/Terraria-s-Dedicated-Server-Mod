@@ -1376,8 +1376,8 @@
   </Projectile>
   <Projectile>
     <Name>Crystal Storm</Name>
-    <Width>9</Width>
-    <Height>9</Height>
+    <Width>8</Width>
+    <Height>8</Height>
     <scale>1.2</scale>
     <Type>94</Type>
     <alpha>50</alpha>

@@ -158,6 +158,8 @@ namespace Terraria_Server
         /// 
         /// </summary>
         public bool netUpdate;
+        public bool netUpdate2;
+        public int netSpam;
         /// <summary>
         /// Delay before striking an entity the projectile has already struck
         /// </summary>
@@ -221,11 +223,10 @@ namespace Terraria_Server
             Width = (int)((float)this.Width * this.scale);
             Height = (int)((float)this.Height * this.scale);
 
-            oldPos = new Vector2[10];
-            for (int k = 0; k < oldPos.Length; k++)
+            this.oldPos = new Vector2[10];
+            for (int k = 0; k < this.oldPos.Length; k++)
             {
-                oldPos[k].X = 0f;
-                oldPos[k].Y = 0f;
+                this.oldPos[k] = new Vector2(0f, 0f);
             }
         }
 
@@ -1215,11 +1216,11 @@ namespace Terraria_Server
                 }
                 if (this.type == ProjectileType.N94_CRYSTAL_STORM)
                 {
-                    for (int num12 = this.oldPos.Length - 1; num12 > 0; num12--)
-                    {
-                        this.oldPos[num12] = this.oldPos[num12 - 1];
-                    }
-                    this.oldPos[0] = this.Position;
+                    //for (int num12 = this.oldPos.Length - 1; num12 > 0; num12--)
+                    //{
+                   //     this.oldPos[num12] = this.oldPos[num12 - 1];
+                   // }
+                  //  this.oldPos[0] = this.Position;
                 }
                 this.timeLeft--;
                 if (this.timeLeft <= 0)
@@ -1230,9 +1231,33 @@ namespace Terraria_Server
                 {
                     this.Kill();
                 }
-                if (this.Active && this.netUpdate && this.Owner == Main.myPlayer)
+                if (this.Active && this.Owner == Main.myPlayer)
                 {
-                    NetMessage.SendData(27, -1, -1, "", i);
+                    if (this.netUpdate2)
+                    {
+                        this.netUpdate = true;
+                    }
+                    if (!this.Active)
+                    {
+                        this.netSpam = 0;
+                    }
+                    if (this.netUpdate)
+                    {
+                        if (this.netSpam < 60)
+                        {
+                            this.netSpam += 5;
+                            NetMessage.SendData(27, -1, -1, "", i);
+                            this.netUpdate2 = false;
+                        }
+                        else
+                        {
+                            this.netUpdate2 = true;
+                        }
+                    }
+                    if (this.netSpam > 0)
+                    {
+                        this.netSpam--;
+                    }
                 }
                 if (this.Active && this.maxUpdates > 0)
                 {
@@ -1255,110 +1280,110 @@ namespace Terraria_Server
         /// </summary>
         public void AI()
         {
-            if (this.aiStyle == 1)
+            switch (this.aiStyle)
             {
-                if (this.type == ProjectileType.N20_GREEN_LASER || this.type == ProjectileType.N14_BULLET ||
-                    this.type == ProjectileType.N36_METEOR_SHOT || this.type == ProjectileType.N83_EYE_LASER ||
-                    this.type == ProjectileType.N84_PINK_LASER || this.type == ProjectileType.N89_CRYSTAL_BULLET ||
-                    this.type == ProjectileType.N100_DEATH_LASER || this.type == ProjectileType.N104_CURSED_BULLET)
-                {
-                    if (this.alpha > 0)
+                case 1:
                     {
-                        this.alpha -= 15;
-                    }
-                    if (this.alpha < 0)
-                    {
-                        this.alpha = 0;
-                    }
-                }
-                if (this.type == ProjectileType.N88_PURPLE_LASER)
-                {
-                    if (this.alpha > 0)
-                        this.alpha -= 10;
-                    if (this.alpha < 0)
-                        this.alpha = 0;
-                }
-                if (this.type != ProjectileType.N5_JESTERS_ARROW && 
-                    this.type != ProjectileType.N14_BULLET && 
-                    this.type != ProjectileType.N20_GREEN_LASER && 
-                    this.type != ProjectileType.N36_METEOR_SHOT && 
-                    this.type != ProjectileType.N38_HARPY_FEATHER &&
-                    this.type != ProjectileType.N83_EYE_LASER &&
-                    this.type != ProjectileType.N84_PINK_LASER &&
-                    this.type != ProjectileType.N88_PURPLE_LASER &&
-                    this.type != ProjectileType.N89_CRYSTAL_BULLET &&
-                    this.type != ProjectileType.N98_POISON_DART &&
-                    this.type != ProjectileType.N100_DEATH_LASER &&
-                    this.type != ProjectileType.N104_CURSED_BULLET)
-                {
-                    this.ai[0] += 1f;
-                }
-                if (this.type == ProjectileType.N81_WOODEN_ARROW || this.type == ProjectileType.N91_HOLY_ARROW)
-                {
-                    if (this.ai[0] >= 20f)
-                    {
-                        this.ai[0] = 20f;
-                        this.Velocity.Y = this.Velocity.Y + 0.07f;
-                    }
-                }
-                else
-                {
-                    if (this.ai[0] >= 15f)
-                    {
-                        this.ai[0] = 15f;
-                        this.Velocity.Y = this.Velocity.Y + 0.1f;
-                    }
-                }
-                this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
-                if (this.Velocity.Y > 16f)
-                {
-                    this.Velocity.Y = 16f;
-                    return;
-                }
-            }
-            else
-            {
-                if (this.aiStyle == 2)
-                {
-                    this.rotation += (Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y)) * 0.03f * (float)this.direction;
-
-                    if (this.type == ProjectileType.N69_HOLY_WATER || this.type == ProjectileType.N70_UNHOLY_WATER)
-                    {
-                        this.ai[0] += 1f;
-                        if (this.ai[0] >= 10f)
+                        if (this.type == ProjectileType.N20_GREEN_LASER || this.type == ProjectileType.N14_BULLET ||
+                            this.type == ProjectileType.N36_METEOR_SHOT || this.type == ProjectileType.N83_EYE_LASER ||
+                            this.type == ProjectileType.N84_PINK_LASER || this.type == ProjectileType.N89_CRYSTAL_BULLET ||
+                            this.type == ProjectileType.N100_DEATH_LASER || this.type == ProjectileType.N104_CURSED_BULLET)
                         {
-                            this.Velocity.Y = this.Velocity.Y + 0.25f;
-                            this.Velocity.X = this.Velocity.X * 0.99f;
+                            if (this.alpha > 0)
+                            {
+                                this.alpha -= 15;
+                            }
+                            if (this.alpha < 0)
+                            {
+                                this.alpha = 0;
+                            }
                         }
-                    }
-                    else
-                    {
-                        this.ai[0] += 1f;
-                        if (this.ai[0] >= 20f)
+                        if (this.type == ProjectileType.N88_PURPLE_LASER)
                         {
-                            this.Velocity.Y = this.Velocity.Y + 0.4f;
-                            this.Velocity.X = this.Velocity.X * 0.97f;
+                            if (this.alpha > 0)
+                                this.alpha -= 10;
+                            if (this.alpha < 0)
+                                this.alpha = 0;
+                        }
+                        if (this.type != ProjectileType.N5_JESTERS_ARROW &&
+                            this.type != ProjectileType.N14_BULLET &&
+                            this.type != ProjectileType.N20_GREEN_LASER &&
+                            this.type != ProjectileType.N36_METEOR_SHOT &&
+                            this.type != ProjectileType.N38_HARPY_FEATHER &&
+                            this.type != ProjectileType.N83_EYE_LASER &&
+                            this.type != ProjectileType.N84_PINK_LASER &&
+                            this.type != ProjectileType.N88_PURPLE_LASER &&
+                            this.type != ProjectileType.N89_CRYSTAL_BULLET &&
+                            this.type != ProjectileType.N98_POISON_DART &&
+                            this.type != ProjectileType.N100_DEATH_LASER &&
+                            this.type != ProjectileType.N104_CURSED_BULLET)
+                        {
+                            this.ai[0] += 1f;
+                        }
+                        if (this.type == ProjectileType.N81_WOODEN_ARROW || this.type == ProjectileType.N91_HOLY_ARROW)
+                        {
+                            if (this.ai[0] >= 20f)
+                            {
+                                this.ai[0] = 20f;
+                                this.Velocity.Y = this.Velocity.Y + 0.07f;
+                            }
                         }
                         else
                         {
-                            if (this.type == ProjectileType.N48_THROWING_KNIFE || this.type == ProjectileType.N54_POISONED_KNIFE)
+                            if (this.ai[0] >= 15f)
                             {
-                                this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
+                                this.ai[0] = 15f;
+                                this.Velocity.Y = this.Velocity.Y + 0.1f;
                             }
                         }
+                        this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
+                        if (this.Velocity.Y > 16f)
+                        {
+                            this.Velocity.Y = 16f;
+                            return;
+                        }
                     }
-                    if (this.Velocity.Y > 16f)
+                    break;
+                case 2:
                     {
-                        this.Velocity.Y = 16f;
+                        this.rotation += (Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y)) * 0.03f * (float)this.direction;
+
+                        if (this.type == ProjectileType.N69_HOLY_WATER || this.type == ProjectileType.N70_UNHOLY_WATER)
+                        {
+                            this.ai[0] += 1f;
+                            if (this.ai[0] >= 10f)
+                            {
+                                this.Velocity.Y = this.Velocity.Y + 0.25f;
+                                this.Velocity.X = this.Velocity.X * 0.99f;
+                            }
+                        }
+                        else
+                        {
+                            this.ai[0] += 1f;
+                            if (this.ai[0] >= 20f)
+                            {
+                                this.Velocity.Y = this.Velocity.Y + 0.4f;
+                                this.Velocity.X = this.Velocity.X * 0.97f;
+                            }
+                            else
+                            {
+                                if (this.type == ProjectileType.N48_THROWING_KNIFE || this.type == ProjectileType.N54_POISONED_KNIFE)
+                                {
+                                    this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
+                                }
+                            }
+                        }
+                        if (this.Velocity.Y > 16f)
+                        {
+                            this.Velocity.Y = 16f;
+                        }
+                        if (this.type == ProjectileType.N54_POISONED_KNIFE && Main.rand.Next(20) == 0)
+                        {
+                            return;
+                        }
                     }
-                    if (this.type == ProjectileType.N54_POISONED_KNIFE && Main.rand.Next(20) == 0)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (this.aiStyle == 3)
+                    break;
+                case 3:
                     {
                         if (this.soundDelay == 0)
                         {
@@ -1367,7 +1392,7 @@ namespace Terraria_Server
                         if (this.ai[0] == 0f)
                         {
                             this.ai[1] += 1f;
-                            if(this.type == ProjectileType.N106_LIGHT_DISC)
+                            if (this.type == ProjectileType.N106_LIGHT_DISC)
                             {
                                 if (this.ai[1] >= 45f)
                                 {
@@ -1412,11 +1437,11 @@ namespace Terraria_Server
                             float num8 = (float)Math.Sqrt((double)(num6 * num6 + num7 * num7));
                             num8 = num4 / num8;
                             num6 *= num8;
-							num7 *= num8;
-							if (num8 > 3000f)
-							{
-								this.Kill();
-							}
+                            num7 *= num8;
+                            if (num8 > 3000f)
+                            {
+                                this.Kill();
+                            }
                             if (this.Velocity.X < num6)
                             {
                                 this.Velocity.X = this.Velocity.X + num5;
@@ -1458,13 +1483,13 @@ namespace Terraria_Server
                             if (Main.myPlayer == this.Owner)
                             {
                                 Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
-                                if(Main.players[Owner].Intersects(rectangle))
+                                if (Main.players[Owner].Intersects(rectangle))
                                 {
                                     this.Kill();
                                 }
                             }
                         }
-                        if(this.type == ProjectileType.N106_LIGHT_DISC)
+                        if (this.type == ProjectileType.N106_LIGHT_DISC)
                         {
                             this.rotation += 0.3f * (float)this.direction;
                             return;
@@ -1472,7 +1497,8 @@ namespace Terraria_Server
                         this.rotation += 0.4f * (float)this.direction;
                         return;
                     }
-                    if (this.aiStyle == 4)
+                    break;
+                case 4:
                     {
                         this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
                         if (this.ai[0] == 0f)
@@ -1494,7 +1520,7 @@ namespace Terraria_Server
                                     {
                                         num9++;
                                     }
-                                    int num10 = Projectile.NewProjectile(this.Position.X + this.Velocity.X + (float)(this.Width / 2), this.Position.Y + this.Velocity.Y + (float)(this.Height / 2), this.Velocity.X, this.Velocity.Y, (ProjectileType)Enum.ToObject(typeof(ProjectileType),num9), this.damage, this.knockBack, this.Owner);
+                                    int num10 = Projectile.NewProjectile(this.Position.X + this.Velocity.X + (float)(this.Width / 2), this.Position.Y + this.Velocity.Y + (float)(this.Height / 2), this.Velocity.X, this.Velocity.Y, (ProjectileType)Enum.ToObject(typeof(ProjectileType), num9), this.damage, this.knockBack, this.Owner);
                                     Main.projectile[num10].damage = this.damage;
                                     Main.projectile[num10].ai[1] = this.ai[1] + 1f;
                                     NetMessage.SendData(27, -1, -1, "", num10);
@@ -1512,1532 +1538,1524 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    else
+                    break;
+                case 5:
                     {
-                        if (this.aiStyle == 5)
+                        if (this.type == ProjectileType.N92_HALLOW_STAR)
                         {
-                            if (this.type == ProjectileType.N92_HALLOW_STAR)
+                            if (this.Position.Y > this.ai[1])
                             {
-                                if (this.Position.Y > this.ai[1])
+                                this.tileCollide = true;
+                            }
+                        }
+                        else
+                        {
+                            if (this.ai[1] == 0f && !Collision.SolidCollision(this.Position, this.Width, this.Height))
+                            {
+                                this.ai[1] = 1f;
+                                this.netUpdate = true;
+                            }
+                            if (this.ai[1] != 0f)
+                            {
+                                this.tileCollide = true;
+                            }
+                        }
+                        if (this.soundDelay == 0)
+                        {
+                            this.soundDelay = 20 + Main.rand.Next(40);
+                        }
+                        if (this.ai[0] == 0f)
+                        {
+                            this.ai[0] = 1f;
+                        }
+                        this.alpha += (int)(25f * this.ai[0]);
+                        if (this.alpha > 200)
+                        {
+                            this.alpha = 200;
+                            this.ai[0] = -1f;
+                        }
+                        if (this.alpha < 0)
+                        {
+                            this.alpha = 0;
+                            this.ai[0] = 1f;
+                        }
+                        this.rotation += (Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y)) * 0.01f * (float)this.direction;
+                        if (this.ai[1] == 1f || this.type == ProjectileType.N92_HALLOW_STAR)
+                        {
+                            this.light = 0.9f;
+                        }
+                    }
+                    break;
+                case 6:
+                    {
+                        this.Velocity *= 0.95f;
+                        this.ai[0] += 1f;
+                        if (this.ai[0] == 180f)
+                        {
+                            this.Kill();
+                        }
+                        if (this.ai[1] == 0f)
+                        {
+                            this.ai[1] = 1f;
+                        }
+                        if (this.type == ProjectileType.N10_PURIFICATION_POWDER || this.type == ProjectileType.N11_VILE_POWDER)
+                        {
+                            int num11 = (int)(this.Position.X / 16f) - 1;
+                            int num12 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
+                            int num13 = (int)(this.Position.Y / 16f) - 1;
+                            int num14 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
+                            if (num11 < 0)
+                            {
+                                num11 = 0;
+                            }
+                            if (num12 > Main.maxTilesX)
+                            {
+                                num12 = Main.maxTilesX;
+                            }
+                            if (num13 < 0)
+                            {
+                                num13 = 0;
+                            }
+                            if (num14 > Main.maxTilesY)
+                            {
+                                num14 = Main.maxTilesY;
+                            }
+                            for (int l = num11; l < num12; l++)
+                            {
+                                for (int m = num13; m < num14; m++)
                                 {
-                                    this.tileCollide = true;
+                                    Vector2 vector2;
+                                    vector2.X = (float)(l * 16);
+                                    vector2.Y = (float)(m * 16);
+
+                                    if (this.Position.X + (float)this.Width > vector2.X && this.Position.X < vector2.X + 16f && this.Position.Y + (float)this.Height > vector2.Y && this.Position.Y < vector2.Y + 16f
+                                        && (Program.properties.TileSquareMessages != "accept" || Main.myPlayer == this.Owner)
+                                        && Main.tile.At(l, m).Active)
+                                    {
+                                        if (this.type == ProjectileType.N10_PURIFICATION_POWDER)
+                                        {
+                                            if (Main.tile.At(l, m).Type == 23)
+                                            {
+                                                Main.tile.At(l, m).SetType(2);
+                                                WorldModify.SquareTileFrame(l, m, true);
+                                                NetMessage.SendTileSquare(-1, l, m, 1);
+                                            }
+                                            if (Main.tile.At(l, m).Type == 25)
+                                            {
+                                                Main.tile.At(l, m).SetType(1);
+                                                WorldModify.SquareTileFrame(l, m, true);
+                                                NetMessage.SendTileSquare(-1, l, m, 1);
+                                            }
+                                            if (Main.tile.At(l, m).Type == 112)
+                                            {
+                                                Main.tile.At(l, m).SetType(53);
+                                                WorldModify.SquareTileFrame(l, m, true);
+                                                NetMessage.SendTileSquare(-1, l, m, 1);
+                                            }
+                                        }
+                                        else if (this.type == ProjectileType.N11_VILE_POWDER)
+                                        {
+                                            if (Main.tile.At(l, m).Type == 109)
+                                            {
+                                                Main.tile.At(l, m).SetType(2);
+                                                WorldModify.SquareTileFrame(l, m, true);
+                                                NetMessage.SendTileSquare(-1, l, m, 1);
+                                            }
+                                            if (Main.tile.At(l, m).Type == 116)
+                                            {
+                                                Main.tile.At(l, m).SetType(53);
+                                                WorldModify.SquareTileFrame(l, m, true);
+                                                NetMessage.SendTileSquare(-1, l, m, 1);
+                                            }
+                                            if (Main.tile.At(l, m).Type == 117)
+                                            {
+                                                Main.tile.At(l, m).SetType(1);
+                                                WorldModify.SquareTileFrame(l, m, true);
+                                                NetMessage.SendTileSquare(-1, l, m, 1);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            return;
+                        }
+                    }
+                    break;
+                case 7:
+                    {
+                        if (Main.players[this.Owner].dead)
+                        {
+                            this.Kill();
+                            return;
+                        }
+                        Vector2 vector3 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
+                        float num15 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector3.X;
+                        float num16 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector3.Y;
+                        float num17 = (float)Math.Sqrt((double)(num15 * num15 + num16 * num16));
+                        this.rotation = (float)Math.Atan2((double)num16, (double)num15) - 1.57f;
+                        if (this.ai[0] == 0f)
+                        {
+                            if ((num17 > 300f && this.type == ProjectileType.N13_HOOK) || (num17 > 400f && this.type == ProjectileType.N32_IVY_WHIP))
+                            {
+                                this.ai[0] = 1f;
+                            }
+                            int num18 = (int)(this.Position.X / 16f) - 1;
+                            int num19 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
+                            int num20 = (int)(this.Position.Y / 16f) - 1;
+                            int num21 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
+                            if (num18 < 0)
+                            {
+                                num18 = 0;
+                            }
+                            if (num19 > Main.maxTilesX)
+                            {
+                                num19 = Main.maxTilesX;
+                            }
+                            if (num20 < 0)
+                            {
+                                num20 = 0;
+                            }
+                            if (num21 > Main.maxTilesY)
+                            {
+                                num21 = Main.maxTilesY;
+                            }
+                            for (int n = num18; n < num19; n++)
+                            {
+                                int num22 = num20;
+                                while (num22 < num21)
+                                {
+                                    Vector2 vector4;
+                                    vector4.X = (float)(n * 16);
+                                    vector4.Y = (float)(num22 * 16);
+                                    if (this.Position.X + (float)this.Width > vector4.X && this.Position.X < vector4.X + 16f && this.Position.Y + (float)this.Height > vector4.Y && this.Position.Y < vector4.Y + 16f && Main.tile.At(n, num22).Active && Main.tileSolid[(int)Main.tile.At(n, num22).Type])
+                                    {
+                                        if (Main.players[this.Owner].grapCount < 10)
+                                        {
+                                            Main.players[this.Owner].grappling[Main.players[this.Owner].grapCount] = this.whoAmI;
+                                            Main.players[this.Owner].grapCount++;
+                                        }
+                                        if (Main.myPlayer == this.Owner)
+                                        {
+                                            int num23 = 0;
+                                            int num24 = -1;
+                                            int num25 = 100000;
+                                            if (this.type == ProjectileType.N73_HOOK || this.type == ProjectileType.N74_HOOK)
+                                            {
+                                                for (int num31 = 0; num31 < 1000; num31++)
+                                                {
+                                                    if (num31 != this.whoAmI && Main.projectile[num31].Active && Main.projectile[num31].Owner == this.Owner &&
+                                                        Main.projectile[num31].aiStyle == 7 && Main.projectile[num31].ai[0] == 2f)
+                                                    {
+                                                        Main.projectile[num31].Kill();
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int num26 = 0; num26 < 1000; num26++)
+                                                {
+                                                    if (Main.projectile[num26].Active && Main.projectile[num26].Owner == this.Owner && Main.projectile[num26].aiStyle == 7)
+                                                    {
+                                                        if (Main.projectile[num26].timeLeft < num25)
+                                                        {
+                                                            num24 = num26;
+                                                            num25 = Main.projectile[num26].timeLeft;
+                                                        }
+                                                        num23++;
+                                                    }
+                                                }
+                                                if (num23 > 3)
+                                                {
+                                                    Main.projectile[num24].Kill();
+                                                }
+                                            }
+                                        }
+                                        var plr = Creator as Player;
+                                        if (plr == null || WorldModify.InvokeAlterationHook(this, plr, n, num22, 0))
+                                        {
+                                            WorldModify.KillTile(n, num22, true, true, false);
+                                        }
+                                        this.Velocity.X = 0f;
+                                        this.Velocity.Y = 0f;
+                                        this.ai[0] = 2f;
+                                        this.Position.X = (float)(n * 16 + 8 - this.Width / 2);
+                                        this.Position.Y = (float)(num22 * 16 + 8 - this.Height / 2);
+                                        this.damage = 0;
+                                        this.netUpdate = true;
+                                        if (Main.myPlayer == this.Owner)
+                                        {
+                                            NetMessage.SendData(13, -1, -1, "", this.Owner);
+                                            break;
+                                        }
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        num22++;
+                                    }
+                                }
+                                if (this.ai[0] == 2f)
+                                {
+                                    return;
+                                }
+                            }
+                            return;
+                        }
+                        if (this.ai[0] == 1f)
+                        {
+                            float num27 = 11f;
+                            if (this.type == ProjectileType.N32_IVY_WHIP)
+                            {
+                                num27 = 15f;
+                            }
+                            if (this.type == ProjectileType.N73_HOOK || this.type == ProjectileType.N74_HOOK)
+                            {
+                                num27 = 17f;
+                            }
+                            if (num17 < 24f)
+                            {
+                                this.Kill();
+                            }
+                            num17 = num27 / num17;
+                            num15 *= num17;
+                            num16 *= num17;
+                            this.Velocity.X = num15;
+                            this.Velocity.Y = num16;
+                            return;
+                        }
+                        if (this.ai[0] == 2f)
+                        {
+                            int num28 = (int)(this.Position.X / 16f) - 1;
+                            int num29 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
+                            int num30 = (int)(this.Position.Y / 16f) - 1;
+                            int num31 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
+                            if (num28 < 0)
+                            {
+                                num28 = 0;
+                            }
+                            if (num29 > Main.maxTilesX)
+                            {
+                                num29 = Main.maxTilesX;
+                            }
+                            if (num30 < 0)
+                            {
+                                num30 = 0;
+                            }
+                            if (num31 > Main.maxTilesY)
+                            {
+                                num31 = Main.maxTilesY;
+                            }
+                            bool flag = true;
+                            for (int num32 = num28; num32 < num29; num32++)
+                            {
+                                for (int num33 = num30; num33 < num31; num33++)
+                                {
+                                    Vector2 vector5;
+                                    vector5.X = (float)(num32 * 16);
+                                    vector5.Y = (float)(num33 * 16);
+                                    if (this.Position.X + (float)(this.Width / 2) > vector5.X && this.Position.X + (float)(this.Width / 2) < vector5.X + 16f && this.Position.Y + (float)(this.Height / 2) > vector5.Y && this.Position.Y + (float)(this.Height / 2) < vector5.Y + 16f && Main.tile.At(num32, num33).Active && Main.tileSolid[(int)Main.tile.At(num32, num33).Type])
+                                    {
+                                        flag = false;
+                                    }
+                                }
+                            }
+                            if (flag)
+                            {
+                                this.ai[0] = 1f;
+                                return;
+                            }
+                            if (Main.players[this.Owner].grapCount < 10)
+                            {
+                                Main.players[this.Owner].grappling[Main.players[this.Owner].grapCount] = this.whoAmI;
+                                Main.players[this.Owner].grapCount++;
+                                return;
+                            }
+                        }
+                    }
+                    break;
+                case 8:
+                    {
+                        if (this.type == ProjectileType.N96_CURSED_FLAME && this.ai[0] == 0f)
+                        {
+                            this.ai[0] = 1f;
+                        }
+                        if (this.type != ProjectileType.N27_WATER_BOLT && this.type != ProjectileType.N96_CURSED_FLAME)
+                        {
+                            this.ai[1] += 1f;
+                        }
+                        if (this.ai[1] >= 20f)
+                        {
+                            this.Velocity.Y = this.Velocity.Y + 0.2f;
+                        }
+                        this.rotation += 0.3f * (float)this.direction;
+                        if (this.Velocity.Y > 16f)
+                        {
+                            this.Velocity.Y = 16f;
+                            return;
+                        }
+                    }
+                    break;
+                case 9:
+                    {
+                        if (Main.myPlayer == this.Owner && this.ai[0] == 0f)
+                        {
+                            // client-code, not updated from 1.0.6
+                            if (!Main.players[this.Owner].channel)
+                            {
+                                this.Kill();
+                            }
+                        }
+                        if (this.type == ProjectileType.N34_FLAMELASH)
+                        {
+                            this.rotation += 0.3f * (float)this.direction;
+                        }
+                        else
+                        {
+                            if (this.Velocity.X != 0f || this.Velocity.Y != 0f)
+                            {
+                                this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) - 2.355f;
+                            }
+                        }
+                        if (this.Velocity.Y > 16f)
+                        {
+                            this.Velocity.Y = 16f;
+                            return;
+                        }
+                    }
+                    break;
+                case 10:
+                    {
+                        if (Main.myPlayer == this.Owner && this.ai[0] == 0f)
+                        {
+                            // client-code, not updated from 1.0.6
+                            if (!Main.players[this.Owner].channel)
+                            {
+                                this.ai[0] = 1f;
+                                this.netUpdate = true;
+                            }
+                        }
+                        if (this.ai[0] == 1f)
+                        {
+                            if (this.type == ProjectileType.N42_SAND_BALL ||
+                                this.type == ProjectileType.N65_EBONSAND_BALL ||
+                                this.type == ProjectileType.N68_PEARL_SAND_BALL)
+                            {
+                                this.ai[1] += 1f;
+                                if (this.ai[1] >= 60f)
+                                {
+                                    this.ai[1] = 60f;
+                                    this.Velocity.Y = this.Velocity.Y + 0.2f;
                                 }
                             }
                             else
                             {
-                                if (this.ai[1] == 0f && !Collision.SolidCollision(this.Position, this.Width, this.Height))
+                                this.Velocity.Y = this.Velocity.Y + 0.41f;
+                            }
+                        }
+                        else
+                        {
+                            if (this.ai[0] == 2f)
+                            {
+                                this.Velocity.Y = this.Velocity.Y + 0.2f;
+                                if ((double)this.Velocity.X < -0.04)
                                 {
-                                    this.ai[1] = 1f;
-                                    this.netUpdate = true;
+                                    this.Velocity.X = this.Velocity.X + 0.04f;
                                 }
-                                if (this.ai[1] != 0f)
+                                else
                                 {
-                                    this.tileCollide = true;
+                                    if ((double)this.Velocity.X > 0.04)
+                                    {
+                                        this.Velocity.X = this.Velocity.X - 0.04f;
+                                    }
+                                    else
+                                    {
+                                        this.Velocity.X = 0f;
+                                    }
                                 }
                             }
-                            if (this.soundDelay == 0)
+                        }
+                        this.rotation += 0.1f;
+                        if (this.Velocity.Y > 10f)
+                        {
+                            this.Velocity.Y = 10f;
+                            return;
+                        }
+                    }
+                    break;
+                case 11:
+                    {
+                        if (this.type == ProjectileType.N72_BLUE_FAIRY || this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
+                        {
+                            if (this.Velocity.X > 0f)
                             {
-                                this.soundDelay = 20 + Main.rand.Next(40);
+                                this.direction = -1;
+                            }
+                            else if (this.Velocity.X < 0f)
+                            {
+                                this.direction = 1;
+                            }
+                            this.rotation = this.Velocity.X * 0.1f;
+                        }
+                        else
+                        {
+                            this.rotation += 0.02f;
+                        }
+                        if (Main.myPlayer == this.Owner)
+                        {
+                            if (this.type == ProjectileType.N72_BLUE_FAIRY || this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
+                            {
+                                // [TODO] 1.1 : double check the player class
+                                if (Main.players[this.Owner].fairy)
+                                {
+                                    this.timeLeft = 2;
+                                }
+                            }
+                            else
+                            {
+                                if (Main.players[this.Owner].lightOrb)
+                                {
+                                    this.timeLeft = 2;
+                                }
+                            }
+                            if (Main.players[this.Owner].dead)
+                            {
+                                this.Kill();
+                                return;
+                            }
+                            float num51 = 2.5f;
+                            int num81 = 70;
+                            if (this.type == ProjectileType.N72_BLUE_FAIRY || this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
+                            {
+                                num51 = 3.5f;
+                                num81 = 40;
+                            }
+                            Vector2 vector8 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
+                            float num52 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector8.X;
+                            float num53 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector8.Y;
+                            float num54 = (float)Math.Sqrt((double)(num52 * num52 + num53 * num53));
+                            num54 = (float)Math.Sqrt((double)(num52 * num52 + num53 * num53));
+                            if (num54 > 800f)
+                            {
+                                this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
+                                this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
+                                return;
+                            }
+                            if (num54 > (float)num81)
+                            {
+                                num54 = num51 / num54;
+                                num52 *= num54;
+                                num53 *= num54;
+                                // [TODO] 1.1 - double check this area of code in aiStyle 11
+                                // Commented out in 1.1
+                                //if (num52 != this.Velocity.X || num53 != this.Velocity.Y)
+                                //{
+                                //   this.netUpdate = true;
+                                //}
+                                this.Velocity.X = num52;
+                                this.Velocity.Y = num53;
+                                return;
+                            }
+                            // Commented out in 1.1
+                            //if (this.Velocity.X != 0f || this.Velocity.Y != 0f)
+                            //{
+                            //    this.netUpdate = true;
+                            //}
+                            this.Velocity.X = 0f;
+                            this.Velocity.Y = 0f;
+                            return;
+                        }
+                    }
+                    break;
+                case 12:
+                    {
+                        this.scale -= 0.04f;
+                        if (this.scale <= 0f)
+                        {
+                            this.Kill();
+                        }
+                        if (this.ai[0] > 4f)
+                        {
+                            this.alpha = 150;
+                            this.light = 0.8f;
+                        }
+                        else
+                        {
+                            this.ai[0] += 1f;
+                        }
+                        this.rotation += 0.3f * (float)this.direction;
+                        return;
+                    }
+                    break;
+                case 13:
+                    {
+                        if (Main.players[this.Owner].dead)
+                        {
+                            this.Kill();
+                            return;
+                        }
+                        Main.players[this.Owner].itemAnimation = 5;
+                        Main.players[this.Owner].itemTime = 5;
+                        if (this.Position.X + (float)(this.Width / 2) > Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2))
+                        {
+                            Main.players[this.Owner].direction = 1;
+                        }
+                        else
+                        {
+                            Main.players[this.Owner].direction = -1;
+                        }
+                        Vector2 vector9 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
+                        float num56 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector9.X;
+                        float num57 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector9.Y;
+                        float num58 = (float)Math.Sqrt((double)(num56 * num56 + num57 * num57));
+                        if (this.ai[0] == 0f)
+                        {
+                            if (num58 > 700f)
+                            {
+                                this.ai[0] = 1f;
+                            }
+                            this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
+                            this.ai[1] += 1f;
+                            if (this.ai[1] > 2f)
+                            {
+                                this.alpha = 0;
+                            }
+                            if (this.ai[1] >= 10f)
+                            {
+                                this.ai[1] = 15f;
+                                this.Velocity.Y = this.Velocity.Y + 0.3f;
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            if (this.ai[0] == 1f)
+                            {
+                                this.tileCollide = false;
+                                this.rotation = (float)Math.Atan2((double)num57, (double)num56) - 1.57f;
+                                float num59 = 11f;
+                                if (num58 < 50f)
+                                {
+                                    this.Kill();
+                                }
+                                num58 = num59 / num58;
+                                num56 *= num58;
+                                num57 *= num58;
+                                this.Velocity.X = num56;
+                                this.Velocity.Y = num57;
+                                return;
+                            }
+                        }
+                    }
+                    break;
+                case 14:
+                    {
+                        if (this.type == ProjectileType.N53_STICKY_GLOWSTICK)
+                        {
+                            try
+                            {
+                                Vector2 vector10 = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, false, false);
+                                bool flag1 = this.Velocity != vector10;
+                                int num66 = ((int)(this.Position.X / 16f)) - 1;
+                                int num67 = ((int)((this.Position.X + this.Width) / 16f)) + 2;
+                                int num68 = ((int)(this.Position.Y / 16f)) - 1;
+                                int num69 = ((int)((this.Position.Y + this.Height) / 16f)) + 2;
+                                if (num66 < 0)
+                                {
+                                    num66 = 0;
+                                }
+                                if (num67 > Main.maxTilesX)
+                                {
+                                    num67 = Main.maxTilesX;
+                                }
+                                if (num68 < 0)
+                                {
+                                    num68 = 0;
+                                }
+                                if (num69 > Main.maxTilesY)
+                                {
+                                    num69 = Main.maxTilesY;
+                                }
+                                for (int num70 = num66; num70 < num67; num70++)
+                                {
+                                    for (int num71 = num68; num71 < num69; num71++)
+                                    {
+                                        if ((Main.tile.At(num70, num71).Active) && (Main.tileSolid[Main.tile.At(num70, num71).Type] || (Main.tileSolidTop[Main.tile.At(num70, num71).Type] && (Main.tile.At(num70, num71).FrameY == 0))))
+                                        {
+                                            Vector2 vector11;
+                                            vector11.X = num70 * 0x10;
+                                            vector11.Y = num71 * 0x10;
+                                            if ((((this.Position.X + this.Width) > vector11.X) && (this.Position.X < (vector11.X + 16f))) && (((this.Position.Y + this.Height) > vector11.Y) && (this.Position.Y < (vector11.Y + 16f))))
+                                            {
+                                                this.Velocity.X = 0f;
+                                                this.Velocity.Y = -0.2f;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                            }
+                        }
+
+                        this.ai[0] += 1f;
+                        if (this.ai[0] > 5f)
+                        {
+                            this.ai[0] = 5f;
+                            if (this.Velocity.Y == 0f && this.Velocity.X != 0f)
+                            {
+                                this.Velocity.X = this.Velocity.X * 0.97f;
+                                if ((double)this.Velocity.X > -0.01 && (double)this.Velocity.X < 0.01)
+                                {
+                                    this.Velocity.X = 0f;
+                                    this.netUpdate = true;
+                                }
+                            }
+                            this.Velocity.Y = this.Velocity.Y + 0.2f;
+                        }
+                        this.rotation += this.Velocity.X * 0.1f;
+                        if (this.Velocity.Y > 16f)
+                        {
+                            this.Velocity.Y = 16f;
+                            return;
+                        }
+                    }
+                    break;
+                case 15:
+                    {
+                        if (Main.players[this.Owner].dead)
+                        {
+                            this.Kill();
+                            return;
+                        }
+                        Main.players[this.Owner].itemAnimation = 10;
+                        Main.players[this.Owner].itemTime = 10;
+                        if (this.Position.X + (float)(this.Width / 2) > Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2))
+                        {
+                            Main.players[this.Owner].direction = 1;
+                            this.direction = 1;
+                        }
+                        else
+                        {
+                            Main.players[this.Owner].direction = -1;
+                            this.direction = -1;
+                        }
+                        Vector2 vector11 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
+                        float num73 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector11.X;
+                        float num74 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector11.Y;
+                        float num75 = (float)Math.Sqrt((double)(num73 * num73 + num74 * num74));
+
+                        if (this.ai[0] == 0f)
+                        {
+                            float num98 = 160f;
+                            if (this.type == ProjectileType.N63_THE_DAO_OF_POW)
+                            {
+                                num98 *= 1.5f;
+                            }
+                            this.tileCollide = true;
+                            if (num75 > num98)
+                            {
+                                this.ai[0] = 1f;
+                                this.netUpdate = true;
+                            }
+                            else
+                            {
+                                if (!Main.players[this.Owner].channel)
+                                {
+                                    if (this.Velocity.Y < 0f)
+                                    {
+                                        this.Velocity.Y = this.Velocity.Y * 0.9f;
+                                    }
+                                    this.Velocity.Y = this.Velocity.Y + 1f;
+                                    this.Velocity.X = this.Velocity.X * 0.9f;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (this.ai[0] == 1f)
+                            {
+                                var owner = Main.players[this.Owner];
+                                float num76 = 14f / owner.meleeSpeed;
+                                float num77 = 0.9f / owner.meleeSpeed;
+                                float num101 = 300f;
+                                if (this.type == ProjectileType.N63_THE_DAO_OF_POW)
+                                {
+                                    num101 *= 1.5f;
+                                    num76 *= 1.5f;
+                                    num77 *= 1.5f;
+                                }
+                                Math.Abs(num73);
+                                Math.Abs(num74);
+                                if (this.ai[1] == 1f)
+                                {
+                                    this.tileCollide = false;
+                                }
+                                if (!owner.channel || num75 > num101 || !this.tileCollide)
+                                {
+                                    this.ai[1] = 1f;
+                                    if (this.tileCollide)
+                                    {
+                                        this.netUpdate = true;
+                                    }
+                                    this.tileCollide = false;
+                                    if (num75 < 20f)
+                                    {
+                                        this.Kill();
+                                    }
+                                }
+                                if (!this.tileCollide)
+                                {
+                                    num77 *= 2f;
+                                }
+                                if (num75 > 60f || !this.tileCollide)
+                                {
+                                    num75 = num76 / num75;
+                                    num73 *= num75;
+                                    num74 *= num75;
+                                    float num78 = num73 - this.Velocity.X;
+                                    float num79 = num74 - this.Velocity.Y;
+                                    float num80 = (float)Math.Sqrt((double)(num78 * num78 + num79 * num79));
+                                    num80 = num77 / num80;
+                                    num78 *= num80;
+                                    num79 *= num80;
+                                    this.Velocity.X = this.Velocity.X * 0.98f;
+                                    this.Velocity.Y = this.Velocity.Y * 0.98f;
+                                    this.Velocity.X = this.Velocity.X + num78;
+                                    this.Velocity.Y = this.Velocity.Y + num79;
+                                }
+                                else
+                                {
+                                    if (Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y) < 6f)
+                                    {
+                                        this.Velocity.X = this.Velocity.X * 0.96f;
+                                        this.Velocity.Y = this.Velocity.Y + 0.2f;
+                                    }
+                                    if (owner.Velocity.X == 0f)
+                                    {
+                                        this.Velocity.X = this.Velocity.X * 0.96f;
+                                    }
+                                }
+                            }
+                        }
+                        this.rotation = (float)Math.Atan2((double)num74, (double)num73) - this.Velocity.X * 0.1f;
+                        return;
+                    }
+                    break;
+                case 16:
+                    {
+                        if (this.type == ProjectileType.N108_EXPLOSIVES)
+                        {
+                            this.ai[0] += 1f;
+                            if (this.ai[0] > 3f)
+                            {
+                                this.Kill();
+                            }
+                        }
+                        if (this.type == ProjectileType.N37_STICKY_BOMB)
+                        {
+                            try
+                            {
+                                int num72 = (int)(this.Position.X / 16f) - 1;
+                                int num73 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
+                                int num74 = (int)(this.Position.Y / 16f) - 1;
+                                int num75 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
+                                if (num72 < 0)
+                                {
+                                    num72 = 0;
+                                }
+                                if (num73 > Main.maxTilesX)
+                                {
+                                    num73 = Main.maxTilesX;
+                                }
+                                if (num74 < 0)
+                                {
+                                    num74 = 0;
+                                }
+                                if (num75 > Main.maxTilesY)
+                                {
+                                    num75 = Main.maxTilesY;
+                                }
+                                for (int num76 = num72; num76 < num73; num76++)
+                                {
+                                    for (int num77 = num74; num77 < num75; num77++)
+                                    {
+                                        if (Main.tile.At(num76, num77).Active && (Main.tileSolid[(int)Main.tile.At(num76, num77).Type] || (Main.tileSolidTop[(int)Main.tile.At(num76, num77).Type] && Main.tile.At(num76, num77).FrameY == 0)))
+                                        {
+                                            Vector2 vector12;
+                                            vector12.X = (float)(num76 * 16);
+                                            vector12.Y = (float)(num77 * 16);
+                                            if (this.Position.X + (float)this.Width - 4f > vector12.X && this.Position.X + 4f < vector12.X + 16f && this.Position.Y + (float)this.Height - 4f > vector12.Y && this.Position.Y + 4f < vector12.Y + 16f)
+                                            {
+                                                this.Velocity.X = 0f;
+                                                this.Velocity.Y = -0.2f;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                            }
+                        }
+                        if (this.type == ProjectileType.N102_BOMB)
+                        {
+                            // [TODO] 1.1 - double check this code
+                            if (this.Velocity.Y > 10f)
+                            {
+                                this.Velocity.Y = 10f;
                             }
                             if (this.ai[0] == 0f)
                             {
                                 this.ai[0] = 1f;
                             }
-                            this.alpha += (int)(25f * this.ai[0]);
-                            if (this.alpha > 200)
+                            if (this.Velocity.Y == 0f)
                             {
-                                this.alpha = 200;
-                                this.ai[0] = -1f;
+                                this.Position.X = this.Position.X + (float)(this.Width / 2);
+                                this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                                this.Width = 128;
+                                this.Height = 128;
+                                this.Position.X = this.Position.X - (float)(this.Width / 2);
+                                this.Position.Y = this.Position.Y - (float)(this.Height / 2);
+                                this.damage = 40;
+                                this.knockBack = 8f;
+                                this.timeLeft = 3;
+                                this.netUpdate = true;
                             }
-                            if (this.alpha < 0)
-                            {
-                                this.alpha = 0;
-                                this.ai[0] = 1f;
-                            }
-                            this.rotation += (Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y)) * 0.01f * (float)this.direction;
-							if (this.ai[1] == 1f || this.type == ProjectileType.N92_HALLOW_STAR)
-							{
-								this.light = 0.9f;
-							}
                         }
-                        else
+                        if (this.Owner == Main.myPlayer && this.timeLeft <= 3)
                         {
-                            if (this.aiStyle == 6)
+                            this.ai[1] = 0f;
+                            this.alpha = 255;
+                            if (this.type == ProjectileType.N28_BOMB ||
+                                this.type == ProjectileType.N37_STICKY_BOMB ||
+                                this.type == ProjectileType.N75_HAPPY_BOMB)
                             {
-                                this.Velocity *= 0.95f;
-                                this.ai[0] += 1f;
-                                if (this.ai[0] == 180f)
-                                {
-                                    this.Kill();
-                                }
-                                if (this.ai[1] == 0f)
-                                {
-                                    this.ai[1] = 1f;
-                                }
-                                if (this.type == ProjectileType.N10_PURIFICATION_POWDER || this.type == ProjectileType.N11_VILE_POWDER)
-                                {
-                                    int num11 = (int)(this.Position.X / 16f) - 1;
-                                    int num12 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
-                                    int num13 = (int)(this.Position.Y / 16f) - 1;
-                                    int num14 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
-                                    if (num11 < 0)
-                                    {
-                                        num11 = 0;
-                                    }
-                                    if (num12 > Main.maxTilesX)
-                                    {
-                                        num12 = Main.maxTilesX;
-                                    }
-                                    if (num13 < 0)
-                                    {
-                                        num13 = 0;
-                                    }
-                                    if (num14 > Main.maxTilesY)
-                                    {
-                                        num14 = Main.maxTilesY;
-                                    }
-                                    for (int l = num11; l < num12; l++)
-                                    {
-                                        for (int m = num13; m < num14; m++)
-                                        {
-                                            Vector2 vector2;
-                                            vector2.X = (float)(l * 16);
-                                            vector2.Y = (float)(m * 16);
-
-                                            if (this.Position.X + (float)this.Width > vector2.X && this.Position.X < vector2.X + 16f && this.Position.Y + (float)this.Height > vector2.Y && this.Position.Y < vector2.Y + 16f
-                                                && (Program.properties.TileSquareMessages != "accept" || Main.myPlayer == this.Owner)
-                                                && Main.tile.At(l, m).Active)
-                                            {
-                                                if (this.type == ProjectileType.N10_PURIFICATION_POWDER)
-                                                {
-                                                    if (Main.tile.At(l, m).Type == 23)
-                                                    {
-                                                        Main.tile.At(l, m).SetType(2);
-                                                        WorldModify.SquareTileFrame(l, m, true);
-                                                        NetMessage.SendTileSquare(-1, l, m, 1);
-                                                    }
-                                                    if (Main.tile.At(l, m).Type == 25)
-                                                    {
-                                                        Main.tile.At(l, m).SetType(1);
-                                                        WorldModify.SquareTileFrame(l, m, true);
-                                                        NetMessage.SendTileSquare(-1, l, m, 1);
-                                                    }
-                                                    if (Main.tile.At(l, m).Type == 112)
-                                                    {
-                                                        Main.tile.At(l, m).SetType(53);
-                                                        WorldModify.SquareTileFrame(l, m, true);
-                                                        NetMessage.SendTileSquare(-1, l, m, 1);
-                                                    }
-                                                }
-                                                else if(this.type == ProjectileType.N11_VILE_POWDER)
-                                                {
-                                                    if (Main.tile.At(l, m).Type == 109)
-                                                    {
-                                                        Main.tile.At(l, m).SetType(2);
-                                                        WorldModify.SquareTileFrame(l, m, true);
-                                                        NetMessage.SendTileSquare(-1, l, m, 1);
-                                                    }
-                                                    if (Main.tile.At(l, m).Type == 116)
-                                                    {
-                                                        Main.tile.At(l, m).SetType(53);
-                                                        WorldModify.SquareTileFrame(l, m, true);
-                                                        NetMessage.SendTileSquare(-1, l, m, 1);
-                                                    }
-                                                    if (Main.tile.At(l, m).Type == 117)
-                                                    {
-                                                        Main.tile.At(l, m).SetType(1);
-                                                        WorldModify.SquareTileFrame(l, m, true);
-                                                        NetMessage.SendTileSquare(-1, l, m, 1);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    return;
-                                }
+                                this.Position.X = this.Position.X + (float)(this.Width / 2);
+                                this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                                this.Width = 128;
+                                this.Height = 128;
+                                this.Position.X = this.Position.X - (float)(this.Width / 2);
+                                this.Position.Y = this.Position.Y - (float)(this.Height / 2);
+                                this.damage = 100;
+                                this.knockBack = 8f;
                             }
                             else
                             {
-                                if (this.aiStyle == 7)
+                                if (this.type == ProjectileType.N29_DYNAMITE)
                                 {
-                                    if (Main.players[this.Owner].dead)
-                                    {
-                                        this.Kill();
-                                        return;
-                                    }
-                                    Vector2 vector3 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
-                                    float num15 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector3.X;
-                                    float num16 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector3.Y;
-                                    float num17 = (float)Math.Sqrt((double)(num15 * num15 + num16 * num16));
-                                    this.rotation = (float)Math.Atan2((double)num16, (double)num15) - 1.57f;
-                                    if (this.ai[0] == 0f)
-                                    {
-                                        if ((num17 > 300f && this.type == ProjectileType.N13_HOOK) || (num17 > 400f && this.type == ProjectileType.N32_IVY_WHIP))
-                                        {
-                                            this.ai[0] = 1f;
-                                        }
-                                        int num18 = (int)(this.Position.X / 16f) - 1;
-                                        int num19 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
-                                        int num20 = (int)(this.Position.Y / 16f) - 1;
-                                        int num21 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
-                                        if (num18 < 0)
-                                        {
-                                            num18 = 0;
-                                        }
-                                        if (num19 > Main.maxTilesX)
-                                        {
-                                            num19 = Main.maxTilesX;
-                                        }
-                                        if (num20 < 0)
-                                        {
-                                            num20 = 0;
-                                        }
-                                        if (num21 > Main.maxTilesY)
-                                        {
-                                            num21 = Main.maxTilesY;
-                                        }
-                                        for (int n = num18; n < num19; n++)
-                                        {
-                                            int num22 = num20;
-                                            while (num22 < num21)
-                                            {
-                                                Vector2 vector4;
-                                                vector4.X = (float)(n * 16);
-                                                vector4.Y = (float)(num22 * 16);
-                                                if (this.Position.X + (float)this.Width > vector4.X && this.Position.X < vector4.X + 16f && this.Position.Y + (float)this.Height > vector4.Y && this.Position.Y < vector4.Y + 16f && Main.tile.At(n, num22).Active && Main.tileSolid[(int)Main.tile.At(n, num22).Type])
-                                                {
-                                                    if (Main.players[this.Owner].grapCount < 10)
-                                                    {
-                                                        Main.players[this.Owner].grappling[Main.players[this.Owner].grapCount] = this.whoAmI;
-                                                        Main.players[this.Owner].grapCount++;
-                                                    }
-                                                    if (Main.myPlayer == this.Owner)
-                                                    {
-                                                        int num23 = 0;
-                                                        int num24 = -1;
-                                                        int num25 = 100000;
-                                                        if(this.type == ProjectileType.N73_HOOK || this.type == ProjectileType.N74_HOOK)
-                                                        {
-                                                            for (int num31 = 0; num31 < 1000; num31++)
-                                                            {
-                                                                if (num31 != this.whoAmI && Main.projectile[num31].Active && Main.projectile[num31].Owner == this.Owner &&
-                                                                    Main.projectile[num31].aiStyle == 7 && Main.projectile[num31].ai[0] == 2f)
-                                                                {
-                                                                    Main.projectile[num31].Kill();
-                                                                }
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            for (int num26 = 0; num26 < 1000; num26++)
-                                                            {
-                                                                if (Main.projectile[num26].Active && Main.projectile[num26].Owner == this.Owner && Main.projectile[num26].aiStyle == 7)
-                                                                {
-                                                                    if (Main.projectile[num26].timeLeft < num25)
-                                                                    {
-                                                                        num24 = num26;
-                                                                        num25 = Main.projectile[num26].timeLeft;
-                                                                    }
-                                                                    num23++;
-                                                                }
-                                                            }
-                                                            if (num23 > 3)
-                                                            {
-                                                                Main.projectile[num24].Kill();
-                                                            }
-                                                        }
-                                                    }
-													var plr = Creator as Player;
-													if (plr == null || WorldModify.InvokeAlterationHook (this, plr, n, num22, 0))
-													{
-														WorldModify.KillTile(n, num22, true, true, false);
-													}
-                                                    this.Velocity.X = 0f;
-                                                    this.Velocity.Y = 0f;
-                                                    this.ai[0] = 2f;
-                                                    this.Position.X = (float)(n * 16 + 8 - this.Width / 2);
-                                                    this.Position.Y = (float)(num22 * 16 + 8 - this.Height / 2);
-                                                    this.damage = 0;
-                                                    this.netUpdate = true;
-                                                    if (Main.myPlayer == this.Owner)
-                                                    {
-                                                        NetMessage.SendData(13, -1, -1, "", this.Owner);
-                                                        break;
-                                                    }
-                                                    break;
-                                                }
-                                                else
-                                                {
-                                                    num22++;
-                                                }
-                                            }
-                                            if (this.ai[0] == 2f)
-                                            {
-                                                return;
-                                            }
-                                        }
-                                        return;
-                                    }
-                                    if (this.ai[0] == 1f)
-                                    {
-                                        float num27 = 11f;
-                                        if (this.type == ProjectileType.N32_IVY_WHIP)
-                                        {
-                                            num27 = 15f;
-                                        }
-                                        if(this.type == ProjectileType.N73_HOOK || this.type == ProjectileType.N74_HOOK)
-                                        {
-                                            num27 = 17f;
-                                        }
-                                        if (num17 < 24f)
-                                        {
-                                            this.Kill();
-                                        }
-                                        num17 = num27 / num17;
-                                        num15 *= num17;
-                                        num16 *= num17;
-                                        this.Velocity.X = num15;
-                                        this.Velocity.Y = num16;
-                                        return;
-                                    }
-                                    if (this.ai[0] == 2f)
-                                    {
-                                        int num28 = (int)(this.Position.X / 16f) - 1;
-                                        int num29 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
-                                        int num30 = (int)(this.Position.Y / 16f) - 1;
-                                        int num31 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
-                                        if (num28 < 0)
-                                        {
-                                            num28 = 0;
-                                        }
-                                        if (num29 > Main.maxTilesX)
-                                        {
-                                            num29 = Main.maxTilesX;
-                                        }
-                                        if (num30 < 0)
-                                        {
-                                            num30 = 0;
-                                        }
-                                        if (num31 > Main.maxTilesY)
-                                        {
-                                            num31 = Main.maxTilesY;
-                                        }
-                                        bool flag = true;
-                                        for (int num32 = num28; num32 < num29; num32++)
-                                        {
-                                            for (int num33 = num30; num33 < num31; num33++)
-                                            {
-                                                Vector2 vector5;
-                                                vector5.X = (float)(num32 * 16);
-                                                vector5.Y = (float)(num33 * 16);
-                                                if (this.Position.X + (float)(this.Width / 2) > vector5.X && this.Position.X + (float)(this.Width / 2) < vector5.X + 16f && this.Position.Y + (float)(this.Height / 2) > vector5.Y && this.Position.Y + (float)(this.Height / 2) < vector5.Y + 16f && Main.tile.At(num32, num33).Active && Main.tileSolid[(int)Main.tile.At(num32, num33).Type])
-                                                {
-                                                    flag = false;
-                                                }
-                                            }
-                                        }
-                                        if (flag)
-                                        {
-                                            this.ai[0] = 1f;
-                                            return;
-                                        }
-                                        if (Main.players[this.Owner].grapCount < 10)
-                                        {
-                                            Main.players[this.Owner].grappling[Main.players[this.Owner].grapCount] = this.whoAmI;
-                                            Main.players[this.Owner].grapCount++;
-                                            return;
-                                        }
-                                    }
+                                    this.Position.X = this.Position.X + (float)(this.Width / 2);
+                                    this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                                    this.Width = 250;
+                                    this.Height = 250;
+                                    this.Position.X = this.Position.X - (float)(this.Width / 2);
+                                    this.Position.Y = this.Position.Y - (float)(this.Height / 2);
+                                    this.damage = 250;
+                                    this.knockBack = 10f;
                                 }
                                 else
                                 {
-                                    if (this.aiStyle == 8)
+                                    if (this.type == ProjectileType.N30_GRENADE)
                                     {
-                                        if(this.type == ProjectileType.N96_CURSED_FLAME && this.ai[0] == 0f)
+                                        this.Position.X = this.Position.X + (float)(this.Width / 2);
+                                        this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                                        this.Width = 128;
+                                        this.Height = 128;
+                                        this.Position.X = this.Position.X - (float)(this.Width / 2);
+                                        this.Position.Y = this.Position.Y - (float)(this.Height / 2);
+                                        this.knockBack = 8f;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (this.type != ProjectileType.N30_GRENADE && this.type != ProjectileType.N108_EXPLOSIVES)
+                            {
+                                this.damage = 0;
+                            }
+                        }
+                        this.ai[0] += 1f;
+                        if ((this.type == ProjectileType.N30_GRENADE && this.ai[0] > 10f) || (this.type != ProjectileType.N30_GRENADE && this.ai[0] > 5f))
+                        {
+                            this.ai[0] = 10f;
+                            if (this.Velocity.Y == 0f && this.Velocity.X != 0f)
+                            {
+                                this.Velocity.X = this.Velocity.X * 0.97f;
+                                if (this.type == ProjectileType.N29_DYNAMITE)
+                                {
+                                    this.Velocity.X = this.Velocity.X * 0.99f;
+                                }
+                                if ((double)this.Velocity.X > -0.01 && (double)this.Velocity.X < 0.01)
+                                {
+                                    this.Velocity.X = 0f;
+                                    this.netUpdate = true;
+                                }
+                            }
+                            this.Velocity.Y = this.Velocity.Y + 0.2f;
+                        }
+                        this.rotation += this.Velocity.X * 0.1f;
+                        return;
+                    }
+                    break;
+                case 17:
+                    {
+                        if (this.Velocity.Y == 0f)
+                        {
+                            this.Velocity.X = this.Velocity.X * 0.98f;
+                        }
+                        this.rotation += this.Velocity.X * 0.1f;
+                        this.Velocity.Y = this.Velocity.Y + 0.2f;
+                        if (this.Owner == Main.myPlayer)
+                        {
+                            int num78 = (int)((this.Position.X + (float)this.Width) / 16f);
+                            int num79 = (int)((this.Position.Y + (float)this.Height) / 16f);
+                            if (Main.tile.At(num78, num79).Exists && !Main.tile.At(num78, num79).Active)
+                            {
+                                WorldModify.PlaceTile(num78, num79, 85, false, false, -1, 0);
+                                if (Main.tile.At(num78, num79).Active)
+                                {
+
+                                    NetMessage.SendData(17, -1, -1, "", 1, (float)num78, (float)num79, 85f);
+
+                                    int num80 = Sign.ReadSign(num78, num79);
+                                    if (num80 >= 0)
+                                    {
+                                        //Need to check if this works :3
+                                        //PlayerEditSignEvent playerEvent = new PlayerEditSignEvent();
+                                        //playerEvent.Sender = Main.players[this.Owner];
+                                        //playerEvent.Sign = Main.sign[num80];
+                                        //playerEvent.Text = this.miscText;
+                                        //playerEvent.isPlayer = false;
+                                        //Server.PluginManager.processHook(Hooks.PLAYER_EDITSIGN, playerEvent);
+                                        //if (playerEvent.Cancelled)
+                                        //{
+                                        //    return;
+                                        //}
+
+                                        Sign.TextSign(num80, this.miscText);
+                                    }
+                                    this.Kill();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 18:
+                    {
+                        if (this.ai[1] == 0f && this.type == ProjectileType.N44_DEMON_SICKLE)
+                        {
+                            this.ai[1] = 1f;
+                        }
+                        this.rotation += (float)this.direction * 0.8f;
+                        this.ai[0] += 1f;
+                        if (this.ai[0] >= 30f)
+                        {
+                            if (this.ai[0] < 100f)
+                            {
+                                this.Velocity *= 1.06f;
+                            }
+                            else
+                            {
+                                this.ai[0] = 200f;
+                            }
+                        }
+                        return;
+                    }
+                    break;
+                case 19:
+                    {
+                        this.direction = Main.players[this.Owner].direction;
+                        Main.players[this.Owner].heldProj = this.whoAmI;
+                        Main.players[this.Owner].itemTime = Main.players[this.Owner].itemAnimation;
+                        this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
+                        this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
+                        if (this.type == ProjectileType.N46_DARK_LANCE)
+                        {
+                            if (this.ai[0] == 0f)
+                            {
+                                this.ai[0] = 3f;
+                                this.netUpdate = true;
+                            }
+                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
+                            {
+                                this.ai[0] -= 1.6f;
+                            }
+                            else
+                            {
+                                this.ai[0] += 1.4f;
+                            }
+                        }
+                        else
+                        {
+                            if (this.type == ProjectileType.N105_GUNGNIR)
+                            {
+                                if (this.ai[0] == 0f)
+                                {
+                                    this.ai[0] = 3f;
+                                    this.netUpdate = true;
+                                }
+                                if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
+                                {
+                                    this.ai[0] -= 2.4f;
+                                }
+                                else
+                                {
+                                    this.ai[0] += 2.1f;
+                                }
+                            }
+                            if (this.type == ProjectileType.N47_TRIDENT)
+                            {
+                                if (this.ai[0] == 0f)
+                                {
+                                    this.ai[0] = 4f;
+                                    this.netUpdate = true;
+                                }
+                                if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
+                                {
+                                    this.ai[0] -= 1.2f;
+                                }
+                                else
+                                {
+                                    this.ai[0] += 0.9f;
+                                }
+                            }
+                            else if (this.type == ProjectileType.N49_SPEAR)
+                            {
+                                if (this.ai[0] == 0f)
+                                {
+                                    this.ai[0] = 4f;
+                                    this.netUpdate = true;
+                                }
+                                if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
+                                {
+                                    this.ai[0] -= 1.1f;
+                                }
+                                else
+                                {
+                                    this.ai[0] += 0.85f;
+                                }
+                            }
+                            else if (this.type == ProjectileType.N64_MYTHRIL_HALBERD)
+                            {
+                                if (this.ai[0] == 0f)
+                                {
+                                    this.ai[0] = 3f;
+                                    this.netUpdate = true;
+                                }
+                                if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
+                                {
+                                    this.ai[0] -= 1.9f;
+                                }
+                                else
+                                {
+                                    this.ai[0] += 1.7f;
+                                }
+                            }
+                            else if (this.type == ProjectileType.N66_ADAMANTITE_GLAIVE || this.type == ProjectileType.N97_COBALT_NAGINATA)
+                            {
+                                if (this.ai[0] == 0f)
+                                {
+                                    this.ai[0] = 3f;
+                                    this.netUpdate = true;
+                                }
+                                if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
+                                {
+                                    this.ai[0] -= 2.1f;
+                                }
+                                else
+                                {
+                                    this.ai[0] += 1.9f;
+                                }
+                            }
+                        }
+                        this.Position += this.Velocity * this.ai[0];
+                        if (Main.players[this.Owner].itemAnimation == 0)
+                        {
+                            this.Kill();
+                        }
+                        this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 2.355f;
+                    }
+                    break;
+                case 20:
+                    {
+                        if (this.soundDelay <= 0)
+                        {
+                            this.soundDelay = 30;
+                        }
+                        if (Main.myPlayer == this.Owner)
+                        {
+                            if (!Main.players[this.Owner].channel)
+                            {
+                                this.Kill();
+                            }
+                        }
+                        if (this.Velocity.X > 0f)
+                        {
+                            Main.players[this.Owner].direction = 1;
+                        }
+                        else
+                        {
+                            if (this.Velocity.X < 0f)
+                            {
+                                Main.players[this.Owner].direction = -1;
+                            }
+                        }
+                        Main.players[this.Owner].direction = this.direction;
+                        Main.players[this.Owner].heldProj = this.whoAmI;
+                        Main.players[this.Owner].itemTime = 2;
+                        Main.players[this.Owner].itemAnimation = 2;
+                        this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
+                        this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
+                        this.rotation = (float)(Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.5700000524520874);
+                        if (Main.players[this.Owner].direction == 1)
+                        {
+                            Main.players[this.Owner].itemRotation = (float)Math.Atan2((double)(this.Velocity.Y * (float)this.direction), (double)(this.Velocity.X * (float)this.direction));
+                        }
+                        else
+                        {
+                            Main.players[this.Owner].itemRotation = (float)Math.Atan2((double)(this.Velocity.Y * (float)this.direction), (double)(this.Velocity.X * (float)this.direction));
+                        }
+                        this.Velocity.X = this.Velocity.X * (1f + (float)Main.rand.Next(-3, 4) * 0.01f);
+                        if (Main.rand.Next(6) == 0)
+                        {
+                            return;
+                        }
+                    }
+                    break;
+                case 21:
+                    {
+                        this.rotation = this.Velocity.X * 0.1f;
+                        if (this.ai[1] == 1f)
+                        {
+                            this.ai[1] = 0f;
+                            Main.harpNote = this.ai[0];
+                            return;
+                        }
+                    }
+                    break;
+                case 22:
+                    {
+                        if (this.Velocity.X == 0f && this.Velocity.Y == 0f)
+                        {
+                            this.alpha = 255;
+                        }
+                        if (this.ai[1] < 0f)
+                        {
+                            if (this.Velocity.X > 0f)
+                            {
+                                this.rotation += 0.3f;
+                            }
+                            else
+                            {
+                                this.rotation -= 0.3f;
+                            }
+                            int num125 = (int)(this.Position.X / 16f) - 1;
+                            int num126 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
+                            int num127 = (int)(this.Position.Y / 16f) - 1;
+                            int num128 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
+                            if (num125 < 0)
+                            {
+                                num125 = 0;
+                            }
+                            if (num126 > Main.maxTilesX)
+                            {
+                                num126 = Main.maxTilesX;
+                            }
+                            if (num127 < 0)
+                            {
+                                num127 = 0;
+                            }
+                            if (num128 > Main.maxTilesY)
+                            {
+                                num128 = Main.maxTilesY;
+                            }
+                            int num129 = (int)this.Position.X + 4;
+                            int num130 = (int)this.Position.Y + 4;
+                            for (int num131 = num125; num131 < num126; num131++)
+                            {
+                                for (int num132 = num127; num132 < num128; num132++)
+                                {
+                                    if (Main.tile.At(num131, num132).Exists && Main.tile.At(num131, num132).Active && Main.tile.At(num131, num132).Type != 127 &&
+                                        Main.tileSolid[(int)Main.tile.At(num131, num132).Type] && !Main.tileSolidTop[(int)Main.tile.At(num131, num132).Type])
+                                    {
+                                        Vector2 vector15;
+                                        vector15.X = (float)(num131 * 16);
+                                        vector15.Y = (float)(num132 * 16);
+                                        if ((float)(num129 + 8) > vector15.X && (float)num129 < vector15.X + 16f &&
+                                            (float)(num130 + 8) > vector15.Y && (float)num130 < vector15.Y + 16f)
                                         {
-                                            this.ai[0] = 1f;
-                                        }
-                                        if (this.type != ProjectileType.N27_WATER_BOLT && this.type != ProjectileType.N96_CURSED_FLAME)
-                                        {
-                                            this.ai[1] += 1f;
-                                        }
-                                        if (this.ai[1] >= 20f)
-                                        {
-                                            this.Velocity.Y = this.Velocity.Y + 0.2f;
-                                        }
-                                        this.rotation += 0.3f * (float)this.direction;
-                                        if (this.Velocity.Y > 16f)
-                                        {
-                                            this.Velocity.Y = 16f;
-                                            return;
+                                            this.Kill();
                                         }
                                     }
-                                    else
+                                }
+                            }
+                            return;
+                        }
+                        if (this.ai[0] < 0f)
+                        {
+                            int num137 = (int)this.Position.X / 16;
+                            int num138 = (int)this.Position.Y / 16;
+                            if (!Main.tile.At(num137, num138).Exists || !Main.tile.At(num137, num138).Active)
+                            {
+                                this.Kill();
+                            }
+                            this.ai[0] -= 1f;
+                            if (this.ai[0] <= -300f && (Main.myPlayer == this.Owner) && Main.tile.At(num137, num138).Active && Main.tile.At(num137, num138).Type == 127)
+                            {
+                                WorldModify.KillTile(num137, num138, false, false, false);
+                                NetMessage.SendData(17, -1, -1, "", 0, (float)num137, (float)num138, 0f, 0);
+                                this.Kill();
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            int num139 = (int)(this.Position.X / 16f) - 1;
+                            int num140 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
+                            int num141 = (int)(this.Position.Y / 16f) - 1;
+                            int num142 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
+                            if (num139 < 0)
+                            {
+                                num139 = 0;
+                            }
+                            if (num140 > Main.maxTilesX)
+                            {
+                                num140 = Main.maxTilesX;
+                            }
+                            if (num141 < 0)
+                            {
+                                num141 = 0;
+                            }
+                            if (num142 > Main.maxTilesY)
+                            {
+                                num142 = Main.maxTilesY;
+                            }
+                            int num143 = (int)this.Position.X + 4;
+                            int num144 = (int)this.Position.Y + 4;
+                            for (int num145 = num139; num145 < num140; num145++)
+                            {
+                                for (int num146 = num141; num146 < num142; num146++)
+                                {
+                                    if (Main.tile.At(num145, num146).Exists && Main.tile.At(num145, num146).Active && Main.tile.At(num145, num146).Type != 127
+                                        && Main.tileSolid[(int)Main.tile.At(num145, num146).Type] && !Main.tileSolidTop[(int)Main.tile.At(num145, num146).Type])
                                     {
-                                        if (this.aiStyle == 9)
+                                        Vector2 vector16;
+                                        vector16.X = (float)(num145 * 16);
+                                        vector16.Y = (float)(num146 * 16);
+                                        if ((float)(num143 + 8) > vector16.X && (float)num143 < vector16.X + 16f &&
+                                            (float)(num144 + 8) > vector16.Y && (float)num144 < vector16.Y + 16f)
                                         {
-                                            if (Main.myPlayer == this.Owner && this.ai[0] == 0f)
-                                            {
-                                                // client-code, not updated from 1.0.6
-                                                if (!Main.players[this.Owner].channel)
-                                                {
-                                                    this.Kill();
-                                                }
-                                            }
-                                            if (this.type == ProjectileType.N34_FLAMELASH)
-                                            {
-                                                this.rotation += 0.3f * (float)this.direction;
-                                            }
-                                            else
-                                            {
-                                                if (this.Velocity.X != 0f || this.Velocity.Y != 0f)
-                                                {
-                                                    this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) - 2.355f;
-                                                }
-                                            }
-                                            if (this.Velocity.Y > 16f)
-                                            {
-                                                this.Velocity.Y = 16f;
-                                                return;
-                                            }
+                                            this.Kill();
                                         }
-                                        else
+                                    }
+                                }
+                            }
+                            if (this.lavaWet)
+                            {
+                                this.Kill();
+                            }
+                            if (this.Active)
+                            {
+                                int num148 = (int)this.ai[0];
+                                int num149 = (int)this.ai[1];
+                                if (this.Velocity.X > 0f)
+                                {
+                                    this.rotation += 0.3f;
+                                }
+                                else
+                                {
+                                    this.rotation -= 0.3f;
+                                }
+                                if (Main.myPlayer == this.Owner)
+                                {
+                                    int num150 = (int)((this.Position.X + (float)(this.Width / 2)) / 16f);
+                                    int num151 = (int)((this.Position.Y + (float)(this.Height / 2)) / 16f);
+                                    bool flag2 = false;
+                                    if (num150 == num148 && num151 == num149)
+                                    {
+                                        flag2 = true;
+                                    }
+                                    if (((this.Velocity.X <= 0f && num150 <= num148) || (this.Velocity.X >= 0f && num150 >= num148)) &&
+                                        ((this.Velocity.Y <= 0f && num151 <= num149) || (this.Velocity.Y >= 0f && num151 >= num149)))
+                                    {
+                                        flag2 = true;
+                                    }
+                                    if (flag2)
+                                    {
+                                        if (WorldModify.PlaceTile(num148, num149, 127, false, false, this.Owner, 0))
                                         {
-                                            if (this.aiStyle == 10)
-                                            {
-                                                if (Main.myPlayer == this.Owner && this.ai[0] == 0f)
-                                                {
-                                                    // client-code, not updated from 1.0.6
-                                                    if (!Main.players[this.Owner].channel)
-                                                    {
-                                                        this.ai[0] = 1f;
-                                                        this.netUpdate = true;
-                                                    }
-                                                }
-                                                if (this.ai[0] == 1f)
-                                                {
-                                                    if (this.type == ProjectileType.N42_SAND_BALL ||
-                                                        this.type == ProjectileType.N65_EBONSAND_BALL ||
-                                                        this.type == ProjectileType.N68_PEARL_SAND_BALL)
-                                                    {
-                                                        this.ai[1] += 1f;
-                                                        if (this.ai[1] >= 60f)
-                                                        {
-                                                            this.ai[1] = 60f;
-                                                            this.Velocity.Y = this.Velocity.Y + 0.2f;
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        this.Velocity.Y = this.Velocity.Y + 0.41f;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (this.ai[0] == 2f)
-                                                    {
-                                                        this.Velocity.Y = this.Velocity.Y + 0.2f;
-                                                        if ((double)this.Velocity.X < -0.04)
-                                                        {
-                                                            this.Velocity.X = this.Velocity.X + 0.04f;
-                                                        }
-                                                        else
-                                                        {
-                                                            if ((double)this.Velocity.X > 0.04)
-                                                            {
-                                                                this.Velocity.X = this.Velocity.X - 0.04f;
-                                                            }
-                                                            else
-                                                            {
-                                                                this.Velocity.X = 0f;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                this.rotation += 0.1f;
-                                                if (this.Velocity.Y > 10f)
-                                                {
-                                                    this.Velocity.Y = 10f;
-                                                    return;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (this.aiStyle == 11)
-                                                {
-                                                    if (this.type == ProjectileType.N72_BLUE_FAIRY || this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
-                                                    {
-                                                        if (this.Velocity.X > 0f)
-                                                        {
-                                                            this.direction = -1;
-                                                        }
-                                                        else if (this.Velocity.X < 0f)
-                                                        {
-                                                            this.direction = 1;
-                                                        }
-                                                        this.rotation = this.Velocity.X * 0.1f;
-                                                    }
-                                                    else
-                                                    {
-                                                        this.rotation += 0.02f;
-                                                    }
-                                                    if (Main.myPlayer == this.Owner)
-                                                    {
-                                                        if (this.type == ProjectileType.N72_BLUE_FAIRY || this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
-                                                        {
-                                                           // [TODO] 1.1 : double check the player class
-                                                            if (Main.players[this.Owner].fairy)
-                                                            {
-                                                                this.timeLeft = 2;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (Main.players[this.Owner].lightOrb)
-                                                            {
-                                                                this.timeLeft = 2;
-                                                            }
-                                                        }
-                                                        if (Main.players[this.Owner].dead)
-                                                        {
-                                                            this.Kill();
-                                                            return;
-                                                        }
-                                                        float num51 = 2.5f;
-                                                        int num81 = 70;
-                                                        if (this.type == ProjectileType.N72_BLUE_FAIRY || this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
-                                                        {
-                                                            num51 = 3.5f;
-                                                            num81 = 40;
-                                                        }
-                                                        Vector2 vector8 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
-                                                        float num52 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector8.X;
-                                                        float num53 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector8.Y;
-                                                        float num54 = (float)Math.Sqrt((double)(num52 * num52 + num53 * num53));
-                                                        num54 = (float)Math.Sqrt((double)(num52 * num52 + num53 * num53));
-                                                        if (num54 > 800f)
-                                                        {
-                                                            this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
-                                                            this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
-                                                            return;
-                                                        }
-                                                        if (num54 > (float)num81)
-                                                        {
-                                                            num54 = num51 / num54;
-                                                            num52 *= num54;
-                                                            num53 *= num54;
-                                                            // [TODO] 1.1 - double check this area of code in aiStyle 11
-                                                            // Commented out in 1.1
-                                                            //if (num52 != this.Velocity.X || num53 != this.Velocity.Y)
-                                                            //{
-                                                            //   this.netUpdate = true;
-                                                            //}
-                                                            this.Velocity.X = num52;
-                                                            this.Velocity.Y = num53;
-                                                            return;
-                                                        }
-                                                        // Commented out in 1.1
-                                                        //if (this.Velocity.X != 0f || this.Velocity.Y != 0f)
-                                                        //{
-                                                        //    this.netUpdate = true;
-                                                        //}
-                                                        this.Velocity.X = 0f;
-                                                        this.Velocity.Y = 0f;
-                                                        return;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (this.aiStyle == 12)
-                                                    {
-                                                        this.scale -= 0.04f;
-                                                        if (this.scale <= 0f)
-                                                        {
-                                                            this.Kill();
-                                                        }
-                                                        if (this.ai[0] > 4f)
-                                                        {
-                                                            this.alpha = 150;
-                                                            this.light = 0.8f;
-                                                        }
-                                                        else
-                                                        {
-                                                            this.ai[0] += 1f;
-                                                        }
-                                                        this.rotation += 0.3f * (float)this.direction;
-                                                        return;
-                                                    }
-                                                    if (this.aiStyle == 13)
-                                                    {
-                                                        if (Main.players[this.Owner].dead)
-                                                        {
-                                                            this.Kill();
-                                                            return;
-                                                        }
-                                                        Main.players[this.Owner].itemAnimation = 5;
-                                                        Main.players[this.Owner].itemTime = 5;
-                                                        if (this.Position.X + (float)(this.Width / 2) > Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2))
-                                                        {
-                                                            Main.players[this.Owner].direction = 1;
-                                                        }
-                                                        else
-                                                        {
-                                                            Main.players[this.Owner].direction = -1;
-                                                        }
-                                                        Vector2 vector9 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
-                                                        float num56 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector9.X;
-                                                        float num57 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector9.Y;
-                                                        float num58 = (float)Math.Sqrt((double)(num56 * num56 + num57 * num57));
-                                                        if (this.ai[0] == 0f)
-                                                        {
-                                                            if (num58 > 700f)
-                                                            {
-                                                                this.ai[0] = 1f;
-                                                            }
-                                                            this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
-                                                            this.ai[1] += 1f;
-                                                            if (this.ai[1] > 2f)
-                                                            {
-                                                                this.alpha = 0;
-                                                            }
-                                                            if (this.ai[1] >= 10f)
-                                                            {
-                                                                this.ai[1] = 15f;
-                                                                this.Velocity.Y = this.Velocity.Y + 0.3f;
-                                                                return;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (this.ai[0] == 1f)
-                                                            {
-                                                                this.tileCollide = false;
-                                                                this.rotation = (float)Math.Atan2((double)num57, (double)num56) - 1.57f;
-                                                                float num59 = 11f;
-                                                                if (num58 < 50f)
-                                                                {
-                                                                    this.Kill();
-                                                                }
-                                                                num58 = num59 / num58;
-                                                                num56 *= num58;
-                                                                num57 *= num58;
-                                                                this.Velocity.X = num56;
-                                                                this.Velocity.Y = num57;
-                                                                return;
-                                                            }
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (this.aiStyle == 14)
-                                                        {
-                                                            if (this.type == ProjectileType.N53_STICKY_GLOWSTICK)
-                                                            {
-                                                                try
-                                                                {
-                                                                    Vector2 vector10 = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, false, false);
-                                                                    bool flag1 = this.Velocity != vector10;
-                                                                    int num66 = ((int)(this.Position.X / 16f)) - 1;
-                                                                    int num67 = ((int)((this.Position.X + this.Width) / 16f)) + 2;
-                                                                    int num68 = ((int)(this.Position.Y / 16f)) - 1;
-                                                                    int num69 = ((int)((this.Position.Y + this.Height) / 16f)) + 2;
-                                                                    if (num66 < 0)
-                                                                    {
-                                                                        num66 = 0;
-                                                                    }
-                                                                    if (num67 > Main.maxTilesX)
-                                                                    {
-                                                                        num67 = Main.maxTilesX;
-                                                                    }
-                                                                    if (num68 < 0)
-                                                                    {
-                                                                        num68 = 0;
-                                                                    }
-                                                                    if (num69 > Main.maxTilesY)
-                                                                    {
-                                                                        num69 = Main.maxTilesY;
-                                                                    }
-                                                                    for (int num70 = num66; num70 < num67; num70++)
-                                                                    {
-                                                                        for (int num71 = num68; num71 < num69; num71++)
-                                                                        {
-                                                                            if ((Main.tile.At(num70, num71).Active) && (Main.tileSolid[Main.tile.At(num70, num71).Type] || (Main.tileSolidTop[Main.tile.At(num70, num71).Type] && (Main.tile.At(num70, num71).FrameY == 0))))
-                                                                            {
-                                                                                Vector2 vector11;
-                                                                                vector11.X = num70 * 0x10;
-                                                                                vector11.Y = num71 * 0x10;
-                                                                                if ((((this.Position.X + this.Width) > vector11.X) && (this.Position.X < (vector11.X + 16f))) && (((this.Position.Y + this.Height) > vector11.Y) && (this.Position.Y < (vector11.Y + 16f))))
-                                                                                {
-                                                                                    this.Velocity.X = 0f;
-                                                                                    this.Velocity.Y = -0.2f;
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                                catch
-                                                                {
-                                                                }
-                                                            }
-
-                                                            this.ai[0] += 1f;
-                                                            if (this.ai[0] > 5f)
-                                                            {
-                                                                this.ai[0] = 5f;
-                                                                if (this.Velocity.Y == 0f && this.Velocity.X != 0f)
-                                                                {
-                                                                    this.Velocity.X = this.Velocity.X * 0.97f;
-                                                                    if ((double)this.Velocity.X > -0.01 && (double)this.Velocity.X < 0.01)
-                                                                    {
-                                                                        this.Velocity.X = 0f;
-                                                                        this.netUpdate = true;
-                                                                    }
-                                                                }
-                                                                this.Velocity.Y = this.Velocity.Y + 0.2f;
-                                                            }
-                                                            this.rotation += this.Velocity.X * 0.1f;
-                                                            if (this.Velocity.Y > 16f)
-                                                            {
-                                                                this.Velocity.Y = 16f;
-                                                                return;
-                                                            }
-                                                        }
-                                                        if (this.aiStyle == 15)
-                                                        {
-                                                            if (Main.players[this.Owner].dead)
-                                                            {
-                                                                this.Kill();
-                                                                return;
-                                                            }
-                                                            Main.players[this.Owner].itemAnimation = 10;
-                                                            Main.players[this.Owner].itemTime = 10;
-                                                            if (this.Position.X + (float)(this.Width / 2) > Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2))
-                                                            {
-                                                                Main.players[this.Owner].direction = 1;
-                                                                this.direction = 1;
-                                                            }
-                                                            else
-                                                            {
-                                                                Main.players[this.Owner].direction = -1;
-                                                                this.direction = -1;
-                                                            }
-                                                            Vector2 vector11 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
-                                                            float num73 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector11.X;
-                                                            float num74 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector11.Y;
-                                                            float num75 = (float)Math.Sqrt((double)(num73 * num73 + num74 * num74));
-
-                                                            if (this.ai[0] == 0f)
-                                                            {
-                                                                float num98 = 160f;
-                                                                if (this.type == ProjectileType.N63_THE_DAO_OF_POW)
-                                                                {
-                                                                    num98 *= 1.5f;
-                                                                }
-                                                                this.tileCollide = true;
-                                                                if (num75 > num98)
-                                                                {
-                                                                    this.ai[0] = 1f;
-                                                                    this.netUpdate = true;
-                                                                }
-                                                                else
-                                                                {
-																	if (!Main.players[this.Owner].channel)
-																	{
-																		if (this.Velocity.Y < 0f)
-																		{
-																			this.Velocity.Y = this.Velocity.Y * 0.9f;
-																		}
-																		this.Velocity.Y = this.Velocity.Y + 1f;
-																		this.Velocity.X = this.Velocity.X * 0.9f;
-																	}
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (this.ai[0] == 1f)
-                                                                {
-																	var owner = Main.players[this.Owner];
-																	float num76 = 14f / owner.meleeSpeed;
-																	float num77 = 0.9f / owner.meleeSpeed;
-                                                                    float num101 = 300f;
-                                                                    if (this.type == ProjectileType.N63_THE_DAO_OF_POW)
-                                                                    {
-                                                                        num101 *= 1.5f;
-                                                                        num76 *= 1.5f;
-                                                                        num77 *= 1.5f;
-                                                                    }
-																	Math.Abs(num73);
-																	Math.Abs(num74);
-																	if (this.ai[1] == 1f)
-																	{
-																		this.tileCollide = false;
-																	}
-																	if (!owner.channel || num75 > num101 || !this.tileCollide)
-																	{
-																		this.ai[1] = 1f;
-																		if (this.tileCollide)
-																		{
-																			this.netUpdate = true;
-																		}
-																		this.tileCollide = false;
-																		if (num75 < 20f)
-																		{
-																			this.Kill();
-																		}
-																	}
-																	if (!this.tileCollide)
-																	{
-																		num77 *= 2f;
-																	}
-																	if (num75 > 60f || !this.tileCollide)
-																	{
-																		num75 = num76 / num75;
-																		num73 *= num75;
-																		num74 *= num75;
-																		float num78 = num73 - this.Velocity.X;
-																		float num79 = num74 - this.Velocity.Y;
-																		float num80 = (float)Math.Sqrt((double)(num78 * num78 + num79 * num79));
-																		num80 = num77 / num80;
-																		num78 *= num80;
-																		num79 *= num80;
-																		this.Velocity.X = this.Velocity.X * 0.98f;
-																		this.Velocity.Y = this.Velocity.Y * 0.98f;
-																		this.Velocity.X = this.Velocity.X + num78;
-																		this.Velocity.Y = this.Velocity.Y + num79;
-																	}
-																	else
-																	{
-																		if (Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y) < 6f)
-																		{
-																			this.Velocity.X = this.Velocity.X * 0.96f;
-																			this.Velocity.Y = this.Velocity.Y + 0.2f;
-																		}
-																		if (owner.Velocity.X == 0f)
-																		{
-																			this.Velocity.X = this.Velocity.X * 0.96f;
-																		}
-																	}
-																}
-															}
-															this.rotation = (float)Math.Atan2((double)num74, (double)num73) - this.Velocity.X * 0.1f;
-                                                            return;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (this.aiStyle == 16)
-                                                            {
-                                                                if(this.type == ProjectileType.N108_EXPLOSIVES)
-                                                                {
-                                                                    this.ai[0] += 1f;
-                                                                    if (this.ai[0] > 3f)
-                                                                    {
-                                                                        this.Kill();
-                                                                    }
-                                                                }
-                                                                if (this.type == ProjectileType.N37_STICKY_BOMB)
-                                                                {
-                                                                    try
-                                                                    {
-                                                                        int num72 = (int)(this.Position.X / 16f) - 1;
-                                                                        int num73 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
-                                                                        int num74 = (int)(this.Position.Y / 16f) - 1;
-                                                                        int num75 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
-                                                                        if (num72 < 0)
-                                                                        {
-                                                                            num72 = 0;
-                                                                        }
-                                                                        if (num73 > Main.maxTilesX)
-                                                                        {
-                                                                            num73 = Main.maxTilesX;
-                                                                        }
-                                                                        if (num74 < 0)
-                                                                        {
-                                                                            num74 = 0;
-                                                                        }
-                                                                        if (num75 > Main.maxTilesY)
-                                                                        {
-                                                                            num75 = Main.maxTilesY;
-                                                                        }
-                                                                        for (int num76 = num72; num76 < num73; num76++)
-                                                                        {
-                                                                            for (int num77 = num74; num77 < num75; num77++)
-                                                                            {
-                                                                                if (Main.tile.At(num76, num77).Active && (Main.tileSolid[(int)Main.tile.At(num76, num77).Type] || (Main.tileSolidTop[(int)Main.tile.At(num76, num77).Type] && Main.tile.At(num76, num77).FrameY == 0)))
-                                                                                {
-                                                                                    Vector2 vector12;
-                                                                                    vector12.X = (float)(num76 * 16);
-                                                                                    vector12.Y = (float)(num77 * 16);
-                                                                                    if (this.Position.X + (float)this.Width - 4f > vector12.X && this.Position.X + 4f < vector12.X + 16f && this.Position.Y + (float)this.Height - 4f > vector12.Y && this.Position.Y + 4f < vector12.Y + 16f)
-                                                                                    {
-                                                                                        this.Velocity.X = 0f;
-                                                                                        this.Velocity.Y = -0.2f;
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    catch
-                                                                    {
-                                                                    }
-                                                                }
-                                                                if( this.type == ProjectileType.N102_BOMB)
-                                                                {
-                                                                    // [TODO] 1.1 - double check this code
-                                                                    if (this.Velocity.Y > 10f)
-                                                                    {
-                                                                        this.Velocity.Y = 10f;
-                                                                    }
-                                                                    if (this.ai[0] == 0f)
-                                                                    {
-                                                                        this.ai[0] = 1f;
-                                                                    }
-                                                                    if (this.Velocity.Y == 0f)
-                                                                    {
-                                                                        this.Position.X = this.Position.X + (float)(this.Width / 2);
-                                                                        this.Position.Y = this.Position.Y + (float)(this.Height / 2);
-                                                                        this.Width = 128;
-                                                                        this.Height = 128;
-                                                                        this.Position.X = this.Position.X - (float)(this.Width / 2);
-                                                                        this.Position.Y = this.Position.Y - (float)(this.Height / 2);
-                                                                        this.damage = 40;
-                                                                        this.knockBack = 8f;
-                                                                        this.timeLeft = 3;
-                                                                        this.netUpdate = true;
-                                                                    }
-                                                                }
-                                                                if (this.Owner == Main.myPlayer && this.timeLeft <= 3)
-                                                                {
-                                                                    this.ai[1] = 0f;
-                                                                    this.alpha = 255;
-                                                                    if (this.type == ProjectileType.N28_BOMB || 
-                                                                        this.type == ProjectileType.N37_STICKY_BOMB ||
-                                                                        this.type == ProjectileType.N75_HAPPY_BOMB)
-                                                                    {
-                                                                        this.Position.X = this.Position.X + (float)(this.Width / 2);
-                                                                        this.Position.Y = this.Position.Y + (float)(this.Height / 2);
-                                                                        this.Width = 128;
-                                                                        this.Height = 128;
-                                                                        this.Position.X = this.Position.X - (float)(this.Width / 2);
-                                                                        this.Position.Y = this.Position.Y - (float)(this.Height / 2);
-                                                                        this.damage = 100;
-                                                                        this.knockBack = 8f;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (this.type == ProjectileType.N29_DYNAMITE)
-                                                                        {
-                                                                            this.Position.X = this.Position.X + (float)(this.Width / 2);
-                                                                            this.Position.Y = this.Position.Y + (float)(this.Height / 2);
-                                                                            this.Width = 250;
-                                                                            this.Height = 250;
-                                                                            this.Position.X = this.Position.X - (float)(this.Width / 2);
-                                                                            this.Position.Y = this.Position.Y - (float)(this.Height / 2);
-                                                                            this.damage = 250;
-                                                                            this.knockBack = 10f;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (this.type == ProjectileType.N30_GRENADE)
-                                                                            {
-                                                                                this.Position.X = this.Position.X + (float)(this.Width / 2);
-                                                                                this.Position.Y = this.Position.Y + (float)(this.Height / 2);
-                                                                                this.Width = 128;
-                                                                                this.Height = 128;
-                                                                                this.Position.X = this.Position.X - (float)(this.Width / 2);
-                                                                                this.Position.Y = this.Position.Y - (float)(this.Height / 2);
-                                                                                this.knockBack = 8f;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (this.type != ProjectileType.N30_GRENADE && this.type != ProjectileType.N108_EXPLOSIVES)
-                                                                    {
-                                                                        this.damage = 0;
-                                                                    }
-                                                                }
-                                                                this.ai[0] += 1f;
-                                                                if ((this.type == ProjectileType.N30_GRENADE && this.ai[0] > 10f) || (this.type != ProjectileType.N30_GRENADE && this.ai[0] > 5f))
-                                                                {
-                                                                    this.ai[0] = 10f;
-                                                                    if (this.Velocity.Y == 0f && this.Velocity.X != 0f)
-                                                                    {
-                                                                        this.Velocity.X = this.Velocity.X * 0.97f;
-                                                                        if (this.type == ProjectileType.N29_DYNAMITE)
-                                                                        {
-                                                                            this.Velocity.X = this.Velocity.X * 0.99f;
-                                                                        }
-                                                                        if ((double)this.Velocity.X > -0.01 && (double)this.Velocity.X < 0.01)
-                                                                        {
-                                                                            this.Velocity.X = 0f;
-                                                                            this.netUpdate = true;
-                                                                        }
-                                                                    }
-                                                                    this.Velocity.Y = this.Velocity.Y + 0.2f;
-                                                                }
-                                                                this.rotation += this.Velocity.X * 0.1f;
-                                                                return;
-                                                            }
-                                                            if (this.aiStyle == 17)
-                                                            {
-                                                                if (this.Velocity.Y == 0f)
-                                                                {
-                                                                    this.Velocity.X = this.Velocity.X * 0.98f;
-                                                                }
-                                                                this.rotation += this.Velocity.X * 0.1f;
-                                                                this.Velocity.Y = this.Velocity.Y + 0.2f;
-                                                                if (this.Owner == Main.myPlayer)
-                                                                {
-                                                                    int num78 = (int)((this.Position.X + (float)this.Width) / 16f);
-                                                                    int num79 = (int)((this.Position.Y + (float)this.Height) / 16f);
-                                                                    if (Main.tile.At(num78, num79).Exists && !Main.tile.At(num78, num79).Active)
-                                                                    {
-                                                                        WorldModify.PlaceTile(num78, num79, 85, false, false, -1, 0);
-                                                                        if (Main.tile.At(num78, num79).Active)
-                                                                        {
-                                                                            
-                                                                            NetMessage.SendData(17, -1, -1, "", 1, (float)num78, (float)num79, 85f);
-
-                                                                            int num80 = Sign.ReadSign(num78, num79);
-                                                                            if (num80 >= 0)
-                                                                            {
-                                                                                //Need to check if this works :3
-                                                                                //PlayerEditSignEvent playerEvent = new PlayerEditSignEvent();
-                                                                                //playerEvent.Sender = Main.players[this.Owner];
-                                                                                //playerEvent.Sign = Main.sign[num80];
-                                                                                //playerEvent.Text = this.miscText;
-                                                                                //playerEvent.isPlayer = false;
-                                                                                //Server.PluginManager.processHook(Hooks.PLAYER_EDITSIGN, playerEvent);
-                                                                                //if (playerEvent.Cancelled)
-                                                                                //{
-                                                                                //    return;
-                                                                                //}
-
-                                                                                Sign.TextSign(num80, this.miscText);
-                                                                            }
-                                                                            this.Kill();
-                                                                            return;
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (this.aiStyle == 18)
-                                                                {
-                                                                    if (this.ai[1] == 0f && this.type == ProjectileType.N44_DEMON_SICKLE)
-                                                                    {
-                                                                        this.ai[1] = 1f;
-                                                                    }
-                                                                    this.rotation += (float)this.direction * 0.8f;
-                                                                    this.ai[0] += 1f;
-                                                                    if (this.ai[0] >= 30f)
-                                                                    {
-                                                                        if (this.ai[0] < 100f)
-                                                                        {
-                                                                            this.Velocity *= 1.06f;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            this.ai[0] = 200f;
-                                                                        }
-                                                                    }
-                                                                    return;
-                                                                }
-                                                                if (this.aiStyle == 19)
-                                                                {
-                                                                    this.direction = Main.players[this.Owner].direction;
-                                                                    Main.players[this.Owner].heldProj = this.whoAmI;
-                                                                    Main.players[this.Owner].itemTime = Main.players[this.Owner].itemAnimation;
-                                                                    this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
-                                                                    this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
-                                                                    if (this.type == ProjectileType.N46_DARK_LANCE)
-                                                                    {
-                                                                        if (this.ai[0] == 0f)
-                                                                        {
-                                                                            this.ai[0] = 3f;
-                                                                            this.netUpdate = true;
-                                                                        }
-                                                                        if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
-                                                                        {
-                                                                            this.ai[0] -= 1.6f;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            this.ai[0] += 1.4f;
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (this.type == ProjectileType.N105_GUNGNIR)
-                                                                        {
-                                                                            if (this.ai[0] == 0f)
-                                                                            {
-                                                                                this.ai[0] = 3f;
-                                                                                this.netUpdate = true;
-                                                                            }
-                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
-                                                                            {
-                                                                                this.ai[0] -= 2.4f;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                this.ai[0] += 2.1f;
-                                                                            }
-                                                                        }
-                                                                        if (this.type == ProjectileType.N47_TRIDENT)
-                                                                        {
-                                                                            if (this.ai[0] == 0f)
-                                                                            {
-                                                                                this.ai[0] = 4f;
-                                                                                this.netUpdate = true;
-                                                                            }
-                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
-                                                                            {
-                                                                                this.ai[0] -= 1.2f;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                this.ai[0] += 0.9f;
-                                                                            }
-                                                                        }
-                                                                        else if (this.type == ProjectileType.N49_SPEAR)
-                                                                        {
-                                                                            if (this.ai[0] == 0f)
-                                                                            {
-                                                                                this.ai[0] = 4f;
-                                                                                this.netUpdate = true;
-                                                                            }
-                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
-                                                                            {
-                                                                                this.ai[0] -= 1.1f;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                this.ai[0] += 0.85f;
-                                                                            }
-                                                                        }
-                                                                        else if (this.type == ProjectileType.N64_MYTHRIL_HALBERD)
-                                                                        {
-                                                                            if (this.ai[0] == 0f)
-                                                                            {
-                                                                                this.ai[0] = 3f;
-                                                                                this.netUpdate = true;
-                                                                            }
-                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
-                                                                            {
-                                                                                this.ai[0] -= 1.9f;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                this.ai[0] += 1.7f;
-                                                                            }
-                                                                        }
-                                                                        else if(this.type == ProjectileType.N66_ADAMANTITE_GLAIVE || this.type == ProjectileType.N97_COBALT_NAGINATA)
-                                                                        {
-                                                                            if (this.ai[0] == 0f)
-                                                                            {
-                                                                                this.ai[0] = 3f;
-                                                                                this.netUpdate = true;
-                                                                            }
-                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
-                                                                            {
-                                                                                this.ai[0] -= 2.1f;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                this.ai[0] += 1.9f;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    this.Position += this.Velocity * this.ai[0];
-                                                                    if (Main.players[this.Owner].itemAnimation == 0)
-                                                                    {
-                                                                        this.Kill();
-                                                                    }
-                                                                    this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 2.355f;
-                                                                }
-                                                                if (this.aiStyle == 20)
-                                                                {
-                                                                    if (this.soundDelay <= 0)
-                                                                    {
-                                                                        this.soundDelay = 30;
-                                                                    }
-                                                                    if (Main.myPlayer == this.Owner)
-                                                                    {
-                                                                        if (!Main.players[this.Owner].channel)
-                                                                        {
-                                                                            this.Kill();
-                                                                        }
-                                                                    }
-                                                                    if (this.Velocity.X > 0f)
-                                                                    {
-                                                                        Main.players[this.Owner].direction = 1;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (this.Velocity.X < 0f)
-                                                                        {
-                                                                            Main.players[this.Owner].direction = -1;
-                                                                        }
-                                                                    }
-                                                                    Main.players[this.Owner].direction = this.direction;
-                                                                    Main.players[this.Owner].heldProj = this.whoAmI;
-                                                                    Main.players[this.Owner].itemTime = 2;
-                                                                    Main.players[this.Owner].itemAnimation = 2;
-                                                                    this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
-                                                                    this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
-                                                                    this.rotation = (float)(Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.5700000524520874);
-                                                                    if (Main.players[this.Owner].direction == 1)
-                                                                    {
-                                                                        Main.players[this.Owner].itemRotation = (float)Math.Atan2((double)(this.Velocity.Y * (float)this.direction), (double)(this.Velocity.X * (float)this.direction));
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        Main.players[this.Owner].itemRotation = (float)Math.Atan2((double)(this.Velocity.Y * (float)this.direction), (double)(this.Velocity.X * (float)this.direction));
-                                                                    }
-                                                                    this.Velocity.X = this.Velocity.X * (1f + (float)Main.rand.Next(-3, 4) * 0.01f);
-                                                                    if (Main.rand.Next(6) == 0)
-                                                                    {
-                                                                        return;
-                                                                    }
-                                                                }
-                                                                else if (this.aiStyle == 21)
-                                                                {
-                                                                    this.rotation = this.Velocity.X * 0.1f;
-                                                                    if (this.ai[1] == 1f)
-                                                                    {
-                                                                        this.ai[1] = 0f;
-                                                                        Main.harpNote = this.ai[0];
-                                                                        return;
-                                                                    }
-                                                                }
-                                                                else if (this.aiStyle == 22)
-                                                                {
-                                                                    if (this.Velocity.X == 0f && this.Velocity.Y == 0f)
-                                                                    {
-                                                                        this.alpha = 255;
-                                                                    }
-                                                                    if (this.ai[1] < 0f)
-                                                                    {
-                                                                        if (this.Velocity.X > 0f)
-                                                                        {
-                                                                            this.rotation += 0.3f;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            this.rotation -= 0.3f;
-                                                                        }
-                                                                        int num125 = (int)(this.Position.X / 16f) - 1;
-                                                                        int num126 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
-                                                                        int num127 = (int)(this.Position.Y / 16f) - 1;
-                                                                        int num128 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
-                                                                        if (num125 < 0)
-                                                                        {
-                                                                            num125 = 0;
-                                                                        }
-                                                                        if (num126 > Main.maxTilesX)
-                                                                        {
-                                                                            num126 = Main.maxTilesX;
-                                                                        }
-                                                                        if (num127 < 0)
-                                                                        {
-                                                                            num127 = 0;
-                                                                        }
-                                                                        if (num128 > Main.maxTilesY)
-                                                                        {
-                                                                            num128 = Main.maxTilesY;
-                                                                        }
-                                                                        int num129 = (int)this.Position.X + 4;
-                                                                        int num130 = (int)this.Position.Y + 4;
-                                                                        for (int num131 = num125; num131 < num126; num131++)
-                                                                        {
-                                                                            for (int num132 = num127; num132 < num128; num132++)
-                                                                            {
-                                                                                if (Main.tile.At(num131, num132).Exists && Main.tile.At(num131, num132).Active && Main.tile.At(num131, num132).Type != 127 && 
-                                                                                    Main.tileSolid[(int)Main.tile.At(num131, num132).Type] && !Main.tileSolidTop[(int)Main.tile.At(num131, num132).Type])
-                                                                                {
-                                                                                    Vector2 vector15;
-                                                                                    vector15.X = (float)(num131 * 16);
-                                                                                    vector15.Y = (float)(num132 * 16);
-                                                                                    if ((float)(num129 + 8) > vector15.X && (float)num129 < vector15.X + 16f &&
-                                                                                        (float)(num130 + 8) > vector15.Y && (float)num130 < vector15.Y + 16f)
-                                                                                    {
-                                                                                        this.Kill();
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                        return;
-                                                                    }
-                                                                    if (this.ai[0] < 0f)
-                                                                    {
-                                                                        int num137 = (int)this.Position.X / 16;
-                                                                        int num138 = (int)this.Position.Y / 16;
-                                                                        if (!Main.tile.At(num137, num138).Exists || !Main.tile.At(num137, num138).Active)
-                                                                        {
-                                                                            this.Kill();
-                                                                        }
-                                                                        this.ai[0] -= 1f;
-                                                                        if (this.ai[0] <= -300f && (Main.myPlayer == this.Owner) && Main.tile.At(num137, num138).Active && Main.tile.At(num137, num138).Type == 127)
-                                                                        {
-                                                                            WorldModify.KillTile(num137, num138, false, false, false);
-                                                                            NetMessage.SendData(17, -1, -1, "", 0, (float)num137, (float)num138, 0f, 0);
-                                                                            this.Kill();
-                                                                            return;
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        int num139 = (int)(this.Position.X / 16f) - 1;
-                                                                        int num140 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
-                                                                        int num141 = (int)(this.Position.Y / 16f) - 1;
-                                                                        int num142 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
-                                                                        if (num139 < 0)
-                                                                        {
-                                                                            num139 = 0;
-                                                                        }
-                                                                        if (num140 > Main.maxTilesX)
-                                                                        {
-                                                                            num140 = Main.maxTilesX;
-                                                                        }
-                                                                        if (num141 < 0)
-                                                                        {
-                                                                            num141 = 0;
-                                                                        }
-                                                                        if (num142 > Main.maxTilesY)
-                                                                        {
-                                                                            num142 = Main.maxTilesY;
-                                                                        }
-                                                                        int num143 = (int)this.Position.X + 4;
-                                                                        int num144 = (int)this.Position.Y + 4;
-                                                                        for (int num145 = num139; num145 < num140; num145++)
-                                                                        {
-                                                                            for (int num146 = num141; num146 < num142; num146++)
-                                                                            {
-                                                                                if (Main.tile.At(num145, num146).Exists && Main.tile.At(num145, num146).Active && Main.tile.At(num145, num146).Type != 127 
-                                                                                    && Main.tileSolid[(int)Main.tile.At(num145, num146).Type] && !Main.tileSolidTop[(int)Main.tile.At(num145, num146).Type])
-                                                                                {
-                                                                                    Vector2 vector16;
-                                                                                    vector16.X = (float)(num145 * 16);
-                                                                                    vector16.Y = (float)(num146 * 16);
-                                                                                    if ((float)(num143 + 8) > vector16.X && (float)num143 < vector16.X + 16f && 
-                                                                                        (float)(num144 + 8) > vector16.Y && (float)num144 < vector16.Y + 16f)
-                                                                                    {
-                                                                                        this.Kill();
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                        if (this.lavaWet)
-                                                                        {
-                                                                            this.Kill();
-                                                                        }
-                                                                        if (this.Active)
-                                                                        {
-                                                                            int num148 = (int)this.ai[0];
-                                                                            int num149 = (int)this.ai[1];
-                                                                            if (this.Velocity.X > 0f)
-                                                                            {
-                                                                                this.rotation += 0.3f;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                this.rotation -= 0.3f;
-                                                                            }
-                                                                            if (Main.myPlayer == this.Owner)
-                                                                            {
-                                                                                int num150 = (int)((this.Position.X + (float)(this.Width / 2)) / 16f);
-                                                                                int num151 = (int)((this.Position.Y + (float)(this.Height / 2)) / 16f);
-                                                                                bool flag2 = false;
-                                                                                if (num150 == num148 && num151 == num149)
-                                                                                {
-                                                                                    flag2 = true;
-                                                                                }
-                                                                                if (((this.Velocity.X <= 0f && num150 <= num148) || (this.Velocity.X >= 0f && num150 >= num148)) &&
-                                                                                    ((this.Velocity.Y <= 0f && num151 <= num149) || (this.Velocity.Y >= 0f && num151 >= num149)))
-                                                                                {
-                                                                                    flag2 = true;
-                                                                                }
-                                                                                if (flag2)
-                                                                                {
-                                                                                    if (WorldModify.PlaceTile(num148, num149, 127, false, false, this.Owner, 0))
-                                                                                    {
-                                                                                        NetMessage.SendData(17, -1, -1, "", 1, (float)((int)this.ai[0]), (float)((int)this.ai[1]), 127f, 0);
-                                                                                        this.damage = 0;
-                                                                                        this.ai[0] = -1f;
-                                                                                        this.Velocity *= 0f;
-                                                                                        this.alpha = 255;
-                                                                                        this.Position.X = (float)(num148 * 16);
-                                                                                        this.Position.Y = (float)(num149 * 16);
-                                                                                        this.netUpdate = true;
-                                                                                        return;
-                                                                                    }
-                                                                                    this.ai[1] = -1f;
-                                                                                    return;
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                                else if (this.aiStyle == 23)
-                                                                {
-                                                                    if (this.timeLeft > 60)
-                                                                    {
-                                                                        this.timeLeft = 60;
-                                                                    }
-                                                                    if (this.ai[0] > 7f)
-                                                                    {
-                                                                        this.ai[0] += 1f;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        this.ai[0] += 1f;
-                                                                    }
-                                                                    this.rotation += 0.3f * (float)this.direction;
-                                                                    return;
-                                                                }
-                                                                else if (this.aiStyle == 24)
-                                                                {
-                                                                    this.light = this.scale * 0.5f;
-                                                                    this.rotation += this.Velocity.X * 0.2f;
-                                                                    this.ai[1] += 1f;
-                                                                    if (this.type == ProjectileType.N94_CRYSTAL_STORM)
-                                                                    {
-                                                                        this.Velocity *= 0.985f;
-                                                                        if (this.ai[1] > 130f)
-                                                                        {
-                                                                            this.scale -= 0.05f;
-                                                                            if ((double)this.scale <= 0.2)
-                                                                            {
-                                                                                this.scale = 0.2f;
-                                                                                this.Kill();
-                                                                                return;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        this.Velocity *= 0.96f;
-                                                                        if (this.ai[1] > 15f)
-                                                                        {
-                                                                            this.scale -= 0.05f;
-                                                                            if ((double)this.scale <= 0.2)
-                                                                            {
-                                                                                this.scale = 0.2f;
-                                                                                this.Kill();
-                                                                                return;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                                else if (this.aiStyle == 25)
-                                                                {
-                                                                    if (this.ai[0] != 0f && this.Velocity.Y <= 0f && this.Velocity.X == 0f)
-                                                                    {
-                                                                        float num157 = 0.5f;
-                                                                        int i2 = (int)((this.Position.X - 8f) / 16f);
-                                                                        int num158 = (int)(this.Position.Y / 16f);
-                                                                        bool flag3 = false;
-                                                                        bool flag4 = false;
-                                                                        if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
-                                                                        {
-                                                                            flag3 = true;
-                                                                        }
-                                                                        i2 = (int)((this.Position.X + (float)this.Width + 8f) / 16f);
-                                                                        if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
-                                                                        {
-                                                                            flag4 = true;
-                                                                        }
-                                                                        if (flag3)
-                                                                        {
-                                                                            this.Velocity.X = num157;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (flag4)
-                                                                            {
-                                                                                this.Velocity.X = -num157;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                i2 = (int)((this.Position.X - 8f - 16f) / 16f);
-                                                                                num158 = (int)(this.Position.Y / 16f);
-                                                                                flag3 = false;
-                                                                                flag4 = false;
-                                                                                if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
-                                                                                {
-                                                                                    flag3 = true;
-                                                                                }
-                                                                                i2 = (int)((this.Position.X + (float)this.Width + 8f + 16f) / 16f);
-                                                                                if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
-                                                                                {
-                                                                                    flag4 = true;
-                                                                                }
-                                                                                if (flag3)
-                                                                                {
-                                                                                    this.Velocity.X = num157;
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (flag4)
-                                                                                    {
-                                                                                        this.Velocity.X = -num157;
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        i2 = (int)((this.Position.X + 4f) / 16f);
-                                                                                        num158 = (int)((this.Position.Y + (float)this.Height + 8f) / 16f);
-                                                                                        if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
-                                                                                        {
-                                                                                            flag3 = true;
-                                                                                        }
-                                                                                        if (!flag3)
-                                                                                        {
-                                                                                            this.Velocity.X = num157;
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            this.Velocity.X = -num157;
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    this.rotation += this.Velocity.X * 0.06f;
-                                                                    this.ai[0] = 1f;
-                                                                    if (this.Velocity.Y > 16f)
-                                                                    {
-                                                                        this.Velocity.Y = 16f;
-                                                                    }
-                                                                    if (this.Velocity.Y <= 6f)
-                                                                    {
-                                                                        if (this.Velocity.X > 0f && this.Velocity.X < 7f)
-                                                                        {
-                                                                            this.Velocity.X = this.Velocity.X + 0.05f;
-                                                                        }
-                                                                        if (this.Velocity.X < 0f && this.Velocity.X > -7f)
-                                                                        {
-                                                                            this.Velocity.X = this.Velocity.X - 0.05f;
-                                                                        }
-                                                                    }
-                                                                    this.Velocity.Y = this.Velocity.Y + 0.3f;
-                                                                }
-                                                                // [TODO] 1.1  double check aistyles 20 - 25
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
+                                            NetMessage.SendData(17, -1, -1, "", 1, (float)((int)this.ai[0]), (float)((int)this.ai[1]), 127f, 0);
+                                            this.damage = 0;
+                                            this.ai[0] = -1f;
+                                            this.Velocity *= 0f;
+                                            this.alpha = 255;
+                                            this.Position.X = (float)(num148 * 16);
+                                            this.Position.Y = (float)(num149 * 16);
+                                            this.netUpdate = true;
+                                            return;
                                         }
+                                        this.ai[1] = -1f;
+                                        return;
                                     }
                                 }
                             }
                         }
                     }
-                }
+                    break;
+                case 23:
+                    {
+                        if (this.timeLeft > 60)
+                        {
+                            this.timeLeft = 60;
+                        }
+                        if (this.ai[0] > 7f)
+                        {
+                            this.ai[0] += 1f;
+                        }
+                        else
+                        {
+                            this.ai[0] += 1f;
+                        }
+                        this.rotation += 0.3f * (float)this.direction;
+                        return;
+                    }
+                    break;
+                case 24:
+                    {
+                        this.light = this.scale * 0.5f;
+                        this.rotation += this.Velocity.X * 0.2f;
+                        this.ai[1] += 1f;
+                        if (this.type == ProjectileType.N94_CRYSTAL_STORM)
+                        {
+                            this.Velocity *= 0.985f;
+                            if (this.ai[1] > 130f)
+                            {
+                                this.scale -= 0.05f;
+                                if ((double)this.scale <= 0.2)
+                                {
+                                    this.scale = 0.2f;
+                                    this.Kill();
+                                    return;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            this.Velocity *= 0.96f;
+                            if (this.ai[1] > 15f)
+                            {
+                                this.scale -= 0.05f;
+                                if ((double)this.scale <= 0.2)
+                                {
+                                    this.scale = 0.2f;
+                                    this.Kill();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 25:
+                    {
+                        if (this.ai[0] != 0f && this.Velocity.Y <= 0f && this.Velocity.X == 0f)
+                        {
+                            float num157 = 0.5f;
+                            int i2 = (int)((this.Position.X - 8f) / 16f);
+                            int num158 = (int)(this.Position.Y / 16f);
+                            bool flag3 = false;
+                            bool flag4 = false;
+                            if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
+                            {
+                                flag3 = true;
+                            }
+                            i2 = (int)((this.Position.X + (float)this.Width + 8f) / 16f);
+                            if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
+                            {
+                                flag4 = true;
+                            }
+                            if (flag3)
+                            {
+                                this.Velocity.X = num157;
+                            }
+                            else
+                            {
+                                if (flag4)
+                                {
+                                    this.Velocity.X = -num157;
+                                }
+                                else
+                                {
+                                    i2 = (int)((this.Position.X - 8f - 16f) / 16f);
+                                    num158 = (int)(this.Position.Y / 16f);
+                                    flag3 = false;
+                                    flag4 = false;
+                                    if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
+                                    {
+                                        flag3 = true;
+                                    }
+                                    i2 = (int)((this.Position.X + (float)this.Width + 8f + 16f) / 16f);
+                                    if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
+                                    {
+                                        flag4 = true;
+                                    }
+                                    if (flag3)
+                                    {
+                                        this.Velocity.X = num157;
+                                    }
+                                    else
+                                    {
+                                        if (flag4)
+                                        {
+                                            this.Velocity.X = -num157;
+                                        }
+                                        else
+                                        {
+                                            i2 = (int)((this.Position.X + 4f) / 16f);
+                                            num158 = (int)((this.Position.Y + (float)this.Height + 8f) / 16f);
+                                            if (WorldModify.SolidTile(i2, num158) || WorldModify.SolidTile(i2, num158 + 1))
+                                            {
+                                                flag3 = true;
+                                            }
+                                            if (!flag3)
+                                            {
+                                                this.Velocity.X = num157;
+                                            }
+                                            else
+                                            {
+                                                this.Velocity.X = -num157;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        this.rotation += this.Velocity.X * 0.06f;
+                        this.ai[0] = 1f;
+                        if (this.Velocity.Y > 16f)
+                        {
+                            this.Velocity.Y = 16f;
+                        }
+                        if (this.Velocity.Y <= 6f)
+                        {
+                            if (this.Velocity.X > 0f && this.Velocity.X < 7f)
+                            {
+                                this.Velocity.X = this.Velocity.X + 0.05f;
+                            }
+                            if (this.Velocity.X < 0f && this.Velocity.X > -7f)
+                            {
+                                this.Velocity.X = this.Velocity.X - 0.05f;
+                            }
+                        }
+                        this.Velocity.Y = this.Velocity.Y + 0.3f;
+                    }
+                    break;
+                default:
+                    {
+                        // there are only aistyles 1 to 25
+                    }
+                    break;
             }
         }
 
