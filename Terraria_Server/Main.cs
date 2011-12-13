@@ -663,7 +663,6 @@ namespace Terraria_Server
                     
                     NetMessage.SendData(7);
                     WorldIO.SaveWorldThreaded();
-
                     
                     if (Main.rand.Next(15) == 0)
                     {
@@ -1083,7 +1082,7 @@ namespace Terraria_Server
 			start = s.Elapsed;
 			try
 			{
-				WorldModify.UpdateWorld ();
+				WorldModify.UpdateWorld(World.Sender);
 				worldUpdateErrors = 0;
 			}
 			catch (Exception e)

@@ -196,7 +196,7 @@ namespace Terraria_Server
 
                     ctx = new HookContext
                     {
-                        Sender = new WorldSender(),
+                        Sender = World.Sender,
                     };
 
                     eArgs = new HookArgs.ServerStateChange
@@ -258,7 +258,7 @@ namespace Terraria_Server
                 
                 ctx = new HookContext
                 {
-                    Sender = new WorldSender(),
+					Sender = World.Sender,
                 };
 
                 eArgs = new HookArgs.ServerStateChange
@@ -313,7 +313,7 @@ namespace Terraria_Server
                 
                 ctx = new HookContext
                 {
-                    Sender = new WorldSender(),
+					Sender = World.Sender,
                 };
 
                 eArgs = new HookArgs.ServerStateChange

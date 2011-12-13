@@ -740,35 +740,35 @@ namespace Terraria_Server
             int num2 = (int)((Position.X + (float)Width) / 16f) + 2;
             int num3 = (int)(Position.Y / 16f) - 1;
             int num4 = (int)((Position.Y + (float)Height) / 16f) + 2;
+
             if (num < 0)
-            {
                 num = 0;
-            }
+
             if (num2 > Main.maxTilesX)
-            {
                 num2 = Main.maxTilesX;
-            }
+
             if (num3 < 0)
-            {
                 num3 = 0;
-            }
+
             if (num4 > Main.maxTilesY)
-            {
                 num4 = Main.maxTilesY;
-            }
-            for (int i = num; i < num2; i++)
+
+            for (int x = num; x < num2; x++)
             {
-                for (int j = num3; j < num4; j++)
+                for (int y = num3; y < num4; y++)
                 {
-                    if (Main.tile.At(i, j).Active && Main.tile.At(i, j).Type == 135)
+                    if (Main.tile.At(x, y).Active && Main.tile.At(x, y).Type == 135)
                     {
                         Vector2 vector;
-                        vector.X = (float)(i * 16);
-                        vector.Y = (float)(j * 16 + 12);
-                        if (Position.X + (float)Width > vector.X && Position.X < vector.X + 16f && Position.Y + (float)Height > vector.Y && (double)Position.Y < (double)vector.Y + 4.01 && (oldPosition.X + (float)Width <= vector.X || oldPosition.X >= vector.X + 16f || oldPosition.Y + (float)Height <= vector.Y || (double)oldPosition.Y >= (double)vector.Y + 16.01))
+                        vector.X = (float)(x * 16);
+                        vector.Y = (float)(y * 16 + 12);
+                        if (Position.X + (float)Width > vector.X && Position.X < vector.X + 16f && Position.Y + 
+							(float)Height > vector.Y && (double)Position.Y < (double)vector.Y + 4.01 && (oldPosition.X + 
+							(float)Width <= vector.X || oldPosition.X >= vector.X + 16f || oldPosition.Y + 
+							(float)Height <= vector.Y || (double)oldPosition.Y >= (double)vector.Y + 16.01))
                         {
-                            WorldGen.hitSwitch(i, j);
-                            NetMessage.SendData(59, -1, -1, "", i, (float)j, 0f, 0f, 0);
+                            WorldGen.hitSwitch(x, y);
+                            NetMessage.SendData(59, -1, -1, "", x, (float)y, 0f, 0f, 0);
                             return true;
                         }
                     }

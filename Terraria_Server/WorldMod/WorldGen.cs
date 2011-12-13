@@ -12,6 +12,8 @@ namespace Terraria_Server.WorldMod
 {
 	public static class WorldGen
     {
+		public const Int32 MAX_TRAPS = 1000;
+
         public static bool mudWall { get; set; }
 		private static int maxDRooms = 100;
 		private const int RECTANGLE_OFFSET = 25;
@@ -341,6 +343,7 @@ namespace Terraria_Server.WorldMod
             HideWaterTreasure();
 
             AddIslandHouses();
+			PlaceTraps();
 
             PlaceBreakables();
 
@@ -4201,7 +4204,7 @@ namespace Terraria_Server.WorldMod
 				num12 = 0;
 				num13 = 1000;
 				num14 = 0;
-				while (num14 < Main.maxTilesX / 200)
+				while (num14 < Main.maxTilesX / 150)
 				{
 					num12++;
 					int num81 = WorldModify.genRand.Next(dMinX, dMaxX);
@@ -4248,6 +4251,24 @@ namespace Terraria_Server.WorldMod
 							}
 						}
 					}
+					if (num12 > num13)
+					{
+						num14++;
+						num12 = 0;
+					}
+				}
+				num12 = 0;
+				num13 = 1000;
+				num14 = 0;
+				while (num14 < Main.maxTilesX / 500)
+				{
+					num12++;
+					int num90 = WorldModify.genRand.Next(WorldGen.dMinX, WorldGen.dMaxX);
+					int num91 = WorldModify.genRand.Next(WorldGen.dMinY, WorldGen.dMaxY);
+
+					if ((int)Main.tile.At(num90, num91).Wall == wallType && WorldModify.placeTrap(num90, num91, 0))
+						num12 = num13;
+
 					if (num12 > num13)
 					{
 						num14++;
@@ -7125,9 +7146,27 @@ namespace Terraria_Server.WorldMod
 			return false;
 		}
 
-        public static void hitSwitch(int i, int j)
-        {
+		public static void PlaceTraps()
+		{
+			var maxTraps = (int)((double)Main.maxTilesX * 0.05);
 
-        }
+			using (var logger = new ProgressLogger(maxTraps, "Placing traps: "))
+			{
+				for (int num273 = 0; num273 < maxTraps; num273++)
+				{
+					float num274 = (float)((double)num273 / ((double)Main.maxTilesX * 0.05));
+					//Main.statusText = "Placing traps: " + (int)(num274 * 100f + 1f) + "%";
+					for (int num275 = 0; num275 < MAX_TRAPS; num275++)
+					{
+						int X = Main.rand.Next(200, Main.maxTilesX - 200);
+						int Y = Main.rand.Next((int)Main.worldSurface, Main.maxTilesY - 300);
+						if (Main.tile.At(X, Y).Wall == 0 && WorldModify.placeTrap(X, Y, -1))
+						{
+							break;
+						}
+					}
+				}
+			}
+		}
     }
 }
