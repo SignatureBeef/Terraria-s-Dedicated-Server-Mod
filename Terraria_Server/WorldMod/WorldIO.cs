@@ -760,7 +760,6 @@ namespace Terraria_Server.WorldMod
 			HookPoints.WorldLoaded.Invoke (ref ctx, ref args);
 		}
 
-
         public static bool hardLock { get; set; }
     }
 }

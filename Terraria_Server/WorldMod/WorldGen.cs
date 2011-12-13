@@ -6950,6 +6950,51 @@ namespace Terraria_Server.WorldMod
 					i += WorldModify.genRand.Next(15, 80);
 				}
 			}
+			float section = (float)(Main.maxTilesX / 4200);
+			int tiles = 0;
+			while ((float)tiles < 200f * section)
+			{
+				int attempts = 0;
+				bool tilePlaced = false;
+				while (!tilePlaced)
+				{
+					attempts++;
+					int x = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.2), (int)((double)Main.maxTilesX * 0.8));
+					int y = WorldModify.genRand.Next(Main.maxTilesY - 300, Main.maxTilesY - 20);
+					if (Main.tile.At(x, y).Active && (Main.tile.At(x, y).Type == 75 || Main.tile.At(x, y).Type == 76))
+					{
+						int direction = 0;
+						if (Main.tile.At(x - 1, y).Wall > 0)
+							direction = -1;
+						else if (Main.tile.At(x + 1, y).Wall > 0)
+							direction = 1;
+
+						if (!Main.tile.At(x + direction, y).Active && !Main.tile.At(x + direction, y + 1).Active)
+						{
+							bool flag2 = false;
+							for (int j = x - 8; j < x + 8; j++)
+							{
+								for (int k = y - 8; k < y + 8; k++)
+								{
+									if (Main.tile.At(j, k).Active && Main.tile.At(j, k).Type == 4)
+									{
+										flag2 = true;
+										break;
+									}
+								}
+							}
+							if (!flag2)
+							{
+								WorldModify.PlaceTile(x + direction, y, 4, true, true, -1, 7);
+								tilePlaced = true;
+							}
+						}
+					}
+					if (attempts > 1000)
+						tilePlaced = true;
+				}
+				tiles++;
+			}
 		}
 
         public static void HellHouse(int i, int j, byte type = 76, byte wall = 13)
@@ -7107,7 +7152,7 @@ namespace Terraria_Server.WorldMod
 					try
 					{
 						Main.tile.At(m, n).SetActive(false);
-						Main.tile.At(m, n).SetWall(13);
+						Main.tile.At(m, n).SetWall(wall);
 						Main.tile.At(m, n).SetLiquid(0);
 						Main.tile.At(m, n).SetLava(false);
 					}
