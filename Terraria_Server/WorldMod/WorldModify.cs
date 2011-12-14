@@ -33,9 +33,9 @@ namespace Terraria_Server.WorldMod
 		private const int TILES_OFFSET_2 = 10;
 		private const int TILE_OFFSET_3 = 16;
 		private const int TILE_OFFSET_4 = 23;
-        private const int TILE_SCALE = 16;
-        private const int TREE_RADIUS = 2;
-        private const int MAX_TILE_SETS = 107;
+		private const int TILE_SCALE = 16;
+		private const int TREE_RADIUS = 2;
+		private const int MAX_TILE_SETS = 145;
 
 		public static int lavaLine;
 		public static int waterLine;
@@ -58,31 +58,31 @@ namespace Terraria_Server.WorldMod
 		private static bool mergeRight = false;
 		public static bool stopDrops = false;
 		public static bool noLiquidCheck = false;
-		
+
 		public static object playerEditLock = new object();
-		
+
 		[ThreadStatic]
 		static Random threadRand;
-		
+
 		public static Random genRand
 		{
 			get
 			{
-				if (threadRand == null) threadRand = new Random ((int)DateTime.Now.Ticks);
+				if (threadRand == null) threadRand = new Random((int)DateTime.Now.Ticks);
 				return threadRand;
 			}
-			
+
 			set
 			{
 			}
 		}
 
-        public static string statusText = "";
-		
+		public static string statusText = "";
+
 		// not sure about this, but sure looks like it was supposed to be thread static
 		[ThreadStatic]
 		private static bool destroyObject = false;
-		
+
 		public static int spawnDelay = 0;
 		public static int spawnNPC = 0;
 		public static int maxRoomTiles = 1900;
@@ -94,7 +94,7 @@ namespace Terraria_Server.WorldMod
 		public static int roomY1;
 		public static int roomY2;
 		public static bool canSpawn;
-        public static bool[] houseTile = new bool[MAX_TILE_SETS];
+		public static bool[] houseTile = new bool[MAX_TILE_SETS];
 		public static int bestX = 0;
 		public static int bestY = 0;
 		public static int hiScore = 0;
@@ -111,29 +111,817 @@ namespace Terraria_Server.WorldMod
 
 		/* Pump/Wires */
 
-		public const Int32 MAX_MECH		= 1000;
-		public const Int32 MAX_PUMP		= 20;
-		public const Int32 MAX_WIRE		= 1000;
+		public const Int32 MAX_MECH = 1000;
+		public const Int32 MAX_PUMP = 20;
+		public const Int32 MAX_WIRE = 1000;
 
-		public static int numMechs		= 0;
-		public static int numOutPump	= 0;
-		public static int numInPump		= 0;
-		public static int numWire		= 0;
-		public static int numNoWire		= 0;
+		public static int numMechs = 0;
+		public static int numOutPump = 0;
+		public static int numInPump = 0;
+		public static int numWire = 0;
+		public static int numNoWire = 0;
 
-		public static int[] mechX		= new int[MAX_MECH];
-		public static int[] mechY		= new int[MAX_MECH];
-		public static int[] mechTime	= new int[MAX_MECH];
+		public static int[] mechX = new int[MAX_MECH];
+		public static int[] mechY = new int[MAX_MECH];
+		public static int[] mechTime = new int[MAX_MECH];
 
-		public static int[] inPumpY		= new int[MAX_PUMP];
-		public static int[] inPumpX		= new int[MAX_PUMP];
-		public static int[] outPumpX	= new int[MAX_PUMP];
-		public static int[] outPumpY	= new int[MAX_PUMP];
+		public static int[] inPumpY = new int[MAX_PUMP];
+		public static int[] inPumpX = new int[MAX_PUMP];
+		public static int[] outPumpX = new int[MAX_PUMP];
+		public static int[] outPumpY = new int[MAX_PUMP];
 
-		public static int[] wireX		= new int[MAX_WIRE];
-		public static int[] wireY		= new int[MAX_WIRE];
-		public static int[] noWireX		= new int[MAX_WIRE];
-		public static int[] noWireY		= new int[MAX_WIRE];
+		public static int[] wireX = new int[MAX_WIRE];
+		public static int[] wireY = new int[MAX_WIRE];
+		public static int[] noWireX = new int[MAX_WIRE];
+		public static int[] noWireY = new int[MAX_WIRE];
+
+		public static void Check1x1(int x, int y, int type)
+		{
+			if ((!Main.tile.At(x, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(x, y + 1).Type]))
+				KillTile(x, y);
+		}
+
+		public static void CheckMan(int i, int j)
+		{
+			if (destroyObject)
+				return;
+
+			int num = j - (int)(Main.tile.At(i, j).FrameY / 18);
+			int k;
+			for (k = (int)Main.tile.At(i, j).FrameX; k >= 100; k -= 100)
+			{
+			}
+
+			while (k >= 36)
+				k -= 36;
+
+			int num2 = i - k / 18;
+			bool flag = false;
+			for (int l = 0; l <= 1; l++)
+			{
+				for (int m = 0; m <= 2; m++)
+				{
+					int num3 = num2 + l;
+					int num4 = num + m;
+					int n;
+					for (n = (int)Main.tile.At(num3, num4).FrameX; n >= 100; n -= 100)
+					{
+					}
+					if (n >= 36)
+						n -= 36;
+
+					if (!Main.tile.At(num3, num4).Active || Main.tile.At(num3, num4).Type != 128 || 
+						(int)Main.tile.At(num3, num4).FrameY != m * 18 || n != l * 18)
+					{
+						flag = true;
+					}
+				}
+			}
+			if (!SolidTile(num2, num + 3) || !SolidTile(num2 + 1, num + 3))
+			{
+				flag = true;
+			}
+			if (flag)
+			{
+				destroyObject = true;
+				Item.NewItem(i * 16, j * 16, 32, 32, 498, 1, false, 0);
+				for (int num5 = 0; num5 <= 1; num5++)
+				{
+					for (int num6 = 0; num6 <= 2; num6++)
+					{
+						int num7 = num2 + num5;
+						int num8 = num + num6;
+						if (Main.tile.At(num7, num8).Active && Main.tile.At(num7, num8).Type == 128)
+						{
+							KillTile(num7, num8, false, false, false);
+						}
+					}
+				}
+				destroyObject = false;
+			}
+		}
+
+		public static void CheckMB(int i, int j, int type)
+		{
+			if (destroyObject)
+				return;
+
+			bool flag = false;
+			int num = 0;
+			int k;
+
+			for (k = (int)(Main.tile.At(i, j).FrameY / 18); k >= 2; k -= 2)
+				num++;
+
+			int num2 = (int)(Main.tile.At(i, j).FrameX / 18);
+			int num3 = 0;
+			if (num2 >= 2)
+			{
+				num2 -= 2;
+				num3++;
+			}
+
+			int num4 = i - num2;
+			int num5 = j - k;
+			for (int l = num4; l < num4 + 2; l++)
+			{
+				for (int m = num5; m < num5 + 2; m++)
+				{
+					if (!Main.tile.At(l, m).Active || (int)Main.tile.At(l, m).Type != type || 
+						(int)Main.tile.At(l, m).FrameX != (l - num4) * 18 + num3 * 36 || 
+						(int)Main.tile.At(l, m).FrameY != (m - num5) * 18 + num * 36)
+					{
+						flag = true;
+					}
+				}
+				if (!SolidTile(l, num5 + 2))
+					flag = true;
+			}
+
+			if (flag)
+			{
+				destroyObject = true;
+				for (int n = num4; n < num4 + 2; n++)
+				{
+					for (int num6 = num5; num6 < num5 + 3; num6++)
+					{
+						if ((int)Main.tile.At(n, num6).Type == type && Main.tile.At(n, num6).Active)
+							KillTile(n, num6);
+					}
+				}
+				Item.NewItem(i * 16, j * 16, 32, 32, 562 + num, 1, false, 0);
+				for (int num7 = num4 - 1; num7 < num4 + 3; num7++)
+				{
+					for (int num8 = num5 - 1; num8 < num5 + 3; num8++)
+						TileFrame(num7, num8);
+				}
+				destroyObject = false;
+			}
+		}
+
+		public static void CheckOrb(int i, int j, int type)
+		{
+			if (!destroyObject)
+			{
+				int num = i;
+				int num2 = j;
+
+				if (Main.tile.At(i, j).FrameX == 0)
+					num = i;
+				else
+					num = i - 1;
+
+				if (Main.tile.At(i, j).FrameY == 0)
+					num2 = j;
+				else
+					num2 = j - 1;
+
+				if ((!Main.tile.At(num, num2).Active || (int)Main.tile.At(num, num2).Type != type || !Main.tile.At(num + 1, num2).Active ||
+					(int)Main.tile.At(num + 1, num2).Type != type || !Main.tile.At(num, num2 + 1).Active ||
+					(int)Main.tile.At(num, num2 + 1).Type != type || !Main.tile.At(num + 1, num2 + 1).Active ||
+					(int)Main.tile.At(num + 1, num2 + 1).Type != type))
+				{
+					destroyObject = true;
+
+					if ((int)Main.tile.At(num, num2).Type == type)
+						KillTile(num, num2);
+
+					if ((int)Main.tile.At(num + 1, num2).Type == type)
+						KillTile(num + 1, num2);
+
+					if ((int)Main.tile.At(num, num2 + 1).Type == type)
+						KillTile(num, num2 + 1);
+
+					if ((int)Main.tile.At(num + 1, num2 + 1).Type == type)
+						KillTile(num + 1, num2 + 1);
+
+					if (!noTileActions)
+					{
+						if (type == 12)
+						{
+							Item.NewItem(num * 16, num2 * 16, 32, 32, 29, 1, false, 0);
+						}
+						else if (type == 31)
+						{
+							if (genRand.Next(2) == 0)
+								spawnMeteor = true;
+
+							int num3 = Main.rand.Next(5);
+
+							if (!shadowOrbSmashed)
+								num3 = 0;
+
+							if (num3 == 0)
+							{
+								Item.NewItem(num * 16, num2 * 16, 32, 32, 96, 1, false, -1);
+								int stack = genRand.Next(25, 51);
+								Item.NewItem(num * 16, num2 * 16, 32, 32, 97, stack, false, 0);
+							}
+							else
+							{
+								if (num3 == 1)
+									Item.NewItem(num * 16, num2 * 16, 32, 32, 64, 1, false, -1);
+								else if (num3 == 2)
+									Item.NewItem(num * 16, num2 * 16, 32, 32, 162, 1, false, -1);
+								else if (num3 == 3)
+									Item.NewItem(num * 16, num2 * 16, 32, 32, 115, 1, false, -1);
+								else if (num3 == 4)
+									Item.NewItem(num * 16, num2 * 16, 32, 32, 111, 1, false, -1);
+							}
+							shadowOrbSmashed = true;
+							shadowOrbCount++;
+							if (shadowOrbCount >= 3)
+							{
+								shadowOrbCount = 0;
+								float num4 = (float)(num * 16);
+								float num5 = (float)(num2 * 16);
+								float num6 = -1f;
+								int num7 = 0;
+								for (int k = 0; k < 255; k++)
+								{
+									float num8 = Math.Abs(Main.players[k].Position.X - num4) + Math.Abs(Main.players[k].Position.Y - num5);
+									if (num8 < num6 || num6 == -1f)
+									{
+										num7 = 0;
+										num6 = num8;
+									}
+								}
+								if (Main.players[num7].zoneEvil)
+									NPC.SpawnOnPlayer(Main.players[num7], num7, 13);
+							}
+							else
+							{
+								string text = "A horrible chill goes down your spine...";
+								if (shadowOrbCount == 2)
+									text = "Screams echo around you...";
+
+								NetMessage.SendData(25, -1, -1, text, 255, 50f, 255f, 130f, 0);
+							}
+						}
+					}
+					destroyObject = false;
+				}
+			}
+		}
+
+		public static void CheckTree(int i, int j)
+		{
+			int num = -1;
+			int num2 = -1;
+			int num3 = -1;
+			int num4 = -1;
+			int num5 = -1;
+			int num6 = -1;
+			int num7 = -1;
+			int num8 = -1;
+			int type = (int)Main.tile.At(i, j).Type;
+			int frameX = (int)Main.tile.At(i, j).FrameX;
+			int frameY = (int)Main.tile.At(i, j).FrameY;
+
+			if (Main.tile.At(i - 1, j).Active)
+			{
+				num4 = (int)Main.tile.At(i - 1, j).Type;
+			}
+			if (Main.tile.At(i + 1, j).Active)
+			{
+				num5 = (int)Main.tile.At(i + 1, j).Type;
+			}
+			if (Main.tile.At(i, j - 1).Active)
+			{
+				num2 = (int)Main.tile.At(i, j - 1).Type;
+			}
+			if (Main.tile.At(i, j + 1).Active)
+			{
+				num7 = (int)Main.tile.At(i, j + 1).Type;
+			}
+			if (Main.tile.At(i - 1, j - 1).Active)
+			{
+				num = (int)Main.tile.At(i - 1, j - 1).Type;
+			}
+			if (Main.tile.At(i + 1, j - 1).Active)
+			{
+				num3 = (int)Main.tile.At(i + 1, j - 1).Type;
+			}
+			if (Main.tile.At(i - 1, j + 1).Active)
+			{
+				num6 = (int)Main.tile.At(i - 1, j + 1).Type;
+			}
+			if (Main.tile.At(i + 1, j + 1).Active)
+			{
+				num8 = (int)Main.tile.At(i + 1, j + 1).Type;
+			}
+			if (num4 >= 0 && Main.tileStone[num4])
+			{
+				num4 = 1;
+			}
+			if (num5 >= 0 && Main.tileStone[num5])
+			{
+				num5 = 1;
+			}
+			if (num2 >= 0 && Main.tileStone[num2])
+			{
+				num2 = 1;
+			}
+			if (num7 >= 0 && Main.tileStone[num7])
+			{
+				num7 = 1;
+			}
+			if (num >= 0 && Main.tileStone[num])
+			{
+				num = 1;
+			}
+			if (num3 >= 0 && Main.tileStone[num3])
+			{
+				num3 = 1;
+			}
+			if (num6 >= 0 && Main.tileStone[num6])
+			{
+				num6 = 1;
+			}
+			if (num8 >= 0 && Main.tileStone[num8])
+			{
+				num8 = 1;
+			}
+			if (num7 == 23)
+			{
+				num7 = 2;
+			}
+			if (num7 == 60)
+			{
+				num7 = 2;
+			}
+			if (num7 == 109)
+			{
+				num7 = 2;
+			}
+			if (Main.tile.At(i, j).FrameX >= 22 && Main.tile.At(i, j).FrameX <= 44 && Main.tile.At(i, j).FrameY >= 132 && Main.tile.At(i, j).FrameY <= 176)
+			{
+				if (num7 != 2)
+				{
+					KillTile(i, j);
+				}
+				else if ((Main.tile.At(i, j).FrameX != 22 || num4 != type) && (Main.tile.At(i, j).FrameX != 44 || num5 != type))
+				{
+					KillTile(i, j);
+				}
+			}
+			else
+			{
+				if ((Main.tile.At(i, j).FrameX == 88 && Main.tile.At(i, j).FrameY >= 0 && Main.tile.At(i, j).FrameY <= 44) || (Main.tile.At(i, j).FrameX == 66 && Main.tile.At(i, j).FrameY >= 66 && Main.tile.At(i, j).FrameY <= 130) || (Main.tile.At(i, j).FrameX == 110 && Main.tile.At(i, j).FrameY >= 66 && Main.tile.At(i, j).FrameY <= 110) || (Main.tile.At(i, j).FrameX == 132 && Main.tile.At(i, j).FrameY >= 0 && Main.tile.At(i, j).FrameY <= 176))
+				{
+					if (num4 == type && num5 == type)
+					{
+						if (Main.tile.At(i, j).FrameNumber == 0)
+						{
+							Main.tile.At(i, j).SetFrameX(110);
+							Main.tile.At(i, j).SetFrameY(66);
+						}
+						if (Main.tile.At(i, j).FrameNumber == 1)
+						{
+							Main.tile.At(i, j).SetFrameX(110);
+							Main.tile.At(i, j).SetFrameY(88);
+						}
+						if (Main.tile.At(i, j).FrameNumber == 2)
+						{
+							Main.tile.At(i, j).SetFrameX(110);
+							Main.tile.At(i, j).SetFrameY(110);
+						}
+					}
+					else
+					{
+						if (num4 == type)
+						{
+							if (Main.tile.At(i, j).FrameNumber == 0)
+							{
+								Main.tile.At(i, j).SetFrameX(88);
+								Main.tile.At(i, j).SetFrameY(0);
+							}
+							if (Main.tile.At(i, j).FrameNumber == 1)
+							{
+								Main.tile.At(i, j).SetFrameX(88);
+								Main.tile.At(i, j).SetFrameY(22);
+							}
+							if (Main.tile.At(i, j).FrameNumber == 2)
+							{
+								Main.tile.At(i, j).SetFrameX(88);
+								Main.tile.At(i, j).SetFrameY(44);
+							}
+						}
+						else
+						{
+							if (num5 == type)
+							{
+								if (Main.tile.At(i, j).FrameNumber == 0)
+								{
+									Main.tile.At(i, j).SetFrameX(66);
+									Main.tile.At(i, j).SetFrameY(66);
+								}
+								if (Main.tile.At(i, j).FrameNumber == 1)
+								{
+									Main.tile.At(i, j).SetFrameX(66);
+									Main.tile.At(i, j).SetFrameY(88);
+								}
+								if (Main.tile.At(i, j).FrameNumber == 2)
+								{
+									Main.tile.At(i, j).SetFrameX(66);
+									Main.tile.At(i, j).SetFrameY(110);
+								}
+							}
+							else
+							{
+								if (Main.tile.At(i, j).FrameNumber == 0)
+								{
+									Main.tile.At(i, j).SetFrameX(0);
+									Main.tile.At(i, j).SetFrameY(0);
+								}
+								if (Main.tile.At(i, j).FrameNumber == 1)
+								{
+									Main.tile.At(i, j).SetFrameX(0);
+									Main.tile.At(i, j).SetFrameY(22);
+								}
+								if (Main.tile.At(i, j).FrameNumber == 2)
+								{
+									Main.tile.At(i, j).SetFrameX(0);
+									Main.tile.At(i, j).SetFrameY(44);
+								}
+							}
+						}
+					}
+				}
+			}
+			if (Main.tile.At(i, j).FrameY >= 132 && Main.tile.At(i, j).FrameY <= 176 && (Main.tile.At(i, j).FrameX == 0 || Main.tile.At(i, j).FrameX == 66 || Main.tile.At(i, j).FrameX == 88))
+			{
+				if (num7 != 2)
+				{
+					KillTile(i, j);
+				}
+				if (num4 != type && num5 != type)
+				{
+					if (Main.tile.At(i, j).FrameNumber == 0)
+					{
+						Main.tile.At(i, j).SetFrameX(0);
+						Main.tile.At(i, j).SetFrameY(0);
+					}
+					if (Main.tile.At(i, j).FrameNumber == 1)
+					{
+						Main.tile.At(i, j).SetFrameX(0);
+						Main.tile.At(i, j).SetFrameY(22);
+					}
+					if (Main.tile.At(i, j).FrameNumber == 2)
+					{
+						Main.tile.At(i, j).SetFrameX(0);
+						Main.tile.At(i, j).SetFrameY(44);
+					}
+				}
+				else
+				{
+					if (num4 != type)
+					{
+						if (Main.tile.At(i, j).FrameNumber == 0)
+						{
+							Main.tile.At(i, j).SetFrameX(0);
+							Main.tile.At(i, j).SetFrameY(132);
+						}
+						if (Main.tile.At(i, j).FrameNumber == 1)
+						{
+							Main.tile.At(i, j).SetFrameX(0);
+							Main.tile.At(i, j).SetFrameY(154);
+						}
+						if (Main.tile.At(i, j).FrameNumber == 2)
+						{
+							Main.tile.At(i, j).SetFrameX(0);
+							Main.tile.At(i, j).SetFrameY(176);
+						}
+					}
+					else
+					{
+						if (num5 != type)
+						{
+							if (Main.tile.At(i, j).FrameNumber == 0)
+							{
+								Main.tile.At(i, j).SetFrameX(66);
+								Main.tile.At(i, j).SetFrameY(132);
+							}
+							if (Main.tile.At(i, j).FrameNumber == 1)
+							{
+								Main.tile.At(i, j).SetFrameX(66);
+								Main.tile.At(i, j).SetFrameY(154);
+							}
+							if (Main.tile.At(i, j).FrameNumber == 2)
+							{
+								Main.tile.At(i, j).SetFrameX(66);
+								Main.tile.At(i, j).SetFrameY(176);
+							}
+						}
+						else
+						{
+							if (Main.tile.At(i, j).FrameNumber == 0)
+							{
+								Main.tile.At(i, j).SetFrameX(88);
+								Main.tile.At(i, j).SetFrameY(132);
+							}
+							if (Main.tile.At(i, j).FrameNumber == 1)
+							{
+								Main.tile.At(i, j).SetFrameX(88);
+								Main.tile.At(i, j).SetFrameY(154);
+							}
+							if (Main.tile.At(i, j).FrameNumber == 2)
+							{
+								Main.tile.At(i, j).SetFrameX(88);
+								Main.tile.At(i, j).SetFrameY(176);
+							}
+						}
+					}
+				}
+			}
+			if ((Main.tile.At(i, j).FrameX == 66 && (Main.tile.At(i, j).FrameY == 0 || Main.tile.At(i, j).FrameY == 22 || Main.tile.At(i, j).FrameY == 44)) || (Main.tile.At(i, j).FrameX == 44 && (Main.tile.At(i, j).FrameY == 198 || Main.tile.At(i, j).FrameY == 220 || Main.tile.At(i, j).FrameY == 242)))
+			{
+				if (num5 != type)
+				{
+					KillTile(i, j);
+				}
+			}
+			else
+			{
+				if ((Main.tile.At(i, j).FrameX == 88 && (Main.tile.At(i, j).FrameY == 66 || Main.tile.At(i, j).FrameY == 88 || Main.tile.At(i, j).FrameY == 110)) || (Main.tile.At(i, j).FrameX == 66 && (Main.tile.At(i, j).FrameY == 198 || Main.tile.At(i, j).FrameY == 220 || Main.tile.At(i, j).FrameY == 242)))
+				{
+					if (num4 != type)
+					{
+						KillTile(i, j);
+					}
+				}
+				else
+				{
+					if (num7 == -1 || num7 == 23)
+					{
+						KillTile(i, j);
+					}
+					else
+					{
+						if (num2 != type && Main.tile.At(i, j).FrameY < 198 && ((Main.tile.At(i, j).FrameX != 22 && Main.tile.At(i, j).FrameX != 44) || Main.tile.At(i, j).FrameY < 132))
+						{
+							if (num4 == type || num5 == type)
+							{
+								if (num7 == type)
+								{
+									if (num4 == type && num5 == type)
+									{
+										if (Main.tile.At(i, j).FrameNumber == 0)
+										{
+											Main.tile.At(i, j).SetFrameX(132);
+											Main.tile.At(i, j).SetFrameY(132);
+										}
+										if (Main.tile.At(i, j).FrameNumber == 1)
+										{
+											Main.tile.At(i, j).SetFrameX(132);
+											Main.tile.At(i, j).SetFrameY(154);
+										}
+										if (Main.tile.At(i, j).FrameNumber == 2)
+										{
+											Main.tile.At(i, j).SetFrameX(132);
+											Main.tile.At(i, j).SetFrameY(176);
+										}
+									}
+									else
+									{
+										if (num4 == type)
+										{
+											if (Main.tile.At(i, j).FrameNumber == 0)
+											{
+												Main.tile.At(i, j).SetFrameX(132);
+												Main.tile.At(i, j).SetFrameY(0);
+											}
+											if (Main.tile.At(i, j).FrameNumber == 1)
+											{
+												Main.tile.At(i, j).SetFrameX(132);
+												Main.tile.At(i, j).SetFrameY(22);
+											}
+											if (Main.tile.At(i, j).FrameNumber == 2)
+											{
+												Main.tile.At(i, j).SetFrameX(132);
+												Main.tile.At(i, j).SetFrameY(44);
+											}
+										}
+										else
+										{
+											if (num5 == type)
+											{
+												if (Main.tile.At(i, j).FrameNumber == 0)
+												{
+													Main.tile.At(i, j).SetFrameX(132);
+													Main.tile.At(i, j).SetFrameY(66);
+												}
+												if (Main.tile.At(i, j).FrameNumber == 1)
+												{
+													Main.tile.At(i, j).SetFrameX(132);
+													Main.tile.At(i, j).SetFrameY(88);
+												}
+												if (Main.tile.At(i, j).FrameNumber == 2)
+												{
+													Main.tile.At(i, j).SetFrameX(132);
+													Main.tile.At(i, j).SetFrameY(110);
+												}
+											}
+										}
+									}
+								}
+								else
+								{
+									if (num4 == type && num5 == type)
+									{
+										if (Main.tile.At(i, j).FrameNumber == 0)
+										{
+											Main.tile.At(i, j).SetFrameX(154);
+											Main.tile.At(i, j).SetFrameY(132);
+										}
+										if (Main.tile.At(i, j).FrameNumber == 1)
+										{
+											Main.tile.At(i, j).SetFrameX(154);
+											Main.tile.At(i, j).SetFrameY(154);
+										}
+										if (Main.tile.At(i, j).FrameNumber == 2)
+										{
+											Main.tile.At(i, j).SetFrameX(154);
+											Main.tile.At(i, j).SetFrameY(176);
+										}
+									}
+									else
+									{
+										if (num4 == type)
+										{
+											if (Main.tile.At(i, j).FrameNumber == 0)
+											{
+												Main.tile.At(i, j).SetFrameX(154);
+												Main.tile.At(i, j).SetFrameY(0);
+											}
+											if (Main.tile.At(i, j).FrameNumber == 1)
+											{
+												Main.tile.At(i, j).SetFrameX(154);
+												Main.tile.At(i, j).SetFrameY(22);
+											}
+											if (Main.tile.At(i, j).FrameNumber == 2)
+											{
+												Main.tile.At(i, j).SetFrameX(154);
+												Main.tile.At(i, j).SetFrameY(44);
+											}
+										}
+										else
+										{
+											if (num5 == type)
+											{
+												if (Main.tile.At(i, j).FrameNumber == 0)
+												{
+													Main.tile.At(i, j).SetFrameX(154);
+													Main.tile.At(i, j).SetFrameY(66);
+												}
+												if (Main.tile.At(i, j).FrameNumber == 1)
+												{
+													Main.tile.At(i, j).SetFrameX(154);
+													Main.tile.At(i, j).SetFrameY(88);
+												}
+												if (Main.tile.At(i, j).FrameNumber == 2)
+												{
+													Main.tile.At(i, j).SetFrameX(154);
+													Main.tile.At(i, j).SetFrameY(110);
+												}
+											}
+										}
+									}
+								}
+							}
+							else
+							{
+								if (Main.tile.At(i, j).FrameNumber == 0)
+								{
+									Main.tile.At(i, j).SetFrameX(110);
+									Main.tile.At(i, j).SetFrameY(0);
+								}
+								if (Main.tile.At(i, j).FrameNumber == 1)
+								{
+									Main.tile.At(i, j).SetFrameX(110);
+									Main.tile.At(i, j).SetFrameY(22);
+								}
+								if (Main.tile.At(i, j).FrameNumber == 2)
+								{
+									Main.tile.At(i, j).SetFrameX(110);
+									Main.tile.At(i, j).SetFrameY(44);
+								}
+							}
+						}
+					}
+				}
+			}
+			if ((int)Main.tile.At(i, j).FrameX != frameX && (int)Main.tile.At(i, j).FrameY != frameY && frameX >= 0 && frameY >= 0)
+			{
+				TileFrame(i - 1, j, false, false);
+				TileFrame(i + 1, j, false, false);
+				TileFrame(i, j - 1, false, false);
+				TileFrame(i, j + 1, false, false);
+			}
+		}
+
+		public static void Place1x1(int x, int y, int type, int style = 0)
+		{
+			if (SolidTile(x, y + 1) && !Main.tile.At(x, y).Active)
+			{
+				Main.tile.At(x, y).SetActive(true);
+				Main.tile.At(x, y).SetType((byte)type);
+				if (type == 144)
+				{
+					Main.tile.At(x, y).SetFrameX((short)(style * 18));
+					Main.tile.At(x, y).SetFrameY(0);
+					return;
+				}
+				Main.tile.At(x, y).SetFrameY((short)(style * 18));
+			}
+		}
+
+		public static void PlaceMan(int i, int j, int dir)
+		{
+			for (int k = i; k <= i + 1; k++)
+			{
+				for (int l = j - 2; l <= j; l++)
+				{
+					if (Main.tile.At(k, l).Active)
+						return;
+				}
+			}
+			if (!SolidTile(i, j + 1) || !SolidTile(i + 1, j + 1))
+				return;
+
+			byte b = 0;
+			if (dir == 1)
+				b = 36;
+
+			Main.tile.At(i, j - 2).SetActive(true);
+			Main.tile.At(i, j - 2).SetFrameY(0);
+			Main.tile.At(i, j - 2).SetFrameX((short)b);
+			Main.tile.At(i, j - 2).SetType(128);
+			Main.tile.At(i, j - 1).SetActive(true);
+			Main.tile.At(i, j - 1).SetFrameY(18);
+			Main.tile.At(i, j - 1).SetFrameX((short)b);
+			Main.tile.At(i, j - 1).SetType(128);
+			Main.tile.At(i, j).SetActive(true);
+			Main.tile.At(i, j).SetFrameY(36);
+			Main.tile.At(i, j).SetFrameX((short)b);
+			Main.tile.At(i, j).SetType(128);
+			Main.tile.At(i + 1, j - 2).SetActive(true);
+			Main.tile.At(i + 1, j - 2).SetFrameY(0);
+			Main.tile.At(i + 1, j - 2).SetFrameX((short)(18 + b));
+			Main.tile.At(i + 1, j - 2).SetType(128);
+			Main.tile.At(i + 1, j - 1).SetActive(true);
+			Main.tile.At(i + 1, j - 1).SetFrameY(18);
+			Main.tile.At(i + 1, j - 1).SetFrameX((short)(18 + b));
+			Main.tile.At(i + 1, j - 1).SetType(128);
+			Main.tile.At(i + 1, j).SetActive(true);
+			Main.tile.At(i + 1, j).SetFrameY(36);
+			Main.tile.At(i + 1, j).SetFrameX((short)(18 + b));
+			Main.tile.At(i + 1, j).SetType(128);
+		}
+
+		public static void PlaceMB(int X, int y, int type, int style)
+		{
+			int num = X + 1;
+			if (num < 5 || num > Main.maxTilesX - 5 || y < 5 || y > Main.maxTilesY - 5)
+			{
+				return;
+			}
+			bool flag = true;
+			for (int i = num - 1; i < num + 1; i++)
+			{
+				for (int j = y - 1; j < y + 1; j++)
+				{
+					if (Main.tile.At(i, j).Active)
+					{
+						flag = false;
+					}
+				}
+				if (!Main.tile.At(i, y + 1).Active || (!Main.tileSolid[(int)Main.tile.At(i, y + 1).Type] &&
+					!Main.tileTable[(int)Main.tile.At(i, y + 1).Type]))
+				{
+					flag = false;
+				}
+			}
+			if (flag)
+			{
+				Main.tile.At(num - 1, y - 1).SetActive(true);
+				Main.tile.At(num - 1, y - 1).SetFrameY((short)(style * 36));
+				Main.tile.At(num - 1, y - 1).SetFrameX(0);
+				Main.tile.At(num - 1, y - 1).SetType((byte)type);
+				Main.tile.At(num, y - 1).SetActive(true);
+				Main.tile.At(num, y - 1).SetFrameY((short)(style * 36));
+				Main.tile.At(num, y - 1).SetFrameX(18);
+				Main.tile.At(num, y - 1).SetType((byte)type);
+				Main.tile.At(num - 1, y).SetActive(true);
+				Main.tile.At(num - 1, y).SetFrameY((short)(style * 36 + 18));
+				Main.tile.At(num - 1, y).SetFrameX(0);
+				Main.tile.At(num - 1, y).SetType((byte)type);
+				Main.tile.At(num, y).SetActive(true);
+				Main.tile.At(num, y).SetFrameY((short)(style * 36 + 18));
+				Main.tile.At(num, y).SetFrameX(18);
+				Main.tile.At(num, y).SetType((byte)type);
+			}
+		}
 
 		public static bool placeTrap(int x2, int y2, int type = -1)
 		{
@@ -1217,43 +2005,44 @@ namespace Terraria_Server.WorldMod
 			return canSpawn;
 		}
 
-        public static bool SolidTile(int x, int y)
-        {
-            var Tile = Main.tile.At(x, y);
-            return Tile.Active && Main.tileSolid[(int)Tile.Type] && !Main.tileSolidTop[(int)Tile.Type];
-        }
-		
-		public static bool InvokeAlterationHook (ISender sender, Player player, int x, int y, byte action, byte type = 0, byte style = 0)
+		public static bool SolidTile(int x, int y)
+		{
+			var Tile = Main.tile.At(x, y);
+			return Tile.Active && Main.tileSolid[(int)Tile.Type] && !Main.tileSolidTop[(int)Tile.Type];
+		}
+
+		public static bool InvokeAlterationHook(ISender sender, Player player, int x, int y, byte action, byte type = 0, byte style = 0)
 		{
 			var ctx = new HookContext
 			{
 				Sender = sender,
 				Player = player,
 			};
-			
+
 			var args = new HookArgs.PlayerWorldAlteration
 			{
-				X = x, Y = y,
+				X = x,
+				Y = y,
 				Action = action,
 				Type = type,
 				Style = style,
 			};
-			
-			HookPoints.PlayerWorldAlteration.Invoke (ref ctx, ref args);
-			
-			if (ctx.CheckForKick ())
+
+			HookPoints.PlayerWorldAlteration.Invoke(ref ctx, ref args);
+
+			if (ctx.CheckForKick())
 				return false;
-				
+
 			if (ctx.Result == HookResult.IGNORE)
 				return false;
-			
+
 			if (ctx.Result == HookResult.RECTIFY)
 			{
 				if (player.whoAmi >= 0)
 					NetMessage.SendTileSquare(player.whoAmi, x, y, 1); // FIXME
 				return false;
 			}
-			
+
 			return true;
 		}
 
@@ -1279,45 +2068,45 @@ namespace Terraria_Server.WorldMod
 				{
 					if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].Type == spawnNPC)
 					{
-                        npcIndex = i;
+						npcIndex = i;
 						break;
 					}
 				}
-                if (npcIndex == -1)
+				if (npcIndex == -1)
 				{
 					int posX = bestX;
 					int posY = bestY;
 					bool flag = true;
-                    Rectangle value = new Rectangle(posX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, posY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
-                    for (int j = 0; j < 255; j++)
-                    {
-                        if (Main.players[j].Active)
-                        {
-                            Rectangle rectangle = new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].Width, Main.players[j].Height);
-                            if (rectangle.Intersects(value))
-                            {
-                                flag = false;
-                                break;
-                            }
-                        }
-                    }
+					Rectangle value = new Rectangle(posX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, posY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+					for (int j = 0; j < 255; j++)
+					{
+						if (Main.players[j].Active)
+						{
+							Rectangle rectangle = new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].Width, Main.players[j].Height);
+							if (rectangle.Intersects(value))
+							{
+								flag = false;
+								break;
+							}
+						}
+					}
 					if (!flag)
 					{
-                        //Find a suitable home/spawn location?
+						//Find a suitable home/spawn location?
 						for (int k = 1; k < 500; k++)
 						{
-                            //See if it's in a 'flat' area?
+							//See if it's in a 'flat' area?
 							for (int l = 0; l < 2; l++)
 							{
 								if (l == 0)
 								{
-                                    posX = bestX + k;
+									posX = bestX + k;
 								}
 								else
 								{
-                                    posX = bestX - k;
+									posX = bestX - k;
 								}
-                                if (posX > 10 && posX < Main.maxTilesX - 10)
+								if (posX > 10 && posX < Main.maxTilesX - 10)
 								{
 									int num4 = bestY - k;
 									double num5 = (double)(bestY + k);
@@ -1332,12 +2121,12 @@ namespace Terraria_Server.WorldMod
 									while ((double)relativeX < num5)
 									{
 										posY = relativeX;
-                                        if (Main.tile.At(posX, posY).Active && Main.tileSolid[(int)Main.tile.At(posX, posY).Type])
+										if (Main.tile.At(posX, posY).Active && Main.tileSolid[(int)Main.tile.At(posX, posY).Type])
 										{
-                                            if (!Collision.SolidTiles(posX - 1, posX + 1, posY - 3, posY - 1))
+											if (!Collision.SolidTiles(posX - 1, posX + 1, posY - 3, posY - 1))
 											{
 												flag = true;
-                                                Rectangle value2 = new Rectangle(posX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, posY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+												Rectangle value2 = new Rectangle(posX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, posY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
 												for (int m = 0; m < 255; m++)
 												{
 													if (Main.players[m].Active)
@@ -1365,27 +2154,27 @@ namespace Terraria_Server.WorldMod
 								break;
 						}
 					}
-                    int townNPCIndex = NPC.NewNPC(posX * 16, posY * 16, spawnNPC, 1);
+					int townNPCIndex = NPC.NewNPC(posX * 16, posY * 16, spawnNPC, 1);
 					Main.npcs[townNPCIndex].homeTileX = bestX;
 					Main.npcs[townNPCIndex].homeTileY = bestY;
-                    if (posX < bestX)
+					if (posX < bestX)
 						Main.npcs[townNPCIndex].direction = 1;
 					else if (posX > bestX)
 						Main.npcs[townNPCIndex].direction = -1;
 
-					Main.npcs[townNPCIndex].netUpdate = true;					
+					Main.npcs[townNPCIndex].netUpdate = true;
 					NetMessage.SendData(25, -1, -1, Main.npcs[townNPCIndex].Name + " has arrived!", 255, 50f, 125f, 255f);
 				}
 				else
 				{
 					Main.npcs[npcIndex].homeTileX = bestX;
-                    Main.npcs[npcIndex].homeTileY = bestY;
-                    Main.npcs[npcIndex].homeless = false;
+					Main.npcs[npcIndex].homeTileY = bestY;
+					Main.npcs[npcIndex].homeless = false;
 				}
 				spawnNPC = 0;
 			}
 		}
-		
+
 		public static void QuickFindHome(int npc)
 		{
 			if (Main.npcs[npc].homeTileX > 10 && Main.npcs[npc].homeTileY > 10 && Main.npcs[npc].homeTileX < Main.maxTilesX - 10 && Main.npcs[npc].homeTileY < Main.maxTilesY)
@@ -1436,7 +2225,7 @@ namespace Terraria_Server.WorldMod
 					Main.npcs[npc].homeless = true;
 			}
 		}
-		
+
 		public static void ScoreRoom(int ignoreNPC = -1)
 		{
 			roomOccupied = false;
@@ -1557,7 +2346,7 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
-		
+
 		public static bool StartRoomCheck(int x, int y)
 		{
 			roomX1 = x;
@@ -1565,7 +2354,7 @@ namespace Terraria_Server.WorldMod
 			roomY1 = y;
 			roomY2 = y;
 			numRoomTiles = 0;
-            for (int i = 0; i < MAX_TILE_SETS; i++)
+			for (int i = 0; i < MAX_TILE_SETS; i++)
 			{
 				houseTile[i] = false;
 			}
@@ -1581,7 +2370,7 @@ namespace Terraria_Server.WorldMod
 
 			return canSpawn;
 		}
-		
+
 		public static void CheckRoom(int x, int y)
 		{
 			if (!canSpawn)
@@ -1660,7 +2449,7 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
-		
+
 		public static void dropMeteor()
 		{
 			bool flag = true;
@@ -1713,7 +2502,7 @@ namespace Terraria_Server.WorldMod
 				Thread.Sleep(10);
 			}
 		}
-		
+
 		public static bool meteor(int x, int y)
 		{
 			if (x < 50 || x > Main.maxTilesX - 50)
@@ -1722,7 +2511,7 @@ namespace Terraria_Server.WorldMod
 			if (y < 50 || y > Main.maxTilesY - 50)
 				return false;
 
-			Rectangle rectangle = new Rectangle((x - RECTANGLE_OFFSET) * TILE_SCALE, (y - RECTANGLE_OFFSET) * TILE_SCALE, 
+			Rectangle rectangle = new Rectangle((x - RECTANGLE_OFFSET) * TILE_SCALE, (y - RECTANGLE_OFFSET) * TILE_SCALE,
 				RECTANGLE_OFFSET * 2 * TILE_SCALE, RECTANGLE_OFFSET * 2 * TILE_SCALE);
 
 			BaseEntity entity;
@@ -1757,9 +2546,9 @@ namespace Terraria_Server.WorldMod
 					if (num3 > y + Main.rand.Next(-2, 3) - 5 && (double)(Math.Abs(x - num2) + Math.Abs(y - num3)) < (double)TILE_OFFSET * 1.5 + (double)Main.rand.Next(-5, 5))
 					{
 						if (!Main.tileSolid[(int)Main.tile.At(num2, num3).Type])
-							Main.tile.At(num2, num3).SetActive (false);
+							Main.tile.At(num2, num3).SetActive(false);
 
-						Main.tile.At(num2, num3).SetType (37);
+						Main.tile.At(num2, num3).SetType(37);
 					}
 				}
 			}
@@ -1769,10 +2558,10 @@ namespace Terraria_Server.WorldMod
 				for (int num5 = y - TILES_OFFSET_2; num5 < y + TILES_OFFSET_2; num5++)
 				{
 					if (num5 > y + Main.rand.Next(-2, 3) - 5 && Math.Abs(x - num4) + Math.Abs(y - num5) < TILES_OFFSET_2 + Main.rand.Next(-3, 4))
-						Main.tile.At(num4, num5).SetActive (false);
+						Main.tile.At(num4, num5).SetActive(false);
 				}
 			}
-			
+
 			for (int num6 = x - TILE_OFFSET_3; num6 < x + TILE_OFFSET_3; num6++)
 			{
 				for (int num7 = y - TILE_OFFSET_3; num7 < y + TILE_OFFSET_3; num7++)
@@ -1794,13 +2583,13 @@ namespace Terraria_Server.WorldMod
 						if (Main.tile.At(num8, num9).Type == 5 || Main.tile.At(num8, num9).Type == 32)
 							KillTile(num8, num9, false, false, false);
 
-						Main.tile.At(num8, num9).SetType (37);
+						Main.tile.At(num8, num9).SetType(37);
 						SquareTileFrame(num8, num9, true);
 					}
 				}
 			}
 			stopDrops = false;
-			
+
 			NetMessage.SendData(25, -1, -1, "A meteorite has landed!", 255, 50f, 255f, 130f);
 			NetMessage.SendTileSquare(-1, x, y, 30);
 			return true;
@@ -1814,9 +2603,9 @@ namespace Terraria_Server.WorldMod
 			int num4;
 			for (int j = freeTilesAbove - num3; j < freeTilesAbove; j++)
 			{
-				Main.tile.At(i, j).SetFrameNumber ((byte)genRand.Next(3));
-				Main.tile.At(i, j).SetActive (true);
-				Main.tile.At(i, j).SetType (5);
+				Main.tile.At(i, j).SetFrameNumber((byte)genRand.Next(3));
+				Main.tile.At(i, j).SetActive(true);
+				Main.tile.At(i, j).SetType(5);
 				num4 = genRand.Next(3);
 				int num5 = genRand.Next(10);
 				if (j == freeTilesAbove - 1 || j == freeTilesAbove - num3)
@@ -1838,239 +2627,239 @@ namespace Terraria_Server.WorldMod
 				{
 					flag2 = true;
 				}
-                switch (num5)
-                {
-                    case 1:
+				switch (num5)
+				{
+					case 1:
 						if (num4 == 0)
 						{
-							Main.tile.At(i, j).SetFrameX (0);
-							Main.tile.At(i, j).SetFrameY (66);
+							Main.tile.At(i, j).SetFrameX(0);
+							Main.tile.At(i, j).SetFrameY(66);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i, j).SetFrameX (0);
-							Main.tile.At(i, j).SetFrameY (88);
+							Main.tile.At(i, j).SetFrameX(0);
+							Main.tile.At(i, j).SetFrameY(88);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i, j).SetFrameX (0);
-							Main.tile.At(i, j).SetFrameY (110);
+							Main.tile.At(i, j).SetFrameX(0);
+							Main.tile.At(i, j).SetFrameY(110);
 						}
-                        break;
+						break;
 					case 2:
 						if (num4 == 0)
 						{
-							Main.tile.At(i, j).SetFrameX (22);
-							Main.tile.At(i, j).SetFrameY (0);
+							Main.tile.At(i, j).SetFrameX(22);
+							Main.tile.At(i, j).SetFrameY(0);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i, j).SetFrameX (22);
-							Main.tile.At(i, j).SetFrameY (22);
+							Main.tile.At(i, j).SetFrameX(22);
+							Main.tile.At(i, j).SetFrameY(22);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i, j).SetFrameX (22);
-							Main.tile.At(i, j).SetFrameY (44);
+							Main.tile.At(i, j).SetFrameX(22);
+							Main.tile.At(i, j).SetFrameY(44);
 						}
-                        break;
+						break;
 					case 3:
 						if (num4 == 0)
 						{
-							Main.tile.At(i, j).SetFrameX (44);
-							Main.tile.At(i, j).SetFrameY (66);
+							Main.tile.At(i, j).SetFrameX(44);
+							Main.tile.At(i, j).SetFrameY(66);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i, j).SetFrameX (44);
-							Main.tile.At(i, j).SetFrameY (88);
+							Main.tile.At(i, j).SetFrameX(44);
+							Main.tile.At(i, j).SetFrameY(88);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i, j).SetFrameX (44);
-							Main.tile.At(i, j).SetFrameY (110);
+							Main.tile.At(i, j).SetFrameX(44);
+							Main.tile.At(i, j).SetFrameY(110);
 						}
-                        break;
+						break;
 					case 4:
 						if (num4 == 0)
 						{
-							Main.tile.At(i, j).SetFrameX (22);
-							Main.tile.At(i, j).SetFrameY (66);
+							Main.tile.At(i, j).SetFrameX(22);
+							Main.tile.At(i, j).SetFrameY(66);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i, j).SetFrameX (22);
-							Main.tile.At(i, j).SetFrameY (88);
+							Main.tile.At(i, j).SetFrameX(22);
+							Main.tile.At(i, j).SetFrameY(88);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i, j).SetFrameX (22);
-							Main.tile.At(i, j).SetFrameY (110);
+							Main.tile.At(i, j).SetFrameX(22);
+							Main.tile.At(i, j).SetFrameY(110);
 						}
-                        break;
+						break;
 					case 5:
 						if (num4 == 0)
 						{
-							Main.tile.At(i, j).SetFrameX (88);
-							Main.tile.At(i, j).SetFrameY (0);
+							Main.tile.At(i, j).SetFrameX(88);
+							Main.tile.At(i, j).SetFrameY(0);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i, j).SetFrameX (88);
-							Main.tile.At(i, j).SetFrameY (22);
+							Main.tile.At(i, j).SetFrameX(88);
+							Main.tile.At(i, j).SetFrameY(22);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i, j).SetFrameX (88);
-							Main.tile.At(i, j).SetFrameY (44);
+							Main.tile.At(i, j).SetFrameX(88);
+							Main.tile.At(i, j).SetFrameY(44);
 						}
-                        break;
+						break;
 					case 6:
 						if (num4 == 0)
 						{
-							Main.tile.At(i, j).SetFrameX (66);
-							Main.tile.At(i, j).SetFrameY (66);
+							Main.tile.At(i, j).SetFrameX(66);
+							Main.tile.At(i, j).SetFrameY(66);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i, j).SetFrameX (66);
-							Main.tile.At(i, j).SetFrameY (88);
+							Main.tile.At(i, j).SetFrameX(66);
+							Main.tile.At(i, j).SetFrameY(88);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i, j).SetFrameX (66);
-							Main.tile.At(i, j).SetFrameY (110);
+							Main.tile.At(i, j).SetFrameX(66);
+							Main.tile.At(i, j).SetFrameY(110);
 						}
-                        break;
+						break;
 					case 7:
 						if (num4 == 0)
 						{
-							Main.tile.At(i, j).SetFrameX (110);
-							Main.tile.At(i, j).SetFrameY (66);
+							Main.tile.At(i, j).SetFrameX(110);
+							Main.tile.At(i, j).SetFrameY(66);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i, j).SetFrameX (110);
-							Main.tile.At(i, j).SetFrameY (88);
+							Main.tile.At(i, j).SetFrameX(110);
+							Main.tile.At(i, j).SetFrameY(88);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i, j).SetFrameX (110);
-							Main.tile.At(i, j).SetFrameY (110);
+							Main.tile.At(i, j).SetFrameX(110);
+							Main.tile.At(i, j).SetFrameY(110);
 						}
-                        break;
+						break;
 					default:
 						if (num4 == 0)
 						{
-							Main.tile.At(i, j).SetFrameX (0);
-							Main.tile.At(i, j).SetFrameY (0);
+							Main.tile.At(i, j).SetFrameX(0);
+							Main.tile.At(i, j).SetFrameY(0);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i, j).SetFrameX (0);
-							Main.tile.At(i, j).SetFrameY (22);
+							Main.tile.At(i, j).SetFrameX(0);
+							Main.tile.At(i, j).SetFrameY(22);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i, j).SetFrameX (0);
-							Main.tile.At(i, j).SetFrameY (44);
+							Main.tile.At(i, j).SetFrameX(0);
+							Main.tile.At(i, j).SetFrameY(44);
 						}
-                        break;
+						break;
 				}
 				if (num5 == 5 || num5 == 7)
 				{
-					Main.tile.At(i - 1, j).SetActive (true);
-					Main.tile.At(i - 1, j).SetType (5);
+					Main.tile.At(i - 1, j).SetActive(true);
+					Main.tile.At(i - 1, j).SetType(5);
 					num4 = genRand.Next(3);
 					if (genRand.Next(3) < 2)
 					{
 						if (num4 == 0)
 						{
-							Main.tile.At(i - 1, j).SetFrameX (44);
-							Main.tile.At(i - 1, j).SetFrameY (198);
+							Main.tile.At(i - 1, j).SetFrameX(44);
+							Main.tile.At(i - 1, j).SetFrameY(198);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i - 1, j).SetFrameX (44);
-							Main.tile.At(i - 1, j).SetFrameY (220);
+							Main.tile.At(i - 1, j).SetFrameX(44);
+							Main.tile.At(i - 1, j).SetFrameY(220);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i - 1, j).SetFrameX (44);
-							Main.tile.At(i - 1, j).SetFrameY (242);
+							Main.tile.At(i - 1, j).SetFrameX(44);
+							Main.tile.At(i - 1, j).SetFrameY(242);
 						}
 					}
 					else
 					{
 						if (num4 == 0)
 						{
-							Main.tile.At(i - 1, j).SetFrameX (66);
-							Main.tile.At(i - 1, j).SetFrameY (0);
+							Main.tile.At(i - 1, j).SetFrameX(66);
+							Main.tile.At(i - 1, j).SetFrameY(0);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i - 1, j).SetFrameX (66);
-							Main.tile.At(i - 1, j).SetFrameY (22);
+							Main.tile.At(i - 1, j).SetFrameX(66);
+							Main.tile.At(i - 1, j).SetFrameY(22);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i - 1, j).SetFrameX (66);
-							Main.tile.At(i - 1, j).SetFrameY (44);
+							Main.tile.At(i - 1, j).SetFrameX(66);
+							Main.tile.At(i - 1, j).SetFrameY(44);
 						}
 					}
 				}
 				if (num5 == 6 || num5 == 7)
 				{
-					Main.tile.At(i + 1, j).SetActive (true);
-					Main.tile.At(i + 1, j).SetType (5);
+					Main.tile.At(i + 1, j).SetActive(true);
+					Main.tile.At(i + 1, j).SetType(5);
 					num4 = genRand.Next(3);
 					if (genRand.Next(3) < 2)
 					{
 						if (num4 == 0)
 						{
-							Main.tile.At(i + 1, j).SetFrameX (66);
-							Main.tile.At(i + 1, j).SetFrameY (198);
+							Main.tile.At(i + 1, j).SetFrameX(66);
+							Main.tile.At(i + 1, j).SetFrameY(198);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i + 1, j).SetFrameX (66);
-							Main.tile.At(i + 1, j).SetFrameY (220);
+							Main.tile.At(i + 1, j).SetFrameX(66);
+							Main.tile.At(i + 1, j).SetFrameY(220);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i + 1, j).SetFrameX (66);
-							Main.tile.At(i + 1, j).SetFrameY (242);
+							Main.tile.At(i + 1, j).SetFrameX(66);
+							Main.tile.At(i + 1, j).SetFrameY(242);
 						}
 					}
 					else
 					{
 						if (num4 == 0)
 						{
-							Main.tile.At(i + 1, j).SetFrameX (88);
-							Main.tile.At(i + 1, j).SetFrameY (66);
+							Main.tile.At(i + 1, j).SetFrameX(88);
+							Main.tile.At(i + 1, j).SetFrameY(66);
 						}
 						if (num4 == 1)
 						{
-							Main.tile.At(i + 1, j).SetFrameX (88);
-							Main.tile.At(i + 1, j).SetFrameY (88);
+							Main.tile.At(i + 1, j).SetFrameX(88);
+							Main.tile.At(i + 1, j).SetFrameY(88);
 						}
 						if (num4 == 2)
 						{
-							Main.tile.At(i + 1, j).SetFrameX (88);
-							Main.tile.At(i + 1, j).SetFrameY (110);
+							Main.tile.At(i + 1, j).SetFrameX(88);
+							Main.tile.At(i + 1, j).SetFrameY(110);
 						}
 					}
 				}
 			}
 			int num6 = genRand.Next(3);
-			bool flag3 = 
+			bool flag3 =
 				Main.tile.At(i - 1, freeTilesAbove).Active &&
 				(Main.tile.At(i - 1, freeTilesAbove).Type == 2 ||
 				Main.tile.At(i - 1, freeTilesAbove).Type == 23 ||
 				Main.tile.At(i - 1, freeTilesAbove).Type == 60 ||
 				Main.tile.At(i - 1, freeTilesAbove).Type == 109);
 
-			bool flag4 = 
+			bool flag4 =
 				Main.tile.At(i + 1, freeTilesAbove).Active &&
 				(Main.tile.At(i + 1, freeTilesAbove).Type == 2 ||
 				Main.tile.At(i + 1, freeTilesAbove).Type == 23 ||
@@ -2102,44 +2891,44 @@ namespace Terraria_Server.WorldMod
 
 			if (num6 == 0 || num6 == 2)
 			{
-				Main.tile.At(i + 1, freeTilesAbove - 1).SetActive (true);
-				Main.tile.At(i + 1, freeTilesAbove - 1).SetType (5);
+				Main.tile.At(i + 1, freeTilesAbove - 1).SetActive(true);
+				Main.tile.At(i + 1, freeTilesAbove - 1).SetType(5);
 				num4 = genRand.Next(3);
 				if (num4 == 0)
 				{
-					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameX (22);
-					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameY (132);
+					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameX(22);
+					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameY(132);
 				}
 				if (num4 == 1)
 				{
-					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameX (22);
-					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameY (154);
+					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameX(22);
+					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameY(154);
 				}
 				if (num4 == 2)
 				{
-					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameX (22);
-					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameY (176);
+					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameX(22);
+					Main.tile.At(i + 1, freeTilesAbove - 1).SetFrameY(176);
 				}
 			}
 			if (num6 == 0 || num6 == 2)
 			{
-				Main.tile.At(i - 1, freeTilesAbove - 1).SetActive (true);
-				Main.tile.At(i - 1, freeTilesAbove - 1).SetType (5);
+				Main.tile.At(i - 1, freeTilesAbove - 1).SetActive(true);
+				Main.tile.At(i - 1, freeTilesAbove - 1).SetType(5);
 				num4 = genRand.Next(3);
 				if (num4 == 0)
 				{
-					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameX (44);
-					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameY (132);
+					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameX(44);
+					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameY(132);
 				}
 				if (num4 == 1)
 				{
-					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameX (44);
-					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameY (154);
+					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameX(44);
+					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameY(154);
 				}
 				if (num4 == 2)
 				{
-					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameX (44);
-					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameY (176);
+					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameX(44);
+					Main.tile.At(i - 1, freeTilesAbove - 1).SetFrameY(176);
 				}
 			}
 			num4 = genRand.Next(3);
@@ -2147,18 +2936,18 @@ namespace Terraria_Server.WorldMod
 			{
 				if (num4 == 0)
 				{
-					Main.tile.At(i, freeTilesAbove - 1).SetFrameX (88);
-					Main.tile.At(i, freeTilesAbove - 1).SetFrameY (132);
+					Main.tile.At(i, freeTilesAbove - 1).SetFrameX(88);
+					Main.tile.At(i, freeTilesAbove - 1).SetFrameY(132);
 				}
 				if (num4 == 1)
 				{
-					Main.tile.At(i, freeTilesAbove - 1).SetFrameX (88);
-					Main.tile.At(i, freeTilesAbove - 1).SetFrameY (154);
+					Main.tile.At(i, freeTilesAbove - 1).SetFrameX(88);
+					Main.tile.At(i, freeTilesAbove - 1).SetFrameY(154);
 				}
 				if (num4 == 2)
 				{
-					Main.tile.At(i, freeTilesAbove - 1).SetFrameX (88);
-					Main.tile.At(i, freeTilesAbove - 1).SetFrameY (176);
+					Main.tile.At(i, freeTilesAbove - 1).SetFrameX(88);
+					Main.tile.At(i, freeTilesAbove - 1).SetFrameY(176);
 				}
 			}
 			else
@@ -2167,18 +2956,18 @@ namespace Terraria_Server.WorldMod
 				{
 					if (num4 == 0)
 					{
-						Main.tile.At(i, freeTilesAbove - 1).SetFrameX (0);
-						Main.tile.At(i, freeTilesAbove - 1).SetFrameY (132);
+						Main.tile.At(i, freeTilesAbove - 1).SetFrameX(0);
+						Main.tile.At(i, freeTilesAbove - 1).SetFrameY(132);
 					}
 					if (num4 == 1)
 					{
-						Main.tile.At(i, freeTilesAbove - 1).SetFrameX (0);
-						Main.tile.At(i, freeTilesAbove - 1).SetFrameY (154);
+						Main.tile.At(i, freeTilesAbove - 1).SetFrameX(0);
+						Main.tile.At(i, freeTilesAbove - 1).SetFrameY(154);
 					}
 					if (num4 == 2)
 					{
-						Main.tile.At(i, freeTilesAbove - 1).SetFrameX (0);
-						Main.tile.At(i, freeTilesAbove - 1).SetFrameY (176);
+						Main.tile.At(i, freeTilesAbove - 1).SetFrameX(0);
+						Main.tile.At(i, freeTilesAbove - 1).SetFrameY(176);
 					}
 				}
 				else if (num6 == 2)
@@ -2205,18 +2994,18 @@ namespace Terraria_Server.WorldMod
 				num4 = genRand.Next(3);
 				if (num4 == 0)
 				{
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameX (22);
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameY (198);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameX(22);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameY(198);
 				}
 				if (num4 == 1)
 				{
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameX (22);
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameY (220);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameX(22);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameY(220);
 				}
 				if (num4 == 2)
 				{
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameX (22);
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameY (242);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameX(22);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameY(242);
 				}
 			}
 			else
@@ -2224,22 +3013,22 @@ namespace Terraria_Server.WorldMod
 				num4 = genRand.Next(3);
 				if (num4 == 0)
 				{
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameX (0);
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameY (198);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameX(0);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameY(198);
 				}
 				if (num4 == 1)
 				{
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameX (0);
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameY (220);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameX(0);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameY(220);
 				}
 				if (num4 == 2)
 				{
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameX (0);
-					Main.tile.At(i, freeTilesAbove - num3).SetFrameY (242);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameX(0);
+					Main.tile.At(i, freeTilesAbove - num3).SetFrameY(242);
 				}
 			}
 			RangeFrame(i - 2, freeTilesAbove - num3 - 1, i + 2, freeTilesAbove + 1);
-			
+
 			NetMessage.SendTileSquare(-1, i, (int)((double)freeTilesAbove - (double)num3 * 0.5), num3 + 1);
 		}
 
@@ -2271,15 +3060,15 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 
-        public static bool IsValidTreeRootTile(TileRef tile)
+		public static bool IsValidTreeRootTile(TileRef tile)
 		{
 			return (tile.Active && (tile.Type == 2 || tile.Type == 23 || tile.Type == 60));
 		}
-		
+
 		public static void GrowShroom(int i, int y)
 		{
 			if (Main.tile.At(i - 1, y - 1).Lava ||
-				Main.tile.At(i - 1, y - 1).Lava || 
+				Main.tile.At(i - 1, y - 1).Lava ||
 				Main.tile.At(i + 1, y - 1).Lava)
 				return;
 
@@ -2289,41 +3078,41 @@ namespace Terraria_Server.WorldMod
 				int num2;
 				for (int j = y - num; j < y; j++)
 				{
-					Main.tile.At(i, j).SetFrameNumber ((byte)genRand.Next(3));
-					Main.tile.At(i, j).SetActive (true);
-					Main.tile.At(i, j).SetType (72);
+					Main.tile.At(i, j).SetFrameNumber((byte)genRand.Next(3));
+					Main.tile.At(i, j).SetActive(true);
+					Main.tile.At(i, j).SetType(72);
 					num2 = genRand.Next(3);
 					if (num2 == 0)
 					{
-						Main.tile.At(i, j).SetFrameX (0);
-						Main.tile.At(i, j).SetFrameY (0);
+						Main.tile.At(i, j).SetFrameX(0);
+						Main.tile.At(i, j).SetFrameY(0);
 					}
 					if (num2 == 1)
 					{
-						Main.tile.At(i, j).SetFrameX (0);
-						Main.tile.At(i, j).SetFrameY (18);
+						Main.tile.At(i, j).SetFrameX(0);
+						Main.tile.At(i, j).SetFrameY(18);
 					}
 					if (num2 == 2)
 					{
-						Main.tile.At(i, j).SetFrameX (0);
-						Main.tile.At(i, j).SetFrameY (36);
+						Main.tile.At(i, j).SetFrameX(0);
+						Main.tile.At(i, j).SetFrameY(36);
 					}
 				}
 				num2 = genRand.Next(3);
 				if (num2 == 0)
 				{
-					Main.tile.At(i, y - num).SetFrameX (36);
-					Main.tile.At(i, y - num).SetFrameY (0);
+					Main.tile.At(i, y - num).SetFrameX(36);
+					Main.tile.At(i, y - num).SetFrameY(0);
 				}
 				if (num2 == 1)
 				{
-					Main.tile.At(i, y - num).SetFrameX (36);
-					Main.tile.At(i, y - num).SetFrameY (18);
+					Main.tile.At(i, y - num).SetFrameX(36);
+					Main.tile.At(i, y - num).SetFrameY(18);
 				}
 				if (num2 == 2)
 				{
-					Main.tile.At(i, y - num).SetFrameX (36);
-					Main.tile.At(i, y - num).SetFrameY (36);
+					Main.tile.At(i, y - num).SetFrameX(36);
+					Main.tile.At(i, y - num).SetFrameY(36);
 				}
 				RangeFrame(i - 2, y - num - 1, i + 2, y + 1);
 				NetMessage.SendTileSquare(-1, i, (int)((double)y - (double)num * 0.5), num + 1);
@@ -2345,7 +3134,7 @@ namespace Terraria_Server.WorldMod
 					x++;
 			}
 		}
-		
+
 		public static bool EmptyTileCheck(int startX, int endX, int startY, int endY, int ignoreStyle = -1)
 		{
 			if (startX < 0)
@@ -2372,11 +3161,11 @@ namespace Terraria_Server.WorldMod
 						if (ignoreStyle == 11 && Main.tile.At(i, j).Type != 11)
 							return false;
 
-						if (ignoreStyle == 20 && Main.tile.At(i, j).Type != 20 && 
-							Main.tile.At(i, j).Type != 3 && 
-							Main.tile.At(i, j).Type != 24 && 
-							Main.tile.At(i, j).Type != 61 && 
-							Main.tile.At(i, j).Type != 32 && 
+						if (ignoreStyle == 20 && Main.tile.At(i, j).Type != 20 &&
+							Main.tile.At(i, j).Type != 3 &&
+							Main.tile.At(i, j).Type != 24 &&
+							Main.tile.At(i, j).Type != 61 &&
+							Main.tile.At(i, j).Type != 32 &&
 							Main.tile.At(i, j).Type != 69 &&
 							Main.tile.At(i, j).Type != 73 &&
 							Main.tile.At(i, j).Type != 74 &&
@@ -2392,25 +3181,25 @@ namespace Terraria_Server.WorldMod
 			}
 			return true;
 		}
-		
+
 		public static bool PlaceDoor(int i, int j, int type)
 		{
 			try
 			{
 				if (Main.tile.At(i, j - 2).Active && Main.tileSolid[(int)Main.tile.At(i, j - 2).Type] && Main.tile.At(i, j + 2).Active && Main.tileSolid[(int)Main.tile.At(i, j + 2).Type])
 				{
-					Main.tile.At(i, j - 1).SetActive (true);
-					Main.tile.At(i, j - 1).SetType (10);
-					Main.tile.At(i, j - 1).SetFrameY (0);
-					Main.tile.At(i, j - 1).SetFrameX ((short)(genRand.Next(3) * 18));
-					Main.tile.At(i, j).SetActive (true);
-					Main.tile.At(i, j).SetType (10);
-					Main.tile.At(i, j).SetFrameY (18);
-					Main.tile.At(i, j).SetFrameX ((short)(genRand.Next(3) * 18));
-					Main.tile.At(i, j + 1).SetActive (true);
-					Main.tile.At(i, j + 1).SetType (10);
-					Main.tile.At(i, j + 1).SetFrameY (36);
-					Main.tile.At(i, j + 1).SetFrameX ((short)(genRand.Next(3) * 18));
+					Main.tile.At(i, j - 1).SetActive(true);
+					Main.tile.At(i, j - 1).SetType(10);
+					Main.tile.At(i, j - 1).SetFrameY(0);
+					Main.tile.At(i, j - 1).SetFrameX((short)(genRand.Next(3) * 18));
+					Main.tile.At(i, j).SetActive(true);
+					Main.tile.At(i, j).SetType(10);
+					Main.tile.At(i, j).SetFrameY(18);
+					Main.tile.At(i, j).SetFrameX((short)(genRand.Next(3) * 18));
+					Main.tile.At(i, j + 1).SetActive(true);
+					Main.tile.At(i, j + 1).SetType(10);
+					Main.tile.At(i, j + 1).SetFrameY(36);
+					Main.tile.At(i, j + 1).SetFrameX((short)(genRand.Next(3) * 18));
 					return true;
 				}
 				else
@@ -2425,31 +3214,32 @@ namespace Terraria_Server.WorldMod
 		public static bool CloseDoor(int x, int y, bool forced, ISender sender)
 		{
 			if (sender == null)
-				sender = new ConsoleSender ();
+				sender = new ConsoleSender();
 
-            if (Program.properties.NPCDoorOpenCancel && sender is NPC)
-                return false;
+			if (Program.properties.NPCDoorOpenCancel && sender is NPC)
+				return false;
 
 			var ctx = new HookContext
 			{
 				Sender = sender,
 			};
-			
+
 			var args = new HookArgs.DoorStateChanged
 			{
-				X = x, Y = y,
+				X = x,
+				Y = y,
 				Direction = 1,
 				Open = false,
 			};
-			
-			HookPoints.DoorStateChanged.Invoke (ref ctx, ref args);
-			
-			if (ctx.CheckForKick ())
+
+			HookPoints.DoorStateChanged.Invoke(ref ctx, ref args);
+
+			if (ctx.CheckForKick())
 				return false;
-			
+
 			if (ctx.Result == HookResult.IGNORE)
 				return false;
-			
+
 			if (ctx.Result == HookResult.RECTIFY)
 			{
 				NetMessage.SendData(19, -1, -1, "", 0, (float)x, (float)y, 0); //Inform the client of the update
@@ -2459,7 +3249,7 @@ namespace Terraria_Server.WorldMod
 			int num = 0;
 			int num2 = x;
 			int num3 = y;
-			
+
 			int frameX = (int)Main.tile.At(x, y).FrameX;
 			int frameY = (int)Main.tile.At(x, y).FrameY;
 			if (frameX == 0)
@@ -2515,12 +3305,12 @@ namespace Terraria_Server.WorldMod
 				{
 					if (l == num2)
 					{
-						Main.tile.At(l, m).SetType (10);
-						Main.tile.At(l, m).SetFrameX ((short)(genRand.Next(3) * 18));
+						Main.tile.At(l, m).SetType(10);
+						Main.tile.At(l, m).SetFrameX((short)(genRand.Next(3) * 18));
 					}
 					else
 					{
-						Main.tile.At(l, m).SetActive (false);
+						Main.tile.At(l, m).SetActive(false);
 					}
 				}
 			}
@@ -2552,31 +3342,32 @@ namespace Terraria_Server.WorldMod
 			if (sender == null)
 			{
 				sender = new ConsoleSender();
-            }
+			}
 
-            if (Program.properties.NPCDoorOpenCancel && sender is NPC)
-                return false;
-			
+			if (Program.properties.NPCDoorOpenCancel && sender is NPC)
+				return false;
+
 			var ctx = new HookContext
 			{
 				Sender = sender,
 			};
-			
+
 			var args = new HookArgs.DoorStateChanged
 			{
-				X = x, Y = y,
+				X = x,
+				Y = y,
 				Direction = direction,
 				Open = true,
 			};
-			
-			HookPoints.DoorStateChanged.Invoke (ref ctx, ref args);
-			
-			if (ctx.CheckForKick ())
+
+			HookPoints.DoorStateChanged.Invoke(ref ctx, ref args);
+
+			if (ctx.CheckForKick())
 				return false;
-			
+
 			if (ctx.Result == HookResult.IGNORE)
 				return false;
-			
+
 			if (ctx.Result == HookResult.RECTIFY)
 			{
 				NetMessage.SendData(19, -1, -1, "", 1, (float)x, (float)y, 0); //Inform the client of the update
@@ -2629,30 +3420,30 @@ namespace Terraria_Server.WorldMod
 			}
 			if (flag)
 			{
-				Main.tile.At(num2, num).SetActive (true);
-				Main.tile.At(num2, num).SetType (11);
-				Main.tile.At(num2, num).SetFrameY (0);
-				Main.tile.At(num2, num).SetFrameX (num3);
-				Main.tile.At(num2 + 1, num).SetActive (true);
-				Main.tile.At(num2 + 1, num).SetType (11);
-				Main.tile.At(num2 + 1, num).SetFrameY (0);
-				Main.tile.At(num2 + 1, num).SetFrameX ((short)(num3 + 18));
-				Main.tile.At(num2, num + 1).SetActive (true);
-				Main.tile.At(num2, num + 1).SetType (11);
-				Main.tile.At(num2, num + 1).SetFrameY (18);
-				Main.tile.At(num2, num + 1).SetFrameX (num3);
-				Main.tile.At(num2 + 1, num + 1).SetActive (true);
-				Main.tile.At(num2 + 1, num + 1).SetType (11);
-				Main.tile.At(num2 + 1, num + 1).SetFrameY (18);
-				Main.tile.At(num2 + 1, num + 1).SetFrameX ((short)(num3 + 18));
-				Main.tile.At(num2, num + 2).SetActive (true);
-				Main.tile.At(num2, num + 2).SetType (11);
-				Main.tile.At(num2, num + 2).SetFrameY (36);
-				Main.tile.At(num2, num + 2).SetFrameX (num3);
-				Main.tile.At(num2 + 1, num + 2).SetActive (true);
-				Main.tile.At(num2 + 1, num + 2).SetType (11);
-				Main.tile.At(num2 + 1, num + 2).SetFrameY (36);
-				Main.tile.At(num2 + 1, num + 2).SetFrameX ((short)(num3 + 18));
+				Main.tile.At(num2, num).SetActive(true);
+				Main.tile.At(num2, num).SetType(11);
+				Main.tile.At(num2, num).SetFrameY(0);
+				Main.tile.At(num2, num).SetFrameX(num3);
+				Main.tile.At(num2 + 1, num).SetActive(true);
+				Main.tile.At(num2 + 1, num).SetType(11);
+				Main.tile.At(num2 + 1, num).SetFrameY(0);
+				Main.tile.At(num2 + 1, num).SetFrameX((short)(num3 + 18));
+				Main.tile.At(num2, num + 1).SetActive(true);
+				Main.tile.At(num2, num + 1).SetType(11);
+				Main.tile.At(num2, num + 1).SetFrameY(18);
+				Main.tile.At(num2, num + 1).SetFrameX(num3);
+				Main.tile.At(num2 + 1, num + 1).SetActive(true);
+				Main.tile.At(num2 + 1, num + 1).SetType(11);
+				Main.tile.At(num2 + 1, num + 1).SetFrameY(18);
+				Main.tile.At(num2 + 1, num + 1).SetFrameX((short)(num3 + 18));
+				Main.tile.At(num2, num + 2).SetActive(true);
+				Main.tile.At(num2, num + 2).SetType(11);
+				Main.tile.At(num2, num + 2).SetFrameY(36);
+				Main.tile.At(num2, num + 2).SetFrameX(num3);
+				Main.tile.At(num2 + 1, num + 2).SetActive(true);
+				Main.tile.At(num2 + 1, num + 2).SetType(11);
+				Main.tile.At(num2 + 1, num + 2).SetFrameY(36);
+				Main.tile.At(num2 + 1, num + 2).SetFrameX((short)(num3 + 18));
 				for (int l = num2 - 1; l <= num2 + 2; l++)
 				{
 					for (int m = num - 1; m <= num + 2; m++)
@@ -2663,7 +3454,7 @@ namespace Terraria_Server.WorldMod
 			}
 			return flag;
 		}
-		
+
 		public static void Check1x2(int x, int j, byte type)
 		{
 			if (destroyObject)
@@ -2671,30 +3462,32 @@ namespace Terraria_Server.WorldMod
 				return;
 			}
 			int num = j;
-            bool flag = true;
+			bool flag = true;
 
-            int FrameY = (int)Main.tile.At(x, num).FrameY;
+			int FrameY = (int)Main.tile.At(x, num).FrameY;
 
-            int num2 = 0;
-            while (FrameY >= 40)
-            {
-                FrameY -= 40;
-                num2++;
-            }
+			int num2 = 0;
+			while (FrameY >= 40)
+			{
+				FrameY -= 40;
+				num2++;
+			}
 
-            if (FrameY == 18)
+			if (FrameY == 18)
 			{
 				num--;
 			}
-            if ((int)Main.tile.At(x, num).FrameY == 40 * num2 && (int)Main.tile.At(x, num + 1).FrameY == 40 * num2 + 18 && Main.tile.At(x, num).Type == type && Main.tile.At(x, num + 1).Type == type)
-            {
-                flag = false;
-            }
+			if ((int)Main.tile.At(x, num).FrameY == 40 * num2 &&
+				(int)Main.tile.At(x, num + 1).FrameY == 40 * num2 + 18 &&
+				Main.tile.At(x, num).Type == type && Main.tile.At(x, num + 1).Type == type)
+			{
+				flag = false;
+			}
 			if (!Main.tile.At(x, num + 2).Active || !Main.tileSolid[(int)Main.tile.At(x, num + 2).Type])
 			{
 				flag = true;
 			}
-			if (Main.tile.At(x, num + 2).Type != 2 && Main.tile.At(x, num).Type == 20)
+			if (Main.tile.At(x, num + 2).Type != 2 && Main.tile.At(x, num + 2).Type != 109 && Main.tile.At(x, num).Type == 20)
 			{
 				flag = true;
 			}
@@ -2711,19 +3504,18 @@ namespace Terraria_Server.WorldMod
 				}
 				if (type == 15)
 				{
-                    if (num2 == 1)
-                    {
-                        Item.NewItem(x * 16, num * 16, 32, 32, 358, 1, false);
-                    }
-                    else
-                    {
-                        Item.NewItem(x * 16, num * 16, 32, 32, 34, 1, false);
-                    }
+					if (num2 == 1)
+						Item.NewItem(x * 16, num * 16, 32, 32, 358);
+					else
+						Item.NewItem(x * 16, num * 16, 32, 32, 34);
 				}
+				else if (type == 134)
+					Item.NewItem(x * 16, num * 16, 32, 32, 525);
+
 				destroyObject = false;
 			}
 		}
-		
+
 		public static void CheckOnTable1x1(int x, int y, int type)
 		{
 			if ((!Main.tile.At(x, y + 1).Active || !Main.tileTable[(int)Main.tile.At(x, y + 1).Type]))
@@ -2742,52 +3534,49 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
-		
+
 		public static void CheckSign(int x, int y, int type)
 		{
 			if (destroyObject)
-			{
 				return;
-			}
-			int num = x - 2;
-			int num2 = x + 3;
-			int num3 = y - 2;
-			int num4 = y + 3;
-			if (num < 0)
-			{
+
+			int leftX = x - 2;
+			int rightX = x + 3;
+			int topY = y - 2;
+			int bottomY = y + 3;
+
+			if (leftX < 0)
 				return;
-			}
-			if (num2 > Main.maxTilesX)
-			{
+
+			if (rightX > Main.maxTilesX)
 				return;
-			}
-			if (num3 < 0)
-			{
+
+			if (topY < 0)
 				return;
-			}
-			if (num4 > Main.maxTilesY)
-			{
+
+			if (bottomY > Main.maxTilesY)
 				return;
-			}
+
 			bool flag = false;
 			int k = (int)(Main.tile.At(x, y).FrameX / 18);
 			int num5 = (int)(Main.tile.At(x, y).FrameY / 18);
+
 			while (k > 1)
-			{
 				k -= 2;
-			}
+
 			int num6 = x - k;
 			int num7 = y - num5;
 			int num8 = (int)(Main.tile.At(num6, num7).FrameX / 18 / 2);
-			num = num6;
-			num2 = num6 + 2;
-			num3 = num7;
-			num4 = num7 + 2;
+			leftX = num6;
+			rightX = num6 + 2;
+			topY = num7;
+			bottomY = num7 + 2;
 			k = 0;
-			for (int l = num; l < num2; l++)
+
+			for (int l = leftX; l < rightX; l++)
 			{
 				num5 = 0;
-				for (int m = num3; m < num4; m++)
+				for (int m = topY; m < bottomY; m++)
 				{
 					if (!Main.tile.At(l, m).Active || (int)Main.tile.At(l, m).Type != type)
 					{
@@ -2807,7 +3596,8 @@ namespace Terraria_Server.WorldMod
 			{
 				if (type == 85)
 				{
-					if (Main.tile.At(num6, num7 + 2).Active && Main.tileSolid[(int)Main.tile.At(num6, num7 + 2).Type] && Main.tile.At(num6 + 1, num7 + 2).Active && Main.tileSolid[(int)Main.tile.At(num6 + 1, num7 + 2).Type])
+					if (Main.tile.At(num6, num7 + 2).Active && Main.tileSolid[(int)Main.tile.At(num6, num7 + 2).Type] && Main.tile.At(num6 + 1, num7 + 2).Active &&
+						Main.tileSolid[(int)Main.tile.At(num6 + 1, num7 + 2).Type])
 					{
 						num8 = 0;
 					}
@@ -2816,19 +3606,26 @@ namespace Terraria_Server.WorldMod
 						flag = true;
 					}
 				}
-				else if (Main.tile.At(num6, num7 + 2).Active && Main.tileSolid[(int)Main.tile.At(num6, num7 + 2).Type] && Main.tile.At(num6 + 1, num7 + 2).Active && Main.tileSolid[(int)Main.tile.At(num6 + 1, num7 + 2).Type])
+				else if (Main.tile.At(num6, num7 + 2).Active && Main.tileSolid[(int)Main.tile.At(num6, num7 + 2).Type] &&
+					Main.tile.At(num6 + 1, num7 + 2).Active && Main.tileSolid[(int)Main.tile.At(num6 + 1, num7 + 2).Type])
 				{
 					num8 = 0;
 				}
-				else if (Main.tile.At(num6, num7 - 1).Active && Main.tileSolid[(int)Main.tile.At(num6, num7 - 1).Type] && !Main.tileSolidTop[(int)Main.tile.At(num6, num7 - 1).Type] && Main.tile.At(num6 + 1, num7 - 1).Active && Main.tileSolid[(int)Main.tile.At(num6 + 1, num7 - 1).Type] && !Main.tileSolidTop[(int)Main.tile.At(num6 + 1, num7 - 1).Type])
+				else if (Main.tile.At(num6, num7 - 1).Active && Main.tileSolid[(int)Main.tile.At(num6, num7 - 1).Type] &&
+					!Main.tileSolidTop[(int)Main.tile.At(num6, num7 - 1).Type] && Main.tile.At(num6 + 1, num7 - 1).Active &&
+					Main.tileSolid[(int)Main.tile.At(num6 + 1, num7 - 1).Type] && !Main.tileSolidTop[(int)Main.tile.At(num6 + 1, num7 - 1).Type])
 				{
 					num8 = 1;
 				}
-				else if (Main.tile.At(num6 - 1, num7).Active && Main.tileSolid[(int)Main.tile.At(num6 - 1, num7).Type] && !Main.tileSolidTop[(int)Main.tile.At(num6 - 1, num7).Type] && Main.tile.At(num6 - 1, num7 + 1).Active && Main.tileSolid[(int)Main.tile.At(num6 - 1, num7 + 1).Type] && !Main.tileSolidTop[(int)Main.tile.At(num6 - 1, num7 + 1).Type])
+				else if (Main.tile.At(num6 - 1, num7).Active && Main.tileSolid[(int)Main.tile.At(num6 - 1, num7).Type] &&
+					!Main.tileSolidTop[(int)Main.tile.At(num6 - 1, num7).Type] && Main.tile.At(num6 - 1, num7 + 1).Active &&
+					Main.tileSolid[(int)Main.tile.At(num6 - 1, num7 + 1).Type] && !Main.tileSolidTop[(int)Main.tile.At(num6 - 1, num7 + 1).Type])
 				{
 					num8 = 2;
 				}
-				else if (Main.tile.At(num6 + 2, num7).Active && Main.tileSolid[(int)Main.tile.At(num6 + 2, num7).Type] && !Main.tileSolidTop[(int)Main.tile.At(num6 + 2, num7).Type] && Main.tile.At(num6 + 2, num7 + 1).Active && Main.tileSolid[(int)Main.tile.At(num6 + 2, num7 + 1).Type] && !Main.tileSolidTop[(int)Main.tile.At(num6 + 2, num7 + 1).Type])
+				else if (Main.tile.At(num6 + 2, num7).Active && Main.tileSolid[(int)Main.tile.At(num6 + 2, num7).Type] &&
+					!Main.tileSolidTop[(int)Main.tile.At(num6 + 2, num7).Type] && Main.tile.At(num6 + 2, num7 + 1).Active &&
+					Main.tileSolid[(int)Main.tile.At(num6 + 2, num7 + 1).Type] && !Main.tileSolidTop[(int)Main.tile.At(num6 + 2, num7 + 1).Type])
 				{
 					num8 = 3;
 				}
@@ -2840,25 +3637,22 @@ namespace Terraria_Server.WorldMod
 			if (flag)
 			{
 				destroyObject = true;
-				for (int n = num; n < num2; n++)
+				for (int n = leftX; n < rightX; n++)
 				{
-					for (int num9 = num3; num9 < num4; num9++)
+					for (int num9 = topY; num9 < bottomY; num9++)
 					{
 						if ((int)Main.tile.At(n, num9).Type == type)
-						{
-							KillTile(n, num9, false, false, false);
-						}
+							KillTile(n, num9);
 					}
 				}
+
 				Sign.KillSign(num6, num7);
+
 				if (type == 85)
-				{
-					Item.NewItem(x * 16, y * 16, 32, 32, 321, 1, false);
-				}
+					Item.NewItem(x * 16, y * 16, 32, 32, 321);
 				else
-				{
-					Item.NewItem(x * 16, y * 16, 32, 32, 171, 1, false);
-				}
+					Item.NewItem(x * 16, y * 16, 32, 32, 171);
+
 				destroyObject = false;
 				return;
 			}
@@ -2867,39 +3661,37 @@ namespace Terraria_Server.WorldMod
 			{
 				for (int num12 = 0; num12 < 2; num12++)
 				{
-					Main.tile.At(num6 + num11, num7 + num12).SetActive (true);
-					Main.tile.At(num6 + num11, num7 + num12).SetType ((byte)type);
-					Main.tile.At(num6 + num11, num7 + num12).SetFrameX ((short)(num10 + 18 * num11));
-					Main.tile.At(num6 + num11, num7 + num12).SetFrameY ((short)(18 * num12));
+					Main.tile.At(num6 + num11, num7 + num12).SetActive(true);
+					Main.tile.At(num6 + num11, num7 + num12).SetType((byte)type);
+					Main.tile.At(num6 + num11, num7 + num12).SetFrameX((short)(num10 + 18 * num11));
+					Main.tile.At(num6 + num11, num7 + num12).SetFrameY((short)(18 * num12));
 				}
 			}
 		}
-		
+
 		public static bool PlaceSign(int x, int y, int type)
 		{
-			int num = x - 2;
-			int num2 = x + 3;
-			int num3 = y - 2;
-			int num4 = y + 3;
-			if (num < 0)
-			{
+			int leftX = x - 2;
+			int rightX = x + 3;
+			int topY = y - 2;
+			int bottomY = y + 3;
+
+			if (leftX < 0)
 				return false;
-			}
-			if (num2 > Main.maxTilesX)
-			{
+
+			if (rightX > Main.maxTilesX)
 				return false;
-			}
-			if (num3 < 0)
-			{
+
+			if (topY < 0)
 				return false;
-			}
-			if (num4 > Main.maxTilesY)
-			{
+
+			if (bottomY > Main.maxTilesY)
 				return false;
-			}
+
 			int num5 = x;
 			int num6 = y;
 			int num7 = 0;
+
 			if (type == 55)
 			{
 				if (Main.tile.At(x, y + 1).Active && Main.tileSolid[(int)Main.tile.At(x, y + 1).Type] && Main.tile.At(x + 1, y + 1).Active && Main.tileSolid[(int)Main.tile.At(x + 1, y + 1).Type])
@@ -2943,15 +3735,15 @@ namespace Terraria_Server.WorldMod
 			{
 				for (int l = 0; l < 2; l++)
 				{
-					Main.tile.At(num5 + k, num6 + l).SetActive (true);
-					Main.tile.At(num5 + k, num6 + l).SetType ((byte)type);
-					Main.tile.At(num5 + k, num6 + l).SetFrameX ((short)(num8 + 18 * k));
-					Main.tile.At(num5 + k, num6 + l).SetFrameY ((short)(18 * l));
+					Main.tile.At(num5 + k, num6 + l).SetActive(true);
+					Main.tile.At(num5 + k, num6 + l).SetType((byte)type);
+					Main.tile.At(num5 + k, num6 + l).SetFrameX((short)(num8 + 18 * k));
+					Main.tile.At(num5 + k, num6 + l).SetFrameY((short)(18 * l));
 				}
 			}
 			return true;
 		}
-		
+
 		public static void PlaceOnTable1x1(int x, int y, int type, int style = 0)
 		{
 			bool flag = false;
@@ -2965,17 +3757,17 @@ namespace Terraria_Server.WorldMod
 			}
 			if (flag)
 			{
-				Main.tile.At(x, y).SetActive (true);
-                Main.tile.At(x, y).SetFrameX((short)(style * 18));
-				Main.tile.At(x, y).SetFrameY (0);
-				Main.tile.At(x, y).SetType ((byte)type);
+				Main.tile.At(x, y).SetActive(true);
+				Main.tile.At(x, y).SetFrameX((short)(style * 18));
+				Main.tile.At(x, y).SetFrameY(0);
+				Main.tile.At(x, y).SetType((byte)type);
 				if (type == 50)
 				{
-					Main.tile.At(x, y).SetFrameX ((short)(18 * genRand.Next(5)));
+					Main.tile.At(x, y).SetFrameX((short)(18 * genRand.Next(5)));
 				}
 			}
 		}
-		
+
 		public static bool PlaceAlch(int x, int y, int style)
 		{
 			if (!Main.tile.At(x, y).Active && Main.tile.At(x, y + 1).Active)
@@ -2983,7 +3775,7 @@ namespace Terraria_Server.WorldMod
 				bool flag = false;
 				if (style == 0)
 				{
-					if (Main.tile.At(x, y + 1).Type != 2 && Main.tile.At(x, y + 1).Type != 78)
+					if (Main.tile.At(x, y + 1).Type != 2 && Main.tile.At(x, y + 1).Type != 78 && Main.tile.At(x, y + 1).Type != 109)
 					{
 						flag = true;
 					}
@@ -3027,7 +3819,7 @@ namespace Terraria_Server.WorldMod
 				}
 				else if (style == 4)
 				{
-					if (Main.tile.At(x, y + 1).Type != 53 && Main.tile.At(x, y + 1).Type != 78)
+					if (Main.tile.At(x, y + 1).Type != 53 && Main.tile.At(x, y + 1).Type != 78 && Main.tile.At(x, y + 1).Type != 116)
 					{
 						flag = true;
 					}
@@ -3049,24 +3841,24 @@ namespace Terraria_Server.WorldMod
 				}
 				if (!flag)
 				{
-					Main.tile.At(x, y).SetActive (true);
-					Main.tile.At(x, y).SetType (82);
-					Main.tile.At(x, y).SetFrameX ((short)(18 * style));
-					Main.tile.At(x, y).SetFrameY (0);
+					Main.tile.At(x, y).SetActive(true);
+					Main.tile.At(x, y).SetType(82);
+					Main.tile.At(x, y).SetFrameX((short)(18 * style));
+					Main.tile.At(x, y).SetFrameY(0);
 					return true;
 				}
 			}
 			return false;
 		}
-		
+
 		public static void GrowAlch(int x, int y)
 		{
 			if (Main.tile.At(x, y).Active)
 			{
 				if (Main.tile.At(x, y).Type == 82 && genRand.Next(50) == 0)
 				{
-					Main.tile.At(x, y).SetType (83);
-					
+					Main.tile.At(x, y).SetType(83);
+
 					NetMessage.SendTileSquare(-1, x, y, 1);
 					SquareTileFrame(x, y, true);
 					return;
@@ -3074,138 +3866,125 @@ namespace Terraria_Server.WorldMod
 				if (Main.tile.At(x, y).FrameX == 36)
 				{
 					if (Main.tile.At(x, y).Type == 83)
-					{
-						Main.tile.At(x, y).SetType (84);
-					}
+						Main.tile.At(x, y).SetType(84);
 					else
-					{
-						Main.tile.At(x, y).SetType (83);
-					}
+						Main.tile.At(x, y).SetType(83);
 					NetMessage.SendTileSquare(-1, x, y, 1);
 				}
 			}
 		}
-		
+
 		public static void PlantAlch()
 		{
-			int num = genRand.Next(20, Main.maxTilesX - 20);
-			int num2 = 0;
+			int x = genRand.Next(20, Main.maxTilesX - 20);
+			int y = 0;
 			if (genRand.Next(40) == 0)
 			{
 				var start = (int)(Main.rockLayer + (double)Main.maxTilesY) / 2;
 				var end = Main.maxTilesY - 20;
 				if (end >= start)
-					num2 = genRand.Next(start, end);
+					y = genRand.Next(start, end);
 			}
 			else if (genRand.Next(10) == 0)
 			{
-				num2 = genRand.Next(0, Main.maxTilesY - 20);
+				y = genRand.Next(0, Main.maxTilesY - 20);
 			}
 			else
 			{
-				num2 = genRand.Next((int)Main.worldSurface, Main.maxTilesY - 20);
+				y = genRand.Next((int)Main.worldSurface, Main.maxTilesY - 20);
 			}
-			while (num2 < Main.maxTilesY - 20 && !Main.tile.At(num, num2).Active)
+			while (y < Main.maxTilesY - 20 && !Main.tile.At(x, y).Active)
 			{
-				num2++;
+				y++;
 			}
-			if (Main.tile.At(num, num2).Active && !Main.tile.At(num, num2 - 1).Active && Main.tile.At(num, num2 - 1).Liquid == 0)
+			if (Main.tile.At(x, y).Active && !Main.tile.At(x, y - 1).Active && Main.tile.At(x, y - 1).Liquid == 0)
 			{
-				if (Main.tile.At(num, num2).Type == 2)
-				{
-					PlaceAlch(num, num2 - 1, 0);
-				}
-				if (Main.tile.At(num, num2).Type == 60)
-				{
-					PlaceAlch(num, num2 - 1, 1);
-				}
-				if (Main.tile.At(num, num2).Type == 0 || Main.tile.At(num, num2).Type == 59)
-				{
-					PlaceAlch(num, num2 - 1, 2);
-				}
-				if (Main.tile.At(num, num2).Type == 23 || Main.tile.At(num, num2).Type == 25)
-				{
-					PlaceAlch(num, num2 - 1, 3);
-				}
-				if (Main.tile.At(num, num2).Type == 53)
-				{
-					PlaceAlch(num, num2 - 1, 4);
-				}
-				if (Main.tile.At(num, num2).Type == 57)
-				{
-					PlaceAlch(num, num2 - 1, 5);
-				}
-				if (Main.tile.At(num, num2 - 1).Active)
-				{
-					NetMessage.SendTileSquare(-1, num, num2 - 1, 1);
-				}
+				var tile = Main.tile.At(x, y);
+
+				if (tile.Type == 2 || tile.Type == 109)
+					PlaceAlch(x, y - 1, 0);
+
+				if (tile.Type == 60)
+					PlaceAlch(x, y - 1, 1);
+
+				if (tile.Type == 0 || tile.Type == 59)
+					PlaceAlch(x, y - 1, 2);
+
+				if (tile.Type == 23 || tile.Type == 25)
+					PlaceAlch(x, y - 1, 3);
+
+				if (tile.Type == 53 || tile.Type == 116)
+					PlaceAlch(x, y - 1, 4);
+
+				if (tile.Type == 57)
+					PlaceAlch(x, y - 1, 5);
+
+				if (Main.tile.At(x, y - 1).Active)
+					NetMessage.SendTileSquare(-1, x, y - 1, 1);
 			}
 		}
-		
+
 		public static void CheckAlch(int x, int y)
 		{
-			bool flag = false;
-			if (!Main.tile.At(x, y + 1).Active)
-			{
-				flag = true;
-			}
+			bool active = !Main.tile.At(x, y + 1).Active;
+
 			int num = (int)(Main.tile.At(x, y).FrameX / 18);
-			Main.tile.At(x, y).SetFrameY (0);
-			if (!flag)
+			Main.tile.At(x, y).SetFrameY(0);
+			if (!active)
 			{
 				if (num == 0)
 				{
 					if (Main.tile.At(x, y + 1).Type != 2 && Main.tile.At(x, y + 1).Type != 78)
 					{
-						flag = true;
+						active = true;
 					}
 					if (Main.tile.At(x, y).Liquid > 0 && Main.tile.At(x, y).Lava)
 					{
-						flag = true;
+						active = true;
 					}
 				}
 				else if (num == 1)
 				{
 					if (Main.tile.At(x, y + 1).Type != 60 && Main.tile.At(x, y + 1).Type != 78)
 					{
-						flag = true;
+						active = true;
 					}
 					if (Main.tile.At(x, y).Liquid > 0 && Main.tile.At(x, y).Lava)
 					{
-						flag = true;
+						active = true;
 					}
 				}
 				else if (num == 2)
 				{
 					if (Main.tile.At(x, y + 1).Type != 0 && Main.tile.At(x, y + 1).Type != 59 && Main.tile.At(x, y + 1).Type != 78)
 					{
-						flag = true;
+						active = true;
 					}
 					if (Main.tile.At(x, y).Liquid > 0 && Main.tile.At(x, y).Lava)
 					{
-						flag = true;
+						active = true;
 					}
 				}
 				else if (num == 3)
 				{
 					if (Main.tile.At(x, y + 1).Type != 23 && Main.tile.At(x, y + 1).Type != 25 && Main.tile.At(x, y + 1).Type != 78)
 					{
-						flag = true;
+						active = true;
 					}
 					if (Main.tile.At(x, y).Liquid > 0 && Main.tile.At(x, y).Lava)
 					{
-						flag = true;
+						active = true;
 					}
 				}
 				else if (num == 4)
 				{
-					if (Main.tile.At(x, y + 1).Type != 53 && Main.tile.At(x, y + 1).Type != 78)
+					if (Main.tile.At(x, y + 1).Type != 53 && Main.tile.At(x, y + 1).Type != 78 && Main.tile.At(x, y + 1).Type != 116)
 					{
-						flag = true;
+						active = true;
 					}
 					if (Main.tile.At(x, y).Liquid > 0 && Main.tile.At(x, y).Lava)
 					{
-						flag = true;
+						active = true;
 					}
 					if (Main.tile.At(x, y).Type != 82 && !Main.tile.At(x, y).Lava)
 					{
@@ -3213,15 +3992,15 @@ namespace Terraria_Server.WorldMod
 						{
 							if (Main.tile.At(x, y).Type == 83)
 							{
-								Main.tile.At(x, y).SetType (84);
-												
+								Main.tile.At(x, y).SetType(84);
+
 								NetMessage.SendTileSquare(-1, x, y, 1);
 							}
 						}
 						else if (Main.tile.At(x, y).Type == 84)
 						{
-							Main.tile.At(x, y).SetType (83);
-												
+							Main.tile.At(x, y).SetType(83);
+
 							NetMessage.SendTileSquare(-1, x, y, 1);
 						}
 					}
@@ -3230,11 +4009,11 @@ namespace Terraria_Server.WorldMod
 				{
 					if (Main.tile.At(x, y + 1).Type != 57 && Main.tile.At(x, y + 1).Type != 78)
 					{
-						flag = true;
+						active = true;
 					}
 					if (Main.tile.At(x, y).Liquid > 0 && !Main.tile.At(x, y).Lava)
 					{
-						flag = true;
+						active = true;
 					}
 					if (Main.tile.At(x, y).Type != 82 && Main.tile.At(x, y).Lava && Main.tile.At(x, y).Type != 82 && Main.tile.At(x, y).Lava)
 					{
@@ -3242,25 +4021,25 @@ namespace Terraria_Server.WorldMod
 						{
 							if (Main.tile.At(x, y).Type == 83)
 							{
-								Main.tile.At(x, y).SetType (84);
+								Main.tile.At(x, y).SetType(84);
 								NetMessage.SendTileSquare(-1, x, y, 1);
 							}
 						}
 						else if (Main.tile.At(x, y).Type == 84)
 						{
-							Main.tile.At(x, y).SetType (83);
+							Main.tile.At(x, y).SetType(83);
 							NetMessage.SendTileSquare(-1, x, y, 1);
 						}
 					}
 				}
 			}
-			if (flag)
+			if (active)
 			{
 				KillTile(x, y, false, false, false);
 			}
 		}
 
-        public static void Place1x2(int x, int y, int type, int style)
+		public static void Place1x2(int x, int y, int type, int style)
 		{
 			short frameX = 0;
 			if (type == 20)
@@ -3269,136 +4048,111 @@ namespace Terraria_Server.WorldMod
 			}
 			if (Main.tile.At(x, y + 1).Active && Main.tileSolid[(int)Main.tile.At(x, y + 1).Type] && !Main.tile.At(x, y - 1).Active)
 			{
-                short frameHeight = (short)(style * 40);
-				Main.tile.At(x, y - 1).SetActive (true);
-                Main.tile.At(x, y - 1).SetFrameY(frameHeight);
-				Main.tile.At(x, y - 1).SetFrameX (frameX);
-				Main.tile.At(x, y - 1).SetType ((byte)type);
-				Main.tile.At(x, y).SetActive (true);
-                Main.tile.At(x, y).SetFrameY((short)(frameHeight + 18));
-				Main.tile.At(x, y).SetFrameX (frameX);
-				Main.tile.At(x, y).SetType ((byte)type);
+				short frameHeight = (short)(style * 40);
+				Main.tile.At(x, y - 1).SetActive(true);
+				Main.tile.At(x, y - 1).SetFrameY(frameHeight);
+				Main.tile.At(x, y - 1).SetFrameX(frameX);
+				Main.tile.At(x, y - 1).SetType((byte)type);
+				Main.tile.At(x, y).SetActive(true);
+				Main.tile.At(x, y).SetFrameY((short)(frameHeight + 18));
+				Main.tile.At(x, y).SetFrameX(frameX);
+				Main.tile.At(x, y).SetType((byte)type);
 			}
 		}
 
-        public static void PlaceBanner(int x, int y, int type, int style = 0)
-        {
-            int FrameLength = style * 18;
-            if (Main.tile.At(x, y - 1).Active && Main.tileSolid[(int)Main.tile.At(x, y - 1).Type] && !Main.tileSolidTop[(int)Main.tile.At(x, y - 1).Type] && !Main.tile.At(x, y).Active && !Main.tile.At(x, y + 1).Active && !Main.tile.At(x, y + 2).Active)
-            {
-                Main.tile.At(x, y).SetActive(true);
-                Main.tile.At(x, y).SetFrameY(0);
-                Main.tile.At(x, y).SetFrameX((short)FrameLength);
-                Main.tile.At(x, y).SetType((byte)type);
-                Main.tile.At(x, y + 1).SetActive(true);
-                Main.tile.At(x, y + 1).SetFrameY(18);
-                Main.tile.At(x, y + 1).SetFrameX((short)FrameLength);
-                Main.tile.At(x, y + 1).SetType((byte)type);
-                Main.tile.At(x, y + 2).SetActive(true);
-                Main.tile.At(x, y + 2).SetFrameY(36);
-                Main.tile.At(x, y + 2).SetFrameX((short)FrameLength);
-                Main.tile.At(x, y + 2).SetType((byte)type);
-            }
-        }
+		public static void PlaceBanner(int x, int y, int type, int style = 0)
+		{
+			int FrameLength = style * 18;
+			if (Main.tile.At(x, y - 1).Active && Main.tileSolid[(int)Main.tile.At(x, y - 1).Type] && !Main.tileSolidTop[(int)Main.tile.At(x, y - 1).Type] && !Main.tile.At(x, y).Active && !Main.tile.At(x, y + 1).Active && !Main.tile.At(x, y + 2).Active)
+			{
+				Main.tile.At(x, y).SetActive(true);
+				Main.tile.At(x, y).SetFrameY(0);
+				Main.tile.At(x, y).SetFrameX((short)FrameLength);
+				Main.tile.At(x, y).SetType((byte)type);
+				Main.tile.At(x, y + 1).SetActive(true);
+				Main.tile.At(x, y + 1).SetFrameY(18);
+				Main.tile.At(x, y + 1).SetFrameX((short)FrameLength);
+				Main.tile.At(x, y + 1).SetType((byte)type);
+				Main.tile.At(x, y + 2).SetActive(true);
+				Main.tile.At(x, y + 2).SetFrameY(36);
+				Main.tile.At(x, y + 2).SetFrameX((short)FrameLength);
+				Main.tile.At(x, y + 2).SetType((byte)type);
+			}
+		}
 
-        public static void CheckBanner(int x, int j, byte type)
-        {
-            if (destroyObject)
-            {
-                return;
-            }
-            int num = j - (int)(Main.tile.At(x, j).FrameY / 18);
-            int frameX = (int)Main.tile.At(x, j).FrameX;
-            bool flag = false;
-            for (int i = 0; i < 3; i++)
-            {
-                if (!Main.tile.At(x, num + i).Active)
-                {
-                    flag = true;
-                }
-                else
-                {
-                    if (Main.tile.At(x, num + i).Type != type)
-                    {
-                        flag = true;
-                    }
-                    else
-                    {
-                        if ((int)Main.tile.At(x, num + i).FrameY != i * 18)
-                        {
-                            flag = true;
-                        }
-                        else
-                        {
-                            if ((int)Main.tile.At(x, num + i).FrameX != frameX)
-                            {
-                                flag = true;
-                            }
-                        }
-                    }
-                }
-            }
-            if (!Main.tile.At(x, num - 1).Active)
-            {
-                flag = true;
-            }
-            if (!Main.tileSolid[(int)Main.tile.At(x, num - 1).Type])
-            {
-                flag = true;
-            }
-            if (Main.tileSolidTop[(int)Main.tile.At(x, num - 1).Type])
-            {
-                flag = true;
-            }
-            if (flag)
-            {
-                destroyObject = true;
-                for (int k = 0; k < 3; k++)
-                {
-                    if (Main.tile.At(x, num + k).Type == type)
-                    {
-                        KillTile(x, num + k, false, false, false);
-                    }
-                }
-                if (type == 91)
-                {
-                    int num2 = frameX / 18;
-                    Item.NewItem(x * 16, (num + 1) * 16, 32, 32, 337 + num2, 1, false);
-                }
-                destroyObject = false;
-            }
-        }
-	
+		public static void CheckBanner(int x, int j, byte type)
+		{
+			if (destroyObject)
+				return;
+
+			int num = j - (int)(Main.tile.At(x, j).FrameY / 18);
+			int frameX = (int)Main.tile.At(x, j).FrameX;
+			bool flag = false;
+
+			for (int i = 0; i < 3; i++)
+			{
+				if (!Main.tile.At(x, num + i).Active)
+					flag = true;
+				else if (Main.tile.At(x, num + i).Type != type)
+					flag = true;
+				else if ((int)Main.tile.At(x, num + i).FrameY != i * 18)
+					flag = true;
+				else if ((int)Main.tile.At(x, num + i).FrameX != frameX)
+					flag = true;
+			}
+			if (!Main.tile.At(x, num - 1).Active)
+				flag = true;
+
+			if (!Main.tileSolid[(int)Main.tile.At(x, num - 1).Type])
+				flag = true;
+
+			if (Main.tileSolidTop[(int)Main.tile.At(x, num - 1).Type])
+				flag = true;
+
+			if (flag)
+			{
+				destroyObject = true;
+				for (int k = 0; k < 3; k++)
+				{
+					if (Main.tile.At(x, num + k).Type == type)
+						KillTile(x, num + k);
+				}
+				if (type == 91)
+				{
+					int num2 = frameX / 18;
+					Item.NewItem(x * 16, (num + 1) * 16, 32, 32, 337 + num2);
+				}
+				destroyObject = false;
+			}
+		}
+
 		public static void Place1x2Top(int x, int y, int type)
 		{
 			short frameX = 0;
-			if (Main.tile.At(x, y - 1).Active && Main.tileSolid[(int)Main.tile.At(x, y - 1).Type] && !Main.tileSolidTop[(int)Main.tile.At(x, y - 1).Type] && !Main.tile.At(x, y + 1).Active)
+			if (Main.tile.At(x, y - 1).Active && Main.tileSolid[(int)Main.tile.At(x, y - 1).Type] &&
+				!Main.tileSolidTop[(int)Main.tile.At(x, y - 1).Type] && !Main.tile.At(x, y + 1).Active)
 			{
-				Main.tile.At(x, y).SetActive (true);
-				Main.tile.At(x, y).SetFrameY (0);
-				Main.tile.At(x, y).SetFrameX (frameX);
-				Main.tile.At(x, y).SetType ((byte)type);
-				Main.tile.At(x, y + 1).SetActive (true);
-				Main.tile.At(x, y + 1).SetFrameY (18);
-				Main.tile.At(x, y + 1).SetFrameX (frameX);
-				Main.tile.At(x, y + 1).SetType ((byte)type);
+				Main.tile.At(x, y).SetActive(true);
+				Main.tile.At(x, y).SetFrameY(0);
+				Main.tile.At(x, y).SetFrameX(frameX);
+				Main.tile.At(x, y).SetType((byte)type);
+				Main.tile.At(x, y + 1).SetActive(true);
+				Main.tile.At(x, y + 1).SetFrameY(18);
+				Main.tile.At(x, y + 1).SetFrameX(frameX);
+				Main.tile.At(x, y + 1).SetType((byte)type);
 			}
 		}
 
 		public static void Check1x2Top(int x, int y, byte type)
 		{
 			if (destroyObject)
-			{
 				return;
-			}
-			
+
 			bool flag = true;
-			
+
 			if (Main.tile.At(x, y).FrameY == 18)
-			{
 				y--;
-			}
-			
+
 			if (Main.tile.At(x, y).FrameY == 0
 				&& Main.tile.At(x, y + 1).FrameY == 18
 				&& Main.tile.At(x, y).Type == type
@@ -3406,47 +4160,40 @@ namespace Terraria_Server.WorldMod
 			{
 				flag = false;
 			}
-			
+
 			if (!Main.tile.At(x, y - 1).Active
 				|| !Main.tileSolid[(int)Main.tile.At(x, y - 1).Type]
 				|| Main.tileSolidTop[(int)Main.tile.At(x, y - 1).Type])
 			{
 				flag = true;
 			}
-			
+
 			if (flag)
 			{
 				destroyObject = true;
 				if (Main.tile.At(x, y).Type == type)
-				{
-					KillTile(x, y, false, false, false);
-				}
+					KillTile(x, y);
+
 				if (Main.tile.At(x, y + 1).Type == type)
-				{
-					KillTile(x, y + 1, false, false, false);
-				}
+					KillTile(x, y + 1);
+
 				if (type == 42)
-				{
-					Item.NewItem(x * 16, y * 16, 32, 32, 136, 1, false);
-				}
+					Item.NewItem(x * 16, y * 16, 32, 32, 136);
+
 				destroyObject = false;
 			}
 		}
-		
+
 		public static void Check2x1(int x, int y, byte type)
 		{
 			if (destroyObject)
-			{
 				return;
-			}
-			
+
 			bool flag = true;
-			
+
 			if (Main.tile.At(x, y).FrameX == 18)
-			{
 				x--;
-			}
-			
+
 			if (Main.tile.At(x, y).FrameX == 0
 				&& Main.tile.At(x + 1, y).FrameX == 18
 				&& Main.tile.At(x, y).Type == type
@@ -3454,7 +4201,7 @@ namespace Terraria_Server.WorldMod
 			{
 				flag = false;
 			}
-			
+
 			if (type == 29 || type == 103)
 			{
 				if (!Main.tile.At(x, y + 1).Active || !Main.tileTable[(int)Main.tile.At(x, y + 1).Type])
@@ -3477,15 +4224,15 @@ namespace Terraria_Server.WorldMod
 					flag = true;
 				}
 			}
-			
+
 			if (flag)
 			{
 				destroyObject = true;
-                if (Main.tile.At(x, y).Type == type)
+				if (Main.tile.At(x, y).Type == type)
 				{
 					KillTile(x, y, false, false, false);
 				}
-                if (Main.tile.At(x + 1, y).Type == type)
+				if (Main.tile.At(x + 1, y).Type == type)
 				{
 					KillTile(x + 1, y, false, false, false);
 				}
@@ -3496,21 +4243,21 @@ namespace Terraria_Server.WorldMod
 				if (type == 18)
 				{
 					Item.NewItem(x * TILE_OFFSET_3, y * TILE_OFFSET_3, 32, 32, 36, 1, false);
-                }
-                if (type == 29)
-                {
-                    Item.NewItem(x * TILE_OFFSET_3, y * TILE_OFFSET_3, 32, 32, 87, 1, false);
-                }
-                if (type == 103)
-                {
-                    Item.NewItem(x * TILE_OFFSET_3, y * TILE_OFFSET_3, 32, 32, 356, 1, false);
-                }
-                destroyObject = false;
-                SquareTileFrame(x, y, true);
-                SquareTileFrame(x + 1, y, true);
+				}
+				if (type == 29)
+				{
+					Item.NewItem(x * TILE_OFFSET_3, y * TILE_OFFSET_3, 32, 32, 87, 1, false);
+				}
+				if (type == 103)
+				{
+					Item.NewItem(x * TILE_OFFSET_3, y * TILE_OFFSET_3, 32, 32, 356, 1, false);
+				}
+				destroyObject = false;
+				SquareTileFrame(x, y, true);
+				SquareTileFrame(x + 1, y, true);
 			}
 		}
-		
+
 		public static void Place2x1(int x, int y, int type)
 		{
 			bool flag = false;
@@ -3537,40 +4284,39 @@ namespace Terraria_Server.WorldMod
 					flag = true;
 				}
 			}
-			
+
 			if (flag)
 			{
-				Main.tile.At(x, y).SetActive (true);
-				Main.tile.At(x, y).SetFrameY (0);
-				Main.tile.At(x, y).SetFrameX (0);
-				Main.tile.At(x, y).SetType ((byte)type);
-				Main.tile.At(x + 1, y).SetActive (true);
-				Main.tile.At(x + 1, y).SetFrameY (0);
-				Main.tile.At(x + 1, y).SetFrameX (18);
-				Main.tile.At(x + 1, y).SetType ((byte)type);
+				Main.tile.At(x, y).SetActive(true);
+				Main.tile.At(x, y).SetFrameY(0);
+				Main.tile.At(x, y).SetFrameX(0);
+				Main.tile.At(x, y).SetType((byte)type);
+				Main.tile.At(x + 1, y).SetActive(true);
+				Main.tile.At(x + 1, y).SetFrameY(0);
+				Main.tile.At(x + 1, y).SetFrameX(18);
+				Main.tile.At(x + 1, y).SetType((byte)type);
 			}
 		}
-		
+
 		public static void Check4x2(int i, int j, int type)
 		{
 			if (destroyObject)
-			{
 				return;
-			}
+
 			bool flag = false;
 			int num = i;
 			num += (int)(Main.tile.At(i, j).FrameX / 18 * -1);
+
 			if ((type == 79 || type == 90) && Main.tile.At(i, j).FrameX >= 72)
-			{
 				num += 4;
-			}
+
 			int num2 = j + (int)(Main.tile.At(i, j).FrameY / 18 * -1);
 			for (int k = num; k < num + 4; k++)
 			{
 				for (int l = num2; l < num2 + 2; l++)
 				{
 					int num3 = (k - num) * 18;
-                    if ((type == 79 || type == 90) && Main.tile.At(i, j).FrameX >= 72)
+					if ((type == 79 || type == 90) && Main.tile.At(i, j).FrameX >= 72)
 					{
 						num3 = (k - num + 4) * 18;
 					}
@@ -3593,128 +4339,144 @@ namespace Terraria_Server.WorldMod
 					{
 						if ((int)Main.tile.At(m, n).Type == type && Main.tile.At(m, n).Active)
 						{
-							KillTile(m, n, false, false, false);
+							KillTile(m, n);
 						}
 					}
 				}
 				if (type == 79)
 				{
-					Item.NewItem(i * 16, j * 16, 32, 32, 224, 1, false);
-                }
-                if (type == 90)
-                {
-                    Item.NewItem(i * 16, j * 16, 32, 32, 336, 1, false);
-                }
+					Item.NewItem(i * 16, j * 16, 32, 32, 224);
+				}
+				if (type == 90)
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 336);
+				}
 				destroyObject = false;
 				for (int num4 = num - 1; num4 < num + 4; num4++)
 				{
 					for (int num5 = num2 - 1; num5 < num2 + 4; num5++)
 					{
-						TileFrame(num4, num5, false, false);
+						TileFrame(num4, num5);
 					}
 				}
 			}
 		}
-		
+
 		public static void Check2x2(int i, int j, int type)
 		{
 			if (destroyObject)
-			{
 				return;
-			}
+
 			bool flag = false;
-			int num = i + (int)(Main.tile.At(i, j).FrameX / 18 * -1);
-			int num2 = j + (int)(Main.tile.At(i, j).FrameY / 18 * -1);
+			int num = i;
+			int num2 = 0;
+			num = (int)(Main.tile.At(i, j).FrameX / 18 * -1);
+			int num3 = (int)(Main.tile.At(i, j).FrameY / 18 * -1);
+			if (num < -1)
+			{
+				num += 2;
+				num2 = 36;
+			}
+			num += i;
+			num3 += j;
 			for (int k = num; k < num + 2; k++)
 			{
-				for (int l = num2; l < num2 + 2; l++)
+				for (int l = num3; l < num3 + 2; l++)
 				{
-					if (!Main.tile.At(k, l).Active || (int)Main.tile.At(k, l).Type != type || (int)Main.tile.At(k, l).FrameX != (k - num) * 18 || (int)Main.tile.At(k, l).FrameY != (l - num2) * 18)
+					if (!Main.tile.At(k, l).Active || (int)Main.tile.At(k, l).Type != type ||
+						(int)Main.tile.At(k, l).FrameX != (k - num) * 18 + num2 || (int)Main.tile.At(k, l).FrameY != (l - num3) * 18)
 					{
 						flag = true;
 					}
 				}
-                if (type == 95)
-                {
-                    if (!Main.tile.At(k, num2 - 1).Active || 
-                        !Main.tileSolid[(int)Main.tile.At(k, num2 - 1).Type] || 
-                        Main.tileSolidTop[(int)Main.tile.At(k, num2 - 1).Type])
-                    {
-                        flag = true;
-                    }
-                }
-                else
-                {
-                    if (!Main.tile.At(k, num2 + 2).Active || 
-                        (!Main.tileSolid[(int)Main.tile.At(k, num2 + 2).Type] && 
-                        !Main.tileTable[(int)Main.tile.At(k, num2 + 2).Type]))
-                    {
-                        flag = true;
-                    }
-                }
+				if (type == 95 || type == 126)
+				{
+					if (!Main.tile.At(k, num3 - 1).Active || !Main.tileSolid[(int)Main.tile.At(k, num3 - 1).Type] || Main.tileSolidTop[(int)Main.tile.At(k, num3 - 1).Type])
+					{
+						flag = true;
+					}
+				}
+				else if (type != 138)
+				{
+					if (!Main.tile.At(k, num3 + 2).Active || (!Main.tileSolid[(int)Main.tile.At(k, num3 + 2).Type] && !Main.tileTable[(int)Main.tile.At(k, num3 + 2).Type]))
+					{
+						flag = true;
+					}
+				}
+			}
+			if (type == 138 && !SolidTile(num, num3 + 2) && !SolidTile(num + 1, num3 + 2))
+			{
+				flag = true;
 			}
 			if (flag)
 			{
 				destroyObject = true;
 				for (int m = num; m < num + 2; m++)
 				{
-					for (int n = num2; n < num2 + 3; n++)
+					for (int n = num3; n < num3 + 2; n++)
 					{
 						if ((int)Main.tile.At(m, n).Type == type && Main.tile.At(m, n).Active)
-						{
-							KillTile(m, n, false, false, false);
-						}
+							KillTile(m, n);
 					}
 				}
 				if (type == 85)
-				{
-					Item.NewItem(i * 16, j * 16, 32, 32, 321, 1, false);
-				}
-                if (type == 94)
-                {
-                    Item.NewItem(i * 16, j * 16, 32, 32, 352, 1, false);
-                }
-                if (type == 95)
-                {
-                    Item.NewItem(i * 16, j * 16, 32, 32, 344, 1, false);
-                }
-                if (type == 96)
-                {
-                    Item.NewItem(i * 16, j * 16, 32, 32, 345, 1, false);
-                }
-                if (type == 97)
-                {
-                    Item.NewItem(i * 16, j * 16, 32, 32, 346, 1, false);
-                }
-                if (type == 98)
-                {
-                    Item.NewItem(i * 16, j * 16, 32, 32, 347, 1, false);
-                }
-                if (type == 99)
-                {
-                    Item.NewItem(i * 16, j * 16, 32, 32, 348, 1, false);
-                }
-                if (type == 100)
-                {
-                    Item.NewItem(i * 16, j * 16, 32, 32, 349, 1, false);
-                }
+					Item.NewItem(i * 16, j * 16, 32, 32, 321);
+
+				if (type == 94)
+					Item.NewItem(i * 16, j * 16, 32, 32, 352);
+
+				if (type == 95)
+					Item.NewItem(i * 16, j * 16, 32, 32, 344);
+
+				if (type == 96)
+					Item.NewItem(i * 16, j * 16, 32, 32, 345);
+
+				if (type == 97)
+					Item.NewItem(i * 16, j * 16, 32, 32, 346);
+
+				if (type == 98)
+					Item.NewItem(i * 16, j * 16, 32, 32, 347);
+
+				if (type == 99)
+					Item.NewItem(i * 16, j * 16, 32, 32, 348);
+
+				if (type == 100)
+					Item.NewItem(i * 16, j * 16, 32, 32, 349);
+
+				if (type == 125)
+					Item.NewItem(i * 16, j * 16, 32, 32, 487);
+
+				if (type == 126)
+					Item.NewItem(i * 16, j * 16, 32, 32, 488);
+
+				if (type == 132)
+					Item.NewItem(i * 16, j * 16, 32, 32, 513);
+
+				if (type == 142)
+					Item.NewItem(i * 16, j * 16, 32, 32, 581);
+
+				if (type == 143)
+					Item.NewItem(i * 16, j * 16, 32, 32, 582);
+
+				if (type == 138 && !gen)
+					Projectile.NewProjectile((float)(num * 16) + 15.5f, (float)(num3 * 16 + 16), 0f, 0f, 99, 70, 10f, Main.myPlayer);
+
 				destroyObject = false;
-				for (int num3 = num - 1; num3 < num + 3; num3++)
+				for (int num4 = num - 1; num4 < num + 3; num4++)
 				{
-					for (int num4 = num2 - 1; num4 < num2 + 3; num4++)
+					for (int num5 = num3 - 1; num5 < num3 + 3; num5++)
 					{
-						TileFrame(num3, num4, false, false);
+						TileFrame(num4, num5, false, false);
 					}
 				}
 			}
 		}
-		
+
 		public static void Check3x2(int i, int j, int type)
 		{
 			if (destroyObject)
-			{
 				return;
-			}
+
 			bool flag = false;
 			int num = i + (int)(Main.tile.At(i, j).FrameX / 18 * -1);
 			int num2 = j + (int)(Main.tile.At(i, j).FrameY / 18 * -1);
@@ -3741,38 +4503,28 @@ namespace Terraria_Server.WorldMod
 					{
 						if ((int)Main.tile.At(m, n).Type == type && Main.tile.At(m, n).Active)
 						{
-							KillTile(m, n, false, false, false);
+							KillTile(m, n);
 						}
 					}
 				}
+
 				if (type == 14)
-				{
-					Item.NewItem(i * 16, j * 16, 32, 32, 32, 1, false);
-				}
+					Item.NewItem(i * 16, j * 16, 32, 32, 32);
 				else if (type == 17)
-				{
-					Item.NewItem(i * 16, j * 16, 32, 32, 33, 1, false);
-				}
+					Item.NewItem(i * 16, j * 16, 32, 32, 33);
 				else if (type == 77)
-				{
-					Item.NewItem(i * 16, j * 16, 32, 32, 221, 1, false);
-				}
-                else if (type == 86)
-			    {
-				    Item.NewItem(i * 16, j * 16, 32, 32, 332, 1, false);
-			    }
-                else if (type == 87)
-			    {
-				    Item.NewItem(i * 16, j * 16, 32, 32, 333, 1, false);
-			    }
-                else if (type == 88)
-				{
-					Item.NewItem(i * 16, j * 16, 32, 32, 334, 1, false);
-				}
-                else if (type == 89)
-				{
-					Item.NewItem(i * 16, j * 16, 32, 32, 335, 1, false);
-				}
+					Item.NewItem(i * 16, j * 16, 32, 32, 221);
+				else if (type == 86)
+					Item.NewItem(i * 16, j * 16, 32, 32, 332);
+				else if (type == 87)
+					Item.NewItem(i * 16, j * 16, 32, 32, 333);
+				else if (type == 88)
+					Item.NewItem(i * 16, j * 16, 32, 32, 334);
+				else if (type == 89)
+					Item.NewItem(i * 16, j * 16, 32, 32, 335);
+				else if (type == 133)
+					Item.NewItem(i * 16, j * 16, 32, 32, 524);
+
 				destroyObject = false;
 				for (int num3 = num - 1; num3 < num + 4; num3++)
 				{
@@ -3783,13 +4535,12 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
-		
+
 		public static void Place4x2(int x, int y, int type, int direction = -1)
 		{
 			if (x < 5 || x > Main.maxTilesX - 5 || y < 5 || y > Main.maxTilesY - 5)
-			{
 				return;
-			}
+
 			bool flag = true;
 			for (int i = x - 1; i < x + 3; i++)
 			{
@@ -3812,52 +4563,50 @@ namespace Terraria_Server.WorldMod
 			}
 			if (flag)
 			{
-				Main.tile.At(x - 1, y - 1).SetActive (true);
-				Main.tile.At(x - 1, y - 1).SetFrameY (0);
-				Main.tile.At(x - 1, y - 1).SetFrameX (num);
-				Main.tile.At(x - 1, y - 1).SetType ((byte)type);
-				Main.tile.At(x, y - 1).SetActive (true);
-				Main.tile.At(x, y - 1).SetFrameY (0);
-				Main.tile.At(x, y - 1).SetFrameX ((short)(18 + num));
-				Main.tile.At(x, y - 1).SetType ((byte)type);
-				Main.tile.At(x + 1, y - 1).SetActive (true);
-				Main.tile.At(x + 1, y - 1).SetFrameY (0);
-				Main.tile.At(x + 1, y - 1).SetFrameX ((short)(36 + num));
-				Main.tile.At(x + 1, y - 1).SetType ((byte)type);
-				Main.tile.At(x + 2, y - 1).SetActive (true);
-				Main.tile.At(x + 2, y - 1).SetFrameY (0);
-				Main.tile.At(x + 2, y - 1).SetFrameX ((short)(54 + num));
-				Main.tile.At(x + 2, y - 1).SetType ((byte)type);
-				Main.tile.At(x - 1, y).SetActive (true);
-				Main.tile.At(x - 1, y).SetFrameY (18);
-				Main.tile.At(x - 1, y).SetFrameX (num);
-				Main.tile.At(x - 1, y).SetType ((byte)type);
-				Main.tile.At(x, y).SetActive (true);
-				Main.tile.At(x, y).SetFrameY (18);
-				Main.tile.At(x, y).SetFrameX ((short)(18 + num));
-				Main.tile.At(x, y).SetType ((byte)type);
-				Main.tile.At(x + 1, y).SetActive (true);
-				Main.tile.At(x + 1, y).SetFrameY (18);
-				Main.tile.At(x + 1, y).SetFrameX ((short)(36 + num));
-				Main.tile.At(x + 1, y).SetType ((byte)type);
-				Main.tile.At(x + 2, y).SetActive (true);
-				Main.tile.At(x + 2, y).SetFrameY (18);
-				Main.tile.At(x + 2, y).SetFrameX ((short)(54 + num));
-				Main.tile.At(x + 2, y).SetType ((byte)type);
+				Main.tile.At(x - 1, y - 1).SetActive(true);
+				Main.tile.At(x - 1, y - 1).SetFrameY(0);
+				Main.tile.At(x - 1, y - 1).SetFrameX(num);
+				Main.tile.At(x - 1, y - 1).SetType((byte)type);
+				Main.tile.At(x, y - 1).SetActive(true);
+				Main.tile.At(x, y - 1).SetFrameY(0);
+				Main.tile.At(x, y - 1).SetFrameX((short)(18 + num));
+				Main.tile.At(x, y - 1).SetType((byte)type);
+				Main.tile.At(x + 1, y - 1).SetActive(true);
+				Main.tile.At(x + 1, y - 1).SetFrameY(0);
+				Main.tile.At(x + 1, y - 1).SetFrameX((short)(36 + num));
+				Main.tile.At(x + 1, y - 1).SetType((byte)type);
+				Main.tile.At(x + 2, y - 1).SetActive(true);
+				Main.tile.At(x + 2, y - 1).SetFrameY(0);
+				Main.tile.At(x + 2, y - 1).SetFrameX((short)(54 + num));
+				Main.tile.At(x + 2, y - 1).SetType((byte)type);
+				Main.tile.At(x - 1, y).SetActive(true);
+				Main.tile.At(x - 1, y).SetFrameY(18);
+				Main.tile.At(x - 1, y).SetFrameX(num);
+				Main.tile.At(x - 1, y).SetType((byte)type);
+				Main.tile.At(x, y).SetActive(true);
+				Main.tile.At(x, y).SetFrameY(18);
+				Main.tile.At(x, y).SetFrameX((short)(18 + num));
+				Main.tile.At(x, y).SetType((byte)type);
+				Main.tile.At(x + 1, y).SetActive(true);
+				Main.tile.At(x + 1, y).SetFrameY(18);
+				Main.tile.At(x + 1, y).SetFrameX((short)(36 + num));
+				Main.tile.At(x + 1, y).SetType((byte)type);
+				Main.tile.At(x + 2, y).SetActive(true);
+				Main.tile.At(x + 2, y).SetFrameY(18);
+				Main.tile.At(x + 2, y).SetFrameX((short)(54 + num));
+				Main.tile.At(x + 2, y).SetType((byte)type);
 			}
 		}
 
-        public static void Place2x2(int x, int superY, int type)
+		public static void Place2x2(int x, int superY, int type)
 		{
-            int y = superY;
-            if (type == 95)
-            {
-                y++;
-            }
+			int y = superY;
+			if (type == 95 || type == 126)
+				y++;
+
 			if (x < 5 || x > Main.maxTilesX - 5 || y < 5 || y > Main.maxTilesY - 5)
-			{
 				return;
-			}
+
 			bool flag = true;
 			for (int i = x - 1; i < x + 1; i++)
 			{
@@ -3867,57 +4616,56 @@ namespace Terraria_Server.WorldMod
 					{
 						flag = false;
 					}
-                    if (type == 98 && Main.tile.At(i, j).Liquid > 0)
-                    {
-                        flag = false;
-                    }
+					if (type == 98 && Main.tile.At(i, j).Liquid > 0)
+					{
+						flag = false;
+					}
 				}
-                if (type == 95)
-                {
-                    if (!Main.tile.At(i, y - 2).Active || 
-                        !Main.tileSolid[(int)Main.tile.At(i, y - 2).Type] || 
-                        Main.tileSolidTop[(int)Main.tile.At(i, y - 2).Type])
-                    {
-                        flag = false;
-                    }
-                }
-                else
-                {
-                    if (!Main.tile.At(i, y + 1).Active || (
-                        !Main.tileSolid[(int)Main.tile.At(i, y + 1).Type] && 
-                        !Main.tileTable[(int)Main.tile.At(i, y + 1).Type]))
-                    {
-                        flag = false;
-                    }
-                }
+				if (type == 95 || type == 126)
+				{
+					if (!Main.tile.At(i, y - 2).Active ||
+						!Main.tileSolid[(int)Main.tile.At(i, y - 2).Type] ||
+						Main.tileSolidTop[(int)Main.tile.At(i, y - 2).Type])
+					{
+						flag = false;
+					}
+				}
+				else
+				{
+					if (!Main.tile.At(i, y + 1).Active || (
+						!Main.tileSolid[(int)Main.tile.At(i, y + 1).Type] &&
+						!Main.tileTable[(int)Main.tile.At(i, y + 1).Type]))
+					{
+						flag = false;
+					}
+				}
 			}
 			if (flag)
 			{
-				Main.tile.At(x - 1, y - 1).SetActive (true);
-				Main.tile.At(x - 1, y - 1).SetFrameY (0);
-				Main.tile.At(x - 1, y - 1).SetFrameX (0);
-				Main.tile.At(x - 1, y - 1).SetType ((byte)type);
-				Main.tile.At(x, y - 1).SetActive (true);
-				Main.tile.At(x, y - 1).SetFrameY (0);
-				Main.tile.At(x, y - 1).SetFrameX (18);
-				Main.tile.At(x, y - 1).SetType ((byte)type);
-				Main.tile.At(x - 1, y).SetActive (true);
-				Main.tile.At(x - 1, y).SetFrameY (18);
-				Main.tile.At(x - 1, y).SetFrameX (0);
-				Main.tile.At(x - 1, y).SetType ((byte)type);
-				Main.tile.At(x, y).SetActive (true);
-				Main.tile.At(x, y).SetFrameY (18);
-				Main.tile.At(x, y).SetFrameX (18);
-				Main.tile.At(x, y).SetType ((byte)type);
+				Main.tile.At(x - 1, y - 1).SetActive(true);
+				Main.tile.At(x - 1, y - 1).SetFrameY(0);
+				Main.tile.At(x - 1, y - 1).SetFrameX(0);
+				Main.tile.At(x - 1, y - 1).SetType((byte)type);
+				Main.tile.At(x, y - 1).SetActive(true);
+				Main.tile.At(x, y - 1).SetFrameY(0);
+				Main.tile.At(x, y - 1).SetFrameX(18);
+				Main.tile.At(x, y - 1).SetType((byte)type);
+				Main.tile.At(x - 1, y).SetActive(true);
+				Main.tile.At(x - 1, y).SetFrameY(18);
+				Main.tile.At(x - 1, y).SetFrameX(0);
+				Main.tile.At(x - 1, y).SetType((byte)type);
+				Main.tile.At(x, y).SetActive(true);
+				Main.tile.At(x, y).SetFrameY(18);
+				Main.tile.At(x, y).SetFrameX(18);
+				Main.tile.At(x, y).SetType((byte)type);
 			}
 		}
-		
+
 		public static void Place3x2(int x, int y, int type)
 		{
 			if (x < 5 || x > Main.maxTilesX - 5 || y < 5 || y > Main.maxTilesY - 5)
-			{
 				return;
-			}
+
 			bool flag = true;
 			for (int i = x - 1; i < x + 2; i++)
 			{
@@ -3935,47 +4683,54 @@ namespace Terraria_Server.WorldMod
 			}
 			if (flag)
 			{
-				Main.tile.At(x - 1, y - 1).SetActive (true);
-				Main.tile.At(x - 1, y - 1).SetFrameY (0);
-				Main.tile.At(x - 1, y - 1).SetFrameX (0);
-				Main.tile.At(x - 1, y - 1).SetType ((byte)type);
-				Main.tile.At(x, y - 1).SetActive (true);
-				Main.tile.At(x, y - 1).SetFrameY (0);
-				Main.tile.At(x, y - 1).SetFrameX (18);
-				Main.tile.At(x, y - 1).SetType ((byte)type);
-				Main.tile.At(x + 1, y - 1).SetActive (true);
-				Main.tile.At(x + 1, y - 1).SetFrameY (0);
-				Main.tile.At(x + 1, y - 1).SetFrameX (36);
-				Main.tile.At(x + 1, y - 1).SetType ((byte)type);
-				Main.tile.At(x - 1, y).SetActive (true);
-				Main.tile.At(x - 1, y).SetFrameY (18);
-				Main.tile.At(x - 1, y).SetFrameX (0);
-				Main.tile.At(x - 1, y).SetType ((byte)type);
-				Main.tile.At(x, y).SetActive (true);
-				Main.tile.At(x, y).SetFrameY (18);
-				Main.tile.At(x, y).SetFrameX (18);
-				Main.tile.At(x, y).SetType ((byte)type);
-				Main.tile.At(x + 1, y).SetActive (true);
-				Main.tile.At(x + 1, y).SetFrameY (18);
-				Main.tile.At(x + 1, y).SetFrameX (36);
-				Main.tile.At(x + 1, y).SetType ((byte)type);
+				Main.tile.At(x - 1, y - 1).SetActive(true);
+				Main.tile.At(x - 1, y - 1).SetFrameY(0);
+				Main.tile.At(x - 1, y - 1).SetFrameX(0);
+				Main.tile.At(x - 1, y - 1).SetType((byte)type);
+				Main.tile.At(x, y - 1).SetActive(true);
+				Main.tile.At(x, y - 1).SetFrameY(0);
+				Main.tile.At(x, y - 1).SetFrameX(18);
+				Main.tile.At(x, y - 1).SetType((byte)type);
+				Main.tile.At(x + 1, y - 1).SetActive(true);
+				Main.tile.At(x + 1, y - 1).SetFrameY(0);
+				Main.tile.At(x + 1, y - 1).SetFrameX(36);
+				Main.tile.At(x + 1, y - 1).SetType((byte)type);
+				Main.tile.At(x - 1, y).SetActive(true);
+				Main.tile.At(x - 1, y).SetFrameY(18);
+				Main.tile.At(x - 1, y).SetFrameX(0);
+				Main.tile.At(x - 1, y).SetType((byte)type);
+				Main.tile.At(x, y).SetActive(true);
+				Main.tile.At(x, y).SetFrameY(18);
+				Main.tile.At(x, y).SetFrameX(18);
+				Main.tile.At(x, y).SetType((byte)type);
+				Main.tile.At(x + 1, y).SetActive(true);
+				Main.tile.At(x + 1, y).SetFrameY(18);
+				Main.tile.At(x + 1, y).SetFrameX(36);
+				Main.tile.At(x + 1, y).SetType((byte)type);
 			}
 		}
-		
+
 		public static void Check3x3(int i, int j, int type)
 		{
 			if (destroyObject)
-			{
 				return;
-			}
+
 			bool flag = false;
-			int num = i + (int)(Main.tile.At(i, j).FrameX / 18 * -1);
-			int num2 = j + (int)(Main.tile.At(i, j).FrameY / 18 * -1);
+			int num = i;
+			num = (int)(Main.tile.At(i, j).FrameX / 18);
+			int num2 = i - num;
+
+			if (num >= 3)
+				num -= 3;
+
+			num = i - num;
+			int num3 = j + (int)(Main.tile.At(i, j).FrameY / 18 * -1);
 			for (int k = num; k < num + 3; k++)
 			{
-				for (int l = num2; l < num2 + 3; l++)
+				for (int l = num3; l < num3 + 3; l++)
 				{
-					if (!Main.tile.At(k, l).Active || (int)Main.tile.At(k, l).Type != type || (int)Main.tile.At(k, l).FrameX != (k - num) * 18 || (int)Main.tile.At(k, l).FrameY != (l - num2) * 18)
+					if (!Main.tile.At(k, l).Active || (int)Main.tile.At(k, l).Type != type ||
+						(int)Main.tile.At(k, l).FrameX != (k - num2) * 18 || (int)Main.tile.At(k, l).FrameY != (l - num3) * 18)
 					{
 						flag = true;
 					}
@@ -3985,63 +4740,57 @@ namespace Terraria_Server.WorldMod
 			{
 				for (int m = num; m < num + 3; m++)
 				{
-					if (!Main.tile.At(m, num2 + 3).Active || !Main.tileSolid[(int)Main.tile.At(m, num2 + 3).Type])
+					if (!Main.tile.At(m, num3 + 3).Active || !Main.tileSolid[(int)Main.tile.At(m, num3 + 3).Type])
 					{
 						flag = true;
 						break;
 					}
 				}
 			}
-			else
+			else if (!Main.tile.At(num + 1, num3 - 1).Active || !Main.tileSolid[(int)Main.tile.At(num + 1, num3 - 1).Type] || Main.tileSolidTop[(int)Main.tile.At(num + 1, num3 - 1).Type])
 			{
-				if (!Main.tile.At(num + 1, num2 - 1).Active || !Main.tileSolid[(int)Main.tile.At(num + 1, num2 - 1).Type] || Main.tileSolidTop[(int)Main.tile.At(num + 1, num2 - 1).Type])
-				{
-					flag = true;
-				}
+				flag = true;
 			}
 			if (flag)
 			{
 				destroyObject = true;
-				for (int m = num; m < num + 3; m++)
+				for (int n = num; n < num + 3; n++)
 				{
-					for (int n = num2; n < num2 + 3; n++)
+					for (int num4 = num3; num4 < num3 + 3; num4++)
 					{
-						if ((int)Main.tile.At(m, n).Type == type && Main.tile.At(m, n).Active)
-						{
-							KillTile(m, n, false, false, false);
-						}
+						if ((int)Main.tile.At(n, num4).Type == type && Main.tile.At(n, num4).Active)
+							KillTile(n, num4);
 					}
 				}
 				if (type == 34)
 				{
-					Item.NewItem(i * 16, j * 16, 32, 32, 106, 1, false);
+					Item.NewItem(i * 16, j * 16, 32, 32, 106);
 				}
 				else if (type == 35)
 				{
-					Item.NewItem(i * 16, j * 16, 32, 32, 107, 1, false);
+					Item.NewItem(i * 16, j * 16, 32, 32, 107);
 				}
 				else if (type == 36)
 				{
-					Item.NewItem(i * 16, j * 16, 32, 32, 108, 1, false);
+					Item.NewItem(i * 16, j * 16, 32, 32, 108);
 				}
-				else
+				else if (type == 106)
 				{
-					if (type == 106)
-					{
-						Item.NewItem(i * 16, j * 16, 32, 32, 363, 1, false);
-					}
+					Item.NewItem(i * 16, j * 16, 32, 32, 363);
 				}
+
 				destroyObject = false;
-				for (int num3 = num - 1; num3 < num + 4; num3++)
+
+				for (int num5 = num - 1; num5 < num + 4; num5++)
 				{
-					for (int num4 = num2 - 1; num4 < num2 + 4; num4++)
+					for (int num6 = num3 - 1; num6 < num3 + 4; num6++)
 					{
-						TileFrame(num3, num4, false, false);
+						TileFrame(num5, num6);
 					}
 				}
 			}
 		}
-		
+
 		public static void Place3x3(int x, int y, int type)
 		{
 			bool flag = true;
@@ -4087,7 +4836,7 @@ namespace Terraria_Server.WorldMod
 			}
 			if (flag)
 			{
-				Main.tile.At(x - 1, y + num).SetActive (true);
+				Main.tile.At(x - 1, y + num).SetActive(true);
 				Main.tile.At(x - 1, y + num).SetFrameY(0);
 				Main.tile.At(x - 1, y + num).SetFrameX(0);
 				Main.tile.At(x - 1, y + num).SetType((byte)type);
@@ -4126,257 +4875,227 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 
-        public static void Check3x4(int i, int j, int type)
-        {
-            if (destroyObject)
-            {
-                return;
-            }
-            bool flag = false;
-            int num = i + (int)(Main.tile.At(i, j).FrameX / 18 * -1);
-            int num2 = j + (int)(Main.tile.At(i, j).FrameY / 18 * -1);
-            for (int k = num; k < num + 3; k++)
-            {
-                for (int l = num2; l < num2 + 4; l++)
-                {
-                    if (!Main.tile.At(k, l).Active || (int)Main.tile.At(k, l).Type != type || 
-                        (int)Main.tile.At(k, l).FrameX != (k - num) * 18 || (int)Main.tile.At(k, l).FrameY != (l - num2) * 18)
-                    {
-                        flag = true;
-                    }
-                }
-                if (!Main.tile.At(k, num2 + 4).Active || !Main.tileSolid[(int)Main.tile.At(k, num2 + 4).Type])
-                {
-                    flag = true;
-                }
-            }
-            if (flag)
-            {
-                destroyObject = true;
-                for (int m = num; m < num + 3; m++)
-                {
-                    for (int n = num2; n < num2 + 4; n++)
-                    {
-                        if ((int)Main.tile.At(m, n).Type == type && Main.tile.At(m, n).Active)
-                        {
-                            KillTile(m, n, false, false, false);
-                        }
-                    }
-                }
-                if (type == 101)
-                {
-                    Item.NewItem(i * 16, j * 16, 32, 32, 354, 1, false);
-                }
-                else
-                {
-                    if (type == 102)
-                    {
-                        Item.NewItem(i * 16, j * 16, 32, 32, 355, 1, false);
-                    }
-                }
-                destroyObject = false;
-                for (int num3 = num - 1; num3 < num + 4; num3++)
-                {
-                    for (int num4 = num2 - 1; num4 < num2 + 4; num4++)
-                    {
-                        TileFrame(num3, num4, false, false);
-                    }
-                }
-            }
-        }
+		public static void Check3x4(int i, int j, int type)
+		{
+			if (destroyObject)
+				return;
 
-        public static void Check1xX(int x, int j, byte type)
-        {
-            if (destroyObject)
-            {
-                return;
-            }
-            int num = j - (int)(Main.tile.At(x, j).FrameY / 18);
-            int frameX = (int)Main.tile.At(x, j).FrameX;
-            int num2 = 3;
-            if (type == 92)
-            {
-                num2 = 6;
-            }
-            bool flag = false;
-            for (int i = 0; i < num2; i++)
-            {
-                if (!Main.tile.At(x, num + i).Active)
-                {
-                    flag = true;
-                }
-                else
-                {
-                    if (Main.tile.At(x, num + i).Type != type)
-                    {
-                        flag = true;
-                    }
-                    else
-                    {
-                        if ((int)Main.tile.At(x, num + i).FrameY != i * 18)
-                        {
-                            flag = true;
-                        }
-                        else
-                        {
-                            if ((int)Main.tile.At(x, num + i).FrameX != frameX)
-                            {
-                                flag = true;
-                            }
-                        }
-                    }
-                }
-            }
-            if (!Main.tile.At(x, num + num2).Active)
-            {
-                flag = true;
-            }
-            if (!Main.tileSolid[(int)Main.tile.At(x, num + num2).Type])
-            {
-                flag = true;
-            }
-            if (flag)
-            {
-                destroyObject = true;
-                for (int k = 0; k < num2; k++)
-                {
-                    if (Main.tile.At(x, num + k).Type == type)
-                    {
-                        KillTile(x, num + k, false, false, false);
-                    }
-                }
-                if (type == 92)
-                {
-                    Item.NewItem(x * 16, j * 16, 32, 32, 341, 1, false);
-                }
-                if (type == 93)
-                {
-                    Item.NewItem(x * 16, j * 16, 32, 32, 342, 1, false);
-                }
-                destroyObject = false;
-            }
-        }
+			bool flag = false;
+			int num = i + (int)(Main.tile.At(i, j).FrameX / 18 * -1);
+			int num2 = j + (int)(Main.tile.At(i, j).FrameY / 18 * -1);
+			for (int k = num; k < num + 3; k++)
+			{
+				for (int l = num2; l < num2 + 4; l++)
+				{
+					if (!Main.tile.At(k, l).Active || (int)Main.tile.At(k, l).Type != type ||
+						(int)Main.tile.At(k, l).FrameX != (k - num) * 18 || (int)Main.tile.At(k, l).FrameY != (l - num2) * 18)
+					{
+						flag = true;
+					}
+				}
+				if (!Main.tile.At(k, num2 + 4).Active || !Main.tileSolid[(int)Main.tile.At(k, num2 + 4).Type])
+				{
+					flag = true;
+				}
+			}
+			if (flag)
+			{
+				destroyObject = true;
+				for (int m = num; m < num + 3; m++)
+				{
+					for (int n = num2; n < num2 + 4; n++)
+					{
+						if ((int)Main.tile.At(m, n).Type == type && Main.tile.At(m, n).Active)
+						{
+							KillTile(m, n);
+						}
+					}
+				}
+				if (type == 101)
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 354);
+				}
+				else if (type == 102)
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 355);
+				}
 
-        public static void Check2xX(int i, int j, byte type)
-        {
-            if (destroyObject)
-            {
-                return;
-            }
-            int num = i;
-            if (Main.tile.At(i, j).FrameX == 18)
-            {
-                num--;
-            }
-            int num2 = j - (int)(Main.tile.At(num, j).FrameY / 18);
-            int frameX = (int)Main.tile.At(num, num2).FrameX;
-            int num3 = 3;
-            if (type == 104)
-            {
-                num3 = 5;
-            }
-            bool flag = false;
-            for (int k = 0; k < num3; k++)
-            {
-                if (!Main.tile.At(num, num2 + k).Active)
-                {
-                    flag = true;
-                }
-                else
-                {
-                    if (Main.tile.At(num, num2 + k).Type != type)
-                    {
-                        flag = true;
-                    }
-                    else
-                    {
-                        if ((int)Main.tile.At(num, num2 + k).FrameY != k * 18)
-                        {
-                            flag = true;
-                        }
-                        else
-                        {
-                            if ((int)Main.tile.At(num, num2 + k).FrameX != frameX)
-                            {
-                                flag = true;
-                            }
-                        }
-                    }
-                }
-                if (!Main.tile.At(num + 1, num2 + k).Active)
-                {
-                    flag = true;
-                }
-                else
-                {
-                    if (Main.tile.At(num + 1, num2 + k).Type != type)
-                    {
-                        flag = true;
-                    }
-                    else
-                    {
-                        if ((int)Main.tile.At(num + 1, num2 + k).FrameY != k * 18)
-                        {
-                            flag = true;
-                        }
-                        else
-                        {
-                            if ((int)Main.tile.At(num + 1, num2 + k).FrameX != frameX + 18)
-                            {
-                                flag = true;
-                            }
-                        }
-                    }
-                }
-            }
-            if (!Main.tile.At(num, num2 + num3).Active)
-            {
-                flag = true;
-            }
-            if (!Main.tileSolid[(int)Main.tile.At(num, num2 + num3).Type])
-            {
-                flag = true;
-            }
-            if (!Main.tile.At(num + 1, num2 + num3).Active)
-            {
-                flag = true;
-            }
-            if (!Main.tileSolid[(int)Main.tile.At(num + 1, num2 + num3).Type])
-            {
-                flag = true;
-            }
-            if (flag)
-            {
-                destroyObject = true;
-                for (int l = 0; l < num3; l++)
-                {
-                    if (Main.tile.At(num, num2 + l).Type == type)
-                    {
-                        KillTile(num, num2 + l, false, false, false);
-                    }
-                    if (Main.tile.At(num + 1, num2 + l).Type == type)
-                    {
-                        KillTile(num + 1, num2 + l, false, false, false);
-                    }
-                }
-                if (type == 104)
-                {
-                    Item.NewItem(num * 16, j * 16, 32, 32, 359, 1, false);
-                }
-                if (type == 105)
-                {
-                    Item.NewItem(num * 16, j * 16, 32, 32, 360, 1, false);
-                }
-                destroyObject = false;
-            }
-        }
+				destroyObject = false;
+				for (int num3 = num - 1; num3 < num + 4; num3++)
+				{
+					for (int num4 = num2 - 1; num4 < num2 + 4; num4++)
+					{
+						TileFrame(num3, num4);
+					}
+				}
+			}
+		}
+
+		public static void Check1xX(int x, int j, byte type)
+		{
+			if (destroyObject)
+				return;
+
+			int num = j - (int)(Main.tile.At(x, j).FrameY / 18);
+			int frameX = (int)Main.tile.At(x, j).FrameX;
+			int num2 = 3;
+
+			if (type == 92)
+				num2 = 6;
+
+			bool flag = false;
+			for (int i = 0; i < num2; i++)
+			{
+				if (!Main.tile.At(x, num + i).Active)
+				{
+					flag = true;
+				}
+				else if (Main.tile.At(x, num + i).Type != type)
+				{
+					flag = true;
+				}
+				else if ((int)Main.tile.At(x, num + i).FrameY != i * 18)
+				{
+					flag = true;
+				}
+				else if ((int)Main.tile.At(x, num + i).FrameX != frameX)
+				{
+					flag = true;
+				}
+			}
+			if (!Main.tile.At(x, num + num2).Active)
+			{
+				flag = true;
+			}
+			if (!Main.tileSolid[(int)Main.tile.At(x, num + num2).Type])
+			{
+				flag = true;
+			}
+			if (flag)
+			{
+				destroyObject = true;
+				for (int k = 0; k < num2; k++)
+				{
+					if (Main.tile.At(x, num + k).Type == type)
+					{
+						KillTile(x, num + k);
+					}
+				}
+				if (type == 92)
+					Item.NewItem(x * 16, j * 16, 32, 32, 341);
+				else if (type == 93)
+					Item.NewItem(x * 16, j * 16, 32, 32, 342);
+				destroyObject = false;
+			}
+		}
+
+		public static void Check2xX(int i, int j, byte type)
+		{
+			if (destroyObject)
+				return;
+
+			int num = i;
+			int k;
+			for (k = (int)Main.tile.At(i, j).FrameX; k >= 36; k -= 36)
+			{
+			}
+
+			if (k == 18)
+				num--;
+
+			int num2 = j - (int)(Main.tile.At(num, j).FrameY / 18);
+
+			int frameX = (int)Main.tile.At(num, num2).FrameX;
+			int num3 = 3;
+
+			if (type == 104)
+				num3 = 5;
+
+			bool flag = false;
+			for (int l = 0; l < num3; l++)
+			{
+				if (!Main.tile.At(num, num2 + l).Active)
+				{
+					flag = true;
+				}
+				else if (Main.tile.At(num, num2 + l).Type != type)
+				{
+					flag = true;
+				}
+				else if ((int)Main.tile.At(num, num2 + l).FrameY != l * 18)
+				{
+					flag = true;
+				}
+				else if ((int)Main.tile.At(num, num2 + l).FrameX != frameX)
+				{
+					flag = true;
+				}
+
+				if (!Main.tile.At(num + 1, num2 + l).Active)
+				{
+					flag = true;
+				}
+				else if (Main.tile.At(num + 1, num2 + l).Type != type)
+				{
+					flag = true;
+				}
+				else if ((int)Main.tile.At(num + 1, num2 + l).FrameY != l * 18)
+				{
+					flag = true;
+				}
+				else if ((int)Main.tile.At(num + 1, num2 + l).FrameX != frameX + 18)
+				{
+					flag = true;
+				}
+			}
+
+			if (!Main.tile.At(num, num2 + num3).Active)
+				flag = true;
+
+			if (!Main.tileSolid[(int)Main.tile.At(num, num2 + num3).Type])
+				flag = true;
+
+			if (!Main.tile.At(num + 1, num2 + num3).Active)
+				flag = true;
+
+			if (!Main.tileSolid[(int)Main.tile.At(num + 1, num2 + num3).Type])
+				flag = true;
+
+			if (flag)
+			{
+				destroyObject = true;
+				for (int m = 0; m < num3; m++)
+				{
+					if (Main.tile.At(num, num2 + m).Type == type)
+						KillTile(num, num2 + m);
+
+					if (Main.tile.At(num + 1, num2 + m).Type == type)
+						KillTile(num + 1, num2 + m);
+				}
+				if (type == 104)
+					Item.NewItem(num * 16, j * 16, 32, 32, 359);
+
+				if (type == 105)
+				{
+					int num4 = frameX / 36;
+					if (num4 == 0)
+						num4 = 360;
+					else if (num4 == 1)
+						num4 = 52;
+					else
+						num4 = 438 + num4 - 2;
+
+					Item.NewItem(num * 16, j * 16, 32, 32, num4);
+				}
+				destroyObject = false;
+			}
+		}
 
 		public static void PlaceSunflower(int x, int y, int type = 27)
 		{
 			if ((double)y > Main.worldSurface - 1.0)
-			{
 				return;
-			}
+
 			bool flag = true;
 			for (int i = x; i < x + 2; i++)
 			{
@@ -4400,29 +5119,28 @@ namespace Terraria_Server.WorldMod
 					{
 						int num = k * 18 + genRand.Next(3) * 36;
 						int num2 = (l + 3) * 18;
-						Main.tile.At(x + k, y + l).SetActive (true);
-						Main.tile.At(x + k, y + l).SetFrameX ((short)num);
-						Main.tile.At(x + k, y + l).SetFrameY ((short)num2);
-						Main.tile.At(x + k, y + l).SetType ((byte)type);
+						Main.tile.At(x + k, y + l).SetActive(true);
+						Main.tile.At(x + k, y + l).SetFrameX((short)num);
+						Main.tile.At(x + k, y + l).SetFrameY((short)num2);
+						Main.tile.At(x + k, y + l).SetType((byte)type);
 					}
 				}
 			}
 		}
-		
+
 		public static void CheckSunflower(int i, int j, int type = 27)
 		{
 			if (destroyObject)
-			{
 				return;
-			}
+
 			bool flag = false;
 			int k = 0;
 			k += (int)(Main.tile.At(i, j).FrameX / 18);
 			int num = j + (int)(Main.tile.At(i, j).FrameY / 18 * -1);
+
 			while (k > 1)
-			{
 				k -= 2;
-			}
+
 			k *= -1;
 			k += i;
 			for (int l = k; l < k + 2; l++)
@@ -4433,6 +5151,7 @@ namespace Terraria_Server.WorldMod
 					for (n = (int)(Main.tile.At(l, m).FrameX / 18); n > 1; n -= 2)
 					{
 					}
+
 					if (!Main.tile.At(l, m).Active || (int)Main.tile.At(l, m).Type != type || n != l - k || (int)Main.tile.At(l, m).FrameY != (m - num) * 18)
 					{
 						flag = true;
@@ -4452,15 +5171,15 @@ namespace Terraria_Server.WorldMod
 					{
 						if ((int)Main.tile.At(num2, num3).Type == type && Main.tile.At(num2, num3).Active)
 						{
-							KillTile(num2, num3, false, false, false);
+							KillTile(num2, num3);
 						}
 					}
 				}
-				Item.NewItem(i * 16, j * 16, 32, 32, 63, 1, false);
+				Item.NewItem(i * 16, j * 16, 32, 32, 63);
 				destroyObject = false;
 			}
 		}
-		
+
 		public static bool PlacePot(int x, int y, int type = 28)
 		{
 			bool flag = true;
@@ -4486,17 +5205,17 @@ namespace Terraria_Server.WorldMod
 					{
 						int num = k * 18 + genRand.Next(3) * 36;
 						int num2 = (l + 1) * 18;
-						Main.tile.At(x + k, y + l).SetActive (true);
-						Main.tile.At(x + k, y + l).SetFrameX ((short)num);
-						Main.tile.At(x + k, y + l).SetFrameY ((short)num2);
-						Main.tile.At(x + k, y + l).SetType ((byte)type);
+						Main.tile.At(x + k, y + l).SetActive(true);
+						Main.tile.At(x + k, y + l).SetFrameX((short)num);
+						Main.tile.At(x + k, y + l).SetFrameY((short)num2);
+						Main.tile.At(x + k, y + l).SetType((byte)type);
 					}
 				}
 				return true;
 			}
 			return false;
 		}
-		
+
 		public static bool CheckCactus(int i, int j)
 		{
 			int num = j;
@@ -4518,25 +5237,25 @@ namespace Terraria_Server.WorldMod
 			}
 			if (!Main.tile.At(num2, num).Active || Main.tile.At(num2, num).Type != 53)
 			{
-				KillTile(i, j, false, false, false);
+				KillTile(i, j);
 				return true;
 			}
 			if (i != num2)
 			{
 				if ((!Main.tile.At(i, j + 1).Active || Main.tile.At(i, j + 1).Type != 80) && (!Main.tile.At(i - 1, j).Active || Main.tile.At(i - 1, j).Type != 80) && (!Main.tile.At(i + 1, j).Active || Main.tile.At(i + 1, j).Type != 80))
 				{
-					KillTile(i, j, false, false, false);
+					KillTile(i, j);
 					return true;
 				}
 			}
 			else if (i == num2 && (!Main.tile.At(i, j + 1).Active || (Main.tile.At(i, j + 1).Type != 80 && Main.tile.At(i, j + 1).Type != 53)))
 			{
-				KillTile(i, j, false, false, false);
+				KillTile(i, j);
 				return true;
 			}
 			return false;
 		}
-		
+
 		public static void PlantCactus(int i, int j)
 		{
 			GrowCactus(i, j);
@@ -4547,7 +5266,7 @@ namespace Terraria_Server.WorldMod
 				GrowCactus(i2, j2);
 			}
 		}
-		
+
 		public static void CactusFrame(int i, int j)
 		{
 			try
@@ -4582,30 +5301,25 @@ namespace Terraria_Server.WorldMod
 					int num7 = (int)Main.tile.At(i, j + 1).Type;
 					int num8 = (int)Main.tile.At(i - 1, j + 1).Type;
 					int num9 = (int)Main.tile.At(i + 1, j + 1).Type;
+
 					if (!Main.tile.At(i - 1, j).Active)
-					{
 						num4 = -1;
-					}
+
 					if (!Main.tile.At(i + 1, j).Active)
-					{
 						num5 = -1;
-					}
+
 					if (!Main.tile.At(i, j - 1).Active)
-					{
 						num6 = -1;
-					}
+
 					if (!Main.tile.At(i, j + 1).Active)
-					{
 						num7 = -1;
-					}
+
 					if (!Main.tile.At(i - 1, j + 1).Active)
-					{
 						num8 = -1;
-					}
+
 					if (!Main.tile.At(i + 1, j + 1).Active)
-					{
 						num9 = -1;
-					}
+
 					short num10 = Main.tile.At(i, j).FrameX;
 					short num11 = Main.tile.At(i, j).FrameY;
 					if (num3 == 0)
@@ -4733,41 +5447,40 @@ namespace Terraria_Server.WorldMod
 					}
 					if (num10 != Main.tile.At(i, j).FrameX || num11 != Main.tile.At(i, j).FrameY)
 					{
-						Main.tile.At(i, j).SetFrameX (num10);
-						Main.tile.At(i, j).SetFrameY (num11);
+						Main.tile.At(i, j).SetFrameX(num10);
+						Main.tile.At(i, j).SetFrameY(num11);
 						SquareTileFrame(i, j, true);
 					}
 				}
 			}
 			catch
 			{
-				Main.tile.At(i, j).SetFrameX (0);
-				Main.tile.At(i, j).SetFrameY (0);
+				Main.tile.At(i, j).SetFrameX(0);
+				Main.tile.At(i, j).SetFrameY(0);
 			}
 		}
-		
+
 		public static void GrowCactus(int i, int j)
 		{
 			int num = j;
 			int num2 = i;
 			if (!Main.tile.At(i, j).Active)
-			{
 				return;
-			}
+
 			if (Main.tile.At(i, j - 1).Liquid > 0)
-			{
 				return;
-			}
+
 			if (Main.tile.At(i, j).Type != 53 && Main.tile.At(i, j).Type != 80)
-			{
 				return;
-			}
+
 			if (Main.tile.At(i, j).Type == 53)
 			{
-				if (Main.tile.At(i, j - 1).Active || Main.tile.At(i - 1, j - 1).Active || Main.tile.At(i + 1, j - 1).Active)
+				if (Main.tile.At(i, j - 1).Active || Main.tile.At(i - 1, j - 1).Active ||
+					Main.tile.At(i + 1, j - 1).Active)
 				{
 					return;
 				}
+
 				int num3 = 0;
 				int num4 = 0;
 				for (int k = i - 6; k <= i + 6; k++)
@@ -4781,15 +5494,15 @@ namespace Terraria_Server.WorldMod
 								if (Main.tile.At(k, l).Type == 80)
 								{
 									num3++;
+
 									if (num3 >= 4)
-									{
 										return;
-									}
 								}
-								if (Main.tile.At(k, l).Type == 53)
-								{
+
+								if (Main.tile.At(k, l).Type == 53 ||
+									Main.tile.At(k, l).Type == 112 ||
+									Main.tile.At(k, l).Type == 116)
 									num4++;
-								}
 							}
 						}
 						catch
@@ -4799,9 +5512,9 @@ namespace Terraria_Server.WorldMod
 				}
 				if (num4 > 10)
 				{
-					Main.tile.At(i, j - 1).SetActive (true);
-					Main.tile.At(i, j - 1).SetType (80);
-					
+					Main.tile.At(i, j - 1).SetActive(true);
+					Main.tile.At(i, j - 1).SetType(80);
+
 					NetMessage.SendTileSquare(-1, i, j - 1, 1);
 					SquareTileFrame(num2, num - 1, true);
 					return;
@@ -4811,9 +5524,8 @@ namespace Terraria_Server.WorldMod
 			else
 			{
 				if (Main.tile.At(i, j).Type != 80)
-				{
 					return;
-				}
+
 				while (Main.tile.At(num2, num).Active && Main.tile.At(num2, num).Type == 80)
 				{
 					num++;
@@ -4855,13 +5567,12 @@ namespace Terraria_Server.WorldMod
 						if (num5 == 0)
 						{
 							if (Main.tile.At(num2, num - 1).Active)
-							{
 								return;
-							}
-							Main.tile.At(num2, num - 1).SetActive (true);
-							Main.tile.At(num2, num - 1).SetType (80);
+
+							Main.tile.At(num2, num - 1).SetActive(true);
+							Main.tile.At(num2, num - 1).SetType(80);
 							SquareTileFrame(num2, num - 1, true);
-							
+
 							NetMessage.SendTileSquare(-1, num2, num - 1, 1);
 							return;
 						}
@@ -4883,16 +5594,16 @@ namespace Terraria_Server.WorldMod
 							int num9 = genRand.Next(3);
 							if (num9 == 0 && flag)
 							{
-								Main.tile.At(num2 - 1, num).SetActive (true);
-								Main.tile.At(num2 - 1, num).SetType (80);
+								Main.tile.At(num2 - 1, num).SetActive(true);
+								Main.tile.At(num2 - 1, num).SetType(80);
 								SquareTileFrame(num2 - 1, num, true);
 								NetMessage.SendTileSquare(-1, num2 - 1, num, 1);
 								return;
 							}
 							else if (num9 == 1 && flag2)
 							{
-								Main.tile.At(num2 + 1, num).SetActive (true);
-								Main.tile.At(num2 + 1, num).SetType (80);
+								Main.tile.At(num2 + 1, num).SetActive(true);
+								Main.tile.At(num2 + 1, num).SetType(80);
 								SquareTileFrame(num2 + 1, num, true);
 								NetMessage.SendTileSquare(-1, num2 + 1, num, 1);
 
@@ -4904,16 +5615,16 @@ namespace Terraria_Server.WorldMod
 								{
 									return;
 								}
-                                //if (Main.tile.At(num2 - 1, num - 1).Active)
-                                //{
-                                //    byte arg_5E0_0 = Main.tile.At(num2 - 1, num - 1).Type;
-                                //}
+								//if (Main.tile.At(num2 - 1, num - 1).Active)
+								//{
+								//    byte arg_5E0_0 = Main.tile.At(num2 - 1, num - 1).Type;
+								//}
 								if (Main.tile.At(num2 + 1, num - 1).Active && Main.tile.At(num2 + 1, num - 1).Type == 80)
 								{
 									return;
 								}
-								Main.tile.At(num2, num - 1).SetActive (true);
-								Main.tile.At(num2, num - 1).SetType (80);
+								Main.tile.At(num2, num - 1).SetActive(true);
+								Main.tile.At(num2, num - 1).SetType(80);
 								SquareTileFrame(num2, num - 1, true);
 								NetMessage.SendTileSquare(-1, num2, num - 1, 1);
 								return;
@@ -4922,35 +5633,35 @@ namespace Terraria_Server.WorldMod
 					}
 					else
 					{
-						if (Main.tile.At(num2, num - 1).Active || Main.tile.At(num2, num - 2).Active || Main.tile.At(num2 + num6, num - 1).Active || !Main.tile.At(num2 - num6, num - 1).Active || Main.tile.At(num2 - num6, num - 1).Type != 80)
-						{
+						if (Main.tile.At(num2, num - 1).Active || Main.tile.At(num2, num - 2).Active ||
+							Main.tile.At(num2 + num6, num - 1).Active ||
+							!Main.tile.At(num2 - num6, num - 1).Active || Main.tile.At(num2 - num6, num - 1).Type != 80)
 							return;
-						}
-						Main.tile.At(num2, num - 1).SetActive (true);
-						Main.tile.At(num2, num - 1).SetType (80);
+
+						Main.tile.At(num2, num - 1).SetActive(true);
+						Main.tile.At(num2, num - 1).SetType(80);
 						SquareTileFrame(num2, num - 1, true);
-						
+
 						NetMessage.SendTileSquare(-1, num2, num - 1, 1);
 						return;
 					}
 				}
 			}
 		}
-		
+
 		public static void CheckPot(int i, int j, int type = 28)
 		{
 			if (destroyObject)
-			{
 				return;
-			}
+
 			bool flag = false;
 			int k = 0;
 			k += (int)(Main.tile.At(i, j).FrameX / 18);
 			int num = j + (int)(Main.tile.At(i, j).FrameY / 18 * -1);
+
 			while (k > 1)
-			{
 				k -= 2;
-			}
+
 			k *= -1;
 			k += i;
 			for (int l = k; l < k + 2; l++)
@@ -4980,305 +5691,334 @@ namespace Terraria_Server.WorldMod
 					{
 						if ((int)Main.tile.At(num2, num3).Type == type && Main.tile.At(num2, num3).Active)
 						{
-							KillTile(num2, num3, false, false, false);
+							KillTile(num2, num3);
 						}
 					}
 				}
-				if (genRand.Next(50) == 0)
+				if (genRand.Next(40) == 0 && (Main.tile.At(k, num).Wall == 7 || Main.tile.At(k, num).Wall == 8 || Main.tile.At(k, num).Wall == 9))
 				{
-					if ((double)j < Main.worldSurface)
-					{
-						int num4 = genRand.Next(4);
-						if (num4 == 0)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 292, 1, false);
-						}
-						if (num4 == 1)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 298, 1, false);
-						}
-						if (num4 == 2)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 299, 1, false);
-						}
-						if (num4 == 3)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 290, 1, false);
-						}
-					}
-					else if ((double)j < Main.rockLayer)
-					{
-						int num5 = genRand.Next(7);
-						if (num5 == 0)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 289, 1, false);
-						}
-						if (num5 == 1)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 298, 1, false);
-						}
-						if (num5 == 2)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 299, 1, false);
-						}
-						if (num5 == 3)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 290, 1, false);
-						}
-						if (num5 == 4)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 303, 1, false);
-						}
-						if (num5 == 5)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 291, 1, false);
-						}
-						if (num5 == 6)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 304, 1, false);
-						}
-					}
-					else if (j < Main.maxTilesY - 200)
-					{
-						int num6 = genRand.Next(10);
-						if (num6 == 0)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 296, 1, false);
-						}
-						if (num6 == 1)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 295, 1, false);
-						}
-						if (num6 == 2)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 299, 1, false);
-						}
-						if (num6 == 3)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 302, 1, false);
-						}
-						if (num6 == 4)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 303, 1, false);
-						}
-						if (num6 == 5)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 305, 1, false);
-						}
-						if (num6 == 6)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 301, 1, false);
-						}
-						if (num6 == 7)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 302, 1, false);
-						}
-						if (num6 == 8)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 297, 1, false);
-						}
-						if (num6 == 9)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 304, 1, false);
-						}
-					}
-					else
-					{
-						int num7 = genRand.Next(12);
-						if (num7 == 0)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 296, 1, false);
-						}
-						if (num7 == 1)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 295, 1, false);
-						}
-						if (num7 == 2)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 293, 1, false);
-						}
-						if (num7 == 3)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 288, 1, false);
-						}
-						if (num7 == 4)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 294, 1, false);
-						}
-						if (num7 == 5)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 297, 1, false);
-						}
-						if (num7 == 6)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 304, 1, false);
-						}
-						if (num7 == 7)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 305, 1, false);
-						}
-						if (num7 == 8)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 301, 1, false);
-						}
-						if (num7 == 9)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 302, 1, false);
-						}
-						if (num7 == 10)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 288, 1, false);
-						}
-						if (num7 == 11)
-						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 300, 1, false);
-						}
-					}
+					Item.NewItem(i * 16, j * 16, 16, 16, 327);
 				}
 				else
 				{
-					int num8 = Main.rand.Next(10);
-					if (num8 == 0 && Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].statLife < Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].statLifeMax)
+					if (genRand.Next(45) == 0)
 					{
-						Item.NewItem(i * 16, j * 16, 16, 16, 58, 1, false);
-					}
-					else if (num8 == 1 && Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].statMana < Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].statManaMax)
-			        {
-				        Item.NewItem(i * 16, j * 16, 16, 16, 184, 1, false);
-			        }
-			        else if (num8 == 2)
-					{
-						int stack = Main.rand.Next(3) + 1;
-						if (Main.tile.At(i, j).Liquid > 0)
+						if ((double)j < Main.worldSurface)
 						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 282, stack, false);
+							int num4 = genRand.Next(4);
+							if (num4 == 0)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 292);
+							}
+							if (num4 == 1)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 298);
+							}
+							if (num4 == 2)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 299);
+							}
+							if (num4 == 3)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 290);
+							}
+						}
+						else if ((double)j < Main.rockLayer)
+						{
+							int num5 = genRand.Next(7);
+							if (num5 == 0)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 289);
+							}
+							if (num5 == 1)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 298);
+							}
+							if (num5 == 2)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 299);
+							}
+							if (num5 == 3)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 290);
+							}
+							if (num5 == 4)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 303);
+							}
+							if (num5 == 5)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 291);
+							}
+							if (num5 == 6)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 304);
+							}
+						}
+						else if (j < Main.maxTilesY - 200)
+						{
+							int num6 = genRand.Next(10);
+							if (num6 == 0)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 296);
+							}
+							if (num6 == 1)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 295);
+							}
+							if (num6 == 2)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 299);
+							}
+							if (num6 == 3)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 302);
+							}
+							if (num6 == 4)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 303);
+							}
+							if (num6 == 5)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 305);
+							}
+							if (num6 == 6)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 301);
+							}
+							if (num6 == 7)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 302);
+							}
+							if (num6 == 8)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 297);
+							}
+							if (num6 == 9)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 304);
+							}
 						}
 						else
 						{
-							Item.NewItem(i * 16, j * 16, 16, 16, 8, stack, false);
+							int num7 = genRand.Next(12);
+							if (num7 == 0)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 296);
+							}
+							if (num7 == 1)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 295);
+							}
+							if (num7 == 2)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 293);
+							}
+							if (num7 == 3)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 288);
+							}
+							if (num7 == 4)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 294);
+							}
+							if (num7 == 5)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 297);
+							}
+							if (num7 == 6)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 304);
+							}
+							if (num7 == 7)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 305);
+							}
+							if (num7 == 8)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 301);
+							}
+							if (num7 == 9)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 302);
+							}
+							if (num7 == 10)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 288);
+							}
+							if (num7 == 11)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 300);
+							}
 						}
-					}
-					else if (num8 == 3)
-					{
-						int stack2 = Main.rand.Next(8) + 3;
-						int type2 = 40;
-						if (j > Main.maxTilesY - 200)
-						{
-							type2 = 265;
-						}
-						Item.NewItem(i * 16, j * 16, 16, 16, type2, stack2, false);
-					}
-					else if (num8 == 4)
-					{
-						int type3 = 28;
-						if (j > Main.maxTilesY - 200)
-						{
-							type3 = 188;
-						}
-						Item.NewItem(i * 16, j * 16, 16, 16, type3, 1, false);
-					}
-					else if (num8 == 5 && (double)j > Main.rockLayer)
-					{
-						int stack3 = Main.rand.Next(4) + 1;
-						Item.NewItem(i * 16, j * 16, 16, 16, 166, stack3, false);
 					}
 					else
 					{
-						float num9 = (float)(200 + genRand.Next(-100, 101));
-						if ((double)j < Main.worldSurface)
+						int num8 = Main.rand.Next(8);
+						if (num8 == 0 && Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].statLife < Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].statLifeMax)
 						{
-							num9 *= 0.5f;
+							Item.NewItem(i * 16, j * 16, 16, 16, 58);
 						}
-						else if ((double)j < Main.rockLayer)
-					    {
-						    num9 *= 0.75f;
-					    }
-					    else if (j > Main.maxTilesY - 250)
-					    {
-						    num9 *= 1.25f;
-					    }
-						num9 *= 1f + (float)Main.rand.Next(-20, 21) * 0.01f;
-						if (Main.rand.Next(5) == 0)
+						else if (num8 == 1 && Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].statMana < Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].statManaMax)
 						{
-							num9 *= 1f + (float)Main.rand.Next(5, 11) * 0.01f;
+							Item.NewItem(i * 16, j * 16, 16, 16, 184);
 						}
-						if (Main.rand.Next(10) == 0)
+						else if (num8 == 2)
 						{
-							num9 *= 1f + (float)Main.rand.Next(10, 21) * 0.01f;
-						}
-						if (Main.rand.Next(15) == 0)
-						{
-							num9 *= 1f + (float)Main.rand.Next(20, 41) * 0.01f;
-						}
-						if (Main.rand.Next(20) == 0)
-						{
-							num9 *= 1f + (float)Main.rand.Next(40, 81) * 0.01f;
-						}
-						if (Main.rand.Next(25) == 0)
-						{
-							num9 *= 1f + (float)Main.rand.Next(50, 101) * 0.01f;
-						}
-						while ((int)num9 > 0)
-						{
-							if (num9 > 1000000f)
+							int stack = Main.rand.Next(1, 6);
+							if (Main.tile.At(i, j).Liquid > 0)
 							{
-								int num10 = (int)(num9 / 1000000f);
-								if (num10 > 50 && Main.rand.Next(2) == 0)
-								{
-									num10 /= Main.rand.Next(3) + 1;
-								}
-								if (Main.rand.Next(2) == 0)
-								{
-									num10 /= Main.rand.Next(3) + 1;
-								}
-								num9 -= (float)(1000000 * num10);
-								Item.NewItem(i * 16, j * 16, 16, 16, 74, num10, false);
-							}
-							else if (num9 > 10000f)
-							{
-								int num11 = (int)(num9 / 10000f);
-								if (num11 > 50 && Main.rand.Next(2) == 0)
-								{
-									num11 /= Main.rand.Next(3) + 1;
-								}
-								if (Main.rand.Next(2) == 0)
-								{
-									num11 /= Main.rand.Next(3) + 1;
-								}
-								num9 -= (float)(10000 * num11);
-								Item.NewItem(i * 16, j * 16, 16, 16, 73, num11, false);
-							}
-							else if (num9 > 100f)
-							{
-								int num12 = (int)(num9 / 100f);
-								if (num12 > 50 && Main.rand.Next(2) == 0)
-								{
-									num12 /= Main.rand.Next(3) + 1;
-								}
-								if (Main.rand.Next(2) == 0)
-								{
-									num12 /= Main.rand.Next(3) + 1;
-								}
-								num9 -= (float)(100 * num12);
-								Item.NewItem(i * 16, j * 16, 16, 16, 72, num12, false);
+								Item.NewItem(i * 16, j * 16, 16, 16, 282, stack);
 							}
 							else
 							{
-								int num13 = (int)num9;
-								if (num13 > 50 && Main.rand.Next(2) == 0)
+								Item.NewItem(i * 16, j * 16, 16, 16, 8, stack);
+							}
+						}
+						else if (num8 == 3)
+						{
+							int stack2 = Main.rand.Next(8) + 3;
+							int type2 = 40;
+							if ((double)j < Main.rockLayer && genRand.Next(2) == 0)
+							{
+								if (Main.hardMode)
 								{
-									num13 /= Main.rand.Next(3) + 1;
+									type2 = 168;
 								}
+								else
+								{
+									type2 = 42;
+								}
+							}
+							if (j > Main.maxTilesY - 200)
+							{
+								type2 = 265;
+							}
+							else if (Main.hardMode)
+							{
 								if (Main.rand.Next(2) == 0)
 								{
-									num13 /= Main.rand.Next(4) + 1;
+									type2 = 278;
 								}
-								if (num13 < 1)
+								else
 								{
-									num13 = 1;
+									type2 = 47;
 								}
-								num9 -= (float)num13;
-								Item.NewItem(i * 16, j * 16, 16, 16, 71, num13, false);
+							}
+							Item.NewItem(i * 16, j * 16, 16, 16, type2, stack2);
+						}
+						else if (num8 == 4)
+						{
+							int type3 = 28;
+							if (j > Main.maxTilesY - 200 || Main.hardMode)
+							{
+								type3 = 188;
+							}
+							Item.NewItem(i * 16, j * 16, 16, 16, type3);
+						}
+						else if (num8 == 5 && (double)j > Main.rockLayer)
+						{
+							int stack3 = Main.rand.Next(4) + 1;
+							Item.NewItem(i * 16, j * 16, 16, 16, 166, stack3);
+						}
+						else
+						{
+							float num9 = (float)(200 + genRand.Next(-100, 101));
+							if ((double)j < Main.worldSurface)
+							{
+								num9 *= 0.5f;
+							}
+							else if ((double)j < Main.rockLayer)
+							{
+								num9 *= 0.75f;
+							}
+							else if (j > Main.maxTilesY - 250)
+							{
+								num9 *= 1.25f;
+							}
+							num9 *= 1f + (float)Main.rand.Next(-20, 21) * 0.01f;
+							if (Main.rand.Next(5) == 0)
+							{
+								num9 *= 1f + (float)Main.rand.Next(5, 11) * 0.01f;
+							}
+							if (Main.rand.Next(10) == 0)
+							{
+								num9 *= 1f + (float)Main.rand.Next(10, 21) * 0.01f;
+							}
+							if (Main.rand.Next(15) == 0)
+							{
+								num9 *= 1f + (float)Main.rand.Next(20, 41) * 0.01f;
+							}
+							if (Main.rand.Next(20) == 0)
+							{
+								num9 *= 1f + (float)Main.rand.Next(40, 81) * 0.01f;
+							}
+							if (Main.rand.Next(25) == 0)
+							{
+								num9 *= 1f + (float)Main.rand.Next(50, 101) * 0.01f;
+							}
+							while ((int)num9 > 0)
+							{
+								if (num9 > 1000000f)
+								{
+									int num10 = (int)(num9 / 1000000f);
+									if (num10 > 50 && Main.rand.Next(2) == 0)
+									{
+										num10 /= Main.rand.Next(3) + 1;
+									}
+									if (Main.rand.Next(2) == 0)
+									{
+										num10 /= Main.rand.Next(3) + 1;
+									}
+									num9 -= (float)(1000000 * num10);
+									Item.NewItem(i * 16, j * 16, 16, 16, 74, num10);
+								}
+								else if (num9 > 10000f)
+								{
+									int num11 = (int)(num9 / 10000f);
+									if (num11 > 50 && Main.rand.Next(2) == 0)
+									{
+										num11 /= Main.rand.Next(3) + 1;
+									}
+									if (Main.rand.Next(2) == 0)
+									{
+										num11 /= Main.rand.Next(3) + 1;
+									}
+									num9 -= (float)(10000 * num11);
+									Item.NewItem(i * 16, j * 16, 16, 16, 73, num11);
+								}
+								else if (num9 > 100f)
+								{
+									int num12 = (int)(num9 / 100f);
+									if (num12 > 50 && Main.rand.Next(2) == 0)
+									{
+										num12 /= Main.rand.Next(3) + 1;
+									}
+									if (Main.rand.Next(2) == 0)
+									{
+										num12 /= Main.rand.Next(3) + 1;
+									}
+									num9 -= (float)(100 * num12);
+									Item.NewItem(i * 16, j * 16, 16, 16, 72, num12);
+								}
+								else
+								{
+									int num13 = (int)num9;
+									if (num13 > 50 && Main.rand.Next(2) == 0)
+									{
+										num13 /= Main.rand.Next(3) + 1;
+									}
+									if (Main.rand.Next(2) == 0)
+									{
+										num13 /= Main.rand.Next(4) + 1;
+									}
+									if (num13 < 1)
+									{
+										num13 = 1;
+									}
+									num9 -= (float)num13;
+									Item.NewItem(i * 16, j * 16, 16, 16, 71, num13);
+								}
 							}
 						}
 					}
@@ -5286,7 +6026,7 @@ namespace Terraria_Server.WorldMod
 				destroyObject = false;
 			}
 		}
-		
+
 		public static int PlaceChest(int x, int y, int type = 21, bool notNearOtherChests = false, int style = 0)
 		{
 			bool flag = true;
@@ -5309,9 +6049,9 @@ namespace Terraria_Server.WorldMod
 			}
 			if (flag && notNearOtherChests)
 			{
-				for (int k = x - 30; k < x + 30; k++)
+				for (int k = x - 25; k < x + 25; k++)
 				{
-					for (int l = y - 10; l < y + 10; l++)
+					for (int l = y - 8; l < y + 8; l++)
 					{
 						try
 						{
@@ -5331,46 +6071,43 @@ namespace Terraria_Server.WorldMod
 			{
 				num = Chest.CreateChest(x, y - 1);
 				if (num == -1)
-				{
 					flag = false;
-				}
 			}
 			if (flag)
 			{
-				Main.tile.At(x, y - 1).SetActive (true);
-				Main.tile.At(x, y - 1).SetFrameY (0);
-				Main.tile.At(x, y - 1).SetFrameX ((short)(36 * style));
-				Main.tile.At(x, y - 1).SetType ((byte)type);
-				Main.tile.At(x + 1, y - 1).SetActive (true);
-				Main.tile.At(x + 1, y - 1).SetFrameY (0);
-				Main.tile.At(x + 1, y - 1).SetFrameX ((short)(18 + 36 * style));
-				Main.tile.At(x + 1, y - 1).SetType ((byte)type);
-				Main.tile.At(x, y).SetActive (true);
-				Main.tile.At(x, y).SetFrameY (18);
-				Main.tile.At(x, y).SetFrameX ((short)(36 * style));
-				Main.tile.At(x, y).SetType ((byte)type);
-				Main.tile.At(x + 1, y).SetActive (true);
-				Main.tile.At(x + 1, y).SetFrameY (18);
-				Main.tile.At(x + 1, y).SetFrameX ((short)(18 + 36 * style));
-				Main.tile.At(x + 1, y).SetType ((byte)type);
+				Main.tile.At(x, y - 1).SetActive(true);
+				Main.tile.At(x, y - 1).SetFrameY(0);
+				Main.tile.At(x, y - 1).SetFrameX((short)(36 * style));
+				Main.tile.At(x, y - 1).SetType((byte)type);
+				Main.tile.At(x + 1, y - 1).SetActive(true);
+				Main.tile.At(x + 1, y - 1).SetFrameY(0);
+				Main.tile.At(x + 1, y - 1).SetFrameX((short)(18 + 36 * style));
+				Main.tile.At(x + 1, y - 1).SetType((byte)type);
+				Main.tile.At(x, y).SetActive(true);
+				Main.tile.At(x, y).SetFrameY(18);
+				Main.tile.At(x, y).SetFrameX((short)(36 * style));
+				Main.tile.At(x, y).SetType((byte)type);
+				Main.tile.At(x + 1, y).SetActive(true);
+				Main.tile.At(x + 1, y).SetFrameY(18);
+				Main.tile.At(x + 1, y).SetFrameX((short)(18 + 36 * style));
+				Main.tile.At(x + 1, y).SetType((byte)type);
 			}
 			return num;
 		}
-		
+
 		public static void CheckChest(int i, int j, int type)
 		{
 			if (destroyObject)
-			{
 				return;
-			}
+
 			bool flag = false;
 			int k = 0;
 			k += (int)(Main.tile.At(i, j).FrameX / 18);
 			int num = j + (int)(Main.tile.At(i, j).FrameY / 18 * -1);
+
 			while (k > 1)
-			{
 				k -= 2;
-			}
+
 			k *= -1;
 			k += i;
 			for (int l = k; l < k + 2; l++)
@@ -5398,18 +6135,18 @@ namespace Terraria_Server.WorldMod
 				{
 					type2 = 348;
 				}
-                else if (Main.tile.At(i, j).FrameX >= 180)
-                {
-                    type2 = 343;
-                }
-                else if (Main.tile.At(i, j).FrameX >= 108)
-                {
-                    type2 = 328;
-                }
-                else if (Main.tile.At(i, j).FrameX >= 36)
-                {
-                    type2 = 306;
-                }
+				else if (Main.tile.At(i, j).FrameX >= 180)
+				{
+					type2 = 343;
+				}
+				else if (Main.tile.At(i, j).FrameX >= 108)
+				{
+					type2 = 328;
+				}
+				else if (Main.tile.At(i, j).FrameX >= 36)
+				{
+					type2 = 306;
+				}
 				destroyObject = true;
 				for (int num2 = k; num2 < k + 2; num2++)
 				{
@@ -5418,129 +6155,117 @@ namespace Terraria_Server.WorldMod
 						if ((int)Main.tile.At(num2, num3).Type == type && Main.tile.At(num2, num3).Active)
 						{
 							Chest.DestroyChest(num2, num3);
-							KillTile(num2, num3, false, false, false);
+							KillTile(num2, num3);
 						}
 					}
 				}
-				Item.NewItem(i * 16, j * 16, 32, 32, type2, 1, false);
+				Item.NewItem(i * 16, j * 16, 32, 32, type2);
 				destroyObject = false;
 			}
 		}
 
-        public static void Place1xX(int x, int y, int type, int style = 0)
-        {
-            int num = style * 18;
-            int num2 = 3;
-            if (type == 92)
-            {
-                num2 = 6;
-            }
-            bool flag = true;
-            for (int i = y - num2 + 1; i < y + 1; i++)
-            {
-                if (Main.tile.At(x, i).Active)
-                {
-                    flag = false;
-                }
-                if (type == 93 && Main.tile.At(x, i).Liquid > 0)
-                {
-                    flag = false;
-                }
-            }
-            if (flag && Main.tile.At(x, y + 1).Active && Main.tileSolid[(int)Main.tile.At(x, y + 1).Type])
-            {
-                for (int j = 0; j < num2; j++)
-                {
-                    Main.tile.At(x, y - num2 + 1 + j).SetActive(true);
-                    Main.tile.At(x, y - num2 + 1 + j).SetFrameY((short)(j * 18));
-                    Main.tile.At(x, y - num2 + 1 + j).SetFrameX((short)num);
-                    Main.tile.At(x, y - num2 + 1 + j).SetType((byte)type);
-                }
-            }
-        }
+		public static void Place1xX(int x, int y, int type, int style = 0)
+		{
+			int num = style * 18;
+			int num2 = 3;
+			if (type == 92)
+				num2 = 6;
 
-        public static void Place2xX(int x, int y, int type, int style = 0)
-        {
-            int num = style * 18;
-            int num2 = 3;
-            if (type == 104)
-            {
-                num2 = 5;
-            }
-            bool flag = true;
-            for (int i = y - num2 + 1; i < y + 1; i++)
-            {
-                if (Main.tile.At(x, i).Active)
-                {
-                    flag = false;
-                }
-                if (Main.tile.At(x + 1, i).Active)
-                {
-                    flag = false;
-                }
-            }
-            if (flag && Main.tile.At(x, y + 1).Active && Main.tileSolid[(int)Main.tile.At(x, y + 1).Type] &&
-                Main.tile.At(x + 1, y + 1).Active && Main.tileSolid[(int)Main.tile.At(x + 1, y + 1).Type])
-            {
-                for (int j = 0; j < num2; j++)
-                {
-                    Main.tile.At(x, y - num2 + 1 + j).SetActive(true);
-                    Main.tile.At(x, y - num2 + 1 + j).SetFrameY((short)(j * 18));
-                    Main.tile.At(x, y - num2 + 1 + j).SetFrameX((short)num);
-                    Main.tile.At(x, y - num2 + 1 + j).SetType((byte)type);
-                    Main.tile.At(x + 1, y - num2 + 1 + j).SetActive(true);
-                    Main.tile.At(x + 1, y - num2 + 1 + j).SetFrameY((short)(j * 18));
-                    Main.tile.At(x + 1, y - num2 + 1 + j).SetFrameX((short)(num + 18));
-                    Main.tile.At(x + 1, y - num2 + 1 + j).SetType((byte)type);
-                }
-            }
-        }
-        
-        public static void Place3x4(int x, int y, int type)
-        {
-            if (x < 5 || x > Main.maxTilesX - 5 || y < 5 || y > Main.maxTilesY - 5)
-            {
-                return;
-            }
-            bool flag = true;
-            for (int i = x - 1; i < x + 2; i++)
-            {
-                for (int j = y - 3; j < y + 1; j++)
-                {
-                    if (Main.tile.At(i, j).Active)
-                    {
-                        flag = false;
-                    }
-                }
-                if (!Main.tile.At(i, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(i, y + 1).Type])
-                {
-                    flag = false;
-                }
-            }
-            if (flag)
-            {
-                for (int k = -3; k <= 0; k++)
-                {
-                    short frameY = (short)((3 + k) * 18);
-                    Main.tile.At(x - 1, y + k).SetActive(true);
-                    Main.tile.At(x - 1, y + k).SetFrameY(frameY);
-                    Main.tile.At(x - 1, y + k).SetFrameX(0);
-                    Main.tile.At(x - 1, y + k).SetType((byte)type);
-                    Main.tile.At(x, y + k).SetActive(true);
-                    Main.tile.At(x, y + k).SetFrameY(frameY);
-                    Main.tile.At(x, y + k).SetFrameX(18);
-                    Main.tile.At(x, y + k).SetType((byte)type);
-                    Main.tile.At(x + 1, y + k).SetActive(true);
-                    Main.tile.At(x + 1, y + k).SetFrameY(frameY);
-                    Main.tile.At(x + 1, y + k).SetFrameX(36);
-                    Main.tile.At(x + 1, y + k).SetType((byte)type);
-                }
-            }
-        }
-        
+			bool flag = true;
+			for (int i = y - num2 + 1; i < y + 1; i++)
+			{
+				if (Main.tile.At(x, i).Active)
+					flag = false;
+
+				if (type == 93 && Main.tile.At(x, i).Liquid > 0)
+					flag = false;
+			}
+			if (flag && Main.tile.At(x, y + 1).Active && Main.tileSolid[(int)Main.tile.At(x, y + 1).Type])
+			{
+				for (int j = 0; j < num2; j++)
+				{
+					Main.tile.At(x, y - num2 + 1 + j).SetActive(true);
+					Main.tile.At(x, y - num2 + 1 + j).SetFrameY((short)(j * 18));
+					Main.tile.At(x, y - num2 + 1 + j).SetFrameX((short)num);
+					Main.tile.At(x, y - num2 + 1 + j).SetType((byte)type);
+				}
+			}
+		}
+
+		public static void Place2xX(int x, int y, int type, int style = 0)
+		{
+			int num = style * 36;
+			int num2 = 3;
+			if (type == 104)
+				num2 = 5;
+
+			bool flag = true;
+			for (int i = y - num2 + 1; i < y + 1; i++)
+			{
+				if (Main.tile.At(x, i).Active)
+					flag = false;
+
+				if (Main.tile.At(x + 1, i).Active)
+					flag = false;
+			}
+			if (flag && Main.tile.At(x, y + 1).Active && Main.tileSolid[(int)Main.tile.At(x, y + 1).Type] &&
+				Main.tile.At(x + 1, y + 1).Active && Main.tileSolid[(int)Main.tile.At(x + 1, y + 1).Type])
+			{
+				for (int j = 0; j < num2; j++)
+				{
+					Main.tile.At(x, y - num2 + 1 + j).SetActive(true);
+					Main.tile.At(x, y - num2 + 1 + j).SetFrameY((short)(j * 18));
+					Main.tile.At(x, y - num2 + 1 + j).SetFrameX((short)num);
+					Main.tile.At(x, y - num2 + 1 + j).SetType((byte)type);
+					Main.tile.At(x + 1, y - num2 + 1 + j).SetActive(true);
+					Main.tile.At(x + 1, y - num2 + 1 + j).SetFrameY((short)(j * 18));
+					Main.tile.At(x + 1, y - num2 + 1 + j).SetFrameX((short)(num + 18));
+					Main.tile.At(x + 1, y - num2 + 1 + j).SetType((byte)type);
+				}
+			}
+		}
+
+		public static void Place3x4(int x, int y, int type)
+		{
+			if (x < 5 || x > Main.maxTilesX - 5 || y < 5 || y > Main.maxTilesY - 5)
+				return;
+
+			bool flag = true;
+			for (int i = x - 1; i < x + 2; i++)
+			{
+				for (int j = y - 3; j < y + 1; j++)
+				{
+					if (Main.tile.At(i, j).Active)
+						flag = false;
+				}
+
+				if (!Main.tile.At(i, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(i, y + 1).Type])
+					flag = false;
+			}
+			if (flag)
+			{
+				for (int k = -3; k <= 0; k++)
+				{
+					short frameY = (short)((3 + k) * 18);
+					Main.tile.At(x - 1, y + k).SetActive(true);
+					Main.tile.At(x - 1, y + k).SetFrameY(frameY);
+					Main.tile.At(x - 1, y + k).SetFrameX(0);
+					Main.tile.At(x - 1, y + k).SetType((byte)type);
+					Main.tile.At(x, y + k).SetActive(true);
+					Main.tile.At(x, y + k).SetFrameY(frameY);
+					Main.tile.At(x, y + k).SetFrameX(18);
+					Main.tile.At(x, y + k).SetType((byte)type);
+					Main.tile.At(x + 1, y + k).SetActive(true);
+					Main.tile.At(x + 1, y + k).SetFrameY(frameY);
+					Main.tile.At(x + 1, y + k).SetFrameX(36);
+					Main.tile.At(x + 1, y + k).SetType((byte)type);
+				}
+			}
+		}
+
 		public static bool PlaceTile(int i, int j, int type, bool mute = false, bool forced = false, int plr = -1, int style = 0)
 		{
-            if (type >= MAX_TILE_SETS)
+			if (type >= MAX_TILE_SETS)
 			{
 				return false;
 			}
@@ -5576,44 +6301,44 @@ namespace Terraria_Server.WorldMod
 					{
 						return false;
 					}
-					Main.tile.At(i, j).SetFrameY (0);
-					Main.tile.At(i, j).SetFrameX (0);
+					Main.tile.At(i, j).SetFrameY(0);
+					Main.tile.At(i, j).SetFrameX(0);
 					if (type == 3 || type == 24)
 					{
-						if (j + 1 < Main.maxTilesY && Main.tile.At(i, j + 1).Active && ((Main.tile.At(i, j + 1).Type == 2 && type == 3) || (Main.tile.At(i, j + 1).Type == 23 && type == 24) || (Main.tile.At(i, j + 1).Type == 78 && type == 3)))
+						if (j + 1 < Main.maxTilesY && Main.tile.At(i, j + 1).Active && ((Main.tile.At(i, j + 1).Type == 2 && type == 3) || (Main.tile.At(i, j + 1).Type == 23 && type == 24) || (Main.tile.At(i, j + 1).Type == 78 && type == 3) || (Main.tile.At(i, j + 1).Type == 109 && type == 110)))
 						{
 							if (type == 24 && genRand.Next(13) == 0)
 							{
-								Main.tile.At(i, j).SetActive (true);
-								Main.tile.At(i, j).SetType (32);
-								SquareTileFrame(i, j, true);
+								Main.tile.At(i, j).SetActive(true);
+								Main.tile.At(i, j).SetType(32);
+								SquareTileFrame(i, j);
 							}
 							else if (Main.tile.At(i, j + 1).Type == 78)
 							{
-								Main.tile.At(i, j).SetActive (true);
-								Main.tile.At(i, j).SetType ((byte)type);
-								Main.tile.At(i, j).SetFrameX ((short)(genRand.Next(2) * 18 + 108));
+								Main.tile.At(i, j).SetActive(true);
+								Main.tile.At(i, j).SetType((byte)type);
+								Main.tile.At(i, j).SetFrameX((short)(genRand.Next(2) * 18 + 108));
 							}
 							else if (Main.tile.At(i, j).Wall == 0 && Main.tile.At(i, j + 1).Wall == 0)
 							{
 								if (genRand.Next(50) == 0 || (type == 24 && genRand.Next(40) == 0))
 								{
-									Main.tile.At(i, j).SetActive (true);
-									Main.tile.At(i, j).SetType ((byte)type);
-									Main.tile.At(i, j).SetFrameX (144);
+									Main.tile.At(i, j).SetActive(true);
+									Main.tile.At(i, j).SetType((byte)type);
+									Main.tile.At(i, j).SetFrameX(144);
 								}
 								else if (genRand.Next(35) == 0)
-							    {
-								    Main.tile.At(i, j).SetActive (true);
-								    Main.tile.At(i, j).SetType ((byte)type);
-								    Main.tile.At(i, j).SetFrameX ((short)(genRand.Next(2) * 18 + 108));
-							    }
-							    else
-							    {
-								    Main.tile.At(i, j).SetActive (true);
-								    Main.tile.At(i, j).SetType ((byte)type);
-								    Main.tile.At(i, j).SetFrameX ((short)(genRand.Next(6) * 18));
-							    }
+								{
+									Main.tile.At(i, j).SetActive(true);
+									Main.tile.At(i, j).SetType((byte)type);
+									Main.tile.At(i, j).SetFrameX((short)(genRand.Next(2) * 18 + 108));
+								}
+								else
+								{
+									Main.tile.At(i, j).SetActive(true);
+									Main.tile.At(i, j).SetType((byte)type);
+									Main.tile.At(i, j).SetFrameX((short)(genRand.Next(6) * 18));
+								}
 							}
 						}
 					}
@@ -5623,33 +6348,35 @@ namespace Terraria_Server.WorldMod
 						{
 							if (genRand.Next(10) == 0 && (double)j > Main.worldSurface)
 							{
-								Main.tile.At(i, j).SetActive (true);
-								Main.tile.At(i, j).SetType (69);
-								SquareTileFrame(i, j, true);
+								Main.tile.At(i, j).SetActive(true);
+								Main.tile.At(i, j).SetType(69);
+								SquareTileFrame(i, j);
 							}
 							else if (genRand.Next(15) == 0 && (double)j > Main.worldSurface)
 							{
-								Main.tile.At(i, j).SetActive (true);
-								Main.tile.At(i, j).SetType ((byte)type);
-								Main.tile.At(i, j).SetFrameX (144);
+								Main.tile.At(i, j).SetActive(true);
+								Main.tile.At(i, j).SetType((byte)type);
+								Main.tile.At(i, j).SetFrameX(144);
 							}
 							else if (genRand.Next(1000) == 0 && (double)j > Main.rockLayer)
 							{
-								Main.tile.At(i, j).SetActive (true);
-								Main.tile.At(i, j).SetType ((byte)type);
-								Main.tile.At(i, j).SetFrameX (162);
+								Main.tile.At(i, j).SetActive(true);
+								Main.tile.At(i, j).SetType((byte)type);
+								Main.tile.At(i, j).SetFrameX(162);
 							}
 							else
 							{
-								Main.tile.At(i, j).SetActive (true);
-								Main.tile.At(i, j).SetType ((byte)type);
-								if ((double)j > Main.rockLayer)
+								if (genRand.Next(15) == 0)
 								{
-									Main.tile.At(i, j).SetFrameX ((short)(genRand.Next(8) * 18));
+									Main.tile.At(i, j).SetActive(true);
+									Main.tile.At(i, j).SetType((byte)type);
+									Main.tile.At(i, j).SetFrameX((short)(genRand.Next(2) * 18 + 108));
 								}
 								else
 								{
-									Main.tile.At(i, j).SetFrameX ((short)(genRand.Next(6) * 18));
+									Main.tile.At(i, j).SetActive(true);
+									Main.tile.At(i, j).SetType((byte)type);
+									Main.tile.At(i, j).SetFrameX((short)(genRand.Next(6) * 18));
 								}
 							}
 						}
@@ -5658,18 +6385,54 @@ namespace Terraria_Server.WorldMod
 					{
 						if (j + 1 < Main.maxTilesY && Main.tile.At(i, j + 1).Active && Main.tile.At(i, j + 1).Type == 70)
 						{
-							Main.tile.At(i, j).SetActive (true);
-							Main.tile.At(i, j).SetType ((byte)type);
-							Main.tile.At(i, j).SetFrameX ((short)(genRand.Next(5) * 18));
+							Main.tile.At(i, j).SetActive(true);
+							Main.tile.At(i, j).SetType((byte)type);
+							Main.tile.At(i, j).SetFrameX((short)(genRand.Next(5) * 18));
+						}
+					}
+					else if (type == 129)
+					{
+						if (SolidTile(i - 1, j) || SolidTile(i + 1, j) || SolidTile(i, j - 1) || SolidTile(i, j + 1))
+						{
+							Main.tile.At(i, j).SetActive(true);
+							Main.tile.At(i, j).SetType((byte)type);
+							Main.tile.At(i, j).SetFrameX((short)(genRand.Next(8) * 18));
+							SquareTileFrame(i, j);
+						}
+					}
+					else if (type == 132 || type == 138 || type == 142 || type == 143)
+					{
+						Place2x2(i, j, type);
+					}
+					else if (type == 137)
+					{
+						Main.tile.At(i, j).SetActive(true);
+						Main.tile.At(i, j).SetType((byte)type);
+						if (style == 1)
+						{
+							Main.tile.At(i, j).SetFrameX(18);
+						}
+					}
+					else if (type == 136)
+					{
+						if ((Main.tile.At(i - 1, j).Active && (Main.tileSolid[(int)Main.tile.At(i - 1, j).Type] ||
+							Main.tile.At(i - 1, j).Type == 124 || (Main.tile.At(i - 1, j).Type == 5 && Main.tile.At(i - 1, j - 1).Type == 5 && Main.tile.At(i - 1, j + 1).Type == 5))) ||
+							(Main.tile.At(i + 1, j).Active && (Main.tileSolid[(int)Main.tile.At(i + 1, j).Type] || Main.tile.At(i + 1, j).Type == 124 || (
+							Main.tile.At(i + 1, j).Type == 5 && Main.tile.At(i + 1, j - 1).Type == 5 && Main.tile.At(i + 1, j + 1).Type == 5))) ||
+							(Main.tile.At(i, j + 1).Active && Main.tileSolid[(int)Main.tile.At(i, j + 1).Type]))
+						{
+							Main.tile.At(i, j).SetActive(true);
+							Main.tile.At(i, j).SetType((byte)type);
+							SquareTileFrame(i, j);
 						}
 					}
 					else if (type == 4)
 					{
 						if ((Main.tile.At(i - 1, j).Active && (Main.tileSolid[(int)Main.tile.At(i - 1, j).Type] || (Main.tile.At(i - 1, j).Type == 5 && Main.tile.At(i - 1, j - 1).Type == 5 && Main.tile.At(i - 1, j + 1).Type == 5))) || (Main.tile.At(i + 1, j).Active && (Main.tileSolid[(int)Main.tile.At(i + 1, j).Type] || (Main.tile.At(i + 1, j).Type == 5 && Main.tile.At(i + 1, j - 1).Type == 5 && Main.tile.At(i + 1, j + 1).Type == 5))) || (Main.tile.At(i, j + 1).Active && Main.tileSolid[(int)Main.tile.At(i, j + 1).Type]))
 						{
-							Main.tile.At(i, j).SetActive (true);
-							Main.tile.At(i, j).SetType ((byte)type);
-							SquareTileFrame(i, j, true);
+							Main.tile.At(i, j).SetActive(true);
+							Main.tile.At(i, j).SetType((byte)type);
+							SquareTileFrame(i, j);
 						}
 					}
 					else if (type == 10)
@@ -5677,7 +6440,7 @@ namespace Terraria_Server.WorldMod
 						if (!Main.tile.At(i, j - 1).Active && !Main.tile.At(i, j - 2).Active && Main.tile.At(i, j - 3).Active && Main.tileSolid[(int)Main.tile.At(i, j - 3).Type])
 						{
 							PlaceDoor(i, j - 1, type);
-							SquareTileFrame(i, j, true);
+							SquareTileFrame(i, j);
 						}
 						else
 						{
@@ -5686,586 +6449,1131 @@ namespace Terraria_Server.WorldMod
 								return false;
 							}
 							PlaceDoor(i, j + 1, type);
-							SquareTileFrame(i, j, true);
+							SquareTileFrame(i, j);
 						}
+					}
+					else if (type == 128)
+					{
+						PlaceMan(i, j, style);
+						SquareTileFrame(i, j);
+					}
+					else if (type == 139)
+					{
+						PlaceMB(i, j, type, style);
+						SquareTileFrame(i, j);
 					}
 					else if (type == 34 || type == 35 || type == 36 || type == 106)
 					{
 						Place3x3(i, j, type);
-						SquareTileFrame(i, j, true);
+						SquareTileFrame(i, j);
 					}
 					else if (type == 13 || type == 33 || type == 49 || type == 50 || type == 78)
 					{
-                        PlaceOnTable1x1(i, j, type, style);
-						SquareTileFrame(i, j, true);
+						PlaceOnTable1x1(i, j, type, style);
+						SquareTileFrame(i, j);
 					}
-                    else if (type == 14 || type == 26 || type == 86 || type == 87 || type == 88 || type == 89)
+					else if (type == 14 || type == 26 || type == 86 || type == 87 || type == 88 || type == 89 || type == 114)
 					{
 						Place3x2(i, j, type);
-						SquareTileFrame(i, j, true);
+						SquareTileFrame(i, j);
 					}
 					else if (type == 20)
 					{
-						if (Main.tile.At(i, j + 1).Active && Main.tile.At(i, j + 1).Type == 2)
+						if (Main.tile.At(i, j + 1).Active && (Main.tile.At(i, j + 1).Type == 2 || Main.tile.At(i, j + 1).Type == 109))
 						{
 							Place1x2(i, j, type, style);
-							SquareTileFrame(i, j, true);
+							SquareTileFrame(i, j);
 						}
 					}
 					else if (type == 15)
 					{
-                        Place1x2(i, j, type, style);
-						SquareTileFrame(i, j, true);
+						Place1x2(i, j, type, style);
+						SquareTileFrame(i, j);
 					}
-                    else if (type == 16 || type == 18 || type == 29 || type == 103)
+					else if (type == 16 || type == 18 || type == 29 || type == 103 || type == 134)
 					{
 						Place2x1(i, j, type);
-						SquareTileFrame(i, j, true);
+						SquareTileFrame(i, j);
 					}
-                    else if (type == 92 || type == 93)
-                    {
-                        Place1xX(i, j, type, 0);
-                        SquareTileFrame(i, j, true);
-                    }
-                    else if (type == 104 || type == 105)
-                    {
-                        Place2xX(i, j, type, 0);
-                        SquareTileFrame(i, j, true);
-                    }
-					else if (type == 17 || type == 77)
+					else if (type == 92 || type == 93)
+					{
+						Place1xX(i, j, type, 0);
+						SquareTileFrame(i, j);
+					}
+					else if (type == 104 || type == 105)
+					{
+						Place2xX(i, j, type, 0);
+						SquareTileFrame(i, j);
+					}
+					else if (type == 17 || type == 77 || type == 133)
 					{
 						Place3x2(i, j, type);
-						SquareTileFrame(i, j, true);
+						SquareTileFrame(i, j);
 					}
 					else if (type == 21)
 					{
 						PlaceChest(i, j, type, false, style);
-						SquareTileFrame(i, j, true);
+						SquareTileFrame(i, j);
 					}
-                    else if (type == 91)
-                    {
-                        PlaceBanner(i, j, type, style);
-                        SquareTileFrame(i, j, true);
-                    }
-                    else if (type == 101 || type == 102)
-                    {
-                        Place3x4(i, j, type);
-                        SquareTileFrame(i, j, true);
-                    }
+					else if (type == 91)
+					{
+						PlaceBanner(i, j, type, style);
+						SquareTileFrame(i, j);
+					}
+					else if (type == 135 || type == 141 || type == 144)
+					{
+						Place1x1(i, j, type, style);
+						SquareTileFrame(i, j);
+					}
+					else if (type == 101 || type == 102)
+					{
+						Place3x4(i, j, type);
+						SquareTileFrame(i, j);
+					}
 					else if (type == 27)
 					{
 						PlaceSunflower(i, j, 27);
-						SquareTileFrame(i, j, true);
+						SquareTileFrame(i, j);
 					}
 					else if (type == 28)
 					{
 						PlacePot(i, j, 28);
-						SquareTileFrame(i, j, true);
+						SquareTileFrame(i, j);
 					}
 					else if (type == 42)
 					{
 						Place1x2Top(i, j, type);
-						SquareTileFrame(i, j, true);
+						SquareTileFrame(i, j);
 					}
 					else if (type == 55 || type == 85)
 					{
 						PlaceSign(i, j, type);
-                    }
-                    else if (Main.tileAlch[type])
-                    {
-                        PlaceAlch(i, j, style);
-                    }
-                    else if (type == 94 || type == 95 || type == 96 || type == 97 || type == 98 || type == 99 || type == 100)
-                    {
-                        Place2x2(i, j, type);
-                    }
-                    else if (type == 79 || type == 90)
-                    {
-                        int direction = 1;
-                        if (plr > -1)
-                        {
-                            direction = Main.players[plr].direction;
-                        }
-                        Place4x2(i, j, type, direction);
-                    }
-                    else if (type == 81)
-                    {
-                        Main.tile.At(i, j).SetFrameX((short)(26 * genRand.Next(6)));
-                        Main.tile.At(i, j).SetActive(true);
-                        Main.tile.At(i, j).SetType((byte)type);
-                    }
-                    else
-                    {
-                        Main.tile.At(i, j).SetActive(true);
-                        Main.tile.At(i, j).SetType((byte)type);
-                    }
+					}
+					else if (Main.tileAlch[type])
+					{
+						PlaceAlch(i, j, style);
+					}
+					else if (type == 94 || type == 95 || type == 96 || type == 97 ||
+						type == 98 || type == 99 || type == 100 || type == 125 || type == 126)
+					{
+						Place2x2(i, j, type);
+					}
+					else if (type == 79 || type == 90)
+					{
+						int direction = 1;
+						if (plr > -1)
+						{
+							direction = Main.players[plr].direction;
+						}
+						Place4x2(i, j, type, direction);
+					}
+					else if (type == 81)
+					{
+						Main.tile.At(i, j).SetFrameX((short)(26 * genRand.Next(6)));
+						Main.tile.At(i, j).SetActive(true);
+						Main.tile.At(i, j).SetType((byte)type);
+					}
+					else
+					{
+						Main.tile.At(i, j).SetActive(true);
+						Main.tile.At(i, j).SetType((byte)type);
+					}
 					if (Main.tile.At(i, j).Active && !mute)
 					{
-						SquareTileFrame(i, j, true);
+						SquareTileFrame(i, j);
 						result = true;
 					}
 				}
 			}
 			return result;
 		}
-		
+
 		public static void KillWall(int i, int j, bool fail = false)
 		{
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
 			{
 				if (Main.tile.At(i, j).Wall > 0)
-                {
+				{
 					if (fail)
 					{
+						SquareWallFrame(i, j);
 						return;
 					}
+
 					int num2 = 0;
 					if (Main.tile.At(i, j).Wall == 1)
-					{
 						num2 = 26;
-					}
+
 					if (Main.tile.At(i, j).Wall == 4)
-					{
 						num2 = 93;
-					}
+
 					if (Main.tile.At(i, j).Wall == 5)
-					{
 						num2 = 130;
-					}
 					if (Main.tile.At(i, j).Wall == 6)
-					{
 						num2 = 132;
-					}
+
 					if (Main.tile.At(i, j).Wall == 7)
-					{
 						num2 = 135;
-					}
+
 					if (Main.tile.At(i, j).Wall == 8)
-					{
 						num2 = 138;
-					}
+
 					if (Main.tile.At(i, j).Wall == 9)
-					{
 						num2 = 140;
-					}
+
 					if (Main.tile.At(i, j).Wall == 10)
-					{
 						num2 = 142;
-					}
+
 					if (Main.tile.At(i, j).Wall == 11)
-					{
 						num2 = 144;
-					}
+
 					if (Main.tile.At(i, j).Wall == 12)
-					{
 						num2 = 146;
-					}
-                    if (Main.tile.At(i, j).Wall == 14)
-					{
+
+					if (Main.tile.At(i, j).Wall == 14)
 						num2 = 330;
-					}
+
 					if (Main.tile.At(i, j).Wall == 16)
-					{
 						num2 = 30;
-					}
+
 					if (Main.tile.At(i, j).Wall == 17)
-					{
 						num2 = 135;
-					}
+
 					if (Main.tile.At(i, j).Wall == 18)
-					{
 						num2 = 138;
-					}
+
 					if (Main.tile.At(i, j).Wall == 19)
-					{
 						num2 = 140;
-					}
+
 					if (Main.tile.At(i, j).Wall == 20)
-					{
 						num2 = 330;
-					}
+
+					if (Main.tile.At(i, j).Wall == 21)
+						num2 = 392;
+
+					if (Main.tile.At(i, j).Wall == 22)
+						num2 = 417;
+
+					if (Main.tile.At(i, j).Wall == 23)
+						num2 = 418;
+
+					if (Main.tile.At(i, j).Wall == 24)
+						num2 = 419;
+
+					if (Main.tile.At(i, j).Wall == 25)
+						num2 = 420;
+
+					if (Main.tile.At(i, j).Wall == 26)
+						num2 = 421;
+
+					if (Main.tile.At(i, j).Wall == 27)
+						num2 = 479;
+
 					if (num2 > 0)
-					{
-						Item.NewItem(i * 16, j * 16, 16, 16, num2, 1, false);
-					}
-					Main.tile.At(i, j).SetWall (0);
+						Item.NewItem(i * 16, j * 16, 16, 16, num2);
+
+					Main.tile.At(i, j).SetWall(0);
+					SquareWallFrame(i, j);
 				}
 			}
 		}
-		
-		public static void KillTile(int x, int y, bool fail = false, bool effectOnly = false, bool noItem = false, Player player = null)
-		{
-			if (x >= 0 && y >= 0 && x < Main.maxTilesX && y < Main.maxTilesY)
-            {
-                TileRef tile = Main.tile.At(x, y);
 
-				if (tile.Active)
+		public static void KillTile(int i, int j, bool fail = false, bool effectOnly = false, bool noItem = false)
+		{
+			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
+			{
+				if (Main.tile.At(i, j).Active)
 				{
-					if (y >= 1 && Main.tile.At(x, y - 1).Active && ((Main.tile.At(x, y - 1).Type == 5 && tile.Type != 5) || (Main.tile.At(x, y - 1).Type == 21 && tile.Type != 21) || (Main.tile.At(x, y - 1).Type == 26 && tile.Type != 26) || (Main.tile.At(x, y - 1).Type == 72 && tile.Type != 72) || (Main.tile.At(x, y - 1).Type == 12 && tile.Type != 12)) && (Main.tile.At(x, y - 1).Type != 5 || ((Main.tile.At(x, y - 1).FrameX != 66 || Main.tile.At(x, y - 1).FrameY < 0 || Main.tile.At(x, y - 1).FrameY > 44) && (Main.tile.At(x, y - 1).FrameX != 88 || Main.tile.At(x, y - 1).FrameY < 66 || Main.tile.At(x, y - 1).FrameY > 110) && Main.tile.At(x, y - 1).FrameY < 198)))
+					if (j >= 1 && Main.tile.At(i, j - 1).Active && ((Main.tile.At(i, j - 1).Type == 5 && Main.tile.At(i, j).Type != 5) ||
+						(Main.tile.At(i, j - 1).Type == 21 && Main.tile.At(i, j).Type != 21) || (Main.tile.At(i, j - 1).Type == 26 &&
+						Main.tile.At(i, j).Type != 26) || (Main.tile.At(i, j - 1).Type == 72 && Main.tile.At(i, j).Type != 72) ||
+						(Main.tile.At(i, j - 1).Type == 12 && Main.tile.At(i, j).Type != 12)) && (Main.tile.At(i, j - 1).Type != 5 ||
+						((Main.tile.At(i, j - 1).FrameX != 66 || Main.tile.At(i, j - 1).FrameY < 0 || Main.tile.At(i, j - 1).FrameY > 44) &&
+							(Main.tile.At(i, j - 1).FrameX != 88 || Main.tile.At(i, j - 1).FrameY < 66 || Main.tile.At(i, j - 1).FrameY > 110) &&
+								Main.tile.At(i, j - 1).FrameY < 198)))
 					{
 						return;
 					}
 					if (!effectOnly && !stopDrops)
 					{
-						if (tile.Type == 3)
+						if (Main.tile.At(i, j).Type == 3 || Main.tile.At(i, j).Type == 110)
 						{
-							if (tile.FrameX == 144)
+							if (Main.tile.At(i, j).FrameX == 144)
 							{
-								Item.NewItem(x * 16, y * 16, 16, 16, 5, 1, false);
+								Item.NewItem(i * 16, j * 16, 16, 16, 5);
 							}
 						}
-						else if (tile.Type == 24)
+						else
 						{
-							if (tile.FrameX == 144)
+							if (Main.tile.At(i, j).Type == 24)
 							{
-								Item.NewItem(x * 16, y * 16, 16, 16, 60, 1, false);
+								if (Main.tile.At(i, j).FrameX == 144)
+								{
+									Item.NewItem(i * 16, j * 16, 16, 16, 60);
+								}
 							}
 						}
-                    }
+					}
+					int num = 10;
+					if (Main.tile.At(i, j).Type == 128)
+					{
+						int num2 = i;
+						int k = (int)Main.tile.At(i, j).FrameX;
+						int l;
+						for (l = (int)Main.tile.At(i, j).FrameX; l >= 100; l -= 100)
+						{
+						}
+						while (l >= 36)
+						{
+							l -= 36;
+						}
+						if (l == 18)
+						{
+							k = (int)Main.tile.At(i - 1, j).FrameX;
+							num2--;
+						}
+						if (k >= 100)
+						{
+							int num3 = 0;
+							while (k >= 100)
+							{
+								k -= 100;
+								num3++;
+							}
+							int num4 = (int)(Main.tile.At(num2, j).FrameY / 18);
+							if (num4 == 0)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, Item.headType[num3], 1, false, 0);
+							}
+							if (num4 == 1)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, Item.bodyType[num3], 1, false, 0);
+							}
+							if (num4 == 2)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, Item.legType[num3], 1, false, 0);
+							}
+							for (k = (int)Main.tile.At(num2, j).FrameX; k >= 100; k -= 100)
+							{
+							}
+							Main.tile.At(num2, j).SetFrameX((short)k);
+						}
+					}
+					if (fail)
+					{
+						num = 3;
+					}
+					if (Main.tile.At(i, j).Type == 138)
+					{
+						num = 0;
+					}
+					for (int m = 0; m < num; m++)
+					{
+						int num5 = 0;
+						if (Main.tile.At(i, j).Type == 0)
+						{
+							num5 = 0;
+						}
+						if (Main.tile.At(i, j).Type == 1 || Main.tile.At(i, j).Type == 16 || Main.tile.At(i, j).Type == 17 || Main.tile.At(i, j).Type == 38 || Main.tile.At(i, j).Type == 39 || Main.tile.At(i, j).Type == 41 || Main.tile.At(i, j).Type == 43 || Main.tile.At(i, j).Type == 44 || Main.tile.At(i, j).Type == 48 || Main.tileStone[(int)Main.tile.At(i, j).Type] || Main.tile.At(i, j).Type == 85 || Main.tile.At(i, j).Type == 90 || Main.tile.At(i, j).Type == 92 || Main.tile.At(i, j).Type == 96 || Main.tile.At(i, j).Type == 97 || Main.tile.At(i, j).Type == 99 || Main.tile.At(i, j).Type == 105 || Main.tile.At(i, j).Type == 117 || Main.tile.At(i, j).Type == 130 || Main.tile.At(i, j).Type == 131 || Main.tile.At(i, j).Type == 132 || Main.tile.At(i, j).Type == 135 || Main.tile.At(i, j).Type == 135 || Main.tile.At(i, j).Type == 137 || Main.tile.At(i, j).Type == 142 || Main.tile.At(i, j).Type == 143 || Main.tile.At(i, j).Type == 144)
+						{
+							num5 = 1;
+						}
+						if (Main.tile.At(i, j).Type == 33 || Main.tile.At(i, j).Type == 95 || Main.tile.At(i, j).Type == 98 || Main.tile.At(i, j).Type == 100)
+						{
+							num5 = 6;
+						}
+						if (Main.tile.At(i, j).Type == 5 || Main.tile.At(i, j).Type == 10 || Main.tile.At(i, j).Type == 11 || Main.tile.At(i, j).Type == 14 || Main.tile.At(i, j).Type == 15 || Main.tile.At(i, j).Type == 19 || Main.tile.At(i, j).Type == 30 || Main.tile.At(i, j).Type == 86 || Main.tile.At(i, j).Type == 87 || Main.tile.At(i, j).Type == 88 || Main.tile.At(i, j).Type == 89 || Main.tile.At(i, j).Type == 93 || Main.tile.At(i, j).Type == 94 || Main.tile.At(i, j).Type == 104 || Main.tile.At(i, j).Type == 106 || Main.tile.At(i, j).Type == 114 || Main.tile.At(i, j).Type == 124 || Main.tile.At(i, j).Type == 128 || Main.tile.At(i, j).Type == 139)
+						{
+							num5 = 7;
+						}
+						if (Main.tile.At(i, j).Type == 21)
+						{
+							if (Main.tile.At(i, j).FrameX >= 108)
+							{
+								num5 = 37;
+							}
+							else if (Main.tile.At(i, j).FrameX >= 36)
+							{
+								num5 = 10;
+							}
+							else
+							{
+								num5 = 7;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 2)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 0;
+							}
+							else
+							{
+								num5 = 2;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 127)
+						{
+							num5 = 67;
+						}
+						if (Main.tile.At(i, j).Type == 91)
+						{
+							num5 = -1;
+						}
+						if (Main.tile.At(i, j).Type == 6 || Main.tile.At(i, j).Type == 26)
+						{
+							num5 = 8;
+						}
+						if (Main.tile.At(i, j).Type == 7 || Main.tile.At(i, j).Type == 34 || Main.tile.At(i, j).Type == 47)
+						{
+							num5 = 9;
+						}
+						if (Main.tile.At(i, j).Type == 8 || Main.tile.At(i, j).Type == 36 || Main.tile.At(i, j).Type == 45 || Main.tile.At(i, j).Type == 102)
+						{
+							num5 = 10;
+						}
+						if (Main.tile.At(i, j).Type == 9 || Main.tile.At(i, j).Type == 35 || Main.tile.At(i, j).Type == 42 || Main.tile.At(i, j).Type == 46 || Main.tile.At(i, j).Type == 126 || Main.tile.At(i, j).Type == 136)
+						{
+							num5 = 11;
+						}
+						if (Main.tile.At(i, j).Type == 12)
+						{
+							num5 = 12;
+						}
+						if (Main.tile.At(i, j).Type == 3 || Main.tile.At(i, j).Type == 73)
+						{
+							num5 = 3;
+						}
+						if (Main.tile.At(i, j).Type == 13 || Main.tile.At(i, j).Type == 54)
+						{
+							num5 = 13;
+						}
+						if (Main.tile.At(i, j).Type == 22 || Main.tile.At(i, j).Type == 140)
+						{
+							num5 = 14;
+						}
+						if (Main.tile.At(i, j).Type == 28 || Main.tile.At(i, j).Type == 78)
+						{
+							num5 = 22;
+						}
+						if (Main.tile.At(i, j).Type == 29)
+						{
+							num5 = 23;
+						}
+						if (Main.tile.At(i, j).Type == 40 || Main.tile.At(i, j).Type == 103)
+						{
+							num5 = 28;
+						}
+						if (Main.tile.At(i, j).Type == 49)
+						{
+							num5 = 29;
+						}
+						if (Main.tile.At(i, j).Type == 50)
+						{
+							num5 = 22;
+						}
+						if (Main.tile.At(i, j).Type == 51)
+						{
+							num5 = 30;
+						}
+						if (Main.tile.At(i, j).Type == 52)
+						{
+							num5 = 3;
+						}
+						if (Main.tile.At(i, j).Type == 53 || Main.tile.At(i, j).Type == 81)
+						{
+							num5 = 32;
+						}
+						if (Main.tile.At(i, j).Type == 56 || Main.tile.At(i, j).Type == 75)
+						{
+							num5 = 37;
+						}
+						if (Main.tile.At(i, j).Type == 57 || Main.tile.At(i, j).Type == 119 || Main.tile.At(i, j).Type == 141)
+						{
+							num5 = 36;
+						}
+						if (Main.tile.At(i, j).Type == 59 || Main.tile.At(i, j).Type == 120)
+						{
+							num5 = 38;
+						}
+						if (Main.tile.At(i, j).Type == 61 || Main.tile.At(i, j).Type == 62 || Main.tile.At(i, j).Type == 74 || Main.tile.At(i, j).Type == 80)
+						{
+							num5 = 40;
+						}
+						if (Main.tile.At(i, j).Type == 69)
+						{
+							num5 = 7;
+						}
+						if (Main.tile.At(i, j).Type == 71 || Main.tile.At(i, j).Type == 72)
+						{
+							num5 = 26;
+						}
+						if (Main.tile.At(i, j).Type == 70)
+						{
+							num5 = 17;
+						}
+						if (Main.tile.At(i, j).Type == 112)
+						{
+							num5 = 14;
+						}
+						if (Main.tile.At(i, j).Type == 123)
+						{
+							num5 = 53;
+						}
+						if (Main.tile.At(i, j).Type == 116 || Main.tile.At(i, j).Type == 118)
+						{
+							num5 = 51;
+						}
+						if (Main.tile.At(i, j).Type == 109)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 0;
+							}
+							else
+							{
+								num5 = 47;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 110 || Main.tile.At(i, j).Type == 113 || Main.tile.At(i, j).Type == 115)
+						{
+							num5 = 47;
+						}
+						if (Main.tile.At(i, j).Type == 107 || Main.tile.At(i, j).Type == 121)
+						{
+							num5 = 48;
+						}
+						if (Main.tile.At(i, j).Type == 108 || Main.tile.At(i, j).Type == 122 || Main.tile.At(i, j).Type == 134)
+						{
+							num5 = 49;
+						}
+						if (Main.tile.At(i, j).Type == 111 || Main.tile.At(i, j).Type == 133)
+						{
+							num5 = 50;
+						}
+						if (Main.tileAlch[(int)Main.tile.At(i, j).Type])
+						{
+							int num6 = (int)(Main.tile.At(i, j).FrameX / 18);
+							if (num6 == 0)
+							{
+								num5 = 3;
+							}
+							if (num6 == 1)
+							{
+								num5 = 3;
+							}
+							if (num6 == 2)
+							{
+								num5 = 7;
+							}
+							if (num6 == 3)
+							{
+								num5 = 17;
+							}
+							if (num6 == 4)
+							{
+								num5 = 3;
+							}
+							if (num6 == 5)
+							{
+								num5 = 6;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 61)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 38;
+							}
+							else
+							{
+								num5 = 39;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 58 || Main.tile.At(i, j).Type == 76 || Main.tile.At(i, j).Type == 77)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 6;
+							}
+							else
+							{
+								num5 = 25;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 37)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 6;
+							}
+							else
+							{
+								num5 = 23;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 32)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 14;
+							}
+							else
+							{
+								num5 = 24;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 23 || Main.tile.At(i, j).Type == 24)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 14;
+							}
+							else
+							{
+								num5 = 17;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 25 || Main.tile.At(i, j).Type == 31)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 14;
+							}
+							else
+							{
+								num5 = 1;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 20)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 7;
+							}
+							else
+							{
+								num5 = 2;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 27)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 3;
+							}
+							else
+							{
+								num5 = 19;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 129)
+						{
+							if (Main.tile.At(i, j).FrameX == 0 || Main.tile.At(i, j).FrameX == 54 || Main.tile.At(i, j).FrameX == 108)
+							{
+								num5 = 68;
+							}
+							else if (Main.tile.At(i, j).FrameX == 18 || Main.tile.At(i, j).FrameX == 72 || Main.tile.At(i, j).FrameX == 126)
+							{
+								num5 = 69;
+							}
+							else
+							{
+								num5 = 70;
+							}
+						}
+						if (Main.tile.At(i, j).Type == 4)
+						{
+							int num7 = (int)(Main.tile.At(i, j).FrameY / 22);
+							if (num7 == 0)
+							{
+								num5 = 6;
+							}
+							else if (num7 == 8)
+							{
+								num5 = 75;
+							}
+							else
+							{
+								num5 = 58 + num7;
+							}
+						}
+						if ((Main.tile.At(i, j).Type == 34 || Main.tile.At(i, j).Type == 35 || Main.tile.At(i, j).Type == 36 || Main.tile.At(i, j).Type == 42) && Main.rand.Next(2) == 0)
+						{
+							num5 = 6;
+						}
+					}
 					if (effectOnly)
 					{
 						return;
 					}
 					if (fail)
 					{
-						if (tile.Type == 2 || tile.Type == 23)
+						if (Main.tile.At(i, j).Type == 2 || Main.tile.At(i, j).Type == 23 || Main.tile.At(i, j).Type == 109)
 						{
-							tile.SetType (0);
+							Main.tile.At(i, j).SetType(0);
 						}
-						if (tile.Type == 60 || tile.Type == 70)
+						if (Main.tile.At(i, j).Type == 60 || Main.tile.At(i, j).Type == 70)
 						{
-							tile.SetType (59);
+							Main.tile.At(i, j).SetType(59);
 						}
-						SquareTileFrame(x, y, true);
+						SquareTileFrame(i, j, true);
 						return;
 					}
-					if (tile.Type == 21)
+					if (Main.tile.At(i, j).Type == 21)
 					{
-						int l = (int)(tile.FrameX / 18);
-						int chestY = y - (int)(tile.FrameY / 18);
-						while (l > 1)
+						int n = (int)(Main.tile.At(i, j).FrameX / 18);
+						int y = j - (int)(Main.tile.At(i, j).FrameY / 18);
+						while (n > 1)
 						{
-							l -= 2;
+							n -= 2;
 						}
-						l = x - l;
-                        if (!Chest.DestroyChest(l, chestY))
+						n = i - n;
+						if (!Chest.DestroyChest(n, y))
 						{
 							return;
 						}
 					}
 					if (!noItem && !stopDrops)
 					{
-						int dropItem = 0;
-						if (tile.Type == 0 || tile.Type == 2)
+						int num8 = 0;
+						if (Main.tile.At(i, j).Type == 0 || Main.tile.At(i, j).Type == 2 || Main.tile.At(i, j).Type == 109)
 						{
-							dropItem = 2;
+							num8 = 2;
 						}
-						else if (tile.Type == 1)
-				        {
-					        dropItem = 3;
-				        }
-				        else if (tile.Type == 3 || tile.Type == 73)
+						else if (Main.tile.At(i, j).Type == 1)
 						{
-							if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(new Vector2((float)(x * 16), (float)(y * 16)), 16, 16)].HasItem(281))
+							num8 = 3;
+						}
+						else if (Main.tile.At(i, j).Type == 3 || Main.tile.At(i, j).Type == 73)
+						{
+							if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].HasItem(281))
 							{
-								dropItem = 283;
+								num8 = 283;
 							}
 						}
-						else if (tile.Type == 4)
+						else if (Main.tile.At(i, j).Type == 4)
 						{
-							dropItem = 8;
+							int num9 = (int)(Main.tile.At(i, j).FrameY / 22);
+							if (num9 == 0)
+							{
+								num8 = 8;
+							}
+							else if (num9 == 8)
+							{
+								num8 = 523;
+							}
+							else
+							{
+								num8 = 426 + num9;
+							}
 						}
-						else if (tile.Type == 5)
+						else if (Main.tile.At(i, j).Type == 5)
 						{
-							if (tile.FrameX >= 22 && tile.FrameY >= 198)
+							if (Main.tile.At(i, j).FrameX >= 22 && Main.tile.At(i, j).FrameY >= 198)
 							{
 								if (genRand.Next(2) == 0)
 								{
-									int num5 = y;
-									while ((!Main.tile.At(x, num5).Active || !Main.tileSolid[(int)Main.tile.At(x, num5).Type] || Main.tileSolidTop[(int)Main.tile.At(x, num5).Type]))
+									int num10 = j;
+									while ((!Main.tile.At(i, num10).Active || !Main.tileSolid[(int)Main.tile.At(i, num10).Type] ||
+										Main.tileSolidTop[(int)Main.tile.At(i, num10).Type]))
 									{
-										num5++;
+										num10++;
 									}
-									if (Main.tile.At(x, num5).Type == 2)
+									if (Main.tile.At(i, num10).Type == 2 || Main.tile.At(i, num10).Type == 109)
 									{
-										dropItem = 27;
+										num8 = 27;
 									}
 									else
 									{
-										dropItem = 9;
+										num8 = 9;
 									}
 								}
 								else
 								{
-									dropItem = 9;
+									num8 = 9;
 								}
 							}
 							else
 							{
-								dropItem = 9;
+								num8 = 9;
 							}
 						}
-						else if (tile.Type == 6)
+						else if (Main.tile.At(i, j).Type == 6)
 						{
-							dropItem = 11;
+							num8 = 11;
 						}
-						else if (tile.Type == 7)
+						else if (Main.tile.At(i, j).Type == 7)
 						{
-							dropItem = 12;
+							num8 = 12;
 						}
-						else if (tile.Type == 8)
+						else if (Main.tile.At(i, j).Type == 8)
 						{
-							dropItem = 13;
+							num8 = 13;
 						}
-						else if (tile.Type == 9)
+						else if (Main.tile.At(i, j).Type == 9)
 						{
-							dropItem = 14;
+							num8 = 14;
 						}
-						else if (tile.Type == 13)
+						else if (Main.tile.At(i, j).Type == 123)
 						{
-						    if (tile.FrameX == 18)
-						    {
-							    dropItem = 28;
-						    }
-						    else if (tile.FrameX == 36)
+							num8 = 424;
+						}
+						else if (Main.tile.At(i, j).Type == 124)
+						{
+							num8 = 480;
+						}
+						else if (Main.tile.At(i, j).Type == 13)
+						{
+							if (Main.tile.At(i, j).FrameX == 18)
 							{
-								dropItem = 110;
+								num8 = 28;
 							}
-							else if (tile.FrameX == 54)
-						    {
-							    dropItem = 350;
-						    }
-                            else if (Main.tile.At(x, y).FrameX == 72)
+							else if (Main.tile.At(i, j).FrameX == 36)
 							{
-								dropItem = 351;
+								num8 = 110;
+							}
+							else if (Main.tile.At(i, j).FrameX == 54)
+							{
+								num8 = 350;
+							}
+							else if (Main.tile.At(i, j).FrameX == 72)
+							{
+								num8 = 351;
 							}
 							else
 							{
-								dropItem = 31;
+								num8 = 31;
 							}
-					    }
-					    else if (tile.Type == 19)
-						{
-							dropItem = 94;
 						}
-						else if (tile.Type == 22)
+						else if (Main.tile.At(i, j).Type == 19)
 						{
-							dropItem = 56;
+							num8 = 94;
 						}
-						else if (tile.Type == 23)
+						else if (Main.tile.At(i, j).Type == 22)
 						{
-							dropItem = 2;
+							num8 = 56;
 						}
-						else if (tile.Type == 25)
+						else if (Main.tile.At(i, j).Type == 140)
 						{
-							dropItem = 61;
+							num8 = 577;
 						}
-						else if (tile.Type == 30)
+						else if (Main.tile.At(i, j).Type == 23)
 						{
-							dropItem = 9;
+							num8 = 2;
 						}
-						else if (tile.Type == 33)
+						else if (Main.tile.At(i, j).Type == 25)
 						{
-							dropItem = 105;
+							num8 = 61;
 						}
-						else if (tile.Type == 37)
+						else if (Main.tile.At(i, j).Type == 30)
 						{
-							dropItem = 116;
+							num8 = 9;
 						}
-						else if (tile.Type == 38)
+						else if (Main.tile.At(i, j).Type == 33)
 						{
-							dropItem = 129;
+							num8 = 105;
 						}
-						else if (tile.Type == 39)
-				        {
-					        dropItem = 131;
-				        }
-				        else if (tile.Type == 40)
+						else if (Main.tile.At(i, j).Type == 37)
 						{
-							dropItem = 133;
+							num8 = 116;
 						}
-						else if (tile.Type == 41)
+						else if (Main.tile.At(i, j).Type == 38)
 						{
-							dropItem = 134;
+							num8 = 129;
 						}
-						else if (tile.Type == 43)
-					    {
-						    dropItem = 137;
-					    }
-					    else if (tile.Type == 44)
+						else if (Main.tile.At(i, j).Type == 39)
 						{
-							dropItem = 139;
+							num8 = 131;
 						}
-						else if (tile.Type == 45)
+						else if (Main.tile.At(i, j).Type == 40)
 						{
-							dropItem = 141;
+							num8 = 133;
 						}
-						else if (tile.Type == 46)
+						else if (Main.tile.At(i, j).Type == 41)
 						{
-							dropItem = 143;
+							num8 = 134;
 						}
-						else if (tile.Type == 47)
+						else if (Main.tile.At(i, j).Type == 43)
 						{
-							dropItem = 145;
+							num8 = 137;
 						}
-						else if (tile.Type == 48)
+						else if (Main.tile.At(i, j).Type == 44)
 						{
-							dropItem = 147;
+							num8 = 139;
 						}
-						else if (tile.Type == 49)
+						else if (Main.tile.At(i, j).Type == 45)
 						{
-							dropItem = 148;
+							num8 = 141;
 						}
-						else if (tile.Type == 51)
+						else if (Main.tile.At(i, j).Type == 46)
 						{
-							dropItem = 150;
+							num8 = 143;
 						}
-						else if (tile.Type == 53)
+						else if (Main.tile.At(i, j).Type == 47)
 						{
-							dropItem = 169;
+							num8 = 145;
 						}
-						else if (tile.Type != 54)
+						else if (Main.tile.At(i, j).Type == 48)
 						{
-							if (tile.Type == 56)
+							num8 = 147;
+						}
+						else if (Main.tile.At(i, j).Type == 49)
+						{
+							num8 = 148;
+						}
+						else if (Main.tile.At(i, j).Type == 51)
+						{
+							num8 = 150;
+						}
+						else if (Main.tile.At(i, j).Type == 53)
+						{
+							num8 = 169;
+						}
+						else if (Main.tile.At(i, j).Type == 54)
+						{
+							num8 = 170;
+						}
+						else if (Main.tile.At(i, j).Type == 56)
+						{
+							num8 = 173;
+						}
+						else if (Main.tile.At(i, j).Type == 57)
+						{
+							num8 = 172;
+						}
+						else if (Main.tile.At(i, j).Type == 58)
+						{
+							num8 = 174;
+						}
+						else if (Main.tile.At(i, j).Type == 60)
+						{
+							num8 = 176;
+						}
+						else if (Main.tile.At(i, j).Type == 70)
+						{
+							num8 = 176;
+						}
+						else if (Main.tile.At(i, j).Type == 75)
+						{
+							num8 = 192;
+						}
+						else if (Main.tile.At(i, j).Type == 76)
+						{
+							num8 = 214;
+						}
+						else if (Main.tile.At(i, j).Type == 78)
+						{
+							num8 = 222;
+						}
+						else if (Main.tile.At(i, j).Type == 81)
+						{
+							num8 = 275;
+						}
+						else if (Main.tile.At(i, j).Type == 80)
+						{
+							num8 = 276;
+						}
+						else if (Main.tile.At(i, j).Type == 107)
+						{
+							num8 = 364;
+						}
+						else if (Main.tile.At(i, j).Type == 108)
+						{
+							num8 = 365;
+						}
+						else if (Main.tile.At(i, j).Type == 111)
+						{
+							num8 = 366;
+						}
+						else if (Main.tile.At(i, j).Type == 112)
+						{
+							num8 = 370;
+						}
+						else if (Main.tile.At(i, j).Type == 116)
+						{
+							num8 = 408;
+						}
+						else if (Main.tile.At(i, j).Type == 117)
+						{
+							num8 = 409;
+						}
+						else if (Main.tile.At(i, j).Type == 129)
+						{
+							num8 = 502;
+						}
+						else if (Main.tile.At(i, j).Type == 118)
+						{
+							num8 = 412;
+						}
+						else if (Main.tile.At(i, j).Type == 119)
+						{
+							num8 = 413;
+						}
+						else if (Main.tile.At(i, j).Type == 120)
+						{
+							num8 = 414;
+						}
+						else if (Main.tile.At(i, j).Type == 121)
+						{
+							num8 = 415;
+						}
+						else if (Main.tile.At(i, j).Type == 122)
+						{
+							num8 = 416;
+						}
+						else if (Main.tile.At(i, j).Type == 136)
+						{
+							num8 = 538;
+						}
+						else if (Main.tile.At(i, j).Type == 137)
+						{
+							num8 = 539;
+						}
+						else if (Main.tile.At(i, j).Type == 141)
+						{
+							num8 = 580;
+						}
+						else if (Main.tile.At(i, j).Type == 135)
+						{
+							if (Main.tile.At(i, j).FrameY == 0)
 							{
-								dropItem = 173;
+								num8 = 529;
 							}
-							else if (tile.Type == 57)
+							if (Main.tile.At(i, j).FrameY == 18)
 							{
-								dropItem = 172;
+								num8 = 541;
 							}
-							else if (tile.Type == 58)
+							if (Main.tile.At(i, j).FrameY == 36)
 							{
-								dropItem = 174;
+								num8 = 542;
 							}
-							else if (tile.Type == 60)
+							if (Main.tile.At(i, j).FrameY == 54)
 							{
-								dropItem = 176;
+								num8 = 543;
 							}
-							else if (tile.Type == 70)
+						}
+						else if (Main.tile.At(i, j).Type == 144)
+						{
+							if (Main.tile.At(i, j).FrameX == 0)
 							{
-								dropItem = 176;
+								num8 = 583;
 							}
-							else if (tile.Type == 75)
+							if (Main.tile.At(i, j).FrameX == 18)
 							{
-								dropItem = 192;
+								num8 = 584;
 							}
-							else if (tile.Type == 76)
+							if (Main.tile.At(i, j).FrameX == 36)
 							{
-								dropItem = 214;
+								num8 = 585;
 							}
-							else if (tile.Type == 78)
+						}
+						else if (Main.tile.At(i, j).Type == 130)
+						{
+							num8 = 511;
+						}
+						else if (Main.tile.At(i, j).Type == 131)
+						{
+							num8 = 512;
+						}
+						else if (Main.tile.At(i, j).Type == 61 || Main.tile.At(i, j).Type == 74)
+						{
+							if (Main.tile.At(i, j).FrameX == 144)
 							{
-								dropItem = 222;
+								Item.NewItem(i * 16, j * 16, 16, 16, 331, genRand.Next(2, 4), false, 0);
 							}
-							else if (tile.Type == 81)
+							else
 							{
-								dropItem = 275;
-							}
-							else if (tile.Type == 80)
-							{
-								dropItem = 276;
-							}
-							else if (tile.Type == 61 || tile.Type == 74)
-							{
-                                if (tile.FrameX == 144)
-                                {
-                                    Item.NewItem(x * 16, y * 16, 16, 16, 331, genRand.Next(1, 3), false);
-                                }
-                                if (tile.FrameX == 162)
+								if (Main.tile.At(i, j).FrameX == 162)
 								{
-									dropItem = 223;
+									num8 = 223;
 								}
-                                else if (tile.FrameX >= 108 && tile.FrameX <= 126 && genRand.Next(100) == 0)
-						        {
-							        dropItem = 208;
-						        }
-						        else if (genRand.Next(100) == 0)
+								else if (Main.tile.At(i, j).FrameX >= 108 && Main.tile.At(i, j).FrameX <= 126 && genRand.Next(100) == 0)
 								{
-									dropItem = 195;
+									num8 = 208;
 								}
-							}
-							else if (tile.Type == 59 || tile.Type == 60)
-						    {
-							    dropItem = 176;
-						    }
-						    else if (tile.Type == 71 || tile.Type == 72)
-							{
-								if (genRand.Next(50) == 0)
+								else if (genRand.Next(100) == 0)
 								{
-									dropItem = 194;
-								}
-								else if (genRand.Next(2) == 0)
-								{
-									dropItem = 183;
-								}
-							}
-							else if (tile.Type >= 63 && tile.Type <= 68)
-							{
-								dropItem = (int)(tile.Type - 63 + 177);
-							}
-							else if (tile.Type == 50)
-							{
-								if (tile.FrameX == 90)
-								{
-									dropItem = 165;
-								}
-								else
-								{
-									dropItem = 149;
-								}
-							}
-							else if (Main.tileAlch[(int)tile.Type] && tile.Type > 82)
-							{
-								int num6 = (int)(tile.FrameX / 18);
-								bool flag = false;
-								if (tile.Type == 84)
-								{
-									flag = true;
-								}
-								if (num6 == 0 && Main.dayTime)
-								{
-									flag = true;
-								}
-								if (num6 == 1 && !Main.dayTime)
-								{
-									flag = true;
-								}
-								if (num6 == 3 && Main.bloodMoon)
-								{
-									flag = true;
-								}
-								dropItem = 313 + num6;
-								if (flag)
-								{
-									Item.NewItem(x * 16, y * 16, 16, 16, 307 + num6, genRand.Next(1, 4), false);
+									num8 = 195;
 								}
 							}
 						}
-						if (dropItem > 0)
+						else if (Main.tile.At(i, j).Type == 59 || Main.tile.At(i, j).Type == 60)
 						{
-							Item.NewItem(x * 16, y * 16, 16, 16, dropItem, 1, false);
+							num8 = 176;
+						}
+						else if (Main.tile.At(i, j).Type == 71 || Main.tile.At(i, j).Type == 72)
+						{
+							if (genRand.Next(50) == 0)
+							{
+								num8 = 194;
+							}
+							else if (genRand.Next(2) == 0)
+							{
+								num8 = 183;
+							}
+						}
+						else if (Main.tile.At(i, j).Type >= 63 && Main.tile.At(i, j).Type <= 68)
+						{
+							num8 = (int)(Main.tile.At(i, j).Type - 63 + 177);
+						}
+						else if (Main.tile.At(i, j).Type == 50)
+						{
+							if (Main.tile.At(i, j).FrameX == 90)
+							{
+								num8 = 165;
+							}
+							else
+							{
+								num8 = 149;
+							}
+						}
+						else if (Main.tileAlch[(int)Main.tile.At(i, j).Type] && Main.tile.At(i, j).Type > 82)
+						{
+							int num11 = (int)(Main.tile.At(i, j).FrameX / 18);
+							bool flag = false;
+							if (Main.tile.At(i, j).Type == 84)
+							{
+								flag = true;
+							}
+							if (num11 == 0 && Main.dayTime)
+							{
+								flag = true;
+							}
+							if (num11 == 1 && !Main.dayTime)
+							{
+								flag = true;
+							}
+							if (num11 == 3 && Main.bloodMoon)
+							{
+								flag = true;
+							}
+							num8 = 313 + num11;
+							if (flag)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, 307 + num11, genRand.Next(1, 4), false, 0);
+							}
+						}
+						if (num8 > 0)
+						{
+							Item.NewItem(i * 16, j * 16, 16, 16, num8, 1, false, -1);
 						}
 					}
-					tile.SetActive (false);
-					if (Main.tileSolid[(int)tile.Type])
+					Main.tile.At(i, j).SetActive(false);
+					Main.tile.At(i, j).SetFrameX(-1);
+					Main.tile.At(i, j).SetFrameY(-1);
+					Main.tile.At(i, j).SetFrameNumber(0);
+					if (Main.tile.At(i, j).Type == 58 && j > Main.maxTilesY - 200)
 					{
-						tile.SetLighted (false);
+						Main.tile.At(i, j).SetLava(true);
+						Main.tile.At(i, j).SetLiquid(128);
 					}
-					tile.SetFrameX (-1);
-					tile.SetFrameY (-1);
-					tile.SetFrameNumber (0);
-                    if (tile.Type == 58 && y > Main.maxTilesY - 200)
-                    {
-                        tile.SetLava(true);
-                        tile.SetLiquid(128);
-                    }
-					tile.SetType (0);
-					SquareTileFrame(x, y, true);
+					Main.tile.At(i, j).SetType(0);
+					SquareTileFrame(i, j, true);
 				}
 			}
 		}
-		
+
 		public static bool PlayerLOS(int x, int y)
 		{
 			Rectangle rectangle = new Rectangle(x * 16, y * 16, 16, 16);
@@ -6273,7 +7581,9 @@ namespace Terraria_Server.WorldMod
 			{
 				if (Main.players[i].Active)
 				{
-					Rectangle value = new Rectangle((int)((double)Main.players[i].Position.X + (double)Main.players[i].Width * 0.5 - (double)NPC.sWidth * 0.6), (int)((double)Main.players[i].Position.Y + (double)Main.players[i].Height * 0.5 - (double)NPC.sHeight * 0.6), (int)((double)NPC.sWidth * 1.2), (int)((double)NPC.sHeight * 1.2));
+					Rectangle value = new Rectangle((int)((double)Main.players[i].Position.X + (double)Main.players[i].Width * 0.5 - (double)NPC.sWidth * 0.6),
+						(int)((double)Main.players[i].Position.Y + (double)Main.players[i].Height * 0.5 - (double)NPC.sHeight * 0.6), (int)((double)NPC.sWidth * 1.2),
+						(int)((double)NPC.sHeight * 1.2));
 					if (rectangle.Intersects(value))
 					{
 						return true;
@@ -6282,7 +7592,7 @@ namespace Terraria_Server.WorldMod
 			}
 			return false;
 		}
-		
+
 		public static void UpdateWorld(ISender Sender)
 		{
 			UpdateMech(Sender);
@@ -6292,7 +7602,7 @@ namespace Terraria_Server.WorldMod
 				bool buffer = false;
 				if (Program.properties.BufferLiquidUpdates)
 					NetMessage.UseLiquidUpdateBuffer = buffer = true;
-				
+
 				try
 				{
 					Liquid.UpdateLiquid();
@@ -6302,7 +7612,7 @@ namespace Terraria_Server.WorldMod
 					if (buffer)
 					{
 						NetMessage.UseLiquidUpdateBuffer = false;
-						LiquidUpdateBuffer.FlushQueue ();
+						LiquidUpdateBuffer.FlushQueue();
 					}
 				}
 				Liquid.skipCount = 0;
@@ -6323,7 +7633,7 @@ namespace Terraria_Server.WorldMod
 				{
 					for (int i = 0; i < NPC.MAX_NPCS; i++)
 					{
-                        if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].townNPC)
+						if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].townNPC)
 						{
 							spawnNPC = Main.npcs[i].Type;
 							break;
@@ -6338,17 +7648,17 @@ namespace Terraria_Server.WorldMod
 				genRand = new Random();
 			}
 
-            TileRef Tile;
-            TileRef Tile2;
+			TileRef Tile;
+			TileRef Tile2;
 			while ((float)num3 < (float)(Main.maxTilesX * Main.maxTilesY) * num)
 			{
 				int TileX = genRand.Next(10, Main.maxTilesX - 10);
 				int TileY = genRand.Next(10, (int)Main.worldSurface - 1);
-                Tile = Main.tile.At(TileX, TileY);
-                int num6 = TileX - 1;
-                int num7 = TileX + 2;
-                int rTileY = TileY - 1;
-                int num9 = TileY + 2;
+				Tile = Main.tile.At(TileX, TileY);
+				int num6 = TileX - 1;
+				int num7 = TileX + 2;
+				int rTileY = TileY - 1;
+				int num9 = TileY + 2;
 				if (num6 < 10)
 				{
 					num6 = 10;
@@ -6366,20 +7676,20 @@ namespace Terraria_Server.WorldMod
 					num9 = Main.maxTilesY - 10;
 				}
 
-                Tile2 = Main.tile.At(TileX, rTileY);
+				Tile2 = Main.tile.At(TileX, rTileY);
 
 				if (true)
 				{
 					if (Main.tileAlch[(int)Tile.Type])
 					{
-                        GrowAlch(TileX, TileY);
+						GrowAlch(TileX, TileY);
 					}
 					if (Tile.Liquid > 32)
 					{
 						if (Tile.Active && (Tile.Type == 3 || Tile.Type == 20 || Tile.Type == 24 || Tile.Type == 27 || Tile.Type == 73))
 						{
-                            KillTile(TileX, TileY, false, false, false);
-                            NetMessage.SendData(17, -1, -1, "", 0, (float)TileX, (float)TileY);
+							KillTile(TileX, TileY, false, false, false);
+							NetMessage.SendData(17, -1, -1, "", 0, (float)TileX, (float)TileY);
 						}
 					}
 					else if (Tile.Active)
@@ -6388,14 +7698,14 @@ namespace Terraria_Server.WorldMod
 						{
 							if (genRand.Next(15) == 0)
 							{
-                                GrowCactus(TileX, TileY);
+								GrowCactus(TileX, TileY);
 							}
 						}
 						else if (Tile.Type == 53)
 						{
-                            if (!Tile2.Active)
+							if (!Tile2.Active)
 							{
-                                if (TileX < 250 || TileX > Main.maxTilesX - 250)
+								if (TileX < 250 || TileX > Main.maxTilesX - 250)
 								{
 									if (genRand.Next(500) == 0 && Tile2.Liquid == 255 && Main.tile.At(TileX, rTileY - 1).Liquid == 255 && Main.tile.At(TileX, rTileY - 2).Liquid == 255 && Main.tile.At(TileX, rTileY - 3).Liquid == 255 && Main.tile.At(TileX, rTileY - 4).Liquid == 255)
 									{
@@ -6480,7 +7790,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (Tile.Type == 3 && genRand.Next(20) == 0 && Tile.FrameX < 144)
 						{
-							Tile.SetType (73);
+							Tile.SetType(73);
 							NetMessage.SendTileSquare(-1, TileX, TileY, 3);
 						}
 						if (Tile.Type == 32 && genRand.Next(3) == 0)
@@ -6563,10 +7873,10 @@ namespace Terraria_Server.WorldMod
 										}
 										if (flag3)
 										{
-											Main.tile.At(num11, num12).SetType (32);
-											Main.tile.At(num11, num12).SetActive (true);
+											Main.tile.At(num11, num12).SetType(32);
+											Main.tile.At(num11, num12).SetActive(true);
 											SquareTileFrame(num11, num12, true);
-												
+
 											NetMessage.SendTileSquare(-1, num11, num12, 3);
 										}
 									}
@@ -6595,8 +7905,8 @@ namespace Terraria_Server.WorldMod
 							{
 								int num20 = TileX;
 								int num21 = TileY + 1;
-								Main.tile.At(num20, num21).SetType (52);
-								Main.tile.At(num20, num21).SetActive (true);
+								Main.tile.At(num20, num21).SetType(52);
+								Main.tile.At(num20, num21).SetActive(true);
 								SquareTileFrame(num20, num21, true);
 								NetMessage.SendTileSquare(-1, num20, num21, 3);
 							}
@@ -6639,7 +7949,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (Tile.Type == 61 && genRand.Next(3) == 0 && Tile.FrameX < 144)
 						{
-							Tile.SetType (74);
+							Tile.SetType(74);
 							NetMessage.SendTileSquare(-1, TileX, TileY, 3);
 						}
 						if ((Tile.Type == 60 || Tile.Type == 62) && genRand.Next(15) == 0 && !Main.tile.At(TileX, TileY + 1).Active && !Main.tile.At(TileX, TileY + 1).Lava)
@@ -6657,8 +7967,8 @@ namespace Terraria_Server.WorldMod
 							{
 								int num25 = TileX;
 								int num26 = TileY + 1;
-								Main.tile.At(num25, num26).SetType (62);
-								Main.tile.At(num25, num26).SetActive (true);
+								Main.tile.At(num25, num26).SetType(62);
+								Main.tile.At(num25, num26).SetActive(true);
 								SquareTileFrame(num25, num26, true);
 								NetMessage.SendTileSquare(-1, num25, num26, 3);
 							}
@@ -6736,7 +8046,7 @@ namespace Terraria_Server.WorldMod
 							}
 							if (Main.tile.At(num28, num29).Type == 61 && genRand.Next(3) == 0 && Main.tile.At(num28, num29).FrameX < 144)
 							{
-								Main.tile.At(num28, num29).SetType (74);
+								Main.tile.At(num28, num29).SetType(74);
 								NetMessage.SendTileSquare(-1, num28, num29, 3);
 							}
 							if ((Main.tile.At(num28, num29).Type == 60 || Main.tile.At(num28, num29).Type == 62) && genRand.Next(5) == 0 && !Main.tile.At(num28, num29 + 1).Active && !Main.tile.At(num28, num29 + 1).Lava)
@@ -6754,8 +8064,8 @@ namespace Terraria_Server.WorldMod
 								{
 									int num37 = num28;
 									int num38 = num29 + 1;
-									Main.tile.At(num37, num38).SetType (62);
-									Main.tile.At(num37, num38).SetActive (true);
+									Main.tile.At(num37, num38).SetType(62);
+									Main.tile.At(num37, num38).SetActive(true);
 									SquareTileFrame(num37, num38, true);
 									NetMessage.SendTileSquare(-1, num37, num38, 3);
 								}
@@ -6793,10 +8103,10 @@ namespace Terraria_Server.WorldMod
 										num40++;
 									}
 									else if (num42 == 2)
-								    {
-									    num39--;
-								    }
-								    else if (num42 == 3)
+									{
+										num39--;
+									}
+									else if (num42 == 3)
 									{
 										num39++;
 									}
@@ -6840,8 +8150,8 @@ namespace Terraria_Server.WorldMod
 											}
 											if (flag9)
 											{
-												Main.tile.At(num39, num40).SetType (69);
-												Main.tile.At(num39, num40).SetActive (true);
+												Main.tile.At(num39, num40).SetType(69);
+												Main.tile.At(num39, num40).SetActive(true);
 												SquareTileFrame(num39, num40, true);
 												NetMessage.SendTileSquare(-1, num39, num40, 3);
 											}
@@ -6919,9 +8229,13 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
-		
+
 		public static void PlaceWall(int i, int j, int type, bool mute = false)
 		{
+			if (i <= 1 || j <= 1 || i >= Main.maxTilesX - 2 || j >= Main.maxTilesY - 2)
+			{
+				return;
+			}
 			if ((int)Main.tile.At(i, j).Wall != type)
 			{
 				for (int k = i - 1; k < i + 2; k++)
@@ -6942,10 +8256,10 @@ namespace Terraria_Server.WorldMod
 						}
 					}
 				}
-				Main.tile.At(i, j).SetWall ((byte)type);
+				Main.tile.At(i, j).SetWall((byte)type);
 			}
 		}
-		
+
 		public static void SpreadGrass(int i, int j, int dirt = 0, int grass = 2, bool repeat = true)
 		{
 			if ((int)Main.tile.At(i, j).Type != dirt || !Main.tile.At(i, j).Active || ((double)j < Main.worldSurface && grass == 70) || ((double)j >= Main.worldSurface && dirt == 0))
@@ -6990,20 +8304,20 @@ namespace Terraria_Server.WorldMod
 				{
 					return;
 				}
-				Main.tile.At(i, j).SetType ((byte)grass);
+				Main.tile.At(i, j).SetType((byte)grass);
 				for (int m = num; m < num2; m++)
 				{
 					for (int n = num3; n < num4; n++)
 					{
 						if (Main.tile.At(m, n).Active && (int)Main.tile.At(m, n).Type == dirt && repeat)
 						{
-							SpreadGrass(m, n, dirt, grass, true);
+							SpreadGrass(m, n, dirt, grass);
 						}
 					}
 				}
 			}
 		}
-		
+
 		public static void SquareTileFrame(int i, int j, bool resetFrame = true)
 		{
 			TileFrame(i - 1, j - 1, false, false);
@@ -7029,7 +8343,7 @@ namespace Terraria_Server.WorldMod
 			WallFrame(i + 1, j, false);
 			WallFrame(i + 1, j + 1, false);
 		}
-		
+
 		public static void SectionTileFrame(int startX, int startY, int endX, int endY)
 		{
 			int num = startX * 200;
@@ -7060,7 +8374,7 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
-		
+
 		public static void RangeFrame(int startX, int startY, int endX, int endY)
 		{
 			int num = endX + 1;
@@ -7069,11 +8383,12 @@ namespace Terraria_Server.WorldMod
 			{
 				for (int j = startY - 1; j < num2 + 1; j++)
 				{
-					TileFrame(i, j, false, false);
+					TileFrame(i, j);
+					WallFrame(i, j);
 				}
 			}
 		}
-		
+
 		public static void WaterCheck(ProgressLogger prog = null)
 		{
 			Liquid.numLiquid = 0;
@@ -7082,10 +8397,10 @@ namespace Terraria_Server.WorldMod
 			{
 				for (int j = Main.maxTilesY - 2; j > 0; j--)
 				{
-					Main.tile.At(i, j).SetCheckingLiquid (false);
+					Main.tile.At(i, j).SetCheckingLiquid(false);
 					if (Main.tile.At(i, j).Liquid > 0 && Main.tile.At(i, j).Active && Main.tileSolid[(int)Main.tile.At(i, j).Type] && !Main.tileSolidTop[(int)Main.tile.At(i, j).Type])
 					{
-						Main.tile.At(i, j).SetLiquid (0);
+						Main.tile.At(i, j).SetLiquid(0);
 					}
 					else if (Main.tile.At(i, j).Liquid > 0)
 					{
@@ -7093,18 +8408,18 @@ namespace Terraria_Server.WorldMod
 						{
 							if (Main.tileWaterDeath[(int)Main.tile.At(i, j).Type])
 							{
-								KillTile(i, j, false, false, false);
+								KillTile(i, j);
 							}
 							if (Main.tile.At(i, j).Lava && Main.tileLavaDeath[(int)Main.tile.At(i, j).Type])
 							{
-								KillTile(i, j, false, false, false);
+								KillTile(i, j);
 							}
 						}
 						if ((!Main.tile.At(i, j + 1).Active || !Main.tileSolid[(int)Main.tile.At(i, j + 1).Type] || Main.tileSolidTop[(int)Main.tile.At(i, j + 1).Type]) && Main.tile.At(i, j + 1).Liquid < 255)
 						{
 							if (Main.tile.At(i, j + 1).Liquid > 250)
 							{
-								Main.tile.At(i, j + 1).SetLiquid (255);
+								Main.tile.At(i, j + 1).SetLiquid(255);
 							}
 							else
 							{
@@ -7140,4354 +8455,114 @@ namespace Terraria_Server.WorldMod
 						}
 					}
 				}
-                if (prog != null)
-                    prog.Value++;
+				if (prog != null)
+					prog.Value++;
 			}
 		}
-		
+
 		public static void EveryTileFrame()
 		{
-			using (var prog = new ProgressLogger (Main.maxTilesX, "Finding tile frames"))
+			using (var prog = new ProgressLogger(Main.maxTilesX, "Finding tile frames"))
 			{
 				noLiquidCheck = true;
 				noTileActions = true;
 				for (int i = 0; i < Main.maxTilesX; i++)
 				{
 					prog.Value = i;
-					
+
 					for (int j = 0; j < Main.maxTilesY; j++)
 					{
-						TileFrame(i, j, true, false);
+						if (Main.tile.At(i, j).Active)
+						{
+							TileFrame(i, j, true, false);
+						}
+						if (Main.tile.At(i, j).Wall > 0)
+						{
+							WallFrame(i, j, true);
+						}
 					}
 				}
 				noLiquidCheck = false;
 				noTileActions = false;
 			}
 		}
-		
+
 		public static void PlantCheck(int i, int j)
 		{
 			int num = -1;
 			int type = (int)Main.tile.At(i, j).Type;
-			int arg_19_0 = i - 1;
-			int arg_23_0 = i + 1;
-			int arg_22_0 = Main.maxTilesX;
-			int arg_29_0 = j - 1;
+			//int arg_19_0 = i - 1;
+			//int arg_23_0 = i + 1;
+			//int arg_22_0 = Main.maxTilesX;
+			//int arg_29_0 = j - 1;
 			if (j + 1 >= Main.maxTilesY)
 			{
 				num = type;
 			}
-			if (i - 1 >= 0 && Main.tile.At(i - 1, j).Active)
-			{
-				byte arg_74_0 = Main.tile.At(i - 1, j).Type;
-			}
-			if (i + 1 < Main.maxTilesX && Main.tile.At(i + 1, j).Active)
-			{
-				byte arg_B7_0 = Main.tile.At(i + 1, j).Type;
-			}
-			if (j - 1 >= 0 && Main.tile.At(i, j - 1).Active)
-			{
-				byte arg_F6_0 = Main.tile.At(i, j - 1).Type;
-			}
+			//if (i - 1 >= 0 && Main.tile.At(i - 1, j).Active)
+			//{
+			//    byte arg_74_0 = Main.tile.At(i - 1, j).Type;
+			//}
+			//if (i + 1 < Main.maxTilesX && Main.tile.At(i + 1, j).Active)
+			//{
+			//    byte arg_B7_0 = Main.tile.At(i + 1, j).Type;
+			//}
+			//if (j - 1 >= 0 && Main.tile.At(i, j - 1).Active)
+			//{
+			//    byte arg_F6_0 = Main.tile.At(i, j - 1).Type;
+			//}
 			if (j + 1 < Main.maxTilesY && Main.tile.At(i, j + 1).Active)
 			{
 				num = (int)Main.tile.At(i, j + 1).Type;
 			}
-			if (i - 1 >= 0 && j - 1 >= 0 && Main.tile.At(i - 1, j - 1).Active)
+			//if (i - 1 >= 0 && j - 1 >= 0 && Main.tile.At(i - 1, j - 1).Active)
+			//{
+			//    byte arg_184_0 = Main.tile.At(i - 1, j - 1).Type;
+			//}
+			//if (i + 1 < Main.maxTilesX && j - 1 >= 0 && Main.tile.At(i + 1, j - 1).Active)
+			//{
+			//    byte arg_1D3_0 = Main.tile.At(i + 1, j - 1).Type;
+			//}
+			//if (i - 1 >= 0 && j + 1 < Main.maxTilesY && Main.tile.At(i - 1, j + 1).Active)
+			//{
+			//    byte arg_222_0 = Main.tile.At(i - 1, j + 1).Type;
+			//}
+			//if (i + 1 < Main.maxTilesX && j + 1 < Main.maxTilesY && Main.tile.At(i + 1, j + 1).Active)
+			//{
+			//    byte arg_275_0 = Main.tile.At(i + 1, j + 1).Type;
+			//}
+			if ((type == 3 && num != 2 && num != 78) || (type == 24 && num != 23) || (type == 61 && num != 60) || (type == 71 && num != 70) || (type == 73 && num != 2 && num != 78) || (type == 74 && num != 60) || (type == 110 && type != 109) || (type == 113 && type != 109))
 			{
-				byte arg_184_0 = Main.tile.At(i - 1, j - 1).Type;
-			}
-			if (i + 1 < Main.maxTilesX && j - 1 >= 0 && Main.tile.At(i + 1, j - 1).Active)
-			{
-				byte arg_1D3_0 = Main.tile.At(i + 1, j - 1).Type;
-			}
-			if (i - 1 >= 0 && j + 1 < Main.maxTilesY && Main.tile.At(i - 1, j + 1).Active)
-			{
-				byte arg_222_0 = Main.tile.At(i - 1, j + 1).Type;
-			}
-			if (i + 1 < Main.maxTilesX && j + 1 < Main.maxTilesY && Main.tile.At(i + 1, j + 1).Active)
-			{
-				byte arg_275_0 = Main.tile.At(i + 1, j + 1).Type;
-			}
-			if ((type == 3 && num != 2 && num != 78) || (type == 24 && num != 23) || (type == 61 && num != 60) || (type == 71 && num != 70) || (type == 73 && num != 2 && num != 78) || (type == 74 && num != 60))
-			{
+				if (num == 23)
+				{
+					type = 24;
+					if (Main.tile.At(i, j).FrameX >= 162)
+					{
+						Main.tile.At(i, j).SetFrameX(126);
+					}
+				}
+				else if (num == 2)
+				{
+					if (type == 113)
+						type = 73;
+					else
+						type = 3;
+				}
+				else if (num == 109)
+				{
+					if (type == 73)
+						type = 113;
+					else
+						type = 110;
+				}
+				if (type != (int)Main.tile.At(i, j).Type)
+				{
+					Main.tile.At(i, j).SetType((byte)type);
+					return;
+				}
 				KillTile(i, j, false, false, false);
 			}
 		}
-
-        public static void TileFrame(int i, int j, bool resetFrame = false, bool noBreak = false)
-        {
-            if (i > 5 && j > 5 && i < Main.maxTilesX - 5 && j < Main.maxTilesY - 5)
-            {
-                if (Main.tile.At(i, j).Liquid > 0 && !noLiquidCheck)
-                {
-                    Liquid.AddWater(i, j);
-                }
-                if (Main.tile.At(i, j).Active)
-                {
-                    if (noBreak && Main.tileFrameImportant[(int)Main.tile.At(i, j).Type])
-                    {
-                        return;
-                    }
-                    int num = -1;
-                    int num2 = -1;
-                    int num3 = -1;
-                    int num4 = -1;
-                    int num5 = -1;
-                    int num6 = -1;
-                    int num7 = -1;
-                    int num8 = -1;
-                    int num9 = (int)Main.tile.At(i, j).Type;
-
-                    if (Main.tileStone[num9])
-                        num9 = 1;
-
-                    int frameX = (int)Main.tile.At(i, j).FrameX;
-                    int frameY = (int)Main.tile.At(i, j).FrameY;
-                    Rectangle rectangle;
-                    rectangle.X = -1;
-                    rectangle.Y = -1;
-                    mergeUp = false;
-                    mergeDown = false;
-                    mergeLeft = false;
-                    mergeRight = false;
-                    if (Main.tile.At(i - 1, j).Active)
-                        num4 = (int)Main.tile.At(i - 1, j).Type;
-
-                    if (Main.tile.At(i + 1, j).Active)
-                        num5 = (int)Main.tile.At(i + 1, j).Type;
-
-                    if ( Main.tile.At(i, j - 1).Active)
-                        num2 = (int)Main.tile.At(i, j - 1).Type;
-
-                    if (Main.tile.At(i, j + 1).Active)
-                        num7 = (int)Main.tile.At(i, j + 1).Type;
-
-                    if (Main.tile.At(i - 1, j - 1).Active)
-                        num = (int)Main.tile.At(i - 1, j - 1).Type;
-
-                    if (Main.tile.At(i + 1, j - 1).Active)
-                        num3 = (int)Main.tile.At(i + 1, j - 1).Type;
-
-                    if (Main.tile.At(i - 1, j + 1).Active)
-                        num6 = (int)Main.tile.At(i - 1, j + 1).Type;
-
-                    if (Main.tile.At(i + 1, j + 1).Active)
-                        num8 = (int)Main.tile.At(i + 1, j + 1).Type;
-
-                    if (num4 >= 0 && Main.tileStone[num4])
-                        num4 = 1;
-
-                    if (num5 >= 0 && Main.tileStone[num5])
-                        num5 = 1;
-
-                    if (num2 >= 0 && Main.tileStone[num2])
-                        num2 = 1;
-
-                    if (num7 >= 0 && Main.tileStone[num7])
-                        num7 = 1;
-
-                    if (num >= 0 && Main.tileStone[num])
-                        num = 1;
-
-                    if (num3 >= 0 && Main.tileStone[num3])
-                        num3 = 1;
-
-                    if (num6 >= 0 && Main.tileStone[num6])
-                        num6 = 1;
-
-                    if (num8 >= 0 && Main.tileStone[num8])
-                        num8 = 1;
-
-                    if (num9 != 0 && num9 != 1)
-                    {
-                        if (num9 == 3 || num9 == 24 || num9 == 61 || num9 == 71 || num9 == 73 || num9 == 74)
-                        {
-                            PlantCheck(i, j);
-                            return;
-                        }
-						if (num9 == 4)
-						{
-							if (num7 >= 0 && Main.tileSolid[num7] && !Main.tileNoAttach[num7])
-							{
-								Main.tile.At(i, j).SetFrameX(0);
-								return;
-							}
-							if ((num4 >= 0 && Main.tileSolid[num4] && !Main.tileNoAttach[num4]) || (num4 == 5 && num == 5 && num6 == 5))
-							{
-								Main.tile.At(i, j).SetFrameX(22);
-								return;
-							}
-							if ((num5 >= 0 && Main.tileSolid[num5] && !Main.tileNoAttach[num5]) || (num5 == 5 && num3 == 5 && num8 == 5))
-							{
-								Main.tile.At(i, j).SetFrameX(44);
-								return;
-							}
-							KillTile(i, j, false, false, false);
-							return;
-						}
-						else
-						{
-							if (num9 == 80)
-							{
-								CactusFrame(i, j);
-								return;
-							}
-							if (num9 == 12 || num9 == 31)
-							{
-								if (!destroyObject)
-								{
-									int num10 = i;
-									int num11 = j;
-									if (Main.tile.At(i, j).FrameX == 0)
-										num10 = i;
-									else
-										num10 = i - 1;
-
-									if (Main.tile.At(i, j).FrameY == 0)
-										num11 = j;
-									else
-										num11 = j - 1;
-
-									if ((!Main.tile.At(num10, num11).Active || (int)Main.tile.At(num10, num11).Type != num9 ||
-										!Main.tile.At(num10 + 1, num11).Active || (int)Main.tile.At(num10 + 1, num11).Type != num9 ||
-											!Main.tile.At(num10, num11 + 1).Active || (int)Main.tile.At(num10, num11 + 1).Type != num9 ||
-												!Main.tile.At(num10 + 1, num11 + 1).Active ||
-													(int)Main.tile.At(num10 + 1, num11 + 1).Type != num9))
-									{
-										destroyObject = true;
-										if ((int)Main.tile.At(num10, num11).Type == num9)
-											KillTile(num10, num11, false, false, false);
-
-										if ((int)Main.tile.At(num10 + 1, num11).Type == num9)
-											KillTile(num10 + 1, num11, false, false, false);
-
-										if ((int)Main.tile.At(num10, num11 + 1).Type == num9)
-											KillTile(num10, num11 + 1, false, false, false);
-
-										if ((int)Main.tile.At(num10 + 1, num11 + 1).Type == num9)
-											KillTile(num10 + 1, num11 + 1, false, false, false);
-
-										if (!noTileActions)
-										{
-											if (num9 == 12)
-												Item.NewItem(num10 * 16, num11 * 16, 32, 32, 29, 1, false);
-											else
-											{
-												if (num9 == 31)
-												{
-													if (genRand.Next(2) == 0)
-														spawnMeteor = true;
-
-													int num12 = Main.rand.Next(5);
-
-													if (!shadowOrbSmashed)
-														num12 = 0;
-
-													if (num12 == 0)
-													{
-														Item.NewItem(num10 * 16, num11 * 16, 32, 32, 96, 1, false);
-														int stack = genRand.Next(25, 51);
-														Item.NewItem(num10 * 16, num11 * 16, 32, 32, 97, stack, false);
-													}
-													else
-													{
-														if (num12 == 1)
-															Item.NewItem(num10 * 16, num11 * 16, 32, 32, 64, 1, false);
-														else if (num12 == 2)
-															Item.NewItem(num10 * 16, num11 * 16, 32, 32, 162, 1, false);
-														else if (num12 == 3)
-															Item.NewItem(num10 * 16, num11 * 16, 32, 32, 115, 1, false);
-														else if (num12 == 4)
-															Item.NewItem(num10 * 16, num11 * 16, 32, 32, 111, 1, false);
-													}
-													shadowOrbSmashed = true;
-													shadowOrbCount++;
-													if (shadowOrbCount >= 3)
-													{
-														shadowOrbCount = 0;
-														float num13 = (float)(num10 * 16);
-														float num14 = (float)(num11 * 16);
-														float num15 = -1f;
-														int plr = 0;
-														for (int k = 0; k < 255; k++) //FIXME: propage player here
-														{
-															float num16 = Math.Abs(Main.players[k].Position.X - num13) + Math.Abs(Main.players[k].Position.Y - num14);
-															if (num16 < num15 || num15 == -1f)
-															{
-																plr = 0;
-																num15 = num16;
-															}
-														}
-
-														var player = Main.players[plr];
-
-														var ctx = new HookContext
-														{
-															Connection = player.Connection,
-															Sender = player,
-															Player = player,
-														};
-
-														var args = new HookArgs.PlayerTriggeredEvent
-														{
-															X = (int)(player.Position.X / 16),
-															Y = (int)(player.Position.Y / 16),
-															Type = WorldEventType.BOSS,
-															Name = "Eater of Worlds",
-														};
-
-														HookPoints.PlayerTriggeredEvent.Invoke(ref ctx, ref args);
-
-														if (!ctx.CheckForKick() && ctx.Result != HookResult.IGNORE)
-														{
-															ProgramLog.Users.Log("{0} @ {1}: Eater of Worlds summoned by {2}.", player.IPAddress, plr, player.Name);
-															NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, string.Concat(player.Name, " has summoned the Eater of Worlds!"), 255, 255, 128, 150);
-															NPC.SpawnOnPlayer(player, plr, 13);
-														}
-													}
-													else
-													{
-														string text = "A horrible chill goes down your spine...";
-														if (shadowOrbCount == 2)
-															text = "Screams echo around you...";
-
-														NetMessage.SendData(25, -1, -1, text, 255, 50f, 255f, 130f, 0);
-													}
-												}
-											}
-										}
-										destroyObject = false;
-									}
-								}
-								return;
-							}
-							if (num9 == 19)
-							{
-								if (num4 == num9 && num5 == num9)
-								{
-									if (Main.tile.At(i, j).FrameNumber == 0)
-									{
-										rectangle.X = 0;
-										rectangle.Y = 0;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 1)
-									{
-										rectangle.X = 0;
-										rectangle.Y = 18;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 2)
-									{
-										rectangle.X = 0;
-										rectangle.Y = 36;
-									}
-								}
-								else if (num4 == num9 && num5 == -1)
-								{
-									if (Main.tile.At(i, j).FrameNumber == 0)
-									{
-										rectangle.X = 18;
-										rectangle.Y = 0;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 1)
-									{
-										rectangle.X = 18;
-										rectangle.Y = 18;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 2)
-									{
-										rectangle.X = 18;
-										rectangle.Y = 36;
-									}
-								}
-								else if (num4 == -1 && num5 == num9)
-								{
-									if (Main.tile.At(i, j).FrameNumber == 0)
-									{
-										rectangle.X = 36;
-										rectangle.Y = 0;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 1)
-									{
-										rectangle.X = 36;
-										rectangle.Y = 18;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 2)
-									{
-										rectangle.X = 36;
-										rectangle.Y = 36;
-									}
-								}
-								else if (num4 != num9 && num5 == num9)
-								{
-									if (Main.tile.At(i, j).FrameNumber == 0)
-									{
-										rectangle.X = 54;
-										rectangle.Y = 0;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 1)
-									{
-										rectangle.X = 54;
-										rectangle.Y = 18;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 2)
-									{
-										rectangle.X = 54;
-										rectangle.Y = 36;
-									}
-								}
-								else if (num4 == num9 && num5 != num9)
-								{
-									if (Main.tile.At(i, j).FrameNumber == 0)
-									{
-										rectangle.X = 72;
-										rectangle.Y = 0;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 1)
-									{
-										rectangle.X = 72;
-										rectangle.Y = 18;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 2)
-									{
-										rectangle.X = 72;
-										rectangle.Y = 36;
-									}
-								}
-								else if (num4 != num9 && num4 != -1 && num5 == -1)
-								{
-									if (Main.tile.At(i, j).FrameNumber == 0)
-									{
-										rectangle.X = 108;
-										rectangle.Y = 0;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 1)
-									{
-										rectangle.X = 108;
-										rectangle.Y = 18;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 2)
-									{
-										rectangle.X = 108;
-										rectangle.Y = 36;
-									}
-								}
-								else if (num4 == -1 && num5 != num9 && num5 != -1)
-								{
-									if (Main.tile.At(i, j).FrameNumber == 0)
-									{
-										rectangle.X = 126;
-										rectangle.Y = 0;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 1)
-									{
-										rectangle.X = 126;
-										rectangle.Y = 18;
-									}
-									if (Main.tile.At(i, j).FrameNumber == 2)
-									{
-										rectangle.X = 126;
-										rectangle.Y = 36;
-									}
-								}
-								else if (Main.tile.At(i, j).FrameNumber == 0)
-								{
-									rectangle.X = 90;
-									rectangle.Y = 0;
-								}
-								if (Main.tile.At(i, j).FrameNumber == 1)
-								{
-									rectangle.X = 90;
-									rectangle.Y = 18;
-								}
-								if (Main.tile.At(i, j).FrameNumber == 2)
-								{
-									rectangle.X = 90;
-									rectangle.Y = 36;
-								}
-							}
-							else if (num9 == 10)
-							{
-								if (!destroyObject)
-								{
-									int frameY2 = (int)Main.tile.At(i, j).FrameY;
-									int num17 = j;
-									bool flag = false;
-									if (frameY2 == 0)
-										num17 = j;
-
-									if (frameY2 == 18)
-										num17 = j - 1;
-
-									if (frameY2 == 36)
-										num17 = j - 2;
-
-									if (!Main.tile.At(i, num17 - 1).Active || !Main.tileSolid[(int)Main.tile.At(i, num17 - 1).Type])
-										flag = true;
-
-									if (!Main.tile.At(i, num17 + 3).Active || !Main.tileSolid[(int)Main.tile.At(i, num17 + 3).Type])
-										flag = true;
-
-									if (!Main.tile.At(i, num17).Active || (int)Main.tile.At(i, num17).Type != num9)
-										flag = true;
-
-									if (!Main.tile.At(i, num17 + 1).Active || (int)Main.tile.At(i, num17 + 1).Type != num9)
-										flag = true;
-
-									if (!Main.tile.At(i, num17 + 2).Active || (int)Main.tile.At(i, num17 + 2).Type != num9)
-										flag = true;
-
-									if (flag)
-									{
-										destroyObject = true;
-										KillTile(i, num17, false, false, false);
-										KillTile(i, num17 + 1, false, false, false);
-										KillTile(i, num17 + 2, false, false, false);
-										Item.NewItem(i * 16, j * 16, 16, 16, 25, 1, false);
-									}
-									destroyObject = false;
-								}
-								return;
-							}
-							if (num9 == 11)
-							{
-								if (!destroyObject)
-								{
-									int num18 = 0;
-									int num19 = i;
-									int num20 = j;
-									int frameX2 = (int)Main.tile.At(i, j).FrameX;
-									int frameY3 = (int)Main.tile.At(i, j).FrameY;
-									bool flag2 = false;
-									if (frameX2 == 0)
-									{
-										num19 = i;
-										num18 = 1;
-									}
-									else if (frameX2 == 18)
-									{
-										num19 = i - 1;
-										num18 = 1;
-									}
-									else if (frameX2 == 36)
-									{
-										num19 = i + 1;
-										num18 = -1;
-									}
-									else if (frameX2 == 54)
-									{
-										num19 = i;
-										num18 = -1;
-									}
-									if (frameY3 == 0)
-									{
-										num20 = j;
-									}
-									else
-									{
-										if (frameY3 == 18)
-										{
-											num20 = j - 1;
-										}
-										else if (frameY3 == 36)
-										{
-											num20 = j - 2;
-										}
-									}
-									if (!Main.tile.At(num19, num20 - 1).Active ||
-										!Main.tileSolid[(int)Main.tile.At(num19, num20 - 1).Type] ||
-										!Main.tile.At(num19, num20 + 3).Active ||
-										!Main.tileSolid[(int)Main.tile.At(num19, num20 + 3).Type])
-									{
-										flag2 = true;
-										destroyObject = true;
-										Item.NewItem(i * 16, j * 16, 16, 16, 25, 1, false);
-									}
-
-									int num21 = num19;
-									if (num18 == -1)
-										num21 = num19 - 1;
-
-									for (int l = num21; l < num21 + 2; l++)
-									{
-										for (int m = num20; m < num20 + 3; m++)
-										{
-											if (!flag2 && (Main.tile.At(l, m).Type != 11 || !Main.tile.At(l, m).Active))
-											{
-												destroyObject = true;
-												Item.NewItem(i * 16, j * 16, 16, 16, 25, 1, false);
-												flag2 = true;
-												l = num21;
-												m = num20;
-											}
-
-											if (flag2)
-												KillTile(l, m, false, false, false);
-										}
-									}
-									destroyObject = false;
-								}
-								return;
-							}
-							if (num9 == 34 || num9 == 35 || num9 == 36 || num9 == 106)
-							{
-								Check3x3(i, j, (int)((byte)num9));
-								return;
-							}
-							if (num9 == 15 || num9 == 20)
-							{
-								Check1x2(i, j, (byte)num9);
-								return;
-							}
-							if (num9 == 14 || num9 == 17 || num9 == 26 || num9 == 77 || num9 == 86 || num9 == 87 || num9 == 88 || num9 == 89)
-							{
-								Check3x2(i, j, (int)((byte)num9));
-								return;
-							}
-							if (num9 == 16 || num9 == 18 || num9 == 29 || num9 == 103)
-							{
-								Check2x1(i, j, (byte)num9);
-								return;
-							}
-							if (num9 == 13 || num9 == 33 || num9 == 49 || num9 == 50 || num9 == 78)
-							{
-								CheckOnTable1x1(i, j, (int)((byte)num9));
-								return;
-							}
-							if (num9 == 21)
-							{
-								CheckChest(i, j, (int)((byte)num9));
-								return;
-							}
-							if (num9 == 27)
-							{
-								CheckSunflower(i, j, 27);
-								return;
-							}
-							if (num9 == 28)
-							{
-								CheckPot(i, j, 28);
-								return;
-							}
-							if (num9 == 91)
-							{
-								CheckBanner(i, j, (byte)num9);
-								return;
-							}
-							if (num9 == 92 || num9 == 93)
-							{
-								Check1xX(i, j, (byte)num9);
-								return;
-							}
-							if (num9 == 104 || num9 == 105)
-								Check2xX(i, j, (byte)num9);
-							else
-							{
-								if (num9 == 101 || num9 == 102)
-								{
-									Check3x4(i, j, (int)((byte)num9));
-									return;
-								}
-								if (num9 == 42)
-								{
-									Check1x2Top(i, j, (byte)num9);
-									return;
-								}
-								if (num9 == 55 || num9 == 85)
-								{
-									CheckSign(i, j, num9);
-									return;
-								}
-								if (num9 == 79 || num9 == 90)
-								{
-									Check4x2(i, j, num9);
-									return;
-								}
-								if (num9 == 85 || num9 == 94 || num9 == 95 || num9 == 96 || num9 == 97 || num9 == 98 || num9 == 99 || num9 == 100)
-								{
-									Check2x2(i, j, num9);
-									return;
-								}
-								if (num9 == 81)
-								{
-									if (num4 != -1 || num2 != -1 || num5 != -1)
-									{
-										KillTile(i, j, false, false, false);
-										return;
-									}
-									if (num7 < 0 || !Main.tileSolid[num7])
-									{
-										KillTile(i, j, false, false, false);
-									}
-									return;
-								}
-								else
-								{
-									if (Main.tileAlch[num9])
-									{
-										CheckAlch(i, j);
-										return;
-									}
-									if (num9 == 72)
-									{
-										if (num7 != num9 && num7 != 70)
-											KillTile(i, j, false, false, false);
-										else if (num2 != num9 && Main.tile.At(i, j).FrameX == 0)
-										{
-											Main.tile.At(i, j).SetFrameNumber((byte)genRand.Next(3));
-											if (Main.tile.At(i, j).FrameNumber == 0)
-											{
-												Main.tile.At(i, j).SetFrameX(18);
-												Main.tile.At(i, j).SetFrameY(0);
-											}
-											if (Main.tile.At(i, j).FrameNumber == 1)
-											{
-												Main.tile.At(i, j).SetFrameX(18);
-												Main.tile.At(i, j).SetFrameY(18);
-											}
-											if (Main.tile.At(i, j).FrameNumber == 2)
-											{
-												Main.tile.At(i, j).SetFrameX(18);
-												Main.tile.At(i, j).SetFrameY(36);
-											}
-										}
-									}
-									else if (num9 == 5)
-									{
-										if (num7 == 23)
-											num7 = 2;
-										if (num7 == 60)
-											num7 = 2;
-
-										if (Main.tile.At(i, j).FrameX >= 22 && Main.tile.At(i, j).FrameX <= 44 && Main.tile.At(i, j).FrameY >= 132 && Main.tile.At(i, j).FrameY <= 176)
-										{
-											if ((num4 != num9 && num5 != num9) || num7 != 2)
-												KillTile(i, j, false, false, false);
-										}
-										else
-										{
-											if ((Main.tile.At(i, j).FrameX == 88 && Main.tile.At(i, j).FrameY >= 0 && Main.tile.At(i, j).FrameY <= 44) || (Main.tile.At(i, j).FrameX == 66 && Main.tile.At(i, j).FrameY >= 66 && Main.tile.At(i, j).FrameY <= 130) || (Main.tile.At(i, j).FrameX == 110 && Main.tile.At(i, j).FrameY >= 66 && Main.tile.At(i, j).FrameY <= 110) || (Main.tile.At(i, j).FrameX == 132 && Main.tile.At(i, j).FrameY >= 0 && Main.tile.At(i, j).FrameY <= 176))
-											{
-												if (num4 == num9 && num5 == num9)
-												{
-													if (Main.tile.At(i, j).FrameNumber == 0)
-													{
-														Main.tile.At(i, j).SetFrameX(110);
-														Main.tile.At(i, j).SetFrameY(66);
-													}
-													if (Main.tile.At(i, j).FrameNumber == 1)
-													{
-														Main.tile.At(i, j).SetFrameX(110);
-														Main.tile.At(i, j).SetFrameY(88);
-													}
-													if (Main.tile.At(i, j).FrameNumber == 2)
-													{
-														Main.tile.At(i, j).SetFrameX(110);
-														Main.tile.At(i, j).SetFrameY(110);
-													}
-												}
-												else if (num4 == num9)
-												{
-													if (Main.tile.At(i, j).FrameNumber == 0)
-													{
-														Main.tile.At(i, j).SetFrameX(88);
-														Main.tile.At(i, j).SetFrameY(0);
-													}
-													if (Main.tile.At(i, j).FrameNumber == 1)
-													{
-														Main.tile.At(i, j).SetFrameX(88);
-														Main.tile.At(i, j).SetFrameY(22);
-													}
-													if (Main.tile.At(i, j).FrameNumber == 2)
-													{
-														Main.tile.At(i, j).SetFrameX(88);
-														Main.tile.At(i, j).SetFrameY(44);
-													}
-												}
-												else if (num5 == num9)
-												{
-													if (Main.tile.At(i, j).FrameNumber == 0)
-													{
-														Main.tile.At(i, j).SetFrameX(66);
-														Main.tile.At(i, j).SetFrameY(66);
-													}
-													if (Main.tile.At(i, j).FrameNumber == 1)
-													{
-														Main.tile.At(i, j).SetFrameX(66);
-														Main.tile.At(i, j).SetFrameY(88);
-													}
-													if (Main.tile.At(i, j).FrameNumber == 2)
-													{
-														Main.tile.At(i, j).SetFrameX(66);
-														Main.tile.At(i, j).SetFrameY(110);
-													}
-												}
-												else
-												{
-													if (Main.tile.At(i, j).FrameNumber == 0)
-													{
-														Main.tile.At(i, j).SetFrameX(0);
-														Main.tile.At(i, j).SetFrameY(0);
-													}
-													if (Main.tile.At(i, j).FrameNumber == 1)
-													{
-														Main.tile.At(i, j).SetFrameX(0);
-														Main.tile.At(i, j).SetFrameY(22);
-													}
-													if (Main.tile.At(i, j).FrameNumber == 2)
-													{
-														Main.tile.At(i, j).SetFrameX(0);
-														Main.tile.At(i, j).SetFrameY(44);
-													}
-												}
-											}
-										}
-										if (Main.tile.At(i, j).FrameY >= 132 && Main.tile.At(i, j).FrameY <= 176 && (Main.tile.At(i, j).FrameX == 0 || Main.tile.At(i, j).FrameX == 66 || Main.tile.At(i, j).FrameX == 88))
-										{
-											if (num7 != 2)
-												KillTile(i, j, false, false, false);
-
-											if (num4 != num9 && num5 != num9)
-											{
-												if (Main.tile.At(i, j).FrameNumber == 0)
-												{
-													Main.tile.At(i, j).SetFrameX(0);
-													Main.tile.At(i, j).SetFrameY(0);
-												}
-												if (Main.tile.At(i, j).FrameNumber == 1)
-												{
-													Main.tile.At(i, j).SetFrameX(0);
-													Main.tile.At(i, j).SetFrameY(22);
-												}
-												if (Main.tile.At(i, j).FrameNumber == 2)
-												{
-													Main.tile.At(i, j).SetFrameX(0);
-													Main.tile.At(i, j).SetFrameY(44);
-												}
-											}
-											else if (num4 != num9)
-											{
-												if (Main.tile.At(i, j).FrameNumber == 0)
-												{
-													Main.tile.At(i, j).SetFrameX(0);
-													Main.tile.At(i, j).SetFrameY(132);
-												}
-												if (Main.tile.At(i, j).FrameNumber == 1)
-												{
-													Main.tile.At(i, j).SetFrameX(0);
-													Main.tile.At(i, j).SetFrameY(154);
-												}
-												if (Main.tile.At(i, j).FrameNumber == 2)
-												{
-													Main.tile.At(i, j).SetFrameX(0);
-													Main.tile.At(i, j).SetFrameY(176);
-												}
-											}
-											else if (num5 != num9)
-											{
-												if (Main.tile.At(i, j).FrameNumber == 0)
-												{
-													Main.tile.At(i, j).SetFrameX(66);
-													Main.tile.At(i, j).SetFrameY(132);
-												}
-												if (Main.tile.At(i, j).FrameNumber == 1)
-												{
-													Main.tile.At(i, j).SetFrameX(66);
-													Main.tile.At(i, j).SetFrameY(154);
-												}
-												if (Main.tile.At(i, j).FrameNumber == 2)
-												{
-													Main.tile.At(i, j).SetFrameX(66);
-													Main.tile.At(i, j).SetFrameY(176);
-												}
-											}
-											else if (Main.tile.At(i, j).FrameNumber == 0)
-											{
-												Main.tile.At(i, j).SetFrameX(88);
-												Main.tile.At(i, j).SetFrameY(132);
-											}
-											if (Main.tile.At(i, j).FrameNumber == 1)
-											{
-												Main.tile.At(i, j).SetFrameX(88);
-												Main.tile.At(i, j).SetFrameY(154);
-											}
-											if (Main.tile.At(i, j).FrameNumber == 2)
-											{
-												Main.tile.At(i, j).SetFrameX(88);
-												Main.tile.At(i, j).SetFrameY(176);
-
-											}
-										}
-										if ((Main.tile.At(i, j).FrameX == 66 && (Main.tile.At(i, j).FrameY == 0 || Main.tile.At(i, j).FrameY == 22 || Main.tile.At(i, j).FrameY == 44)) || (Main.tile.At(i, j).FrameX == 88 && (Main.tile.At(i, j).FrameY == 66 || Main.tile.At(i, j).FrameY == 88 || Main.tile.At(i, j).FrameY == 110)) || (Main.tile.At(i, j).FrameX == 44 && (Main.tile.At(i, j).FrameY == 198 || Main.tile.At(i, j).FrameY == 220 || Main.tile.At(i, j).FrameY == 242)) || (Main.tile.At(i, j).FrameX == 66 && (Main.tile.At(i, j).FrameY == 198 || Main.tile.At(i, j).FrameY == 220 || Main.tile.At(i, j).FrameY == 242)))
-										{
-											if (num4 != num9 && num5 != num9)
-												KillTile(i, j, false, false, false);
-										}
-										else
-										{
-											if (num7 == -1 || num7 == 23)
-												KillTile(i, j, false, false, false);
-											else
-											{
-												if (num2 != num9 && Main.tile.At(i, j).FrameY < 198 && ((Main.tile.At(i, j).FrameX != 22 && Main.tile.At(i, j).FrameX != 44) || Main.tile.At(i, j).FrameY < 132))
-												{
-													if (num4 == num9 || num5 == num9)
-													{
-														if (num7 == num9)
-														{
-															if (num4 == num9 && num5 == num9)
-															{
-																if (Main.tile.At(i, j).FrameNumber == 0)
-																{
-																	Main.tile.At(i, j).SetFrameX(132);
-																	Main.tile.At(i, j).SetFrameY(132);
-																}
-																if (Main.tile.At(i, j).FrameNumber == 1)
-																{
-																	Main.tile.At(i, j).SetFrameX(132);
-																	Main.tile.At(i, j).SetFrameY(154);
-																}
-																if (Main.tile.At(i, j).FrameNumber == 2)
-																{
-																	Main.tile.At(i, j).SetFrameX(132);
-																	Main.tile.At(i, j).SetFrameY(176);
-																}
-															}
-															else if (num4 == num9)
-															{
-																if (Main.tile.At(i, j).FrameNumber == 0)
-																{
-																	Main.tile.At(i, j).SetFrameX(132);
-																	Main.tile.At(i, j).SetFrameY(0);
-																}
-																if (Main.tile.At(i, j).FrameNumber == 1)
-																{
-																	Main.tile.At(i, j).SetFrameX(132);
-																	Main.tile.At(i, j).SetFrameY(22);
-																}
-																if (Main.tile.At(i, j).FrameNumber == 2)
-																{
-																	Main.tile.At(i, j).SetFrameX(132);
-																	Main.tile.At(i, j).SetFrameY(44);
-																}
-															}
-															else if (num5 == num9)
-															{
-																if (Main.tile.At(i, j).FrameNumber == 0)
-																{
-																	Main.tile.At(i, j).SetFrameX(132);
-																	Main.tile.At(i, j).SetFrameY(66);
-																}
-																if (Main.tile.At(i, j).FrameNumber == 1)
-																{
-																	Main.tile.At(i, j).SetFrameX(132);
-																	Main.tile.At(i, j).SetFrameY(88);
-																}
-																if (Main.tile.At(i, j).FrameNumber == 2)
-																{
-																	Main.tile.At(i, j).SetFrameX(132);
-																	Main.tile.At(i, j).SetFrameY(110);
-																}
-															}
-														}
-														else if (num4 == num9 && num5 == num9)
-														{
-															if (Main.tile.At(i, j).FrameNumber == 0)
-															{
-																Main.tile.At(i, j).SetFrameX(154);
-																Main.tile.At(i, j).SetFrameY(132);
-															}
-															if (Main.tile.At(i, j).FrameNumber == 1)
-															{
-																Main.tile.At(i, j).SetFrameX(154);
-																Main.tile.At(i, j).SetFrameY(154);
-															}
-															if (Main.tile.At(i, j).FrameNumber == 2)
-															{
-																Main.tile.At(i, j).SetFrameX(154);
-																Main.tile.At(i, j).SetFrameY(176);
-															}
-														}
-														else if (num4 == num9)
-														{
-															if (Main.tile.At(i, j).FrameNumber == 0)
-															{
-																Main.tile.At(i, j).SetFrameX(154);
-																Main.tile.At(i, j).SetFrameY(0);
-															}
-															if (Main.tile.At(i, j).FrameNumber == 1)
-															{
-																Main.tile.At(i, j).SetFrameX(154);
-																Main.tile.At(i, j).SetFrameY(22);
-															}
-															if (Main.tile.At(i, j).FrameNumber == 2)
-															{
-																Main.tile.At(i, j).SetFrameX(154);
-																Main.tile.At(i, j).SetFrameY(44);
-															}
-														}
-														else if (num5 == num9)
-														{
-															if (Main.tile.At(i, j).FrameNumber == 0)
-															{
-																Main.tile.At(i, j).SetFrameX(154);
-																Main.tile.At(i, j).SetFrameY(66);
-															}
-															if (Main.tile.At(i, j).FrameNumber == 1)
-															{
-																Main.tile.At(i, j).SetFrameX(154);
-																Main.tile.At(i, j).SetFrameY(88);
-															}
-															if (Main.tile.At(i, j).FrameNumber == 2)
-															{
-																Main.tile.At(i, j).SetFrameX(154);
-																Main.tile.At(i, j).SetFrameY(110);
-															}
-														}
-													}
-													else
-													{
-														if (Main.tile.At(i, j).FrameNumber == 0)
-														{
-															Main.tile.At(i, j).SetFrameX(110);
-															Main.tile.At(i, j).SetFrameY(0);
-														}
-														if (Main.tile.At(i, j).FrameNumber == 1)
-														{
-															Main.tile.At(i, j).SetFrameX(110);
-															Main.tile.At(i, j).SetFrameY(22);
-														}
-														if (Main.tile.At(i, j).FrameNumber == 2)
-														{
-															Main.tile.At(i, j).SetFrameX(110);
-															Main.tile.At(i, j).SetFrameY(44);
-														}
-													}
-												}
-											}
-										}
-										rectangle.X = (int)Main.tile.At(i, j).FrameX;
-										rectangle.Y = (int)Main.tile.At(i, j).FrameY;
-									}
-								}
-							}
-						}
-                    }
-                    if (Main.tileFrameImportant[(int)Main.tile.At(i, j).Type])
-                        return;
-
-                    int num22 = 0;
-                    if (resetFrame)
-                    {
-                        num22 = genRand.Next(0, 3);
-                        Main.tile.At(i, j).SetFrameNumber((byte)num22);
-                    }
-                    else
-                    {
-                        num22 = (int)Main.tile.At(i, j).FrameNumber;
-                    }
-                    if (num9 == 0)
-                    {
-                        if (num2 >= 0 && Main.tileMergeDirt[num2])
-                        {
-                            TileFrame(i, j - 1, false, false);
-                            if (mergeDown)
-                                num2 = num9;
-                        }
-                        if (num7 >= 0 && Main.tileMergeDirt[num7])
-                        {
-                            TileFrame(i, j + 1, false, false);
-                            if (mergeUp)
-                                num7 = num9;
-                        }
-                        if (num4 >= 0 && Main.tileMergeDirt[num4])
-                        {
-                            TileFrame(i - 1, j, false, false);
-                            if (mergeRight)
-                                num4 = num9;
-                        }
-                        if (num5 >= 0 && Main.tileMergeDirt[num5])
-                        {
-                            TileFrame(i + 1, j, false, false);
-                            if (mergeLeft)
-                                num5 = num9;
-                        }
-                        if (num >= 0 && Main.tileMergeDirt[num])
-                            num = num9;
-
-                        if (num3 >= 0 && Main.tileMergeDirt[num3])
-                            num3 = num9;
-
-                        if (num6 >= 0 && Main.tileMergeDirt[num6])
-                            num6 = num9;
-
-                        if (num8 >= 0 && Main.tileMergeDirt[num8])
-                            num8 = num9;
-
-                        if (num2 == 2)
-                            num2 = num9;
-
-                        if (num7 == 2)
-                            num7 = num9;
-
-                        if (num4 == 2)
-                            num4 = num9;
-
-                        if (num5 == 2)
-                            num5 = num9;
-
-                        if (num == 2)
-                            num = num9;
-
-                        if (num3 == 2)
-                            num3 = num9;
-
-                        if (num6 == 2)
-                            num6 = num9;
-
-                        if (num8 == 2)
-                            num8 = num9;
-
-                        if (num2 == 23)
-                            num2 = num9;
-
-                        if (num7 == 23)
-                            num7 = num9;
-
-                        if (num4 == 23)
-                            num4 = num9;
-
-                        if (num5 == 23)
-                            num5 = num9;
-
-                        if (num == 23)
-                            num = num9;
-
-                        if (num3 == 23)
-                            num3 = num9;
-
-                        if (num6 == 23)
-                            num6 = num9;
-
-                        if (num8 == 23)
-                            num8 = num9;
-
-                    }
-                    else if (num9 == 57)
-                        {
-                            if (num2 == 58)
-                            {
-                                TileFrame(i, j - 1, false, false);
-                                if (mergeDown)
-                                    num2 = num9;
-                            }
-                            if (num7 == 58)
-                            {
-                                TileFrame(i, j + 1, false, false);
-                                if (mergeUp)
-                                    num7 = num9;
-                            }
-                            if (num4 == 58)
-                            {
-                                TileFrame(i - 1, j, false, false);
-                                if (mergeRight)
-                                    num4 = num9;
-                            }
-                            if (num5 == 58)
-                            {
-                                TileFrame(i + 1, j, false, false);
-                                if (mergeLeft)
-                                    num5 = num9;
-                            }
-                            if (num == 58)
-                                num = num9;
-
-                            if (num3 == 58)
-                                num3 = num9;
-
-                            if (num6 == 58)
-                                num6 = num9;
-
-                            if (num8 == 58)
-                                num8 = num9;
-
-                        }
-					else if (num9 == 59)
-					{
-						if (num2 == 60)
-						{
-							num2 = num9;
-						}
-						if (num7 == 60)
-						{
-							num7 = num9;
-						}
-						if (num4 == 60)
-						{
-							num4 = num9;
-						}
-						if (num5 == 60)
-						{
-							num5 = num9;
-						}
-						if (num == 60)
-						{
-							num = num9;
-						}
-						if (num3 == 60)
-						{
-							num3 = num9;
-						}
-						if (num6 == 60)
-						{
-							num6 = num9;
-						}
-						if (num8 == 60)
-						{
-							num8 = num9;
-						}
-						if (num2 == 70)
-						{
-							num2 = num9;
-						}
-						if (num7 == 70)
-						{
-							num7 = num9;
-						}
-						if (num4 == 70)
-						{
-							num4 = num9;
-						}
-						if (num5 == 70)
-						{
-							num5 = num9;
-						}
-						if (num == 70)
-						{
-							num = num9;
-						}
-						if (num3 == 70)
-						{
-							num3 = num9;
-						}
-						if (num6 == 70)
-						{
-							num6 = num9;
-						}
-						if (num8 == 70)
-						{
-							num8 = num9;
-						}
-					}
-                    if (Main.tileMergeDirt[num9])
-                    {
-                        if (num2 == 0)
-                        {
-                            num2 = -2;
-                        }
-                        if (num7 == 0)
-                        {
-                            num7 = -2;
-                        }
-                        if (num4 == 0)
-                        {
-                            num4 = -2;
-                        }
-                        if (num5 == 0)
-                        {
-                            num5 = -2;
-                        }
-                        if (num == 0)
-                        {
-                            num = -2;
-                        }
-                        if (num3 == 0)
-                        {
-                            num3 = -2;
-                        }
-                        if (num6 == 0)
-                        {
-                            num6 = -2;
-                        }
-                        if (num8 == 0)
-                        {
-                            num8 = -2;
-                        }
-                    }
-                    else
-                    {
-                        if (num9 == 58)
-                        {
-                            if (num2 == 57)
-                            {
-                                num2 = -2;
-                            }
-                            if (num7 == 57)
-                            {
-                                num7 = -2;
-                            }
-                            if (num4 == 57)
-                            {
-                                num4 = -2;
-                            }
-                            if (num5 == 57)
-                            {
-                                num5 = -2;
-                            }
-                            if (num == 57)
-                            {
-                                num = -2;
-                            }
-                            if (num3 == 57)
-                            {
-                                num3 = -2;
-                            }
-                            if (num6 == 57)
-                            {
-                                num6 = -2;
-                            }
-                            if (num8 == 57)
-                            {
-                                num8 = -2;
-                            }
-                        }
-                        else
-                        {
-                            if (num9 == 59)
-                            {
-                                if (num2 == 1)
-                                {
-                                    num2 = -2;
-                                }
-                                if (num7 == 1)
-                                {
-                                    num7 = -2;
-                                }
-                                if (num4 == 1)
-                                {
-                                    num4 = -2;
-                                }
-                                if (num5 == 1)
-                                {
-                                    num5 = -2;
-                                }
-                                if (num == 1)
-                                {
-                                    num = -2;
-                                }
-                                if (num3 == 1)
-                                {
-                                    num3 = -2;
-                                }
-                                if (num6 == 1)
-                                {
-                                    num6 = -2;
-                                }
-                                if (num8 == 1)
-                                {
-                                    num8 = -2;
-                                }
-                            }
-                        }
-                    }
-                    if (num9 == 32)
-                    {
-                        if (num7 == 23)
-                        {
-                            num7 = num9;
-                        }
-                    }
-                    else
-                    {
-                        if (num9 == 69)
-                        {
-                            if (num7 == 60)
-                            {
-                                num7 = num9;
-                            }
-                        }
-                        else
-                        {
-                            if (num9 == 51)
-                            {
-                                if (num2 > -1 && !Main.tileNoAttach[num2])
-                                {
-                                    num2 = num9;
-                                }
-                                if (num7 > -1 && !Main.tileNoAttach[num7])
-                                {
-                                    num7 = num9;
-                                }
-                                if (num4 > -1 && !Main.tileNoAttach[num4])
-                                {
-                                    num4 = num9;
-                                }
-                                if (num5 > -1 && !Main.tileNoAttach[num5])
-                                {
-                                    num5 = num9;
-                                }
-                                if (num > -1 && !Main.tileNoAttach[num])
-                                {
-                                    num = num9;
-                                }
-                                if (num3 > -1 && !Main.tileNoAttach[num3])
-                                {
-                                    num3 = num9;
-                                }
-                                if (num6 > -1 && !Main.tileNoAttach[num6])
-                                {
-                                    num6 = num9;
-                                }
-                                if (num8 > -1 && !Main.tileNoAttach[num8])
-                                {
-                                    num8 = num9;
-                                }
-                            }
-                        }
-                    }
-                    if (num2 > -1 && !Main.tileSolid[num2] && num2 != num9)
-                    {
-                        num2 = -1;
-                    }
-                    if (num7 > -1 && !Main.tileSolid[num7] && num7 != num9)
-                    {
-                        num7 = -1;
-                    }
-                    if (num4 > -1 && !Main.tileSolid[num4] && num4 != num9)
-                    {
-                        num4 = -1;
-                    }
-                    if (num5 > -1 && !Main.tileSolid[num5] && num5 != num9)
-                    {
-                        num5 = -1;
-                    }
-                    if (num > -1 && !Main.tileSolid[num] && num != num9)
-                    {
-                        num = -1;
-                    }
-                    if (num3 > -1 && !Main.tileSolid[num3] && num3 != num9)
-                    {
-                        num3 = -1;
-                    }
-                    if (num6 > -1 && !Main.tileSolid[num6] && num6 != num9)
-                    {
-                        num6 = -1;
-                    }
-                    if (num8 > -1 && !Main.tileSolid[num8] && num8 != num9)
-                    {
-                        num8 = -1;
-                    }
-                    if (num9 == 2 || num9 == 23 || num9 == 60 || num9 == 70)
-                    {
-                        int num23 = 0;
-                        if (num9 == 60 || num9 == 70)
-                        {
-                            num23 = 59;
-                        }
-                        else
-                        {
-                            if (num9 == 2)
-                            {
-                                if (num2 == 23)
-                                {
-                                    num2 = num23;
-                                }
-                                if (num7 == 23)
-                                {
-                                    num7 = num23;
-                                }
-                                if (num4 == 23)
-                                {
-                                    num4 = num23;
-                                }
-                                if (num5 == 23)
-                                {
-                                    num5 = num23;
-                                }
-                                if (num == 23)
-                                {
-                                    num = num23;
-                                }
-                                if (num3 == 23)
-                                {
-                                    num3 = num23;
-                                }
-                                if (num6 == 23)
-                                {
-                                    num6 = num23;
-                                }
-                                if (num8 == 23)
-                                {
-                                    num8 = num23;
-                                }
-                            }
-                            else
-                            {
-                                if (num9 == 23)
-                                {
-                                    if (num2 == 2)
-                                    {
-                                        num2 = num23;
-                                    }
-                                    if (num7 == 2)
-                                    {
-                                        num7 = num23;
-                                    }
-                                    if (num4 == 2)
-                                    {
-                                        num4 = num23;
-                                    }
-                                    if (num5 == 2)
-                                    {
-                                        num5 = num23;
-                                    }
-                                    if (num == 2)
-                                    {
-                                        num = num23;
-                                    }
-                                    if (num3 == 2)
-                                    {
-                                        num3 = num23;
-                                    }
-                                    if (num6 == 2)
-                                    {
-                                        num6 = num23;
-                                    }
-                                    if (num8 == 2)
-                                    {
-                                        num8 = num23;
-                                    }
-                                }
-                            }
-                        }
-                        if (num2 != num9 && num2 != num23 && (num7 == num9 || num7 == num23))
-                        {
-                            if (num4 == num23 && num5 == num9)
-                            {
-                                if (num22 == 0)
-                                {
-                                    rectangle.X = 0;
-                                    rectangle.Y = 198;
-                                }
-                                if (num22 == 1)
-                                {
-                                    rectangle.X = 18;
-                                    rectangle.Y = 198;
-                                }
-                                if (num22 == 2)
-                                {
-                                    rectangle.X = 36;
-                                    rectangle.Y = 198;
-                                }
-                            }
-                            else
-                            {
-                                if (num4 == num9 && num5 == num23)
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 54;
-                                        rectangle.Y = 198;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 72;
-                                        rectangle.Y = 198;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 90;
-                                        rectangle.Y = 198;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (num7 != num9 && num7 != num23 && (num2 == num9 || num2 == num23))
-                            {
-                                if (num4 == num23 && num5 == num9)
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 0;
-                                        rectangle.Y = 216;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 18;
-                                        rectangle.Y = 216;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 36;
-                                        rectangle.Y = 216;
-                                    }
-                                }
-                                else
-                                {
-                                    if (num4 == num9 && num5 == num23)
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 54;
-                                            rectangle.Y = 216;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 72;
-                                            rectangle.Y = 216;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 90;
-                                            rectangle.Y = 216;
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (num4 != num9 && num4 != num23 && (num5 == num9 || num5 == num23))
-                                {
-                                    if (num2 == num23 && num7 == num9)
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 72;
-                                            rectangle.Y = 144;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 72;
-                                            rectangle.Y = 162;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 72;
-                                            rectangle.Y = 180;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (num7 == num9 && num5 == num2)
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 72;
-                                                rectangle.Y = 90;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 72;
-                                                rectangle.Y = 108;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 72;
-                                                rectangle.Y = 126;
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (num5 != num9 && num5 != num23 && (num4 == num9 || num4 == num23))
-                                    {
-                                        if (num2 == num23 && num7 == num9)
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 90;
-                                                rectangle.Y = 144;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 90;
-                                                rectangle.Y = 162;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 90;
-                                                rectangle.Y = 180;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (num7 == num9 && num5 == num2)
-                                            {
-                                                if (num22 == 0)
-                                                {
-                                                    rectangle.X = 90;
-                                                    rectangle.Y = 90;
-                                                }
-                                                if (num22 == 1)
-                                                {
-                                                    rectangle.X = 90;
-                                                    rectangle.Y = 108;
-                                                }
-                                                if (num22 == 2)
-                                                {
-                                                    rectangle.X = 90;
-                                                    rectangle.Y = 126;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-										if (num2 == num9 && num7 == num9 && num4 == num9 && num5 == num9)
-										{
-											if (num != num9 && num3 != num9 && num6 != num9 && num8 != num9)
-											{
-												if (num8 == num23)
-												{
-													if (num22 == 0)
-													{
-														rectangle.X = 108;
-														rectangle.Y = 324;
-													}
-													if (num22 == 1)
-													{
-														rectangle.X = 126;
-														rectangle.Y = 324;
-													}
-													if (num22 == 2)
-													{
-														rectangle.X = 144;
-														rectangle.Y = 324;
-													}
-												}
-												else
-												{
-													if (num3 == num23)
-													{
-														if (num22 == 0)
-														{
-															rectangle.X = 108;
-															rectangle.Y = 342;
-														}
-														if (num22 == 1)
-														{
-															rectangle.X = 126;
-															rectangle.Y = 342;
-														}
-														if (num22 == 2)
-														{
-															rectangle.X = 144;
-															rectangle.Y = 342;
-														}
-													}
-													else
-													{
-														if (num6 == num23)
-														{
-															if (num22 == 0)
-															{
-																rectangle.X = 108;
-																rectangle.Y = 360;
-															}
-															if (num22 == 1)
-															{
-																rectangle.X = 126;
-																rectangle.Y = 360;
-															}
-															if (num22 == 2)
-															{
-																rectangle.X = 144;
-																rectangle.Y = 360;
-															}
-														}
-														else
-														{
-															if (num == num23)
-															{
-																if (num22 == 0)
-																{
-																	rectangle.X = 108;
-																	rectangle.Y = 378;
-																}
-																if (num22 == 1)
-																{
-																	rectangle.X = 126;
-																	rectangle.Y = 378;
-																}
-																if (num22 == 2)
-																{
-																	rectangle.X = 144;
-																	rectangle.Y = 378;
-																}
-															}
-															else
-															{
-																if (num22 == 0)
-																{
-																	rectangle.X = 144;
-																	rectangle.Y = 234;
-																}
-																if (num22 == 1)
-																{
-																	rectangle.X = 198;
-																	rectangle.Y = 234;
-																}
-																if (num22 == 2)
-																{
-																	rectangle.X = 252;
-																	rectangle.Y = 234;
-																}
-															}
-														}
-													}
-												}
-											}
-											else
-											{
-												if (num != num9 && num8 != num9)
-												{
-													if (num22 == 0)
-													{
-														rectangle.X = 36;
-														rectangle.Y = 306;
-													}
-													if (num22 == 1)
-													{
-														rectangle.X = 54;
-														rectangle.Y = 306;
-													}
-													if (num22 == 2)
-													{
-														rectangle.X = 72;
-														rectangle.Y = 306;
-													}
-												}
-												else
-												{
-													if (num3 != num9 && num6 != num9)
-													{
-														if (num22 == 0)
-														{
-															rectangle.X = 90;
-															rectangle.Y = 306;
-														}
-														if (num22 == 1)
-														{
-															rectangle.X = 108;
-															rectangle.Y = 306;
-														}
-														if (num22 == 2)
-														{
-															rectangle.X = 126;
-															rectangle.Y = 306;
-														}
-													}
-													else
-													{
-														if (num != num9 && num3 == num9 && num6 == num9 && num8 == num9)
-														{
-															if (num22 == 0)
-															{
-																rectangle.X = 54;
-																rectangle.Y = 108;
-															}
-															if (num22 == 1)
-															{
-																rectangle.X = 54;
-																rectangle.Y = 144;
-															}
-															if (num22 == 2)
-															{
-																rectangle.X = 54;
-																rectangle.Y = 180;
-															}
-														}
-														else
-														{
-															if (num == num9 && num3 != num9 && num6 == num9 && num8 == num9)
-															{
-																if (num22 == 0)
-																{
-																	rectangle.X = 36;
-																	rectangle.Y = 108;
-																}
-																if (num22 == 1)
-																{
-																	rectangle.X = 36;
-																	rectangle.Y = 144;
-																}
-																if (num22 == 2)
-																{
-																	rectangle.X = 36;
-																	rectangle.Y = 180;
-																}
-															}
-															else
-															{
-																if (num == num9 && num3 == num9 && num6 != num9 && num8 == num9)
-																{
-																	if (num22 == 0)
-																	{
-																		rectangle.X = 54;
-																		rectangle.Y = 90;
-																	}
-																	if (num22 == 1)
-																	{
-																		rectangle.X = 54;
-																		rectangle.Y = 126;
-																	}
-																	if (num22 == 2)
-																	{
-																		rectangle.X = 54;
-																		rectangle.Y = 162;
-																	}
-																}
-																else
-																{
-																	if (num == num9 && num3 == num9 && num6 == num9 && num8 != num9)
-																	{
-																		if (num22 == 0)
-																		{
-																			rectangle.X = 36;
-																			rectangle.Y = 90;
-																		}
-																		if (num22 == 1)
-																		{
-																			rectangle.X = 36;
-																			rectangle.Y = 126;
-																		}
-																		if (num22 == 2)
-																		{
-																			rectangle.X = 36;
-																			rectangle.Y = 162;
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-										else
-										{
-											if (num2 == num9 && num7 == num23 && num4 == num9 && num5 == num9 && num == -1 && num3 == -1)
-											{
-												if (num22 == 0)
-												{
-													rectangle.X = 108;
-													rectangle.Y = 18;
-												}
-												if (num22 == 1)
-												{
-													rectangle.X = 126;
-													rectangle.Y = 18;
-												}
-												if (num22 == 2)
-												{
-													rectangle.X = 144;
-													rectangle.Y = 18;
-												}
-											}
-											else
-											{
-												if (num2 == num23 && num7 == num9 && num4 == num9 && num5 == num9 && num6 == -1 && num8 == -1)
-												{
-													if (num22 == 0)
-													{
-														rectangle.X = 108;
-														rectangle.Y = 36;
-													}
-													if (num22 == 1)
-													{
-														rectangle.X = 126;
-														rectangle.Y = 36;
-													}
-													if (num22 == 2)
-													{
-														rectangle.X = 144;
-														rectangle.Y = 36;
-													}
-												}
-												else
-												{
-													if (num2 == num9 && num7 == num9 && num4 == num23 && num5 == num9 && num3 == -1 && num8 == -1)
-													{
-														if (num22 == 0)
-														{
-															rectangle.X = 198;
-															rectangle.Y = 0;
-														}
-														if (num22 == 1)
-														{
-															rectangle.X = 198;
-															rectangle.Y = 18;
-														}
-														if (num22 == 2)
-														{
-															rectangle.X = 198;
-															rectangle.Y = 36;
-														}
-													}
-													else
-													{
-														if (num2 == num9 && num7 == num9 && num4 == num9 && num5 == num23 && num == -1 && num6 == -1)
-														{
-															if (num22 == 0)
-															{
-																rectangle.X = 180;
-																rectangle.Y = 0;
-															}
-															if (num22 == 1)
-															{
-																rectangle.X = 180;
-																rectangle.Y = 18;
-															}
-															if (num22 == 2)
-															{
-																rectangle.X = 180;
-																rectangle.Y = 36;
-															}
-														}
-														else
-														{
-															if (num2 == num9 && num7 == num23 && num4 == num9 && num5 == num9)
-															{
-																if (num3 != -1)
-																{
-																	if (num22 == 0)
-																	{
-																		rectangle.X = 54;
-																		rectangle.Y = 108;
-																	}
-																	if (num22 == 1)
-																	{
-																		rectangle.X = 54;
-																		rectangle.Y = 144;
-																	}
-																	if (num22 == 2)
-																	{
-																		rectangle.X = 54;
-																		rectangle.Y = 180;
-																	}
-																}
-																else
-																{
-																	if (num != -1)
-																	{
-																		if (num22 == 0)
-																		{
-																			rectangle.X = 36;
-																			rectangle.Y = 108;
-																		}
-																		if (num22 == 1)
-																		{
-																			rectangle.X = 36;
-																			rectangle.Y = 144;
-																		}
-																		if (num22 == 2)
-																		{
-																			rectangle.X = 36;
-																			rectangle.Y = 180;
-																		}
-																	}
-																}
-															}
-															else
-															{
-																if (num2 == num23 && num7 == num9 && num4 == num9 && num5 == num9)
-																{
-																	if (num8 != -1)
-																	{
-																		if (num22 == 0)
-																		{
-																			rectangle.X = 54;
-																			rectangle.Y = 90;
-																		}
-																		if (num22 == 1)
-																		{
-																			rectangle.X = 54;
-																			rectangle.Y = 126;
-																		}
-																		if (num22 == 2)
-																		{
-																			rectangle.X = 54;
-																			rectangle.Y = 162;
-																		}
-																	}
-																	else
-																	{
-																		if (num6 != -1)
-																		{
-																			if (num22 == 0)
-																			{
-																				rectangle.X = 36;
-																				rectangle.Y = 90;
-																			}
-																			if (num22 == 1)
-																			{
-																				rectangle.X = 36;
-																				rectangle.Y = 126;
-																			}
-																			if (num22 == 2)
-																			{
-																				rectangle.X = 36;
-																				rectangle.Y = 162;
-																			}
-																		}
-																	}
-																}
-																else
-																{
-																	if (num2 == num9 && num7 == num9 && num4 == num9 && num5 == num23)
-																	{
-																		if (num != -1)
-																		{
-																			if (num22 == 0)
-																			{
-																				rectangle.X = 54;
-																				rectangle.Y = 90;
-																			}
-																			if (num22 == 1)
-																			{
-																				rectangle.X = 54;
-																				rectangle.Y = 126;
-																			}
-																			if (num22 == 2)
-																			{
-																				rectangle.X = 54;
-																				rectangle.Y = 162;
-																			}
-																		}
-																		else
-																		{
-																			if (num6 != -1)
-																			{
-																				if (num22 == 0)
-																				{
-																					rectangle.X = 54;
-																					rectangle.Y = 108;
-																				}
-																				if (num22 == 1)
-																				{
-																					rectangle.X = 54;
-																					rectangle.Y = 144;
-																				}
-																				if (num22 == 2)
-																				{
-																					rectangle.X = 54;
-																					rectangle.Y = 180;
-																				}
-																			}
-																		}
-																	}
-																	else
-																	{
-																		if (num2 == num9 && num7 == num9 && num4 == num23 && num5 == num9)
-																		{
-																			if (num3 != -1)
-																			{
-																				if (num22 == 0)
-																				{
-																					rectangle.X = 36;
-																					rectangle.Y = 90;
-																				}
-																				if (num22 == 1)
-																				{
-																					rectangle.X = 36;
-																					rectangle.Y = 126;
-																				}
-																				if (num22 == 2)
-																				{
-																					rectangle.X = 36;
-																					rectangle.Y = 162;
-																				}
-																			}
-																			else
-																			{
-																				if (num8 != -1)
-																				{
-																					if (num22 == 0)
-																					{
-																						rectangle.X = 36;
-																						rectangle.Y = 108;
-																					}
-																					if (num22 == 1)
-																					{
-																						rectangle.X = 36;
-																						rectangle.Y = 144;
-																					}
-																					if (num22 == 2)
-																					{
-																						rectangle.X = 36;
-																						rectangle.Y = 180;
-																					}
-																				}
-																			}
-																		}
-																		else
-																		{
-																			if ((num2 == num23 && num7 == num9 && num4 == num9 && num5 == num9) || (num2 == num9 && num7 == num23 && num4 == num9 && num5 == num9) || (num2 == num9 && num7 == num9 && num4 == num23 && num5 == num9) || (num2 == num9 && num7 == num9 && num4 == num9 && num5 == num23))
-																			{
-																				if (num22 == 0)
-																				{
-																					rectangle.X = 18;
-																					rectangle.Y = 18;
-																				}
-																				if (num22 == 1)
-																				{
-																					rectangle.X = 36;
-																					rectangle.Y = 18;
-																				}
-																				if (num22 == 2)
-																				{
-																					rectangle.X = 54;
-																					rectangle.Y = 18;
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-                                    }
-                                }
-                            }
-                        }
-                        if ((num2 == num9 || num2 == num23) && (num7 == num9 || num7 == num23) && (num4 == num9 || num4 == num23) && (num5 == num9 || num5 == num23))
-                        {
-                            if (num != num9 && num != num23 && (num3 == num9 || num3 == num23) && (num6 == num9 || num6 == num23) && (num8 == num9 || num8 == num23))
-                            {
-                                if (num22 == 0)
-                                {
-                                    rectangle.X = 54;
-                                    rectangle.Y = 108;
-                                }
-                                if (num22 == 1)
-                                {
-                                    rectangle.X = 54;
-                                    rectangle.Y = 144;
-                                }
-                                if (num22 == 2)
-                                {
-                                    rectangle.X = 54;
-                                    rectangle.Y = 180;
-                                }
-                            }
-                            else
-                            {
-                                if (num3 != num9 && num3 != num23 && (num == num9 || num == num23) && (num6 == num9 || num6 == num23) && (num8 == num9 || num8 == num23))
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 36;
-                                        rectangle.Y = 108;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 36;
-                                        rectangle.Y = 144;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 36;
-                                        rectangle.Y = 180;
-                                    }
-                                }
-                                else
-                                {
-                                    if (num6 != num9 && num6 != num23 && (num == num9 || num == num23) && (num3 == num9 || num3 == num23) && (num8 == num9 || num8 == num23))
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 54;
-                                            rectangle.Y = 90;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 54;
-                                            rectangle.Y = 126;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 54;
-                                            rectangle.Y = 162;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (num8 != num9 && num8 != num23 && (num == num9 || num == num23) && (num6 == num9 || num6 == num23) && (num3 == num9 || num3 == num23))
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 36;
-                                                rectangle.Y = 90;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 36;
-                                                rectangle.Y = 126;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 36;
-                                                rectangle.Y = 162;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (num2 != num23 && num2 != num9 && num7 == num9 && num4 != num23 && num4 != num9 && num5 == num9 && num8 != num23 && num8 != num9)
-                        {
-                            if (num22 == 0)
-                            {
-                                rectangle.X = 90;
-                                rectangle.Y = 270;
-                            }
-                            if (num22 == 1)
-                            {
-                                rectangle.X = 108;
-                                rectangle.Y = 270;
-                            }
-                            if (num22 == 2)
-                            {
-                                rectangle.X = 126;
-                                rectangle.Y = 270;
-                            }
-                        }
-                        else
-                        {
-                            if (num2 != num23 && num2 != num9 && num7 == num9 && num4 == num9 && num5 != num23 && num5 != num9 && num6 != num23 && num6 != num9)
-                            {
-                                if (num22 == 0)
-                                {
-                                    rectangle.X = 144;
-                                    rectangle.Y = 270;
-                                }
-                                if (num22 == 1)
-                                {
-                                    rectangle.X = 162;
-                                    rectangle.Y = 270;
-                                }
-                                if (num22 == 2)
-                                {
-                                    rectangle.X = 180;
-                                    rectangle.Y = 270;
-                                }
-                            }
-                            else
-                            {
-                                if (num7 != num23 && num7 != num9 && num2 == num9 && num4 != num23 && num4 != num9 && num5 == num9 && num3 != num23 && num3 != num9)
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 90;
-                                        rectangle.Y = 288;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 108;
-                                        rectangle.Y = 288;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 126;
-                                        rectangle.Y = 288;
-                                    }
-                                }
-                                else
-                                {
-                                    if (num7 != num23 && num7 != num9 && num2 == num9 && num4 == num9 && num5 != num23 && num5 != num9 && num != num23 && num != num9)
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 144;
-                                            rectangle.Y = 288;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 162;
-                                            rectangle.Y = 288;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 180;
-                                            rectangle.Y = 288;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (num2 != num9 && num2 != num23 && num7 == num9 && num4 == num9 && num5 == num9 && num6 != num9 && num6 != num23 && num8 != num9 && num8 != num23)
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 144;
-                                                rectangle.Y = 216;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 198;
-                                                rectangle.Y = 216;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 252;
-                                                rectangle.Y = 216;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (num7 != num9 && num7 != num23 && num2 == num9 && num4 == num9 && num5 == num9 && num != num9 && num != num23 && num3 != num9 && num3 != num23)
-                                            {
-                                                if (num22 == 0)
-                                                {
-                                                    rectangle.X = 144;
-                                                    rectangle.Y = 252;
-                                                }
-                                                if (num22 == 1)
-                                                {
-                                                    rectangle.X = 198;
-                                                    rectangle.Y = 252;
-                                                }
-                                                if (num22 == 2)
-                                                {
-                                                    rectangle.X = 252;
-                                                    rectangle.Y = 252;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (num4 != num9 && num4 != num23 && num7 == num9 && num2 == num9 && num5 == num9 && num3 != num9 && num3 != num23 && num8 != num9 && num8 != num23)
-                                                {
-                                                    if (num22 == 0)
-                                                    {
-                                                        rectangle.X = 126;
-                                                        rectangle.Y = 234;
-                                                    }
-                                                    if (num22 == 1)
-                                                    {
-                                                        rectangle.X = 180;
-                                                        rectangle.Y = 234;
-                                                    }
-                                                    if (num22 == 2)
-                                                    {
-                                                        rectangle.X = 234;
-                                                        rectangle.Y = 234;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (num5 != num9 && num5 != num23 && num7 == num9 && num2 == num9 && num4 == num9 && num != num9 && num != num23 && num6 != num9 && num6 != num23)
-                                                    {
-                                                        if (num22 == 0)
-                                                        {
-                                                            rectangle.X = 162;
-                                                            rectangle.Y = 234;
-                                                        }
-                                                        if (num22 == 1)
-                                                        {
-                                                            rectangle.X = 216;
-                                                            rectangle.Y = 234;
-                                                        }
-                                                        if (num22 == 2)
-                                                        {
-                                                            rectangle.X = 270;
-                                                            rectangle.Y = 234;
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (num2 != num23 && num2 != num9 && (num7 == num23 || num7 == num9) && num4 == num23 && num5 == num23)
-                                                        {
-                                                            if (num22 == 0)
-                                                            {
-                                                                rectangle.X = 36;
-                                                                rectangle.Y = 270;
-                                                            }
-                                                            if (num22 == 1)
-                                                            {
-                                                                rectangle.X = 54;
-                                                                rectangle.Y = 270;
-                                                            }
-                                                            if (num22 == 2)
-                                                            {
-                                                                rectangle.X = 72;
-                                                                rectangle.Y = 270;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (num7 != num23 && num7 != num9 && (num2 == num23 || num2 == num9) && num4 == num23 && num5 == num23)
-                                                            {
-                                                                if (num22 == 0)
-                                                                {
-                                                                    rectangle.X = 36;
-                                                                    rectangle.Y = 288;
-                                                                }
-                                                                if (num22 == 1)
-                                                                {
-                                                                    rectangle.X = 54;
-                                                                    rectangle.Y = 288;
-                                                                }
-                                                                if (num22 == 2)
-                                                                {
-                                                                    rectangle.X = 72;
-                                                                    rectangle.Y = 288;
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (num4 != num23 && num4 != num9 && (num5 == num23 || num5 == num9) && num2 == num23 && num7 == num23)
-                                                                {
-                                                                    if (num22 == 0)
-                                                                    {
-                                                                        rectangle.X = 0;
-                                                                        rectangle.Y = 270;
-                                                                    }
-                                                                    if (num22 == 1)
-                                                                    {
-                                                                        rectangle.X = 0;
-                                                                        rectangle.Y = 288;
-                                                                    }
-                                                                    if (num22 == 2)
-                                                                    {
-                                                                        rectangle.X = 0;
-                                                                        rectangle.Y = 306;
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (num5 != num23 && num5 != num9 && (num4 == num23 || num4 == num9) && num2 == num23 && num7 == num23)
-                                                                    {
-                                                                        if (num22 == 0)
-                                                                        {
-                                                                            rectangle.X = 18;
-                                                                            rectangle.Y = 270;
-                                                                        }
-                                                                        if (num22 == 1)
-                                                                        {
-                                                                            rectangle.X = 18;
-                                                                            rectangle.Y = 288;
-                                                                        }
-                                                                        if (num22 == 2)
-                                                                        {
-                                                                            rectangle.X = 18;
-                                                                            rectangle.Y = 306;
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (num2 == num9 && num7 == num23 && num4 == num23 && num5 == num23)
-                                                                        {
-                                                                            if (num22 == 0)
-                                                                            {
-                                                                                rectangle.X = 198;
-                                                                                rectangle.Y = 288;
-                                                                            }
-                                                                            if (num22 == 1)
-                                                                            {
-                                                                                rectangle.X = 216;
-                                                                                rectangle.Y = 288;
-                                                                            }
-                                                                            if (num22 == 2)
-                                                                            {
-                                                                                rectangle.X = 234;
-                                                                                rectangle.Y = 288;
-                                                                            }
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (num2 == num23 && num7 == num9 && num4 == num23 && num5 == num23)
-                                                                            {
-                                                                                if (num22 == 0)
-                                                                                {
-                                                                                    rectangle.X = 198;
-                                                                                    rectangle.Y = 270;
-                                                                                }
-                                                                                if (num22 == 1)
-                                                                                {
-                                                                                    rectangle.X = 216;
-                                                                                    rectangle.Y = 270;
-                                                                                }
-                                                                                if (num22 == 2)
-                                                                                {
-                                                                                    rectangle.X = 234;
-                                                                                    rectangle.Y = 270;
-                                                                                }
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (num2 == num23 && num7 == num23 && num4 == num9 && num5 == num23)
-                                                                                {
-                                                                                    if (num22 == 0)
-                                                                                    {
-                                                                                        rectangle.X = 198;
-                                                                                        rectangle.Y = 306;
-                                                                                    }
-                                                                                    if (num22 == 1)
-                                                                                    {
-                                                                                        rectangle.X = 216;
-                                                                                        rectangle.Y = 306;
-                                                                                    }
-                                                                                    if (num22 == 2)
-                                                                                    {
-                                                                                        rectangle.X = 234;
-                                                                                        rectangle.Y = 306;
-                                                                                    }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (num2 == num23 && num7 == num23 && num4 == num23 && num5 == num9)
-                                                                                    {
-                                                                                        if (num22 == 0)
-                                                                                        {
-                                                                                            rectangle.X = 144;
-                                                                                            rectangle.Y = 306;
-                                                                                        }
-                                                                                        if (num22 == 1)
-                                                                                        {
-                                                                                            rectangle.X = 162;
-                                                                                            rectangle.Y = 306;
-                                                                                        }
-                                                                                        if (num22 == 2)
-                                                                                        {
-                                                                                            rectangle.X = 180;
-                                                                                            rectangle.Y = 306;
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (num2 != num9 && num2 != num23 && num7 == num9 && num4 == num9 && num5 == num9)
-                        {
-                            if ((num6 == num23 || num6 == num9) && num8 != num23 && num8 != num9)
-                            {
-                                if (num22 == 0)
-                                {
-                                    rectangle.X = 0;
-                                    rectangle.Y = 324;
-                                }
-                                if (num22 == 1)
-                                {
-                                    rectangle.X = 18;
-                                    rectangle.Y = 324;
-                                }
-                                if (num22 == 2)
-                                {
-                                    rectangle.X = 36;
-                                    rectangle.Y = 324;
-                                }
-                            }
-                            else
-                            {
-                                if ((num8 == num23 || num8 == num9) && num6 != num23 && num6 != num9)
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 54;
-                                        rectangle.Y = 324;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 72;
-                                        rectangle.Y = 324;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 90;
-                                        rectangle.Y = 324;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (num7 != num9 && num7 != num23 && num2 == num9 && num4 == num9 && num5 == num9)
-                            {
-                                if ((num == num23 || num == num9) && num3 != num23 && num3 != num9)
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 0;
-                                        rectangle.Y = 342;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 18;
-                                        rectangle.Y = 342;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 36;
-                                        rectangle.Y = 342;
-                                    }
-                                }
-                                else
-                                {
-                                    if ((num3 == num23 || num3 == num9) && num != num23 && num != num9)
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 54;
-                                            rectangle.Y = 342;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 72;
-                                            rectangle.Y = 342;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 90;
-                                            rectangle.Y = 342;
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (num4 != num9 && num4 != num23 && num2 == num9 && num7 == num9 && num5 == num9)
-                                {
-                                    if ((num3 == num23 || num3 == num9) && num8 != num23 && num8 != num9)
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 54;
-                                            rectangle.Y = 360;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 72;
-                                            rectangle.Y = 360;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 90;
-                                            rectangle.Y = 360;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if ((num8 == num23 || num8 == num9) && num3 != num23 && num3 != num9)
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 0;
-                                                rectangle.Y = 360;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 18;
-                                                rectangle.Y = 360;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 36;
-                                                rectangle.Y = 360;
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (num5 != num9 && num5 != num23 && num2 == num9 && num7 == num9 && num4 == num9)
-                                    {
-                                        if ((num == num23 || num == num9) && num6 != num23 && num6 != num9)
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 0;
-                                                rectangle.Y = 378;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 18;
-                                                rectangle.Y = 378;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 36;
-                                                rectangle.Y = 378;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if ((num6 == num23 || num6 == num9) && num != num23 && num != num9)
-                                            {
-                                                if (num22 == 0)
-                                                {
-                                                    rectangle.X = 54;
-                                                    rectangle.Y = 378;
-                                                }
-                                                if (num22 == 1)
-                                                {
-                                                    rectangle.X = 72;
-                                                    rectangle.Y = 378;
-                                                }
-                                                if (num22 == 2)
-                                                {
-                                                    rectangle.X = 90;
-                                                    rectangle.Y = 378;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if ((num2 == num9 || num2 == num23) && (num7 == num9 || num7 == num23) && (num4 == num9 || num4 == num23) && (num5 == num9 || num5 == num23) && num != -1 && num3 != -1 && num6 != -1 && num8 != -1)
-                        {
-                            if (num22 == 0)
-                            {
-                                rectangle.X = 18;
-                                rectangle.Y = 18;
-                            }
-                            if (num22 == 1)
-                            {
-                                rectangle.X = 36;
-                                rectangle.Y = 18;
-                            }
-                            if (num22 == 2)
-                            {
-                                rectangle.X = 54;
-                                rectangle.Y = 18;
-                            }
-                        }
-                        if (num2 == num23)
-                        {
-                            num2 = -2;
-                        }
-                        if (num7 == num23)
-                        {
-                            num7 = -2;
-                        }
-                        if (num4 == num23)
-                        {
-                            num4 = -2;
-                        }
-                        if (num5 == num23)
-                        {
-                            num5 = -2;
-                        }
-                        if (num == num23)
-                        {
-                            num = -2;
-                        }
-                        if (num3 == num23)
-                        {
-                            num3 = -2;
-                        }
-                        if (num6 == num23)
-                        {
-                            num6 = -2;
-                        }
-                        if (num8 == num23)
-                        {
-                            num8 = -2;
-                        }
-                    }
-                    if ((num9 == 1 || num9 == 2 || num9 == 6 || num9 == 7 || num9 == 8 || num9 == 9 || num9 == 22 || num9 == 23 || num9 == 25 || num9 == 37 || num9 == 40 || num9 == 53 || num9 == 56 || num9 == 58 || num9 == 59 || num9 == 60 || num9 == 70) && rectangle.X == -1 && rectangle.Y == -1)
-                    {
-                        if (num2 >= 0 && num2 != num9)
-                        {
-                            num2 = -1;
-                        }
-                        if (num7 >= 0 && num7 != num9)
-                        {
-                            num7 = -1;
-                        }
-                        if (num4 >= 0 && num4 != num9)
-                        {
-                            num4 = -1;
-                        }
-                        if (num5 >= 0 && num5 != num9)
-                        {
-                            num5 = -1;
-                        }
-                        if (num2 != -1 && num7 != -1 && num4 != -1 && num5 != -1)
-                        {
-                            if (num2 == -2 && num7 == num9 && num4 == num9 && num5 == num9)
-                            {
-                                if (num22 == 0)
-                                {
-                                    rectangle.X = 144;
-                                    rectangle.Y = 108;
-                                }
-                                if (num22 == 1)
-                                {
-                                    rectangle.X = 162;
-                                    rectangle.Y = 108;
-                                }
-                                if (num22 == 2)
-                                {
-                                    rectangle.X = 180;
-                                    rectangle.Y = 108;
-                                }
-                                mergeUp = true;
-                            }
-                            else
-                            {
-                                if (num2 == num9 && num7 == -2 && num4 == num9 && num5 == num9)
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 144;
-                                        rectangle.Y = 90;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 162;
-                                        rectangle.Y = 90;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 180;
-                                        rectangle.Y = 90;
-                                    }
-                                    mergeDown = true;
-                                }
-                                else
-                                {
-                                    if (num2 == num9 && num7 == num9 && num4 == -2 && num5 == num9)
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 162;
-                                            rectangle.Y = 126;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 162;
-                                            rectangle.Y = 144;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 162;
-                                            rectangle.Y = 162;
-                                        }
-                                        mergeLeft = true;
-                                    }
-                                    else
-                                    {
-                                        if (num2 == num9 && num7 == num9 && num4 == num9 && num5 == -2)
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 144;
-                                                rectangle.Y = 126;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 144;
-                                                rectangle.Y = 144;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 144;
-                                                rectangle.Y = 162;
-                                            }
-                                            mergeRight = true;
-                                        }
-                                        else
-                                        {
-                                            if (num2 == -2 && num7 == num9 && num4 == -2 && num5 == num9)
-                                            {
-                                                if (num22 == 0)
-                                                {
-                                                    rectangle.X = 36;
-                                                    rectangle.Y = 90;
-                                                }
-                                                if (num22 == 1)
-                                                {
-                                                    rectangle.X = 36;
-                                                    rectangle.Y = 126;
-                                                }
-                                                if (num22 == 2)
-                                                {
-                                                    rectangle.X = 36;
-                                                    rectangle.Y = 162;
-                                                }
-                                                mergeUp = true;
-                                                mergeLeft = true;
-                                            }
-                                            else
-                                            {
-                                                if (num2 == -2 && num7 == num9 && num4 == num9 && num5 == -2)
-                                                {
-                                                    if (num22 == 0)
-                                                    {
-                                                        rectangle.X = 54;
-                                                        rectangle.Y = 90;
-                                                    }
-                                                    if (num22 == 1)
-                                                    {
-                                                        rectangle.X = 54;
-                                                        rectangle.Y = 126;
-                                                    }
-                                                    if (num22 == 2)
-                                                    {
-                                                        rectangle.X = 54;
-                                                        rectangle.Y = 162;
-                                                    }
-                                                    mergeUp = true;
-                                                    mergeRight = true;
-                                                }
-                                                else
-                                                {
-                                                    if (num2 == num9 && num7 == -2 && num4 == -2 && num5 == num9)
-                                                    {
-                                                        if (num22 == 0)
-                                                        {
-                                                            rectangle.X = 36;
-                                                            rectangle.Y = 108;
-                                                        }
-                                                        if (num22 == 1)
-                                                        {
-                                                            rectangle.X = 36;
-                                                            rectangle.Y = 144;
-                                                        }
-                                                        if (num22 == 2)
-                                                        {
-                                                            rectangle.X = 36;
-                                                            rectangle.Y = 180;
-                                                        }
-                                                        mergeDown = true;
-                                                        mergeLeft = true;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (num2 == num9 && num7 == -2 && num4 == num9 && num5 == -2)
-                                                        {
-                                                            if (num22 == 0)
-                                                            {
-                                                                rectangle.X = 54;
-                                                                rectangle.Y = 108;
-                                                            }
-                                                            if (num22 == 1)
-                                                            {
-                                                                rectangle.X = 54;
-                                                                rectangle.Y = 144;
-                                                            }
-                                                            if (num22 == 2)
-                                                            {
-                                                                rectangle.X = 54;
-                                                                rectangle.Y = 180;
-                                                            }
-                                                            mergeDown = true;
-                                                            mergeRight = true;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (num2 == num9 && num7 == num9 && num4 == -2 && num5 == -2)
-                                                            {
-                                                                if (num22 == 0)
-                                                                {
-                                                                    rectangle.X = 180;
-                                                                    rectangle.Y = 126;
-                                                                }
-                                                                if (num22 == 1)
-                                                                {
-                                                                    rectangle.X = 180;
-                                                                    rectangle.Y = 144;
-                                                                }
-                                                                if (num22 == 2)
-                                                                {
-                                                                    rectangle.X = 180;
-                                                                    rectangle.Y = 162;
-                                                                }
-                                                                mergeLeft = true;
-                                                                mergeRight = true;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (num2 == -2 && num7 == -2 && num4 == num9 && num5 == num9)
-                                                                {
-                                                                    if (num22 == 0)
-                                                                    {
-                                                                        rectangle.X = 144;
-                                                                        rectangle.Y = 180;
-                                                                    }
-                                                                    if (num22 == 1)
-                                                                    {
-                                                                        rectangle.X = 162;
-                                                                        rectangle.Y = 180;
-                                                                    }
-                                                                    if (num22 == 2)
-                                                                    {
-                                                                        rectangle.X = 180;
-                                                                        rectangle.Y = 180;
-                                                                    }
-                                                                    mergeUp = true;
-                                                                    mergeDown = true;
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (num2 == -2 && num7 == num9 && num4 == -2 && num5 == -2)
-                                                                    {
-                                                                        if (num22 == 0)
-                                                                        {
-                                                                            rectangle.X = 198;
-                                                                            rectangle.Y = 90;
-                                                                        }
-                                                                        if (num22 == 1)
-                                                                        {
-                                                                            rectangle.X = 198;
-                                                                            rectangle.Y = 108;
-                                                                        }
-                                                                        if (num22 == 2)
-                                                                        {
-                                                                            rectangle.X = 198;
-                                                                            rectangle.Y = 126;
-                                                                        }
-                                                                        mergeUp = true;
-                                                                        mergeLeft = true;
-                                                                        mergeRight = true;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (num2 == num9 && num7 == -2 && num4 == -2 && num5 == -2)
-                                                                        {
-                                                                            if (num22 == 0)
-                                                                            {
-                                                                                rectangle.X = 198;
-                                                                                rectangle.Y = 144;
-                                                                            }
-                                                                            if (num22 == 1)
-                                                                            {
-                                                                                rectangle.X = 198;
-                                                                                rectangle.Y = 162;
-                                                                            }
-                                                                            if (num22 == 2)
-                                                                            {
-                                                                                rectangle.X = 198;
-                                                                                rectangle.Y = 180;
-                                                                            }
-                                                                            mergeDown = true;
-                                                                            mergeLeft = true;
-                                                                            mergeRight = true;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (num2 == -2 && num7 == -2 && num4 == num9 && num5 == -2)
-                                                                            {
-                                                                                if (num22 == 0)
-                                                                                {
-                                                                                    rectangle.X = 216;
-                                                                                    rectangle.Y = 144;
-                                                                                }
-                                                                                if (num22 == 1)
-                                                                                {
-                                                                                    rectangle.X = 216;
-                                                                                    rectangle.Y = 162;
-                                                                                }
-                                                                                if (num22 == 2)
-                                                                                {
-                                                                                    rectangle.X = 216;
-                                                                                    rectangle.Y = 180;
-                                                                                }
-                                                                                mergeUp = true;
-                                                                                mergeDown = true;
-                                                                                mergeRight = true;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (num2 == -2 && num7 == -2 && num4 == -2 && num5 == num9)
-                                                                                {
-                                                                                    if (num22 == 0)
-                                                                                    {
-                                                                                        rectangle.X = 216;
-                                                                                        rectangle.Y = 90;
-                                                                                    }
-                                                                                    if (num22 == 1)
-                                                                                    {
-                                                                                        rectangle.X = 216;
-                                                                                        rectangle.Y = 108;
-                                                                                    }
-                                                                                    if (num22 == 2)
-                                                                                    {
-                                                                                        rectangle.X = 216;
-                                                                                        rectangle.Y = 126;
-                                                                                    }
-                                                                                    mergeUp = true;
-                                                                                    mergeDown = true;
-                                                                                    mergeLeft = true;
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (num2 == -2 && num7 == -2 && num4 == -2 && num5 == -2)
-                                                                                    {
-                                                                                        if (num22 == 0)
-                                                                                        {
-                                                                                            rectangle.X = 108;
-                                                                                            rectangle.Y = 198;
-                                                                                        }
-                                                                                        if (num22 == 1)
-                                                                                        {
-                                                                                            rectangle.X = 126;
-                                                                                            rectangle.Y = 198;
-                                                                                        }
-                                                                                        if (num22 == 2)
-                                                                                        {
-                                                                                            rectangle.X = 144;
-                                                                                            rectangle.Y = 198;
-                                                                                        }
-                                                                                        mergeUp = true;
-                                                                                        mergeDown = true;
-                                                                                        mergeLeft = true;
-                                                                                        mergeRight = true;
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        if (num2 == num9 && num7 == num9 && num4 == num9 && num5 == num9)
-                                                                                        {
-                                                                                            if (num == -2)
-                                                                                            {
-                                                                                                if (num22 == 0)
-                                                                                                {
-                                                                                                    rectangle.X = 18;
-                                                                                                    rectangle.Y = 108;
-                                                                                                }
-                                                                                                if (num22 == 1)
-                                                                                                {
-                                                                                                    rectangle.X = 18;
-                                                                                                    rectangle.Y = 144;
-                                                                                                }
-                                                                                                if (num22 == 2)
-                                                                                                {
-                                                                                                    rectangle.X = 18;
-                                                                                                    rectangle.Y = 180;
-                                                                                                }
-                                                                                            }
-                                                                                            if (num3 == -2)
-                                                                                            {
-                                                                                                if (num22 == 0)
-                                                                                                {
-                                                                                                    rectangle.X = 0;
-                                                                                                    rectangle.Y = 108;
-                                                                                                }
-                                                                                                if (num22 == 1)
-                                                                                                {
-                                                                                                    rectangle.X = 0;
-                                                                                                    rectangle.Y = 144;
-                                                                                                }
-                                                                                                if (num22 == 2)
-                                                                                                {
-                                                                                                    rectangle.X = 0;
-                                                                                                    rectangle.Y = 180;
-                                                                                                }
-                                                                                            }
-                                                                                            if (num6 == -2)
-                                                                                            {
-                                                                                                if (num22 == 0)
-                                                                                                {
-                                                                                                    rectangle.X = 18;
-                                                                                                    rectangle.Y = 90;
-                                                                                                }
-                                                                                                if (num22 == 1)
-                                                                                                {
-                                                                                                    rectangle.X = 18;
-                                                                                                    rectangle.Y = 126;
-                                                                                                }
-                                                                                                if (num22 == 2)
-                                                                                                {
-                                                                                                    rectangle.X = 18;
-                                                                                                    rectangle.Y = 162;
-                                                                                                }
-                                                                                            }
-                                                                                            if (num8 == -2)
-                                                                                            {
-                                                                                                if (num22 == 0)
-                                                                                                {
-                                                                                                    rectangle.X = 0;
-                                                                                                    rectangle.Y = 90;
-                                                                                                }
-                                                                                                if (num22 == 1)
-                                                                                                {
-                                                                                                    rectangle.X = 0;
-                                                                                                    rectangle.Y = 126;
-                                                                                                }
-                                                                                                if (num22 == 2)
-                                                                                                {
-                                                                                                    rectangle.X = 0;
-                                                                                                    rectangle.Y = 162;
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (num9 != 2 && num9 != 23 && num9 != 60 && num9 != 70)
-                            {
-                                if (num2 == -1 && num7 == -2 && num4 == num9 && num5 == num9)
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 234;
-                                        rectangle.Y = 0;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 252;
-                                        rectangle.Y = 0;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 270;
-                                        rectangle.Y = 0;
-                                    }
-                                    mergeDown = true;
-                                }
-                                else
-                                {
-                                    if (num2 == -2 && num7 == -1 && num4 == num9 && num5 == num9)
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 234;
-                                            rectangle.Y = 18;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 252;
-                                            rectangle.Y = 18;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 270;
-                                            rectangle.Y = 18;
-                                        }
-                                        mergeUp = true;
-                                    }
-                                    else
-                                    {
-                                        if (num2 == num9 && num7 == num9 && num4 == -1 && num5 == -2)
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 234;
-                                                rectangle.Y = 36;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 252;
-                                                rectangle.Y = 36;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 270;
-                                                rectangle.Y = 36;
-                                            }
-                                            mergeRight = true;
-                                        }
-                                        else
-                                        {
-                                            if (num2 == num9 && num7 == num9 && num4 == -2 && num5 == -1)
-                                            {
-                                                if (num22 == 0)
-                                                {
-                                                    rectangle.X = 234;
-                                                    rectangle.Y = 54;
-                                                }
-                                                if (num22 == 1)
-                                                {
-                                                    rectangle.X = 252;
-                                                    rectangle.Y = 54;
-                                                }
-                                                if (num22 == 2)
-                                                {
-                                                    rectangle.X = 270;
-                                                    rectangle.Y = 54;
-                                                }
-                                                mergeLeft = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (num2 != -1 && num7 != -1 && num4 == -1 && num5 == num9)
-                            {
-                                if (num2 == -2 && num7 == num9)
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 72;
-                                        rectangle.Y = 144;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 72;
-                                        rectangle.Y = 162;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 72;
-                                        rectangle.Y = 180;
-                                    }
-                                    mergeUp = true;
-                                }
-                                else
-                                {
-                                    if (num7 == -2 && num2 == num9)
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 72;
-                                            rectangle.Y = 90;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 72;
-                                            rectangle.Y = 108;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 72;
-                                            rectangle.Y = 126;
-                                        }
-                                        mergeDown = true;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (num2 != -1 && num7 != -1 && num4 == num9 && num5 == -1)
-                                {
-                                    if (num2 == -2 && num7 == num9)
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 90;
-                                            rectangle.Y = 144;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 90;
-                                            rectangle.Y = 162;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 90;
-                                            rectangle.Y = 180;
-                                        }
-                                        mergeUp = true;
-                                    }
-                                    else
-                                    {
-                                        if (num7 == -2 && num2 == num9)
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 90;
-                                                rectangle.Y = 90;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 90;
-                                                rectangle.Y = 108;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 90;
-                                                rectangle.Y = 126;
-                                            }
-                                            mergeDown = true;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (num2 == -1 && num7 == num9 && num4 != -1 && num5 != -1)
-                                    {
-                                        if (num4 == -2 && num5 == num9)
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 0;
-                                                rectangle.Y = 198;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 18;
-                                                rectangle.Y = 198;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 36;
-                                                rectangle.Y = 198;
-                                            }
-                                            mergeLeft = true;
-                                        }
-                                        else
-                                        {
-                                            if (num5 == -2 && num4 == num9)
-                                            {
-                                                if (num22 == 0)
-                                                {
-                                                    rectangle.X = 54;
-                                                    rectangle.Y = 198;
-                                                }
-                                                if (num22 == 1)
-                                                {
-                                                    rectangle.X = 72;
-                                                    rectangle.Y = 198;
-                                                }
-                                                if (num22 == 2)
-                                                {
-                                                    rectangle.X = 90;
-                                                    rectangle.Y = 198;
-                                                }
-                                                mergeRight = true;
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (num2 == num9 && num7 == -1 && num4 != -1 && num5 != -1)
-                                        {
-                                            if (num4 == -2 && num5 == num9)
-                                            {
-                                                if (num22 == 0)
-                                                {
-                                                    rectangle.X = 0;
-                                                    rectangle.Y = 216;
-                                                }
-                                                if (num22 == 1)
-                                                {
-                                                    rectangle.X = 18;
-                                                    rectangle.Y = 216;
-                                                }
-                                                if (num22 == 2)
-                                                {
-                                                    rectangle.X = 36;
-                                                    rectangle.Y = 216;
-                                                }
-                                                mergeLeft = true;
-                                            }
-                                            else
-                                            {
-                                                if (num5 == -2 && num4 == num9)
-                                                {
-                                                    if (num22 == 0)
-                                                    {
-                                                        rectangle.X = 54;
-                                                        rectangle.Y = 216;
-                                                    }
-                                                    if (num22 == 1)
-                                                    {
-                                                        rectangle.X = 72;
-                                                        rectangle.Y = 216;
-                                                    }
-                                                    if (num22 == 2)
-                                                    {
-                                                        rectangle.X = 90;
-                                                        rectangle.Y = 216;
-                                                    }
-                                                    mergeRight = true;
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (num2 != -1 && num7 != -1 && num4 == -1 && num5 == -1)
-                                            {
-                                                if (num2 == -2 && num7 == -2)
-                                                {
-                                                    if (num22 == 0)
-                                                    {
-                                                        rectangle.X = 108;
-                                                        rectangle.Y = 216;
-                                                    }
-                                                    if (num22 == 1)
-                                                    {
-                                                        rectangle.X = 108;
-                                                        rectangle.Y = 234;
-                                                    }
-                                                    if (num22 == 2)
-                                                    {
-                                                        rectangle.X = 108;
-                                                        rectangle.Y = 252;
-                                                    }
-                                                    mergeUp = true;
-                                                    mergeDown = true;
-                                                }
-                                                else
-                                                {
-                                                    if (num2 == -2)
-                                                    {
-                                                        if (num22 == 0)
-                                                        {
-                                                            rectangle.X = 126;
-                                                            rectangle.Y = 144;
-                                                        }
-                                                        if (num22 == 1)
-                                                        {
-                                                            rectangle.X = 126;
-                                                            rectangle.Y = 162;
-                                                        }
-                                                        if (num22 == 2)
-                                                        {
-                                                            rectangle.X = 126;
-                                                            rectangle.Y = 180;
-                                                        }
-                                                        mergeUp = true;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (num7 == -2)
-                                                        {
-                                                            if (num22 == 0)
-                                                            {
-                                                                rectangle.X = 126;
-                                                                rectangle.Y = 90;
-                                                            }
-                                                            if (num22 == 1)
-                                                            {
-                                                                rectangle.X = 126;
-                                                                rectangle.Y = 108;
-                                                            }
-                                                            if (num22 == 2)
-                                                            {
-                                                                rectangle.X = 126;
-                                                                rectangle.Y = 126;
-                                                            }
-                                                            mergeDown = true;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (num2 == -1 && num7 == -1 && num4 != -1 && num5 != -1)
-                                                {
-                                                    if (num4 == -2 && num5 == -2)
-                                                    {
-                                                        if (num22 == 0)
-                                                        {
-                                                            rectangle.X = 162;
-                                                            rectangle.Y = 198;
-                                                        }
-                                                        if (num22 == 1)
-                                                        {
-                                                            rectangle.X = 180;
-                                                            rectangle.Y = 198;
-                                                        }
-                                                        if (num22 == 2)
-                                                        {
-                                                            rectangle.X = 198;
-                                                            rectangle.Y = 198;
-                                                        }
-                                                        mergeLeft = true;
-                                                        mergeRight = true;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (num4 == -2)
-                                                        {
-                                                            if (num22 == 0)
-                                                            {
-                                                                rectangle.X = 0;
-                                                                rectangle.Y = 252;
-                                                            }
-                                                            if (num22 == 1)
-                                                            {
-                                                                rectangle.X = 18;
-                                                                rectangle.Y = 252;
-                                                            }
-                                                            if (num22 == 2)
-                                                            {
-                                                                rectangle.X = 36;
-                                                                rectangle.Y = 252;
-                                                            }
-                                                            mergeLeft = true;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (num5 == -2)
-                                                            {
-                                                                if (num22 == 0)
-                                                                {
-                                                                    rectangle.X = 54;
-                                                                    rectangle.Y = 252;
-                                                                }
-                                                                if (num22 == 1)
-                                                                {
-                                                                    rectangle.X = 72;
-                                                                    rectangle.Y = 252;
-                                                                }
-                                                                if (num22 == 2)
-                                                                {
-                                                                    rectangle.X = 90;
-                                                                    rectangle.Y = 252;
-                                                                }
-                                                                mergeRight = true;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (num2 == -2 && num7 == -1 && num4 == -1 && num5 == -1)
-                                                    {
-                                                        if (num22 == 0)
-                                                        {
-                                                            rectangle.X = 108;
-                                                            rectangle.Y = 144;
-                                                        }
-                                                        if (num22 == 1)
-                                                        {
-                                                            rectangle.X = 108;
-                                                            rectangle.Y = 162;
-                                                        }
-                                                        if (num22 == 2)
-                                                        {
-                                                            rectangle.X = 108;
-                                                            rectangle.Y = 180;
-                                                        }
-                                                        mergeUp = true;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (num2 == -1 && num7 == -2 && num4 == -1 && num5 == -1)
-                                                        {
-                                                            if (num22 == 0)
-                                                            {
-                                                                rectangle.X = 108;
-                                                                rectangle.Y = 90;
-                                                            }
-                                                            if (num22 == 1)
-                                                            {
-                                                                rectangle.X = 108;
-                                                                rectangle.Y = 108;
-                                                            }
-                                                            if (num22 == 2)
-                                                            {
-                                                                rectangle.X = 108;
-                                                                rectangle.Y = 126;
-                                                            }
-                                                            mergeDown = true;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (num2 == -1 && num7 == -1 && num4 == -2 && num5 == -1)
-                                                            {
-                                                                if (num22 == 0)
-                                                                {
-                                                                    rectangle.X = 0;
-                                                                    rectangle.Y = 234;
-                                                                }
-                                                                if (num22 == 1)
-                                                                {
-                                                                    rectangle.X = 18;
-                                                                    rectangle.Y = 234;
-                                                                }
-                                                                if (num22 == 2)
-                                                                {
-                                                                    rectangle.X = 36;
-                                                                    rectangle.Y = 234;
-                                                                }
-                                                                mergeLeft = true;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (num2 == -1 && num7 == -1 && num4 == -1 && num5 == -2)
-                                                                {
-                                                                    if (num22 == 0)
-                                                                    {
-                                                                        rectangle.X = 54;
-                                                                        rectangle.Y = 234;
-                                                                    }
-                                                                    if (num22 == 1)
-                                                                    {
-                                                                        rectangle.X = 72;
-                                                                        rectangle.Y = 234;
-                                                                    }
-                                                                    if (num22 == 2)
-                                                                    {
-                                                                        rectangle.X = 90;
-                                                                        rectangle.Y = 234;
-                                                                    }
-                                                                    mergeRight = true;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (rectangle.X < 0 || rectangle.Y < 0)
-                    {
-                        if (num9 == 2 || num9 == 23 || num9 == 60 || num9 == 70)
-                        {
-                            if (num2 == -2)
-                            {
-                                num2 = num9;
-                            }
-                            if (num7 == -2)
-                            {
-                                num7 = num9;
-                            }
-                            if (num4 == -2)
-                            {
-                                num4 = num9;
-                            }
-                            if (num5 == -2)
-                            {
-                                num5 = num9;
-                            }
-                            if (num == -2)
-                            {
-                                num = num9;
-                            }
-                            if (num3 == -2)
-                            {
-                                num3 = num9;
-                            }
-                            if (num6 == -2)
-                            {
-                                num6 = num9;
-                            }
-                            if (num8 == -2)
-                            {
-                                num8 = num9;
-                            }
-                        }
-                        if (num2 == num9 && num7 == num9 && (num4 == num9 & num5 == num9))
-                        {
-                            if (num != num9 && num3 != num9)
-                            {
-                                if (num22 == 0)
-                                {
-                                    rectangle.X = 108;
-                                    rectangle.Y = 18;
-                                }
-                                if (num22 == 1)
-                                {
-                                    rectangle.X = 126;
-                                    rectangle.Y = 18;
-                                }
-                                if (num22 == 2)
-                                {
-                                    rectangle.X = 144;
-                                    rectangle.Y = 18;
-                                }
-                            }
-                            else
-                            {
-                                if (num6 != num9 && num8 != num9)
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 108;
-                                        rectangle.Y = 36;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 126;
-                                        rectangle.Y = 36;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 144;
-                                        rectangle.Y = 36;
-                                    }
-                                }
-                                else
-                                {
-                                    if (num != num9 && num6 != num9)
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 180;
-                                            rectangle.Y = 0;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 180;
-                                            rectangle.Y = 18;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 180;
-                                            rectangle.Y = 36;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (num3 != num9 && num8 != num9)
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 198;
-                                                rectangle.Y = 0;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 198;
-                                                rectangle.Y = 18;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 198;
-                                                rectangle.Y = 36;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 18;
-                                                rectangle.Y = 18;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 36;
-                                                rectangle.Y = 18;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 54;
-                                                rectangle.Y = 18;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (num2 != num9 && num7 == num9 && (num4 == num9 & num5 == num9))
-                            {
-                                if (num22 == 0)
-                                {
-                                    rectangle.X = 18;
-                                    rectangle.Y = 0;
-                                }
-                                if (num22 == 1)
-                                {
-                                    rectangle.X = 36;
-                                    rectangle.Y = 0;
-                                }
-                                if (num22 == 2)
-                                {
-                                    rectangle.X = 54;
-                                    rectangle.Y = 0;
-                                }
-                            }
-                            else
-                            {
-                                if (num2 == num9 && num7 != num9 && (num4 == num9 & num5 == num9))
-                                {
-                                    if (num22 == 0)
-                                    {
-                                        rectangle.X = 18;
-                                        rectangle.Y = 36;
-                                    }
-                                    if (num22 == 1)
-                                    {
-                                        rectangle.X = 36;
-                                        rectangle.Y = 36;
-                                    }
-                                    if (num22 == 2)
-                                    {
-                                        rectangle.X = 54;
-                                        rectangle.Y = 36;
-                                    }
-                                }
-                                else
-                                {
-                                    if (num2 == num9 && num7 == num9 && (num4 != num9 & num5 == num9))
-                                    {
-                                        if (num22 == 0)
-                                        {
-                                            rectangle.X = 0;
-                                            rectangle.Y = 0;
-                                        }
-                                        if (num22 == 1)
-                                        {
-                                            rectangle.X = 0;
-                                            rectangle.Y = 18;
-                                        }
-                                        if (num22 == 2)
-                                        {
-                                            rectangle.X = 0;
-                                            rectangle.Y = 36;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (num2 == num9 && num7 == num9 && (num4 == num9 & num5 != num9))
-                                        {
-                                            if (num22 == 0)
-                                            {
-                                                rectangle.X = 72;
-                                                rectangle.Y = 0;
-                                            }
-                                            if (num22 == 1)
-                                            {
-                                                rectangle.X = 72;
-                                                rectangle.Y = 18;
-                                            }
-                                            if (num22 == 2)
-                                            {
-                                                rectangle.X = 72;
-                                                rectangle.Y = 36;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (num2 != num9 && num7 == num9 && (num4 != num9 & num5 == num9))
-                                            {
-                                                if (num22 == 0)
-                                                {
-                                                    rectangle.X = 0;
-                                                    rectangle.Y = 54;
-                                                }
-                                                if (num22 == 1)
-                                                {
-                                                    rectangle.X = 36;
-                                                    rectangle.Y = 54;
-                                                }
-                                                if (num22 == 2)
-                                                {
-                                                    rectangle.X = 72;
-                                                    rectangle.Y = 54;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (num2 != num9 && num7 == num9 && (num4 == num9 & num5 != num9))
-                                                {
-                                                    if (num22 == 0)
-                                                    {
-                                                        rectangle.X = 18;
-                                                        rectangle.Y = 54;
-                                                    }
-                                                    if (num22 == 1)
-                                                    {
-                                                        rectangle.X = 54;
-                                                        rectangle.Y = 54;
-                                                    }
-                                                    if (num22 == 2)
-                                                    {
-                                                        rectangle.X = 90;
-                                                        rectangle.Y = 54;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (num2 == num9 && num7 != num9 && (num4 != num9 & num5 == num9))
-                                                    {
-                                                        if (num22 == 0)
-                                                        {
-                                                            rectangle.X = 0;
-                                                            rectangle.Y = 72;
-                                                        }
-                                                        if (num22 == 1)
-                                                        {
-                                                            rectangle.X = 36;
-                                                            rectangle.Y = 72;
-                                                        }
-                                                        if (num22 == 2)
-                                                        {
-                                                            rectangle.X = 72;
-                                                            rectangle.Y = 72;
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (num2 == num9 && num7 != num9 && (num4 == num9 & num5 != num9))
-                                                        {
-                                                            if (num22 == 0)
-                                                            {
-                                                                rectangle.X = 18;
-                                                                rectangle.Y = 72;
-                                                            }
-                                                            if (num22 == 1)
-                                                            {
-                                                                rectangle.X = 54;
-                                                                rectangle.Y = 72;
-                                                            }
-                                                            if (num22 == 2)
-                                                            {
-                                                                rectangle.X = 90;
-                                                                rectangle.Y = 72;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (num2 == num9 && num7 == num9 && (num4 != num9 & num5 != num9))
-                                                            {
-                                                                if (num22 == 0)
-                                                                {
-                                                                    rectangle.X = 90;
-                                                                    rectangle.Y = 0;
-                                                                }
-                                                                if (num22 == 1)
-                                                                {
-                                                                    rectangle.X = 90;
-                                                                    rectangle.Y = 18;
-                                                                }
-                                                                if (num22 == 2)
-                                                                {
-                                                                    rectangle.X = 90;
-                                                                    rectangle.Y = 36;
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (num2 != num9 && num7 != num9 && (num4 == num9 & num5 == num9))
-                                                                {
-                                                                    if (num22 == 0)
-                                                                    {
-                                                                        rectangle.X = 108;
-                                                                        rectangle.Y = 72;
-                                                                    }
-                                                                    if (num22 == 1)
-                                                                    {
-                                                                        rectangle.X = 126;
-                                                                        rectangle.Y = 72;
-                                                                    }
-                                                                    if (num22 == 2)
-                                                                    {
-                                                                        rectangle.X = 144;
-                                                                        rectangle.Y = 72;
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (num2 != num9 && num7 == num9 && (num4 != num9 & num5 != num9))
-                                                                    {
-                                                                        if (num22 == 0)
-                                                                        {
-                                                                            rectangle.X = 108;
-                                                                            rectangle.Y = 0;
-                                                                        }
-                                                                        if (num22 == 1)
-                                                                        {
-                                                                            rectangle.X = 126;
-                                                                            rectangle.Y = 0;
-                                                                        }
-                                                                        if (num22 == 2)
-                                                                        {
-                                                                            rectangle.X = 144;
-                                                                            rectangle.Y = 0;
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (num2 == num9 && num7 != num9 && (num4 != num9 & num5 != num9))
-                                                                        {
-                                                                            if (num22 == 0)
-                                                                            {
-                                                                                rectangle.X = 108;
-                                                                                rectangle.Y = 54;
-                                                                            }
-                                                                            if (num22 == 1)
-                                                                            {
-                                                                                rectangle.X = 126;
-                                                                                rectangle.Y = 54;
-                                                                            }
-                                                                            if (num22 == 2)
-                                                                            {
-                                                                                rectangle.X = 144;
-                                                                                rectangle.Y = 54;
-                                                                            }
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (num2 != num9 && num7 != num9 && (num4 != num9 & num5 == num9))
-                                                                            {
-                                                                                if (num22 == 0)
-                                                                                {
-                                                                                    rectangle.X = 162;
-                                                                                    rectangle.Y = 0;
-                                                                                }
-                                                                                if (num22 == 1)
-                                                                                {
-                                                                                    rectangle.X = 162;
-                                                                                    rectangle.Y = 18;
-                                                                                }
-                                                                                if (num22 == 2)
-                                                                                {
-                                                                                    rectangle.X = 162;
-                                                                                    rectangle.Y = 36;
-                                                                                }
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (num2 != num9 && num7 != num9 && (num4 == num9 & num5 != num9))
-                                                                                {
-                                                                                    if (num22 == 0)
-                                                                                    {
-                                                                                        rectangle.X = 216;
-                                                                                        rectangle.Y = 0;
-                                                                                    }
-                                                                                    if (num22 == 1)
-                                                                                    {
-                                                                                        rectangle.X = 216;
-                                                                                        rectangle.Y = 18;
-                                                                                    }
-                                                                                    if (num22 == 2)
-                                                                                    {
-                                                                                        rectangle.X = 216;
-                                                                                        rectangle.Y = 36;
-                                                                                    }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (num2 != num9 && num7 != num9 && (num4 != num9 & num5 != num9))
-                                                                                    {
-                                                                                        if (num22 == 0)
-                                                                                        {
-                                                                                            rectangle.X = 162;
-                                                                                            rectangle.Y = 54;
-                                                                                        }
-                                                                                        if (num22 == 1)
-                                                                                        {
-                                                                                            rectangle.X = 180;
-                                                                                            rectangle.Y = 54;
-                                                                                        }
-                                                                                        if (num22 == 2)
-                                                                                        {
-                                                                                            rectangle.X = 198;
-                                                                                            rectangle.Y = 54;
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (rectangle.X <= -1 || rectangle.Y <= -1)
-                    {
-                        if (num22 <= 0)
-                        {
-                            rectangle.X = 18;
-                            rectangle.Y = 18;
-                        }
-                        if (num22 == 1)
-                        {
-                            rectangle.X = 36;
-                            rectangle.Y = 18;
-                        }
-                        if (num22 >= 2)
-                        {
-                            rectangle.X = 54;
-                            rectangle.Y = 18;
-                        }
-                    }
-                    Main.tile.At(i, j).SetFrameX((short)rectangle.X);
-                    Main.tile.At(i, j).SetFrameY((short)rectangle.Y);
-                    if (num9 == 52 || num9 == 62)
-                    {
-                        if (!Main.tile.At(i, j - 1).Active)
-                        {
-                            num2 = -1;
-                        }
-                        else
-                        {
-                            num2 = (int)Main.tile.At(i, j - 1).Type;
-                        }
-                        if (num2 != num9 && num2 != 2 && num2 != 60)
-                        {
-                            KillTile(i, j, false, false, false);
-                        }
-                    }
-                    if (!noTileActions && num9 == 53)
-                    {
-                        if (!Main.tile.At(i, j + 1).Active)
-                            {
-                                bool flag4 = true;
-                                if (Main.tile.At(i, j - 1).Active && Main.tile.At(i, j - 1).Type == 21)
-                                {
-                                    flag4 = false;
-                                }
-                                if (flag4)
-                                {
-                                    int type2 = 31;
-                                    if (num9 == 59)
-                                    {
-                                        type2 = 39;
-                                    }
-                                    if (num9 == 57)
-                                    {
-                                        type2 = 40;
-                                    }
-                                    Main.tile.At(i, j).SetActive(false);
-                                    int num25 = Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0.41f, type2, 10, 0f, Main.myPlayer);
-                                    Main.projectile[num25].Velocity.Y = 0.5f;
-                                    Projectile expr_6501_cp_0 = Main.projectile[num25];
-                                    expr_6501_cp_0.Position.Y = expr_6501_cp_0.Position.Y + 2f;
-                                    Main.projectile[num25].ai[0] = 1f;
-                                    NetMessage.SendTileSquare(-1, i, j, 1);
-                                    SquareTileFrame(i, j, true);
-                                }
-                            }
-                    }
-                    if (rectangle.X != frameX && rectangle.Y != frameY && frameX >= 0 && frameY >= 0)
-                    {
-                        bool flag5 = mergeUp;
-                        bool flag6 = mergeDown;
-                        bool flag7 = mergeLeft;
-                        bool flag8 = mergeRight;
-                        TileFrame(i - 1, j, false, false);
-                        TileFrame(i + 1, j, false, false);
-                        TileFrame(i, j - 1, false, false);
-                        TileFrame(i, j + 1, false, false);
-                        mergeUp = flag5;
-                        mergeDown = flag6;
-                        mergeLeft = flag7;
-                        mergeRight = flag8;
-                    }
-                }
-            }
-        }
 
 		public static void WallFrame(int i, int j, bool resetFrame = false)
 		{
@@ -11997,50 +9072,5011 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 
-        // [TODO] 1.1 - here down
-        public static int altarCount { get; set; }
+		public static void TileFrame(int i, int j, bool resetFrame = false, bool noBreak = false)
+		{
+			try
+			{
+				if (i > 5 && j > 5 && i < Main.maxTilesX - 5 && j < Main.maxTilesY - 5)
+				{
+					if (Main.tile.At(i, j).Liquid > 0 && !noLiquidCheck)
+					{
+						Liquid.AddWater(i, j);
+					}
+					if (Main.tile.At(i, j).Active)
+					{
+						if (!noBreak || !Main.tileFrameImportant[(int)Main.tile.At(i, j).Type] || Main.tile.At(i, j).Type == 4)
+						{
+							int num = (int)Main.tile.At(i, j).Type;
+							if (Main.tileStone[num])
+							{
+								num = 1;
+							}
+							int frameX = (int)Main.tile.At(i, j).FrameX;
+							int frameY = (int)Main.tile.At(i, j).FrameY;
+							Rectangle rectangle = new Rectangle(-1, -1, 0, 0);
+							if (Main.tileFrameImportant[(int)Main.tile.At(i, j).Type])
+							{
+								if (num == 4)
+								{
+									short num2 = 0;
+									if (Main.tile.At(i, j).FrameX >= 66)
+									{
+										num2 = 66;
+									}
+									int num3 = -1;
+									int num4 = -1;
+									int num5 = -1;
+									int num6 = -1;
+									int num7 = -1;
+									int num8 = -1;
+									int num9 = -1;
+									if (Main.tile.At(i, j - 1).Active)
+									{
+										byte arg_186_0 = Main.tile.At(i, j - 1).Type;
+									}
+									if (Main.tile.At(i, j + 1).Active)
+									{
+										num3 = (int)Main.tile.At(i, j + 1).Type;
+									}
+									if (Main.tile.At(i - 1, j).Active)
+									{
+										num4 = (int)Main.tile.At(i - 1, j).Type;
+									}
+									if (Main.tile.At(i + 1, j).Active)
+									{
+										num5 = (int)Main.tile.At(i + 1, j).Type;
+									}
+									if (Main.tile.At(i - 1, j + 1).Active)
+									{
+										num6 = (int)Main.tile.At(i - 1, j + 1).Type;
+									}
+									if (Main.tile.At(i + 1, j + 1).Active)
+									{
+										num7 = (int)Main.tile.At(i + 1, j + 1).Type;
+									}
+									if (Main.tile.At(i - 1, j - 1).Active)
+									{
+										num8 = (int)Main.tile.At(i - 1, j - 1).Type;
+									}
+									if (Main.tile.At(i + 1, j - 1).Active)
+									{
+										num9 = (int)Main.tile.At(i + 1, j - 1).Type;
+									}
+									if (num3 >= 0 && Main.tileSolid[num3] && !Main.tileNoAttach[num3])
+									{
+										Main.tile.At(i, j).SetFrameX(num2);
+									}
+									else
+									{
+										if ((num4 >= 0 && Main.tileSolid[num4] && !Main.tileNoAttach[num4]) || num4 == 124 || (num4 == 5 && num8 == 5 && num6 == 5))
+										{
+											Main.tile.At(i, j).SetFrameX((short)(22 + num2));
+										}
+										else
+										{
+											if ((num5 >= 0 && Main.tileSolid[num5] && !Main.tileNoAttach[num5]) || num5 == 124 || (num5 == 5 && num9 == 5 && num7 == 5))
+											{
+												Main.tile.At(i, j).SetFrameX((short)(44 + num2));
+											}
+											else
+											{
+												KillTile(i, j);
+											}
+										}
+									}
+								}
+								else
+								{
+									if (num == 136)
+									{
+										int num10 = -1;
+										int num11 = -1;
+										int num12 = -1;
+										if (Main.tile.At(i, j + 1).Active)
+										{
+											num10 = (int)Main.tile.At(i, j + 1).Type;
+										}
+										if (Main.tile.At(i - 1, j).Active)
+										{
+											num11 = (int)Main.tile.At(i - 1, j).Type;
+										}
+										if (Main.tile.At(i + 1, j).Active)
+										{
+											num12 = (int)Main.tile.At(i + 1, j).Type;
+										}
+										if (num10 >= 0 && Main.tileSolid[num10] && !Main.tileNoAttach[num10])
+										{
+											Main.tile.At(i, j).SetFrameX(0);
+										}
+										else
+										{
+											if ((num11 >= 0 && Main.tileSolid[num11] && !Main.tileNoAttach[num11]) || num11 == 124 || num11 == 5)
+											{
+												Main.tile.At(i, j).SetFrameX(18);
+											}
+											else
+											{
+												if ((num12 >= 0 && Main.tileSolid[num12] && !Main.tileNoAttach[num12]) || num12 == 124 || num12 == 5)
+												{
+													Main.tile.At(i, j).SetFrameX(36);
+												}
+												else
+												{
+													KillTile(i, j);
+												}
+											}
+										}
+									}
+									else
+									{
+										if (num == 129)
+										{
+											int num13 = -1;
+											int num14 = -1;
+											int num15 = -1;
+											int num16 = -1;
+											if (Main.tile.At(i, j - 1).Active)
+											{
+												num14 = (int)Main.tile.At(i, j - 1).Type;
+											}
+											if (Main.tile.At(i, j + 1).Active)
+											{
+												num13 = (int)Main.tile.At(i, j + 1).Type;
+											}
+											if (Main.tile.At(i - 1, j).Active)
+											{
+												num15 = (int)Main.tile.At(i - 1, j).Type;
+											}
+											if (Main.tile.At(i + 1, j).Active)
+											{
+												num16 = (int)Main.tile.At(i + 1, j).Type;
+											}
+											if (num13 >= 0 && Main.tileSolid[num13] && !Main.tileSolidTop[num13])
+											{
+												Main.tile.At(i, j).SetFrameY(0);
+											}
+											else
+											{
+												if (num15 >= 0 && Main.tileSolid[num15] && !Main.tileSolidTop[num15])
+												{
+													Main.tile.At(i, j).SetFrameY(54);
+												}
+												else
+												{
+													if (num16 >= 0 && Main.tileSolid[num16] && !Main.tileSolidTop[num16])
+													{
+														Main.tile.At(i, j).SetFrameY(36);
+													}
+													else
+													{
+														if (num14 >= 0 && Main.tileSolid[num14] && !Main.tileSolidTop[num14])
+														{
+															Main.tile.At(i, j).SetFrameY(18);
+														}
+														else
+														{
+															KillTile(i, j);
+														}
+													}
+												}
+											}
+										}
+										else
+										{
+											if (num == 3 || num == 24 || num == 61 || num == 71 || num == 73 || num == 74 || num == 110 || num == 113)
+											{
+												PlantCheck(i, j);
+											}
+											else
+											{
+												if (num == 12 || num == 31)
+												{
+													CheckOrb(i, j, num);
+												}
+												else
+												{
+													if (num == 10)
+													{
+														if (!destroyObject)
+														{
+															int frameY2 = (int)Main.tile.At(i, j).FrameY;
+															int num17 = j;
+															bool flag = false;
+															if (frameY2 == 0)
+															{
+																num17 = j;
+															}
+															if (frameY2 == 18)
+															{
+																num17 = j - 1;
+															}
+															if (frameY2 == 36)
+															{
+																num17 = j - 2;
+															}
+															if (!Main.tile.At(i, num17 - 1).Active || !Main.tileSolid[(int)Main.tile.At(i, num17 - 1).Type])
+															{
+																flag = true;
+															}
+															if (!Main.tile.At(i, num17 + 3).Active || !Main.tileSolid[(int)Main.tile.At(i, num17 + 3).Type])
+															{
+																flag = true;
+															}
+															if (!Main.tile.At(i, num17).Active || (int)Main.tile.At(i, num17).Type != num)
+															{
+																flag = true;
+															}
+															if (!Main.tile.At(i, num17 + 1).Active || (int)Main.tile.At(i, num17 + 1).Type != num)
+															{
+																flag = true;
+															}
+															if (!Main.tile.At(i, num17 + 2).Active || (int)Main.tile.At(i, num17 + 2).Type != num)
+															{
+																flag = true;
+															}
+															if (flag)
+															{
+																destroyObject = true;
+																KillTile(i, num17, false, false, false);
+																KillTile(i, num17 + 1, false, false, false);
+																KillTile(i, num17 + 2, false, false, false);
+																Item.NewItem(i * 16, j * 16, 16, 16, 25, 1, false, 0);
+															}
+															destroyObject = false;
+														}
+													}
+													else
+													{
+														if (num == 11)
+														{
+															if (!destroyObject)
+															{
+																int num18 = 0;
+																int num19 = i;
+																int num20 = j;
+																int frameX2 = (int)Main.tile.At(i, j).FrameX;
+																int frameY3 = (int)Main.tile.At(i, j).FrameY;
+																bool flag2 = false;
+																if (frameX2 == 0)
+																{
+																	num19 = i;
+																	num18 = 1;
+																}
+																else
+																{
+																	if (frameX2 == 18)
+																	{
+																		num19 = i - 1;
+																		num18 = 1;
+																	}
+																	else
+																	{
+																		if (frameX2 == 36)
+																		{
+																			num19 = i + 1;
+																			num18 = -1;
+																		}
+																		else
+																		{
+																			if (frameX2 == 54)
+																			{
+																				num19 = i;
+																				num18 = -1;
+																			}
+																		}
+																	}
+																}
+																if (frameY3 == 0)
+																{
+																	num20 = j;
+																}
+																else
+																{
+																	if (frameY3 == 18)
+																	{
+																		num20 = j - 1;
+																	}
+																	else
+																	{
+																		if (frameY3 == 36)
+																		{
+																			num20 = j - 2;
+																		}
+																	}
+																}
+																if (!Main.tile.At(num19, num20 - 1).Active || !Main.tileSolid[(int)Main.tile.At(num19, num20 - 1).Type] || !Main.tile.At(num19, num20 + 3).Active || !Main.tileSolid[(int)Main.tile.At(num19, num20 + 3).Type])
+																{
+																	flag2 = true;
+																	destroyObject = true;
+																	Item.NewItem(i * 16, j * 16, 16, 16, 25, 1, false, 0);
+																}
+																int num21 = num19;
+																if (num18 == -1)
+																{
+																	num21 = num19 - 1;
+																}
+																for (int k = num21; k < num21 + 2; k++)
+																{
+																	for (int l = num20; l < num20 + 3; l++)
+																	{
+																		if (!flag2 && (Main.tile.At(k, l).Type != 11 || !Main.tile.At(k, l).Active))
+																		{
+																			destroyObject = true;
+																			Item.NewItem(i * 16, j * 16, 16, 16, 25, 1, false, 0);
+																			flag2 = true;
+																			k = num21;
+																			l = num20;
+																		}
+																		if (flag2)
+																		{
+																			KillTile(k, l, false, false, false);
+																		}
+																	}
+																}
+																destroyObject = false;
+															}
+														}
+														else
+														{
+															if (num == 34 || num == 35 || num == 36 || num == 106)
+															{
+																Check3x3(i, j, (int)((byte)num));
+															}
+															else
+															{
+																if (num == 15 || num == 20)
+																{
+																	Check1x2(i, j, (byte)num);
+																}
+																else
+																{
+																	if (num == 14 || num == 17 || num == 26 || num == 77 || num == 86 || num == 87 || num == 88 || num == 89 || num == 114 || num == 133)
+																	{
+																		Check3x2(i, j, (int)((byte)num));
+																	}
+																	else
+																	{
+																		if (num == 135 || num == 144 || num == 141)
+																		{
+																			Check1x1(i, j, num);
+																		}
+																		else
+																		{
+																			if (num == 16 || num == 18 || num == 29 || num == 103 || num == 134)
+																			{
+																				Check2x1(i, j, (byte)num);
+																			}
+																			else
+																			{
+																				if (num == 13 || num == 33 || num == 50 || num == 78)
+																				{
+																					CheckOnTable1x1(i, j, (int)((byte)num));
+																				}
+																				else
+																				{
+																					if (num == 21)
+																					{
+																						CheckChest(i, j, (int)((byte)num));
+																					}
+																					else
+																					{
+																						if (num == 128)
+																						{
+																							CheckMan(i, j);
+																						}
+																						else
+																						{
+																							if (num == 27)
+																							{
+																								CheckSunflower(i, j, 27);
+																							}
+																							else
+																							{
+																								if (num == 28)
+																								{
+																									CheckPot(i, j, 28);
+																								}
+																								else
+																								{
+																									if (num == 132 || num == 138 || num == 142 || num == 143)
+																									{
+																										Check2x2(i, j, num);
+																									}
+																									else
+																									{
+																										if (num == 91)
+																										{
+																											CheckBanner(i, j, (byte)num);
+																										}
+																										else
+																										{
+																											if (num == 139)
+																											{
+																												CheckMB(i, j, (int)((byte)num));
+																											}
+																											else
+																											{
+																												if (num == 92 || num == 93)
+																												{
+																													Check1xX(i, j, (byte)num);
+																												}
+																												else
+																												{
+																													if (num == 104 || num == 105)
+																													{
+																														Check2xX(i, j, (byte)num);
+																													}
+																													else
+																													{
+																														if (num == 101 || num == 102)
+																														{
+																															Check3x4(i, j, (int)((byte)num));
+																														}
+																														else
+																														{
+																															if (num == 42)
+																															{
+																																Check1x2Top(i, j, (byte)num);
+																															}
+																															else
+																															{
+																																if (num == 55 || num == 85)
+																																{
+																																	CheckSign(i, j, num);
+																																}
+																																else
+																																{
+																																	if (num == 79 || num == 90)
+																																	{
+																																		Check4x2(i, j, num);
+																																	}
+																																	else
+																																	{
+																																		if (num == 85 || num == 94 || num == 95 || num == 96 || num == 97 || num == 98 || num == 99 || num == 100 || num == 125 || num == 126)
+																																		{
+																																			Check2x2(i, j, num);
+																																		}
+																																		else
+																																		{
+																																			if (num == 81)
+																																			{
+																																				int num22 = -1;
+																																				int num23 = -1;
+																																				int num24 = -1;
+																																				int num25 = -1;
+																																				if (Main.tile.At(i, j - 1).Active)
+																																				{
+																																					num23 = (int)Main.tile.At(i, j - 1).Type;
+																																				}
+																																				if (Main.tile.At(i, j + 1).Active)
+																																				{
+																																					num22 = (int)Main.tile.At(i, j + 1).Type;
+																																				}
+																																				if (Main.tile.At(i - 1, j).Active)
+																																				{
+																																					num24 = (int)Main.tile.At(i - 1, j).Type;
+																																				}
+																																				if (Main.tile.At(i + 1, j).Active)
+																																				{
+																																					num25 = (int)Main.tile.At(i + 1, j).Type;
+																																				}
+																																				if (num24 != -1 || num23 != -1 || num25 != -1)
+																																				{
+																																					KillTile(i, j);
+																																				}
+																																				else
+																																				{
+																																					if (num22 < 0 || !Main.tileSolid[num22])
+																																					{
+																																						KillTile(i, j);
+																																					}
+																																				}
+																																			}
+																																			else
+																																			{
+																																				if (Main.tileAlch[num])
+																																				{
+																																					CheckAlch(i, j);
+																																				}
+																																				else
+																																				{
+																																					if (num == 72)
+																																					{
+																																						int num26 = -1;
+																																						int num27 = -1;
+																																						if (Main.tile.At(i, j - 1).Active)
+																																						{
+																																							num27 = (int)Main.tile.At(i, j - 1).Type;
+																																						}
+																																						if (Main.tile.At(i, j + 1).Active)
+																																						{
+																																							num26 = (int)Main.tile.At(i, j + 1).Type;
+																																						}
+																																						if (num26 != num && num26 != 70)
+																																						{
+																																							KillTile(i, j);
+																																						}
+																																						else
+																																						{
+																																							if (num27 != num && Main.tile.At(i, j).FrameX == 0)
+																																							{
+																																								Main.tile.At(i, j).SetFrameNumber((byte)genRand.Next(3));
+																																								if (Main.tile.At(i, j).FrameNumber == 0)
+																																								{
+																																									Main.tile.At(i, j).SetFrameX(18);
+																																									Main.tile.At(i, j).SetFrameY(0);
+																																								}
+																																								if (Main.tile.At(i, j).FrameNumber == 1)
+																																								{
+																																									Main.tile.At(i, j).SetFrameX(18);
+																																									Main.tile.At(i, j).SetFrameY(18);
+																																								}
+																																								if (Main.tile.At(i, j).FrameNumber == 2)
+																																								{
+																																									Main.tile.At(i, j).SetFrameX(18);
+																																									Main.tile.At(i, j).SetFrameY(36);
+																																								}
+																																							}
+																																						}
+																																					}
+																																					else
+																																					{
+																																						if (num == 5)
+																																						{
+																																							CheckTree(i, j);
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							else
+							{
+								int num28 = -1;
+								int num29 = -1;
+								int num30 = -1;
+								int num31 = -1;
+								int num32 = -1;
+								int num33 = -1;
+								int num34 = -1;
+								int num35 = -1;
+								if (Main.tile.At(i - 1, j).Active)
+								{
+									if (Main.tileStone[(int)Main.tile.At(i - 1, j).Type])
+									{
+										num31 = 1;
+									}
+									else
+									{
+										num31 = (int)Main.tile.At(i - 1, j).Type;
+									}
+								}
+								if (Main.tile.At(i + 1, j).Active)
+								{
+									if (Main.tileStone[(int)Main.tile.At(i + 1, j).Type])
+									{
+										num32 = 1;
+									}
+									else
+									{
+										num32 = (int)Main.tile.At(i + 1, j).Type;
+									}
+								}
+								if (Main.tile.At(i, j - 1).Active)
+								{
+									if (Main.tileStone[(int)Main.tile.At(i, j - 1).Type])
+									{
+										num29 = 1;
+									}
+									else
+									{
+										num29 = (int)Main.tile.At(i, j - 1).Type;
+									}
+								}
+								if (Main.tile.At(i, j + 1).Active)
+								{
+									if (Main.tileStone[(int)Main.tile.At(i, j + 1).Type])
+									{
+										num34 = 1;
+									}
+									else
+									{
+										num34 = (int)Main.tile.At(i, j + 1).Type;
+									}
+								}
+								if (Main.tile.At(i - 1, j - 1).Active)
+								{
+									if (Main.tileStone[(int)Main.tile.At(i - 1, j - 1).Type])
+									{
+										num28 = 1;
+									}
+									else
+									{
+										num28 = (int)Main.tile.At(i - 1, j - 1).Type;
+									}
+								}
+								if (Main.tile.At(i + 1, j - 1).Active)
+								{
+									if (Main.tileStone[(int)Main.tile.At(i + 1, j - 1).Type])
+									{
+										num30 = 1;
+									}
+									else
+									{
+										num30 = (int)Main.tile.At(i + 1, j - 1).Type;
+									}
+								}
+								if (Main.tile.At(i - 1, j + 1).Active)
+								{
+									if (Main.tileStone[(int)Main.tile.At(i - 1, j + 1).Type])
+									{
+										num33 = 1;
+									}
+									else
+									{
+										num33 = (int)Main.tile.At(i - 1, j + 1).Type;
+									}
+								}
+								if (Main.tile.At(i + 1, j + 1).Active)
+								{
+									if (Main.tileStone[(int)Main.tile.At(i + 1, j + 1).Type])
+									{
+										num35 = 1;
+									}
+									else
+									{
+										num35 = (int)Main.tile.At(i + 1, j + 1).Type;
+									}
+								}
+								if (!Main.tileSolid[num])
+								{
+									if (num == 49)
+									{
+										CheckOnTable1x1(i, j, (int)((byte)num));
+										return;
+									}
+									if (num == 80)
+									{
+										CactusFrame(i, j);
+										return;
+									}
+								}
+								else
+								{
+									if (num == 19)
+									{
+										if (num32 >= 0 && !Main.tileSolid[num32])
+										{
+											num32 = -1;
+										}
+										if (num31 >= 0 && !Main.tileSolid[num31])
+										{
+											num31 = -1;
+										}
+										if (num31 == num && num32 == num)
+										{
+											if (Main.tile.At(i, j).FrameNumber == 0)
+											{
+												rectangle.X = 0;
+												rectangle.Y = 0;
+											}
+											else
+											{
+												if (Main.tile.At(i, j).FrameNumber == 1)
+												{
+													rectangle.X = 0;
+													rectangle.Y = 18;
+												}
+												else
+												{
+													rectangle.X = 0;
+													rectangle.Y = 36;
+												}
+											}
+										}
+										else
+										{
+											if (num31 == num && num32 == -1)
+											{
+												if (Main.tile.At(i, j).FrameNumber == 0)
+												{
+													rectangle.X = 18;
+													rectangle.Y = 0;
+												}
+												else
+												{
+													if (Main.tile.At(i, j).FrameNumber == 1)
+													{
+														rectangle.X = 18;
+														rectangle.Y = 18;
+													}
+													else
+													{
+														rectangle.X = 18;
+														rectangle.Y = 36;
+													}
+												}
+											}
+											else
+											{
+												if (num31 == -1 && num32 == num)
+												{
+													if (Main.tile.At(i, j).FrameNumber == 0)
+													{
+														rectangle.X = 36;
+														rectangle.Y = 0;
+													}
+													else
+													{
+														if (Main.tile.At(i, j).FrameNumber == 1)
+														{
+															rectangle.X = 36;
+															rectangle.Y = 18;
+														}
+														else
+														{
+															rectangle.X = 36;
+															rectangle.Y = 36;
+														}
+													}
+												}
+												else
+												{
+													if (num31 != num && num32 == num)
+													{
+														if (Main.tile.At(i, j).FrameNumber == 0)
+														{
+															rectangle.X = 54;
+															rectangle.Y = 0;
+														}
+														else
+														{
+															if (Main.tile.At(i, j).FrameNumber == 1)
+															{
+																rectangle.X = 54;
+																rectangle.Y = 18;
+															}
+															else
+															{
+																rectangle.X = 54;
+																rectangle.Y = 36;
+															}
+														}
+													}
+													else
+													{
+														if (num31 == num && num32 != num)
+														{
+															if (Main.tile.At(i, j).FrameNumber == 0)
+															{
+																rectangle.X = 72;
+																rectangle.Y = 0;
+															}
+															else
+															{
+																if (Main.tile.At(i, j).FrameNumber == 1)
+																{
+																	rectangle.X = 72;
+																	rectangle.Y = 18;
+																}
+																else
+																{
+																	rectangle.X = 72;
+																	rectangle.Y = 36;
+																}
+															}
+														}
+														else
+														{
+															if (num31 != num && num31 != -1 && num32 == -1)
+															{
+																if (Main.tile.At(i, j).FrameNumber == 0)
+																{
+																	rectangle.X = 108;
+																	rectangle.Y = 0;
+																}
+																else
+																{
+																	if (Main.tile.At(i, j).FrameNumber == 1)
+																	{
+																		rectangle.X = 108;
+																		rectangle.Y = 18;
+																	}
+																	else
+																	{
+																		rectangle.X = 108;
+																		rectangle.Y = 36;
+																	}
+																}
+															}
+															else
+															{
+																if (num31 == -1 && num32 != num && num32 != -1)
+																{
+																	if (Main.tile.At(i, j).FrameNumber == 0)
+																	{
+																		rectangle.X = 126;
+																		rectangle.Y = 0;
+																	}
+																	else
+																	{
+																		if (Main.tile.At(i, j).FrameNumber == 1)
+																		{
+																			rectangle.X = 126;
+																			rectangle.Y = 18;
+																		}
+																		else
+																		{
+																			rectangle.X = 126;
+																			rectangle.Y = 36;
+																		}
+																	}
+																}
+																else
+																{
+																	if (Main.tile.At(i, j).FrameNumber == 0)
+																	{
+																		rectangle.X = 90;
+																		rectangle.Y = 0;
+																	}
+																	else
+																	{
+																		if (Main.tile.At(i, j).FrameNumber == 1)
+																		{
+																			rectangle.X = 90;
+																			rectangle.Y = 18;
+																		}
+																		else
+																		{
+																			rectangle.X = 90;
+																			rectangle.Y = 36;
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								mergeUp = false;
+								mergeDown = false;
+								mergeLeft = false;
+								mergeRight = false;
+								int num36 = 0;
+								if (resetFrame)
+								{
+									num36 = genRand.Next(0, 3);
+									Main.tile.At(i, j).SetFrameNumber((byte)num36);
+								}
+								else
+								{
+									num36 = (int)Main.tile.At(i, j).FrameNumber;
+								}
+								if (num == 0)
+								{
+									if (num29 >= 0 && Main.tileMergeDirt[num29])
+									{
+										TileFrame(i, j - 1, false, false);
+										if (mergeDown)
+										{
+											num29 = num;
+										}
+									}
+									if (num34 >= 0 && Main.tileMergeDirt[num34])
+									{
+										TileFrame(i, j + 1, false, false);
+										if (mergeUp)
+										{
+											num34 = num;
+										}
+									}
+									if (num31 >= 0 && Main.tileMergeDirt[num31])
+									{
+										TileFrame(i - 1, j, false, false);
+										if (mergeRight)
+										{
+											num31 = num;
+										}
+									}
+									if (num32 >= 0 && Main.tileMergeDirt[num32])
+									{
+										TileFrame(i + 1, j, false, false);
+										if (mergeLeft)
+										{
+											num32 = num;
+										}
+									}
+									if (num29 == 2 || num29 == 23 || num29 == 109)
+									{
+										num29 = num;
+									}
+									if (num34 == 2 || num34 == 23 || num34 == 109)
+									{
+										num34 = num;
+									}
+									if (num31 == 2 || num31 == 23 || num31 == 109)
+									{
+										num31 = num;
+									}
+									if (num32 == 2 || num32 == 23 || num32 == 109)
+									{
+										num32 = num;
+									}
+									if (num28 >= 0 && Main.tileMergeDirt[num28])
+									{
+										num28 = num;
+									}
+									else
+									{
+										if (num28 == 2 || num28 == 23 || num28 == 109)
+										{
+											num28 = num;
+										}
+									}
+									if (num30 >= 0 && Main.tileMergeDirt[num30])
+									{
+										num30 = num;
+									}
+									else
+									{
+										if (num30 == 2 || num30 == 23 || num30 == 109)
+										{
+											num30 = num;
+										}
+									}
+									if (num33 >= 0 && Main.tileMergeDirt[num33])
+									{
+										num33 = num;
+									}
+									else
+									{
+										if (num33 == 2 || num33 == 23 || num30 == 109)
+										{
+											num33 = num;
+										}
+									}
+									if (num35 >= 0 && Main.tileMergeDirt[num35])
+									{
+										num35 = num;
+									}
+									else
+									{
+										if (num35 == 2 || num35 == 23 || num35 == 109)
+										{
+											num35 = num;
+										}
+									}
+									if ((double)j < Main.rockLayer)
+									{
+										if (num29 == 59)
+										{
+											num29 = -2;
+										}
+										if (num34 == 59)
+										{
+											num34 = -2;
+										}
+										if (num31 == 59)
+										{
+											num31 = -2;
+										}
+										if (num32 == 59)
+										{
+											num32 = -2;
+										}
+										if (num28 == 59)
+										{
+											num28 = -2;
+										}
+										if (num30 == 59)
+										{
+											num30 = -2;
+										}
+										if (num33 == 59)
+										{
+											num33 = -2;
+										}
+										if (num35 == 59)
+										{
+											num35 = -2;
+										}
+									}
+								}
+								else
+								{
+									if (Main.tileMergeDirt[num])
+									{
+										if (num29 == 0)
+										{
+											num29 = -2;
+										}
+										if (num34 == 0)
+										{
+											num34 = -2;
+										}
+										if (num31 == 0)
+										{
+											num31 = -2;
+										}
+										if (num32 == 0)
+										{
+											num32 = -2;
+										}
+										if (num28 == 0)
+										{
+											num28 = -2;
+										}
+										if (num30 == 0)
+										{
+											num30 = -2;
+										}
+										if (num33 == 0)
+										{
+											num33 = -2;
+										}
+										if (num35 == 0)
+										{
+											num35 = -2;
+										}
+										if (num == 1)
+										{
+											if ((double)j > Main.rockLayer)
+											{
+												if (num29 == 59)
+												{
+													TileFrame(i, j - 1, false, false);
+													if (mergeDown)
+													{
+														num29 = num;
+													}
+												}
+												if (num34 == 59)
+												{
+													TileFrame(i, j + 1, false, false);
+													if (mergeUp)
+													{
+														num34 = num;
+													}
+												}
+												if (num31 == 59)
+												{
+													TileFrame(i - 1, j, false, false);
+													if (mergeRight)
+													{
+														num31 = num;
+													}
+												}
+												if (num32 == 59)
+												{
+													TileFrame(i + 1, j, false, false);
+													if (mergeLeft)
+													{
+														num32 = num;
+													}
+												}
+												if (num28 == 59)
+												{
+													num28 = num;
+												}
+												if (num30 == 59)
+												{
+													num30 = num;
+												}
+												if (num33 == 59)
+												{
+													num33 = num;
+												}
+												if (num35 == 59)
+												{
+													num35 = num;
+												}
+											}
+											if (num29 == 57)
+											{
+												TileFrame(i, j - 1, false, false);
+												if (mergeDown)
+												{
+													num29 = num;
+												}
+											}
+											if (num34 == 57)
+											{
+												TileFrame(i, j + 1, false, false);
+												if (mergeUp)
+												{
+													num34 = num;
+												}
+											}
+											if (num31 == 57)
+											{
+												TileFrame(i - 1, j, false, false);
+												if (mergeRight)
+												{
+													num31 = num;
+												}
+											}
+											if (num32 == 57)
+											{
+												TileFrame(i + 1, j, false, false);
+												if (mergeLeft)
+												{
+													num32 = num;
+												}
+											}
+											if (num28 == 57)
+											{
+												num28 = num;
+											}
+											if (num30 == 57)
+											{
+												num30 = num;
+											}
+											if (num33 == 57)
+											{
+												num33 = num;
+											}
+											if (num35 == 57)
+											{
+												num35 = num;
+											}
+										}
+									}
+									else
+									{
+										if (num == 58 || num == 76 || num == 75)
+										{
+											if (num29 == 57)
+											{
+												num29 = -2;
+											}
+											if (num34 == 57)
+											{
+												num34 = -2;
+											}
+											if (num31 == 57)
+											{
+												num31 = -2;
+											}
+											if (num32 == 57)
+											{
+												num32 = -2;
+											}
+											if (num28 == 57)
+											{
+												num28 = -2;
+											}
+											if (num30 == 57)
+											{
+												num30 = -2;
+											}
+											if (num33 == 57)
+											{
+												num33 = -2;
+											}
+											if (num35 == 57)
+											{
+												num35 = -2;
+											}
+										}
+										else
+										{
+											if (num == 59)
+											{
+												if ((double)j > Main.rockLayer)
+												{
+													if (num29 == 1)
+													{
+														num29 = -2;
+													}
+													if (num34 == 1)
+													{
+														num34 = -2;
+													}
+													if (num31 == 1)
+													{
+														num31 = -2;
+													}
+													if (num32 == 1)
+													{
+														num32 = -2;
+													}
+													if (num28 == 1)
+													{
+														num28 = -2;
+													}
+													if (num30 == 1)
+													{
+														num30 = -2;
+													}
+													if (num33 == 1)
+													{
+														num33 = -2;
+													}
+													if (num35 == 1)
+													{
+														num35 = -2;
+													}
+												}
+												if (num29 == 60)
+												{
+													num29 = num;
+												}
+												if (num34 == 60)
+												{
+													num34 = num;
+												}
+												if (num31 == 60)
+												{
+													num31 = num;
+												}
+												if (num32 == 60)
+												{
+													num32 = num;
+												}
+												if (num28 == 60)
+												{
+													num28 = num;
+												}
+												if (num30 == 60)
+												{
+													num30 = num;
+												}
+												if (num33 == 60)
+												{
+													num33 = num;
+												}
+												if (num35 == 60)
+												{
+													num35 = num;
+												}
+												if (num29 == 70)
+												{
+													num29 = num;
+												}
+												if (num34 == 70)
+												{
+													num34 = num;
+												}
+												if (num31 == 70)
+												{
+													num31 = num;
+												}
+												if (num32 == 70)
+												{
+													num32 = num;
+												}
+												if (num28 == 70)
+												{
+													num28 = num;
+												}
+												if (num30 == 70)
+												{
+													num30 = num;
+												}
+												if (num33 == 70)
+												{
+													num33 = num;
+												}
+												if (num35 == 70)
+												{
+													num35 = num;
+												}
+												if ((double)j < Main.rockLayer)
+												{
+													if (num29 == 0)
+													{
+														TileFrame(i, j - 1, false, false);
+														if (mergeDown)
+														{
+															num29 = num;
+														}
+													}
+													if (num34 == 0)
+													{
+														TileFrame(i, j + 1, false, false);
+														if (mergeUp)
+														{
+															num34 = num;
+														}
+													}
+													if (num31 == 0)
+													{
+														TileFrame(i - 1, j, false, false);
+														if (mergeRight)
+														{
+															num31 = num;
+														}
+													}
+													if (num32 == 0)
+													{
+														TileFrame(i + 1, j, false, false);
+														if (mergeLeft)
+														{
+															num32 = num;
+														}
+													}
+													if (num28 == 0)
+													{
+														num28 = num;
+													}
+													if (num30 == 0)
+													{
+														num30 = num;
+													}
+													if (num33 == 0)
+													{
+														num33 = num;
+													}
+													if (num35 == 0)
+													{
+														num35 = num;
+													}
+												}
+											}
+											else
+											{
+												if (num == 57)
+												{
+													if (num29 == 1)
+													{
+														num29 = -2;
+													}
+													if (num34 == 1)
+													{
+														num34 = -2;
+													}
+													if (num31 == 1)
+													{
+														num31 = -2;
+													}
+													if (num32 == 1)
+													{
+														num32 = -2;
+													}
+													if (num28 == 1)
+													{
+														num28 = -2;
+													}
+													if (num30 == 1)
+													{
+														num30 = -2;
+													}
+													if (num33 == 1)
+													{
+														num33 = -2;
+													}
+													if (num35 == 1)
+													{
+														num35 = -2;
+													}
+													if (num29 == 58 || num29 == 76 || num29 == 75)
+													{
+														TileFrame(i, j - 1, false, false);
+														if (mergeDown)
+														{
+															num29 = num;
+														}
+													}
+													if (num34 == 58 || num34 == 76 || num34 == 75)
+													{
+														TileFrame(i, j + 1, false, false);
+														if (mergeUp)
+														{
+															num34 = num;
+														}
+													}
+													if (num31 == 58 || num31 == 76 || num31 == 75)
+													{
+														TileFrame(i - 1, j, false, false);
+														if (mergeRight)
+														{
+															num31 = num;
+														}
+													}
+													if (num32 == 58 || num32 == 76 || num32 == 75)
+													{
+														TileFrame(i + 1, j, false, false);
+														if (mergeLeft)
+														{
+															num32 = num;
+														}
+													}
+													if (num28 == 58 || num28 == 76 || num28 == 75)
+													{
+														num28 = num;
+													}
+													if (num30 == 58 || num30 == 76 || num30 == 75)
+													{
+														num30 = num;
+													}
+													if (num33 == 58 || num33 == 76 || num33 == 75)
+													{
+														num33 = num;
+													}
+													if (num35 == 58 || num35 == 76 || num35 == 75)
+													{
+														num35 = num;
+													}
+												}
+												else
+												{
+													if (num == 32)
+													{
+														if (num34 == 23)
+														{
+															num34 = num;
+														}
+													}
+													else
+													{
+														if (num == 69)
+														{
+															if (num34 == 60)
+															{
+																num34 = num;
+															}
+														}
+														else
+														{
+															if (num == 51)
+															{
+																if (num29 > -1 && !Main.tileNoAttach[num29])
+																{
+																	num29 = num;
+																}
+																if (num34 > -1 && !Main.tileNoAttach[num34])
+																{
+																	num34 = num;
+																}
+																if (num31 > -1 && !Main.tileNoAttach[num31])
+																{
+																	num31 = num;
+																}
+																if (num32 > -1 && !Main.tileNoAttach[num32])
+																{
+																	num32 = num;
+																}
+																if (num28 > -1 && !Main.tileNoAttach[num28])
+																{
+																	num28 = num;
+																}
+																if (num30 > -1 && !Main.tileNoAttach[num30])
+																{
+																	num30 = num;
+																}
+																if (num33 > -1 && !Main.tileNoAttach[num33])
+																{
+																	num33 = num;
+																}
+																if (num35 > -1 && !Main.tileNoAttach[num35])
+																{
+																	num35 = num;
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								bool flag3 = false;
+								if (num == 2 || num == 23 || num == 60 || num == 70 || num == 109)
+								{
+									flag3 = true;
+									if (num29 > -1 && !Main.tileSolid[num29] && num29 != num)
+									{
+										num29 = -1;
+									}
+									if (num34 > -1 && !Main.tileSolid[num34] && num34 != num)
+									{
+										num34 = -1;
+									}
+									if (num31 > -1 && !Main.tileSolid[num31] && num31 != num)
+									{
+										num31 = -1;
+									}
+									if (num32 > -1 && !Main.tileSolid[num32] && num32 != num)
+									{
+										num32 = -1;
+									}
+									if (num28 > -1 && !Main.tileSolid[num28] && num28 != num)
+									{
+										num28 = -1;
+									}
+									if (num30 > -1 && !Main.tileSolid[num30] && num30 != num)
+									{
+										num30 = -1;
+									}
+									if (num33 > -1 && !Main.tileSolid[num33] && num33 != num)
+									{
+										num33 = -1;
+									}
+									if (num35 > -1 && !Main.tileSolid[num35] && num35 != num)
+									{
+										num35 = -1;
+									}
+									int num37 = 0;
+									if (num == 60 || num == 70)
+									{
+										num37 = 59;
+									}
+									else
+									{
+										if (num == 2)
+										{
+											if (num29 == 23)
+											{
+												num29 = num37;
+											}
+											if (num34 == 23)
+											{
+												num34 = num37;
+											}
+											if (num31 == 23)
+											{
+												num31 = num37;
+											}
+											if (num32 == 23)
+											{
+												num32 = num37;
+											}
+											if (num28 == 23)
+											{
+												num28 = num37;
+											}
+											if (num30 == 23)
+											{
+												num30 = num37;
+											}
+											if (num33 == 23)
+											{
+												num33 = num37;
+											}
+											if (num35 == 23)
+											{
+												num35 = num37;
+											}
+										}
+										else
+										{
+											if (num == 23)
+											{
+												if (num29 == 2)
+												{
+													num29 = num37;
+												}
+												if (num34 == 2)
+												{
+													num34 = num37;
+												}
+												if (num31 == 2)
+												{
+													num31 = num37;
+												}
+												if (num32 == 2)
+												{
+													num32 = num37;
+												}
+												if (num28 == 2)
+												{
+													num28 = num37;
+												}
+												if (num30 == 2)
+												{
+													num30 = num37;
+												}
+												if (num33 == 2)
+												{
+													num33 = num37;
+												}
+												if (num35 == 2)
+												{
+													num35 = num37;
+												}
+											}
+										}
+									}
+									if (num29 != num && num29 != num37 && (num34 == num || num34 == num37))
+									{
+										if (num31 == num37 && num32 == num)
+										{
+											if (num36 == 0)
+											{
+												rectangle.X = 0;
+												rectangle.Y = 198;
+											}
+											else
+											{
+												if (num36 == 1)
+												{
+													rectangle.X = 18;
+													rectangle.Y = 198;
+												}
+												else
+												{
+													rectangle.X = 36;
+													rectangle.Y = 198;
+												}
+											}
+										}
+										else
+										{
+											if (num31 == num && num32 == num37)
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 54;
+													rectangle.Y = 198;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 72;
+														rectangle.Y = 198;
+													}
+													else
+													{
+														rectangle.X = 90;
+														rectangle.Y = 198;
+													}
+												}
+											}
+										}
+									}
+									else
+									{
+										if (num34 != num && num34 != num37 && (num29 == num || num29 == num37))
+										{
+											if (num31 == num37 && num32 == num)
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 0;
+													rectangle.Y = 216;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 18;
+														rectangle.Y = 216;
+													}
+													else
+													{
+														rectangle.X = 36;
+														rectangle.Y = 216;
+													}
+												}
+											}
+											else
+											{
+												if (num31 == num && num32 == num37)
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 54;
+														rectangle.Y = 216;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 72;
+															rectangle.Y = 216;
+														}
+														else
+														{
+															rectangle.X = 90;
+															rectangle.Y = 216;
+														}
+													}
+												}
+											}
+										}
+										else
+										{
+											if (num31 != num && num31 != num37 && (num32 == num || num32 == num37))
+											{
+												if (num29 == num37 && num34 == num)
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 72;
+														rectangle.Y = 144;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 72;
+															rectangle.Y = 162;
+														}
+														else
+														{
+															rectangle.X = 72;
+															rectangle.Y = 180;
+														}
+													}
+												}
+												else
+												{
+													if (num34 == num && num32 == num29)
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 72;
+															rectangle.Y = 90;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 72;
+																rectangle.Y = 108;
+															}
+															else
+															{
+																rectangle.X = 72;
+																rectangle.Y = 126;
+															}
+														}
+													}
+												}
+											}
+											else
+											{
+												if (num32 != num && num32 != num37 && (num31 == num || num31 == num37))
+												{
+													if (num29 == num37 && num34 == num)
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 90;
+															rectangle.Y = 144;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 90;
+																rectangle.Y = 162;
+															}
+															else
+															{
+																rectangle.X = 90;
+																rectangle.Y = 180;
+															}
+														}
+													}
+													else
+													{
+														if (num34 == num && num32 == num29)
+														{
+															if (num36 == 0)
+															{
+																rectangle.X = 90;
+																rectangle.Y = 90;
+															}
+															else
+															{
+																if (num36 == 1)
+																{
+																	rectangle.X = 90;
+																	rectangle.Y = 108;
+																}
+																else
+																{
+																	rectangle.X = 90;
+																	rectangle.Y = 126;
+																}
+															}
+														}
+													}
+												}
+												else
+												{
+													if (num29 == num && num34 == num && num31 == num && num32 == num)
+													{
+														if (num28 != num && num30 != num && num33 != num && num35 != num)
+														{
+															if (num35 == num37)
+															{
+																if (num36 == 0)
+																{
+																	rectangle.X = 108;
+																	rectangle.Y = 324;
+																}
+																else
+																{
+																	if (num36 == 1)
+																	{
+																		rectangle.X = 126;
+																		rectangle.Y = 324;
+																	}
+																	else
+																	{
+																		rectangle.X = 144;
+																		rectangle.Y = 324;
+																	}
+																}
+															}
+															else
+															{
+																if (num30 == num37)
+																{
+																	if (num36 == 0)
+																	{
+																		rectangle.X = 108;
+																		rectangle.Y = 342;
+																	}
+																	else
+																	{
+																		if (num36 == 1)
+																		{
+																			rectangle.X = 126;
+																			rectangle.Y = 342;
+																		}
+																		else
+																		{
+																			rectangle.X = 144;
+																			rectangle.Y = 342;
+																		}
+																	}
+																}
+																else
+																{
+																	if (num33 == num37)
+																	{
+																		if (num36 == 0)
+																		{
+																			rectangle.X = 108;
+																			rectangle.Y = 360;
+																		}
+																		else
+																		{
+																			if (num36 == 1)
+																			{
+																				rectangle.X = 126;
+																				rectangle.Y = 360;
+																			}
+																			else
+																			{
+																				rectangle.X = 144;
+																				rectangle.Y = 360;
+																			}
+																		}
+																	}
+																	else
+																	{
+																		if (num28 == num37)
+																		{
+																			if (num36 == 0)
+																			{
+																				rectangle.X = 108;
+																				rectangle.Y = 378;
+																			}
+																			else
+																			{
+																				if (num36 == 1)
+																				{
+																					rectangle.X = 126;
+																					rectangle.Y = 378;
+																				}
+																				else
+																				{
+																					rectangle.X = 144;
+																					rectangle.Y = 378;
+																				}
+																			}
+																		}
+																		else
+																		{
+																			if (num36 == 0)
+																			{
+																				rectangle.X = 144;
+																				rectangle.Y = 234;
+																			}
+																			else
+																			{
+																				if (num36 == 1)
+																				{
+																					rectangle.X = 198;
+																					rectangle.Y = 234;
+																				}
+																				else
+																				{
+																					rectangle.X = 252;
+																					rectangle.Y = 234;
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+														else
+														{
+															if (num28 != num && num35 != num)
+															{
+																if (num36 == 0)
+																{
+																	rectangle.X = 36;
+																	rectangle.Y = 306;
+																}
+																else
+																{
+																	if (num36 == 1)
+																	{
+																		rectangle.X = 54;
+																		rectangle.Y = 306;
+																	}
+																	else
+																	{
+																		rectangle.X = 72;
+																		rectangle.Y = 306;
+																	}
+																}
+															}
+															else
+															{
+																if (num30 != num && num33 != num)
+																{
+																	if (num36 == 0)
+																	{
+																		rectangle.X = 90;
+																		rectangle.Y = 306;
+																	}
+																	else
+																	{
+																		if (num36 == 1)
+																		{
+																			rectangle.X = 108;
+																			rectangle.Y = 306;
+																		}
+																		else
+																		{
+																			rectangle.X = 126;
+																			rectangle.Y = 306;
+																		}
+																	}
+																}
+																else
+																{
+																	if (num28 != num && num30 == num && num33 == num && num35 == num)
+																	{
+																		if (num36 == 0)
+																		{
+																			rectangle.X = 54;
+																			rectangle.Y = 108;
+																		}
+																		else
+																		{
+																			if (num36 == 1)
+																			{
+																				rectangle.X = 54;
+																				rectangle.Y = 144;
+																			}
+																			else
+																			{
+																				rectangle.X = 54;
+																				rectangle.Y = 180;
+																			}
+																		}
+																	}
+																	else
+																	{
+																		if (num28 == num && num30 != num && num33 == num && num35 == num)
+																		{
+																			if (num36 == 0)
+																			{
+																				rectangle.X = 36;
+																				rectangle.Y = 108;
+																			}
+																			else
+																			{
+																				if (num36 == 1)
+																				{
+																					rectangle.X = 36;
+																					rectangle.Y = 144;
+																				}
+																				else
+																				{
+																					rectangle.X = 36;
+																					rectangle.Y = 180;
+																				}
+																			}
+																		}
+																		else
+																		{
+																			if (num28 == num && num30 == num && num33 != num && num35 == num)
+																			{
+																				if (num36 == 0)
+																				{
+																					rectangle.X = 54;
+																					rectangle.Y = 90;
+																				}
+																				else
+																				{
+																					if (num36 == 1)
+																					{
+																						rectangle.X = 54;
+																						rectangle.Y = 126;
+																					}
+																					else
+																					{
+																						rectangle.X = 54;
+																						rectangle.Y = 162;
+																					}
+																				}
+																			}
+																			else
+																			{
+																				if (num28 == num && num30 == num && num33 == num && num35 != num)
+																				{
+																					if (num36 == 0)
+																					{
+																						rectangle.X = 36;
+																						rectangle.Y = 90;
+																					}
+																					else
+																					{
+																						if (num36 == 1)
+																						{
+																							rectangle.X = 36;
+																							rectangle.Y = 126;
+																						}
+																						else
+																						{
+																							rectangle.X = 36;
+																							rectangle.Y = 162;
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+													else
+													{
+														if (num29 == num && num34 == num37 && num31 == num && num32 == num && num28 == -1 && num30 == -1)
+														{
+															if (num36 == 0)
+															{
+																rectangle.X = 108;
+																rectangle.Y = 18;
+															}
+															else
+															{
+																if (num36 == 1)
+																{
+																	rectangle.X = 126;
+																	rectangle.Y = 18;
+																}
+																else
+																{
+																	rectangle.X = 144;
+																	rectangle.Y = 18;
+																}
+															}
+														}
+														else
+														{
+															if (num29 == num37 && num34 == num && num31 == num && num32 == num && num33 == -1 && num35 == -1)
+															{
+																if (num36 == 0)
+																{
+																	rectangle.X = 108;
+																	rectangle.Y = 36;
+																}
+																else
+																{
+																	if (num36 == 1)
+																	{
+																		rectangle.X = 126;
+																		rectangle.Y = 36;
+																	}
+																	else
+																	{
+																		rectangle.X = 144;
+																		rectangle.Y = 36;
+																	}
+																}
+															}
+															else
+															{
+																if (num29 == num && num34 == num && num31 == num37 && num32 == num && num30 == -1 && num35 == -1)
+																{
+																	if (num36 == 0)
+																	{
+																		rectangle.X = 198;
+																		rectangle.Y = 0;
+																	}
+																	else
+																	{
+																		if (num36 == 1)
+																		{
+																			rectangle.X = 198;
+																			rectangle.Y = 18;
+																		}
+																		else
+																		{
+																			rectangle.X = 198;
+																			rectangle.Y = 36;
+																		}
+																	}
+																}
+																else
+																{
+																	if (num29 == num && num34 == num && num31 == num && num32 == num37 && num28 == -1 && num33 == -1)
+																	{
+																		if (num36 == 0)
+																		{
+																			rectangle.X = 180;
+																			rectangle.Y = 0;
+																		}
+																		else
+																		{
+																			if (num36 == 1)
+																			{
+																				rectangle.X = 180;
+																				rectangle.Y = 18;
+																			}
+																			else
+																			{
+																				rectangle.X = 180;
+																				rectangle.Y = 36;
+																			}
+																		}
+																	}
+																	else
+																	{
+																		if (num29 == num && num34 == num37 && num31 == num && num32 == num)
+																		{
+																			if (num30 != -1)
+																			{
+																				if (num36 == 0)
+																				{
+																					rectangle.X = 54;
+																					rectangle.Y = 108;
+																				}
+																				else
+																				{
+																					if (num36 == 1)
+																					{
+																						rectangle.X = 54;
+																						rectangle.Y = 144;
+																					}
+																					else
+																					{
+																						rectangle.X = 54;
+																						rectangle.Y = 180;
+																					}
+																				}
+																			}
+																			else
+																			{
+																				if (num28 != -1)
+																				{
+																					if (num36 == 0)
+																					{
+																						rectangle.X = 36;
+																						rectangle.Y = 108;
+																					}
+																					else
+																					{
+																						if (num36 == 1)
+																						{
+																							rectangle.X = 36;
+																							rectangle.Y = 144;
+																						}
+																						else
+																						{
+																							rectangle.X = 36;
+																							rectangle.Y = 180;
+																						}
+																					}
+																				}
+																			}
+																		}
+																		else
+																		{
+																			if (num29 == num37 && num34 == num && num31 == num && num32 == num)
+																			{
+																				if (num35 != -1)
+																				{
+																					if (num36 == 0)
+																					{
+																						rectangle.X = 54;
+																						rectangle.Y = 90;
+																					}
+																					else
+																					{
+																						if (num36 == 1)
+																						{
+																							rectangle.X = 54;
+																							rectangle.Y = 126;
+																						}
+																						else
+																						{
+																							rectangle.X = 54;
+																							rectangle.Y = 162;
+																						}
+																					}
+																				}
+																				else
+																				{
+																					if (num33 != -1)
+																					{
+																						if (num36 == 0)
+																						{
+																							rectangle.X = 36;
+																							rectangle.Y = 90;
+																						}
+																						else
+																						{
+																							if (num36 == 1)
+																							{
+																								rectangle.X = 36;
+																								rectangle.Y = 126;
+																							}
+																							else
+																							{
+																								rectangle.X = 36;
+																								rectangle.Y = 162;
+																							}
+																						}
+																					}
+																				}
+																			}
+																			else
+																			{
+																				if (num29 == num && num34 == num && num31 == num && num32 == num37)
+																				{
+																					if (num28 != -1)
+																					{
+																						if (num36 == 0)
+																						{
+																							rectangle.X = 54;
+																							rectangle.Y = 90;
+																						}
+																						else
+																						{
+																							if (num36 == 1)
+																							{
+																								rectangle.X = 54;
+																								rectangle.Y = 126;
+																							}
+																							else
+																							{
+																								rectangle.X = 54;
+																								rectangle.Y = 162;
+																							}
+																						}
+																					}
+																					else
+																					{
+																						if (num33 != -1)
+																						{
+																							if (num36 == 0)
+																							{
+																								rectangle.X = 54;
+																								rectangle.Y = 108;
+																							}
+																							else
+																							{
+																								if (num36 == 1)
+																								{
+																									rectangle.X = 54;
+																									rectangle.Y = 144;
+																								}
+																								else
+																								{
+																									rectangle.X = 54;
+																									rectangle.Y = 180;
+																								}
+																							}
+																						}
+																					}
+																				}
+																				else
+																				{
+																					if (num29 == num && num34 == num && num31 == num37 && num32 == num)
+																					{
+																						if (num30 != -1)
+																						{
+																							if (num36 == 0)
+																							{
+																								rectangle.X = 36;
+																								rectangle.Y = 90;
+																							}
+																							else
+																							{
+																								if (num36 == 1)
+																								{
+																									rectangle.X = 36;
+																									rectangle.Y = 126;
+																								}
+																								else
+																								{
+																									rectangle.X = 36;
+																									rectangle.Y = 162;
+																								}
+																							}
+																						}
+																						else
+																						{
+																							if (num35 != -1)
+																							{
+																								if (num36 == 0)
+																								{
+																									rectangle.X = 36;
+																									rectangle.Y = 108;
+																								}
+																								else
+																								{
+																									if (num36 == 1)
+																									{
+																										rectangle.X = 36;
+																										rectangle.Y = 144;
+																									}
+																									else
+																									{
+																										rectangle.X = 36;
+																										rectangle.Y = 180;
+																									}
+																								}
+																							}
+																						}
+																					}
+																					else
+																					{
+																						if ((num29 == num37 && num34 == num && num31 == num && num32 == num) || (num29 == num && num34 == num37 && num31 == num && num32 == num) || (num29 == num && num34 == num && num31 == num37 && num32 == num) || (num29 == num && num34 == num && num31 == num && num32 == num37))
+																						{
+																							if (num36 == 0)
+																							{
+																								rectangle.X = 18;
+																								rectangle.Y = 18;
+																							}
+																							else
+																							{
+																								if (num36 == 1)
+																								{
+																									rectangle.X = 36;
+																									rectangle.Y = 18;
+																								}
+																								else
+																								{
+																									rectangle.X = 54;
+																									rectangle.Y = 18;
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+									if ((num29 == num || num29 == num37) && (num34 == num || num34 == num37) && (num31 == num || num31 == num37) && (num32 == num || num32 == num37))
+									{
+										if (num28 != num && num28 != num37 && (num30 == num || num30 == num37) && (num33 == num || num33 == num37) && (num35 == num || num35 == num37))
+										{
+											if (num36 == 0)
+											{
+												rectangle.X = 54;
+												rectangle.Y = 108;
+											}
+											else
+											{
+												if (num36 == 1)
+												{
+													rectangle.X = 54;
+													rectangle.Y = 144;
+												}
+												else
+												{
+													rectangle.X = 54;
+													rectangle.Y = 180;
+												}
+											}
+										}
+										else
+										{
+											if (num30 != num && num30 != num37 && (num28 == num || num28 == num37) && (num33 == num || num33 == num37) && (num35 == num || num35 == num37))
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 36;
+													rectangle.Y = 108;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 36;
+														rectangle.Y = 144;
+													}
+													else
+													{
+														rectangle.X = 36;
+														rectangle.Y = 180;
+													}
+												}
+											}
+											else
+											{
+												if (num33 != num && num33 != num37 && (num28 == num || num28 == num37) && (num30 == num || num30 == num37) && (num35 == num || num35 == num37))
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 54;
+														rectangle.Y = 90;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 54;
+															rectangle.Y = 126;
+														}
+														else
+														{
+															rectangle.X = 54;
+															rectangle.Y = 162;
+														}
+													}
+												}
+												else
+												{
+													if (num35 != num && num35 != num37 && (num28 == num || num28 == num37) && (num33 == num || num33 == num37) && (num30 == num || num30 == num37))
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 36;
+															rectangle.Y = 90;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 36;
+																rectangle.Y = 126;
+															}
+															else
+															{
+																rectangle.X = 36;
+																rectangle.Y = 162;
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+									if (num29 != num37 && num29 != num && num34 == num && num31 != num37 && num31 != num && num32 == num && num35 != num37 && num35 != num)
+									{
+										if (num36 == 0)
+										{
+											rectangle.X = 90;
+											rectangle.Y = 270;
+										}
+										else
+										{
+											if (num36 == 1)
+											{
+												rectangle.X = 108;
+												rectangle.Y = 270;
+											}
+											else
+											{
+												rectangle.X = 126;
+												rectangle.Y = 270;
+											}
+										}
+									}
+									else
+									{
+										if (num29 != num37 && num29 != num && num34 == num && num31 == num && num32 != num37 && num32 != num && num33 != num37 && num33 != num)
+										{
+											if (num36 == 0)
+											{
+												rectangle.X = 144;
+												rectangle.Y = 270;
+											}
+											else
+											{
+												if (num36 == 1)
+												{
+													rectangle.X = 162;
+													rectangle.Y = 270;
+												}
+												else
+												{
+													rectangle.X = 180;
+													rectangle.Y = 270;
+												}
+											}
+										}
+										else
+										{
+											if (num34 != num37 && num34 != num && num29 == num && num31 != num37 && num31 != num && num32 == num && num30 != num37 && num30 != num)
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 90;
+													rectangle.Y = 288;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 108;
+														rectangle.Y = 288;
+													}
+													else
+													{
+														rectangle.X = 126;
+														rectangle.Y = 288;
+													}
+												}
+											}
+											else
+											{
+												if (num34 != num37 && num34 != num && num29 == num && num31 == num && num32 != num37 && num32 != num && num28 != num37 && num28 != num)
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 144;
+														rectangle.Y = 288;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 162;
+															rectangle.Y = 288;
+														}
+														else
+														{
+															rectangle.X = 180;
+															rectangle.Y = 288;
+														}
+													}
+												}
+												else
+												{
+													if (num29 != num && num29 != num37 && num34 == num && num31 == num && num32 == num && num33 != num && num33 != num37 && num35 != num && num35 != num37)
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 144;
+															rectangle.Y = 216;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 198;
+																rectangle.Y = 216;
+															}
+															else
+															{
+																rectangle.X = 252;
+																rectangle.Y = 216;
+															}
+														}
+													}
+													else
+													{
+														if (num34 != num && num34 != num37 && num29 == num && num31 == num && num32 == num && num28 != num && num28 != num37 && num30 != num && num30 != num37)
+														{
+															if (num36 == 0)
+															{
+																rectangle.X = 144;
+																rectangle.Y = 252;
+															}
+															else
+															{
+																if (num36 == 1)
+																{
+																	rectangle.X = 198;
+																	rectangle.Y = 252;
+																}
+																else
+																{
+																	rectangle.X = 252;
+																	rectangle.Y = 252;
+																}
+															}
+														}
+														else
+														{
+															if (num31 != num && num31 != num37 && num34 == num && num29 == num && num32 == num && num30 != num && num30 != num37 && num35 != num && num35 != num37)
+															{
+																if (num36 == 0)
+																{
+																	rectangle.X = 126;
+																	rectangle.Y = 234;
+																}
+																else
+																{
+																	if (num36 == 1)
+																	{
+																		rectangle.X = 180;
+																		rectangle.Y = 234;
+																	}
+																	else
+																	{
+																		rectangle.X = 234;
+																		rectangle.Y = 234;
+																	}
+																}
+															}
+															else
+															{
+																if (num32 != num && num32 != num37 && num34 == num && num29 == num && num31 == num && num28 != num && num28 != num37 && num33 != num && num33 != num37)
+																{
+																	if (num36 == 0)
+																	{
+																		rectangle.X = 162;
+																		rectangle.Y = 234;
+																	}
+																	else
+																	{
+																		if (num36 == 1)
+																		{
+																			rectangle.X = 216;
+																			rectangle.Y = 234;
+																		}
+																		else
+																		{
+																			rectangle.X = 270;
+																			rectangle.Y = 234;
+																		}
+																	}
+																}
+																else
+																{
+																	if (num29 != num37 && num29 != num && (num34 == num37 || num34 == num) && num31 == num37 && num32 == num37)
+																	{
+																		if (num36 == 0)
+																		{
+																			rectangle.X = 36;
+																			rectangle.Y = 270;
+																		}
+																		else
+																		{
+																			if (num36 == 1)
+																			{
+																				rectangle.X = 54;
+																				rectangle.Y = 270;
+																			}
+																			else
+																			{
+																				rectangle.X = 72;
+																				rectangle.Y = 270;
+																			}
+																		}
+																	}
+																	else
+																	{
+																		if (num34 != num37 && num34 != num && (num29 == num37 || num29 == num) && num31 == num37 && num32 == num37)
+																		{
+																			if (num36 == 0)
+																			{
+																				rectangle.X = 36;
+																				rectangle.Y = 288;
+																			}
+																			else
+																			{
+																				if (num36 == 1)
+																				{
+																					rectangle.X = 54;
+																					rectangle.Y = 288;
+																				}
+																				else
+																				{
+																					rectangle.X = 72;
+																					rectangle.Y = 288;
+																				}
+																			}
+																		}
+																		else
+																		{
+																			if (num31 != num37 && num31 != num && (num32 == num37 || num32 == num) && num29 == num37 && num34 == num37)
+																			{
+																				if (num36 == 0)
+																				{
+																					rectangle.X = 0;
+																					rectangle.Y = 270;
+																				}
+																				else
+																				{
+																					if (num36 == 1)
+																					{
+																						rectangle.X = 0;
+																						rectangle.Y = 288;
+																					}
+																					else
+																					{
+																						rectangle.X = 0;
+																						rectangle.Y = 306;
+																					}
+																				}
+																			}
+																			else
+																			{
+																				if (num32 != num37 && num32 != num && (num31 == num37 || num31 == num) && num29 == num37 && num34 == num37)
+																				{
+																					if (num36 == 0)
+																					{
+																						rectangle.X = 18;
+																						rectangle.Y = 270;
+																					}
+																					else
+																					{
+																						if (num36 == 1)
+																						{
+																							rectangle.X = 18;
+																							rectangle.Y = 288;
+																						}
+																						else
+																						{
+																							rectangle.X = 18;
+																							rectangle.Y = 306;
+																						}
+																					}
+																				}
+																				else
+																				{
+																					if (num29 == num && num34 == num37 && num31 == num37 && num32 == num37)
+																					{
+																						if (num36 == 0)
+																						{
+																							rectangle.X = 198;
+																							rectangle.Y = 288;
+																						}
+																						else
+																						{
+																							if (num36 == 1)
+																							{
+																								rectangle.X = 216;
+																								rectangle.Y = 288;
+																							}
+																							else
+																							{
+																								rectangle.X = 234;
+																								rectangle.Y = 288;
+																							}
+																						}
+																					}
+																					else
+																					{
+																						if (num29 == num37 && num34 == num && num31 == num37 && num32 == num37)
+																						{
+																							if (num36 == 0)
+																							{
+																								rectangle.X = 198;
+																								rectangle.Y = 270;
+																							}
+																							else
+																							{
+																								if (num36 == 1)
+																								{
+																									rectangle.X = 216;
+																									rectangle.Y = 270;
+																								}
+																								else
+																								{
+																									rectangle.X = 234;
+																									rectangle.Y = 270;
+																								}
+																							}
+																						}
+																						else
+																						{
+																							if (num29 == num37 && num34 == num37 && num31 == num && num32 == num37)
+																							{
+																								if (num36 == 0)
+																								{
+																									rectangle.X = 198;
+																									rectangle.Y = 306;
+																								}
+																								else
+																								{
+																									if (num36 == 1)
+																									{
+																										rectangle.X = 216;
+																										rectangle.Y = 306;
+																									}
+																									else
+																									{
+																										rectangle.X = 234;
+																										rectangle.Y = 306;
+																									}
+																								}
+																							}
+																							else
+																							{
+																								if (num29 == num37 && num34 == num37 && num31 == num37 && num32 == num)
+																								{
+																									if (num36 == 0)
+																									{
+																										rectangle.X = 144;
+																										rectangle.Y = 306;
+																									}
+																									else
+																									{
+																										if (num36 == 1)
+																										{
+																											rectangle.X = 162;
+																											rectangle.Y = 306;
+																										}
+																										else
+																										{
+																											rectangle.X = 180;
+																											rectangle.Y = 306;
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+									if (num29 != num && num29 != num37 && num34 == num && num31 == num && num32 == num)
+									{
+										if ((num33 == num37 || num33 == num) && num35 != num37 && num35 != num)
+										{
+											if (num36 == 0)
+											{
+												rectangle.X = 0;
+												rectangle.Y = 324;
+											}
+											else
+											{
+												if (num36 == 1)
+												{
+													rectangle.X = 18;
+													rectangle.Y = 324;
+												}
+												else
+												{
+													rectangle.X = 36;
+													rectangle.Y = 324;
+												}
+											}
+										}
+										else
+										{
+											if ((num35 == num37 || num35 == num) && num33 != num37 && num33 != num)
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 54;
+													rectangle.Y = 324;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 72;
+														rectangle.Y = 324;
+													}
+													else
+													{
+														rectangle.X = 90;
+														rectangle.Y = 324;
+													}
+												}
+											}
+										}
+									}
+									else
+									{
+										if (num34 != num && num34 != num37 && num29 == num && num31 == num && num32 == num)
+										{
+											if ((num28 == num37 || num28 == num) && num30 != num37 && num30 != num)
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 0;
+													rectangle.Y = 342;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 18;
+														rectangle.Y = 342;
+													}
+													else
+													{
+														rectangle.X = 36;
+														rectangle.Y = 342;
+													}
+												}
+											}
+											else
+											{
+												if ((num30 == num37 || num30 == num) && num28 != num37 && num28 != num)
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 54;
+														rectangle.Y = 342;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 72;
+															rectangle.Y = 342;
+														}
+														else
+														{
+															rectangle.X = 90;
+															rectangle.Y = 342;
+														}
+													}
+												}
+											}
+										}
+										else
+										{
+											if (num31 != num && num31 != num37 && num29 == num && num34 == num && num32 == num)
+											{
+												if ((num30 == num37 || num30 == num) && num35 != num37 && num35 != num)
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 54;
+														rectangle.Y = 360;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 72;
+															rectangle.Y = 360;
+														}
+														else
+														{
+															rectangle.X = 90;
+															rectangle.Y = 360;
+														}
+													}
+												}
+												else
+												{
+													if ((num35 == num37 || num35 == num) && num30 != num37 && num30 != num)
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 0;
+															rectangle.Y = 360;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 18;
+																rectangle.Y = 360;
+															}
+															else
+															{
+																rectangle.X = 36;
+																rectangle.Y = 360;
+															}
+														}
+													}
+												}
+											}
+											else
+											{
+												if (num32 != num && num32 != num37 && num29 == num && num34 == num && num31 == num)
+												{
+													if ((num28 == num37 || num28 == num) && num33 != num37 && num33 != num)
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 0;
+															rectangle.Y = 378;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 18;
+																rectangle.Y = 378;
+															}
+															else
+															{
+																rectangle.X = 36;
+																rectangle.Y = 378;
+															}
+														}
+													}
+													else
+													{
+														if ((num33 == num37 || num33 == num) && num28 != num37 && num28 != num)
+														{
+															if (num36 == 0)
+															{
+																rectangle.X = 54;
+																rectangle.Y = 378;
+															}
+															else
+															{
+																if (num36 == 1)
+																{
+																	rectangle.X = 72;
+																	rectangle.Y = 378;
+																}
+																else
+																{
+																	rectangle.X = 90;
+																	rectangle.Y = 378;
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+									if ((num29 == num || num29 == num37) && (num34 == num || num34 == num37) && (num31 == num || num31 == num37) && (num32 == num || num32 == num37) && num28 != -1 && num30 != -1 && num33 != -1 && num35 != -1)
+									{
+										if (num36 == 0)
+										{
+											rectangle.X = 18;
+											rectangle.Y = 18;
+										}
+										else
+										{
+											if (num36 == 1)
+											{
+												rectangle.X = 36;
+												rectangle.Y = 18;
+											}
+											else
+											{
+												rectangle.X = 54;
+												rectangle.Y = 18;
+											}
+										}
+									}
+									if (num29 == num37)
+									{
+										num29 = -2;
+									}
+									if (num34 == num37)
+									{
+										num34 = -2;
+									}
+									if (num31 == num37)
+									{
+										num31 = -2;
+									}
+									if (num32 == num37)
+									{
+										num32 = -2;
+									}
+									if (num28 == num37)
+									{
+										num28 = -2;
+									}
+									if (num30 == num37)
+									{
+										num30 = -2;
+									}
+									if (num33 == num37)
+									{
+										num33 = -2;
+									}
+									if (num35 == num37)
+									{
+										num35 = -2;
+									}
+								}
+								if (rectangle.X == -1 && rectangle.Y == -1 && (Main.tileMergeDirt[num] || num == 0 || num == 2 || num == 57 || num == 58 || num == 59 || num == 60 || num == 70 || num == 109 || num == 76 || num == 75))
+								{
+									if (!flag3)
+									{
+										flag3 = true;
+										if (num29 > -1 && !Main.tileSolid[num29] && num29 != num)
+										{
+											num29 = -1;
+										}
+										if (num34 > -1 && !Main.tileSolid[num34] && num34 != num)
+										{
+											num34 = -1;
+										}
+										if (num31 > -1 && !Main.tileSolid[num31] && num31 != num)
+										{
+											num31 = -1;
+										}
+										if (num32 > -1 && !Main.tileSolid[num32] && num32 != num)
+										{
+											num32 = -1;
+										}
+										if (num28 > -1 && !Main.tileSolid[num28] && num28 != num)
+										{
+											num28 = -1;
+										}
+										if (num30 > -1 && !Main.tileSolid[num30] && num30 != num)
+										{
+											num30 = -1;
+										}
+										if (num33 > -1 && !Main.tileSolid[num33] && num33 != num)
+										{
+											num33 = -1;
+										}
+										if (num35 > -1 && !Main.tileSolid[num35] && num35 != num)
+										{
+											num35 = -1;
+										}
+									}
+									if (num29 >= 0 && num29 != num)
+									{
+										num29 = -1;
+									}
+									if (num34 >= 0 && num34 != num)
+									{
+										num34 = -1;
+									}
+									if (num31 >= 0 && num31 != num)
+									{
+										num31 = -1;
+									}
+									if (num32 >= 0 && num32 != num)
+									{
+										num32 = -1;
+									}
+									if (num29 != -1 && num34 != -1 && num31 != -1 && num32 != -1)
+									{
+										if (num29 == -2 && num34 == num && num31 == num && num32 == num)
+										{
+											if (num36 == 0)
+											{
+												rectangle.X = 144;
+												rectangle.Y = 108;
+											}
+											else
+											{
+												if (num36 == 1)
+												{
+													rectangle.X = 162;
+													rectangle.Y = 108;
+												}
+												else
+												{
+													rectangle.X = 180;
+													rectangle.Y = 108;
+												}
+											}
+											mergeUp = true;
+										}
+										else
+										{
+											if (num29 == num && num34 == -2 && num31 == num && num32 == num)
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 144;
+													rectangle.Y = 90;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 162;
+														rectangle.Y = 90;
+													}
+													else
+													{
+														rectangle.X = 180;
+														rectangle.Y = 90;
+													}
+												}
+												mergeDown = true;
+											}
+											else
+											{
+												if (num29 == num && num34 == num && num31 == -2 && num32 == num)
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 162;
+														rectangle.Y = 126;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 162;
+															rectangle.Y = 144;
+														}
+														else
+														{
+															rectangle.X = 162;
+															rectangle.Y = 162;
+														}
+													}
+													mergeLeft = true;
+												}
+												else
+												{
+													if (num29 == num && num34 == num && num31 == num && num32 == -2)
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 144;
+															rectangle.Y = 126;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 144;
+																rectangle.Y = 144;
+															}
+															else
+															{
+																rectangle.X = 144;
+																rectangle.Y = 162;
+															}
+														}
+														mergeRight = true;
+													}
+													else
+													{
+														if (num29 == -2 && num34 == num && num31 == -2 && num32 == num)
+														{
+															if (num36 == 0)
+															{
+																rectangle.X = 36;
+																rectangle.Y = 90;
+															}
+															else
+															{
+																if (num36 == 1)
+																{
+																	rectangle.X = 36;
+																	rectangle.Y = 126;
+																}
+																else
+																{
+																	rectangle.X = 36;
+																	rectangle.Y = 162;
+																}
+															}
+															mergeUp = true;
+															mergeLeft = true;
+														}
+														else
+														{
+															if (num29 == -2 && num34 == num && num31 == num && num32 == -2)
+															{
+																if (num36 == 0)
+																{
+																	rectangle.X = 54;
+																	rectangle.Y = 90;
+																}
+																else
+																{
+																	if (num36 == 1)
+																	{
+																		rectangle.X = 54;
+																		rectangle.Y = 126;
+																	}
+																	else
+																	{
+																		rectangle.X = 54;
+																		rectangle.Y = 162;
+																	}
+																}
+																mergeUp = true;
+																mergeRight = true;
+															}
+															else
+															{
+																if (num29 == num && num34 == -2 && num31 == -2 && num32 == num)
+																{
+																	if (num36 == 0)
+																	{
+																		rectangle.X = 36;
+																		rectangle.Y = 108;
+																	}
+																	else
+																	{
+																		if (num36 == 1)
+																		{
+																			rectangle.X = 36;
+																			rectangle.Y = 144;
+																		}
+																		else
+																		{
+																			rectangle.X = 36;
+																			rectangle.Y = 180;
+																		}
+																	}
+																	mergeDown = true;
+																	mergeLeft = true;
+																}
+																else
+																{
+																	if (num29 == num && num34 == -2 && num31 == num && num32 == -2)
+																	{
+																		if (num36 == 0)
+																		{
+																			rectangle.X = 54;
+																			rectangle.Y = 108;
+																		}
+																		else
+																		{
+																			if (num36 == 1)
+																			{
+																				rectangle.X = 54;
+																				rectangle.Y = 144;
+																			}
+																			else
+																			{
+																				rectangle.X = 54;
+																				rectangle.Y = 180;
+																			}
+																		}
+																		mergeDown = true;
+																		mergeRight = true;
+																	}
+																	else
+																	{
+																		if (num29 == num && num34 == num && num31 == -2 && num32 == -2)
+																		{
+																			if (num36 == 0)
+																			{
+																				rectangle.X = 180;
+																				rectangle.Y = 126;
+																			}
+																			else
+																			{
+																				if (num36 == 1)
+																				{
+																					rectangle.X = 180;
+																					rectangle.Y = 144;
+																				}
+																				else
+																				{
+																					rectangle.X = 180;
+																					rectangle.Y = 162;
+																				}
+																			}
+																			mergeLeft = true;
+																			mergeRight = true;
+																		}
+																		else
+																		{
+																			if (num29 == -2 && num34 == -2 && num31 == num && num32 == num)
+																			{
+																				if (num36 == 0)
+																				{
+																					rectangle.X = 144;
+																					rectangle.Y = 180;
+																				}
+																				else
+																				{
+																					if (num36 == 1)
+																					{
+																						rectangle.X = 162;
+																						rectangle.Y = 180;
+																					}
+																					else
+																					{
+																						rectangle.X = 180;
+																						rectangle.Y = 180;
+																					}
+																				}
+																				mergeUp = true;
+																				mergeDown = true;
+																			}
+																			else
+																			{
+																				if (num29 == -2 && num34 == num && num31 == -2 && num32 == -2)
+																				{
+																					if (num36 == 0)
+																					{
+																						rectangle.X = 198;
+																						rectangle.Y = 90;
+																					}
+																					else
+																					{
+																						if (num36 == 1)
+																						{
+																							rectangle.X = 198;
+																							rectangle.Y = 108;
+																						}
+																						else
+																						{
+																							rectangle.X = 198;
+																							rectangle.Y = 126;
+																						}
+																					}
+																					mergeUp = true;
+																					mergeLeft = true;
+																					mergeRight = true;
+																				}
+																				else
+																				{
+																					if (num29 == num && num34 == -2 && num31 == -2 && num32 == -2)
+																					{
+																						if (num36 == 0)
+																						{
+																							rectangle.X = 198;
+																							rectangle.Y = 144;
+																						}
+																						else
+																						{
+																							if (num36 == 1)
+																							{
+																								rectangle.X = 198;
+																								rectangle.Y = 162;
+																							}
+																							else
+																							{
+																								rectangle.X = 198;
+																								rectangle.Y = 180;
+																							}
+																						}
+																						mergeDown = true;
+																						mergeLeft = true;
+																						mergeRight = true;
+																					}
+																					else
+																					{
+																						if (num29 == -2 && num34 == -2 && num31 == num && num32 == -2)
+																						{
+																							if (num36 == 0)
+																							{
+																								rectangle.X = 216;
+																								rectangle.Y = 144;
+																							}
+																							else
+																							{
+																								if (num36 == 1)
+																								{
+																									rectangle.X = 216;
+																									rectangle.Y = 162;
+																								}
+																								else
+																								{
+																									rectangle.X = 216;
+																									rectangle.Y = 180;
+																								}
+																							}
+																							mergeUp = true;
+																							mergeDown = true;
+																							mergeRight = true;
+																						}
+																						else
+																						{
+																							if (num29 == -2 && num34 == -2 && num31 == -2 && num32 == num)
+																							{
+																								if (num36 == 0)
+																								{
+																									rectangle.X = 216;
+																									rectangle.Y = 90;
+																								}
+																								else
+																								{
+																									if (num36 == 1)
+																									{
+																										rectangle.X = 216;
+																										rectangle.Y = 108;
+																									}
+																									else
+																									{
+																										rectangle.X = 216;
+																										rectangle.Y = 126;
+																									}
+																								}
+																								mergeUp = true;
+																								mergeDown = true;
+																								mergeLeft = true;
+																							}
+																							else
+																							{
+																								if (num29 == -2 && num34 == -2 && num31 == -2 && num32 == -2)
+																								{
+																									if (num36 == 0)
+																									{
+																										rectangle.X = 108;
+																										rectangle.Y = 198;
+																									}
+																									else
+																									{
+																										if (num36 == 1)
+																										{
+																											rectangle.X = 126;
+																											rectangle.Y = 198;
+																										}
+																										else
+																										{
+																											rectangle.X = 144;
+																											rectangle.Y = 198;
+																										}
+																									}
+																									mergeUp = true;
+																									mergeDown = true;
+																									mergeLeft = true;
+																									mergeRight = true;
+																								}
+																								else
+																								{
+																									if (num29 == num && num34 == num && num31 == num && num32 == num)
+																									{
+																										if (num28 == -2)
+																										{
+																											if (num36 == 0)
+																											{
+																												rectangle.X = 18;
+																												rectangle.Y = 108;
+																											}
+																											else
+																											{
+																												if (num36 == 1)
+																												{
+																													rectangle.X = 18;
+																													rectangle.Y = 144;
+																												}
+																												else
+																												{
+																													rectangle.X = 18;
+																													rectangle.Y = 180;
+																												}
+																											}
+																										}
+																										if (num30 == -2)
+																										{
+																											if (num36 == 0)
+																											{
+																												rectangle.X = 0;
+																												rectangle.Y = 108;
+																											}
+																											else
+																											{
+																												if (num36 == 1)
+																												{
+																													rectangle.X = 0;
+																													rectangle.Y = 144;
+																												}
+																												else
+																												{
+																													rectangle.X = 0;
+																													rectangle.Y = 180;
+																												}
+																											}
+																										}
+																										if (num33 == -2)
+																										{
+																											if (num36 == 0)
+																											{
+																												rectangle.X = 18;
+																												rectangle.Y = 90;
+																											}
+																											else
+																											{
+																												if (num36 == 1)
+																												{
+																													rectangle.X = 18;
+																													rectangle.Y = 126;
+																												}
+																												else
+																												{
+																													rectangle.X = 18;
+																													rectangle.Y = 162;
+																												}
+																											}
+																										}
+																										if (num35 == -2)
+																										{
+																											if (num36 == 0)
+																											{
+																												rectangle.X = 0;
+																												rectangle.Y = 90;
+																											}
+																											else
+																											{
+																												if (num36 == 1)
+																												{
+																													rectangle.X = 0;
+																													rectangle.Y = 126;
+																												}
+																												else
+																												{
+																													rectangle.X = 0;
+																													rectangle.Y = 162;
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+									else
+									{
+										if (num != 2 && num != 23 && num != 60 && num != 70 && num != 109)
+										{
+											if (num29 == -1 && num34 == -2 && num31 == num && num32 == num)
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 234;
+													rectangle.Y = 0;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 252;
+														rectangle.Y = 0;
+													}
+													else
+													{
+														rectangle.X = 270;
+														rectangle.Y = 0;
+													}
+												}
+												mergeDown = true;
+											}
+											else
+											{
+												if (num29 == -2 && num34 == -1 && num31 == num && num32 == num)
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 234;
+														rectangle.Y = 18;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 252;
+															rectangle.Y = 18;
+														}
+														else
+														{
+															rectangle.X = 270;
+															rectangle.Y = 18;
+														}
+													}
+													mergeUp = true;
+												}
+												else
+												{
+													if (num29 == num && num34 == num && num31 == -1 && num32 == -2)
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 234;
+															rectangle.Y = 36;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 252;
+																rectangle.Y = 36;
+															}
+															else
+															{
+																rectangle.X = 270;
+																rectangle.Y = 36;
+															}
+														}
+														mergeRight = true;
+													}
+													else
+													{
+														if (num29 == num && num34 == num && num31 == -2 && num32 == -1)
+														{
+															if (num36 == 0)
+															{
+																rectangle.X = 234;
+																rectangle.Y = 54;
+															}
+															else
+															{
+																if (num36 == 1)
+																{
+																	rectangle.X = 252;
+																	rectangle.Y = 54;
+																}
+																else
+																{
+																	rectangle.X = 270;
+																	rectangle.Y = 54;
+																}
+															}
+															mergeLeft = true;
+														}
+													}
+												}
+											}
+										}
+										if (num29 != -1 && num34 != -1 && num31 == -1 && num32 == num)
+										{
+											if (num29 == -2 && num34 == num)
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 72;
+													rectangle.Y = 144;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 72;
+														rectangle.Y = 162;
+													}
+													else
+													{
+														rectangle.X = 72;
+														rectangle.Y = 180;
+													}
+												}
+												mergeUp = true;
+											}
+											else
+											{
+												if (num34 == -2 && num29 == num)
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 72;
+														rectangle.Y = 90;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 72;
+															rectangle.Y = 108;
+														}
+														else
+														{
+															rectangle.X = 72;
+															rectangle.Y = 126;
+														}
+													}
+													mergeDown = true;
+												}
+											}
+										}
+										else
+										{
+											if (num29 != -1 && num34 != -1 && num31 == num && num32 == -1)
+											{
+												if (num29 == -2 && num34 == num)
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 90;
+														rectangle.Y = 144;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 90;
+															rectangle.Y = 162;
+														}
+														else
+														{
+															rectangle.X = 90;
+															rectangle.Y = 180;
+														}
+													}
+													mergeUp = true;
+												}
+												else
+												{
+													if (num34 == -2 && num29 == num)
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 90;
+															rectangle.Y = 90;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 90;
+																rectangle.Y = 108;
+															}
+															else
+															{
+																rectangle.X = 90;
+																rectangle.Y = 126;
+															}
+														}
+														mergeDown = true;
+													}
+												}
+											}
+											else
+											{
+												if (num29 == -1 && num34 == num && num31 != -1 && num32 != -1)
+												{
+													if (num31 == -2 && num32 == num)
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 0;
+															rectangle.Y = 198;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 18;
+																rectangle.Y = 198;
+															}
+															else
+															{
+																rectangle.X = 36;
+																rectangle.Y = 198;
+															}
+														}
+														mergeLeft = true;
+													}
+													else
+													{
+														if (num32 == -2 && num31 == num)
+														{
+															if (num36 == 0)
+															{
+																rectangle.X = 54;
+																rectangle.Y = 198;
+															}
+															else
+															{
+																if (num36 == 1)
+																{
+																	rectangle.X = 72;
+																	rectangle.Y = 198;
+																}
+																else
+																{
+																	rectangle.X = 90;
+																	rectangle.Y = 198;
+																}
+															}
+															mergeRight = true;
+														}
+													}
+												}
+												else
+												{
+													if (num29 == num && num34 == -1 && num31 != -1 && num32 != -1)
+													{
+														if (num31 == -2 && num32 == num)
+														{
+															if (num36 == 0)
+															{
+																rectangle.X = 0;
+																rectangle.Y = 216;
+															}
+															else
+															{
+																if (num36 == 1)
+																{
+																	rectangle.X = 18;
+																	rectangle.Y = 216;
+																}
+																else
+																{
+																	rectangle.X = 36;
+																	rectangle.Y = 216;
+																}
+															}
+															mergeLeft = true;
+														}
+														else
+														{
+															if (num32 == -2 && num31 == num)
+															{
+																if (num36 == 0)
+																{
+																	rectangle.X = 54;
+																	rectangle.Y = 216;
+																}
+																else
+																{
+																	if (num36 == 1)
+																	{
+																		rectangle.X = 72;
+																		rectangle.Y = 216;
+																	}
+																	else
+																	{
+																		rectangle.X = 90;
+																		rectangle.Y = 216;
+																	}
+																}
+																mergeRight = true;
+															}
+														}
+													}
+													else
+													{
+														if (num29 != -1 && num34 != -1 && num31 == -1 && num32 == -1)
+														{
+															if (num29 == -2 && num34 == -2)
+															{
+																if (num36 == 0)
+																{
+																	rectangle.X = 108;
+																	rectangle.Y = 216;
+																}
+																else
+																{
+																	if (num36 == 1)
+																	{
+																		rectangle.X = 108;
+																		rectangle.Y = 234;
+																	}
+																	else
+																	{
+																		rectangle.X = 108;
+																		rectangle.Y = 252;
+																	}
+																}
+																mergeUp = true;
+																mergeDown = true;
+															}
+															else
+															{
+																if (num29 == -2)
+																{
+																	if (num36 == 0)
+																	{
+																		rectangle.X = 126;
+																		rectangle.Y = 144;
+																	}
+																	else
+																	{
+																		if (num36 == 1)
+																		{
+																			rectangle.X = 126;
+																			rectangle.Y = 162;
+																		}
+																		else
+																		{
+																			rectangle.X = 126;
+																			rectangle.Y = 180;
+																		}
+																	}
+																	mergeUp = true;
+																}
+																else
+																{
+																	if (num34 == -2)
+																	{
+																		if (num36 == 0)
+																		{
+																			rectangle.X = 126;
+																			rectangle.Y = 90;
+																		}
+																		else
+																		{
+																			if (num36 == 1)
+																			{
+																				rectangle.X = 126;
+																				rectangle.Y = 108;
+																			}
+																			else
+																			{
+																				rectangle.X = 126;
+																				rectangle.Y = 126;
+																			}
+																		}
+																		mergeDown = true;
+																	}
+																}
+															}
+														}
+														else
+														{
+															if (num29 == -1 && num34 == -1 && num31 != -1 && num32 != -1)
+															{
+																if (num31 == -2 && num32 == -2)
+																{
+																	if (num36 == 0)
+																	{
+																		rectangle.X = 162;
+																		rectangle.Y = 198;
+																	}
+																	else
+																	{
+																		if (num36 == 1)
+																		{
+																			rectangle.X = 180;
+																			rectangle.Y = 198;
+																		}
+																		else
+																		{
+																			rectangle.X = 198;
+																			rectangle.Y = 198;
+																		}
+																	}
+																	mergeLeft = true;
+																	mergeRight = true;
+																}
+																else
+																{
+																	if (num31 == -2)
+																	{
+																		if (num36 == 0)
+																		{
+																			rectangle.X = 0;
+																			rectangle.Y = 252;
+																		}
+																		else
+																		{
+																			if (num36 == 1)
+																			{
+																				rectangle.X = 18;
+																				rectangle.Y = 252;
+																			}
+																			else
+																			{
+																				rectangle.X = 36;
+																				rectangle.Y = 252;
+																			}
+																		}
+																		mergeLeft = true;
+																	}
+																	else
+																	{
+																		if (num32 == -2)
+																		{
+																			if (num36 == 0)
+																			{
+																				rectangle.X = 54;
+																				rectangle.Y = 252;
+																			}
+																			else
+																			{
+																				if (num36 == 1)
+																				{
+																					rectangle.X = 72;
+																					rectangle.Y = 252;
+																				}
+																				else
+																				{
+																					rectangle.X = 90;
+																					rectangle.Y = 252;
+																				}
+																			}
+																			mergeRight = true;
+																		}
+																	}
+																}
+															}
+															else
+															{
+																if (num29 == -2 && num34 == -1 && num31 == -1 && num32 == -1)
+																{
+																	if (num36 == 0)
+																	{
+																		rectangle.X = 108;
+																		rectangle.Y = 144;
+																	}
+																	else
+																	{
+																		if (num36 == 1)
+																		{
+																			rectangle.X = 108;
+																			rectangle.Y = 162;
+																		}
+																		else
+																		{
+																			rectangle.X = 108;
+																			rectangle.Y = 180;
+																		}
+																	}
+																	mergeUp = true;
+																}
+																else
+																{
+																	if (num29 == -1 && num34 == -2 && num31 == -1 && num32 == -1)
+																	{
+																		if (num36 == 0)
+																		{
+																			rectangle.X = 108;
+																			rectangle.Y = 90;
+																		}
+																		else
+																		{
+																			if (num36 == 1)
+																			{
+																				rectangle.X = 108;
+																				rectangle.Y = 108;
+																			}
+																			else
+																			{
+																				rectangle.X = 108;
+																				rectangle.Y = 126;
+																			}
+																		}
+																		mergeDown = true;
+																	}
+																	else
+																	{
+																		if (num29 == -1 && num34 == -1 && num31 == -2 && num32 == -1)
+																		{
+																			if (num36 == 0)
+																			{
+																				rectangle.X = 0;
+																				rectangle.Y = 234;
+																			}
+																			else
+																			{
+																				if (num36 == 1)
+																				{
+																					rectangle.X = 18;
+																					rectangle.Y = 234;
+																				}
+																				else
+																				{
+																					rectangle.X = 36;
+																					rectangle.Y = 234;
+																				}
+																			}
+																			mergeLeft = true;
+																		}
+																		else
+																		{
+																			if (num29 == -1 && num34 == -1 && num31 == -1 && num32 == -2)
+																			{
+																				if (num36 == 0)
+																				{
+																					rectangle.X = 54;
+																					rectangle.Y = 234;
+																				}
+																				else
+																				{
+																					if (num36 == 1)
+																					{
+																						rectangle.X = 72;
+																						rectangle.Y = 234;
+																					}
+																					else
+																					{
+																						rectangle.X = 90;
+																						rectangle.Y = 234;
+																					}
+																				}
+																				mergeRight = true;
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								if (rectangle.X < 0 || rectangle.Y < 0)
+								{
+									if (!flag3)
+									{
+										flag3 = true;
+										if (num29 > -1 && !Main.tileSolid[num29] && num29 != num)
+										{
+											num29 = -1;
+										}
+										if (num34 > -1 && !Main.tileSolid[num34] && num34 != num)
+										{
+											num34 = -1;
+										}
+										if (num31 > -1 && !Main.tileSolid[num31] && num31 != num)
+										{
+											num31 = -1;
+										}
+										if (num32 > -1 && !Main.tileSolid[num32] && num32 != num)
+										{
+											num32 = -1;
+										}
+										if (num28 > -1 && !Main.tileSolid[num28] && num28 != num)
+										{
+											num28 = -1;
+										}
+										if (num30 > -1 && !Main.tileSolid[num30] && num30 != num)
+										{
+											num30 = -1;
+										}
+										if (num33 > -1 && !Main.tileSolid[num33] && num33 != num)
+										{
+											num33 = -1;
+										}
+										if (num35 > -1 && !Main.tileSolid[num35] && num35 != num)
+										{
+											num35 = -1;
+										}
+									}
+									if (num == 2 || num == 23 || num == 60 || num == 70 || num == 109)
+									{
+										if (num29 == -2)
+										{
+											num29 = num;
+										}
+										if (num34 == -2)
+										{
+											num34 = num;
+										}
+										if (num31 == -2)
+										{
+											num31 = num;
+										}
+										if (num32 == -2)
+										{
+											num32 = num;
+										}
+										if (num28 == -2)
+										{
+											num28 = num;
+										}
+										if (num30 == -2)
+										{
+											num30 = num;
+										}
+										if (num33 == -2)
+										{
+											num33 = num;
+										}
+										if (num35 == -2)
+										{
+											num35 = num;
+										}
+									}
+									if (num29 == num && num34 == num && (num31 == num & num32 == num))
+									{
+										if (num28 != num && num30 != num)
+										{
+											if (num36 == 0)
+											{
+												rectangle.X = 108;
+												rectangle.Y = 18;
+											}
+											else
+											{
+												if (num36 == 1)
+												{
+													rectangle.X = 126;
+													rectangle.Y = 18;
+												}
+												else
+												{
+													rectangle.X = 144;
+													rectangle.Y = 18;
+												}
+											}
+										}
+										else
+										{
+											if (num33 != num && num35 != num)
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 108;
+													rectangle.Y = 36;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 126;
+														rectangle.Y = 36;
+													}
+													else
+													{
+														rectangle.X = 144;
+														rectangle.Y = 36;
+													}
+												}
+											}
+											else
+											{
+												if (num28 != num && num33 != num)
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 180;
+														rectangle.Y = 0;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 180;
+															rectangle.Y = 18;
+														}
+														else
+														{
+															rectangle.X = 180;
+															rectangle.Y = 36;
+														}
+													}
+												}
+												else
+												{
+													if (num30 != num && num35 != num)
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 198;
+															rectangle.Y = 0;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 198;
+																rectangle.Y = 18;
+															}
+															else
+															{
+																rectangle.X = 198;
+																rectangle.Y = 36;
+															}
+														}
+													}
+													else
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 18;
+															rectangle.Y = 18;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 36;
+																rectangle.Y = 18;
+															}
+															else
+															{
+																rectangle.X = 54;
+																rectangle.Y = 18;
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+									else
+									{
+										if (num29 != num && num34 == num && (num31 == num & num32 == num))
+										{
+											if (num36 == 0)
+											{
+												rectangle.X = 18;
+												rectangle.Y = 0;
+											}
+											else
+											{
+												if (num36 == 1)
+												{
+													rectangle.X = 36;
+													rectangle.Y = 0;
+												}
+												else
+												{
+													rectangle.X = 54;
+													rectangle.Y = 0;
+												}
+											}
+										}
+										else
+										{
+											if (num29 == num && num34 != num && (num31 == num & num32 == num))
+											{
+												if (num36 == 0)
+												{
+													rectangle.X = 18;
+													rectangle.Y = 36;
+												}
+												else
+												{
+													if (num36 == 1)
+													{
+														rectangle.X = 36;
+														rectangle.Y = 36;
+													}
+													else
+													{
+														rectangle.X = 54;
+														rectangle.Y = 36;
+													}
+												}
+											}
+											else
+											{
+												if (num29 == num && num34 == num && (num31 != num & num32 == num))
+												{
+													if (num36 == 0)
+													{
+														rectangle.X = 0;
+														rectangle.Y = 0;
+													}
+													else
+													{
+														if (num36 == 1)
+														{
+															rectangle.X = 0;
+															rectangle.Y = 18;
+														}
+														else
+														{
+															rectangle.X = 0;
+															rectangle.Y = 36;
+														}
+													}
+												}
+												else
+												{
+													if (num29 == num && num34 == num && (num31 == num & num32 != num))
+													{
+														if (num36 == 0)
+														{
+															rectangle.X = 72;
+															rectangle.Y = 0;
+														}
+														else
+														{
+															if (num36 == 1)
+															{
+																rectangle.X = 72;
+																rectangle.Y = 18;
+															}
+															else
+															{
+																rectangle.X = 72;
+																rectangle.Y = 36;
+															}
+														}
+													}
+													else
+													{
+														if (num29 != num && num34 == num && (num31 != num & num32 == num))
+														{
+															if (num36 == 0)
+															{
+																rectangle.X = 0;
+																rectangle.Y = 54;
+															}
+															else
+															{
+																if (num36 == 1)
+																{
+																	rectangle.X = 36;
+																	rectangle.Y = 54;
+																}
+																else
+																{
+																	rectangle.X = 72;
+																	rectangle.Y = 54;
+																}
+															}
+														}
+														else
+														{
+															if (num29 != num && num34 == num && (num31 == num & num32 != num))
+															{
+																if (num36 == 0)
+																{
+																	rectangle.X = 18;
+																	rectangle.Y = 54;
+																}
+																else
+																{
+																	if (num36 == 1)
+																	{
+																		rectangle.X = 54;
+																		rectangle.Y = 54;
+																	}
+																	else
+																	{
+																		rectangle.X = 90;
+																		rectangle.Y = 54;
+																	}
+																}
+															}
+															else
+															{
+																if (num29 == num && num34 != num && (num31 != num & num32 == num))
+																{
+																	if (num36 == 0)
+																	{
+																		rectangle.X = 0;
+																		rectangle.Y = 72;
+																	}
+																	else
+																	{
+																		if (num36 == 1)
+																		{
+																			rectangle.X = 36;
+																			rectangle.Y = 72;
+																		}
+																		else
+																		{
+																			rectangle.X = 72;
+																			rectangle.Y = 72;
+																		}
+																	}
+																}
+																else
+																{
+																	if (num29 == num && num34 != num && (num31 == num & num32 != num))
+																	{
+																		if (num36 == 0)
+																		{
+																			rectangle.X = 18;
+																			rectangle.Y = 72;
+																		}
+																		else
+																		{
+																			if (num36 == 1)
+																			{
+																				rectangle.X = 54;
+																				rectangle.Y = 72;
+																			}
+																			else
+																			{
+																				rectangle.X = 90;
+																				rectangle.Y = 72;
+																			}
+																		}
+																	}
+																	else
+																	{
+																		if (num29 == num && num34 == num && (num31 != num & num32 != num))
+																		{
+																			if (num36 == 0)
+																			{
+																				rectangle.X = 90;
+																				rectangle.Y = 0;
+																			}
+																			else
+																			{
+																				if (num36 == 1)
+																				{
+																					rectangle.X = 90;
+																					rectangle.Y = 18;
+																				}
+																				else
+																				{
+																					rectangle.X = 90;
+																					rectangle.Y = 36;
+																				}
+																			}
+																		}
+																		else
+																		{
+																			if (num29 != num && num34 != num && (num31 == num & num32 == num))
+																			{
+																				if (num36 == 0)
+																				{
+																					rectangle.X = 108;
+																					rectangle.Y = 72;
+																				}
+																				else
+																				{
+																					if (num36 == 1)
+																					{
+																						rectangle.X = 126;
+																						rectangle.Y = 72;
+																					}
+																					else
+																					{
+																						rectangle.X = 144;
+																						rectangle.Y = 72;
+																					}
+																				}
+																			}
+																			else
+																			{
+																				if (num29 != num && num34 == num && (num31 != num & num32 != num))
+																				{
+																					if (num36 == 0)
+																					{
+																						rectangle.X = 108;
+																						rectangle.Y = 0;
+																					}
+																					else
+																					{
+																						if (num36 == 1)
+																						{
+																							rectangle.X = 126;
+																							rectangle.Y = 0;
+																						}
+																						else
+																						{
+																							rectangle.X = 144;
+																							rectangle.Y = 0;
+																						}
+																					}
+																				}
+																				else
+																				{
+																					if (num29 == num && num34 != num && (num31 != num & num32 != num))
+																					{
+																						if (num36 == 0)
+																						{
+																							rectangle.X = 108;
+																							rectangle.Y = 54;
+																						}
+																						else
+																						{
+																							if (num36 == 1)
+																							{
+																								rectangle.X = 126;
+																								rectangle.Y = 54;
+																							}
+																							else
+																							{
+																								rectangle.X = 144;
+																								rectangle.Y = 54;
+																							}
+																						}
+																					}
+																					else
+																					{
+																						if (num29 != num && num34 != num && (num31 != num & num32 == num))
+																						{
+																							if (num36 == 0)
+																							{
+																								rectangle.X = 162;
+																								rectangle.Y = 0;
+																							}
+																							else
+																							{
+																								if (num36 == 1)
+																								{
+																									rectangle.X = 162;
+																									rectangle.Y = 18;
+																								}
+																								else
+																								{
+																									rectangle.X = 162;
+																									rectangle.Y = 36;
+																								}
+																							}
+																						}
+																						else
+																						{
+																							if (num29 != num && num34 != num && (num31 == num & num32 != num))
+																							{
+																								if (num36 == 0)
+																								{
+																									rectangle.X = 216;
+																									rectangle.Y = 0;
+																								}
+																								else
+																								{
+																									if (num36 == 1)
+																									{
+																										rectangle.X = 216;
+																										rectangle.Y = 18;
+																									}
+																									else
+																									{
+																										rectangle.X = 216;
+																										rectangle.Y = 36;
+																									}
+																								}
+																							}
+																							else
+																							{
+																								if (num29 != num && num34 != num && (num31 != num & num32 != num))
+																								{
+																									if (num36 == 0)
+																									{
+																										rectangle.X = 162;
+																										rectangle.Y = 54;
+																									}
+																									else
+																									{
+																										if (num36 == 1)
+																										{
+																											rectangle.X = 180;
+																											rectangle.Y = 54;
+																										}
+																										else
+																										{
+																											rectangle.X = 198;
+																											rectangle.Y = 54;
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								if (rectangle.X <= -1 || rectangle.Y <= -1)
+								{
+									if (num36 <= 0)
+									{
+										rectangle.X = 18;
+										rectangle.Y = 18;
+									}
+									else
+									{
+										if (num36 == 1)
+										{
+											rectangle.X = 36;
+											rectangle.Y = 18;
+										}
+									}
+									if (num36 >= 2)
+									{
+										rectangle.X = 54;
+										rectangle.Y = 18;
+									}
+								}
+								Main.tile.At(i, j).SetFrameX((short)rectangle.X);
+								Main.tile.At(i, j).SetFrameY((short)rectangle.Y);
+								if (num == 52 || num == 62 || num == 115)
+								{
+									//if (Main.tile.At(i, j - 1] != null)
+									{
+										if (!Main.tile.At(i, j - 1).Active)
+										{
+											num29 = -1;
+										}
+										else
+										{
+											num29 = (int)Main.tile.At(i, j - 1).Type;
+										}
+									}
+									//else
+									//{
+									//    num29 = num;
+									//}
+									if (num == 52 && (num29 == 109 || num29 == 115))
+									{
+										Main.tile.At(i, j).SetType(115);
+										SquareTileFrame(i, j, true);
+										return;
+									}
+									if (num == 115 && (num29 == 2 || num29 == 52))
+									{
+										Main.tile.At(i, j).SetType(52);
+										SquareTileFrame(i, j, true);
+										return;
+									}
+									if (num29 != num)
+									{
+										bool flag4 = false;
+										if (num29 == -1)
+										{
+											flag4 = true;
+										}
+										if (num == 52 && num29 != 2)
+										{
+											flag4 = true;
+										}
+										if (num == 62 && num29 != 60)
+										{
+											flag4 = true;
+										}
+										if (num == 115 && num29 != 109)
+										{
+											flag4 = true;
+										}
+										if (flag4)
+										{
+											KillTile(i, j);
+										}
+									}
+								}
+								if (!noTileActions && (num == 53 || num == 112 || num == 116 || num == 123))
+								{
+									if (!Main.tile.At(i, j + 1).Active)
+									{
+										bool flag6 = true;
+										if (Main.tile.At(i, j - 1).Active && Main.tile.At(i, j - 1).Type == 21)
+										{
+											flag6 = false;
+										}
+										if (flag6)
+										{
+											int type2 = 31;
+											if (num == 59)
+											{
+												type2 = 39;
+											}
+											if (num == 57)
+											{
+												type2 = 40;
+											}
+											if (num == 112)
+											{
+												type2 = 56;
+											}
+											if (num == 116)
+											{
+												type2 = 67;
+											}
+											if (num == 123)
+											{
+												type2 = 71;
+											}
+											Main.tile.At(i, j).SetActive(false);
+											int num39 = Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 2.5f, type2, 10, 0f, Main.myPlayer);
+											Main.projectile[num39].Velocity.Y = 0.5f;
+											Main.projectile[num39].Position.Y = Main.projectile[num39].Position.Y + 2f;
 
-        public static int totalEvil = 0;
-        public static int totalGood = 0;
-        public static int totalSolid = 0;
-        public static int totalEvil2 = 0;
-        public static int totalGood2 = 0;
-        public static int totalSolid2 = 0;
-        public static byte tEvil = 0;
-        public static byte tGood = 0;
+											Main.projectile[num39].netUpdate = true;
+											NetMessage.SendTileSquare(-1, i, j, 1);
+											SquareTileFrame(i, j, true);
+										}
+									}
+								}
+								if (rectangle.X != frameX && rectangle.Y != frameY && frameX >= 0 && frameY >= 0)
+								{
+									bool flag7 = mergeUp;
+									bool flag8 = mergeDown;
+									bool flag9 = mergeLeft;
+									bool flag10 = mergeRight;
+									TileFrame(i - 1, j, false, false);
+									TileFrame(i + 1, j, false, false);
+									TileFrame(i, j - 1, false, false);
+									TileFrame(i, j + 1, false, false);
+									mergeUp = flag7;
+									mergeDown = flag8;
+									mergeLeft = flag9;
+									mergeRight = flag10;
+								}
+							}
+						}
+					}
+				}
+			}
+			catch
+			{
+			}
+		}
 
-        public static void CountTiles(int X)
-        {
-            if (X == 0)
-            {
-                totalEvil = totalEvil2;
-                totalSolid = totalSolid2;
-                totalGood = totalGood2;
-                float num = (float)totalGood / (float)totalSolid;
-                num = (float)Math.Round((double)(num * 100f));
-                float num2 = (float)totalEvil / (float)totalSolid;
-                num2 = (float)Math.Round((double)(num2 * 100f));
-                tGood = (byte)num;
-                tEvil = (byte)num2;
-                NetMessage.SendData(57, -1, -1, "", 0, 0f, 0f, 0f, 0);
-            }
-            for (int i = 0; i < Main.maxTilesY; i++)
-            {
-                int num3 = 1;
+		// [TODO] 1.1 - here down
+		public static int altarCount { get; set; }
 
-                if ((double)i <= Main.worldSurface)
+		public static int totalEvil = 0;
+		public static int totalGood = 0;
+		public static int totalSolid = 0;
+		public static int totalEvil2 = 0;
+		public static int totalGood2 = 0;
+		public static int totalSolid2 = 0;
+		public static byte tEvil = 0;
+		public static byte tGood = 0;
+
+		public static void CountTiles(int X)
+		{
+			if (X == 0)
+			{
+				totalEvil = totalEvil2;
+				totalSolid = totalSolid2;
+				totalGood = totalGood2;
+				float num = (float)totalGood / (float)totalSolid;
+				num = (float)Math.Round((double)(num * 100f));
+				float num2 = (float)totalEvil / (float)totalSolid;
+				num2 = (float)Math.Round((double)(num2 * 100f));
+				tGood = (byte)num;
+				tEvil = (byte)num2;
+				NetMessage.SendData(57, -1, -1, "", 0, 0f, 0f, 0f, 0);
+			}
+			for (int i = 0; i < Main.maxTilesY; i++)
+			{
+				int num3 = 1;
+
+				if ((double)i <= Main.worldSurface)
 					num3 *= 5;
 
-                if (WorldModify.SolidTile(X, i))
-                {
-                    if (Main.tile.At(X, i).Type == 109 || Main.tile.At(X, i).Type == 116 || Main.tile.At(X, i).Type == 117)
-                        totalGood2 += num3;
-                    else if (Main.tile.At(X, i).Type == 23 || Main.tile.At(X, i).Type == 25 || Main.tile.At(X, i).Type == 112)
+				if (SolidTile(X, i))
+				{
+					if (Main.tile.At(X, i).Type == 109 || Main.tile.At(X, i).Type == 116 || Main.tile.At(X, i).Type == 117)
+						totalGood2 += num3;
+					else if (Main.tile.At(X, i).Type == 23 || Main.tile.At(X, i).Type == 25 || Main.tile.At(X, i).Type == 112)
 						totalEvil2 += num3;
 
-                    totalSolid2 += num3;
-                }
-            }
-        }
-    }
+					totalSolid2 += num3;
+				}
+			}
+		}
+	}
 }

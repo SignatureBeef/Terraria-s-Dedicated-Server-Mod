@@ -53,11 +53,10 @@ namespace Terraria_Server.Messages
 				return;
 			}
 			
-			WorldModify.KillTile(x, y, false, false, false, player);
+			WorldModify.KillTile(x, y, false, false, false /*, player */); //Seems player isn't needed in the old 1.0.6.1 method...or was removed?
+
 			if (!Main.tile.At(x, y).Active || Main.tile.At(x, y).Type != 21)
-			{
 				NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
-			}
         }
     }
 }

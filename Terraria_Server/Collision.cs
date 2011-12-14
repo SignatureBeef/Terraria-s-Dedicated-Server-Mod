@@ -734,7 +734,8 @@ namespace Terraria_Server
             }
             return false;
         }
-        public static bool SwitchTiles(Vector2 Position, int Width, int Height, Vector2 oldPosition)
+
+		public static bool SwitchTiles(Vector2 Position, int Width, int Height, Vector2 oldPosition, ISender Sender)
         {
             int num = (int)(Position.X / 16f) - 1;
             int num2 = (int)((Position.X + (float)Width) / 16f) + 2;
@@ -767,7 +768,7 @@ namespace Terraria_Server
 							(float)Width <= vector.X || oldPosition.X >= vector.X + 16f || oldPosition.Y + 
 							(float)Height <= vector.Y || (double)oldPosition.Y >= (double)vector.Y + 16.01))
                         {
-                            WorldGen.hitSwitch(x, y);
+                            WorldModify.hitSwitch(x, y, Sender);
                             NetMessage.SendData(59, -1, -1, "", x, (float)y, 0f, 0f, 0);
                             return true;
                         }

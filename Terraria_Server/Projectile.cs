@@ -1212,7 +1212,7 @@ namespace Terraria_Server
                 this.Damage();
                 if (this.type == ProjectileType.N99_BOULDER)
                 {
-                    Collision.SwitchTiles(this.Position, this.Width, this.Height, this.lastPosition);
+                    Collision.SwitchTiles(this.Position, this.Width, this.Height, this.lastPosition, this.Creator);
                 }
                 if (this.type == ProjectileType.N94_CRYSTAL_STORM)
                 {

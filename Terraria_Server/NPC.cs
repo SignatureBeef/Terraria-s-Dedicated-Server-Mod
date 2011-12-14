@@ -6965,7 +6965,7 @@ namespace Terraria_Server
                     npc.oldPosition = npc.Position;
                     npc.Position += npc.Velocity;
                 }
-				if (!npc.noTileCollide && npc.lifeMax > 1 && Collision.SwitchTiles(npc.Position, npc.Width, npc.Height, npc.oldPosition) && npc.type == NPCType.N46_BUNNY)
+				if (!npc.noTileCollide && npc.lifeMax > 1 && Collision.SwitchTiles(npc.Position, npc.Width, npc.Height, npc.oldPosition, npc) && npc.type == NPCType.N46_BUNNY)
 				{
 					npc.ai[0] = 1f;
 					npc.ai[1] = 400f;

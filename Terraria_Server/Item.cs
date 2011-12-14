@@ -13,6 +13,14 @@ namespace Terraria_Server
 	/// </summary>
 	public class Item : BaseEntity
 	{
+		public const Int32 MAX_HEAD_TYPES = 44;
+		public const Int32 MAX_BODY_TYPES = 25;
+		public const Int32 MAX_LEG_TYPES = 24;
+
+		public static int[] headType = new int[MAX_HEAD_TYPES];
+		public static int[] bodyType = new int[MAX_BODY_TYPES];
+		public static int[] legType = new int[MAX_LEG_TYPES];
+
 		/// <summary>
 		/// Potion delay time
 		/// </summary>
