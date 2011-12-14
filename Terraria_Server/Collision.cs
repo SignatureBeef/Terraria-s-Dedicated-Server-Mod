@@ -767,7 +767,7 @@ namespace Terraria_Server
 							(float)Width <= vector.X || oldPosition.X >= vector.X + 16f || oldPosition.Y + 
 							(float)Height <= vector.Y || (double)oldPosition.Y >= (double)vector.Y + 16.01))
                         {
-                            WorldGen.hitSwitch(x, y);
+                            WorldGen.PlaceTraps();
                             NetMessage.SendData(59, -1, -1, "", x, (float)y, 0f, 0f, 0);
                             return true;
                         }
