@@ -262,7 +262,15 @@ namespace Terraria_Server.WorldMod
 
 									for (int y = 0; y < Main.maxTilesY; y++)
 									{
-										TileRef tile = Main.tile.At(x, y);
+										if (Main.tile.At(x, y).Type == 127 && Main.tile.At(x, y).Active)
+										{
+											WorldModify.KillTile(x, y);
+											WorldModify.KillTile(x, y);
+											if (!Main.tile.At(x, y).Active)
+												NetMessage.SendData(17, -1, -1, String.Empty, 0, (float)x, (float)y);
+										}
+
+										TileRef tile = Main.tile.At(x, y); //.FieldwiseClone();
 										binaryWriter.Write(tile.Active);
 										if (tile.Active)
 										{
@@ -309,7 +317,7 @@ namespace Terraria_Server.WorldMod
 							}
 
 							Chest chest;
-							for (int i = 0; i < 1000; i++)
+							for (int i = 0; i < Main.maxChests; i++)
 							{
 								chest = Main.chest[i];
 								if (chest == null)
@@ -338,7 +346,7 @@ namespace Terraria_Server.WorldMod
 							}
 
 							Sign sign;
-							for (int i = 0; i < 1000; i++)
+							for (int i = 0; i < Sign.MAX_SIGNS; i++)
 							{
 								sign = Main.sign[i];
 								if (sign == null || sign.text == null)
@@ -530,8 +538,20 @@ namespace Terraria_Server.WorldMod
 											Main.tile.At(j, k).SetType(binaryReader.ReadByte());
 											if (Main.tileFrameImportant[(int)Main.tile.At(j, k).Type])
 											{
-												Main.tile.At(j, k).SetFrameX(binaryReader.ReadInt16());
-												Main.tile.At(j, k).SetFrameY(binaryReader.ReadInt16());
+												if (Terraria_Release < 28 && Main.tile.At(j, k).Type == 4)
+												{
+													Main.tile.At(j, k).SetFrameX(0);
+													Main.tile.At(j, k).SetFrameY(0);
+												}
+												else
+												{
+													Main.tile.At(j, k).SetFrameX(binaryReader.ReadInt16());
+													Main.tile.At(j, k).SetFrameY(binaryReader.ReadInt16());
+													if (Main.tile.At(j, k).Type == 144)
+													{
+														Main.tile.At(j, k).SetFrameY(0);
+													}
+												}
 											}
 											else
 											{
@@ -541,7 +561,9 @@ namespace Terraria_Server.WorldMod
 										}
                                         if (Terraria_Release <= 25)
 									    {
-										    Main.tile.At(j, k).SetLighted(binaryReader.ReadBoolean());          
+											/*Main.tile.At(j, k).SetLighted(*/
+											binaryReader.ReadBoolean();
+											/*);*/          
 									    }
 										if (binaryReader.ReadBoolean())
 										{
@@ -581,7 +603,7 @@ namespace Terraria_Server.WorldMod
 								}
 							}
 
-							for (int l = 0; l < 1000; l++)
+							for (int l = 0; l < Main.maxChests; l++)
 							{
 								if (binaryReader.ReadBoolean())
 								{
@@ -596,27 +618,27 @@ namespace Terraria_Server.WorldMod
 										{
                                             string defaults = Item.VersionName(binaryReader.ReadString(), Terraria_Release);
 											Main.chest[l].contents[m] = Registries.Item.Create(defaults, stack);
-                                            Main.chest[m].contents[m].Stack = (int)stack;
+                                            Main.chest[l].contents[m].Stack = (int)stack;
                                             if (Terraria_Release >= 36)
                                             {
-                                                Main.chest[m].contents[m].SetPrefix((int)binaryReader.ReadByte());
+                                                Main.chest[l].contents[m].SetPrefix((int)binaryReader.ReadByte());
                                             }
 										}
 									}
 								}
 							}
-							for (int n = 0; n < 1000; n++)
+							for (int n = 0; n < Sign.MAX_SIGNS; n++)
 							{
 								if (binaryReader.ReadBoolean())
 								{
                                     string text = binaryReader.ReadString();
-									int num3 = binaryReader.ReadInt32();
-									int num4 = binaryReader.ReadInt32();
-									if (Main.tile.At(num3, num4).Active && (Main.tile.At(num3, num4).Type == 55 || Main.tile.At(num3, num4).Type == 85))
+									int x = binaryReader.ReadInt32();
+									int y = binaryReader.ReadInt32();
+									if (Main.tile.At(x, y).Active && (Main.tile.At(x, y).Type == 55 || Main.tile.At(x, y).Type == 85))
 									{
 										Main.sign[n] = new Sign();
-										Main.sign[n].x = num3;
-										Main.sign[n].y = num4;
+										Main.sign[n].x = x;
+										Main.sign[n].y = y;
 										Main.sign[n].text = text;
 									}
 								}
@@ -721,7 +743,7 @@ namespace Terraria_Server.WorldMod
 							}
 						}
 					}
-					catch
+					catch(Exception e)
 					{
 						WorldModify.loadFailed = true;
 						WorldModify.loadSuccess = false;
@@ -730,9 +752,12 @@ namespace Terraria_Server.WorldMod
 							binaryReader.Close();
 							fileStream.Close();
 						}
-						catch
-						{
-						}
+						catch { }
+
+						ProgramLog.Error.Log(
+							String.Format("Error Loading world:\n{0}", e)
+						);
+
 						return;
 					}
 				}

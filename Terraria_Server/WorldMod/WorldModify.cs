@@ -5548,51 +5548,42 @@ namespace Terraria_Server.WorldMod
 
 		public static int PlaceChest(int x, int y, int type = 21, bool notNearOtherChests = false, int style = 0)
 		{
-			bool flag = true;
-			int num = -1;
-			for (int modX = x; modX < x + 2; modX++)
+			bool placed = true;
+			int index = -1;
+			for (int i = x; i < x + 2; i++)
 			{
-				for (int modY = y - 1; modY < y + 1; modY++)
+				for (int j = y - 1; j < y + 1; j++)
 				{
-					TileRef tile = Main.tile.At(modX, modY);
-					if (tile.Active || tile.Lava)
-					{
-						flag = false;
-					}
-				}
+					if (Main.tile.At(i, j).Active)
+						placed = false;
 
-				if (!Main.tile.At(modX, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(modX, y + 1).Type])
-				{
-					flag = false;
+					if (Main.tile.At(i, j).Lava)
+						placed = false;
 				}
+				if (!Main.tile.At(i, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(i, y + 1).Type])
+					placed = false;
 			}
-			if (flag && notNearOtherChests)
+			if (placed && notNearOtherChests)
 			{
 				for (int k = x - 25; k < x + 25; k++)
 				{
 					for (int l = y - 8; l < y + 8; l++)
 					{
-						try
+						if (Main.tile.At(k, l).Active && Main.tile.At(k, l).Type == 21)
 						{
-							if (Main.tile.At(k, l).Active && Main.tile.At(k, l).Type == 21)
-							{
-								flag = false;
-								return -1;
-							}
-						}
-						catch
-						{
+							placed = false;
+							return -1;
 						}
 					}
 				}
 			}
-			if (flag)
+			if (placed)
 			{
-				num = Chest.CreateChest(x, y - 1);
-				if (num == -1)
-					flag = false;
+				index = Chest.CreateChest(x, y - 1);
+				if (index == -1)
+					placed = false;
 			}
-			if (flag)
+			if (placed)
 			{
 				Main.tile.At(x, y - 1).SetActive(true);
 				Main.tile.At(x, y - 1).SetFrameY(0);
@@ -5611,7 +5602,7 @@ namespace Terraria_Server.WorldMod
 				Main.tile.At(x + 1, y).SetFrameX((short)(18 + 36 * style));
 				Main.tile.At(x + 1, y).SetType((byte)type);
 			}
-			return num;
+			return index;
 		}
 
 		public static void CheckChest(int i, int j, int type)

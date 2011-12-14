@@ -17,7 +17,7 @@ namespace Terraria_Server.Messages
             num += 2;
             int contentsIndex = (int)readBuffer[num++];
             int stackSize = (int)readBuffer[num++];
-            int prefix = readBuffer[num++];
+            int prefix = (int)readBuffer[num++];
             int netID = BitConverter.ToInt16 (readBuffer, num);
 
             if (Main.chest[chestIndex] == null)
