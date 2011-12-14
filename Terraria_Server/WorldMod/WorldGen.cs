@@ -110,6 +110,9 @@ namespace Terraria_Server.WorldMod
 
 		public static void GenerateWorld(int seed = -1)
 		{
+			NPC.ClearNames();
+			NPC.SetNames();
+
 			WorldModify.gen = true;
 			resetGen();
 			if (seed > 0)
@@ -229,7 +232,7 @@ namespace Terraria_Server.WorldMod
 					while ((double)terrainY < TerrainY)
 					{
 						Main.tile.At(TerrainX, terrainY).SetActive(false);
-						Main.tile.At(TerrainX, terrainY).SetLighted(true);
+						//Main.tile.At(TerrainX, terrainY).SetLighted(true);
 						Main.tile.At(TerrainX, terrainY).SetFrameX(-1);
 						Main.tile.At(TerrainX, terrainY).SetFrameY(-1);
 						terrainY++;
@@ -260,6 +263,30 @@ namespace Terraria_Server.WorldMod
 			WorldModify.waterLine = (int)(Main.rockLayer + (double)Main.maxTilesY) / 2;
 			WorldModify.waterLine += WorldModify.genRand.Next(-100, 20);
 			WorldModify.lavaLine = WorldModify.waterLine + WorldModify.genRand.Next(50, 80);
+
+			for (int k = 0; k < (int)((double)Main.maxTilesX * 0.0015); k++)
+			{
+				int[] array = new int[10];
+				int[] array2 = new int[10];
+				int num14 = WorldModify.genRand.Next(450, Main.maxTilesX - 450);
+				int num15 = 0;
+				for (int l = 0; l < 10; l++)
+				{
+					while (!Main.tile.At(num14, num15).Active)
+						num15++;
+
+					array[l] = num14;
+					array2[l] = num15 - WorldModify.genRand.Next(11, 16);
+					num14 += WorldModify.genRand.Next(5, 11);
+				}
+				for (int m = 0; m < 10; m++)
+				{
+					WorldGen.TileRunner(array[m], array2[m], (double)WorldModify.genRand.Next(5, 8), 
+						WorldModify.genRand.Next(6, 9), 0, true, -2f, -0.3f, false, true);
+					WorldGen.TileRunner(array[m], array2[m], (double)WorldModify.genRand.Next(5, 8), 
+						WorldModify.genRand.Next(6, 9), 0, true, 2f, -0.3f, false, true);
+				}
+			}
 
             AddSand(Direction);
 
@@ -411,17 +438,19 @@ namespace Terraria_Server.WorldMod
 
         public static void AddSand(int direction)
         {
-            int sandLines = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.0007), (int)((double)Main.maxTilesX * 0.002)) + 2;
-            var someotherCaveGen = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 8E-06);
-            using (var sandProg = new ProgressLogger(sandLines + someotherCaveGen, "Adding sand"))
+            int sandLines = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.0008), (int)((double)Main.maxTilesX * 0.0025)) + 2;
+			//var someotherCaveGen = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 8E-06);
+			sandLines += 2;
+            using (var sandProg = new ProgressLogger(sandLines, "Adding sand"))
             {
                 for (int k = 0; k < sandLines; k++)
                 {
                     int sandStartX = WorldModify.genRand.Next(Main.maxTilesX);
-                    while ((float)sandStartX > (float)Main.maxTilesX * 0.45f && (float)sandStartX < (float)Main.maxTilesX * 0.55f)
-                    {
-                        sandStartX = WorldModify.genRand.Next(Main.maxTilesX);
-                    }
+					while ((float)sandStartX > (float)Main.maxTilesX * 0.4f && (float)sandStartX < (float)Main.maxTilesX * 0.6f)
+					{
+						sandStartX = WorldModify.genRand.Next(Main.maxTilesX);
+					}
+
                     int sandStartEnd = WorldModify.genRand.Next(35, 90);
                     if (k == 1)
                     {
@@ -2639,7 +2668,7 @@ namespace Terraria_Server.WorldMod
                 num269++;
             }
 
-            WorldModify.AddTrees();
+            WorldGen.AddTrees();
         }
 
         public static void PlantHerbs()
@@ -7162,34 +7191,6 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
-		
-		public static bool GrowEpicTree(int x, int y)
-		{
-			int freeTilesAbove = y;
-			while (Main.tile.At(x, freeTilesAbove).Type == 20)
-			{
-				freeTilesAbove++;
-			}
-
-			TileRef leftTile = Main.tile.At(x - 1, freeTilesAbove);
-			TileRef rightTile = Main.tile.At(x + 1, freeTilesAbove);
-			if (Main.tile.At(x, freeTilesAbove).Active
-				&& Main.tile.At(x, freeTilesAbove).Type == 2
-				&& Main.tile.At(x, freeTilesAbove - 1).Wall == 0
-				&& Main.tile.At(x, freeTilesAbove - 1).Liquid == 0
-				&& leftTile.Active
-				&& leftTile.Type == 2
-				&& rightTile.Active
-				&& rightTile.Type == 2)
-			{
-				if (WorldModify.EmptyTileCheck(x - TREE_RADIUS, x + TREE_RADIUS, freeTilesAbove - 55, freeTilesAbove - 1, 20))
-				{
-					WorldModify.GrowTreeShared(x, y, freeTilesAbove, 20, 30);
-					return true;
-				}
-			}
-			return false;
-		}
 
 		public static void PlaceTraps()
 		{
@@ -7211,6 +7212,996 @@ namespace Terraria_Server.WorldMod
 						}
 					}
 				}
+			}
+		}
+
+		public static bool GrowEpicTree(int i, int y)
+		{
+			int num = y;
+			while (Main.tile.At(i, num).Type == 20)
+			{
+				num++;
+			}
+			if (Main.tile.At(i, num).Active && Main.tile.At(i, num).Type == 2 && Main.tile.At(i, num - 1).Wall == 0 && 
+				Main.tile.At(i, num - 1).Liquid == 0 && ((Main.tile.At(i - 1, num).Active && (Main.tile.At(i - 1, num).Type == 2 || 
+				Main.tile.At(i - 1, num).Type == 23 || Main.tile.At(i - 1, num).Type == 60 || Main.tile.At(i - 1, num).Type == 109)) || 
+				(Main.tile.At(i + 1, num).Active && (Main.tile.At(i + 1, num).Type == 2 || Main.tile.At(i + 1, num).Type == 23 || 
+				Main.tile.At(i + 1, num).Type == 60 || Main.tile.At(i + 1, num).Type == 109))))
+			{
+				int num2 = 1;
+				if (WorldModify.EmptyTileCheck(i - num2, i + num2, num - 55, num - 1, 20))
+				{
+					bool flag = false;
+					bool flag2 = false;
+					int num3 = WorldModify.genRand.Next(20, 30);
+					int num4;
+					for (int j = num - num3; j < num; j++)
+					{
+						Main.tile.At(i, j).SetFrameNumber((byte)WorldModify.genRand.Next(3));
+						Main.tile.At(i, j).SetActive(true);
+						Main.tile.At(i, j).SetType(5);
+						num4 = WorldModify.genRand.Next(3);
+						int num5 = WorldModify.genRand.Next(10);
+						if (j == num - 1 || j == num - num3)
+						{
+							num5 = 0;
+						}
+						while (((num5 == 5 || num5 == 7) && flag) || ((num5 == 6 || num5 == 7) && flag2))
+						{
+							num5 = WorldModify.genRand.Next(10);
+						}
+						flag = false;
+						flag2 = false;
+						if (num5 == 5 || num5 == 7)
+						{
+							flag = true;
+						}
+						if (num5 == 6 || num5 == 7)
+						{
+							flag2 = true;
+						}
+						if (num5 == 1)
+						{
+							if (num4 == 0)
+							{
+								Main.tile.At(i, j).SetFrameX(0);
+								Main.tile.At(i, j).SetFrameY(66);
+							}
+							if (num4 == 1)
+							{
+								Main.tile.At(i, j).SetFrameX(0);
+								Main.tile.At(i, j).SetFrameY(88);
+							}
+							if (num4 == 2)
+							{
+								Main.tile.At(i, j).SetFrameX(0);
+								Main.tile.At(i, j).SetFrameY(110);
+							}
+						}
+						else
+						{
+							if (num5 == 2)
+							{
+								if (num4 == 0)
+								{
+									Main.tile.At(i, j).SetFrameX(22);
+									Main.tile.At(i, j).SetFrameY(0);
+								}
+								if (num4 == 1)
+								{
+									Main.tile.At(i, j).SetFrameX(22);
+									Main.tile.At(i, j).SetFrameY(22);
+								}
+								if (num4 == 2)
+								{
+									Main.tile.At(i, j).SetFrameX(22);
+									Main.tile.At(i, j).SetFrameY(44);
+								}
+							}
+							else
+							{
+								if (num5 == 3)
+								{
+									if (num4 == 0)
+									{
+										Main.tile.At(i, j).SetFrameX(44);
+										Main.tile.At(i, j).SetFrameY(66);
+									}
+									if (num4 == 1)
+									{
+										Main.tile.At(i, j).SetFrameX(44);
+										Main.tile.At(i, j).SetFrameY(88);
+									}
+									if (num4 == 2)
+									{
+										Main.tile.At(i, j).SetFrameX(44);
+										Main.tile.At(i, j).SetFrameY(110);
+									}
+								}
+								else
+								{
+									if (num5 == 4)
+									{
+										if (num4 == 0)
+										{
+											Main.tile.At(i, j).SetFrameX(22);
+											Main.tile.At(i, j).SetFrameY(66);
+										}
+										if (num4 == 1)
+										{
+											Main.tile.At(i, j).SetFrameX(22);
+											Main.tile.At(i, j).SetFrameY(88);
+										}
+										if (num4 == 2)
+										{
+											Main.tile.At(i, j).SetFrameX(22);
+											Main.tile.At(i, j).SetFrameY(110);
+										}
+									}
+									else
+									{
+										if (num5 == 5)
+										{
+											if (num4 == 0)
+											{
+												Main.tile.At(i, j).SetFrameX(88);
+												Main.tile.At(i, j).SetFrameY(0);
+											}
+											if (num4 == 1)
+											{
+												Main.tile.At(i, j).SetFrameX(88);
+												Main.tile.At(i, j).SetFrameY(22);
+											}
+											if (num4 == 2)
+											{
+												Main.tile.At(i, j).SetFrameX(88);
+												Main.tile.At(i, j).SetFrameY(44);
+											}
+										}
+										else
+										{
+											if (num5 == 6)
+											{
+												if (num4 == 0)
+												{
+													Main.tile.At(i, j).SetFrameX(66);
+													Main.tile.At(i, j).SetFrameY(66);
+												}
+												if (num4 == 1)
+												{
+													Main.tile.At(i, j).SetFrameX(66);
+													Main.tile.At(i, j).SetFrameY(88);
+												}
+												if (num4 == 2)
+												{
+													Main.tile.At(i, j).SetFrameX(66);
+													Main.tile.At(i, j).SetFrameY(110);
+												}
+											}
+											else
+											{
+												if (num5 == 7)
+												{
+													if (num4 == 0)
+													{
+														Main.tile.At(i, j).SetFrameX(110);
+														Main.tile.At(i, j).SetFrameY(66);
+													}
+													if (num4 == 1)
+													{
+														Main.tile.At(i, j).SetFrameX(110);
+														Main.tile.At(i, j).SetFrameY(88);
+													}
+													if (num4 == 2)
+													{
+														Main.tile.At(i, j).SetFrameX(110);
+														Main.tile.At(i, j).SetFrameY(110);
+													}
+												}
+												else
+												{
+													if (num4 == 0)
+													{
+														Main.tile.At(i, j).SetFrameX(0);
+														Main.tile.At(i, j).SetFrameY(0);
+													}
+													if (num4 == 1)
+													{
+														Main.tile.At(i, j).SetFrameX(0);
+														Main.tile.At(i, j).SetFrameY(22);
+													}
+													if (num4 == 2)
+													{
+														Main.tile.At(i, j).SetFrameX(0);
+														Main.tile.At(i, j).SetFrameY(44);
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						if (num5 == 5 || num5 == 7)
+						{
+							Main.tile.At(i - 1, j).SetActive(true);
+							Main.tile.At(i - 1, j).SetType(5);
+							num4 = WorldModify.genRand.Next(3);
+							if (WorldModify.genRand.Next(3) < 2)
+							{
+								if (num4 == 0)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(44);
+									Main.tile.At(i - 1, j).SetFrameY(198);
+								}
+								if (num4 == 1)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(44);
+									Main.tile.At(i - 1, j).SetFrameY(220);
+								}
+								if (num4 == 2)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(44);
+									Main.tile.At(i - 1, j).SetFrameY(242);
+								}
+							}
+							else
+							{
+								if (num4 == 0)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(66);
+									Main.tile.At(i - 1, j).SetFrameY(0);
+								}
+								if (num4 == 1)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(66);
+									Main.tile.At(i - 1, j).SetFrameY(22);
+								}
+								if (num4 == 2)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(66);
+									Main.tile.At(i - 1, j).SetFrameY(44);
+								}
+							}
+						}
+						if (num5 == 6 || num5 == 7)
+						{
+							Main.tile.At(i + 1, j).SetActive(true);
+							Main.tile.At(i + 1, j).SetType(5);
+							num4 = WorldModify.genRand.Next(3);
+							if (WorldModify.genRand.Next(3) < 2)
+							{
+								if (num4 == 0)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(66);
+									Main.tile.At(i + 1, j).SetFrameY(198);
+								}
+								if (num4 == 1)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(66);
+									Main.tile.At(i + 1, j).SetFrameY(220);
+								}
+								if (num4 == 2)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(66);
+									Main.tile.At(i + 1, j).SetFrameY(242);
+								}
+							}
+							else
+							{
+								if (num4 == 0)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(88);
+									Main.tile.At(i + 1, j).SetFrameY(66);
+								}
+								if (num4 == 1)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(88);
+									Main.tile.At(i + 1, j).SetFrameY(88);
+								}
+								if (num4 == 2)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(88);
+									Main.tile.At(i + 1, j).SetFrameY(110);
+								}
+							}
+						}
+					}
+					int num6 = WorldModify.genRand.Next(3);
+					bool flag3 = false;
+					bool flag4 = false;
+					if (Main.tile.At(i - 1, num).Active && (Main.tile.At(i - 1, num).Type == 2 || Main.tile.At(i - 1, num).Type == 23 || Main.tile.At(i - 1, num).Type == 60 || Main.tile.At(i - 1, num).Type == 109))
+					{
+						flag3 = true;
+					}
+					if (Main.tile.At(i + 1, num).Active && (Main.tile.At(i + 1, num).Type == 2 || Main.tile.At(i + 1, num).Type == 23 || Main.tile.At(i + 1, num).Type == 60 || Main.tile.At(i + 1, num).Type == 109))
+					{
+						flag4 = true;
+					}
+					if (!flag3)
+					{
+						if (num6 == 0)
+						{
+							num6 = 2;
+						}
+						if (num6 == 1)
+						{
+							num6 = 3;
+						}
+					}
+					if (!flag4)
+					{
+						if (num6 == 0)
+						{
+							num6 = 1;
+						}
+						if (num6 == 2)
+						{
+							num6 = 3;
+						}
+					}
+					if (flag3 && !flag4)
+					{
+						num6 = 1;
+					}
+					if (flag4 && !flag3)
+					{
+						num6 = 2;
+					}
+					if (num6 == 0 || num6 == 1)
+					{
+						Main.tile.At(i + 1, num - 1).SetActive(true);
+						Main.tile.At(i + 1, num - 1).SetType(5);
+						num4 = WorldModify.genRand.Next(3);
+						if (num4 == 0)
+						{
+							Main.tile.At(i + 1, num - 1).SetFrameX(22);
+							Main.tile.At(i + 1, num - 1).SetFrameY(132);
+						}
+						if (num4 == 1)
+						{
+							Main.tile.At(i + 1, num - 1).SetFrameX(22);
+							Main.tile.At(i + 1, num - 1).SetFrameY(154);
+						}
+						if (num4 == 2)
+						{
+							Main.tile.At(i + 1, num - 1).SetFrameX(22);
+							Main.tile.At(i + 1, num - 1).SetFrameY(176);
+						}
+					}
+					if (num6 == 0 || num6 == 2)
+					{
+						Main.tile.At(i - 1, num - 1).SetActive(true);
+						Main.tile.At(i - 1, num - 1).SetType(5);
+						num4 = WorldModify.genRand.Next(3);
+						if (num4 == 0)
+						{
+							Main.tile.At(i - 1, num - 1).SetFrameX(44);
+							Main.tile.At(i - 1, num - 1).SetFrameY(132);
+						}
+						if (num4 == 1)
+						{
+							Main.tile.At(i - 1, num - 1).SetFrameX(44);
+							Main.tile.At(i - 1, num - 1).SetFrameY(154);
+						}
+						if (num4 == 2)
+						{
+							Main.tile.At(i - 1, num - 1).SetFrameX(44);
+							Main.tile.At(i - 1, num - 1).SetFrameY(176);
+						}
+					}
+					num4 = WorldModify.genRand.Next(3);
+					if (num6 == 0)
+					{
+						if (num4 == 0)
+						{
+							Main.tile.At(i, num - 1).SetFrameX(88);
+							Main.tile.At(i, num - 1).SetFrameY(132);
+						}
+						if (num4 == 1)
+						{
+							Main.tile.At(i, num - 1).SetFrameX(88);
+							Main.tile.At(i, num - 1).SetFrameY(154);
+						}
+						if (num4 == 2)
+						{
+							Main.tile.At(i, num - 1).SetFrameX(88);
+							Main.tile.At(i, num - 1).SetFrameY(176);
+						}
+					}
+					else
+					{
+						if (num6 == 1)
+						{
+							if (num4 == 0)
+							{
+								Main.tile.At(i, num - 1).SetFrameX(0);
+								Main.tile.At(i, num - 1).SetFrameY(132);
+							}
+							if (num4 == 1)
+							{
+								Main.tile.At(i, num - 1).SetFrameX(0);
+								Main.tile.At(i, num - 1).SetFrameY(154);
+							}
+							if (num4 == 2)
+							{
+								Main.tile.At(i, num - 1).SetFrameX(0);
+								Main.tile.At(i, num - 1).SetFrameY(176);
+							}
+						}
+						else
+						{
+							if (num6 == 2)
+							{
+								if (num4 == 0)
+								{
+									Main.tile.At(i, num - 1).SetFrameX(66);
+									Main.tile.At(i, num - 1).SetFrameY(132);
+								}
+								if (num4 == 1)
+								{
+									Main.tile.At(i, num - 1).SetFrameX(66);
+									Main.tile.At(i, num - 1).SetFrameY(154);
+								}
+								if (num4 == 2)
+								{
+									Main.tile.At(i, num - 1).SetFrameX(66);
+									Main.tile.At(i, num - 1).SetFrameY(176);
+								}
+							}
+						}
+					}
+					if (WorldModify.genRand.Next(3) < 2)
+					{
+						num4 = WorldModify.genRand.Next(3);
+						if (num4 == 0)
+						{
+							Main.tile.At(i, num - num3).SetFrameX(22);
+							Main.tile.At(i, num - num3).SetFrameY(198);
+						}
+						if (num4 == 1)
+						{
+							Main.tile.At(i, num - num3).SetFrameX(22);
+							Main.tile.At(i, num - num3).SetFrameY(220);
+						}
+						if (num4 == 2)
+						{
+							Main.tile.At(i, num - num3).SetFrameX(22);
+							Main.tile.At(i, num - num3).SetFrameY(242);
+						}
+					}
+					else
+					{
+						num4 = WorldModify.genRand.Next(3);
+						if (num4 == 0)
+						{
+							Main.tile.At(i, num - num3).SetFrameX(0);
+							Main.tile.At(i, num - num3).SetFrameY(198);
+						}
+						if (num4 == 1)
+						{
+							Main.tile.At(i, num - num3).SetFrameX(0);
+							Main.tile.At(i, num - num3).SetFrameY(220);
+						}
+						if (num4 == 2)
+						{
+							Main.tile.At(i, num - num3).SetFrameX(0);
+							Main.tile.At(i, num - num3).SetFrameY(242);
+						}
+					}
+					WorldModify.RangeFrame(i - 2, num - num3 - 1, i + 2, num + 1);
+					NetMessage.SendTileSquare(-1, i, (int)((double)num - (double)num3 * 0.5), num3 + 1);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public static void GrowTree(int i, int y)
+		{
+			int num = y;
+			while (Main.tile.At(i, num).Type == 20)
+			{
+				num++;
+			}
+			if ((Main.tile.At(i - 1, num - 1).Liquid != 0 || Main.tile.At(i - 1, num - 1).Liquid != 0 || 
+				Main.tile.At(i + 1, num - 1).Liquid != 0) && Main.tile.At(i, num).Type != 60)
+			{
+				return;
+			}
+			if (Main.tile.At(i, num).Active && (Main.tile.At(i, num).Type == 2 || Main.tile.At(i, num).Type == 23 || 
+				Main.tile.At(i, num).Type == 60 || Main.tile.At(i, num).Type == 109) && Main.tile.At(i, num - 1).Wall == 0 && 
+					((Main.tile.At(i - 1, num).Active && (Main.tile.At(i - 1, num).Type == 2 || 
+					Main.tile.At(i - 1, num).Type == 23 || Main.tile.At(i - 1, num).Type == 60 || 
+					Main.tile.At(i - 1, num).Type == 109)) || (Main.tile.At(i + 1, num).Active && 
+					(Main.tile.At(i + 1, num).Type == 2 || Main.tile.At(i + 1, num).Type == 23 || 
+					Main.tile.At(i + 1, num).Type == 60 || Main.tile.At(i + 1, num).Type == 109))))
+			{
+				int num2 = 1;
+				int num3 = 16;
+				if (Main.tile.At(i, num).Type == 60)
+				{
+					num3 += 5;
+				}
+				if (WorldModify.EmptyTileCheck(i - num2, i + num2, num - num3, num - 1, 20))
+				{
+					bool flag = false;
+					bool flag2 = false;
+					int num4 = WorldModify.genRand.Next(5, num3 + 1);
+					int num5;
+					for (int j = num - num4; j < num; j++)
+					{
+						Main.tile.At(i, j).SetFrameNumber((byte)WorldModify.genRand.Next(3));
+						Main.tile.At(i, j).SetActive(true);
+						Main.tile.At(i, j).SetType(5);
+						num5 = WorldModify.genRand.Next(3);
+						int num6 = WorldModify.genRand.Next(10);
+						if (j == num - 1 || j == num - num4)
+						{
+							num6 = 0;
+						}
+						while (((num6 == 5 || num6 == 7) && flag) || ((num6 == 6 || num6 == 7) && flag2))
+						{
+							num6 = WorldModify.genRand.Next(10);
+						}
+						flag = false;
+						flag2 = false;
+						if (num6 == 5 || num6 == 7)
+						{
+							flag = true;
+						}
+						if (num6 == 6 || num6 == 7)
+						{
+							flag2 = true;
+						}
+						if (num6 == 1)
+						{
+							if (num5 == 0)
+							{
+								Main.tile.At(i, j).SetFrameX(0);
+								Main.tile.At(i, j).SetFrameY(66);
+							}
+							if (num5 == 1)
+							{
+								Main.tile.At(i, j).SetFrameX(0);
+								Main.tile.At(i, j).SetFrameY(88);
+							}
+							if (num5 == 2)
+							{
+								Main.tile.At(i, j).SetFrameX(0);
+								Main.tile.At(i, j).SetFrameY(110);
+							}
+						}
+						else
+						{
+							if (num6 == 2)
+							{
+								if (num5 == 0)
+								{
+									Main.tile.At(i, j).SetFrameX(22);
+									Main.tile.At(i, j).SetFrameY(0);
+								}
+								if (num5 == 1)
+								{
+									Main.tile.At(i, j).SetFrameX(22);
+									Main.tile.At(i, j).SetFrameY(22);
+								}
+								if (num5 == 2)
+								{
+									Main.tile.At(i, j).SetFrameX(22);
+									Main.tile.At(i, j).SetFrameY(44);
+								}
+							}
+							else
+							{
+								if (num6 == 3)
+								{
+									if (num5 == 0)
+									{
+										Main.tile.At(i, j).SetFrameX(44);
+										Main.tile.At(i, j).SetFrameY(66);
+									}
+									if (num5 == 1)
+									{
+										Main.tile.At(i, j).SetFrameX(44);
+										Main.tile.At(i, j).SetFrameY(88);
+									}
+									if (num5 == 2)
+									{
+										Main.tile.At(i, j).SetFrameX(44);
+										Main.tile.At(i, j).SetFrameY(110);
+									}
+								}
+								else
+								{
+									if (num6 == 4)
+									{
+										if (num5 == 0)
+										{
+											Main.tile.At(i, j).SetFrameX(22);
+											Main.tile.At(i, j).SetFrameY(66);
+										}
+										if (num5 == 1)
+										{
+											Main.tile.At(i, j).SetFrameX(22);
+											Main.tile.At(i, j).SetFrameY(88);
+										}
+										if (num5 == 2)
+										{
+											Main.tile.At(i, j).SetFrameX(22);
+											Main.tile.At(i, j).SetFrameY(110);
+										}
+									}
+									else
+									{
+										if (num6 == 5)
+										{
+											if (num5 == 0)
+											{
+												Main.tile.At(i, j).SetFrameX(88);
+												Main.tile.At(i, j).SetFrameY(0);
+											}
+											if (num5 == 1)
+											{
+												Main.tile.At(i, j).SetFrameX(88);
+												Main.tile.At(i, j).SetFrameY(22);
+											}
+											if (num5 == 2)
+											{
+												Main.tile.At(i, j).SetFrameX(88);
+												Main.tile.At(i, j).SetFrameY(44);
+											}
+										}
+										else
+										{
+											if (num6 == 6)
+											{
+												if (num5 == 0)
+												{
+													Main.tile.At(i, j).SetFrameX(66);
+													Main.tile.At(i, j).SetFrameY(66);
+												}
+												if (num5 == 1)
+												{
+													Main.tile.At(i, j).SetFrameX(66);
+													Main.tile.At(i, j).SetFrameY(88);
+												}
+												if (num5 == 2)
+												{
+													Main.tile.At(i, j).SetFrameX(66);
+													Main.tile.At(i, j).SetFrameY(110);
+												}
+											}
+											else
+											{
+												if (num6 == 7)
+												{
+													if (num5 == 0)
+													{
+														Main.tile.At(i, j).SetFrameX(110);
+														Main.tile.At(i, j).SetFrameY(66);
+													}
+													if (num5 == 1)
+													{
+														Main.tile.At(i, j).SetFrameX(110);
+														Main.tile.At(i, j).SetFrameY(88);
+													}
+													if (num5 == 2)
+													{
+														Main.tile.At(i, j).SetFrameX(110);
+														Main.tile.At(i, j).SetFrameY(110);
+													}
+												}
+												else
+												{
+													if (num5 == 0)
+													{
+														Main.tile.At(i, j).SetFrameX(0);
+														Main.tile.At(i, j).SetFrameY(0);
+													}
+													if (num5 == 1)
+													{
+														Main.tile.At(i, j).SetFrameX(0);
+														Main.tile.At(i, j).SetFrameY(22);
+													}
+													if (num5 == 2)
+													{
+														Main.tile.At(i, j).SetFrameX(0);
+														Main.tile.At(i, j).SetFrameY(44);
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						if (num6 == 5 || num6 == 7)
+						{
+							Main.tile.At(i - 1, j).SetActive(true);
+							Main.tile.At(i - 1, j).SetType(5);
+							num5 = WorldModify.genRand.Next(3);
+							if (WorldModify.genRand.Next(3) < 2)
+							{
+								if (num5 == 0)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(44);
+									Main.tile.At(i - 1, j).SetFrameY(198);
+								}
+								if (num5 == 1)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(44);
+									Main.tile.At(i - 1, j).SetFrameY(220);
+								}
+								if (num5 == 2)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(44);
+									Main.tile.At(i - 1, j).SetFrameY(242);
+								}
+							}
+							else
+							{
+								if (num5 == 0)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(66);
+									Main.tile.At(i - 1, j).SetFrameY(0);
+								}
+								if (num5 == 1)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(66);
+									Main.tile.At(i - 1, j).SetFrameY(22);
+								}
+								if (num5 == 2)
+								{
+									Main.tile.At(i - 1, j).SetFrameX(66);
+									Main.tile.At(i - 1, j).SetFrameY(44);
+								}
+							}
+						}
+						if (num6 == 6 || num6 == 7)
+						{
+							Main.tile.At(i + 1, j).SetActive(true);
+							Main.tile.At(i + 1, j).SetType(5);
+							num5 = WorldModify.genRand.Next(3);
+							if (WorldModify.genRand.Next(3) < 2)
+							{
+								if (num5 == 0)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(66);
+									Main.tile.At(i + 1, j).SetFrameY(198);
+								}
+								if (num5 == 1)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(66);
+									Main.tile.At(i + 1, j).SetFrameY(220);
+								}
+								if (num5 == 2)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(66);
+									Main.tile.At(i + 1, j).SetFrameY(242);
+								}
+							}
+							else
+							{
+								if (num5 == 0)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(88);
+									Main.tile.At(i + 1, j).SetFrameY(66);
+								}
+								if (num5 == 1)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(88);
+									Main.tile.At(i + 1, j).SetFrameY(88);
+								}
+								if (num5 == 2)
+								{
+									Main.tile.At(i + 1, j).SetFrameX(88);
+									Main.tile.At(i + 1, j).SetFrameY(110);
+								}
+							}
+						}
+					}
+					int num7 = WorldModify.genRand.Next(3);
+					bool flag3 = false;
+					bool flag4 = false;
+					if (Main.tile.At(i - 1, num).Active && (Main.tile.At(i - 1, num).Type == 2 || Main.tile.At(i - 1, num).Type == 23 || Main.tile.At(i - 1, num).Type == 60 || Main.tile.At(i - 1, num).Type == 109))
+					{
+						flag3 = true;
+					}
+					if (Main.tile.At(i + 1, num).Active && (Main.tile.At(i + 1, num).Type == 2 || Main.tile.At(i + 1, num).Type == 23 || Main.tile.At(i + 1, num).Type == 60 || Main.tile.At(i + 1, num).Type == 109))
+					{
+						flag4 = true;
+					}
+					if (!flag3)
+					{
+						if (num7 == 0)
+						{
+							num7 = 2;
+						}
+						if (num7 == 1)
+						{
+							num7 = 3;
+						}
+					}
+					if (!flag4)
+					{
+						if (num7 == 0)
+						{
+							num7 = 1;
+						}
+						if (num7 == 2)
+						{
+							num7 = 3;
+						}
+					}
+					if (flag3 && !flag4)
+					{
+						num7 = 1;
+					}
+					if (flag4 && !flag3)
+					{
+						num7 = 2;
+					}
+					if (num7 == 0 || num7 == 1)
+					{
+						Main.tile.At(i + 1, num - 1).SetActive(true);
+						Main.tile.At(i + 1, num - 1).SetType(5);
+						num5 = WorldModify.genRand.Next(3);
+						if (num5 == 0)
+						{
+							Main.tile.At(i + 1, num - 1).SetFrameX(22);
+							Main.tile.At(i + 1, num - 1).SetFrameY(132);
+						}
+						if (num5 == 1)
+						{
+							Main.tile.At(i + 1, num - 1).SetFrameX(22);
+							Main.tile.At(i + 1, num - 1).SetFrameY(154);
+						}
+						if (num5 == 2)
+						{
+							Main.tile.At(i + 1, num - 1).SetFrameX(22);
+							Main.tile.At(i + 1, num - 1).SetFrameY(176);
+						}
+					}
+					if (num7 == 0 || num7 == 2)
+					{
+						Main.tile.At(i - 1, num - 1).SetActive(true);
+						Main.tile.At(i - 1, num - 1).SetType(5);
+						num5 = WorldModify.genRand.Next(3);
+						if (num5 == 0)
+						{
+							Main.tile.At(i - 1, num - 1).SetFrameX(44);
+							Main.tile.At(i - 1, num - 1).SetFrameY(132);
+						}
+						if (num5 == 1)
+						{
+							Main.tile.At(i - 1, num - 1).SetFrameX(44);
+							Main.tile.At(i - 1, num - 1).SetFrameY(154);
+						}
+						if (num5 == 2)
+						{
+							Main.tile.At(i - 1, num - 1).SetFrameX(44);
+							Main.tile.At(i - 1, num - 1).SetFrameY(176);
+						}
+					}
+					num5 = WorldModify.genRand.Next(3);
+					if (num7 == 0)
+					{
+						if (num5 == 0)
+						{
+							Main.tile.At(i, num - 1).SetFrameX(88);
+							Main.tile.At(i, num - 1).SetFrameY(132);
+						}
+						if (num5 == 1)
+						{
+							Main.tile.At(i, num - 1).SetFrameX(88);
+							Main.tile.At(i, num - 1).SetFrameY(154);
+						}
+						if (num5 == 2)
+						{
+							Main.tile.At(i, num - 1).SetFrameX(88);
+							Main.tile.At(i, num - 1).SetFrameY(176);
+						}
+					}
+					else
+					{
+						if (num7 == 1)
+						{
+							if (num5 == 0)
+							{
+								Main.tile.At(i, num - 1).SetFrameX(0);
+								Main.tile.At(i, num - 1).SetFrameY(132);
+							}
+							if (num5 == 1)
+							{
+								Main.tile.At(i, num - 1).SetFrameX(0);
+								Main.tile.At(i, num - 1).SetFrameY(154);
+							}
+							if (num5 == 2)
+							{
+								Main.tile.At(i, num - 1).SetFrameX(0);
+								Main.tile.At(i, num - 1).SetFrameY(176);
+							}
+						}
+						else
+						{
+							if (num7 == 2)
+							{
+								if (num5 == 0)
+								{
+									Main.tile.At(i, num - 1).SetFrameX(66);
+									Main.tile.At(i, num - 1).SetFrameY(132);
+								}
+								if (num5 == 1)
+								{
+									Main.tile.At(i, num - 1).SetFrameX(66);
+									Main.tile.At(i, num - 1).SetFrameY(154);
+								}
+								if (num5 == 2)
+								{
+									Main.tile.At(i, num - 1).SetFrameX(66);
+									Main.tile.At(i, num - 1).SetFrameY(176);
+								}
+							}
+						}
+					}
+					if (WorldModify.genRand.Next(4) < 3)
+					{
+						num5 = WorldModify.genRand.Next(3);
+						if (num5 == 0)
+						{
+							Main.tile.At(i, num - num4).SetFrameX(22);
+							Main.tile.At(i, num - num4).SetFrameY(198);
+						}
+						if (num5 == 1)
+						{
+							Main.tile.At(i, num - num4).SetFrameX(22);
+							Main.tile.At(i, num - num4).SetFrameY(220);
+						}
+						if (num5 == 2)
+						{
+							Main.tile.At(i, num - num4).SetFrameX(22);
+							Main.tile.At(i, num - num4).SetFrameY(242);
+						}
+					}
+					else
+					{
+						num5 = WorldModify.genRand.Next(3);
+						if (num5 == 0)
+						{
+							Main.tile.At(i, num - num4).SetFrameX(0);
+							Main.tile.At(i, num - num4).SetFrameY(198);
+						}
+						if (num5 == 1)
+						{
+							Main.tile.At(i, num - num4).SetFrameX(0);
+							Main.tile.At(i, num - num4).SetFrameY(220);
+						}
+						if (num5 == 2)
+						{
+							Main.tile.At(i, num - num4).SetFrameX(0);
+							Main.tile.At(i, num - num4).SetFrameY(242);
+						}
+					}
+					WorldModify.RangeFrame(i - 2, num - num4 - 1, i + 2, num + 1);
+					NetMessage.SendTileSquare(-1, i, (int)((double)num - (double)num4 * 0.5), num4 + 1);
+				}
+			}
+		}
+
+		public static void AddTrees()
+		{
+			for (int x = 1; x < Main.maxTilesX - 1; x++)
+			{
+				int y = 20;
+				while ((double)y < Main.worldSurface)
+				{
+					GrowTree(x, y);
+					y++;
+				}
+
+				if (WorldModify.genRand.Next(3) == 0 || WorldModify.genRand.Next(4) == 0)
+					x++;
 			}
 		}
     }

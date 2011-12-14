@@ -128,7 +128,7 @@ namespace Terraria_Server.Messages
 			
 			if (ctx.Result != HookResult.CONTINUE)
 			{
-				if (type > 55)
+				if (type > Projectile.MAX_PROJECTILES)
 				{
 					args.CleanupProjectile ();
 					NetPlay.slots[whoAmI].Kick ("Invalid projectile.");

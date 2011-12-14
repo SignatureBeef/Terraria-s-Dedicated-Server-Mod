@@ -15741,6 +15741,12 @@ namespace Terraria_Server
 			}
 		}
 
+		public static void ClearNames()
+		{
+			for (int i = 0; i < Main.MAX_NAMES; i++)
+				Main.chrName[i] = String.Empty;
+		}
+
 		// [ToDo] Simplify by using arrays instead of switches?
 		public static void SetNames()
 		{
