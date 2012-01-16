@@ -618,11 +618,9 @@ namespace Terraria_Server.WorldMod
 										{
                                             string defaults = Item.VersionName(binaryReader.ReadString(), Terraria_Release);
 											Main.chest[l].contents[m] = Registries.Item.Create(defaults, stack);
-                                            Main.chest[l].contents[m].Stack = (int)stack;
+											//Main.chest[l].contents[m].Stack = (int)stack;
                                             if (Terraria_Release >= 36)
-                                            {
-                                                Main.chest[l].contents[m].SetPrefix((int)binaryReader.ReadByte());
-                                            }
+												Main.chest[l].contents[m].SetPrefix((int)binaryReader.ReadByte());
 										}
 									}
 								}
@@ -755,7 +753,7 @@ namespace Terraria_Server.WorldMod
 						catch { }
 
 						ProgramLog.Error.Log(
-							String.Format("Error Loading world:\n{0}", e)
+							String.Format("Error Loading world:\n{0}\nStack Trace: {1}", e, e.StackTrace)
 						);
 
 						return;

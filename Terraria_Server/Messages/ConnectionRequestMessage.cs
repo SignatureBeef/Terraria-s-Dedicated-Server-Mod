@@ -66,7 +66,7 @@ namespace Terraria_Server.Messages
 			{
 				if (version.Length > 30) version = version.Substring (0, 30);
 				ProgramLog.Debug.Log ("Client version string: {0}", version);
-				conn.Kick (string.Concat ("This server requires Terraria ", Program.VERSION_NUMBER));
+				conn.Kick (string.Concat ("This server requires Terraria ", Statics.VERSION_NUMBER));
 				return;
 			}
 			

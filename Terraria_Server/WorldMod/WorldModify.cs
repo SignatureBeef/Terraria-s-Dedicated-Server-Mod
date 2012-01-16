@@ -135,6 +135,147 @@ namespace Terraria_Server.WorldMod
 		public static int[] noWireX = new int[MAX_WIRE];
 		public static int[] noWireY = new int[MAX_WIRE];
 
+		public static void hardUpdateWorld(int i, int j)
+		{
+			if (Main.hardMode)
+			{
+				int type = (int)Main.tile.At(i, j).Type;
+				if (type == 117 && (double)j > Main.rockLayer && Main.rand.Next(110) == 0)
+				{
+					int num = genRand.Next(4);
+					int num2 = 0;
+					int num3 = 0;
+
+					if (num == 0)
+						num2 = -1;
+					else if (num == 1)
+						num2 = 1;
+					else
+						num3 = (num == 0) ? -1 : 1;
+
+					if (!Main.tile.At(i + num2, j + num3).Active)
+					{
+						int num4 = 0;
+						int num5 = 6;
+						for (int k = i - num5; k <= i + num5; k++)
+						{
+							for (int l = j - num5; l <= j + num5; l++)
+							{
+								if (Main.tile.At(k, l).Active && Main.tile.At(k, l).Type == 129)
+									num4++;
+							}
+						}
+						if (num4 < 2)
+						{
+							PlaceTile(i + num2, j + num3, 129, true, false, -1, 0);
+							NetMessage.SendTileSquare(-1, i + num2, j + num3, 1);
+						}
+					}
+				}
+				if (type == 23 || type == 25 || type == 32 || type == 112)
+				{
+					bool flag = true;
+					while (flag)
+					{
+						flag = false;
+						int num6 = i + genRand.Next(-3, 4);
+						int num7 = j + genRand.Next(-3, 4);
+						if (Main.tile.At(num6, num7).Type == 2)
+						{
+							if (genRand.Next(2) == 0)
+								flag = true;
+
+							Main.tile.At(num6, num7).SetType(23);
+							SquareTileFrame(num6, num7, true);
+							NetMessage.SendTileSquare(-1, num6, num7, 1);
+						}
+						else if (Main.tile.At(num6, num7).Type == 1)
+						{
+							if (genRand.Next(2) == 0)
+								flag = true;
+
+							Main.tile.At(num6, num7).SetType(25);
+							SquareTileFrame(num6, num7, true);
+							NetMessage.SendTileSquare(-1, num6, num7, 1);
+						}
+						else if (Main.tile.At(num6, num7).Type == 53)
+						{
+							if (genRand.Next(2) == 0)
+								flag = true;
+
+							Main.tile.At(num6, num7).SetType(112);
+							SquareTileFrame(num6, num7, true);
+							NetMessage.SendTileSquare(-1, num6, num7, 1);
+						}
+						else if (Main.tile.At(num6, num7).Type == 59)
+						{
+							if (genRand.Next(2) == 0)
+								flag = true;
+
+							Main.tile.At(num6, num7).SetType(0);
+							SquareTileFrame(num6, num7, true);
+							NetMessage.SendTileSquare(-1, num6, num7, 1);
+						}
+						else if (Main.tile.At(num6, num7).Type == 60)
+						{
+							if (genRand.Next(2) == 0)
+								flag = true;
+
+							Main.tile.At(num6, num7).SetType(23);
+							SquareTileFrame(num6, num7, true);
+							NetMessage.SendTileSquare(-1, num6, num7, 1);
+						}
+						else if (Main.tile.At(num6, num7).Type == 69)
+						{
+							if (genRand.Next(2) == 0)
+								flag = true;
+
+							Main.tile.At(num6, num7).SetType(32);
+							SquareTileFrame(num6, num7, true);
+							NetMessage.SendTileSquare(-1, num6, num7, 1);
+						}
+					}
+				}
+				if (type == 109 || type == 110 || type == 113 || type == 115 || type == 116 || type == 117 || type == 118)
+				{
+					bool flag2 = true;
+					while (flag2)
+					{
+						flag2 = false;
+						int num8 = i + genRand.Next(-3, 4);
+						int num9 = j + genRand.Next(-3, 4);
+						if (Main.tile.At(num8, num9).Type == 2)
+						{
+							if (genRand.Next(2) == 0)
+								flag2 = true;
+
+							Main.tile.At(num8, num9).SetType(109);
+							SquareTileFrame(num8, num9, true);
+							NetMessage.SendTileSquare(-1, num8, num9, 1);
+						}
+						else if (Main.tile.At(num8, num9).Type == 1)
+						{
+							if (genRand.Next(2) == 0)
+								flag2 = true;
+
+							Main.tile.At(num8, num9).SetType(117);
+							SquareTileFrame(num8, num9, true);
+							NetMessage.SendTileSquare(-1, num8, num9, 1);
+						}
+						else if (Main.tile.At(num8, num9).Type == 53)
+						{
+							if (genRand.Next(2) == 0)
+								flag2 = true;
+
+							Main.tile.At(num8, num9).SetType(116);
+							SquareTileFrame(num8, num9, true);
+							NetMessage.SendTileSquare(-1, num8, num9, 1);
+						}
+					}
+				}
+			}
+		}
+
 		public static void Check1x1(int x, int y, int type)
 		{
 			if ((!Main.tile.At(x, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(x, y + 1).Type]))
@@ -170,7 +311,7 @@ namespace Terraria_Server.WorldMod
 					if (n >= 36)
 						n -= 36;
 
-					if (!Main.tile.At(num3, num4).Active || Main.tile.At(num3, num4).Type != 128 || 
+					if (!Main.tile.At(num3, num4).Active || Main.tile.At(num3, num4).Type != 128 ||
 						(int)Main.tile.At(num3, num4).FrameY != m * 18 || n != l * 18)
 					{
 						flag = true;
@@ -227,8 +368,8 @@ namespace Terraria_Server.WorldMod
 			{
 				for (int m = num5; m < num5 + 2; m++)
 				{
-					if (!Main.tile.At(l, m).Active || (int)Main.tile.At(l, m).Type != type || 
-						(int)Main.tile.At(l, m).FrameX != (l - num4) * 18 + num3 * 36 || 
+					if (!Main.tile.At(l, m).Active || (int)Main.tile.At(l, m).Type != type ||
+						(int)Main.tile.At(l, m).FrameX != (l - num4) * 18 + num3 * 36 ||
 						(int)Main.tile.At(l, m).FrameY != (m - num5) * 18 + num * 36)
 					{
 						flag = true;
@@ -2594,7 +2735,7 @@ namespace Terraria_Server.WorldMod
 			NetMessage.SendTileSquare(-1, x, y, 30);
 			return true;
 		}
-		
+
 		public static bool IsValidTreeRootTile(TileRef tile)
 		{
 			return (tile.Active && (tile.Type == 2 || tile.Type == 23 || tile.Type == 60));
@@ -7273,18 +7414,33 @@ namespace Terraria_Server.WorldMod
 										{
 											num10 = 23;
 										}
-										if (Main.tile.At(j, k).Type == 0 || (num10 == 23 && Main.tile.At(j, k).Type == 2))
+										if (Main.tile.At(j, k).Type == 0 || (num10 == 23 && Main.tile.At(j, k).Type == 2) || (num10 == 23 && Main.tile.At(j, k).Type == 109))
 										{
 											SpreadGrass(j, k, 0, num10, false);
 											if (num10 == 23)
 											{
 												SpreadGrass(j, k, 2, num10, false);
+												SpreadGrass(j, k, 109, num10, false);
 											}
 											if ((int)Main.tile.At(j, k).Type == num10)
 											{
 												SquareTileFrame(j, k, true);
 												flag2 = true;
 											}
+										}
+									}
+									if (Main.tile.At(j, k).Type == 0 || (num10 == 109 && Main.tile.At(j, k).Type == 2) || (num10 == 109 && Main.tile.At(j, k).Type == 23))
+									{
+										SpreadGrass(j, k, 0, num10, false);
+										if (num10 == 109)
+										{
+											SpreadGrass(j, k, 2, num10, false);
+											SpreadGrass(j, k, 23, num10, false);
+										}
+										if ((int)Main.tile.At(j, k).Type == num10)
+										{
+											SquareTileFrame(j, k, true);
+											flag2 = true;
 										}
 									}
 								}
@@ -7301,6 +7457,11 @@ namespace Terraria_Server.WorldMod
 						if (Tile.Type == 3 && genRand.Next(20) == 0 && Tile.FrameX < 144)
 						{
 							Tile.SetType(73);
+							NetMessage.SendTileSquare(-1, TileX, TileY, 3);
+						}
+						if (Tile.Type == 110 && genRand.Next(20) == 0 && Tile.FrameX < 144)
+						{
+							Tile.SetType(113);
 							NetMessage.SendTileSquare(-1, TileX, TileY, 3);
 						}
 						if (Tile.Type == 32 && genRand.Next(3) == 0)
@@ -7483,6 +7644,26 @@ namespace Terraria_Server.WorldMod
 								NetMessage.SendTileSquare(-1, num25, num26, 3);
 							}
 						}
+						if ((Tile.Type == 109 || Tile.Type == 115) && genRand.Next(15) == 0 && !Main.tile.At(TileX, TileY + 1).Active && !Main.tile.At(TileX, TileY + 1).Lava)
+						{
+							bool flag7 = false;
+							for (int y = TileY; y > TileY - 10; y--)
+							{
+								if (Main.tile.At(TileX, y).Active && Main.tile.At(TileX, y).Type == 109)
+								{
+									flag7 = true;
+									break;
+								}
+							}
+							if (flag7)
+							{
+								int setY = TileY + 1;
+								Main.tile.At(TileX, setY).SetType(115);
+								Main.tile.At(TileX, setY).SetActive(true);
+								SquareTileFrame(TileX, setY, true);
+								NetMessage.SendTileSquare(-1, TileX, setY, 3);
+							}
+						}
 					}
 				}
 				num3++;
@@ -7522,6 +7703,106 @@ namespace Terraria_Server.WorldMod
 					{
 						if (Main.tile.At(num28, num29).Active)
 						{
+							WorldModify.hardUpdateWorld(num31, num32);
+							if (Main.tile.At(num28, num29).Type == 23 && !Main.tile.At(num28, num29).Active && genRand.Next(1) == 0)
+							{
+								PlaceTile(num28, num32, 24, true, false, -1, 0);
+								if (Main.tile.At(num28, num29).Active)
+								{
+									NetMessage.SendTileSquare(-1, num28, num32, 1);
+								}
+							}
+							if (Main.tile.At(num28, num32).Type == 32 && genRand.Next(3) == 0)
+							{
+								int num37 = num28;
+								int num38 = num32;
+								int num39 = 0;
+								if (Main.tile.At(num37 + 1, num38).Active && Main.tile.At(num37 + 1, num38).Type == 32)
+								{
+									num39++;
+								}
+								if (Main.tile.At(num37 - 1, num38).Active && Main.tile.At(num37 - 1, num38).Type == 32)
+								{
+									num39++;
+								}
+								if (Main.tile.At(num37, num38 + 1).Active && Main.tile.At(num37, num38 + 1).Type == 32)
+								{
+									num39++;
+								}
+								if (Main.tile.At(num37, num38 - 1).Active && Main.tile.At(num37, num38 - 1).Type == 32)
+								{
+									num39++;
+								}
+								if (num39 < 3 || Main.tile.At(num28, num32).Type == 23)
+								{
+									int num40 = genRand.Next(4);
+									if (num40 == 0)
+									{
+										num38--;
+									}
+									else if (num40 == 1)
+									{
+										num38++;
+									}
+									else if (num40 == 2)
+									{
+										num37--;
+									}
+									else if (num40 == 3)
+									{
+										num37++;
+									}
+									if (!Main.tile.At(num37, num38).Active)
+									{
+										num39 = 0;
+										if (Main.tile.At(num37 + 1, num38).Active && Main.tile.At(num37 + 1, num38).Type == 32)
+										{
+											num39++;
+										}
+										if (Main.tile.At(num37 - 1, num38).Active && Main.tile.At(num37 - 1, num38).Type == 32)
+										{
+											num39++;
+										}
+										if (Main.tile.At(num37, num38 + 1).Active && Main.tile.At(num37, num38 + 1).Type == 32)
+										{
+											num39++;
+										}
+										if (Main.tile.At(num37, num38 - 1).Active && Main.tile.At(num37, num38 - 1).Type == 32)
+										{
+											num39++;
+										}
+										if (num39 < 2)
+										{
+											int num41 = 7;
+											int num42 = num37 - num41;
+											int num43 = num37 + num41;
+											int num44 = num38 - num41;
+											int num45 = num38 + num41;
+											bool flag8 = false;
+											for (int num46 = num42; num46 < num43; num46++)
+											{
+												for (int num47 = num44; num47 < num45; num47++)
+												{
+													if (Math.Abs(num46 - num37) * 2 + Math.Abs(num47 - num38) < 9 && Main.tile.At(num46, num47).Active &&
+														Main.tile.At(num46, num47).Type == 23 && Main.tile.At(num46, num47 - 1).Active &&
+														Main.tile.At(num46, num47 - 1).Type == 32 && Main.tile.At(num46, num47 - 1).Liquid == 0)
+													{
+														flag8 = true;
+														break;
+													}
+												}
+											}
+											if (flag8)
+											{
+												Main.tile.At(num37, num38).SetType(32);
+												Main.tile.At(num37, num38).SetActive(true);
+												SquareTileFrame(num37, num38, true);
+												NetMessage.SendTileSquare(-1, num37, num38, 3);
+											}
+										}
+									}
+								}
+							}
 							if (Main.tile.At(num28, num29).Type == 60)
 							{
 								int type2 = (int)Main.tile.At(num28, num29).Type;

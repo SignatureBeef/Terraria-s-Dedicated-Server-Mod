@@ -188,7 +188,7 @@ namespace Terraria_Server.RemoteConsole
 		{
 			writer.WriteLine (ASCIIArt);
 			writer.WriteLine ("");
-			writer.WriteLine ("\x1b[1;37mTerraria {0} dedicated server remote console, running TDSM #{1}.\x1b[0m", Program.VERSION_NUMBER, Statics.BUILD);
+			writer.WriteLine ("\x1b[1;37mTerraria {0} dedicated server remote console, running TDSM #{1}.\x1b[0m", Statics.VERSION_NUMBER, Statics.BUILD);
 			writer.WriteLine ("\x1b[1;37mYou have 20 seconds to log in.\x1b[0m");
 			writer.Flush ();
 		}
