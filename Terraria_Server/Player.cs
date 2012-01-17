@@ -3327,7 +3327,7 @@ namespace Terraria_Server
 								Main.tile.At(i, j).SetLiquid (0);
 								WorldModify.SquareTileFrame(i, j, true);
 							}
-							WorldModify.KillTile(i, j, false, false, false);
+							WorldModify.KillTile(i, j);
 						}
 					}
 				}

@@ -22,10 +22,15 @@ namespace Terraria_Server
 		public int SizeY {
 			get { return data.GetLength (1); }
 		}
-     
-		public TileRef At (int x, int y)
+
+		public TileRef At(int x, int y)
 		{
-			return new TileRef (x, y);
+			return new TileRef(x, y);
+		}
+
+		public ITile ITileAt(int x, int y)
+		{
+			return new TileRef(x, y);
 		}
      
 		public TileRef CreateTileAt (int x, int y)

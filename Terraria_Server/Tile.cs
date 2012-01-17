@@ -4,8 +4,71 @@ using System.Collections.Generic;
 
 namespace Terraria_Server
 {
+	public interface ITile
+	{
+		//TileData Data { get; }
+
+		//void SetData(TileData value);
+
+		//bool Exists { get; }
+
+		bool Active { get; }
+
+		void SetActive(bool value);
+
+		bool Lighted { get; }
+
+		void SetLighted(bool value);
+
+		byte Type { get; }
+
+		void SetType(byte value);
+
+		byte Wall { get; }
+
+		void SetWall(byte value);
+
+		byte Liquid { get; }
+
+		void SetLiquid(byte value);
+
+		void AddLiquid(int value);
+
+		bool CheckingLiquid { get; }
+
+		void SetCheckingLiquid(bool value);
+
+		bool SkipLiquid { get; }
+
+		void SetSkipLiquid(bool value);
+
+		bool Lava { get; }
+
+		void SetLava(bool value);
+
+		byte FrameNumber { get; }
+
+		void SetFrameNumber(byte value);
+
+		short FrameX { get; }
+
+		void SetFrameX(short value);
+
+		void AddFrameX(int value);
+
+		short FrameY { get; }
+
+		void SetFrameY(short value);
+
+		void AddFrameY(int value);
+
+		bool Wire { get; }
+
+		void SetWire(bool value);
+	}
+
 	[StructLayout(LayoutKind.Sequential, Pack=1)]
-	public struct TileRef
+	public struct TileRef : ITile
 	{
 		private readonly short x;
 		private readonly short y;

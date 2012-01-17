@@ -572,7 +572,7 @@ namespace Terraria_Server
                         vector2.Y = (float)(j * 16);
                         if (nextPos.X + (float)Width >= vector2.X && nextPos.X <= vector2.X + 16f && nextPos.Y + (float)Height >= vector2.Y && nextPos.Y <= vector2.Y + 16f)
                         {
-                            WorldModify.KillTile(i, j, true, true, false);
+							WorldModify.KillTile(i, j, null, true, true);
                         }
                     }
                 }
@@ -626,7 +626,7 @@ namespace Terraria_Server
 								else if (type == 80)
                                     Y = 6;
 								if (type == 32 || type == 69)
-                                    WorldModify.KillTile(i, j, false, false, false);								
+                                    WorldModify.KillTile(i, j);								
 
                                 return new Vector2((float)directionX, (float)Y);
                             }

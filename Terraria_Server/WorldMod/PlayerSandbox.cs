@@ -67,7 +67,7 @@ namespace Terraria_Server.WorldMod
 				{
 					case SideEffectType.ADD_WATER:
 					{
-						Liquid.AddWater (eff.X, eff.Y);
+						Terraria_Server.Liquid.AddWater (eff.X, eff.Y);
 						break;
 					}
 					
@@ -370,7 +370,7 @@ namespace Terraria_Server.WorldMod
 			return Main.tile.At(x, y).Wall;
 		}
 		
-		public byte LiquidAt (int x, int y)
+		public byte Liquid (int x, int y)
 		{
 			int idx;
 			if (changedTiles.TryGetValue((uint) (x << 16) | (uint) y, out idx))
@@ -478,7 +478,7 @@ namespace Terraria_Server.WorldMod
 			tiles[idx].Wall = val;
 		}
 		
-		public void SetLiquidAt (int x, int y, byte val)
+		public void SetLiquid (int x, int y, byte val)
 		{
 			var idx = Change (x, y);
 			tiles[idx].Liquid = val;
@@ -495,11 +495,74 @@ namespace Terraria_Server.WorldMod
 			var idx = Change (x, y);
 			tiles[idx].FrameX = val;
 		}
-		
-		public void SetFrameYAt (int x, int y, short val)
+
+		public void SetFrameYAt(int x, int y, short val)
 		{
-			var idx = Change (x, y);
+			var idx = Change(x, y);
 			tiles[idx].FrameY = val;
+		}
+
+		public void SetWire(int x, int y, bool val)
+		{
+			var idx = Change(x, y);
+			tiles[idx].Wire = val;
+		}
+
+		public bool Wire(int x, int y)
+		{
+			int idx;
+			if (changedTiles.TryGetValue((uint)(x << 16) | (uint)y, out idx))
+				return tiles[idx].Wire;
+
+			return Main.tile.At(x, y).Wire;
+		}
+
+		public void SetSkipLiquid(int x, int y, bool val)
+		{
+			var idx = Change(x, y);
+			tiles[idx].SkipLiquid = val;
+		}
+
+		public bool SkipLiquid(int x, int y)
+		{
+			int idx;
+			if (changedTiles.TryGetValue((uint)(x << 16) | (uint)y, out idx))
+				return tiles[idx].SkipLiquid;
+
+			return Main.tile.At(x, y).SkipLiquid;
+		}
+
+		public void SetCheckingLiquid(int x, int y, bool val)
+		{
+			var idx = Change(x, y);
+			tiles[idx].CheckingLiquid = val;
+		}
+
+		public bool CheckingLiquid(int x, int y)
+		{
+			int idx;
+			if (changedTiles.TryGetValue((uint)(x << 16) | (uint)y, out idx))
+				return tiles[idx].CheckingLiquid;
+
+			return Main.tile.At(x, y).CheckingLiquid;
+		}
+
+		public void AddLiquid(int x, int y, int val)
+		{
+			var idx = Change(x, y);
+			tiles[idx].liquid = (byte)(tiles[idx].liquid + val);
+		}
+
+		public void AddFrameX(int x, int y, int val)
+		{
+			var idx = Change(x, y);
+			tiles[idx].FrameX = (byte)(tiles[idx].FrameX + val);
+		}
+
+		public void AddFrameY(int x, int y, int val)
+		{
+			var idx = Change(x, y);
+			tiles[idx].FrameY = (byte)(tiles[idx].FrameY + val);
 		}
 	}
 }

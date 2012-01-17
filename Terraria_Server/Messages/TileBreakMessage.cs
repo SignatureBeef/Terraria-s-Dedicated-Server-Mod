@@ -16,7 +16,7 @@ namespace Terraria_Server.Messages
         {
             return Packet.TILE_BREAK;
         }
-				
+						
 		static SandboxEditor<PlayerSandbox> staticEditor = new SandboxEditor<PlayerSandbox> (new PlayerSandbox ());
 		
         public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
@@ -57,7 +57,7 @@ namespace Terraria_Server.Messages
 				{
 					case 0:
 						//editor.KillTile(x, y, failFlag, false, false);
-						WorldModify.KillTile(x, y, editor.TileAt, failFlag);
+						WorldModify.KillTile(x, y, editor.ITileAt, failFlag);
 						break;
 						
 					case 1:

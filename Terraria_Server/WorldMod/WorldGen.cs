@@ -2382,7 +2382,7 @@ namespace Terraria_Server.WorldMod
                         {
                             for (int num234 = JChestY[num232]; num234 <= JChestY[num232] + 1; num234++)
                             {
-                                WorldModify.KillTile(num233, num234, false, false, false);
+                                WorldModify.KillTile(num233, num234);
                             }
                         }
                         AddBuriedChest(JChestX[num232], JChestY[num232], contain, false);
@@ -5873,7 +5873,7 @@ namespace Terraria_Server.WorldMod
 					{
 						if ((double)(Math.Abs((float)k - value.X) + Math.Abs((float)l - value.Y)) < num * 0.5 * (1.0 + (double)WorldModify.genRand.Next(-10, 11) * 0.015))
 						{
-							WorldModify.KillTile(k, l, false, false, false);
+							WorldModify.KillTile(k, l);
 						}
 					}
 				}

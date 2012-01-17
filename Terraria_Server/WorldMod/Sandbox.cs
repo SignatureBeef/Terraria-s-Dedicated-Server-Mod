@@ -61,7 +61,7 @@ namespace Terraria_Server.WorldMod
 			return Main.tile.At(x, y).Wall;
 		}
 		
-		public byte LiquidAt (int x, int y)
+		public byte Liquid (int x, int y)
 		{
 			return Main.tile.At(x, y).Liquid;
 		}
@@ -75,10 +75,15 @@ namespace Terraria_Server.WorldMod
 		{
 			return Main.tile.At(x, y).FrameX;
 		}
-		
-		public short FrameYAt (int x, int y)
+
+		public short FrameYAt(int x, int y)
 		{
 			return Main.tile.At(x, y).FrameY;
+		}
+
+		public bool Wire(int x, int y)
+		{
+			return Main.tile.At(x, y).Wire;
 		}
 		
 		public void SetActiveAt (int x, int y, bool val)
@@ -102,7 +107,7 @@ namespace Terraria_Server.WorldMod
 		{
 		}
 		
-		public void SetLiquidAt (int x, int y, byte val)
+		public void SetLiquid (int x, int y, byte val)
 		{
 		}
 		
@@ -117,7 +122,46 @@ namespace Terraria_Server.WorldMod
 		public void SetFrameYAt (int x, int y, short val)
 		{
 		}
+
+		public void SetWire(int x, int y, bool val)
+		{
+
+		}
 		
+		public void SetSkipLiquid(int x, int y, bool val)
+		{
+
+		}
+
+		public bool SkipLiquid(int x, int y)
+		{
+			return Main.tile.At(x, y).SkipLiquid;
+		}
+
+		public void SetCheckingLiquid(int x, int y, bool val)
+		{
+
+		}
+
+		public bool CheckingLiquid(int x, int y)
+		{
+			return Main.tile.At(x, y).CheckingLiquid;
+		}
+
+		public void AddLiquid(int x, int y, int val)
+		{
+
+		}
+
+		public void AddFrameX(int x, int y, int val)
+		{
+
+		}
+
+		public void AddFrameY(int x, int y, int val)
+		{
+
+		}
 	}
 	
 	public struct TestSandbox : ISandbox
@@ -211,7 +255,7 @@ namespace Terraria_Server.WorldMod
 			return Main.tile.At(x, y).Wall;
 		}
 		
-		public byte LiquidAt (int x, int y)
+		public byte Liquid (int x, int y)
 		{
 			ChangedTile tile;
 			if (changedTiles.TryGetValue((x << 16) | y, out tile))
@@ -305,7 +349,7 @@ namespace Terraria_Server.WorldMod
 			tile.data.Wall = val;
 		}
 		
-		public void SetLiquidAt (int x, int y, byte val)
+		public void SetLiquid (int x, int y, byte val)
 		{
 			ChangedTile tile;
 			if (! changedTiles.TryGetValue ((x << 16) | y, out tile))
@@ -351,6 +395,81 @@ namespace Terraria_Server.WorldMod
 			}
 			Logging.ProgramLog.Debug.Log ("{0}, {1} FrameY = {2}", x, y, val);
 			tile.data.FrameY = val;
+		}
+
+		public bool Wire(int x, int y)
+		{
+			ChangedTile tile;
+			if (changedTiles.TryGetValue((x << 16) | y, out tile))
+				return tile.data.Wire;
+			return Main.tile.At(x, y).Wire;
+		}
+
+		public void SetWire(int x, int y, bool val)
+		{
+			ChangedTile tile;
+			if (!changedTiles.TryGetValue((x << 16) | y, out tile))
+			{
+				tile = new ChangedTile(x, y);
+				changedTiles[(x << 16) | y] = tile;
+			}
+			Logging.ProgramLog.Debug.Log("{0}, {1} SetWire = {2}", x, y, val);
+			tile.data.Wire = val;
+		}
+
+		public void SetSkipLiquid(int x, int y, bool val)
+		{
+			ChangedTile tile;
+			if (!changedTiles.TryGetValue((x << 16) | y, out tile))
+			{
+				tile = new ChangedTile(x, y);
+				changedTiles[(x << 16) | y] = tile;
+			}
+			Logging.ProgramLog.Debug.Log("{0}, {1} SetSkipLiquid = {2}", x, y, val);
+			tile.data.SkipLiquid = val;
+		}
+
+		public bool SkipLiquid(int x, int y)
+		{
+			ChangedTile tile;
+			if (changedTiles.TryGetValue((x << 16) | y, out tile))
+				return tile.data.SkipLiquid;
+			return Main.tile.At(x, y).SkipLiquid;
+		}
+
+		public void SetCheckingLiquid(int x, int y, bool val)
+		{
+			ChangedTile tile;
+			if (!changedTiles.TryGetValue((x << 16) | y, out tile))
+			{
+				tile = new ChangedTile(x, y);
+				changedTiles[(x << 16) | y] = tile;
+			}
+			Logging.ProgramLog.Debug.Log("{0}, {1} SetCheckingLiquid = {2}", x, y, val);
+			tile.data.CheckingLiquid = val;
+		}
+
+		public bool CheckingLiquid(int x, int y)
+		{
+			ChangedTile tile;
+			if (changedTiles.TryGetValue((x << 16) | y, out tile))
+				return tile.data.CheckingLiquid;
+			return Main.tile.At(x, y).CheckingLiquid;
+		}
+
+		public void AddLiquid(int x, int y, int val)
+		{
+
+		}
+
+		public void AddFrameX(int x, int y, int val)
+		{
+
+		}
+
+		public void AddFrameY(int x, int y, int val)
+		{
+
 		}
 	}
 		
@@ -456,7 +575,7 @@ namespace Terraria_Server.WorldMod
 			return Main.tile.At(x, y).Wall;
 		}
 		
-		public byte LiquidAt (int x, int y)
+		public byte Liquid (int x, int y)
 		{
 			ChangedTile tile;
 			if (changedTiles.TryGetValue((x << 16) | y, out tile))
@@ -567,7 +686,7 @@ namespace Terraria_Server.WorldMod
 			tile.data.Wall = val;
 		}
 		
-		public void SetLiquidAt (int x, int y, byte val)
+		public void SetLiquid (int x, int y, byte val)
 		{
 			var tile = Change (x, y);
 			tile.data.Liquid = val;
@@ -589,6 +708,64 @@ namespace Terraria_Server.WorldMod
 		{
 			var tile = Change (x, y);
 			tile.data.FrameY = val;
+		}
+
+
+		public bool Wire(int x, int y)
+		{
+			ChangedTile tile;
+			if (changedTiles.TryGetValue((x << 16) | y, out tile))
+				return tile.data.Wire;
+			return Main.tile.At(x, y).Wire;
+		}
+
+		public void SetWire(int x, int y, bool val)
+		{
+			var tile = Change(x, y);
+			tile.data.Wire = val;
+		}
+
+		public void SetSkipLiquid(int x, int y, bool val)
+		{
+			var tile = Change(x, y);
+			tile.data.SkipLiquid = val;
+		}
+
+		public bool SkipLiquid(int x, int y)
+		{
+			ChangedTile tile;
+			if (changedTiles.TryGetValue((x << 16) | y, out tile))
+				return tile.data.SkipLiquid;
+			return Main.tile.At(x, y).SkipLiquid;
+		}
+
+		public void SetCheckingLiquid(int x, int y, bool val)
+		{
+			var tile = Change(x, y);
+			tile.data.CheckingLiquid = val;
+		}
+
+		public bool CheckingLiquid(int x, int y)
+		{
+			ChangedTile tile;
+			if (changedTiles.TryGetValue((x << 16) | y, out tile))
+				return tile.data.CheckingLiquid;
+			return Main.tile.At(x, y).CheckingLiquid;
+		}
+
+		public void AddLiquid(int x, int y, int val)
+		{
+
+		}
+
+		public void AddFrameX(int x, int y, int val)
+		{
+
+		}
+
+		public void AddFrameY(int x, int y, int val)
+		{
+
 		}
 	}
 }

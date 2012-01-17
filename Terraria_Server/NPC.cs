@@ -8101,12 +8101,12 @@ namespace Terraria_Server
                             flag4 = true;
                             npc.ai[1] = 10f;
                         }
-                        WorldModify.KillTile(tileX, tileY - 1, true, false, false);
+						WorldModify.KillTile(tileX, tileY - 1, null, true);
                         if (flag4)
                         {
                             if (npc.Type == 26)
                             {
-                                WorldModify.KillTile(tileX, tileY - 1, false, false, false);
+                                WorldModify.KillTile(tileX, tileY - 1);
                                 NetMessage.SendData(17, -1, -1, "", 0, (float)tileX, (float)(tileY - 1), 0f, 0);
                                 return;
                             }
@@ -9128,7 +9128,7 @@ namespace Terraria_Server
                             flag7 = true;
                             if (Main.rand.Next(40) == 0 && Main.tile.At(m, n).Active)
                             {
-                                WorldModify.KillTile(m, n, true, true, false);
+								WorldModify.KillTile(m, n, null, true, true);
                             }
                             //if (Main.tile.At(m, n).Type == 2)
                             //{

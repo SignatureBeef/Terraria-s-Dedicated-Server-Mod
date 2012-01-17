@@ -551,7 +551,7 @@ namespace Terraria_Server
                                     var plr = Creator as Player;
                                     if (plr == null || WorldModify.InvokeAlterationHook(this, plr, i, j, 0))
                                     {
-                                        WorldModify.KillTile(i, j, false, false, false);
+                                        WorldModify.KillTile(i, j);
                                         NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
                                     }
                                 }
@@ -1775,7 +1775,7 @@ namespace Terraria_Server
                                         var plr = Creator as Player;
                                         if (plr == null || WorldModify.InvokeAlterationHook(this, plr, n, num22, 0))
                                         {
-                                            WorldModify.KillTile(n, num22, true, true, false);
+											WorldModify.KillTile(n, num22, null, true, true);
                                         }
                                         this.Velocity.X = 0f;
                                         this.Velocity.Y = 0f;
@@ -2806,7 +2806,7 @@ namespace Terraria_Server
                             this.ai[0] -= 1f;
                             if (this.ai[0] <= -300f && (Main.myPlayer == this.Owner) && Main.tile.At(num137, num138).Active && Main.tile.At(num137, num138).Type == 127)
                             {
-                                WorldModify.KillTile(num137, num138, false, false, false);
+                                WorldModify.KillTile(num137, num138);
                                 NetMessage.SendData(17, -1, -1, "", 0, (float)num137, (float)num138, 0f, 0);
                                 this.Kill();
                                 return;
@@ -3147,7 +3147,7 @@ namespace Terraria_Server
                         }
                         if (Main.tile.At(num16, num17).Type == 127 && Main.tile.At(num16, num17).Active)
                         {
-                            WorldModify.KillTile(num16, num17, false, false, false);
+                            WorldModify.KillTile(num16, num17);
                         }
                     }
                     break;
@@ -3321,12 +3321,12 @@ namespace Terraria_Server
 									{
 										if (alter == 0 || alter == 100)
 										{
-											WorldModify.KillTile(num89, num90, false, false, false);
+											WorldModify.KillTile(num89, num90);
 											NetMessage.SendData(17, -1, -1, "", 0, (float)num89, (float)num90, 0f, 0);
 										}
 										if (alter == 2 || alter == 100)
 										{
-											WorldModify.KillWall(num89, num90, false);
+											WorldModify.KillWall(num89, num90);
 											NetMessage.SendData(17, -1, -1, "", 2, (float)num89, (float)num90, 0f, 0);
 										}
 									}

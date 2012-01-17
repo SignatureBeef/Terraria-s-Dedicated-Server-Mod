@@ -918,7 +918,7 @@ namespace Terraria_Server
                     Main.tile.At(x, y).SetActive (false);
                     return;
                 }
-                WorldModify.KillTile(x, y, false, false, false);
+                WorldModify.KillTile(x, y);
                 NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
             }
         }
