@@ -6329,7 +6329,7 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 
-		public static void KillTile(int i, int j, Func<Int32, Int32, TRef> TileRef, bool fail = false, bool effectOnly = false, bool noItem = false)
+		public static void KillTile(int i, int j, Func<Int32, Int32, SandboxEditor<TBox>.TRef> TileRef, bool fail = false, bool effectOnly = false, bool noItem = false)
 		{
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
 			{

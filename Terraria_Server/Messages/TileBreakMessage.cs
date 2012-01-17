@@ -16,8 +16,7 @@ namespace Terraria_Server.Messages
         {
             return Packet.TILE_BREAK;
         }
-		
-		
+				
 		static SandboxEditor<PlayerSandbox> staticEditor = new SandboxEditor<PlayerSandbox> (new PlayerSandbox ());
 		
         public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
