@@ -101,7 +101,6 @@ namespace Terraria_Server.WorldMod
 				this.y = (short)y;
 			}
 
-			bool ITile.Active { get { return editor.sandbox.ActiveAt(x, y); } }
 			public bool Active { get { return editor.sandbox.ActiveAt(x, y); } }
 			public void SetActive(bool val)
 			{
