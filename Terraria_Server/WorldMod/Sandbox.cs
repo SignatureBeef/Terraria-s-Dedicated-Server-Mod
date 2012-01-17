@@ -162,6 +162,12 @@ namespace Terraria_Server.WorldMod
 		{
 
 		}
+
+
+		public bool Exists(int x, int y)
+		{
+			return Main.tile.At(x, y).Exists;
+		}
 	}
 	
 	public struct TestSandbox : ISandbox
@@ -471,6 +477,12 @@ namespace Terraria_Server.WorldMod
 		{
 
 		}
+
+
+		public bool Exists(int x, int y)
+		{
+			return changedTiles.ContainsKey((x << 16) | y);
+		}
 	}
 		
 	public struct BBSandbox : ISandbox
@@ -766,6 +778,12 @@ namespace Terraria_Server.WorldMod
 		public void AddFrameY(int x, int y, int val)
 		{
 
+		}
+
+
+		public bool Exists(int x, int y)
+		{
+			return changedTiles.ContainsKey((x << 16) | y);
 		}
 	}
 }

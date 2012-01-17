@@ -1190,8 +1190,11 @@ namespace Terraria_Server
 		/// Updates specified item's condition
 		/// </summary>
 		/// <param name="i">Item index</param>
-		public void UpdateItem(int i)
+		public void UpdateItem(Func<Int32, Int32, ITile> TileRefs, int i)
 		{
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
 			if (this.Active)
 			{
 				float addVelocity = 0.1f;
@@ -1274,7 +1277,7 @@ namespace Terraria_Server
                                     if (Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
                                     {
                                         NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
-                                        NPC.SpawnWallOfFlesh(Position);
+										NPC.SpawnWallOfFlesh(TileRefs, Position);
                                     }
 								}
 							}

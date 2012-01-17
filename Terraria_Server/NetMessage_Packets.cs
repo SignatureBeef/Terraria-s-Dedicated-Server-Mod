@@ -801,7 +801,7 @@ namespace Terraria_Server
 		
 		public void KillTile ()
 		{
-			throw new NotImplementedException ("NetMessage.KillTile()");
+			throw new NotImplementedException ("NetMessage.KillTile(TileRefs, )");
 		}
 		
 		public void HealPlayer (int playerId, int amount)

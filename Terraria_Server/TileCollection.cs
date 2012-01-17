@@ -28,7 +28,7 @@ namespace Terraria_Server
 			return new TileRef(x, y);
 		}
 
-		public ITile ITileAt(int x, int y)
+		public static ITile ITileAt(int x, int y)
 		{
 			return new TileRef(x, y);
 		}

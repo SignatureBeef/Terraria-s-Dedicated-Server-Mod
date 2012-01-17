@@ -29,7 +29,7 @@ namespace Terraria_Server.Messages
 				return;
 			}
 
-			WorldModify.MoveRoom((int)homeTileX, (int)homeTileY, (int)npcId);
+			WorldModify.MoveRoom(null, (int)homeTileX, (int)homeTileY, (int)npcId);
 		}
 	}
 }

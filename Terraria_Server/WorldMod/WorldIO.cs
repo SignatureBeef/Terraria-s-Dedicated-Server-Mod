@@ -31,7 +31,7 @@ namespace Terraria_Server.WorldMod
 
         public static void SaveWorldCallback(object threadContext)
         {
-            saveWorld(Server.World.SavePath, false);
+            saveWorld(null, Server.World.SavePath, false);
         }
 
         public static void SaveWorldThreaded()
@@ -173,8 +173,11 @@ namespace Terraria_Server.WorldMod
 			worldCleared = true;
 		}
 
-        public static bool saveWorld(string savePath, bool resetTime = false)
+		public static bool saveWorld(Func<Int32, Int32, ITile> TileRefs, string savePath, bool resetTime = false)
 		{
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
             bool success = true;
 
 			if (savePath == null)
@@ -262,15 +265,15 @@ namespace Terraria_Server.WorldMod
 
 									for (int y = 0; y < Main.maxTilesY; y++)
 									{
-										if (Main.tile.At(x, y).Type == 127 && Main.tile.At(x, y).Active)
+										if (TileRefs(x, y).Type == 127 && TileRefs(x, y).Active)
 										{
-											WorldModify.KillTile(x, y);
-											WorldModify.KillTile(x, y);
-											if (!Main.tile.At(x, y).Active)
+											WorldModify.KillTile(TileRefs, x, y);
+											WorldModify.KillTile(TileRefs, x, y);
+											if (!TileRefs(x, y).Active)
 												NetMessage.SendData(17, -1, -1, String.Empty, 0, (float)x, (float)y);
 										}
 
-										TileRef tile = Main.tile.At(x, y); //.FieldwiseClone();
+										var tile = TileRefs(x, y); //.FieldwiseClone();
 										binaryWriter.Write(tile.Active);
 										if (tile.Active)
 										{
@@ -283,7 +286,7 @@ namespace Terraria_Server.WorldMod
 										}
 
 										//binaryWriter.Write(tile.Lighted);
-										if (Main.tile.At(x, y).Wall > 0)
+										if (TileRefs(x, y).Wall > 0)
 										{
 											binaryWriter.Write(true);
 											binaryWriter.Write(tile.Wall);
@@ -305,7 +308,7 @@ namespace Terraria_Server.WorldMod
 										}
                                         binaryWriter.Write(tile.Wire);
                                         int num2 = 1;
-                                        while (y + num2 < Main.maxTilesY && tile.Equals(Main.tile.At(x, y + num2)))
+                                        while (y + num2 < Main.maxTilesY && tile.Equals(TileRefs(x, y + num2)))
                                         {
                                             num2++;
                                         }
@@ -447,8 +450,11 @@ namespace Terraria_Server.WorldMod
 			return success;
 		}
 
-		public static void LoadWorld (string LoadPath)
+		public static void LoadWorld (Func<Int32, Int32, ITile> TileRefs, string LoadPath)
 		{
+			if(TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
 			using (FileStream fileStream = new FileStream(LoadPath, FileMode.Open))
 			{
 				using (BinaryReader binaryReader = new BinaryReader(fileStream))
@@ -700,12 +706,12 @@ namespace Terraria_Server.WorldMod
                                 {
                                     float num10 = (float)num9 / (float)Main.maxTilesX;
                                     WorldModify.statusText = "Checking tile alignment: " + (int)(num10 * 100f + 1f) + "%";
-                                    WorldModify.CountTiles(num9);
+									WorldModify.CountTiles(TileRefs, num9);
                                 }
 								WorldModify.waterLine = Main.maxTilesY;
                                 NPC.SetNames();
-								Liquid.QuickWater(2, -1, -1);
-								WorldModify.WaterCheck();
+								Liquid.QuickWater(TileRefs, 2, -1, -1);
+								WorldModify.WaterCheck(TileRefs);
 								int num11 = 0;
 								Liquid.quickSettle = true;
 								int num12 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
@@ -731,12 +737,12 @@ namespace Terraria_Server.WorldMod
 
 										prog.Value = (int)(num14 * 50f + 50f);
 
-										Liquid.UpdateLiquid();
+										Liquid.UpdateLiquid(TileRefs);
 									}
 								Liquid.quickSettle = false;
 
 								ProgramLog.Log("Performing Water Check");
-								WorldModify.WaterCheck();
+								WorldModify.WaterCheck(TileRefs);
 								WorldModify.gen = false;
 							}
 						}

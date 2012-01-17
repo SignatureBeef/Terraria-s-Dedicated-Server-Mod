@@ -67,7 +67,7 @@ namespace Terraria_Server.WorldMod
 				{
 					case SideEffectType.ADD_WATER:
 					{
-						Terraria_Server.Liquid.AddWater (eff.X, eff.Y);
+						Terraria_Server.Liquid.AddWater (null, eff.X, eff.Y); //Applying => Normal Tile References
 						break;
 					}
 					
@@ -563,6 +563,11 @@ namespace Terraria_Server.WorldMod
 		{
 			var idx = Change(x, y);
 			tiles[idx].FrameY = (byte)(tiles[idx].FrameY + val);
+		}
+
+		public bool Exists(int x, int y)
+		{
+			return changedTiles.ContainsKey((uint)(x << 16) | (uint)y);
 		}
 	}
 }

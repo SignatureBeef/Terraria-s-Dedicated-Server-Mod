@@ -537,9 +537,12 @@ namespace Terraria_Server
             }
             return result;
         }
-        
-        public static void HitTiles(Vector2 Position, Vector2 Velocity, int Width, int Height)
+
+		public static void HitTiles(Func<Int32, Int32, ITile> TileRefs, Vector2 Position, Vector2 Velocity, int Width, int Height)
         {
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
             Vector2 nextPos = Position + Velocity;
             int left = (int)(Position.X / 16f) - 1;
             int right = (int)((Position.X + (float)Width) / 16f) + 2;
@@ -565,22 +568,25 @@ namespace Terraria_Server
             {
                 for (int j = top; j < bottom; j++)
                 {
-                    if (Main.tile.At(i, j).Active && (Main.tileSolid[(int)Main.tile.At(i, j).Type] || (Main.tileSolidTop[(int)Main.tile.At(i, j).Type] && Main.tile.At(i, j).FrameY == 0)))
+                    if (TileRefs(i, j).Active && (Main.tileSolid[(int)TileRefs(i, j).Type] || (Main.tileSolidTop[(int)TileRefs(i, j).Type] && TileRefs(i, j).FrameY == 0)))
                     {
                         Vector2 vector2;
                         vector2.X = (float)(i * 16);
                         vector2.Y = (float)(j * 16);
                         if (nextPos.X + (float)Width >= vector2.X && nextPos.X <= vector2.X + 16f && nextPos.Y + (float)Height >= vector2.Y && nextPos.Y <= vector2.Y + 16f)
                         {
-							WorldModify.KillTile(i, j, null, true, true);
+							WorldModify.KillTile(TileRefs, i, j, true, true);
                         }
                     }
                 }
             }
         }
 
-        public static Vector2 HurtTiles(Vector2 Position, Vector2 Velocity, int Width, int Height, bool fireImmune = false)
+        public static Vector2 HurtTiles(Func<Int32, Int32, ITile> TileRefs, Vector2 Position, Vector2 Velocity, int Width, int Height, bool fireImmune = false)
         {
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
             int left = (int)(Position.X / 16f) - 1;
             int right = (int)((Position.X + (float)Width) / 16f) + 2;
             int top = (int)(Position.Y / 16f) - 1;
@@ -605,13 +611,13 @@ namespace Terraria_Server
             {
                 for (int j = top; j < bottom; j++)
                 {
-                    if (Main.tile.At(i, j).Active && (Main.tile.At(i, j).Type == 32 || Main.tile.At(i, j).Type == 37 || Main.tile.At(i, j).Type == 48 || Main.tile.At(i, j).Type == 53 || Main.tile.At(i, j).Type == 57 || Main.tile.At(i, j).Type == 58 || Main.tile.At(i, j).Type == 59 || Main.tile.At(i, j).Type == 69 || Main.tile.At(i, j).Type == 76 || Main.tile.At(i, j).Type == 80))
+                    if (TileRefs(i, j).Active && (TileRefs(i, j).Type == 32 || TileRefs(i, j).Type == 37 || TileRefs(i, j).Type == 48 || TileRefs(i, j).Type == 53 || TileRefs(i, j).Type == 57 || TileRefs(i, j).Type == 58 || TileRefs(i, j).Type == 59 || TileRefs(i, j).Type == 69 || TileRefs(i, j).Type == 76 || TileRefs(i, j).Type == 80))
                     {
                         Vector2 vector2;
                         vector2.X = (float)(i * 16);
                         vector2.Y = (float)(j * 16);
                         int Y = 0;
-                        int type = (int)Main.tile.At(i, j).Type;
+                        int type = (int)TileRefs(i, j).Type;
                         if (type == 32 || type == 69 || type == 80)
                         {
                             if (Position.X + (float)Width > vector2.X && Position.X < vector2.X + 16f && Position.Y + (float)Height > vector2.Y && (double)Position.Y < (double)vector2.Y + 16.01)
@@ -626,7 +632,7 @@ namespace Terraria_Server
 								else if (type == 80)
                                     Y = 6;
 								if (type == 32 || type == 69)
-                                    WorldModify.KillTile(i, j);								
+                                    WorldModify.KillTile(TileRefs, i, j);								
 
                                 return new Vector2((float)directionX, (float)Y);
                             }
@@ -735,8 +741,11 @@ namespace Terraria_Server
             return false;
         }
 
-		public static bool SwitchTiles(Vector2 Position, int Width, int Height, Vector2 oldPosition, ISender Sender)
+		public static bool SwitchTiles(Func<Int32, Int32, ITile> TileRefs, Vector2 Position, int Width, int Height, Vector2 oldPosition, ISender Sender)
         {
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
             int num = (int)(Position.X / 16f) - 1;
             int num2 = (int)((Position.X + (float)Width) / 16f) + 2;
             int num3 = (int)(Position.Y / 16f) - 1;
@@ -758,7 +767,7 @@ namespace Terraria_Server
             {
                 for (int y = num3; y < num4; y++)
                 {
-                    if (Main.tile.At(x, y).Active && Main.tile.At(x, y).Type == 135)
+                    if (TileRefs(x, y).Active && TileRefs(x, y).Type == 135)
                     {
                         Vector2 vector;
                         vector.X = (float)(x * 16);
@@ -768,7 +777,7 @@ namespace Terraria_Server
 							(float)Width <= vector.X || oldPosition.X >= vector.X + 16f || oldPosition.Y + 
 							(float)Height <= vector.Y || (double)oldPosition.Y >= (double)vector.Y + 16.01))
                         {
-                            WorldModify.hitSwitch(x, y, Sender);
+                            WorldModify.hitSwitch(TileRefs, x, y, Sender);
                             NetMessage.SendData(59, -1, -1, "", x, (float)y, 0f, 0f, 0);
                             return true;
                         }

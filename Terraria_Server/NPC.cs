@@ -849,19 +849,19 @@ namespace Terraria_Server
                                         flag3 = true;
                                         npc.ai[1] = 10f;
                                     }
-                                    WorldModify.KillTile(num4, num5 - 1, true, false, false);
+                                    WorldModify.KillTile(TileRefs, num4, num5 - 1, true, false, false);
                                     if (flag3)
                                     {
                                         if (npc.type == NPCType.N26_GOBLIN_PEON)
                                         {
-                                            WorldModify.KillTile(num4, num5 - 1, false, false, false);
+                                            WorldModify.KillTile(TileRefs, num4, num5 - 1, false, false, false);
 
                                             NetMessage.SendData(17, -1, -1, "", 0, (float)num4, (float)(num5 - 1), 0f, 0);
                                             return;
                                         }
                                         else
                                         {
-                                            bool flag4 = WorldModify.OpenDoor(num4, num5, npc.direction, npc.closeDoor, DoorOpener.NPC);
+                                            bool flag4 = WorldModify.OpenDoor(TileRefs, num4, num5, npc.direction, npc.closeDoor, DoorOpener.NPC);
                                             if (!flag4)
                                             {
                                                 npc.ai[3] = (float)num3;
@@ -1727,7 +1727,7 @@ namespace Terraria_Server
                                                         flag6 = true;
                                                         if (Main.rand.Next(40) == 0 && Main.tile.At(m, n).Active)
                                                         {
-                                                            WorldModify.KillTile(m, n, true, true, false);
+                                                            WorldModify.KillTile(TileRefs, m, n, true, true, false);
                                                         }
                                                         if (Main.tile.At(m, n).Type == 2)
                                                         {
@@ -2192,7 +2192,7 @@ namespace Terraria_Server
                                                     }
                                                     if (npc.closeDoor && ((npc.Position.X + (float)(npc.Width / 2)) / 16f > (float)(npc.doorX + 2) || (npc.Position.X + (float)(npc.Width / 2)) / 16f < (float)(npc.doorX - 2)))
                                                     {
-                                                        bool flag9 = WorldModify.CloseDoor(npc.doorX, npc.doorY, false, DoorOpener.NPC);
+                                                        bool flag9 = WorldModify.CloseDoor(TileRefs, npc.doorX, npc.doorY, false, DoorOpener.NPC);
                                                         if (flag9)
                                                         {
                                                             npc.closeDoor = false;
@@ -2243,7 +2243,7 @@ namespace Terraria_Server
                                                         int num69 = (int)((npc.Position.Y + (float)npc.Height - 16f) / 16f);
                                                         if (npc.townNPC && Main.tile.At(num68, num69 - 2).Active && Main.tile.At(num68, num69 - 2).Type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                                                         {
-                                                            bool flag10 = WorldModify.OpenDoor(num68, num69 - 2, npc.direction, npc.closeDoor, DoorOpener.NPC);
+                                                            bool flag10 = WorldModify.OpenDoor(TileRefs, num68, num69 - 2, npc.direction, npc.closeDoor, DoorOpener.NPC);
                                                             if (flag10)
                                                             {
                                                                 npc.closeDoor = true;
@@ -2254,7 +2254,7 @@ namespace Terraria_Server
                                                                 npc.ai[1] += 80f;
                                                                 return;
                                                             }
-                                                            if (WorldModify.OpenDoor(num68, num69 - 2, -npc.direction, npc.closeDoor, DoorOpener.NPC))
+                                                            if (WorldModify.OpenDoor(TileRefs, num68, num69 - 2, -npc.direction, npc.closeDoor, DoorOpener.NPC))
                                                             {
                                                                 npc.closeDoor = true;
                                                                 npc.doorX = num68;
@@ -4108,7 +4108,7 @@ namespace Terraria_Server
                 }
 
                 // Perform AI
-                AIFunctions[aiStyle](npc, flag);
+				AIFunctions[aiStyle](npc, flag, TileCollection.ITileAt); //standard tile refs
             }
             else
             {
@@ -6575,7 +6575,7 @@ namespace Terraria_Server
 //                    {
 //                        Main.tile.At(num5, num6).SetLiquid(200);
 //                    }
-//                    WorldModify.TileFrame(num5, num6, false, false);
+//                    WorldModify.TileFrame(TileRefs, num5, num6, false, false);
 //                    return;
 //                }
 //            }
@@ -6965,7 +6965,7 @@ namespace Terraria_Server
                     npc.oldPosition = npc.Position;
                     npc.Position += npc.Velocity;
                 }
-				if (!npc.noTileCollide && npc.lifeMax > 1 && Collision.SwitchTiles(npc.Position, npc.Width, npc.Height, npc.oldPosition, npc) && npc.type == NPCType.N46_BUNNY)
+				if (!npc.noTileCollide && npc.lifeMax > 1 && Collision.SwitchTiles(null, npc.Position, npc.Width, npc.Height, npc.oldPosition, npc) && npc.type == NPCType.N46_BUNNY)
 				{
 					npc.ai[0] = 1f;
 					npc.ai[1] = 400f;
@@ -7477,7 +7477,7 @@ namespace Terraria_Server
 
         //AI Stuff
 
-        private delegate void AIFunction(NPC npc, bool flag);
+		private delegate void AIFunction(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs);
 
         private static Dictionary<int, AIFunction> AIFunctions = new Dictionary<int, AIFunction>();
 
@@ -7534,7 +7534,7 @@ namespace Terraria_Server
         }
 
         // 0
-        private void AIUnknown(NPC npc, bool flag)
+		private void AIUnknown(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             npc.Velocity.X = npc.Velocity.X * 0.93f;
             if ((double)npc.Velocity.X > -0.1 && (double)npc.Velocity.X < 0.1)
@@ -7545,7 +7545,7 @@ namespace Terraria_Server
         }
 
         // 1
-        private void AISlime(NPC npc, bool flagg)
+		private void AISlime(NPC npc, bool flagg, Func<Int32, Int32, ITile> TileRefs)
         {
             bool flag = (!Main.dayTime) || (npc.life != npc.lifeMax) || (npc.Position.Y > Main.worldSurface * 16.0) || (npc.Type == 81);
             
@@ -7719,7 +7719,7 @@ namespace Terraria_Server
         }
 
         // 2
-        private void AIDemonEye(NPC npc, bool flag)
+		private void AIDemonEye(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             npc.noGravity = true;
             if (npc.collideX)
@@ -7866,7 +7866,7 @@ namespace Terraria_Server
         }
 
         // 3
-        private void AIFighter(NPC npc, bool flag)
+		private void AIFighter(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             int num3 = 60;
             bool flag2 = false;
@@ -8101,18 +8101,18 @@ namespace Terraria_Server
                             flag4 = true;
                             npc.ai[1] = 10f;
                         }
-						WorldModify.KillTile(tileX, tileY - 1, null, true);
+						WorldModify.KillTile(TileRefs, tileX, tileY - 1, true);
                         if (flag4)
                         {
                             if (npc.Type == 26)
                             {
-                                WorldModify.KillTile(tileX, tileY - 1);
+                                WorldModify.KillTile(TileRefs, tileX, tileY - 1);
                                 NetMessage.SendData(17, -1, -1, "", 0, (float)tileX, (float)(tileY - 1), 0f, 0);
                                 return;
                             }
                             else
                             {
-                                bool flag5 = WorldModify.OpenDoor(tileX, tileY, npc.direction, npc);
+                                bool flag5 = WorldModify.OpenDoor(TileRefs, tileX, tileY, npc.direction, npc);
                                 if (!flag5)
                                 {
                                     npc.ai[3] = (float)num3;
@@ -8195,7 +8195,7 @@ namespace Terraria_Server
         }
 
         // 4
-        private void AIEoC(NPC npc, bool flag)
+		private void AIEoC(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             if (npc.target < 0 || npc.target == 255 || Main.players[npc.target].dead || !Main.players[npc.target].Active)
             {
@@ -8616,7 +8616,7 @@ namespace Terraria_Server
         }
 
         // 5
-        private void AIFlyDirect(NPC npc, bool flag)
+		private void AIFlyDirect(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             if (npc.target < 0 || npc.target == 255 || Main.players[npc.target].dead)
             {
@@ -8956,7 +8956,7 @@ namespace Terraria_Server
 		}
 
         // 6
-        private void AIWorm(NPC npc, bool flag)
+		private void AIWorm(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             if (npc.target < 0 || npc.target == 255 || Main.players[npc.target].dead)
             {
@@ -9128,7 +9128,7 @@ namespace Terraria_Server
                             flag7 = true;
                             if (Main.rand.Next(40) == 0 && Main.tile.At(m, n).Active)
                             {
-								WorldModify.KillTile(m, n, null, true, true);
+								WorldModify.KillTile(TileRefs, m, n, true, true);
                             }
                             //if (Main.tile.At(m, n).Type == 2)
                             //{
@@ -9376,7 +9376,7 @@ namespace Terraria_Server
         }
 
         // 7
-        private void AIFriendly(NPC npc, bool flag)
+        private void AIFriendly(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             int num75 = (int)(npc.Position.X + (float)(npc.Width / 2)) / 16;
             int num76 = (int)(npc.Position.Y + (float)npc.Height + 1f) / 16;
@@ -9474,7 +9474,7 @@ namespace Terraria_Server
                     else
                     {
                         npc.homeless = true;
-                        WorldModify.QuickFindHome(npc.whoAmI);
+						WorldModify.QuickFindHome(TileRefs, npc.whoAmI);
                     }
                 }
             }
@@ -9636,7 +9636,7 @@ namespace Terraria_Server
                     }
                     if (npc.closeDoor && ((npc.Position.X + (float)(npc.Width / 2)) / 16f > (float)(npc.doorX + 2) || (npc.Position.X + (float)(npc.Width / 2)) / 16f < (float)(npc.doorX - 2)))
                     {
-                        bool flag12 = WorldModify.CloseDoor(npc.doorX, npc.doorY, false, npc);
+                        bool flag12 = WorldModify.CloseDoor(TileRefs, npc.doorX, npc.doorY, false, npc);
                         if (flag12)
                         {
                             npc.closeDoor = false;
@@ -9688,7 +9688,7 @@ namespace Terraria_Server
 
                         if (npc.townNPC && Main.tile.At(num80, num81 - 2).Active && Main.tile.At(num80, num81 - 2).Type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                         {
-                            bool flag13 = WorldModify.OpenDoor(num80, num81 - 2, npc.direction, npc);
+                            bool flag13 = WorldModify.OpenDoor(TileRefs, num80, num81 - 2, npc.direction, npc);
                             if (flag13)
                             {
                                 npc.closeDoor = true;
@@ -9699,7 +9699,7 @@ namespace Terraria_Server
                                 npc.ai[1] += 80f;
                                 return;
                             }
-                            if (WorldModify.OpenDoor(num80, num81 - 2, -npc.direction, npc))
+                            if (WorldModify.OpenDoor(TileRefs, num80, num81 - 2, -npc.direction, npc))
                             {
                                 npc.closeDoor = true;
                                 npc.doorX = num80;
@@ -9815,7 +9815,7 @@ namespace Terraria_Server
         }
 
         // 8
-        private void AIWizard(NPC npc, bool flag)
+		private void AIWizard(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             npc.TargetClosest(true);
             npc.Velocity.X = npc.Velocity.X * 0.93f;
@@ -9943,7 +9943,7 @@ namespace Terraria_Server
         }
 
         // 9
-        private void AISphere(NPC npc, bool flag)
+		private void AISphere(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             if (npc.target == 255)
             {
@@ -9970,7 +9970,7 @@ namespace Terraria_Server
         }
 
         // 10
-        private void AICursedSkull(NPC npc, bool flag)
+		private void AICursedSkull(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             float num110 = 1f;
             float num111 = 0.011f;
@@ -10082,7 +10082,7 @@ namespace Terraria_Server
         }
 
         // 11
-        private void AISkeletronHead(NPC npc, bool flag)
+		private void AISkeletronHead(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             if (npc.ai[0] == 0f)
             {
@@ -10244,7 +10244,7 @@ namespace Terraria_Server
         }
 
         // 12
-        private void AISkeletronHand(NPC npc, bool flag)
+		private void AISkeletronHand(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             npc.spriteDirection = -(int)npc.ai[0];
             if (!Main.npcs[(int)npc.ai[1]].Active || Main.npcs[(int)npc.ai[1]].aiStyle != 11)
@@ -10470,7 +10470,7 @@ namespace Terraria_Server
         }
 
         // 13
-        private void AIMunchyPlant(NPC npc, bool flag)
+		private void AIMunchyPlant(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             if (!Main.tile.At((int)npc.ai[0], (int)npc.ai[1]).Active)
             {
@@ -10621,7 +10621,7 @@ namespace Terraria_Server
         }
 
         // 14
-        private void AIFlyWinged(NPC npc, bool flag)
+		private void AIFlyWinged(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             npc.noGravity = true;
             if (npc.collideX)
@@ -11036,7 +11036,7 @@ namespace Terraria_Server
         }
 
         // 15
-        private void AIKingSlime(NPC npc, bool flag)
+		private void AIKingSlime(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             npc.aiAction = 0;
             if (npc.ai[3] == 0f && npc.life > 0)
@@ -11168,7 +11168,7 @@ namespace Terraria_Server
         }
 
         // 16
-        private void AIFish(NPC npc, bool flag)
+		private void AIFish(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             if (npc.direction == 0)
             {
@@ -11339,7 +11339,7 @@ namespace Terraria_Server
         }
 
         // 17
-        private void AIVulture(NPC npc, bool flag)
+		private void AIVulture(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             npc.noGravity = true;
             if (npc.ai[0] == 0f)
@@ -11482,7 +11482,7 @@ namespace Terraria_Server
         }
 
         // 18
-        private void AIJellyFish(NPC npc, bool flag)
+		private void AIJellyFish(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             if (npc.direction == 0)
             {
@@ -11614,7 +11614,7 @@ namespace Terraria_Server
         }
 
         // 19
-        private void AIAntlion(NPC npc, bool flag)
+		private void AIAntlion(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             npc.TargetClosest(true);
             float num174 = 12f;
@@ -11704,7 +11704,7 @@ namespace Terraria_Server
         }
 
         // 20
-        private void AISpikedBall(NPC npc, bool flag)
+		private void AISpikedBall(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             if (npc.ai[0] == 0f)
             {
@@ -11788,7 +11788,7 @@ namespace Terraria_Server
         }
 
         // 21
-        private void AIBlazingWheel(NPC npc, bool flag)
+		private void AIBlazingWheel(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
         {
             if (npc.ai[0] == 0f)
             {
@@ -11841,7 +11841,7 @@ namespace Terraria_Server
         }
 
 		// 22
-		private void AISlowDebuffFlying(NPC npc, bool flag)
+		private void AISlowDebuffFlying(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			bool flag25 = false;
 			if (npc.justHit)
@@ -12074,7 +12074,7 @@ namespace Terraria_Server
 		}
 
 		// 23
-		private void AITool(NPC npc, bool flag)
+		private void AITool(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			npc.noGravity = true;
 			npc.noTileCollide = true;
@@ -12140,7 +12140,7 @@ namespace Terraria_Server
 		}
 
 		// 24
-		private void AIBird(NPC npc, bool flag)
+		private void AIBird(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			npc.noGravity = true;
 			if (npc.ai[0] == 0f)
@@ -12256,7 +12256,7 @@ namespace Terraria_Server
 		}
 
 		// 25
-		private void AIMimic(NPC npc, bool flag)
+		private void AIMimic(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (npc.ai[3] == 0f)
 			{
@@ -12345,7 +12345,7 @@ namespace Terraria_Server
 		}
 
 		// 26
-		private void AIUnicorn(NPC npc, bool flag)
+		private void AIUnicorn(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			int num281 = 30;
 			bool flag32 = false;
@@ -12483,7 +12483,7 @@ namespace Terraria_Server
 		}
 
 		// 27
-		private void AIWallOfFlesh(NPC npc, bool flag)
+		private void AIWallOfFlesh(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (npc.Position.X < 160f || npc.Position.X > (float)((Main.maxTilesX - 10) * 16))
 				npc.Active = false;
@@ -12539,7 +12539,7 @@ namespace Terraria_Server
 				{
 					try
 					{
-						if (WorldModify.SolidTile(num292, tileY) || Main.tile.At(num292, tileY).Liquid > 0)
+						if (WorldModify.SolidTile(TileRefs, num292, tileY) || Main.tile.At(num292, tileY).Liquid > 0)
 							num290++;
 					}
 					catch
@@ -12575,7 +12575,7 @@ namespace Terraria_Server
 				{
 					try
 					{
-						if (WorldModify.SolidTile(tileX, tileY) || Main.tile.At(tileX, tileY).Liquid > 0)
+						if (WorldModify.SolidTile(TileRefs, tileX, tileY) || Main.tile.At(tileX, tileY).Liquid > 0)
 						{
 							num290++;
 						}
@@ -12688,7 +12688,7 @@ namespace Terraria_Server
 		}
 
 		// 28
-		private void AIWallOfFlesh_Eye(NPC npc, bool flag)
+		private void AIWallOfFlesh_Eye(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (Main.WallOfFlesh < 0)
 			{
@@ -12844,7 +12844,7 @@ namespace Terraria_Server
 		}
 
 		// 29
-		private void AITheHungry(NPC npc, bool flag)
+		private void AITheHungry(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (npc.justHit)
 				npc.ai[1] = 10f;
@@ -12961,7 +12961,7 @@ namespace Terraria_Server
 		}
 
 		// 30
-		private void AIRetinazer(NPC npc, bool flag)
+		private void AIRetinazer(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (npc.target < 0 || npc.target == 255 || Main.players[npc.target].dead || !Main.players[npc.target].Active)
 			{
@@ -13455,7 +13455,7 @@ namespace Terraria_Server
 		}
 
 		// 31
-		private void AISpazmatism(NPC npc, bool flag)
+		private void AISpazmatism(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (npc.target < 0 || npc.target == 255 || Main.players[npc.target].dead || !Main.players[npc.target].Active)
 			{
@@ -13877,7 +13877,7 @@ namespace Terraria_Server
 		}
 
 		// 32
-		private void AISkeletronPrime(NPC npc, bool flag)
+		private void AISkeletronPrime(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			npc.damage = npc.defDamage;
 			npc.defense = npc.defDefense;
@@ -14045,7 +14045,7 @@ namespace Terraria_Server
 		}
 
 		// 33
-		private void AIPrimeSaw(NPC npc, bool flag)
+		private void AIPrimeSaw(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			Vector2 vector42 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
 			float num395 = Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) - 200f * npc.ai[0] - vector42.X;
@@ -14370,7 +14370,7 @@ namespace Terraria_Server
 		}
 
 		// 34
-		private void AIPrimeVice(NPC npc, bool flag)
+		private void AIPrimeVice(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			npc.spriteDirection = -(int)npc.ai[0];
 			Vector2 vector47 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
@@ -14669,7 +14669,7 @@ namespace Terraria_Server
 		}
 
 		// 35
-		private void AIPrimeCannon(NPC npc, bool flag)
+		private void AIPrimeCannon(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			npc.spriteDirection = -(int)npc.ai[0];
 			if (!Main.npcs[(int)npc.ai[1]].Active || Main.npcs[(int)npc.ai[1]].aiStyle != 32)
@@ -14904,7 +14904,7 @@ namespace Terraria_Server
 		}
 
 		// 36
-		private void AIPrimeLaser(NPC npc, bool flag)
+		private void AIPrimeLaser(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			npc.spriteDirection = -(int)npc.ai[0];
 			if (!Main.npcs[(int)npc.ai[1]].Active || Main.npcs[(int)npc.ai[1]].aiStyle != 32)
@@ -15137,7 +15137,7 @@ namespace Terraria_Server
 		}
 
 		// 37
-		private void AITheDestroyer(NPC npc, bool flag)
+		private void AITheDestroyer(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (npc.ai[3] > 0f)
 			{
@@ -15650,8 +15650,11 @@ namespace Terraria_Server
         /// Server Only
         /// </summary>
         /// <param name="pos"></param>
-        public static void SpawnWallOfFlesh(Vector2 pos)
+        public static void SpawnWallOfFlesh(Func<Int32, Int32, ITile> TileRefs, Vector2 pos)
         {
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
             if (pos.Y / 16f < (float)(Main.maxTilesY - 205))
                 return;
 
@@ -15690,9 +15693,9 @@ namespace Terraria_Server
             int nextY = 0;
             try
             {
-                while (WorldModify.SolidTile(posX, tileY - nextY) || Main.tile.At(posX, tileY - nextY).Liquid >= 100)
+                while (WorldModify.SolidTile(TileRefs, posX, tileY - nextY) || TileRefs(posX, tileY - nextY).Liquid >= 100)
                 {
-                    if (!WorldModify.SolidTile(posX, tileY + nextY) && Main.tile.At(posX, tileY + nextY).Liquid < 100)
+                    if (!WorldModify.SolidTile(TileRefs, posX, tileY + nextY) && TileRefs(posX, tileY + nextY).Liquid < 100)
                     {
                         tileY += nextY;
                         posY = tileY * 16;

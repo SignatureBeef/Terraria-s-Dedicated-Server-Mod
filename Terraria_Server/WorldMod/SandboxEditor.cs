@@ -23,6 +23,7 @@ namespace Terraria_Server.WorldMod
 		bool ActiveAt(int x, int y);
 		bool LitAt(int x, int y);
 		bool LavaAt(int x, int y);
+		bool Exists(int x, int y);
 
 		byte TypeAt(int x, int y);
 		byte WallAt(int x, int y);
@@ -185,6 +186,14 @@ namespace Terraria_Server.WorldMod
 			{
 				editor.sandbox.AddFrameY(x, y, val);
 			}
+
+			public bool Exists
+			{
+				get
+				{
+					return editor.sandbox.Exists(x, y);
+				}
+			}
 		}
 
 		private const int RECTANGLE_OFFSET = 25;
@@ -217,6 +226,11 @@ namespace Terraria_Server.WorldMod
 			return new TRef(this, x, y);
 		}
 
+		public static ITile ITileAt(SandboxEditor<TBox> editor, int x, int y)
+		{
+			return new TRef(editor, x, y);
+		}
+
 		public ITile ITileAt(int x, int y)
 		{
 			return new TRef(this, x, y);
@@ -224,59 +238,60 @@ namespace Terraria_Server.WorldMod
 
 		public bool EmptyTileCheck(int startX, int endX, int startY, int endY, int ignoreStyle = -1)
 		{
-			return WorldModify.EmptyTileCheck(startX, endX, startY, endY, ignoreStyle, ITileAt);
+			return WorldModify.EmptyTileCheck(ITileAt, startX, endX, startY, endY, ignoreStyle);
 		}
 
 		public bool PlaceDoor(int i, int j, int type)
 		{
-			return WorldModify.PlaceDoor(i, j, type, ITileAt);
+			return WorldModify.PlaceDoor(ITileAt, i, j, type);
 		}
 
 		public bool CloseDoor(int x, int y, bool forced, ISender sender)
 		{
-			return WorldModify.CloseDoor(x, y, forced, sender, ITileAt);
+			return WorldModify.CloseDoor(ITileAt, x, y, forced, sender);
 		}
 
 		public bool OpenDoor(int x, int y, int direction, ISender sender)
 		{
-			return WorldModify.OpenDoor(x, y, direction, sender, ITileAt);
+			return WorldModify.OpenDoor(ITileAt, x, y, direction, sender);
 		}
 
 		public void Check1x2(int x, int j, byte type)
 		{
-			WorldModify.Check1x2(x, j, type, ITileAt);
+			WorldModify.Check1x2(ITileAt, x, j, type);
 		}
 
 		public void CheckOnTable1x1(int x, int y, int type)
 		{
-			WorldModify.CheckOnTable1x1(x, y, type, ITileAt);
+			WorldModify.CheckOnTable1x1(ITileAt, x, y, type);
 		}
 
 		public void CheckSign(int x, int y, int type)
 		{
-			WorldModify.CheckSign(x, y, type, ITileAt);
+			WorldModify.CheckSign(ITileAt, x, y, type);
 		}
 
 		public bool PlaceSign(int x, int y, int type)
 		{
-			return WorldModify.PlaceSign(x, y, type, ITileAt);
+			return WorldModify.PlaceSign(ITileAt, x, y, type);
 		}
 
 		public void PlaceOnTable1x1(int x, int y, int type, int style = 0)
 		{
-			WorldModify.PlaceOnTable1x1(x, y, type, style, ITileAt);
+			WorldModify.PlaceOnTable1x1(ITileAt, x, y, type, style);
 		}
 
 		public bool PlaceAlch(int x, int y, int style) 
 		{
-			return WorldModify.PlaceAlch(x, y, style, ITileAt);
+			return WorldModify.PlaceAlch(ITileAt, x, y, style);
 		}
 
 		public void GrowAlch(int x, int y) 
 		{
-			WorldModify.GrowAlch(x, y, ITileAt);
+			WorldModify.GrowAlch(ITileAt, x, y);
 		}
 
+		//remove
 		public void PlantAlch() 
 		{
 			WorldModify.PlantAlch(ITileAt);
@@ -284,27 +299,27 @@ namespace Terraria_Server.WorldMod
 
 		public void CheckAlch(int x, int y) 
 		{
-			WorldModify.CheckAlch(x, y, ITileAt);
+			WorldModify.CheckAlch(ITileAt, x, y);
 		}
 
 		public void Place1x2(int x, int y, int type, int style) 
 		{
-			WorldModify.Place1x2(x, y, type, style, ITileAt);
+			WorldModify.Place1x2(ITileAt, x, y, type, style);
 		}
 
 		public void PlaceBanner(int x, int y, int type, int style = 0) 
 		{
-			WorldModify.PlaceBanner(x, y, type, style, ITileAt);
+			WorldModify.PlaceBanner(ITileAt, x, y, type, style);
 		}
 
 		public void CheckBanner(int x, int j, byte type) 
 		{
-			WorldModify.CheckBanner(x, j, type, ITileAt);
+			WorldModify.CheckBanner(ITileAt, x, j, type);
 		}
 
 		public void Place1x2Top(int x, int y, int type) 
 		{
-			WorldModify.Place1x2Top(x, y, type, ITileAt);
+			WorldModify.Place1x2Top(ITileAt, x, y, type);
 		}
 
 		//private TRef GetTile(int x, int y)
@@ -314,152 +329,152 @@ namespace Terraria_Server.WorldMod
 
 		public void Check1x2Top(int x, int y, byte type)
 		{
-			WorldModify.Check1x2Top(x, y, type, ITileAt);
+			WorldModify.Check1x2Top(ITileAt, x, y, type);
 		} 
 
 		public void Check2x1(int x, int y, byte type) 
 		{
-			WorldModify.Check2x1(x, y, type, ITileAt);
+			WorldModify.Check2x1(ITileAt, x, y, type);
 		}
 
 		public void Place2x1(int x, int y, int type) 
 		{
-			WorldModify.Place2x1(x, y, type, ITileAt);
+			WorldModify.Place2x1(ITileAt, x, y, type);
 		}
 
 		public void Check4x2(int i, int j, int type) 
 		{
-			WorldModify.Check4x2(i, j, type, ITileAt);
+			WorldModify.Check4x2(ITileAt, i, j, type);
 		}
 
 		public void Check2x2(int i, int j, int type) 
 		{
-			WorldModify.Check2x2(i, j, type, ITileAt);
+			WorldModify.Check2x2(ITileAt, i, j, type);
 		}
 
 		public void Check3x2(int i, int j, int type) 
 		{
-			WorldModify.Check3x3(i, j, type, ITileAt);
+			WorldModify.Check3x3(ITileAt, i, j, type);
 		}
 
 		public void Place4x2(int x, int y, int type, int direction = -1) 
 		{
-			WorldModify.Place4x2(x, y, type, direction, ITileAt);
+			WorldModify.Place4x2(ITileAt, x, y, type, direction);
 		}
 
 		public void Place2x2(int x, int superY, int type) 
 		{
-			WorldModify.Place2x2(x, superY, type, ITileAt);
+			WorldModify.Place2x2(ITileAt, x, superY, type);
 		}
 
 		public void Place3x2(int x, int y, int type) 
 		{
-			WorldModify.Place3x2(x, y, type, ITileAt);
+			WorldModify.Place3x2(ITileAt, x, y, type);
 		}
 
 		public void Check3x3(int i, int j, int type) 
 		{
-			WorldModify.Check3x3(i, j, type, ITileAt);
+			WorldModify.Check3x3(ITileAt, i, j, type);
 		}
 
 		public void Place3x3(int x, int y, int type) 
 		{
-			WorldModify.Place3x3(x, y, type, ITileAt);
+			WorldModify.Place3x3(ITileAt, x, y, type);
 		}
 
 		public void Check3x4(int i, int j, int type) 
 		{
-			WorldModify.Check3x4(i, j, type, ITileAt);
+			WorldModify.Check3x4(ITileAt, i, j, type);
 		}
 
 		public void Check1xX(int x, int j, byte type) 
 		{
-			WorldModify.Check1xX(x, j, type, ITileAt);
+			WorldModify.Check1xX(ITileAt, x, j, type);
 		}
 
 		public void Check2xX(int i, int j, byte type) 
 		{
-			WorldModify.Check2xX(i, j, type, ITileAt);
+			WorldModify.Check2xX(ITileAt, i, j, type);
 		}
 
 		public void PlaceSunflower(int x, int y, int type = 27) 
 		{
-			WorldModify.PlaceSunflower(x, y, type, ITileAt);
+			WorldModify.PlaceSunflower(ITileAt, x, y, type);
 		}
 
 		public void CheckSunflower(int i, int j, int type = 27) 
 		{
-			WorldModify.CheckSunflower(i, j, type, ITileAt);
+			WorldModify.CheckSunflower(ITileAt, i, j, type);
 		}
 
 		public bool PlacePot(int x, int y, int type = 28) 
 		{
-			return WorldModify.PlacePot(x, y, type, ITileAt);
+			return WorldModify.PlacePot(ITileAt, x, y, type);
 		}
 
 		public bool CheckCactus(int i, int j) 
 		{
-			return WorldModify.CheckCactus(i, j, ITileAt);
+			return WorldModify.CheckCactus(ITileAt, i, j);
 		}
 
 		public void PlantCactus(int i, int j) 
 		{
-			WorldModify.PlantCactus(i, j);
+			WorldModify.PlantCactus(ITileAt, i, j);
 		}
 
 		public void CactusFrame(int i, int j) 
 		{
-			WorldModify.CactusFrame(i, j, ITileAt);
+			WorldModify.CactusFrame(ITileAt, i, j);
 		}
 
 		public void GrowCactus(int i, int j) 
 		{
-			WorldModify.GrowCactus(i, j, ITileAt);
+			WorldModify.GrowCactus(ITileAt, i, j);
 		}
 
 		public void CheckPot(int i, int j, int type = 28) 
 		{
-			WorldModify.CheckPot(i, j, type, ITileAt);
+			WorldModify.CheckPot(ITileAt, i, j, type);
 		}
 
 		public int PlaceChest(int x, int y, int type = 21, bool notNearOtherChests = false, int style = 0) 
 		{
-			return WorldModify.PlaceChest(x, y, type, notNearOtherChests, style, ITileAt);
+			return WorldModify.PlaceChest(ITileAt, x, y, type, notNearOtherChests, style);
 		}
 
 		public void CheckChest(int i, int j, int type) 
 		{
-			WorldModify.CheckChest(i, j, type, ITileAt);
+			WorldModify.CheckChest(ITileAt, i, j, type);
 		}
 
 		public void Place1xX(int x, int y, int type, int style = 0) 
 		{
-			WorldModify.Place1xX(x, y, type, style, ITileAt);
+			WorldModify.Place1xX(ITileAt, x, y, type, style);
 		}
 
 		public void Place2xX(int x, int y, int type, int style = 0) 
 		{
-			WorldModify.Place2xX(x, y, type, style, ITileAt);
+			WorldModify.Place2xX(ITileAt, x, y, type, style);
 		}
 
 		public void Place3x4(int x, int y, int type) 
 		{
-			WorldModify.Place3x4(x, y, type, ITileAt);
+			WorldModify.Place3x4(ITileAt, x, y, type);
 		}
 
 		public bool PlaceTile(int i, int j, int type, bool mute = false, bool forced = false, int plr = -1, int style = 0) 
 		{
-			return WorldModify.PlaceTile(i, j, type, mute, forced, plr, style, ITileAt);
+			return WorldModify.PlaceTile(ITileAt, i, j, type, mute, forced, plr, style);
 		}
 
 		public void KillWall(int i, int j, bool fail = false) 
 		{
-			WorldModify.KillWall(i, j, ITileAt, fail);
+			WorldModify.KillWall(ITileAt, i, j, fail);
 		}
 
 		public void KillTile(int x, int y, bool fail = false, bool effectOnly = false, bool noItem = false, Player player = null) 
 		{
-			WorldModify.KillTile(x, y, ITileAt, fail, effectOnly, noItem);
+			WorldModify.KillTile(ITileAt, x, y, fail, effectOnly, noItem);
 		}
 
 		//Remove
@@ -470,40 +485,40 @@ namespace Terraria_Server.WorldMod
 
 		public void PlaceWall(int i, int j, int type, bool mute = false) 
 		{
-			WorldModify.PlaceWall(i, j, type, mute, ITileAt);
+			WorldModify.PlaceWall(ITileAt, i, j, type, mute);
 		}
 
 		public void SpreadGrass(int i, int j, int dirt = 0, int grass = 2, bool repeat = true) 
 		{
-			WorldModify.SpreadGrass(i, j, dirt, grass, repeat, ITileAt);
+			WorldModify.SpreadGrass(ITileAt, i, j, dirt, grass, repeat);
 		}
 
 		//remove
 		public void SquareTileFrame(int i, int j, bool resetFrame = true) 
 		{
-			WorldModify.SquareTileFrame(i, j, resetFrame);
+			WorldModify.SquareTileFrame(ITileAt, i, j, resetFrame);
 		}
 
 		//Remove
 		public void SectionTileFrame(int startX, int startY, int endX, int endY) 
 		{
-			WorldModify.SectionTileFrame(startX, startY, endX, endY);
+			WorldModify.SectionTileFrame(ITileAt, startX, startY, endX, endY);
 		}
 
 		//remove
 		public void RangeFrame(int startX, int startY, int endX, int endY) 
 		{
-			WorldModify.RangeFrame(startX, startY, endX, endY);
+			WorldModify.RangeFrame(ITileAt, startX, startY, endX, endY);
 		}
 
 		public void PlantCheck(int i, int j) 
 		{
-			WorldModify.PlantCheck(i, j, ITileAt);
+			WorldModify.PlantCheck(ITileAt, i, j);
 		}
 
 		public void TileFrame(int i, int j, bool resetFrame = false, bool noBreak = false)
 		{
-			WorldModify.TileFrame(i, j, resetFrame, noBreak, ITileAt);
+			WorldModify.TileFrame(ITileAt, i, j, resetFrame, noBreak);
 		}
 	}
 }

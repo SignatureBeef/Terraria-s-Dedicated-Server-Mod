@@ -256,8 +256,8 @@ namespace Terraria_Server
 						WorldGen.numDungeons = 1;
 						WorldModify.ficount = (int)((double)Terraria_Server.Main.maxTilesX * 0.0008); //The Statics one was generating with default values, We want it to use the actual tileX for the world
 					}
-					WorldGen.GenerateWorld(seed);
-					WorldIO.saveWorld(worldFile, true);
+					WorldGen.GenerateWorld(null, seed);
+					WorldIO.saveWorld(null, worldFile, true);
 				}
 
 				ctx = new HookContext
@@ -313,7 +313,7 @@ namespace Terraria_Server
 				Terraria_Server.Main.maxSectionsX = worldXtiles / 200;
 				Terraria_Server.Main.maxSectionsY = worldYtiles / 150;
 
-				WorldIO.LoadWorld(Server.World.SavePath);
+				WorldIO.LoadWorld(null, Server.World.SavePath);
 
 				ctx = new HookContext
 				{
@@ -762,7 +762,7 @@ namespace Terraria_Server
 						if (NetPlay.anyClients || (hibernate == false))
 						{
 							var start = s.Elapsed;
-                            Terraria_Server.Main.Update(s);
+                            Terraria_Server.Main.Update(null, s);
 							LastUpdateTime = s.Elapsed - start;
 						}
 					}
@@ -789,7 +789,7 @@ namespace Terraria_Server
                             leftOver = 1000.0;
 
 						if (NetPlay.anyClients || (hibernate == false))
-                            Terraria_Server.Main.Update(stopwatch);
+							Terraria_Server.Main.Update(null, stopwatch);
 
 						double num9 = (double)stopwatch.ElapsedMilliseconds + leftOver;
 						if (num9 < serverProcessAverage)

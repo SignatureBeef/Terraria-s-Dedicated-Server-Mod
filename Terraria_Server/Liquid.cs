@@ -25,8 +25,11 @@ namespace Terraria_Server
         public int kill;
         public int delay;
 
-        public static double QuickWater(int verbose = 0, int minY = -1, int maxY = -1, ProgressLogger prog = null)
+        public static double QuickWater(Func<Int32, Int32, ITile> TileRefs, int verbose = 0, int minY = -1, int maxY = -1, ProgressLogger prog = null)
         {
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
             int num = 0;
 
             if (minY == -1)
@@ -72,21 +75,21 @@ namespace Terraria_Server
                     }
                     for (int num7 = num4; num7 != num5; num7 += num6)
                     {
-                        if (Main.tile.At(num7, i).Liquid > 0)
+                        if (TileRefs(num7, i).Liquid > 0)
                         {
                             int num8 = -num6;
                             bool flag = false;
                             int num9 = num7;
                             int num10 = i;
-                            bool flag2 = Main.tile.At(num7, i).Lava;
-                            byte b = Main.tile.At(num7, i).Liquid;
-                            Main.tile.At(num7, i).SetLiquid (0);
+                            bool flag2 = TileRefs(num7, i).Lava;
+                            byte b = TileRefs(num7, i).Liquid;
+                            TileRefs(num7, i).SetLiquid (0);
                             bool flag3 = true;
                             int num11 = 0;
                             while (flag3 && num9 > 3 && num9 < Main.maxTilesX - 3 && num10 < Main.maxTilesY - 3)
                             {
                                 flag3 = false;
-                                while (Main.tile.At(num9, num10 + 1).Liquid == 0 && num10 < Main.maxTilesY - 5 && (!Main.tile.At(num9, num10 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num9, num10 + 1).Type] || Main.tileSolidTop[(int)Main.tile.At(num9, num10 + 1).Type]))
+                                while (TileRefs(num9, num10 + 1).Liquid == 0 && num10 < Main.maxTilesY - 5 && (!TileRefs(num9, num10 + 1).Active || !Main.tileSolid[(int)TileRefs(num9, num10 + 1).Type] || Main.tileSolidTop[(int)TileRefs(num9, num10 + 1).Type]))
                                 {
                                     flag = true;
                                     num8 = num6;
@@ -98,14 +101,14 @@ namespace Terraria_Server
                                         flag2 = true;
                                     }
                                 }
-                                if (Main.tile.At(num9, num10 + 1).Liquid > 0 && Main.tile.At(num9, num10 + 1).Liquid < 255 && Main.tile.At(num9, num10 + 1).Lava == flag2)
+                                if (TileRefs(num9, num10 + 1).Liquid > 0 && TileRefs(num9, num10 + 1).Liquid < 255 && TileRefs(num9, num10 + 1).Lava == flag2)
                                 {
-                                    int num12 = (int)(255 - Main.tile.At(num9, num10 + 1).Liquid);
+                                    int num12 = (int)(255 - TileRefs(num9, num10 + 1).Liquid);
                                     if (num12 > (int)b)
                                     {
                                         num12 = (int)b;
                                     }
-                                    TileRef expr_25A = Main.tile.At(num9, num10 + 1);
+                                    var expr_25A = TileRefs(num9, num10 + 1);
                                     expr_25A.AddLiquid ((byte)num12);
                                     b -= (byte)num12;
                                     if (b <= 0)
@@ -116,19 +119,19 @@ namespace Terraria_Server
                                 }
                                 if (num11 == 0)
                                 {
-                                    if (Main.tile.At(num9 + num8, num10).Liquid == 0 && (!Main.tile.At(num9 + num8, num10).Active || !Main.tileSolid[(int)Main.tile.At(num9 + num8, num10).Type] || Main.tileSolidTop[(int)Main.tile.At(num9 + num8, num10).Type]))
+                                    if (TileRefs(num9 + num8, num10).Liquid == 0 && (!TileRefs(num9 + num8, num10).Active || !Main.tileSolid[(int)TileRefs(num9 + num8, num10).Type] || Main.tileSolidTop[(int)TileRefs(num9 + num8, num10).Type]))
                                     {
                                         num11 = num8;
                                     }
                                     else
                                     {
-                                        if (Main.tile.At(num9 - num8, num10).Liquid == 0 && (!Main.tile.At(num9 - num8, num10).Active || !Main.tileSolid[(int)Main.tile.At(num9 - num8, num10).Type] || Main.tileSolidTop[(int)Main.tile.At(num9 - num8, num10).Type]))
+                                        if (TileRefs(num9 - num8, num10).Liquid == 0 && (!TileRefs(num9 - num8, num10).Active || !Main.tileSolid[(int)TileRefs(num9 - num8, num10).Type] || Main.tileSolidTop[(int)TileRefs(num9 - num8, num10).Type]))
                                         {
                                             num11 = -num8;
                                         }
                                     }
                                 }
-                                if (num11 != 0 && Main.tile.At(num9 + num11, num10).Liquid == 0 && (!Main.tile.At(num9 + num11, num10).Active || !Main.tileSolid[(int)Main.tile.At(num9 + num11, num10).Type] || Main.tileSolidTop[(int)Main.tile.At(num9 + num11, num10).Type]))
+                                if (num11 != 0 && TileRefs(num9 + num11, num10).Liquid == 0 && (!TileRefs(num9 + num11, num10).Active || !Main.tileSolid[(int)TileRefs(num9 + num11, num10).Type] || Main.tileSolidTop[(int)TileRefs(num9 + num11, num10).Type]))
                                 {
                                     flag3 = true;
                                     num9 += num11;
@@ -145,56 +148,56 @@ namespace Terraria_Server
                             {
                                 num++;
                             }
-                            Main.tile.At(num9, num10).SetLiquid (b);
-                            Main.tile.At(num9, num10).SetLava (flag2);
-                            if (Main.tile.At(num9 - 1, num10).Liquid > 0 && Main.tile.At(num9 - 1, num10).Lava != flag2)
+                            TileRefs(num9, num10).SetLiquid (b);
+                            TileRefs(num9, num10).SetLava (flag2);
+                            if (TileRefs(num9 - 1, num10).Liquid > 0 && TileRefs(num9 - 1, num10).Lava != flag2)
                             {
                                 if (flag2)
                                 {
-                                    Liquid.LavaCheck(num9, num10);
+                                    Liquid.LavaCheck(TileRefs, num9, num10);
                                 }
                                 else
                                 {
-                                    Liquid.LavaCheck(num9 - 1, num10);
+                                    Liquid.LavaCheck(TileRefs, num9 - 1, num10);
                                 }
                             }
                             else
                             {
-                                if (Main.tile.At(num9 + 1, num10).Liquid > 0 && Main.tile.At(num9 + 1, num10).Lava != flag2)
+                                if (TileRefs(num9 + 1, num10).Liquid > 0 && TileRefs(num9 + 1, num10).Lava != flag2)
                                 {
                                     if (flag2)
                                     {
-                                        Liquid.LavaCheck(num9, num10);
+                                        Liquid.LavaCheck(TileRefs, num9, num10);
                                     }
                                     else
                                     {
-                                        Liquid.LavaCheck(num9 + 1, num10);
+                                        Liquid.LavaCheck(TileRefs, num9 + 1, num10);
                                     }
                                 }
                                 else
                                 {
-                                    if (Main.tile.At(num9, num10 - 1).Liquid > 0 && Main.tile.At(num9, num10 - 1).Lava != flag2)
+                                    if (TileRefs(num9, num10 - 1).Liquid > 0 && TileRefs(num9, num10 - 1).Lava != flag2)
                                     {
                                         if (flag2)
                                         {
-                                            Liquid.LavaCheck(num9, num10);
+                                            Liquid.LavaCheck(TileRefs, num9, num10);
                                         }
                                         else
                                         {
-                                            Liquid.LavaCheck(num9, num10 - 1);
+                                            Liquid.LavaCheck(TileRefs, num9, num10 - 1);
                                         }
                                     }
                                     else
                                     {
-                                        if (Main.tile.At(num9, num10 + 1).Liquid > 0 && Main.tile.At(num9, num10 + 1).Lava != flag2)
+                                        if (TileRefs(num9, num10 + 1).Liquid > 0 && TileRefs(num9, num10 + 1).Lava != flag2)
                                         {
                                             if (flag2)
                                             {
-                                                Liquid.LavaCheck(num9, num10);
+                                                Liquid.LavaCheck(TileRefs, num9, num10);
                                             }
                                             else
                                             {
-                                                Liquid.LavaCheck(num9, num10 + 1);
+                                                Liquid.LavaCheck(TileRefs, num9, num10 + 1);
                                             }
                                         }
                                     }
@@ -206,41 +209,44 @@ namespace Terraria_Server
             }
             return (double)num;
         }
-        
-        public void Update()
+
+		public void Update(Func<Int32, Int32, ITile> TileRefs)
         {
-            if (Main.tile.At(this.x, this.y).Active && Main.tileSolid[(int)Main.tile.At(this.x, this.y).Type] && !Main.tileSolidTop[(int)Main.tile.At(this.x, this.y).Type])
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
+            if (TileRefs(this.x, this.y).Active && Main.tileSolid[(int)TileRefs(this.x, this.y).Type] && !Main.tileSolidTop[(int)TileRefs(this.x, this.y).Type])
             {
-                if (Main.tile.At(this.x, this.y).Type != 10)
+                if (TileRefs(this.x, this.y).Type != 10)
                 {
-                    Main.tile.At(this.x, this.y).SetLiquid (0);
+                    TileRefs(this.x, this.y).SetLiquid (0);
                 }
                 this.kill = 9;
                 return;
             }
-            byte liquid = Main.tile.At(this.x, this.y).Liquid;
+            byte liquid = TileRefs(this.x, this.y).Liquid;
             float num = 0f;
             
-            if (this.y > Main.maxTilesY - 200 && !Main.tile.At(this.x, this.y).Lava && Main.tile.At(this.x, this.y).Liquid > 0)
+            if (this.y > Main.maxTilesY - 200 && !TileRefs(this.x, this.y).Lava && TileRefs(this.x, this.y).Liquid > 0)
             {
                 byte b = 2;
-                if (Main.tile.At(this.x, this.y).Liquid < b)
+                if (TileRefs(this.x, this.y).Liquid < b)
                 {
-                    b = Main.tile.At(this.x, this.y).Liquid;
+                    b = TileRefs(this.x, this.y).Liquid;
                 }
-                TileRef expr_16F = Main.tile.At(this.x, this.y);
+                var expr_16F = TileRefs(this.x, this.y);
                 expr_16F.AddLiquid (-b);
             }
 
-            if (Main.tile.At(this.x, this.y).Liquid == 0)
+            if (TileRefs(this.x, this.y).Liquid == 0)
             {
                 this.kill = 9;
                 return;
             }
 
-            if (Main.tile.At(this.x, this.y).Lava)
+            if (TileRefs(this.x, this.y).Lava)
             {
-                Liquid.LavaCheck(this.x, this.y);
+                Liquid.LavaCheck(TileRefs, this.x, this.y);
                 if (!Liquid.quickFall)
                 {
                     if (this.delay < 5)
@@ -253,102 +259,102 @@ namespace Terraria_Server
             }
             else
             {
-                if (Main.tile.At(this.x - 1, this.y).Lava)
+                if (TileRefs(this.x - 1, this.y).Lava)
                 {
-                    Liquid.AddWater(this.x - 1, this.y);
+                    Liquid.AddWater(TileRefs, this.x - 1, this.y);
                 }
-                if (Main.tile.At(this.x + 1, this.y).Lava)
+                if (TileRefs(this.x + 1, this.y).Lava)
                 {
-                    Liquid.AddWater(this.x + 1, this.y);
+                    Liquid.AddWater(TileRefs, this.x + 1, this.y);
                 }
-                if (Main.tile.At(this.x, this.y - 1).Lava)
+                if (TileRefs(this.x, this.y - 1).Lava)
                 {
-                    Liquid.AddWater(this.x, this.y - 1);
+                    Liquid.AddWater(TileRefs, this.x, this.y - 1);
                 }
-                if (Main.tile.At(this.x, this.y + 1).Lava)
+                if (TileRefs(this.x, this.y + 1).Lava)
                 {
-                    Liquid.AddWater(this.x, this.y + 1);
+                    Liquid.AddWater(TileRefs, this.x, this.y + 1);
                 }
             }
 
-            if ((!Main.tile.At(this.x, this.y + 1).Active || !Main.tileSolid[(int)Main.tile.At(this.x, this.y + 1).Type] || Main.tileSolidTop[(int)Main.tile.At(this.x, this.y + 1).Type]) && (Main.tile.At(this.x, this.y + 1).Liquid <= 0 || Main.tile.At(this.x, this.y + 1).Lava == Main.tile.At(this.x, this.y).Lava) && Main.tile.At(this.x, this.y + 1).Liquid < 255)
+            if ((!TileRefs(this.x, this.y + 1).Active || !Main.tileSolid[(int)TileRefs(this.x, this.y + 1).Type] || Main.tileSolidTop[(int)TileRefs(this.x, this.y + 1).Type]) && (TileRefs(this.x, this.y + 1).Liquid <= 0 || TileRefs(this.x, this.y + 1).Lava == TileRefs(this.x, this.y).Lava) && TileRefs(this.x, this.y + 1).Liquid < 255)
             {
-                num = (float)(255 - Main.tile.At(this.x, this.y + 1).Liquid);
-                if (num > (float)Main.tile.At(this.x, this.y).Liquid)
+                num = (float)(255 - TileRefs(this.x, this.y + 1).Liquid);
+                if (num > (float)TileRefs(this.x, this.y).Liquid)
                 {
-                    num = (float)Main.tile.At(this.x, this.y).Liquid;
+                    num = (float)TileRefs(this.x, this.y).Liquid;
                 }
-                TileRef expr_42E = Main.tile.At(this.x, this.y);
+                var expr_42E = TileRefs(this.x, this.y);
                 expr_42E.AddLiquid (- (byte)num);
-                TileRef expr_455 = Main.tile.At(this.x, this.y + 1);
+                var expr_455 = TileRefs(this.x, this.y + 1);
                 expr_455.AddLiquid (+ (byte)num);
-                Main.tile.At(this.x, this.y + 1).SetLava (Main.tile.At(this.x, this.y).Lava);
-                Liquid.AddWater(this.x, this.y + 1);
-                Main.tile.At(this.x, this.y + 1).SetSkipLiquid (true);
-                Main.tile.At(this.x, this.y).SetSkipLiquid (true);
-                if (Main.tile.At(this.x, this.y).Liquid > 250)
+                TileRefs(this.x, this.y + 1).SetLava (TileRefs(this.x, this.y).Lava);
+                Liquid.AddWater(TileRefs, this.x, this.y + 1);
+                TileRefs(this.x, this.y + 1).SetSkipLiquid (true);
+                TileRefs(this.x, this.y).SetSkipLiquid (true);
+                if (TileRefs(this.x, this.y).Liquid > 250)
                 {
-                    Main.tile.At(this.x, this.y).SetLiquid (255);
+                    TileRefs(this.x, this.y).SetLiquid (255);
                 }
                 else
                 {
-                    Liquid.AddWater(this.x - 1, this.y);
-                    Liquid.AddWater(this.x + 1, this.y);
+                    Liquid.AddWater(TileRefs, this.x - 1, this.y);
+                    Liquid.AddWater(TileRefs, this.x + 1, this.y);
                 }
             }
 
-            if (Main.tile.At(this.x, this.y).Liquid > 0)
+            if (TileRefs(this.x, this.y).Liquid > 0)
             {
                 bool flag = true;
                 bool flag2 = true;
                 bool flag3 = true;
                 bool flag4 = true;
-                if (Main.tile.At(this.x - 1, this.y).Active && Main.tileSolid[(int)Main.tile.At(this.x - 1, this.y).Type] && !Main.tileSolidTop[(int)Main.tile.At(this.x - 1, this.y).Type])
+                if (TileRefs(this.x - 1, this.y).Active && Main.tileSolid[(int)TileRefs(this.x - 1, this.y).Type] && !Main.tileSolidTop[(int)TileRefs(this.x - 1, this.y).Type])
                 {
                     flag = false;
                 }
-                else if (Main.tile.At(this.x - 1, this.y).Liquid > 0 && Main.tile.At(this.x - 1, this.y).Lava != Main.tile.At(this.x, this.y).Lava)
+                else if (TileRefs(this.x - 1, this.y).Liquid > 0 && TileRefs(this.x - 1, this.y).Lava != TileRefs(this.x, this.y).Lava)
                 {
                     flag = false;
                 }
-                else if (Main.tile.At(this.x - 2, this.y).Active && Main.tileSolid[(int)Main.tile.At(this.x - 2, this.y).Type] && !Main.tileSolidTop[(int)Main.tile.At(this.x - 2, this.y).Type])
+                else if (TileRefs(this.x - 2, this.y).Active && Main.tileSolid[(int)TileRefs(this.x - 2, this.y).Type] && !Main.tileSolidTop[(int)TileRefs(this.x - 2, this.y).Type])
                 {
                     flag3 = false;
                 }
-                else if (Main.tile.At(this.x - 2, this.y).Liquid == 0)
+                else if (TileRefs(this.x - 2, this.y).Liquid == 0)
                 {
                     flag3 = false;
                 }
-                else if (Main.tile.At(this.x - 2, this.y).Liquid > 0 && Main.tile.At(this.x - 2, this.y).Lava != Main.tile.At(this.x, this.y).Lava)
+                else if (TileRefs(this.x - 2, this.y).Liquid > 0 && TileRefs(this.x - 2, this.y).Lava != TileRefs(this.x, this.y).Lava)
                 {
                     flag3 = false;
                 }
 
-                if (Main.tile.At(this.x + 1, this.y).Active && Main.tileSolid[(int)Main.tile.At(this.x + 1, this.y).Type] && !Main.tileSolidTop[(int)Main.tile.At(this.x + 1, this.y).Type])
+                if (TileRefs(this.x + 1, this.y).Active && Main.tileSolid[(int)TileRefs(this.x + 1, this.y).Type] && !Main.tileSolidTop[(int)TileRefs(this.x + 1, this.y).Type])
                 {
                     flag2 = false;
                 }
                 else
                 {
-                    if (Main.tile.At(this.x + 1, this.y).Liquid > 0 && Main.tile.At(this.x + 1, this.y).Lava != Main.tile.At(this.x, this.y).Lava)
+                    if (TileRefs(this.x + 1, this.y).Liquid > 0 && TileRefs(this.x + 1, this.y).Lava != TileRefs(this.x, this.y).Lava)
                     {
                         flag2 = false;
                     }
                     else
                     {
-                        if (Main.tile.At(this.x + 2, this.y).Active && Main.tileSolid[(int)Main.tile.At(this.x + 2, this.y).Type] && !Main.tileSolidTop[(int)Main.tile.At(this.x + 2, this.y).Type])
+                        if (TileRefs(this.x + 2, this.y).Active && Main.tileSolid[(int)TileRefs(this.x + 2, this.y).Type] && !Main.tileSolidTop[(int)TileRefs(this.x + 2, this.y).Type])
                         {
                             flag4 = false;
                         }
                         else
                         {
-                            if (Main.tile.At(this.x + 2, this.y).Liquid == 0)
+                            if (TileRefs(this.x + 2, this.y).Liquid == 0)
                             {
                                 flag4 = false;
                             }
                             else
                             {
-                                if (Main.tile.At(this.x + 2, this.y).Liquid > 0 && Main.tile.At(this.x + 2, this.y).Lava != Main.tile.At(this.x, this.y).Lava)
+                                if (TileRefs(this.x + 2, this.y).Liquid > 0 && TileRefs(this.x + 2, this.y).Lava != TileRefs(this.x, this.y).Lava)
                                 {
                                     flag4 = false;
                                 }
@@ -357,7 +363,7 @@ namespace Terraria_Server
                     }
                 }
                 int num2 = 0;
-                if (Main.tile.At(this.x, this.y).Liquid < 3)
+                if (TileRefs(this.x, this.y).Liquid < 3)
                 {
                     num2 = -1;
                 }
@@ -367,37 +373,37 @@ namespace Terraria_Server
                     {
                         bool flag5 = true;
                         bool flag6 = true;
-                        if (Main.tile.At(this.x - 3, this.y).Active && Main.tileSolid[(int)Main.tile.At(this.x - 3, this.y).Type] && !Main.tileSolidTop[(int)Main.tile.At(this.x - 3, this.y).Type])
+                        if (TileRefs(this.x - 3, this.y).Active && Main.tileSolid[(int)TileRefs(this.x - 3, this.y).Type] && !Main.tileSolidTop[(int)TileRefs(this.x - 3, this.y).Type])
                         {
                             flag5 = false;
                         }
                         else
                         {
-                            if (Main.tile.At(this.x - 3, this.y).Liquid == 0)
+                            if (TileRefs(this.x - 3, this.y).Liquid == 0)
                             {
                                 flag5 = false;
                             }
                             else
                             {
-                                if (Main.tile.At(this.x - 3, this.y).Lava != Main.tile.At(this.x, this.y).Lava)
+                                if (TileRefs(this.x - 3, this.y).Lava != TileRefs(this.x, this.y).Lava)
                                 {
                                     flag5 = false;
                                 }
                             }
                         }
-                        if (Main.tile.At(this.x + 3, this.y).Active && Main.tileSolid[(int)Main.tile.At(this.x + 3, this.y).Type] && !Main.tileSolidTop[(int)Main.tile.At(this.x + 3, this.y).Type])
+                        if (TileRefs(this.x + 3, this.y).Active && Main.tileSolid[(int)TileRefs(this.x + 3, this.y).Type] && !Main.tileSolidTop[(int)TileRefs(this.x + 3, this.y).Type])
                         {
                             flag6 = false;
                         }
                         else
                         {
-                            if (Main.tile.At(this.x + 3, this.y).Liquid == 0)
+                            if (TileRefs(this.x + 3, this.y).Liquid == 0)
                             {
                                 flag6 = false;
                             }
                             else
                             {
-                                if (Main.tile.At(this.x + 3, this.y).Lava != Main.tile.At(this.x, this.y).Lava)
+                                if (TileRefs(this.x + 3, this.y).Lava != TileRefs(this.x, this.y).Lava)
                                 {
                                     flag6 = false;
                                 }
@@ -405,162 +411,162 @@ namespace Terraria_Server
                         }
                         if (flag5 && flag6)
                         {
-                            num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x - 2, this.y).Liquid + Main.tile.At(this.x + 2, this.y).Liquid + Main.tile.At(this.x - 3, this.y).Liquid + Main.tile.At(this.x + 3, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
+                            num = (float)((int)(TileRefs(this.x - 1, this.y).Liquid + TileRefs(this.x + 1, this.y).Liquid + TileRefs(this.x - 2, this.y).Liquid + TileRefs(this.x + 2, this.y).Liquid + TileRefs(this.x - 3, this.y).Liquid + TileRefs(this.x + 3, this.y).Liquid + TileRefs(this.x, this.y).Liquid) + num2);
                             num = (float)Math.Round((double)(num / 7f));
                             int num3 = 0;
-                            Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
+                            TileRefs(this.x - 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x - 1, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 1, this.y);
-                                Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x - 1, this.y);
+                                TileRefs(this.x - 1, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
+                            TileRefs(this.x + 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x + 1, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 1, this.y);
-                                Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x + 1, this.y);
+                                TileRefs(this.x + 1, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            Main.tile.At(this.x - 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x - 2, this.y).Liquid != (byte)num)
+                            TileRefs(this.x - 2, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x - 2, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 2, this.y);
-                                Main.tile.At(this.x - 2, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x - 2, this.y);
+                                TileRefs(this.x - 2, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            Main.tile.At(this.x + 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x + 2, this.y).Liquid != (byte)num)
+                            TileRefs(this.x + 2, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x + 2, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 2, this.y);
-                                Main.tile.At(this.x + 2, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x + 2, this.y);
+                                TileRefs(this.x + 2, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            Main.tile.At(this.x - 3, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x - 3, this.y).Liquid != (byte)num)
+                            TileRefs(this.x - 3, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x - 3, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 3, this.y);
-                                Main.tile.At(this.x - 3, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x - 3, this.y);
+                                TileRefs(this.x - 3, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            Main.tile.At(this.x + 3, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x + 3, this.y).Liquid != (byte)num)
+                            TileRefs(this.x + 3, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x + 3, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 3, this.y);
-                                Main.tile.At(this.x + 3, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x + 3, this.y);
+                                TileRefs(this.x + 3, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x - 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 1, this.y);
+                                Liquid.AddWater(TileRefs, this.x - 1, this.y);
                             }
-                            if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x + 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 1, this.y);
+                                Liquid.AddWater(TileRefs, this.x + 1, this.y);
                             }
-                            if (Main.tile.At(this.x - 2, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x - 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 2, this.y);
+                                Liquid.AddWater(TileRefs, this.x - 2, this.y);
                             }
-                            if (Main.tile.At(this.x + 2, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x + 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 2, this.y);
+                                Liquid.AddWater(TileRefs, this.x + 2, this.y);
                             }
-                            if (Main.tile.At(this.x - 3, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x - 3, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 3, this.y);
+                                Liquid.AddWater(TileRefs, this.x - 3, this.y);
                             }
-                            if (Main.tile.At(this.x + 3, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x + 3, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 3, this.y);
+                                Liquid.AddWater(TileRefs, this.x + 3, this.y);
                             }
-                            if (num3 != 6 || Main.tile.At(this.x, this.y - 1).Liquid <= 0)
+                            if (num3 != 6 || TileRefs(this.x, this.y - 1).Liquid <= 0)
                             {
-                                Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
+                                TileRefs(this.x, this.y).SetLiquid ((byte)num);
                             }
                         }
                         else
                         {
                             int num4 = 0;
-                            num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x - 2, this.y).Liquid + Main.tile.At(this.x + 2, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
+                            num = (float)((int)(TileRefs(this.x - 1, this.y).Liquid + TileRefs(this.x + 1, this.y).Liquid + TileRefs(this.x - 2, this.y).Liquid + TileRefs(this.x + 2, this.y).Liquid + TileRefs(this.x, this.y).Liquid) + num2);
                             num = (float)Math.Round((double)(num / 5f));
-                            Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
+                            TileRefs(this.x - 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x - 1, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 1, this.y);
-                                Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x - 1, this.y);
+                                TileRefs(this.x - 1, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num4++;
                             }
-                            Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
+                            TileRefs(this.x + 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x + 1, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 1, this.y);
-                                Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x + 1, this.y);
+                                TileRefs(this.x + 1, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num4++;
                             }
-                            Main.tile.At(this.x - 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x - 2, this.y).Liquid != (byte)num)
+                            TileRefs(this.x - 2, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x - 2, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 2, this.y);
-                                Main.tile.At(this.x - 2, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x - 2, this.y);
+                                TileRefs(this.x - 2, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num4++;
                             }
-                            Main.tile.At(this.x + 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x + 2, this.y).Liquid != (byte)num)
+                            TileRefs(this.x + 2, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x + 2, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 2, this.y);
-                                Main.tile.At(this.x + 2, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x + 2, this.y);
+                                TileRefs(this.x + 2, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num4++;
                             }
-                            if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x - 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 1, this.y);
+                                Liquid.AddWater(TileRefs, this.x - 1, this.y);
                             }
-                            if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x + 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 1, this.y);
+                                Liquid.AddWater(TileRefs, this.x + 1, this.y);
                             }
-                            if (Main.tile.At(this.x - 2, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x - 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 2, this.y);
+                                Liquid.AddWater(TileRefs, this.x - 2, this.y);
                             }
-                            if (Main.tile.At(this.x + 2, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x + 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 2, this.y);
+                                Liquid.AddWater(TileRefs, this.x + 2, this.y);
                             }
-                            if (num4 != 4 || Main.tile.At(this.x, this.y - 1).Liquid <= 0)
+                            if (num4 != 4 || TileRefs(this.x, this.y - 1).Liquid <= 0)
                             {
-                                Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
+                                TileRefs(this.x, this.y).SetLiquid ((byte)num);
                             }
                         }
                     }
@@ -568,77 +574,77 @@ namespace Terraria_Server
                     {
                         if (flag3)
                         {
-                            num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x - 2, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
+                            num = (float)((int)(TileRefs(this.x - 1, this.y).Liquid + TileRefs(this.x + 1, this.y).Liquid + TileRefs(this.x - 2, this.y).Liquid + TileRefs(this.x, this.y).Liquid) + num2);
                             num = (float)Math.Round((double)(num / 4f) + 0.001);
-                            Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            TileRefs(this.x - 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x - 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x - 1, this.y);
-                                Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x - 1, this.y);
+                                TileRefs(this.x - 1, this.y).SetLiquid ((byte)num);
                             }
-                            Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            TileRefs(this.x + 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x + 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 1, this.y);
-                                Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x + 1, this.y);
+                                TileRefs(this.x + 1, this.y).SetLiquid ((byte)num);
                             }
-                            Main.tile.At(this.x - 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x - 2, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                            TileRefs(this.x - 2, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x - 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                             {
-                                Main.tile.At(this.x - 2, this.y).SetLiquid ((byte)num);
-                                Liquid.AddWater(this.x - 2, this.y);
+                                TileRefs(this.x - 2, this.y).SetLiquid ((byte)num);
+                                Liquid.AddWater(TileRefs, this.x - 2, this.y);
                             }
-                            Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
+                            TileRefs(this.x, this.y).SetLiquid ((byte)num);
                         }
                         else
                         {
                             if (flag4)
                             {
-                                num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x + 2, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
+                                num = (float)((int)(TileRefs(this.x - 1, this.y).Liquid + TileRefs(this.x + 1, this.y).Liquid + TileRefs(this.x + 2, this.y).Liquid + TileRefs(this.x, this.y).Liquid) + num2);
                                 num = (float)Math.Round((double)(num / 4f) + 0.001);
-                                Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                                if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                                TileRefs(this.x - 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                                if (TileRefs(this.x - 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                                 {
-                                    Liquid.AddWater(this.x - 1, this.y);
-                                    Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
+                                    Liquid.AddWater(TileRefs, this.x - 1, this.y);
+                                    TileRefs(this.x - 1, this.y).SetLiquid ((byte)num);
                                 }
-                                Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                                if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                                TileRefs(this.x + 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                                if (TileRefs(this.x + 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                                 {
-                                    Liquid.AddWater(this.x + 1, this.y);
-                                    Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
+                                    Liquid.AddWater(TileRefs, this.x + 1, this.y);
+                                    TileRefs(this.x + 1, this.y).SetLiquid ((byte)num);
                                 }
-                                Main.tile.At(this.x + 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                                if (Main.tile.At(this.x + 2, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
+                                TileRefs(this.x + 2, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                                if (TileRefs(this.x + 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
                                 {
-                                    Main.tile.At(this.x + 2, this.y).SetLiquid ((byte)num);
-                                    Liquid.AddWater(this.x + 2, this.y);
+                                    TileRefs(this.x + 2, this.y).SetLiquid ((byte)num);
+                                    Liquid.AddWater(TileRefs, this.x + 2, this.y);
                                 }
-                                Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
+                                TileRefs(this.x, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
-                                num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
+                                num = (float)((int)(TileRefs(this.x - 1, this.y).Liquid + TileRefs(this.x + 1, this.y).Liquid + TileRefs(this.x, this.y).Liquid) + num2);
                                 num = (float)Math.Round((double)(num / 3f) + 0.001);
-                                Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                                if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
+                                TileRefs(this.x - 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                                if (TileRefs(this.x - 1, this.y).Liquid != (byte)num)
                                 {
-                                    Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
+                                    TileRefs(this.x - 1, this.y).SetLiquid ((byte)num);
                                 }
-                                if (Main.tile.At(this.x, this.y).Liquid != (byte)num || Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
+                                if (TileRefs(this.x, this.y).Liquid != (byte)num || TileRefs(this.x - 1, this.y).Liquid != (byte)num)
                                 {
-                                    Liquid.AddWater(this.x - 1, this.y);
+                                    Liquid.AddWater(TileRefs, this.x - 1, this.y);
                                 }
-                                Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                                if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
+                                TileRefs(this.x + 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                                if (TileRefs(this.x + 1, this.y).Liquid != (byte)num)
                                 {
-                                    Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
+                                    TileRefs(this.x + 1, this.y).SetLiquid ((byte)num);
                                 }
-                                if (Main.tile.At(this.x, this.y).Liquid != (byte)num || Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
+                                if (TileRefs(this.x, this.y).Liquid != (byte)num || TileRefs(this.x + 1, this.y).Liquid != (byte)num)
                                 {
-                                    Liquid.AddWater(this.x + 1, this.y);
+                                    Liquid.AddWater(TileRefs, this.x + 1, this.y);
                                 }
-                                Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
+                                TileRefs(this.x, this.y).SetLiquid ((byte)num);
                             }
                         }
                     }
@@ -647,51 +653,51 @@ namespace Terraria_Server
                 {
                     if (flag)
                     {
-                        num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
+                        num = (float)((int)(TileRefs(this.x - 1, this.y).Liquid + TileRefs(this.x, this.y).Liquid) + num2);
                         num = (float)Math.Round((double)(num / 2f) + 0.001);
-                        if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
+                        if (TileRefs(this.x - 1, this.y).Liquid != (byte)num)
                         {
-                            Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
+                            TileRefs(this.x - 1, this.y).SetLiquid ((byte)num);
                         }
-                        Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                        if (Main.tile.At(this.x, this.y).Liquid != (byte)num || Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
+                        TileRefs(this.x - 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                        if (TileRefs(this.x, this.y).Liquid != (byte)num || TileRefs(this.x - 1, this.y).Liquid != (byte)num)
                         {
-                            Liquid.AddWater(this.x - 1, this.y);
+                            Liquid.AddWater(TileRefs, this.x - 1, this.y);
                         }
-                        Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
+                        TileRefs(this.x, this.y).SetLiquid ((byte)num);
                     }
                     else
                     {
                         if (flag2)
                         {
-                            num = (float)((int)(Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
+                            num = (float)((int)(TileRefs(this.x + 1, this.y).Liquid + TileRefs(this.x, this.y).Liquid) + num2);
                             num = (float)Math.Round((double)(num / 2f) + 0.001);
-                            if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
+                            if (TileRefs(this.x + 1, this.y).Liquid != (byte)num)
                             {
-                                Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
+                                TileRefs(this.x + 1, this.y).SetLiquid ((byte)num);
                             }
-                            Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
-                            if (Main.tile.At(this.x, this.y).Liquid != (byte)num || Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
+                            TileRefs(this.x + 1, this.y).SetLava (TileRefs(this.x, this.y).Lava);
+                            if (TileRefs(this.x, this.y).Liquid != (byte)num || TileRefs(this.x + 1, this.y).Liquid != (byte)num)
                             {
-                                Liquid.AddWater(this.x + 1, this.y);
+                                Liquid.AddWater(TileRefs, this.x + 1, this.y);
                             }
-                            Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
+                            TileRefs(this.x, this.y).SetLiquid ((byte)num);
                         }
                     }
                 }
             }
-            if (Main.tile.At(this.x, this.y).Liquid == liquid)
+            if (TileRefs(this.x, this.y).Liquid == liquid)
             {
                 this.kill++;
                 return;
             }
-            if (Main.tile.At(this.x, this.y).Liquid == 254 && liquid == 255)
+            if (TileRefs(this.x, this.y).Liquid == 254 && liquid == 255)
             {
-                Main.tile.At(this.x, this.y).SetLiquid (255);
+                TileRefs(this.x, this.y).SetLiquid (255);
                 this.kill++;
                 return;
             }
-            Liquid.AddWater(this.x, this.y - 1);
+            Liquid.AddWater(TileRefs, this.x, this.y - 1);
             this.kill = 0;
         }
         
@@ -711,9 +717,12 @@ namespace Terraria_Server
                 }
             }
         }
-        
-        public static void UpdateLiquid()
+
+		public static void UpdateLiquid(Func<Int32, Int32, ITile> TileRefs)
         {
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
             Liquid.cycles = 25;
             Liquid.maxLiquid = 5000;
 
@@ -746,15 +755,19 @@ namespace Terraria_Server
                     while (Liquid.panicY >= 3 && num < 5)
                     {
                         num++;
-                        Liquid.QuickWater(0, Liquid.panicY, Liquid.panicY);
+						Liquid.QuickWater(TileRefs, 0, Liquid.panicY, Liquid.panicY);
                         Liquid.panicY--;
                         if (Liquid.panicY < 3)
                         {
                             ProgramLog.Log ("Water has been settled.");
                             Liquid.panicCounter = 0;
                             Liquid.panicMode = false;
-                            using (var prog = new ProgressLogger (Main.maxTilesX - 2, "Performing water check"))
-                                WorldModify.WaterCheck (prog);
+
+							using (var prog = new ProgressLogger(Main.maxTilesX - 2, "Performing water check"))
+							{
+								WorldModify.WaterCheck(TileRefs, prog);
+							}
+
                             for (int i = 0; i < 255; i++)
                             {
                                 for (int j = 0; j < Main.maxSectionsX; j++)
@@ -810,8 +823,8 @@ namespace Terraria_Server
                 for (int l = num3; l < num4; l++)
                 {
                     Main.liquid[l].delay = 10;
-                    Main.liquid[l].Update();
-                    Main.tile.At(Main.liquid[l].x, Main.liquid[l].y).SetSkipLiquid (false);
+                    Main.liquid[l].Update(TileRefs);
+                    TileRefs(Main.liquid[l].x, Main.liquid[l].y).SetSkipLiquid (false);
                 }
             }
             else
@@ -819,13 +832,13 @@ namespace Terraria_Server
                 for (int m = num3; m < num4; m++)
                 {
                     
-                    if (!Main.tile.At(Main.liquid[m].x, Main.liquid[m].y).SkipLiquid)
+                    if (!TileRefs(Main.liquid[m].x, Main.liquid[m].y).SkipLiquid)
                     {
-                        Main.liquid[m].Update();
+						Main.liquid[m].Update(TileRefs);
                     }
                     else
                     {
-                        Main.tile.At(Main.liquid[m].x, Main.liquid[m].y).SetSkipLiquid (false);
+                        TileRefs(Main.liquid[m].x, Main.liquid[m].y).SetSkipLiquid (false);
                     }
                 }
             }
@@ -837,7 +850,7 @@ namespace Terraria_Server
                 {
                     if (Main.liquid[n].kill > 3)
                     {
-                        Liquid.DelWater(n);
+                        Liquid.DelWater(TileRefs, n);
                     }
                 }
 
@@ -850,8 +863,8 @@ namespace Terraria_Server
 
                 for (int num6 = 0; num6 < num5; num6++)
                 {
-                    Main.tile.At(Main.liquidBuffer[0].x, Main.liquidBuffer[0].y).SetCheckingLiquid (false);
-                    Liquid.AddWater(Main.liquidBuffer[0].x, Main.liquidBuffer[0].y);
+                    TileRefs(Main.liquidBuffer[0].x, Main.liquidBuffer[0].y).SetCheckingLiquid (false);
+                    Liquid.AddWater(TileRefs, Main.liquidBuffer[0].x, Main.liquidBuffer[0].y);
                     LiquidBuffer.DelBuffer(0);
                 }
 
@@ -863,7 +876,7 @@ namespace Terraria_Server
                         Liquid.stuck = true;
                         for (int num7 = Liquid.numLiquid - 1; num7 >= 0; num7--)
                         {
-                            Liquid.DelWater(num7);
+							Liquid.DelWater(TileRefs, num7);
                         }
                         Liquid.stuck = false;
                         Liquid.stuckCount = 0;
@@ -878,9 +891,12 @@ namespace Terraria_Server
             }
         }
 
-        public static void AddWater(int x, int y)
+		public static void AddWater(Func<Int32, Int32, ITile> TileRefs, int x, int y)
         {
-            if (Main.tile.At(x, y).CheckingLiquid)
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
+            if (TileRefs(x, y).CheckingLiquid)
             {
                 return;
             }
@@ -892,7 +908,7 @@ namespace Terraria_Server
             {
                 return;
             }
-            if (Main.tile.At(x, y).Liquid == 0)
+            if (TileRefs(x, y).Liquid == 0)
             {
                 return;
             }
@@ -901,67 +917,70 @@ namespace Terraria_Server
                 LiquidBuffer.AddBuffer(x, y);
                 return;
             }
-            Main.tile.At(x, y).SetCheckingLiquid (true);
+            TileRefs(x, y).SetCheckingLiquid (true);
             Main.liquid[Liquid.numLiquid].kill = 0;
             Main.liquid[Liquid.numLiquid].x = x;
             Main.liquid[Liquid.numLiquid].y = y;
             Main.liquid[Liquid.numLiquid].delay = 0;
-            Main.tile.At(x, y).SetSkipLiquid (false);
+            TileRefs(x, y).SetSkipLiquid (false);
             Liquid.numLiquid++;
             
             NetMessage.SendWater(x, y);
 
-            if (Main.tile.At(x, y).Active && (Main.tileWaterDeath[(int)Main.tile.At(x, y).Type] || (Main.tile.At(x, y).Lava && Main.tileLavaDeath[(int)Main.tile.At(x, y).Type])))
+            if (TileRefs(x, y).Active && (Main.tileWaterDeath[(int)TileRefs(x, y).Type] || (TileRefs(x, y).Lava && Main.tileLavaDeath[(int)TileRefs(x, y).Type])))
             {
                 if (WorldModify.gen)
                 {
-                    Main.tile.At(x, y).SetActive (false);
+                    TileRefs(x, y).SetActive (false);
                     return;
                 }
-                WorldModify.KillTile(x, y);
+				WorldModify.KillTile(TileRefs, x, y);
                 NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
             }
         }
-        
-        public static void LavaCheck(int x, int y)
+
+		public static void LavaCheck(Func<Int32, Int32, ITile> TileRefs, int x, int y)
         {
-            if ((Main.tile.At(x - 1, y).Liquid > 0 && !Main.tile.At(x - 1, y).Lava) || (Main.tile.At(x + 1, y).Liquid > 0 && !Main.tile.At(x + 1, y).Lava) || (Main.tile.At(x, y - 1).Liquid > 0 && !Main.tile.At(x, y - 1).Lava))
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
+            if ((TileRefs(x - 1, y).Liquid > 0 && !TileRefs(x - 1, y).Lava) || (TileRefs(x + 1, y).Liquid > 0 && !TileRefs(x + 1, y).Lava) || (TileRefs(x, y - 1).Liquid > 0 && !TileRefs(x, y - 1).Lava))
             {
                 int num = 0;
 
-                if (!Main.tile.At(x - 1, y).Lava)
+                if (!TileRefs(x - 1, y).Lava)
                 {
-                    num += (int)Main.tile.At(x - 1, y).Liquid;
-                    Main.tile.At(x - 1, y).SetLiquid (0);
+                    num += (int)TileRefs(x - 1, y).Liquid;
+                    TileRefs(x - 1, y).SetLiquid (0);
                 }
 
-                if (!Main.tile.At(x + 1, y).Lava)
+                if (!TileRefs(x + 1, y).Lava)
                 {
-                    num += (int)Main.tile.At(x + 1, y).Liquid;
-                    Main.tile.At(x + 1, y).SetLiquid (0);
+                    num += (int)TileRefs(x + 1, y).Liquid;
+                    TileRefs(x + 1, y).SetLiquid (0);
                 }
 
-                if (!Main.tile.At(x, y - 1).Lava)
+                if (!TileRefs(x, y - 1).Lava)
                 {
-                    num += (int)Main.tile.At(x, y - 1).Liquid;
-                    Main.tile.At(x, y - 1).SetLiquid (0);
+                    num += (int)TileRefs(x, y - 1).Liquid;
+                    TileRefs(x, y - 1).SetLiquid (0);
                 }
 
-                if (num >= 128 && !Main.tile.At(x, y).Active)
+                if (num >= 128 && !TileRefs(x, y).Active)
                 {
                     ClearLava(x, y);
-                    WorldModify.PlaceTile(x, y, 56, true, true, -1, 0);
-                    WorldModify.SquareTileFrame(x, y, true);
+					WorldModify.PlaceTile(TileRefs, x, y, 56, true, true, -1, 0);
+					WorldModify.SquareTileFrame(TileRefs, x, y, true);
 
                     NetMessage.SendTileSquare(-1, x - 1, y - 1, 3);
                     return;
                 }
             }
-            else if (Main.tile.At(x, y + 1).Liquid > 0 && !Main.tile.At(x, y + 1).Lava && !Main.tile.At(x, y + 1).Active)
+            else if (TileRefs(x, y + 1).Liquid > 0 && !TileRefs(x, y + 1).Lava && !TileRefs(x, y + 1).Active)
             {
                 ClearLava(x, y);
-                WorldModify.PlaceTile(x, y + 1, 56, true, true, -1, 0);
-                WorldModify.SquareTileFrame(x, y + 1, true);
+				WorldModify.PlaceTile(TileRefs, x, y + 1, 56, true, true, -1, 0);
+				WorldModify.SquareTileFrame(TileRefs, x, y + 1, true);
                 
                 NetMessage.SendTileSquare(-1, x - 1, y, 3);
             }
@@ -972,66 +991,66 @@ namespace Terraria_Server
             Main.tile.At(x, y).SetLiquid (0);
             Main.tile.At(x, y).SetLava (false);
         }
-        
-        public static void DelWater(int liquidIndex)
+
+		public static void DelWater(Func<Int32, Int32, ITile> TileRefs, int liquidIndex)
         {
             int x = Main.liquid[liquidIndex].x;
             int y = Main.liquid[liquidIndex].y;
 
-            if (Main.tile.At(x, y).Liquid < 2)
+            if (TileRefs(x, y).Liquid < 2)
             {
-                Main.tile.At(x, y).SetLiquid (0);
+                TileRefs(x, y).SetLiquid (0);
             }
-            else if (Main.tile.At(x, y).Liquid < 20)
+            else if (TileRefs(x, y).Liquid < 20)
             {
-                if ((Main.tile.At(x - 1, y).Liquid < Main.tile.At(x, y).Liquid && (!Main.tile.At(x - 1, y).Active || !Main.tileSolid[(int)Main.tile.At(x - 1, y).Type] || Main.tileSolidTop[(int)Main.tile.At(x - 1, y).Type])) || (Main.tile.At(x + 1, y).Liquid < Main.tile.At(x, y).Liquid && (!Main.tile.At(x + 1, y).Active || !Main.tileSolid[(int)Main.tile.At(x + 1, y).Type] || Main.tileSolidTop[(int)Main.tile.At(x + 1, y).Type])) || (Main.tile.At(x, y + 1).Liquid < 255 && (!Main.tile.At(x, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(x, y + 1).Type] || Main.tileSolidTop[(int)Main.tile.At(x, y + 1).Type])))
+                if ((TileRefs(x - 1, y).Liquid < TileRefs(x, y).Liquid && (!TileRefs(x - 1, y).Active || !Main.tileSolid[(int)TileRefs(x - 1, y).Type] || Main.tileSolidTop[(int)TileRefs(x - 1, y).Type])) || (TileRefs(x + 1, y).Liquid < TileRefs(x, y).Liquid && (!TileRefs(x + 1, y).Active || !Main.tileSolid[(int)TileRefs(x + 1, y).Type] || Main.tileSolidTop[(int)TileRefs(x + 1, y).Type])) || (TileRefs(x, y + 1).Liquid < 255 && (!TileRefs(x, y + 1).Active || !Main.tileSolid[(int)TileRefs(x, y + 1).Type] || Main.tileSolidTop[(int)TileRefs(x, y + 1).Type])))
                 {
-                    Main.tile.At(x, y).SetLiquid (0);
+                    TileRefs(x, y).SetLiquid (0);
                 }
             }
-            else if (Main.tile.At(x, y + 1).Liquid < 255 && (!Main.tile.At(x, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(x, y + 1).Type] || Main.tileSolidTop[(int)Main.tile.At(x, y + 1).Type]) && !Liquid.stuck)
+            else if (TileRefs(x, y + 1).Liquid < 255 && (!TileRefs(x, y + 1).Active || !Main.tileSolid[(int)TileRefs(x, y + 1).Type] || Main.tileSolidTop[(int)TileRefs(x, y + 1).Type]) && !Liquid.stuck)
             {
                 Main.liquid[liquidIndex].kill = 0;
                 return;
             }
-			if (Main.tile.At(x, y).Liquid < 250 && Main.tile.At(x, y - 1).Liquid > 0)
+			if (TileRefs(x, y).Liquid < 250 && TileRefs(x, y - 1).Liquid > 0)
 			{
-				Liquid.AddWater(x, y - 1);
+				Liquid.AddWater(TileRefs, x, y - 1);
 			}
-            if (Main.tile.At(x, y).Liquid == 0)
+            if (TileRefs(x, y).Liquid == 0)
             {
-                Main.tile.At(x, y).SetLava (false);
+                TileRefs(x, y).SetLava (false);
             }
             else
             {
-				if (Main.tile.At(x + 1, y).Liquid > 0 && Main.tile.At(x + 1, y + 1).Liquid < 250 && !Main.tile.At(x + 1, y + 1).Active)
+				if (TileRefs(x + 1, y).Liquid > 0 && TileRefs(x + 1, y + 1).Liquid < 250 && !TileRefs(x + 1, y + 1).Active)
 				{
-					Liquid.AddWater(x + 1, y);
+					Liquid.AddWater(TileRefs, x + 1, y);
 				}
-				if (Main.tile.At(x - 1, y).Liquid > 0 && Main.tile.At(x - 1, y + 1).Liquid < 250 && !Main.tile.At(x - 1, y + 1).Active)
+				if (TileRefs(x - 1, y).Liquid > 0 && TileRefs(x - 1, y + 1).Liquid < 250 && !TileRefs(x - 1, y + 1).Active)
 				{
-					Liquid.AddWater(x - 1, y);
+					Liquid.AddWater(TileRefs, x - 1, y);
 				}
-                if (Main.tile.At(x, y).Lava)
+                if (TileRefs(x, y).Lava)
                 {
-					Liquid.LavaCheck(x, y);
+					Liquid.LavaCheck(TileRefs, x, y);
 					for (int i = x - 1; i <= x + 1; i++)
 					{
 						for (int j = y - 1; j <= y + 1; j++)
 						{
-							if (Main.tile.At(i, j).Active)
+							if (TileRefs(i, j).Active)
 							{
-								if (Main.tile.At(i, j).Type == 2 || Main.tile.At(i, j).Type == 23)
+								if (TileRefs(i, j).Type == 2 || TileRefs(i, j).Type == 23)
 								{
-									Main.tile.At(i, j).SetType (0);
-									WorldModify.SquareTileFrame(i, j, true);
+									TileRefs(i, j).SetType (0);
+									WorldModify.SquareTileFrame(TileRefs, i, j, true);
 						
 									NetMessage.SendTileSquare(-1, x, y, 3);
 								}
-								else if (Main.tile.At(i, j).Type == 60 || Main.tile.At(i, j).Type == 70)
+								else if (TileRefs(i, j).Type == 60 || TileRefs(i, j).Type == 70)
 								{
-									Main.tile.At(i, j).SetType (59);
-									WorldModify.SquareTileFrame(i, j, true);
+									TileRefs(i, j).SetType (59);
+									WorldModify.SquareTileFrame(TileRefs, i, j, true);
 						
 									NetMessage.SendTileSquare(-1, x, y, 3);
 								}
@@ -1045,13 +1064,13 @@ namespace Terraria_Server
             NetMessage.SendWater(x, y);
 
             Liquid.numLiquid--;
-            Main.tile.At(Main.liquid[liquidIndex].x, Main.liquid[liquidIndex].y).SetCheckingLiquid (false);
+            TileRefs(Main.liquid[liquidIndex].x, Main.liquid[liquidIndex].y).SetCheckingLiquid (false);
             Main.liquid[liquidIndex].x = Main.liquid[Liquid.numLiquid].x;
             Main.liquid[liquidIndex].y = Main.liquid[Liquid.numLiquid].y;
             Main.liquid[liquidIndex].kill = Main.liquid[Liquid.numLiquid].kill;
-            if (Main.tileAlch[(int)Main.tile.At(x, y).Type])
+            if (Main.tileAlch[(int)TileRefs(x, y).Type])
             {
-                WorldModify.CheckAlch(x, y);
+                WorldModify.CheckAlch(TileRefs, x, y);
             }
         }
     }

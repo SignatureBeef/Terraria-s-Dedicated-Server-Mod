@@ -31,12 +31,12 @@ namespace Terraria_Server.Messages
             if (state)
             {
                 lock (WorldModify.playerEditLock)
-                    WorldModify.OpenDoor(x, y, direction, Main.players[whoAmI]);
+                    WorldModify.OpenDoor(null, x, y, direction, Main.players[whoAmI]);
             }
             else if (doorAction == 1)
             {
                 lock (WorldModify.playerEditLock)
-                    WorldModify.CloseDoor(x, y, false, Main.players[whoAmI]);
+                    WorldModify.CloseDoor(null, x, y, false, Main.players[whoAmI]);
             }
                         
             NetMessage.SendData(19, -1, whoAmI, "", (int)doorAction, (float)x, (float)y, (float)doorDirection);

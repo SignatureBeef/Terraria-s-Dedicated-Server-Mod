@@ -807,7 +807,7 @@ namespace Terraria_Server
 				if (Main.time > 16200.0 && WorldModify.spawnMeteor)
 				{
 					WorldModify.spawnMeteor = false;
-					WorldModify.dropMeteor();
+					WorldModify.dropMeteor(null);
 				}
 			}
 			else
@@ -900,7 +900,7 @@ namespace Terraria_Server
 						{
 							if (Main.npcs[i].type != NPCType.N37_OLD_MAN && !Main.npcs[i].homeless)
 							{
-								WorldModify.QuickFindHome(i);
+								WorldModify.QuickFindHome(null, i);
 							}
 							else
 							{
@@ -1066,8 +1066,11 @@ namespace Terraria_Server
 		public static TimeSpan LastInvasionUpdateTime { get; private set; }
 		public static TimeSpan LastServerUpdateTime { get; private set; }
 
-		public static void Update(Stopwatch s)
+		public static void Update(Func<Int32, Int32, ITile> TileRefs, Stopwatch s)
 		{
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
 			int count = 0;
 
 			int timeUpdateErrors = 0;
@@ -1080,7 +1083,7 @@ namespace Terraria_Server
 			{
 				try
 				{
-					player.UpdatePlayer(count);
+					player.UpdatePlayer(TileRefs, count);
 				}
 				catch (Exception e)
 				{
@@ -1152,7 +1155,7 @@ namespace Terraria_Server
 
 					try
 					{
-						Main.projectile[i].Update(i);
+						Main.projectile[i].Update(TileRefs, i);
 					}
 					catch (Exception e)
 					{
@@ -1183,7 +1186,7 @@ namespace Terraria_Server
 
 					try
 					{
-						Main.item[i].UpdateItem(i);
+						Main.item[i].UpdateItem(TileRefs, i);
 					}
 					catch (Exception e)
 					{
@@ -1217,7 +1220,7 @@ namespace Terraria_Server
 			start = s.Elapsed;
 			try
 			{
-				WorldModify.UpdateWorld(World.Sender);
+				WorldModify.UpdateWorld(TileRefs, World.Sender);
 				worldUpdateErrors = 0;
 			}
 			catch (Exception e)

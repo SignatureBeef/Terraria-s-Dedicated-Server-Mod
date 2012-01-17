@@ -151,7 +151,7 @@ namespace Terraria_Server.Messages
 			
 			if (args.applied > 0)
 			{
-				WorldModify.RangeFrame(left, top, left + (int)size, top + (int)size);
+				WorldModify.RangeFrame(null, left, top, left + (int)size, top + (int)size);
 				NetMessage.SendData(Packet.TILE_SQUARE, -1, whoAmI, "", (int)size, (float)left, (float)top);
 			}
 			

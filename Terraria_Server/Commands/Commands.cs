@@ -228,7 +228,7 @@ namespace Terraria_Server.Commands
 		{
 			Server.notifyOps("Saving World...", true);
 
-			WorldIO.saveWorld(Server.World.SavePath, false);
+			WorldIO.saveWorld(null, Server.World.SavePath, false);
 			while (WorldModify.saveLock)
 			{
                 Thread.Sleep(100);
@@ -993,7 +993,7 @@ namespace Terraria_Server.Commands
 
 			ProgramLog.Log("Starting the Server");
 			Main.Initialize();
-			WorldIO.LoadWorld(Server.World.SavePath);
+			WorldIO.LoadWorld(null, Server.World.SavePath);
 			Program.updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
             NetPlay.StartServer();
 			//Statics.keepRunning = false;

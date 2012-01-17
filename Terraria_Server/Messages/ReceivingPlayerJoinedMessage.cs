@@ -44,7 +44,7 @@ namespace Terraria_Server.Messages
             num += 4;
             player.SpawnY = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            player.Spawn();
+            player.Spawn(null);
             
             //ProgramLog.Debug.Log ("sx: {0}, sy: {1}, tx: {2}, ty: {3}", player.SpawnX, player.SpawnY, player.TeleSpawnX, player.TeleSpawnY);
             

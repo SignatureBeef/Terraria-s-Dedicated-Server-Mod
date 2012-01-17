@@ -19,7 +19,7 @@ namespace Terraria_Server.Misc
     {
         public static BackupIOReturn LoadWorld(string Name)
         {
-            WorldIO.LoadWorld(Statics.WorldPath + Path.DirectorySeparatorChar + Name);
+            WorldIO.LoadWorld(null, Statics.WorldPath + Path.DirectorySeparatorChar + Name);
 
             if (WorldModify.loadFailed && !WorldModify.loadSuccess)
             {
@@ -34,7 +34,7 @@ namespace Terraria_Server.Misc
             if (WorldModify.saveLock) return BackupIOReturn.SAVE_LOCK;
                 //Please wait for the current operation to finish.
 
-            if (WorldIO.saveWorld(Statics.WorldPath + Path.DirectorySeparatorChar + Name))
+            if (WorldIO.saveWorld(null, Statics.WorldPath + Path.DirectorySeparatorChar + Name))
                 return BackupIOReturn.SUCCESS;
             else
                 return BackupIOReturn.SAVE_FAIL;

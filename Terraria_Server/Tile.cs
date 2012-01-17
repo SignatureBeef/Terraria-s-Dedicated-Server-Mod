@@ -14,6 +14,8 @@ namespace Terraria_Server
 
 		bool Active { get; }
 
+		bool Exists { get; }
+
 		void SetActive(bool value);
 
 		bool Lighted { get; }

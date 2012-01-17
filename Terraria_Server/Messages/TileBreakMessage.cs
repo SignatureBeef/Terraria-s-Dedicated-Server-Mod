@@ -56,8 +56,7 @@ namespace Terraria_Server.Messages
 				switch (tileAction)
 				{
 					case 0:
-						//editor.KillTile(x, y, failFlag, false, false);
-						WorldModify.KillTile(x, y, editor.ITileAt, failFlag);
+						editor.KillTile(x, y, failFlag, false, false);
 						break;
 						
 					case 1:
