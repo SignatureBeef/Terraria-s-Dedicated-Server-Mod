@@ -1,7 +1,8 @@
 Terraria's Dedicated Server Mod
 -------------
 
-Aims to provide a stable Server + API which is compatible with Mono.
+Aims to provide a stable Server + API which is compatible with Mono while also being 10% free of charge. However if you wish to donate, please checkout the donation options over at http://tdsm.org
+(Donating will encourage us to work harder, Because at the moment we are doing this out of shear good will for people in a predicament when we originally left.)
 
 If you like TDSM or want to help support us, we simply ask you to tell your friends about it, and help spread the word!.
 
@@ -9,15 +10,22 @@ If you like TDSM or want to help support us, we simply ask you to tell your frie
 * Dev's are more than welcome to post their commits to my page, I'm all for it. 
 
 
-TDSM IS NOT tMod. TDSM was actually under development before tMod was released.
-
-	- TDSM has been tested on a Ubuntu System with the Latest Mono installed. It was proven to be working! DebugMode is no longer needed!
-
+TDSM IS NOT tMod nor is it TShock. TDSM was actually under development before tMod was released.
 
 Status
 -------------
-TDSM is currently runnable as a server, You may also find that Developers can also now make plugins for it if they feel so.
-From build #24 TDSM has been getting much better performance wise for your server with each build. Build #25 you will see noticably that ram & CPU usage has decreased. You will also notice how fast you will connect :P
+We are actually started on a new beta release, Found here and is seperate from the official main repo found over at GitHub.
+There are many things still left to do, such as new Biomes and tile modifications.
+
+Features
+-------------
+Oh god. There is too many to tell, Such things as 
+	- Memory/CPU optimizations (at this stage 56mb on a testing state)
+	- No Client code (Runs a hell of a lot faster...)
+	- Permissions System
+	- Player sandboxing! (This keeps track of player world alterations!)
+	
+These are just only a few, But there is a larger list located at http://tdsm.org
 
 
 How To Use
@@ -29,11 +37,11 @@ TDSM has included the use for Operators. To use this feature simply set a passwo
 
 The server also allows command line arguments, We will be adding documentation to the Wiki whenever we can.
 
-TODO
+Contact
 -------------
-* Yet to removed the rest of un-needed code for client purpose. (Not much left)
-* Yet to add more plugin hooks!
-* Yet to remember what else!
+Usually we always had talked on IRC or the Forums.
+During the beta development we setup #TDSMBeta on esper; Invite only. So you might want to hop on #TDSM or #TDSMGit and have a chat to DeathCradle.
+
 
 Developers
 =============
