@@ -2,6 +2,7 @@ Terraria's Dedicated Server Mod
 -------------
 
 Aims to provide a stable Server + API which is compatible with Mono while also being 10% free of charge. However if you wish to donate, please checkout the donation options over at http://tdsm.org
+
 (Donating will encourage us to work harder, Because at the moment we are doing this out of shear good will for people in a predicament when we originally left.)
 
 If you like TDSM or want to help support us, we simply ask you to tell your friends about it, and help spread the word!.
@@ -20,10 +21,15 @@ There are many things still left to do, such as new Biomes and tile modification
 Features
 -------------
 Oh god. There is too many to tell, Such things as 
+
 	- Memory/CPU optimizations (at this stage 56mb on a testing state)
+	
 	- No Client code (Runs a hell of a lot faster...)
+	
 	- Permissions System
+	
 	- Player sandboxing! (This keeps track of player world alterations!)
+	
 	
 These are just only a few, But there is a larger list located at http://tdsm.org
 
@@ -40,6 +46,7 @@ The server also allows command line arguments, We will be adding documentation t
 Contact
 -------------
 Usually we always had talked on IRC or the Forums.
+
 During the beta development we setup #TDSMBeta on esper; Invite only. So you might want to hop on #TDSM or #TDSMGit and have a chat to DeathCradle.
 
 
