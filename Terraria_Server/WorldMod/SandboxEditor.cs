@@ -74,7 +74,7 @@ namespace Terraria_Server.WorldMod
 			this.sandbox = sandbox;
 		}
 		
-		struct TRef
+		public struct TRef
 		{
 			readonly SandboxEditor<TBox> editor;
 			readonly short x;
@@ -166,12 +166,12 @@ namespace Terraria_Server.WorldMod
 		
 		public const int maxRoomTiles = 1900;
 		
-		TRef TileAt (int x, int y)
+		public TRef TileAt (int x, int y)
 		{
 			return new TRef (this, x, y);
 		}
 		
-		public bool EmptyTileCheck(int startX, int endX, int startY, int endY, int ignoreStyle = -1)
+		/*public bool EmptyTileCheck(int startX, int endX, int startY, int endY, int ignoreStyle = -1)
 		{
 			if (startX < 0)
 			{
@@ -8596,6 +8596,6 @@ namespace Terraria_Server.WorldMod
 					}
 				}
 			}
-		}
+		}*/
 	}
 }
