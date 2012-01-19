@@ -452,6 +452,8 @@ namespace Terraria_Server.WorldMod
 
 		public static void LoadWorld (Func<Int32, Int32, ITile> TileRefs, string LoadPath)
 		{
+			Main.checkXmas();
+
 			if(TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 

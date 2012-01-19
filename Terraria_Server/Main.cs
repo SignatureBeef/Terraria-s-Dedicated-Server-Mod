@@ -69,6 +69,9 @@ namespace Terraria_Server
 		// [TODO] 1.1
 		public static float harpNote = 0f;
 
+		public static bool Xmas = false;
+		public static int snowDust = 0;
+
 		public static bool[] tileMergeDirt = new bool[Main.MAX_TILE_SETS];
 		public static bool[] tileCut = new bool[Main.MAX_TILE_SETS];
 		public static bool[] tileAlch = new bool[Main.MAX_TILE_SETS];
@@ -781,6 +784,7 @@ namespace Terraria_Server
 
 				if (Main.time > 32400.0)
 				{
+					Main.checkXmas();
 					if (Main.invasionDelay > 0)
 					{
 						Main.invasionDelay--;
@@ -1264,5 +1268,18 @@ namespace Terraria_Server
 
 		// [TODO] 1.1
 		public static bool hardMode { get; set; }
+
+		public static void checkXmas()
+		{
+			DateTime now = DateTime.Now;
+			int day = now.Day;
+			int month = now.Month;
+			if (day >= 15 && month == 12)
+			{
+				Main.Xmas = true;
+				return;
+			}
+			Main.Xmas = false;
+		}
 	}
 }
