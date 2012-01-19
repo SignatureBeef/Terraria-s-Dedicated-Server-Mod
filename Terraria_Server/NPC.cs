@@ -14,6 +14,8 @@ namespace Terraria_Server
 	/// <summary>
 	/// Basic NPC class
 	/// </summary>
+	/// 
+	[DeepClone]
     public class NPC : BaseEntity, ISender
     {
         internal delegate void NPCSpawn(int npcId);
@@ -168,16 +170,20 @@ namespace Terraria_Server
         public int oldDirectionY;
         public int soundDelay;
 
+		public const Int32 MAX_BUFF_TIME	= 5;
+		public const Int32 MAX_BUFF_TYPE	= 5;
+		public const Int32 MAX_BUFF_IMMUNE	= 256;
+
 		[DontClone] public Vector2 Velocity;
 		[DontClone] public Vector2 oldPosition;
 		[DontClone] public Vector2 oldVelocity;
         
-		[DeepClone] public float[] ai = new float[NPC.MAX_AI];
-		[DeepClone] public float[] localAI = new float[NPC.MAX_AI];
-		[DeepClone] public ushort[] immune = new ushort[256];
-		[DeepClone] public int[] buffType = new int[5];
-		[DeepClone] public int[] buffTime = new int[5];
-		[DeepClone] public bool[] buffImmune = new bool[Main.MAX_BUFFS];
+		[DeepClone] public float[]	ai			= new float[MAX_AI];
+		[DeepClone] public float[]	localAI		= new float[MAX_AI];
+		[DeepClone] public ushort[] immune		= new ushort[MAX_BUFF_IMMUNE];
+		[DeepClone] public int[]	buffType	= new int[MAX_BUFF_TYPE];
+		[DeepClone] public int[]	buffTime	= new int[MAX_BUFF_TIME];
+		[DeepClone] public bool[]	buffImmune	= new bool[Main.MAX_BUFFS];
 		
 		public bool PoisonImmunity
 		{
@@ -7461,17 +7467,21 @@ namespace Terraria_Server
             //cloned.defense = (int)(cloned.
             //cloned.slots *= cloned.scale;
             
-            cloned.ai = new float[NPC.MAX_AI];
-            Array.Copy(ai, cloned.ai, NPC.MAX_AI);
-            cloned.immune = new ushort[256];
-            Array.Copy(immune, cloned.immune, 256);
-            cloned.buffType = new int[5];
-            Array.Copy (buffType, cloned.buffType, 5);
-            cloned.buffTime = new int[5];
-            Array.Copy (buffTime, cloned.buffTime, 5);
+            cloned.ai = new float[MAX_AI];
+            Array.Copy(ai, cloned.ai, MAX_AI);
+
+            cloned.immune = new ushort[MAX_BUFF_IMMUNE];
+			Array.Copy(immune, cloned.immune, MAX_BUFF_IMMUNE);
+
+            cloned.buffType = new int[MAX_BUFF_TYPE];
+			Array.Copy(buffType, cloned.buffType, MAX_BUFF_TYPE);
+
+            cloned.buffTime = new int[MAX_BUFF_TIME];
+			Array.Copy(buffTime, cloned.buffTime, MAX_BUFF_TIME);
+
             //cloned.buffImmune = new System.Collections.BitArray (buffImmune);
-            cloned.buffImmune = new bool[27];
-            Array.Copy (buffImmune, cloned.buffImmune, 27);
+			cloned.buffImmune = new bool[Main.MAX_BUFFS];
+			Array.Copy(buffImmune, cloned.buffImmune, Main.MAX_BUFFS);
             return cloned;
         }
 

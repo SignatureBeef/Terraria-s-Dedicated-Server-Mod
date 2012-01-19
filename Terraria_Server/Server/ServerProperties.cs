@@ -12,6 +12,7 @@ namespace Terraria_Server
         private const bool      DEFAULT_ALLOW_TDCMRPG           = true;
         private const bool      DEFAULT_AUTOMATIC_UPDATES       = false;
         private const bool      DEFAULT_BUFFER_LIQUID_UPDATES   = false;
+        private const bool      DEFAULT_COLLECT_GARBAGE			= true;
         private const int       DEFAULT_EXIT_USERS              = -1;
         private const string    DEFAULT_GREETING                = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
         private const bool      DEFAULT_HACKED_DATA             = false;
@@ -45,6 +46,7 @@ namespace Terraria_Server
         private const string    ALLOW_TDCMRPG                   = "allow-tdcmrpg";
         private const string    AUTOMATIC_UPDATES               = "allowupdates";
         private const string    BUFFER_LIQUID_UPDATES           = "buffer-liquid-updates";
+        private const string    COLLECT_GARBAGE					= "collect-garbage";
         private const string    EXIT_USERS                      = "exitaccesslevel";
         private const string    DUNGEON_AMOUNT                  = "opt-numdungeons";
         private const string    FLOATING_ISLAND_AMOUNT          = "opt-num-floating-islands";
@@ -86,8 +88,9 @@ namespace Terraria_Server
             object temp = null;
             temp = AllowExplosions;
             temp = AllowTDCMRPG;
-            temp = AutomaticUpdates;
-            temp = BufferLiquidUpdates;
+			temp = AutomaticUpdates;
+			temp = BufferLiquidUpdates;
+			temp = CollectGarbage;
             temp = DungeonAmount;
             temp = ExitAccessLevel;
             temp = FloatingIslandAmount;
@@ -542,10 +545,16 @@ namespace Terraria_Server
             set { setValue(EXIT_USERS, value); }
         }
 
-        public bool AllowTDCMRPG
-        {
-            get { return getValue(ALLOW_TDCMRPG, DEFAULT_ALLOW_TDCMRPG); }
-            set { setValue(ALLOW_TDCMRPG, value); }
-        }
+		public bool AllowTDCMRPG
+		{
+			get { return getValue(ALLOW_TDCMRPG, DEFAULT_ALLOW_TDCMRPG); }
+			set { setValue(ALLOW_TDCMRPG, value); }
+		}
+
+		public bool CollectGarbage
+		{
+			get { return getValue(COLLECT_GARBAGE, DEFAULT_COLLECT_GARBAGE); }
+			set { setValue(COLLECT_GARBAGE, value); }
+		}
     }
 }

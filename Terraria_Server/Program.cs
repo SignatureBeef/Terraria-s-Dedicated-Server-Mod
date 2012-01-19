@@ -741,7 +741,8 @@ namespace Terraria_Server
 	
 					double updateTime = 16.66666666666667;
 					double nextUpdate = s.ElapsedMilliseconds + updateTime;
-	
+
+					var collect = 0;
 					while (!NetPlay.disconnect)
 					{
 						double now = s.ElapsedMilliseconds;
@@ -764,6 +765,17 @@ namespace Terraria_Server
 							var start = s.Elapsed;
                             Terraria_Server.Main.Update(null, s);
 							LastUpdateTime = s.Elapsed - start;
+						}
+
+						if (collect++ >= 1000) //Every 1000 loops should be less intensive.
+						{
+							if (properties.CollectGarbage)
+							{
+								ProgramLog.Debug.Log("Performing GC...");
+								GC.Collect();
+								//ProgramLog.Debug.Log("GC Total Memory {0}", GC.GetTotalMemory(false));
+							}
+							collect = 0;
 						}
 					}
 	

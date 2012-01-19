@@ -29,7 +29,11 @@ namespace Terraria_Utilities.Serialize
         /// <param name="SetDefaults"></param>
         /// <param name="invokeType"></param>
         /// <param name="input"></param>
-        public static Dictionary<Int32, String> Serialize(Type type, string[] ignoreFields, MethodInfo SetDefaults, InvokeType invokeType = InvokeType.ITEM_NPC, string[] inputs = null, int MaxObjects = 1000)
+        public static Dictionary<Int32, String> Serialize(
+			Type type, string[] ignoreFields, MethodInfo SetDefaults, 
+			InvokeType invokeType = InvokeType.ITEM_NPC, 
+			string[] inputs = null, int MaxObjects = 1000,
+			bool NPCOverride = false)
         {
             var FilePath = (invokeType == InvokeType.ITEM_NPC_BY_NAME) ? type.Name + "sByName.xml" : type.Name + "s.xml";
             if (File.Exists(FilePath))
