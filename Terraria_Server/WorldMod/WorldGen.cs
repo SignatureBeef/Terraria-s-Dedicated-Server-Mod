@@ -6237,7 +6237,7 @@ namespace Terraria_Server.WorldMod
 							}
 							else
 							{
-								if ((overRide || !TileRefs(k, l).Active) && (type != 40 || TileRefs(k, l).Type != 53) && (!Main.tileStone[type] || TileRefs(k, l).Type == 1) && TileRefs(k, l).Type != 45 && (TileRefs(k, l).Type != 1 || type != 59 || (double)l >= Main.worldSurface + (double)WorldModify.genRand.Next(-50, 50)))
+								if ((overRide || !TileRefs(k, l).Active) && (type != 40 || TileRefs(k, l).Type != 53) && (!Main.tileStone[type] || TileRefs(k, l).Type == 1) && TileRefs(k, l).Type != 45 && TileRefs(k, l).Type != 147 && (TileRefs(k, l).Type != 1 || type != 59 || (double)l >= Main.worldSurface + (double)WorldModify.genRand.Next(-50, 50)))
 								{
 									if (TileRefs(k, l).Type != 53 || (double)l >= Main.worldSurface)
 									{
@@ -7544,9 +7544,9 @@ namespace Terraria_Server.WorldMod
 			}
 			if (TileRefs(i, num).Active && TileRefs(i, num).Type == 2 && TileRefs(i, num - 1).Wall == 0 &&
 				TileRefs(i, num - 1).Liquid == 0 && ((TileRefs(i - 1, num).Active && (TileRefs(i - 1, num).Type == 2 ||
-				TileRefs(i - 1, num).Type == 23 || TileRefs(i - 1, num).Type == 60 || TileRefs(i - 1, num).Type == 109)) ||
+				TileRefs(i - 1, num).Type == 23 || TileRefs(i - 1, num).Type == 60 || TileRefs(i - 1, num).Type == 109 || TileRefs(i - 1, num).Type == 147)) ||
 				(TileRefs(i + 1, num).Active && (TileRefs(i + 1, num).Type == 2 || TileRefs(i + 1, num).Type == 23 ||
-				TileRefs(i + 1, num).Type == 60 || TileRefs(i + 1, num).Type == 109))))
+				TileRefs(i + 1, num).Type == 60 || TileRefs(i + 1, num).Type == 109 || TileRefs(i + 1, num).Type == 147))))
 			{
 				int num2 = 1;
 				if (WorldModify.EmptyTileCheck(TileRefs, i - num2, i + num2, num - 55, num - 1, 20))
@@ -7830,11 +7830,11 @@ namespace Terraria_Server.WorldMod
 					int num6 = WorldModify.genRand.Next(3);
 					bool flag3 = false;
 					bool flag4 = false;
-					if (TileRefs(i - 1, num).Active && (TileRefs(i - 1, num).Type == 2 || TileRefs(i - 1, num).Type == 23 || TileRefs(i - 1, num).Type == 60 || TileRefs(i - 1, num).Type == 109))
+					if (TileRefs(i - 1, num).Active && (TileRefs(i - 1, num).Type == 2 || TileRefs(i - 1, num).Type == 23 || TileRefs(i - 1, num).Type == 60 || TileRefs(i - 1, num).Type == 109 || TileRefs(i - 1, num).Type == 147))
 					{
 						flag3 = true;
 					}
-					if (TileRefs(i + 1, num).Active && (TileRefs(i + 1, num).Type == 2 || TileRefs(i + 1, num).Type == 23 || TileRefs(i + 1, num).Type == 60 || TileRefs(i + 1, num).Type == 109))
+					if (TileRefs(i + 1, num).Active && (TileRefs(i + 1, num).Type == 2 || TileRefs(i + 1, num).Type == 23 || TileRefs(i + 1, num).Type == 60 || TileRefs(i + 1, num).Type == 109 || TileRefs(i + 1, num).Type == 147))
 					{
 						flag4 = true;
 					}
@@ -8033,12 +8033,12 @@ namespace Terraria_Server.WorldMod
 				return;
 			}
 			if (TileRefs(i, num).Active && (TileRefs(i, num).Type == 2 || TileRefs(i, num).Type == 23 ||
-				TileRefs(i, num).Type == 60 || TileRefs(i, num).Type == 109) && TileRefs(i, num - 1).Wall == 0 &&
+				TileRefs(i, num).Type == 60 || TileRefs(i, num).Type == 109 || TileRefs(i, num).Type == 147) && TileRefs(i, num - 1).Wall == 0 &&
 					((TileRefs(i - 1, num).Active && (TileRefs(i - 1, num).Type == 2 ||
 					TileRefs(i - 1, num).Type == 23 || TileRefs(i - 1, num).Type == 60 ||
-					TileRefs(i - 1, num).Type == 109)) || (TileRefs(i + 1, num).Active &&
+					TileRefs(i - 1, num).Type == 109 || TileRefs(i - 1, num).Type == 147)) || (TileRefs(i + 1, num).Active &&
 					(TileRefs(i + 1, num).Type == 2 || TileRefs(i + 1, num).Type == 23 ||
-					TileRefs(i + 1, num).Type == 60 || TileRefs(i + 1, num).Type == 109))))
+					TileRefs(i + 1, num).Type == 60 || TileRefs(i + 1, num).Type == 109 || TileRefs(i + 1, num).Type == 147))))
 			{
 				int num2 = 1;
 				int num3 = 16;
@@ -8327,11 +8327,11 @@ namespace Terraria_Server.WorldMod
 					int num7 = WorldModify.genRand.Next(3);
 					bool flag3 = false;
 					bool flag4 = false;
-					if (TileRefs(i - 1, num).Active && (TileRefs(i - 1, num).Type == 2 || TileRefs(i - 1, num).Type == 23 || TileRefs(i - 1, num).Type == 60 || TileRefs(i - 1, num).Type == 109))
+					if (TileRefs(i - 1, num).Active && (TileRefs(i - 1, num).Type == 2 || TileRefs(i - 1, num).Type == 23 || TileRefs(i - 1, num).Type == 60 || TileRefs(i - 1, num).Type == 109 || TileRefs(i - 1, num).Type == 147))
 					{
 						flag3 = true;
 					}
-					if (TileRefs(i + 1, num).Active && (TileRefs(i + 1, num).Type == 2 || TileRefs(i + 1, num).Type == 23 || TileRefs(i + 1, num).Type == 60 || TileRefs(i + 1, num).Type == 109))
+					if (TileRefs(i + 1, num).Active && (TileRefs(i + 1, num).Type == 2 || TileRefs(i + 1, num).Type == 23 || TileRefs(i + 1, num).Type == 60 || TileRefs(i + 1, num).Type == 109 || TileRefs(i + 1, num).Type == 147))
 					{
 						flag4 = true;
 					}
