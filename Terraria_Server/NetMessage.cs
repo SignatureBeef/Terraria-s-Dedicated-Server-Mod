@@ -320,11 +320,17 @@ namespace Terraria_Server
                     case (int)Packet.CLIENT_MOD_SPAWN_NPC:
                         msg.RpgNPCSpawned(number);
 						break;
+
 					case (int)Packet.NPC_NAME:
 						msg.NPCName(number, Main.chrName[number]);
 						break;
+
 					case (int)Packet.WORLD_BALANCE:
 						msg.WorldBalance(WorldModify.tGood, WorldModify.tEvil);
+						break;
+
+					case (int)Packet.SPAWN_NPCS:
+						msg.SpawnNPC(number, (int)number2);
 						break;
 						
 					default:

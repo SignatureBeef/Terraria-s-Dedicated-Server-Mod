@@ -1,11 +1,8 @@
 ﻿using System;
-using Terraria_Server;
-using Terraria_Server.Collections;
 using Terraria_Utilities.Serialize;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
-using Terraria_Server.Definitions;
 
 namespace Terraria_Utilities
 {

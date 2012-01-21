@@ -1097,5 +1097,14 @@ namespace Terraria_Server
 
             End();
         }
+
+		public void SpawnNPC(int PlayerId, int NPCId) //Can do invasion too (-1)
+		{
+			/*Header(Packet.SPAWN_NPCS, 8);
+
+			Int(PlayerId);
+			Int(NPCId);*/
+			throw new Exception("NetMessage.SpawnNPC");
+		}
 	}
 }

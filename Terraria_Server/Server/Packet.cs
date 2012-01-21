@@ -67,6 +67,9 @@
 		HIT_SWITCH = 59,
 		NPC_HOME = 60,
 		
+		//1.1.2
+		SPAWN_NPCS = 61,
+
 		//custom
 		TILE_ROW_COMPRESSED = 240,
 //		TILE_SQUARE_COMPRESSED = 241,

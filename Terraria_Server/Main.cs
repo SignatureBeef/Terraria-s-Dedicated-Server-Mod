@@ -529,12 +529,10 @@ namespace Terraria_Server
 			NetMessage.SendData(25, -1, -1, text, 255, 175f, 75f, 255f);
 		}
 
-		public static void StartInvasion()
+		public static void StartInvasion(int Type)
 		{
 			if (!WorldModify.shadowOrbSmashed)
-			{
 				return;
-			}
 
 			if (Main.invasionType == 0 && Main.invasionDelay == 0)
 			{
@@ -542,15 +540,13 @@ namespace Terraria_Server
 				foreach (Player player in Main.players)
 				{
 					if (player.Active && player.statLifeMax >= 200)
-					{
 						playerCount++;
-					}
 				}
 
 				if (playerCount > 0)
 				{
-					Main.invasionType = 1;
-					Main.invasionSize = 100 + 50 * playerCount;
+					Main.invasionType = Type;
+					Main.invasionSize = 80 + 40 * playerCount;
 					Main.invasionWarn = 0;
 					if (Main.rand.Next(2) == 0)
 					{
@@ -808,9 +804,12 @@ namespace Terraria_Server
 					NetMessage.SendData(7);
 					WorldIO.SaveWorldThreaded();
 
-					if (Main.rand.Next(15) == 0)
+					if (WorldModify.shadowOrbSmashed)
 					{
-						Main.StartInvasion();
+						if ((!NPC.downedGoblins && Main.rand.Next(3) == 0) || Main.rand.Next(15) == 0)
+						{
+							Main.StartInvasion(1);
+						}
 					}
 				}
 				if (Main.time > 16200.0 && WorldModify.spawnMeteor)
