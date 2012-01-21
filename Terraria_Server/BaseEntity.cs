@@ -9,7 +9,7 @@ namespace Terraria_Server
         public bool Active { get; set; }
         public int Height { get; set; }
         public string Name { get; set; }
-        [DontClone] public Vector2 Position;
+        public Vector2 Position;
         public virtual int Type { get; set; }
         public virtual int aiStyle { get; set; }
         public virtual int damage { get; set; }
@@ -19,8 +19,8 @@ namespace Terraria_Server
         public virtual float scale { get; set; }
         public virtual float knockBackResist { get; set; }
         public virtual float slots { get; set; }
-        public virtual short NetID { get; set; }// why are these virtual anyway...
-        public int Width { get; set; }
+        public virtual int NetID { get; set; }// why are these virtual anyway...
+        public virtual int Width { get; set; }
 
         public abstract object Clone();
 

@@ -31,10 +31,17 @@ namespace Terraria_Server.Messages
                 npc.life = 0;
                 npc.HitEffect(0, 10.0);
                 npc.Active = false;
-            }
-            
-            NetMessage.SendData(28, -1, whoAmI, "", (int)npcIndex, (float)damage, knockback, (float)direction, crit);
-            NetMessage.SendData(23, -1, -1, "", (int)npcIndex);
+            }            
+
+			if (npc.life <= 0)
+			{
+				NetMessage.SendData(28, -1, whoAmI, String.Empty, (int)npcIndex, (float)damage, knockback, (float)direction, crit);
+				NetMessage.SendData(23, -1, -1, String.Empty, (int)npcIndex);
+				return;
+			}
+			
+			NetMessage.SendData(28, -1, whoAmI, String.Empty, (int)npcIndex, (float)damage, knockback, (float)direction, crit);
+			npc.netUpdate = true;
         }
     }
 }

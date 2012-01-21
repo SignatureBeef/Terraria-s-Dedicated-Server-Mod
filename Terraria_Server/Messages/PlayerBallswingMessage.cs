@@ -26,7 +26,8 @@ namespace Terraria_Server.Messages
             num += 4;
             int itemAnimation = (int)BitConverter.ToInt16(readBuffer, num);
             Main.players[playerIndex].itemRotation = itemRotation;
-            Main.players[playerIndex].itemAnimation = itemAnimation;
+			Main.players[playerIndex].itemAnimation = itemAnimation;
+			Main.players[playerIndex].channel = Main.players[playerIndex].inventory[Main.players[playerIndex].selectedItemIndex].Channel;
             
             NetMessage.SendData(41, -1, whoAmI, "", playerIndex);
         }

@@ -102,6 +102,8 @@ namespace Terraria_Server.Messages
 							different |= (tile.Lava ? 1 : 0) != readBuffer[num++];
 						}
 						
+						tile.Wire = (b9 & 16) == 16;
+						
 						if (different)
 						{
 							break;

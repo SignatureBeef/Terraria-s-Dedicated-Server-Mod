@@ -23,9 +23,9 @@ namespace Terraria_Utilities.Serialize
 			"Name", "Type", "aiStyle", "scale",
 			"damage", "defense", "lifeMax", "value",
 			"knockBackResist", "Width", "Height", "PoisonImmunity",
-			"ConfusionImmunity", "BurningImmunity", "CurseImmunity", "slots",
+			"ConfusionImmunity", "BurningImmunity", "CurseImmunity", "npcSlots",
 			"noTileCollide", "noGravity", "behindTiles", "NetAlways",
-			"DisplayName"
+			"DisplayName", "netSkip", "NetID"
 		};
 
 		public static List<String> NPCNames = new List<String>()
@@ -57,7 +57,7 @@ namespace Terraria_Utilities.Serialize
 				var npc = Activator.CreateInstance(type) as Terraria.NPC;
 				npc.SetDefaults(npcId);
 
-				if (npc.Name == String.Empty)
+				if (npc.name == String.Empty)
 					continue;
 
 				SerializeNPC(npc, writer);
@@ -98,13 +98,13 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.buffImmune[39], feild);
 						break;
 					case "Name":
-						writer.WriteCustomObject(npc.Name, feild);
+						writer.WriteCustomObject(npc.name, feild);
 						break;
 					case "Type":
 						if (SetDefaults_Int32)
-							writer.WriteCustomObject(npc.Type, feild);
+							writer.WriteCustomObject(npc.type, feild);
 						else
-							writer.WriteCustomObject(npc.Type, "Inherits");
+							writer.WriteCustomObject(npc.type, "Inherits");
 						break;
 					case "aiStyle":
 						writer.WriteCustomObject(npc.aiStyle, feild);
@@ -128,12 +128,12 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.knockBackResist, feild);
 						break;
 					case "Width":
-						writer.WriteCustomObject(npc.Width, feild);
+						writer.WriteCustomObject(npc.width, feild);
 						break;
 					case "Height":
-						writer.WriteCustomObject(npc.Height, feild);
+						writer.WriteCustomObject(npc.height, feild);
 						break;
-					case "slots":
+					case "npcSlots":
 						writer.WriteCustomObject(npc.npcSlots, feild);
 						break;
 					case "noTileCollide":
@@ -146,10 +146,17 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.behindTiles, feild);
 						break;
 					case "DisplayName":
-						writer.WriteCustomObject(npc.displayName, feild);
+						if(npc.displayName != npc.name)
+							writer.WriteCustomObject(npc.displayName, feild);
 						break;
 					case "NetAlways":
 						writer.WriteCustomObject(npc.netAlways, feild);
+						break;
+					case "netSkip":
+						writer.WriteCustomObject(npc.netSkip, feild);
+						break;
+					case "NetID":
+						writer.WriteCustomObject(npc.netID, feild);
 						break;
 					default:
 						throw new Exception("This class is feild specific! Please add the relative feild above [" + feild + "]");

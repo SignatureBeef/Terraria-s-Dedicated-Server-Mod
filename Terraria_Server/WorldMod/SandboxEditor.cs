@@ -519,5 +519,15 @@ namespace Terraria_Server.WorldMod
 		{
 			WorldModify.TileFrame(ITileAt, i, j, resetFrame, noBreak);
 		}
+
+		public void PlaceWire(int i, int j)
+		{
+			WorldModify.PlaceWire(ITileAt, i, j);
+		}
+
+		public void KillWire(int i, int j)
+		{
+			WorldModify.KillWire(ITileAt, i, j);
+		}
 	}
 }

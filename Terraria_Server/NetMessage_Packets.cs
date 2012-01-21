@@ -629,12 +629,15 @@ namespace Terraria_Server
 			if (npc.Active)
 				Int (npc.life);
 			else
-				Int (0);
+				Int(0);
+
+			if (!npc.Active || npc.life <= 0)
+				npc.netSkip = 0;
 			
 			for (int i = 0; i < NPC.MAX_AI; i++)
 				Float (npc.ai[i]);
 			
-			Short (npc.NetID);
+			Int (npc.NetID);
 			
 			End ();
 		}

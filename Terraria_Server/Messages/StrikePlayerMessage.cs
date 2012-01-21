@@ -32,7 +32,7 @@ namespace Terraria_Server.Messages
 			
 			if (victim.Hurt(aggressor, (int)damage, hitDirection, pvp, true, deathText, crit == 1) > 0.0)
 			{
-				//NetMessage.SendData(26, -1, whoAmI, deathText, victimId, (float)hitDirection, (float)damage, (float)pvpFlag, 0/*this is still 0 O_o*/);
+				NetMessage.SendData(26, -1, whoAmI, deathText, victimId, (float)hitDirection, (float)damage, (float)pvpFlag, 0/*this is still 0 O_o*/);
 			}
         }
     }

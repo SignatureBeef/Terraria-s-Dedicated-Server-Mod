@@ -105,7 +105,7 @@ namespace Terraria_Server
 		/// Whether player is wearing bone armor
 		/// </summary>
 		public bool boneArmor;
-		public int townNPCs;
+		public float townNPCs;
 		/// <summary>
 		/// Current speed and direction
 		/// </summary>
@@ -140,7 +140,7 @@ namespace Terraria_Server
 		/// Time left for chat window visibility
 		/// </summary>
 		public int chatShowTime;
-		public int activeNPCs;
+		public float activeNPCs;
 		public bool mouseInterface;
 		public int changeItem = -1;
 		/// <summary>
@@ -3733,19 +3733,13 @@ namespace Terraria_Server
 				{
 					dmg = (int)((float)dmg * this.meleeDamage);
 				}
-				else
+				else if (this.inventory[this.selectedItemIndex].Ranged)
 				{
-					if (this.inventory[this.selectedItemIndex].Ranged)
-					{
-						dmg = (int)((float)dmg * this.rangedDamage);
-					}
-					else
-					{
-						if (this.inventory[this.selectedItemIndex].Magic)
-						{
-							dmg = (int)((float)dmg * this.magicDamage);
-						}
-					}
+					dmg = (int)((float)dmg * this.rangedDamage);
+				}
+				else if (this.inventory[this.selectedItemIndex].Magic)
+				{
+					dmg = (int)((float)dmg * this.magicDamage);
 				}
 			}
 

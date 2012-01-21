@@ -15,6 +15,7 @@ namespace Terraria_Server.TDCM.Packets.Quests
         /// <param name="npcId"></param>
         public static void NPC_NPCSpawnHandler(int npcId)
         {
+			return;
             var npc = Main.npcs[npcId];
 
             if (Main.rand == null)

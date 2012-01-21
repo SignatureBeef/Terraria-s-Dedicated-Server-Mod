@@ -57,8 +57,7 @@ namespace Terraria_Server.Messages
 				{
 					case 0:
 						editor.KillTile(x, y, failFlag, false, false);
-						break;
-						
+						break;						
 					case 1:
 						
 						if (editor.PlaceTile (x, y, (int)tileType, false, false, whoAmI, style))
@@ -73,19 +72,21 @@ namespace Terraria_Server.Messages
 								editor.SquareTileFrame (x, y, true);
 							}
 						}
-
-						break;
-						
+						break;						
 					case 2:
 						editor.KillWall(x, y, failFlag);
-						break;
-						
+						break;						
 					case 3:
 						editor.PlaceWall(x, y, (int)tileType, false);
-						break;
-						
+						break;						
 					case 4:
 						editor.KillTile(x, y, failFlag, false, true);
+						break;
+					case 5:
+						editor.PlaceWire(x, y);
+						break;
+					case 6:
+						editor.KillWire(x, y);
 						break;
 				}
 				

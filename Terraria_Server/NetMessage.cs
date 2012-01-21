@@ -9,6 +9,7 @@ using Terraria_Server.Logging;
 using Terraria_Server.Networking;
 using Terraria_Server.Plugins;
 using Terraria_Server.TDCM;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
@@ -318,9 +319,12 @@ namespace Terraria_Server
 
                     case (int)Packet.CLIENT_MOD_SPAWN_NPC:
                         msg.RpgNPCSpawned(number);
-                        break;
+						break;
 					case (int)Packet.NPC_NAME:
 						msg.NPCName(number, Main.chrName[number]);
+						break;
+					case (int)Packet.WORLD_BALANCE:
+						msg.WorldBalance(WorldModify.tGood, WorldModify.tEvil);
 						break;
 						
 					default:

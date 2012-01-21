@@ -42,7 +42,10 @@ namespace Terraria_Server.WorldMod
 		public static void clearWorld()
 		{
 			Statics.WorldLoaded = false;
-			
+
+			WorldModify.tGood = 0;
+			WorldModify.tEvil = 0;
+
 			Main.trashItem = new Item();
 			WorldModify.spawnEye = false;
 			WorldModify.spawnNPC = 0;

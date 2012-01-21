@@ -87,26 +87,16 @@ namespace Terraria_Server.Messages
             for (int npcIndex = 0; npcIndex < NPC.MAX_NPCS; npcIndex++)
             {
                 if (Main.npcs[npcIndex].Active)
-                {
-                    NetMessage.SendData(23, whoAmI, -1, "", npcIndex);
-                }
+					NetMessage.SendData(23, whoAmI, -1, "", npcIndex);
             }
+
             NetMessage.SendData(49, whoAmI);
-			
-			//[ToDo] Implement tGood, tEvil in WorldGen
-			//NetMessage.SendData(57, whoAmI);
+			NetMessage.SendData(57, whoAmI);
 
 			//Send NPC Names...
-			NetMessage.SendData(56, whoAmI, -1, String.Empty, 17);
-			NetMessage.SendData(56, whoAmI, -1, String.Empty, 18);
-			NetMessage.SendData(56, whoAmI, -1, String.Empty, 19);
-			NetMessage.SendData(56, whoAmI, -1, String.Empty, 20);
-			NetMessage.SendData(56, whoAmI, -1, String.Empty, 22);
-			NetMessage.SendData(56, whoAmI, -1, String.Empty, 38);
-			NetMessage.SendData(56, whoAmI, -1, String.Empty, 54);
-			NetMessage.SendData(56, whoAmI, -1, String.Empty, 107);
-			NetMessage.SendData(56, whoAmI, -1, String.Empty, 108);
-			NetMessage.SendData(56, whoAmI, -1, String.Empty, 124);
+
+			foreach (var npcId in new int[] { 17, 18, 19, 20, 22, 38, 54, 107, 108, 124 })
+				NetMessage.SendData(56, whoAmI, -1, String.Empty, npcId);
         }
     }
 }

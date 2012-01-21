@@ -14124,5 +14124,26 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
+
+		public static bool PlaceWire(Func<Int32, Int32, ITile> TileRefs, int i, int j)
+		{
+			if (!TileRefs(i,j).Wire)
+			{
+				TileRefs(i, j).SetWire(true);
+				return true;
+			}
+			return false;
+		}
+
+		public static bool KillWire(Func<Int32, Int32, ITile> TileRefs, int i, int j)
+		{
+			if (TileRefs(i, j).Wire)
+			{
+				TileRefs(i, j).SetWire(false);
+				Item.NewItem(i * 16, j * 16, 16, 16, 530, 1, false, 0);
+				return true;
+			}
+			return false;
+		}
 	}
 }
