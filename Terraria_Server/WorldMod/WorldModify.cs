@@ -613,6 +613,10 @@ namespace Terraria_Server.WorldMod
 			{
 				num7 = 2;
 			}
+			if (num7 == 147)
+			{
+				num7 = 2;
+			}
 			if (TileRefs(i, j).FrameX >= 22 && TileRefs(i, j).FrameX <= 44 && TileRefs(i, j).FrameY >= 132 && TileRefs(i, j).FrameY <= 176)
 			{
 				if (num7 != 2)
@@ -3237,7 +3241,7 @@ namespace Terraria_Server.WorldMod
 			{
 				flag = true;
 			}
-			if (TileRefs(x, num + 2).Type != 2 && TileRefs(x, num + 2).Type != 109 && TileRefs(x, num).Type == 20)
+			if (TileRefs(x, num + 2).Type != 2 && TileRefs(x, num + 2).Type != 109 && TileRefs(x, num + 2).Type != 147 && TileRefs(x, num).Type == 20)
 			{
 				flag = true;
 			}
@@ -6340,7 +6344,7 @@ namespace Terraria_Server.WorldMod
 					}
 					else if (type == 20)
 					{
-						if (TileRefs(i, j + 1).Active && (TileRefs(i, j + 1).Type == 2 || TileRefs(i, j + 1).Type == 109))
+						if (TileRefs(i, j + 1).Active && (TileRefs(i, j + 1).Type == 2 || TileRefs(i, j + 1).Type == 109 || TileRefs(i, j + 1).Type == 147))
 						{
 							Place1x2(TileRefs, i, j, type, style);
 							SquareTileFrame(TileRefs, i, j);
@@ -6787,7 +6791,7 @@ namespace Terraria_Server.WorldMod
 						{
 							num5 = 53;
 						}
-						if (TileRefs(i, j).Type == 116 || TileRefs(i, j).Type == 118)
+						if (TileRefs(i, j).Type == 116 || TileRefs(i, j).Type == 118 || TileRefs(i, j).Type == 147 || TileRefs(i, j).Type == 148)
 						{
 							num5 = 51;
 						}
@@ -6810,11 +6814,11 @@ namespace Terraria_Server.WorldMod
 						{
 							num5 = 48;
 						}
-						if (TileRefs(i, j).Type == 108 || TileRefs(i, j).Type == 122 || TileRefs(i, j).Type == 134)
+						if (TileRefs(i, j).Type == 108 || TileRefs(i, j).Type == 122 || TileRefs(i, j).Type == 134 || TileRefs(i, j).Type == 146 || TileRefs(i, j).Type == 149)
 						{
 							num5 = 49;
 						}
-						if (TileRefs(i, j).Type == 111 || TileRefs(i, j).Type == 133)
+						if (TileRefs(i, j).Type == 111 || TileRefs(i, j).Type == 133 || TileRefs(i, j).Type == 145)
 						{
 							num5 = 50;
 						}
@@ -7090,6 +7094,27 @@ namespace Terraria_Server.WorldMod
 						{
 							num8 = 480;
 						}
+						else if (TileRefs(i, j).Type == 149)
+						{
+							if (TileRefs(i, j).FrameX == 0 || TileRefs(i, j).FrameX == 54)
+							{
+								num8 = 596;
+							}
+							else
+							{
+								if (TileRefs(i, j).FrameX == 18 || TileRefs(i, j).FrameX == 72)
+								{
+									num8 = 597;
+								}
+								else
+								{
+									if (TileRefs(i, j).FrameX == 36 || TileRefs(i, j).FrameX == 90)
+									{
+										num8 = 598;
+									}
+								}
+							}
+						}
 						else if (TileRefs(i, j).Type == 13)
 						{
 							if (TileRefs(i, j).FrameX == 18)
@@ -7300,6 +7325,22 @@ namespace Terraria_Server.WorldMod
 						else if (TileRefs(i, j).Type == 141)
 						{
 							num8 = 580;
+						}
+						else if (TileRefs(i, j).Type == 145)
+						{
+							num8 = 586;
+						}
+						else if (TileRefs(i, j).Type == 146)
+						{
+							num8 = 591;
+						}
+						else if (TileRefs(i, j).Type == 147)
+						{
+							num8 = 593;
+						}
+						else if (TileRefs(i, j).Type == 148)
+						{
+							num8 = 594;
 						}
 						else if (TileRefs(i, j).Type == 135)
 						{
