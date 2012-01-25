@@ -89,7 +89,11 @@ namespace Terraria_Server
                             while (flag3 && num9 > 3 && num9 < Main.maxTilesX - 3 && num10 < Main.maxTilesY - 3)
                             {
                                 flag3 = false;
-                                while (TileRefs(num9, num10 + 1).Liquid == 0 && num10 < Main.maxTilesY - 5 && (!TileRefs(num9, num10 + 1).Active || !Main.tileSolid[(int)TileRefs(num9, num10 + 1).Type] || Main.tileSolidTop[(int)TileRefs(num9, num10 + 1).Type]))
+								while (TileRefs(num9, num10 + 1).Liquid == 0 && num10 < Main.maxTilesY - 5 && 
+									(!TileRefs(num9, num10 + 1).Active 
+									|| !Main.tileSolid[(int)TileRefs(num9, num10 + 1).Type] 
+									|| Main.tileSolidTop[(int)TileRefs(num9, num10 + 1).Type]
+									))
                                 {
                                     flag = true;
                                     num8 = num6;

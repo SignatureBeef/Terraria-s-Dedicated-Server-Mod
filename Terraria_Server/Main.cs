@@ -18,7 +18,7 @@ namespace Terraria_Server
 		//public static bool npcChatRelease = false;
 		//public static bool npcChatFocus1 = false;
 		//public static bool npcChatFocus2 = false;
-		public const Int32 MAX_TILE_SETS = 145;
+		public const Int32 MAX_TILE_SETS = 150;
 		public const Int32 MAX_WALL_SETS = 29;
 		public const Int32 MAX_BUFFS = 40;
 		public const Int32 MAX_NAMES = 142;
