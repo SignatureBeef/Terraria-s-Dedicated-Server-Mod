@@ -57,7 +57,7 @@ namespace Terraria_Utilities.Serialize
 				var npc = Activator.CreateInstance(type) as Terraria.NPC;
 				npc.SetDefaults(npcId);
 
-				if (npc.name == String.Empty)
+				if (npc.Name == String.Empty)
 					continue;
 
 				SerializeNPC(npc, writer);
@@ -98,13 +98,13 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.buffImmune[39], feild);
 						break;
 					case "Name":
-						writer.WriteCustomObject(npc.name, feild);
+						writer.WriteCustomObject(npc.Name, feild);
 						break;
 					case "Type":
 						if (SetDefaults_Int32)
-							writer.WriteCustomObject(npc.type, feild);
+							writer.WriteCustomObject(npc.Type, feild);
 						else
-							writer.WriteCustomObject(npc.type, "Inherits");
+							writer.WriteCustomObject(npc.Type, "Inherits");
 						break;
 					case "aiStyle":
 						writer.WriteCustomObject(npc.aiStyle, feild);
@@ -128,10 +128,10 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.knockBackResist, feild);
 						break;
 					case "Width":
-						writer.WriteCustomObject(npc.width, feild);
+						writer.WriteCustomObject(npc.Width, feild);
 						break;
 					case "Height":
-						writer.WriteCustomObject(npc.height, feild);
+						writer.WriteCustomObject(npc.Height, feild);
 						break;
 					case "npcSlots":
 						writer.WriteCustomObject(npc.npcSlots, feild);
@@ -146,7 +146,7 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.behindTiles, feild);
 						break;
 					case "DisplayName":
-						if(npc.displayName != npc.name)
+						if(npc.displayName != npc.Name)
 							writer.WriteCustomObject(npc.displayName, feild);
 						break;
 					case "NetAlways":
@@ -156,7 +156,7 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.netSkip, feild);
 						break;
 					case "NetID":
-						writer.WriteCustomObject(npc.netID, feild);
+						writer.WriteCustomObject(npc.NetID, feild);
 						break;
 					default:
 						throw new Exception("This class is feild specific! Please add the relative feild above [" + feild + "]");

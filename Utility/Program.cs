@@ -26,11 +26,11 @@ namespace Terraria_Utilities
         {
             Console.WriteLine(WELCOME_MESSAGE);
 
-			/* [START] Test NPC Serializer */
+			/* [START] Test NPC Serializer
 			NPCSerializer.Serialize();
 			Console.ReadKey(true);
 			return;
-			/* [END] Test NPC Serializer */
+			[END] Test NPC Serializer */
 
             var location = "C:\\TerrariaServer.exe";
             var typeSet = GetSet();

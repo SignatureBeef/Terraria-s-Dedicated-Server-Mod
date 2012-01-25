@@ -229,6 +229,12 @@ namespace Terraria_Server.Definitions
         N107_HAMDRAX,
         [XmlEnum(Name = "108")]
         N108_EXPLOSIVES,
+		[XmlEnum(Name = "109")]
+		N109_SNOW_BALL,
+		[XmlEnum(Name = "110")]
+		N110_BULLET,
+		[XmlEnum(Name = "111")]
+		N111_BUNNY,
     }
     
 	public static class ProjectileTypeExtensions
