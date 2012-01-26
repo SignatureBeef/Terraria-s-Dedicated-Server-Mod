@@ -4772,7 +4772,7 @@ namespace Terraria_Server
 						ProgramLog.Users.Log("{0} @ {1}: Invasion triggered by {2}.", IPAddress, whoAmi, Name);
 						NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, string.Concat(Name, " has summoned an invasion!"), 255, 255, 128, 150);
 						Main.invasionDelay = 0;
-						Main.StartInvasion(1);
+						Main.StartInvasion();
 					}
 				}
 			}

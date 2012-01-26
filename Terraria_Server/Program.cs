@@ -763,7 +763,7 @@ namespace Terraria_Server
 						if (NetPlay.anyClients || (hibernate == false))
 						{
 							var start = s.Elapsed;
-                            Terraria_Server.Main.Update(null, s);
+                            Terraria_Server.Main.Update(s);
 							LastUpdateTime = s.Elapsed - start;
 						}
 
@@ -801,7 +801,7 @@ namespace Terraria_Server
                             leftOver = 1000.0;
 
 						if (NetPlay.anyClients || (hibernate == false))
-							Terraria_Server.Main.Update(null, stopwatch);
+							Terraria_Server.Main.Update(stopwatch);
 
 						double num9 = (double)stopwatch.ElapsedMilliseconds + leftOver;
 						if (num9 < serverProcessAverage)

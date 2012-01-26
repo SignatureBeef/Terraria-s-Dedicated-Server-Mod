@@ -248,8 +248,9 @@ namespace Terraria_Server.WorldMod
                             binaryWriter.Write(NPC.savedGoblin);
                             binaryWriter.Write(NPC.savedWizard);
                             binaryWriter.Write(NPC.savedMech);
-                            binaryWriter.Write(NPC.downedGoblins);
-                            binaryWriter.Write(NPC.downedClown);
+							binaryWriter.Write(NPC.downedGoblins);
+							binaryWriter.Write(NPC.downedClown);
+							binaryWriter.Write(NPC.downedFrost);
 							binaryWriter.Write(WorldModify.shadowOrbSmashed);
 							binaryWriter.Write(WorldModify.spawnMeteor);
 							binaryWriter.Write((byte)WorldModify.shadowOrbCount);
@@ -522,6 +523,10 @@ namespace Terraria_Server.WorldMod
                             {
                                 NPC.downedClown = binaryReader.ReadBoolean();
                             }
+							if (Terraria_Release >= 37)
+							{
+								NPC.downedFrost = binaryReader.ReadBoolean();
+							}
 							WorldModify.shadowOrbSmashed = binaryReader.ReadBoolean();
 							WorldModify.spawnMeteor = binaryReader.ReadBoolean();
 							WorldModify.shadowOrbCount = (int)binaryReader.ReadByte();

@@ -39,22 +39,22 @@ namespace Terraria_Utilities
             Console.Write("Updating Assemblies...");
 
             /* Update Reference */
-            var i = 0;
+            /*var i = 0;
             foreach (var name_space in new string[] { Item.FullName, NPC.FullName, Projectile.FullName })
             {
-                /* Add extra fields from ignored lists incase we forgot some */
+                /* Add extra fields from ignored lists incase we forgot some * /
                 foreach (var field in typeSet[i++].IgnoreFields)
                 {
                     char letter = field.ToCharArray()[0];
                     if (Char.IsUpper(letter))
                     {
-                        /* Add both; Lower & Upper - Lazy IDC */
+                        /* Add both; Lower & Upper - Lazy IDC * /
                         upperCase[name_space].Add(field);
                         upperCase[name_space].Add(Serializer.ReplaceFirst(field, false));
                     }
                 }
                 Serializer.UpdateAssembly(location, name_space, upperCase[name_space]);
-            }
+            }*/
 
             Console.Write("Ok\nSerializing...");
             Terraria.Main.dedServ = true; //Set this to true, We don't need the GUI shit.
@@ -68,7 +68,7 @@ namespace Terraria_Utilities
                                         set.EntityObjNames, (set.EntityObjNames != null) ? set.EntityObjNames.Length : 1000
                 );
 
-                var ClassName = set.TypeReference.Name + "Type";
+                var ClassName = set.TypeReference.Name + "Type" + set.InvokeType.ToString();
                 var writer = new StreamWriter(ClassName + ".cs");
 
                 Console.Write("Saving {0}...", ClassName);

@@ -89,7 +89,14 @@ namespace Terraria_Utilities.Serialize
                     Console.WriteLine("Processing `{0}`...", value);
                     serializer.WriteObject(writer, obj);
                     count++;
-                    returnData.Add(count, value);
+
+					if (obj is Terraria.NPC)
+					{
+						var npc = obj as Terraria.NPC;
+						returnData.Add(npc.Type, value);
+					}
+					else
+						returnData.Add(count, value);
                 }
                 Thread.Sleep(5);
             }

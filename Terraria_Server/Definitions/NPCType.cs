@@ -157,6 +157,146 @@ namespace Terraria_Server.Definitions
         [XmlEnum(Name = "73")]
         N73_GOBLIN_SCOUT,
         [XmlEnum(Name = "74")]
-        N74_BIRD
+        N74_BIRD,
+		[XmlEnum(Name = "75")]
+		N75_PIXIE,
+		[XmlEnum(Name = "77")]
+		N77_ARMORED_SKELETON,
+		[XmlEnum(Name = "78")]
+		N78_MUMMY,
+		[XmlEnum(Name = "79")]
+		N79_DARK_MUMMY,
+		[XmlEnum(Name = "80")]
+		N80_LIGHT_MUMMY,
+		[XmlEnum(Name = "81")]
+		N81_CORRUPT_SLIME,
+		[XmlEnum(Name = "82")]
+		N82_WRAITH,
+		[XmlEnum(Name = "83")]
+		N83_CURSED_HAMMER,
+		[XmlEnum(Name = "84")]
+		N84_ENCHANTED_SWORD,
+		[XmlEnum(Name = "85")]
+		N85_MIMIC,
+		[XmlEnum(Name = "86")]
+		N86_UNICORN,
+		[XmlEnum(Name = "87")]
+		N87_WYVERN_HEAD,
+		[XmlEnum(Name = "88")]
+		N88_WYVERN_LEGS,
+		[XmlEnum(Name = "89")]
+		N89_WYVERN_BODY,
+		[XmlEnum(Name = "90")]
+		N90_WYVERN_BODY_2,
+		[XmlEnum(Name = "91")]
+		N91_WYVERN_BODY_3,
+		[XmlEnum(Name = "92")]
+		N92_WYVERN_TAIL,
+		[XmlEnum(Name = "93")]
+		N93_GIANT_BAT,
+		[XmlEnum(Name = "94")]
+		N94_CORRUPTOR,
+		[XmlEnum(Name = "95")]
+		N95_DIGGER_HEAD,
+		[XmlEnum(Name = "96")]
+		N96_DIGGER_BODY,
+		[XmlEnum(Name = "97")]
+		N97_DIGGER_TAIL,
+		[XmlEnum(Name = "98")]
+		N98_SEEKER_HEAD,
+		[XmlEnum(Name = "99")]
+		N99_SEEKER_BODY,
+		[XmlEnum(Name = "100")]
+		N100_SEEKER_TAIL,
+		[XmlEnum(Name = "101")]
+		N101_CLINGER,
+		[XmlEnum(Name = "102")]
+		N102_ANGLER_FISH,
+		[XmlEnum(Name = "103")]
+		N103_GREEN_JELLYFISH,
+		[XmlEnum(Name = "104")]
+		N104_WEREWOLF,
+		[XmlEnum(Name = "105")]
+		N105_BOUND_GOBLIN,
+		[XmlEnum(Name = "106")]
+		N106_BOUND_WIZARD,
+		[XmlEnum(Name = "107")]
+		N107_GOBLIN_TINKERER,
+		[XmlEnum(Name = "108")]
+		N108_WIZARD,
+		[XmlEnum(Name = "109")]
+		N109_CLOWN,
+		[XmlEnum(Name = "110")]
+		N110_SKELETON_ARCHER,
+		[XmlEnum(Name = "111")]
+		N111_GOBLIN_ARCHER,
+		[XmlEnum(Name = "112")]
+		N112_VILE_SPIT,
+		[XmlEnum(Name = "113")]
+		N113_WALL_OF_FLESH,
+		[XmlEnum(Name = "114")]
+		N114_WALL_OF_FLESH_EYE,
+		[XmlEnum(Name = "115")]
+		N115_THE_HUNGRY,
+		[XmlEnum(Name = "116")]
+		N116_THE_HUNGRY_II,
+		[XmlEnum(Name = "117")]
+		N117_LEECH_HEAD,
+		[XmlEnum(Name = "118")]
+		N118_LEECH_BODY,
+		[XmlEnum(Name = "119")]
+		N119_LEECH_TAIL,
+		[XmlEnum(Name = "120")]
+		N120_CHAOS_ELEMENTAL,
+		[XmlEnum(Name = "121")]
+		N121_SLIMER,
+		[XmlEnum(Name = "122")]
+		N122_GASTROPOD,
+		[XmlEnum(Name = "123")]
+		N123_BOUND_MECHANIC,
+		[XmlEnum(Name = "124")]
+		N124_MECHANIC,
+		[XmlEnum(Name = "125")]
+		N125_RETINAZER,
+		[XmlEnum(Name = "126")]
+		N126_SPAZMATISM,
+		[XmlEnum(Name = "127")]
+		N127_SKELETRON_PRIME,
+		[XmlEnum(Name = "128")]
+		N128_PRIME_CANNON,
+		[XmlEnum(Name = "129")]
+		N129_PRIME_SAW,
+		[XmlEnum(Name = "130")]
+		N130_PRIME_VICE,
+		[XmlEnum(Name = "131")]
+		N131_PRIME_LASER,
+		[XmlEnum(Name = "132")]
+		N132_BALD_ZOMBIE,
+		[XmlEnum(Name = "133")]
+		N133_WANDERING_EYE,
+		[XmlEnum(Name = "134")]
+		N134_THE_DESTROYER,
+		[XmlEnum(Name = "135")]
+		N135_THE_DESTROYER_BODY,
+		[XmlEnum(Name = "136")]
+		N136_THE_DESTROYER_TAIL,
+		[XmlEnum(Name = "137")]
+		N137_ILLUMINANT_BAT,
+		[XmlEnum(Name = "138")]
+		N138_ILLUMINANT_SLIME,
+		[XmlEnum(Name = "139")]
+		N139_PROBE,
+		[XmlEnum(Name = "140")]
+		N140_POSSESSED_ARMOR,
+		[XmlEnum(Name = "141")]
+		N141_TOXIC_SLUDGE,
+		[XmlEnum(Name = "142")]
+		N142_SANTA_CLAUS,
+		[XmlEnum(Name = "143")]
+		N143_SNOWMAN_GANGSTA,
+		[XmlEnum(Name = "144")]
+		N144_MISTER_STABBY,
+		[XmlEnum(Name = "145")]
+		N145_SNOW_BALLA,
     }
 }

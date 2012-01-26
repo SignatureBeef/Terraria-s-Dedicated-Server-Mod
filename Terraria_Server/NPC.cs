@@ -15,7 +15,6 @@ namespace Terraria_Server
 	/// Basic NPC class
 	/// </summary>
 	/// 
-	[DeepClone]
 	public class NPC : BaseEntity, ISender
 	{
 		internal delegate void NPCSpawn(int npcId);
@@ -6254,6 +6253,130 @@ namespace Terraria_Server
 		/// </summary>
 		public void NPCLoot()
 		{
+			if (Main.hardMode && this.lifeMax > 1 && this.damage > 0 && !this.friendly && 
+				(double)this.Position.Y > Main.rockLayer * 16.0 && Main.rand.Next(7) == 0 && this.type != NPCType.N121_SLIMER && this.value > 0f)
+			{
+				if (Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].zoneEvil)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 521, 1, false, 0);
+				}
+				if (Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].zoneHoly)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 520, 1, false, 0);
+				}
+			}
+			if (Main.Xmas && this.lifeMax > 1 && this.damage > 0 && !this.friendly && this.type != NPCType.N121_SLIMER && this.value > 0f && Main.rand.Next(13) == 0)
+			{
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, Main.rand.Next(599, 602), 1, false, 0);
+			}
+			if (this.type == NPCType.N109_CLOWN && !NPC.downedClown)
+			{
+				NPC.downedClown = true;
+				NetMessage.SendData(7);
+			}
+			if (this.type == NPCType.N85_MIMIC && this.value > 0f)
+			{
+				int num = Main.rand.Next(7);
+				if (num == 0)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 437, 1, false, -1);
+				}
+				if (num == 1)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 517, 1, false, -1);
+				}
+				if (num == 2)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 535, 1, false, -1);
+				}
+				if (num == 3)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 536, 1, false, -1);
+				}
+				if (num == 4)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 532, 1, false, -1);
+				}
+				if (num == 5)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 393, 1, false, -1);
+				}
+				if (num == 6)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 554, 1, false, -1);
+				}
+			}
+			if (this.type == NPCType.N87_WYVERN_HEAD)
+			{
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 575, Main.rand.Next(5, 11), false, 0);
+			}
+			if (this.type == NPCType.N143_SNOWMAN_GANGSTA || this.type == NPCType.N144_MISTER_STABBY || this.type == NPCType.N145_SNOW_BALLA)
+			{
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 593, Main.rand.Next(5, 11), false, 0);
+			}
+			if (this.type == NPCType.N79_DARK_MUMMY)
+			{
+				if (Main.rand.Next(10) == 0)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 527, 1, false, 0);
+				}
+			}
+			else if (this.type == NPCType.N80_LIGHT_MUMMY && Main.rand.Next(10) == 0)
+			{
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 528, 1, false, 0);
+			}
+			if (this.type == NPCType.N101_CLINGER || this.type == NPCType.N98_SEEKER_HEAD)
+			{
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 522, Main.rand.Next(2, 6), false, 0);
+			}
+			if (this.type == NPCType.N86_UNICORN)
+			{
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 526, 1, false, 0);
+			}
+			if (this.type == NPCType.N113_WALL_OF_FLESH)
+			{
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 367, 1, false, -1);
+				if (Main.rand.Next(2) == 0)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, Main.rand.Next(489, 492), 1, false, -1);
+				}
+				else
+				{
+					int num2 = Main.rand.Next(3);
+					if (num2 == 0)
+					{
+						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 514, 1, false, -1);
+					}
+					else if (num2 == 1)
+					{
+						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 426, 1, false, -1);
+					}
+					else if (num2 == 2)
+					{
+						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 434, 1, false, -1);
+					}
+				}
+
+				int num3 = (int)(this.Position.X + (float)(this.Width / 2)) / 16;
+				int num4 = (int)(this.Position.Y + (float)(this.Height / 2)) / 16;
+				int num5 = this.Width / 2 / 16 + 1;
+				for (int i = num3 - num5; i <= num3 + num5; i++)
+				{
+					for (int j = num4 - num5; j <= num4 + num5; j++)
+					{
+						if ((i == num3 - num5 || i == num3 + num5 || j == num4 - num5 || j == num4 + num5) && !Main.tile.At(i, j).Active)
+						{
+							Main.tile.At(i, j).SetType(140);
+							Main.tile.At(i, j).SetActive(true);
+						}
+						Main.tile.At(i, j).SetLava(false);
+						Main.tile.At(i, j).SetLiquid(0);
+
+						NetMessage.SendTileSquare(-1, i, j, 1);
+					}
+				}
+			}
+
 			if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME)
 			{
 				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 23, Main.rand.Next(1, 3), false);
@@ -18930,6 +19053,9 @@ namespace Terraria_Server
 					return -1;
 			}
 		}
+
+		//TODO 1.1.2
+		public static bool downedFrost { get; set; }
 	}
 }
 
