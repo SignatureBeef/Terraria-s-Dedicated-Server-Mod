@@ -59,7 +59,7 @@ namespace Terraria_Server.Collections
 					if (t.NetID == 0) t.NetID = (short)t.Type;
 					//Networking.StringCache.Add (System.Text.Encoding.ASCII.GetBytes (t.Name), t.Name);
 					Networking.StringCache.Add (t.Name);
-					
+
 					if (typeLookup.ContainsKey(t.Type))
 					{
 						List<T> values;
@@ -146,8 +146,7 @@ namespace Terraria_Server.Collections
             }
             return CloneAndInit(defaultValue);
         }
-
-
+		
         public T FindClass(string name)
         {
             List<T> values;

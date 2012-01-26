@@ -8158,7 +8158,8 @@ namespace Terraria_Server
 			cloned.buffImmune = new bool[Main.MAX_BUFFS];
 			Array.Copy(buffImmune, cloned.buffImmune, Main.MAX_BUFFS);
 
-			cloned.NetID = cloned.Type;
+			//if (cloned.NetID == cloned.Type)
+			//    cloned.NetID = cloned.Type;
 
 			return cloned;
 		}
