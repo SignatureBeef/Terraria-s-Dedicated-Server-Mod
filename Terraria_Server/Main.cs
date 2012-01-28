@@ -15,17 +15,15 @@ namespace Terraria_Server
 {
 	public class Main
 	{
-		//public static bool npcChatRelease = false;
-		//public static bool npcChatFocus1 = false;
-		//public static bool npcChatFocus2 = false;
-		public const Int32 MAX_TILE_SETS = 145;
-		public const Int32 MAX_WALL_SETS = 29;
+		public const Int32 MAX_TILE_SETS = 150;
+		public const Int32 MAX_WALL_SETS = 40;
 		public const Int32 MAX_BUFFS = 40;
 		public const Int32 MAX_NAMES = 142;
 
 		public static bool Xmas { get; set; }
 
 		public static Item trashItem { get; set; }
+
 		public static bool[] debuff = new bool[MAX_BUFFS];
 		public const int maxItemText = 100;
 		public const int MAX_PLAYERS = 255;
@@ -43,10 +41,12 @@ namespace Terraria_Server
 		public static float rightWorld = 134400f;
 		public static float topWorld = 0f;
 		public static float bottomWorld = 38400f;
-		public static int maxTilesX = -1; //(int)Main.rightWorld / 16 + 1;
-		public static int maxTilesY = -1; //(int)Main.bottomWorld / 16 + 1;
-		public static int maxSectionsX = Main.maxTilesX / 200;
-		public static int maxSectionsY = Main.maxTilesY / 150;
+		public static int maxTilesX = -1;
+		//(int)rightWorld / 16 + 1;
+		public static int maxTilesY = -1;
+		//(int)bottomWorld / 16 + 1;
+		public static int maxSectionsX = maxTilesX / 200;
+		public static int maxSectionsY = maxTilesY / 150;
 		//[Obsolete("Replaced by SlotManager.MaxSlots")]
 		//public static int maxNetplayers = 254;
 		public static int dungeonX;
@@ -70,26 +70,23 @@ namespace Terraria_Server
 
 		// [TODO] 1.1
 		public static float harpNote = 0f;
-
-		public static bool[] tileMergeDirt = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileCut = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileAlch = new bool[Main.MAX_TILE_SETS];
-		public static int[] tileShine = new int[Main.MAX_TILE_SETS];
-		public static bool[] wallHouse = new bool[Main.MAX_WALL_SETS];
-		public static bool[] tileStone = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileWaterDeath = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileLavaDeath = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileTable = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileBlockLight = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileDungeon = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileSolidTop = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileSolid = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileNoAttach = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileNoFail = new bool[Main.MAX_TILE_SETS];
-		public static bool[] tileFrameImportant = new bool[Main.MAX_TILE_SETS];
-
+		public static bool[] tileMergeDirt = new bool[MAX_TILE_SETS];
+		public static bool[] tileCut = new bool[MAX_TILE_SETS];
+		public static bool[] tileAlch = new bool[MAX_TILE_SETS];
+		public static int[] tileShine = new int[MAX_TILE_SETS];
+		public static bool[] wallHouse = new bool[MAX_WALL_SETS];
+		public static bool[] tileStone = new bool[MAX_TILE_SETS];
+		public static bool[] tileWaterDeath = new bool[MAX_TILE_SETS];
+		public static bool[] tileLavaDeath = new bool[MAX_TILE_SETS];
+		public static bool[] tileTable = new bool[MAX_TILE_SETS];
+		public static bool[] tileBlockLight = new bool[MAX_TILE_SETS];
+		public static bool[] tileDungeon = new bool[MAX_TILE_SETS];
+		public static bool[] tileSolidTop = new bool[MAX_TILE_SETS];
+		public static bool[] tileSolid = new bool[MAX_TILE_SETS];
+		public static bool[] tileNoAttach = new bool[MAX_TILE_SETS];
+		public static bool[] tileNoFail = new bool[MAX_TILE_SETS];
+		public static bool[] tileFrameImportant = new bool[MAX_TILE_SETS];
 		public static string[] chrName = new string[MAX_NAMES];
-
 		[ThreadStatic]
 		static Random threadRand;
 
@@ -97,7 +94,8 @@ namespace Terraria_Server
 		{
 			get
 			{
-				if (threadRand == null) threadRand = new Random((int)DateTime.Now.Ticks);
+				if (threadRand == null)
+					threadRand = new Random((int)DateTime.Now.Ticks);
 				return threadRand;
 			}
 			set
@@ -123,418 +121,300 @@ namespace Terraria_Server
 		public static bool editSign = false;
 		public static string signText = "";
 		public static string npcChatText = "";
-
 		public static int invasionType = 0;
 		public static double invasionX = 0.0;
 		public static int invasionSize = 0;
 		public static int invasionDelay = 0;
 		public static int invasionWarn = 0;
-
 		public static int[] npcFrameCount = new int[]
 		{
-			1, 
-			2, 
-			2, 
-			3, 
-			6, 
-			2, 
-			2, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			2, 
-			16, 
-			14, 
-			16, 
-			14, 
-			15, 
-			16, 
-			2, 
-			10, 
-			1, 
-			16, 
-			16, 
-			16, 
-			3, 
-			1, 
-			15, 
-			3, 
-			1, 
-			3, 
-			1, 
-			1, 
-			16, 
-			16, 
-			1, 
-			1, 
-			1, 
-			3, 
-			3, 
-			15, 
-			3, 
-			7, 
-			7, 
-			4, 
-			5, 
-			5, 
-			5, 
-			3, 
-			3, 
-			16, 
-			6, 
-			3, 
-			6, 
-			6, 
-			2, 
-			5, 
-			3, 
-			2, 
-			7, 
-			7, 
-			4, 
-			2, 
-			8, 
-			1, 
-			5, 
-			1, 
-			2, 
-			4, 
-			16, 
-			5, 
-			4, 
-			4, 
-			15, 
-			15, 
-			15, 
-			15, 
-			2, 
-			4, 
-			6, 
-			6, 
-			18, 
-			16, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			4, 
-			3, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			5, 
-			6, 
-			7, 
-			16, 
-			1, 
-			1, 
-			16, 
-			16, 
-			12, 
-			20, 
-			21, 
-			1, 
-			2, 
-			2, 
-			3, 
-			6, 
-			1, 
-			1, 
-			1, 
-			15, 
-			4, 
-			11, 
-			1, 
-			14, 
-			6, 
-			6, 
-			3, 
-			1, 
-			2, 
-			2, 
-			1, 
-			3, 
-			4, 
-			1, 
-			2, 
-			1, 
-			4, 
-			2, 
-			1, 
-			15, 
-			3, 
-			16, 
-			4, 
-			5, 
-			7, 
-			3
+			1,			2, 			2, 			3, 			6, 			2, 		
+			2, 			1, 			1,			1, 			1, 			1, 
+			1, 			1, 			1,			1, 			2, 			16, 
+			14,			16, 		14, 		15,			16, 		2, 
+			10, 		1, 			16, 		16, 		16,			3,
+			1, 			15, 		3, 			1, 			3, 			1, 
+			1, 			16, 		16, 		1, 			1, 			1, 
+			3, 			3, 			15, 		3, 			7, 			7, 
+			4, 			5, 			5, 			5, 			3, 			3, 
+			16, 		6, 			3, 			6, 			6, 			2, 
+			5, 			3, 			2, 			7, 			7, 			4, 
+			2, 			8, 			1, 			5, 			1, 			2, 
+			4, 			16, 		5, 			4, 			4, 			15, 
+			15, 		15, 		15, 		2, 			4, 			6, 
+			6, 			18, 		16, 		1, 			1, 			1, 
+			1, 			1, 			1, 			4, 			3, 			1, 
+			1, 			1, 			1, 			1, 			1, 			5, 
+			6, 			7, 			16, 		1, 			1, 			16, 
+			16, 		12, 		20, 		21, 		1, 			2, 
+			2, 			3, 			6, 			1, 			1, 			1, 
+			15, 		4, 			11, 		1, 			14, 		6, 
+			6, 			3, 			1, 			2, 			2, 			1, 
+			3, 			4, 			1, 			2, 			1, 			4, 
+			2, 			1, 			15, 		3, 			16, 		4, 
+			5, 			7, 			3
 		};
-
 		public static int timeOut = 120;
 		public static int NetplayCounter;
 		public static int lastItemUpdate;
 		public static int maxNPCUpdates = 15;
 		public static int maxItemUpdates = 10;
 		public static bool autoPass = false;
-
 		public static int zoneX = 99;
 		public static int zoneY = 87;
 
+		/*protected override void Initialize2()
+		{
+			for (int num9 = 0; num9 < 604; num9++)
+			{
+				Item item = new Item();
+				item.SetDefaults(num9, false);
+				itemName[num9] = item.name;
+				if (item.headSlot > 0)
+					Item.headType[item.headSlot] = item.type;
+				if (item.bodySlot > 0)
+					Item.bodyType[item.bodySlot] = item.type;
+				if (item.legSlot > 0)
+					Item.legType[item.legSlot] = item.type;
+			}
+		
+			this.shop[0] = new Chest();
+			this.shop[1] = new Chest();
+			this.shop[1].SetupShop(1);
+			this.shop[2] = new Chest();
+			this.shop[2].SetupShop(2);
+			this.shop[3] = new Chest();
+			this.shop[3].SetupShop(3);
+			this.shop[4] = new Chest();
+			this.shop[4].SetupShop(4);
+			this.shop[5] = new Chest();
+			this.shop[5].SetupShop(5);
+			this.shop[6] = new Chest();
+			this.shop[6].SetupShop(6);
+			this.shop[7] = new Chest();
+			this.shop[7].SetupShop(7);
+			this.shop[8] = new Chest();
+			this.shop[8].SetupShop(8);
+			this.shop[9] = new Chest();
+			this.shop[9].SetupShop(9);
+
+			for (int num14 = 1; num14 < 112; num14++)
+			{
+				Projectile projectile = new Projectile();
+				projectile.SetDefaults(num14);
+				if (projectile.hostile)
+					projHostile[num14] = true;
+			}
+		}*/
+
 		public static void Initialize()
 		{
-			//if (Main.webProtect)
-			//{
-			//    getAuth();
-			//    while (!Main.webAuth)
-			//    {
-			//        Statics.IsActive = false;
-			//    }
-			//}
+			stopSpawns = Program.properties.StopNPCSpawning;
 
-			Main.stopSpawns = Program.properties.StopNPCSpawning;
+			NPC.ClearNames();
+			NPC.SetNames();
 
-			Main.tileShine[6] = 1150;
-			Main.tileShine[7] = 1100;
-			Main.tileShine[8] = 1000;
-			Main.tileShine[9] = 1050;
-			Main.tileShine[12] = 1000;
-			Main.tileShine[21] = 1000;
-			Main.tileShine[22] = 1150;
-			Main.tileShine[45] = 1900;
-			Main.tileShine[46] = 2000;
-			Main.tileShine[47] = 2100;
-			Main.tileShine[63] = 900;
-			Main.tileShine[64] = 900;
-			Main.tileShine[65] = 900;
-			Main.tileShine[66] = 900;
-			Main.tileShine[67] = 900;
-			Main.tileShine[68] = 900;
+			//foreach (var buff in new int[] { 20, 24, 31, 39 })
+			//    pvpBuff[buff] = true;
 
-			foreach (int i in new int[] { 20, 21, 22, 23, 24, 25 })
-			{
-				Main.debuff[i] = true;
-			}
+			foreach (var buff in new int[] { 20, 21, 22, 23, 24, 25, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39 })
+				debuff[buff] = true;
 
-			foreach (int i in new int[] { 3, 24, 28, 32, 51, 52, 61, 62, 69, 71, 73, 74, 82, 83, 84 })
-			{
-				Main.tileCut[i] = true;
-			}
+			foreach (var i in new int[] { 3, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 24, 26, 27, 28, 29, 
+				31, 33, 34, 35, 36, 42, 50, 55, 61, 71, 72, 73, 74, 77, 78, 79, 81, 82, 83, 84, 85, 86, 87, 88, 89, 
+				90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 110, 113, 114, 125, 126, 
+				128, 129, 132, 133, 134, 135, 136, 137, 138, 139, 141, 142, 143, 144, 149 })
+				tileFrameImportant[i] = true;
 
-			foreach (int i in new int[] { 82, 83, 84 })
-			{
-				Main.tileAlch[i] = true;
-			}
+			foreach (var i in new int[] { 63, 64, 65, 66, 67, 68, 130, 131 })
+				tileStone[i] = true;
 
-			foreach (int i in new int[] { 3, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 24, 26, 27, 28, 29, 
-                31, 33, 34, 35, 36, 42, 50, 55, 61, 71, 72, 73, 74, 77, 78, 79, 81, 82, 83, 84, 85, 86, 87, 88,
-                89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106 })
-			{
-				Main.tileFrameImportant[i] = true;
-			}
+			foreach (var i in new int[] { 0, 1, 2, 6, 7, 8, 9, 10, 22, 23, 25, 30, 32, 37, 38, 39, 40, 41, 43, 44, 45, 
+				46, 47, 48, 52, 53, 56, 57, 58, 59, 60, 62, 63, 64, 65, 66, 67, 68, 70, 75, 76, 107, 108, 109, 111, 112, 
+				115, 116, 117, 118, 119, 120, 121, 122, 123, 130, 131, 137, 138, 140, 145, 146, 147, 148 })
+				tileBlockLight[i] = true;
 
-			foreach (int i in new int[] { 3, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 27, 28, 29, 32, 33,
-                34, 35, 36, 42, 49, 50, 52, 55, 61, 62, 69, 71, 72, 73, 74, 79, 80, 81, 86, 87, 88, 89, 91, 92,
-                93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106 })
-			{
-				Main.tileLavaDeath[i] = true;
-			}
+			foreach (var i in new int[] { 0, 1, 2, 6, 7, 8, 9, 10, 19, 22, 23, 25, 30, 37, 38, 39, 40, 41, 43, 44, 45, 46, 
+				47, 48, 53, 54, 56, 57, 58, 59, 60, 63, 64, 65, 66, 67, 68, 70, 75, 76, 107, 108, 109, 111, 112, 116, 117, 
+				118, 119, 120, 121, 122, 123, 127, 130, 137, 138, 140, 145, 146, 147, 148 })
+				tileSolid[i] = true;
 
-			foreach (int i in new int[] { 0, 1, 2, 6, 7, 8, 9, 10, 22, 23, 25, 30, 32, 37, 38, 39, 40, 41, 43, 44, 
-                45, 46, 47, 48, 51, 52, 53, 56, 57, 58, 59, 60, 62, 63, 64, 65, 66, 67, 68, 70, 75, 76 })
-			{
-				Main.tileBlockLight[i] = true;
-			}
+			foreach (var i in new int[] { 1, 6, 7, 8, 9, 22, 25, 30, 37, 38, 39, 40, 41, 43, 44, 45, 46, 47, 53, 56, 107, 
+				108, 111, 112, 116, 117, 118, 119, 120, 121, 122, 123, 140, 145, 146, 147, 148 })
+				tileMergeDirt[i] = true;
 
-			foreach (int i in new int[] { 14, 16, 18, 19, 87, 88, 101 })
-			{
-				Main.tileSolidTop[i] = true;
-			}
+			foreach (var i in new int[] { 3, 24, 28, 32, 51, 52, 61, 62, 69, 71, 73, 74, 82, 83, 84, 110, 113, 115 })
+				tileCut[i] = true;
 
-			foreach (int i in new int[] { 3, 4, 10, 13, 14, 15, 16, 17, 18, 19, 20, 21, 27, 50, 86, 87, 88, 89,
-                90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 101, 102 })
-			{
-				Main.tileNoAttach[i] = true;
-			}
+			foreach (var i in new int[] { 3, 4, 24, 32, 50, 61, 69, 73, 74, 82, 83, 84, 110, 113 })
+				tileNoFail[i] = true;
 
-			foreach (int i in new int[] { 14, 18, 19, 87, 88, 101 })
-			{
-				Main.tileTable[i] = true;
-			}
+			foreach (var i in new int[] { 1, 4, 5, 6, 10, 11, 12, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 30, 31 })
+				wallHouse[i] = true;
 
-			foreach (int i in new int[] { 4, 51, 93, 98 })
-			{
-				Main.tileWaterDeath[i] = true;
-			}
+			foreach (var i in new int[] { 82, 83, 84 })
+				tileAlch[i] = true;
 
-			foreach (int i in new int[] { 1, 4, 5, 6, 10, 11, 12, 16, 17, 18, 19, 20 })
-			{
-				Main.wallHouse[i] = true;
-			}
+			foreach (var i in new int[] { 3, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 27, 28, 29, 32, 33, 34, 35, 36, 
+				42, 49, 50, 52, 55, 61, 62, 69, 71, 72, 73, 74, 79, 80, 81, 86, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 
+				99, 100, 101, 102, 103, 104, 106, 110, 113, 115, 125, 126 })
+				tileLavaDeath[i] = true;
 
-			foreach (int i in new int[] { 3, 4, 24, 32, 50, 61, 69, 73, 74, 82, 83, 84 })
-			{
-				Main.tileNoFail[i] = true;
-			}
+			foreach (var i in new int[] { 3, 4, 10, 13, 14, 15, 16, 17, 18, 19, 20, 21, 27, 50, 86, 87, 88, 89, 90, 91, 92, 
+				93, 94, 95, 96, 97, 98, 99, 101, 102, 110, 114 })
+				tileNoAttach[i] = true;
 
-			foreach (int i in new int[] {0, 1, 2, 6, 7, 8, 9, 10, 19, 22, 23, 25, 30, 37, 38, 39, 40, 41, 43, 44, 45, 46,
-                47, 48, 53, 54, 56, 57, 58, 59, 60, 63, 64, 65, 66, 67, 68, 70, 75, 76})
-			{
-				Main.tileSolid[i] = true;
-			}
+			foreach (var i in new int[] { 41, 43, 44 })
+				tileDungeon[i] = true;
 
-			foreach (int i in new int[] { 3, 4, 5, 11 })
-			{
-				Main.tileSolid[i] = false;
-			}
+			foreach (var i in new int[] { 14, 18, 19, 87, 88, 101, 114 })
+				tileTable[i] = true;
 
-			foreach (int i in new int[] { 63, 64, 65, 66, 67, 68 })
-			{
-				Main.tileStone[i] = false;
-			}
+			foreach (var i in new int[] { 4, 51, 93, 98 })
+				tileWaterDeath[i] = true;
 
-			foreach (int i in new int[] { 41, 43, 44 })
-			{
-				Main.tileDungeon[i] = true;
-			}
+
+
+			foreach (var i in new int[] { 129 })
+				tileShine[i] = 300;
+
+			foreach (var i in new int[] { 129, 63, 64, 65, 66, 67, 68, 108 })
+				tileShine[i] = 900;
+
+			foreach (var i in new int[] { 22, 6 })
+				tileShine[i] = 1150;
+
+			foreach (var i in new int[] { 7 })
+				tileShine[i] = 1100;
+
+			foreach (var i in new int[] { 8, 12 })
+				tileShine[i] = 1000;
+
+			foreach (var i in new int[] { 9 })
+				tileShine[i] = 1050;
+
+			foreach (var i in new int[] { 21 })
+				tileShine[i] = 1200;
+
+			foreach (var i in new int[] { 109, 110, 116, 117 })
+				tileShine[i] = 9000;
+
+			foreach (var i in new int[] { 45 })
+				tileShine[i] = 1900;
+
+			foreach (var i in new int[] { 46 })
+				tileShine[i] = 2000;
+
+			foreach (var i in new int[] { 47 })
+				tileShine[i] = 2100;
+
+			foreach (var i in new int[] { 122 })
+				tileShine[i] = 1800;
+
+			foreach (var i in new int[] { 121 })
+				tileShine[i] = 1850;
+
+			foreach (var i in new int[] { 118 })
+				tileShine[i] = 8000;
+
+			foreach (var i in new int[] { 125 })
+				tileShine[i] = 600;
+
+			foreach (var i in new int[] { 107 })
+				tileShine[i] = 950;
+
+			foreach (var i in new int[] { 111 })
+				tileShine[i] = 850;
+
 			for (int l = 0; l < 201; l++)
-			{
-				Main.item[l] = new Item();
-			}
+				item[l] = new Item();
 			for (int m = 0; m < NPC.MAX_NPCS + 1; m++)
 			{
-				Main.npcs[m] = new NPC();
-				Main.npcs[m].whoAmI = m;
+				npcs[m] = new NPC();
+				npcs[m].whoAmI = m;
 			}
 			for (int i = 0; i < MAX_PLAYERS + 1; i++)
-			{
-				Main.players[i] = new Player();
-			}
+				players[i] = new Player();
 			for (int num2 = 0; num2 < 1001; num2++)
-			{
-				Main.projectile[num2] = new Projectile();
-			}
+				projectile[num2] = new Projectile();
 			for (int num10 = 0; num10 < Liquid.resLiquid; num10++)
-			{
-				Main.liquid[num10] = new Liquid();
-			}
+				liquid[num10] = new Liquid();
 			for (int num11 = 0; num11 < 10000; num11++)
-			{
-				Main.liquidBuffer[num11] = new LiquidBuffer();
-			}
+				liquidBuffer[num11] = new LiquidBuffer();
 
-			Main.teamColor[0] = new Color(255, 255, 255);
-			Main.teamColor[1] = new Color(230, 40, 20);
-			Main.teamColor[2] = new Color(20, 200, 30);
-			Main.teamColor[3] = new Color(75, 90, 255);
-			Main.teamColor[4] = new Color(200, 180, 0);
-
-			NPC.SetNames();
+			teamColor[0] = new Color(255, 255, 255);
+			teamColor[1] = new Color(230, 40, 20);
+			teamColor[2] = new Color(20, 200, 30);
+			teamColor[3] = new Color(75, 90, 255);
+			teamColor[4] = new Color(200, 180, 0);
 
 			NetPlay.Init();
 		}
 
 		private static void UpdateInvasion()
 		{
-			if (Main.invasionType > 0)
+			if (invasionType > 0)
 			{
-				if (Main.invasionSize <= 0)
+				if (invasionSize <= 0)
 				{
-					if (Main.invasionType == 1)
+					if (invasionType == 1)
 					{
 						NPC.downedGoblins = true;
 						NetMessage.SendData(7);
 					}
-					else if (Main.invasionType == 2)
-					{
+					else if (invasionType == 2)
 						NPC.downedFrost = true;
-					}
 
-					Main.InvasionWarning();
-					Main.invasionType = 0;
-					Main.invasionDelay = 7;
+					InvasionWarning();
+					invasionType = 0;
+					invasionDelay = 7;
 				}
-				if (Main.invasionX == (double)Main.spawnTileX)
-				{
+				if (invasionX == (double)spawnTileX)
 					return;
-				}
 				float num = 0.2f;
-				if (Main.invasionX > (double)Main.spawnTileX)
+				if (invasionX > (double)spawnTileX)
 				{
-					Main.invasionX -= (double)num;
-					if (Main.invasionX <= (double)Main.spawnTileX)
+					invasionX -= (double)num;
+					if (invasionX <= (double)spawnTileX)
 					{
-						Main.invasionX = (double)Main.spawnTileX;
-						Main.InvasionWarning();
+						invasionX = (double)spawnTileX;
+						InvasionWarning();
 					}
 					else
-					{
-						Main.invasionWarn--;
-					}
+						invasionWarn--;
 				}
-				else
+				else if (invasionX < (double)spawnTileX)
 				{
-					if (Main.invasionX < (double)Main.spawnTileX)
+					invasionX += (double)num;
+					if (invasionX >= (double)spawnTileX)
 					{
-						Main.invasionX += (double)num;
-						if (Main.invasionX >= (double)Main.spawnTileX)
-						{
-							Main.invasionX = (double)Main.spawnTileX;
-							Main.InvasionWarning();
-						}
-						else
-						{
-							Main.invasionWarn--;
-						}
+						invasionX = (double)spawnTileX;
+						InvasionWarning();
 					}
+					else
+						invasionWarn--;
 				}
-				if (Main.invasionWarn <= 0)
+				if (invasionWarn <= 0)
 				{
-					Main.invasionWarn = 3600;
-					Main.InvasionWarning();
+					invasionWarn = 3600;
+					InvasionWarning();
 				}
 			}
 		}
 
 		private static void InvasionWarning()
 		{
-			if (Main.invasionType == 0)
-			{
+			if (invasionType == 0)
 				return;
-			}
 			string text = "";
-			if (Main.invasionSize <= 0)
-			{
+			if (invasionSize <= 0)
 				text = "The goblin army has been defeated!";
-			}
+			else if (invasionX < (double)spawnTileX)
+				text = "A goblin army is approaching from the west!";
+			else if (invasionX > (double)spawnTileX)
+				text = "A goblin army is approaching from the east!";
 			else
-			{
-				if (Main.invasionX < (double)Main.spawnTileX)
-				{
-					text = "A goblin army is approaching from the west!";
-				}
-				else
-				{
-					if (Main.invasionX > (double)Main.spawnTileX)
-					{
-						text = "A goblin army is approaching from the east!";
-					}
-					else
-					{
-						text = "The goblin army has arrived!";
-					}
-				}
-			}
+				text = "The goblin army has arrived!";
 
 			NetMessage.SendData(25, -1, -1, text, 255, 175f, 75f, 255f);
 		}
@@ -542,50 +422,45 @@ namespace Terraria_Server
 		public static void StartInvasion()
 		{
 			if (!WorldModify.shadowOrbSmashed)
-			{
 				return;
-			}
 
-			if (Main.invasionType == 0 && Main.invasionDelay == 0)
+			if (invasionType == 0 && invasionDelay == 0)
 			{
 				int playerCount = 0;
-				foreach (Player player in Main.players)
+				foreach (Player player in players)
 				{
 					if (player.Active && player.statLifeMax >= 200)
-					{
 						playerCount++;
-					}
 				}
 
 				if (playerCount > 0)
 				{
-					Main.invasionType = 1;
-					Main.invasionSize = 100 + 50 * playerCount;
-					Main.invasionWarn = 0;
-					if (Main.rand.Next(2) == 0)
+					invasionType = 1;
+					invasionSize = 100 + 50 * playerCount;
+					invasionWarn = 0;
+					if (rand.Next(2) == 0)
 					{
-						Main.invasionX = 0.0;
+						invasionX = 0.0;
 						return;
 					}
-					Main.invasionX = (double)Main.maxTilesX;
+					invasionX = (double)maxTilesX;
 				}
 			}
 		}
 
 		private static void UpdateServer()
 		{
-			Main.NetplayCounter++;
-			if (Main.NetplayCounter > 3600)
+			NetplayCounter++;
+			if (NetplayCounter > 3600)
 			{
 				NetMessage.SendData(7);
 				//NetMessage.SyncPlayers();
-				Main.NetplayCounter = 0;
+				NetplayCounter = 0;
 			}
-			if (Main.NetplayCounter % 30 == 0)
-			{
+			if (NetplayCounter % 30 == 0)
 				for (int i = 0; i < 255; i++)
 				{
-					var player = Main.players[i];
+					var player = players[i];
 					var rows = player.rowsToRectify;
 					if (player.Active && rows.Count > 0)
 					{
@@ -594,13 +469,12 @@ namespace Terraria_Server
 						{
 							locked = Monitor.TryEnter(rows);
 							if (!locked)
-							{
 								//ProgramLog.Debug.Log ("not acquired!");
 								continue;
-							}
 
 							var conn = player.Connection;
-							if (conn == null) continue;
+							if (conn == null)
+								continue;
 
 							int Y1 = int.MaxValue;
 							int Y2 = 0;
@@ -611,14 +485,14 @@ namespace Terraria_Server
 							bool warn = false;
 
 							if (rows.Count <= 150)
-							{
 								foreach (var kv in rows)
 								{
 									var y = kv.Key;
 									var x1 = (int)(kv.Value >> 16);
 									var x2 = (int)(kv.Value & 0xffff);
 
-									if (x1 > x2) continue;
+									if (x1 > x2)
+										continue;
 
 									var len = x2 - x1 + 1;
 
@@ -628,17 +502,20 @@ namespace Terraria_Server
 										break;
 									}
 
-									if (y < Y1) Y1 = y;
-									if (y > Y2) Y2 = y;
-									if (x1 < X1) X1 = x1;
-									if (x2 > X2) X2 = x2;
+									if (y < Y1)
+										Y1 = y;
+									if (y > Y2)
+										Y2 = y;
+									if (x1 < X1)
+										X1 = x1;
+									if (x2 > X2)
+										X2 = x2;
 
 									if (conn.CompressionVersion == 1)
 										msg.TileRowCompressed(len, x1, y);
 									else
 										msg.SendTileRow(len, x1, y);
 								}
-							}
 							else
 								warn = true;
 
@@ -658,82 +535,60 @@ namespace Terraria_Server
 						}
 						finally
 						{
-							if (locked) Monitor.Exit(rows);
+							if (locked)
+								Monitor.Exit(rows);
 						}
 					}
 				}
-			}
 			for (int i = 0; i < 255; i++)
-			{
-				if (Main.players[i].Active && NetPlay.slots[i].state >= SlotState.CONNECTED)
-				{
+				if (players[i].Active && NetPlay.slots[i].state >= SlotState.CONNECTED)
 					NetPlay.slots[i].SpamUpdate();
-				}
-			}
-			Math.IEEERemainder((double)Main.NetplayCounter, 60.0);
-			if (Math.IEEERemainder((double)Main.NetplayCounter, 360.0) == 0.0)
+			Math.IEEERemainder((double)NetplayCounter, 60.0);
+			if (Math.IEEERemainder((double)NetplayCounter, 360.0) == 0.0)
 			{
 				bool flag2 = true;
-				int num = Main.lastItemUpdate;
+				int num = lastItemUpdate;
 				int num2 = 0;
 				while (flag2)
 				{
 					num++;
 					if (num >= 200)
-					{
 						num = 0;
-					}
 					num2++;
-					if (!Main.item[num].Active || Main.item[num].Owner == 255)
-					{
+					if (!item[num].Active || item[num].Owner == 255)
 						NetMessage.SendData(21, -1, -1, "", num);
-					}
-					if (num2 >= Main.maxItemUpdates || num == Main.lastItemUpdate)
-					{
+					if (num2 >= maxItemUpdates || num == lastItemUpdate)
 						flag2 = false;
-					}
 				}
-				Main.lastItemUpdate = num;
+				lastItemUpdate = num;
 			}
 
 			for (int i = 0; i < 200; i++)
-			{
-				if (Main.item[i].Active && (Main.item[i].Owner == 255 || !Main.players[Main.item[i].Owner].Active))
-				{
-					Main.item[i].FindOwner(i);
-				}
-			}
+				if (item[i].Active && (item[i].Owner == 255 || !players[item[i].Owner].Active))
+					item[i].FindOwner(i);
 
 			for (int i = 0; i < 255; i++)
 			{
 				//                if (Netplay.slots[i].state >= SlotState.CONNECTED)
 				//                {
 				//                    //Netplay.slots[i].timeOut++;
-				//                    if (/*!Main.stopTimeOuts && */Netplay.slots[i].timeOut > 60 * Main.timeOut)
+				//                    if (/*!stopTimeOuts && */Netplay.slots[i].timeOut > 60 * timeOut)
 				//                    {
 				//                        Netplay.slots[i].Kick ("Timed out.");
 				//                    }
 				//                }
 
-				Player player = Main.players[i];
+				Player player = players[i];
 				if (player.Active)
 				{
 					int sectionX = NetPlay.GetSectionX((int)(player.Position.X / 16f));
 					int sectionY = NetPlay.GetSectionY((int)(player.Position.Y / 16f));
 					int num3 = 0;
 					for (int j = sectionX - 1; j < sectionX + 2; j++)
-					{
 						for (int k = sectionY - 1; k < sectionY + 2; k++)
-						{
-							if (j >= 0 && j < Main.maxSectionsX && k >= 0 && k < Main.maxSectionsY)
-							{
+							if (j >= 0 && j < maxSectionsX && k >= 0 && k < maxSectionsY)
 								if (!NetPlay.slots[i].tileSection[j, k])
-								{
 									num3++;
-								}
-							}
-						}
-					}
 
 					if (num3 > 0)
 					{
@@ -742,51 +597,43 @@ namespace Terraria_Server
 						NetPlay.slots[i].statusText2 = "is receiving tile data";
 						NetPlay.slots[i].statusMax += num4;
 						for (int j = sectionX - 1; j < sectionX + 2; j++)
-						{
 							for (int k = sectionY - 1; k < sectionY + 2; k++)
-							{
-								if (j >= 0 && j < Main.maxSectionsX && k >= 0 && k < Main.maxSectionsY)
-								{
+								if (j >= 0 && j < maxSectionsX && k >= 0 && k < maxSectionsY)
 									if (!NetPlay.slots[i].tileSection[j, k])
 									{
 										NetMessage.SendSection(i, j, k);
 										NetMessage.SendData(11, i, -1, "", j, (float)k, (float)j, (float)k);
 									}
-								}
-							}
-						}
 					}
 					else
 					{
 						var conn = player.Connection;
-						if (conn != null) conn.Flush();
+						if (conn != null)
+							conn.Flush();
 					}
 				}
 				else
 				{
 					var conn = player.Connection;
-					if (conn != null) conn.Flush();
+					if (conn != null)
+						conn.Flush();
 				}
 			}
 		}
 
-		//static TimeChangedEvent timeEvent = new TimeChangedEvent();
 		private static void UpdateTime()
 		{
-			Main.time += 1.0;
+			time += 1.0;
 
-			//Server.PluginManager.processHook(Hooks.TIME_CHANGED, timeEvent);
-
-			if (!Main.dayTime)
+			if (!dayTime)
 			{
 				if (WorldModify.spawnEye)
-				{
-					if (Main.time > 4860.0)
+					if (time > 4860.0)
 					{
 						int count = 0;
-						foreach (Player player in Main.players)
+						foreach (Player player in players)
 						{
-							if (player.Active && !player.dead && (double)player.Position.Y < Main.worldSurface * 16.0)
+							if (player.Active && !player.dead && (double)player.Position.Y < worldSurface * 16.0)
 							{
 								NPC.SpawnOnPlayer(player, count, 4);
 								WorldModify.spawnEye = false;
@@ -795,34 +642,27 @@ namespace Terraria_Server
 							count++;
 						}
 					}
-				}
 
-				if (Main.time > 32400.0)
+				if (time > 32400.0)
 				{
-					if (Main.invasionDelay > 0)
-					{
-						Main.invasionDelay--;
-					}
+					if (invasionDelay > 0)
+						invasionDelay--;
 					WorldModify.spawnNPC = 0;
-					Main.checkForSpawns = 0;
-					Main.time = 0.0;
-					Main.bloodMoon = false;
-					Main.dayTime = true;
-					Main.moonPhase++;
-					if (Main.moonPhase >= 8)
-					{
-						Main.moonPhase = 0;
-					}
+					checkForSpawns = 0;
+					time = 0.0;
+					bloodMoon = false;
+					dayTime = true;
+					moonPhase++;
+					if (moonPhase >= 8)
+						moonPhase = 0;
 
 					NetMessage.SendData(7);
 					WorldIO.SaveWorldThreaded();
 
-					if (Main.rand.Next(15) == 0)
-					{
-						Main.StartInvasion();
-					}
+					if (rand.Next(15) == 0)
+						StartInvasion();
 				}
-				if (Main.time > 16200.0 && WorldModify.spawnMeteor)
+				if (time > 16200.0 && WorldModify.spawnMeteor)
 				{
 					WorldModify.spawnMeteor = false;
 					WorldModify.dropMeteor(null);
@@ -830,18 +670,16 @@ namespace Terraria_Server
 			}
 			else
 			{
-				if (Main.time > 54000.0)
+				if (time > 54000.0)
 				{
 					WorldModify.spawnNPC = 0;
-					Main.checkForSpawns = 0;
-					if (Main.rand.Next(50) == 0 && WorldModify.shadowOrbSmashed)
-					{
+					checkForSpawns = 0;
+					if (rand.Next(50) == 0 && WorldModify.shadowOrbSmashed)
 						WorldModify.spawnMeteor = true;
-					}
 					if (!NPC.downedBoss1)
 					{
 						bool flag = false;
-						foreach (Player player in Main.players)
+						foreach (Player player in players)
 						{
 							if (player.Active && player.statLifeMax >= 200)
 							{
@@ -849,19 +687,13 @@ namespace Terraria_Server
 								break;
 							}
 						}
-						if (flag && Main.rand.Next(3) == 0)
+						if (flag && rand.Next(3) == 0)
 						{
 							int num = 0;
 							for (int i = 0; i < NPC.MAX_NPCS; i++)
-							{
-								if (Main.npcs[i].Active)
-								{
-									if (Main.npcs[i].townNPC)
-									{
+								if (npcs[i].Active)
+									if (npcs[i].townNPC)
 										num++;
-									}
-								}
-							}
 							if (num >= 4)
 							{
 								WorldModify.spawnEye = true;
@@ -870,38 +702,30 @@ namespace Terraria_Server
 							}
 						}
 					}
-					if (!WorldModify.spawnEye && Main.moonPhase != 4 && Main.rand.Next(7) == 0)
+					if (!WorldModify.spawnEye && moonPhase != 4 && rand.Next(7) == 0)
 					{
 						for (int i = 0; i < 255; i++)
-						{
-							if (Main.players[i].Active && Main.players[i].statLifeMax > 100)
+							if (players[i].Active && players[i].statLifeMax > 100)
 							{
-								Main.bloodMoon = true;
+								bloodMoon = true;
 								break;
 							}
-						}
-						if (Main.bloodMoon)
-						{
+						if (bloodMoon)
 							NetMessage.SendData(25, -1, -1, "The Blood Moon is rising...", 255, 50f, 255f, 130f);
-						}
 					}
-					Main.time = 0.0;
-					Main.dayTime = false;
+					time = 0.0;
+					dayTime = false;
 
 					NetMessage.SendData(7);
 				}
-				Main.checkForSpawns++;
-				if (Main.checkForSpawns >= 7200)
+				checkForSpawns++;
+				if (checkForSpawns >= 7200)
 				{
 					int num2 = 0;
 					for (int i = 0; i < 255; i++)
-					{
-						if (Main.players[i].Active)
-						{
+						if (players[i].Active)
 							num2++;
-						}
-					}
-					Main.checkForSpawns = 0;
+					checkForSpawns = 0;
 					WorldModify.spawnNPC = 0;
 					int num3 = 0;
 					int num4 = 0;
@@ -913,18 +737,13 @@ namespace Terraria_Server
 					int num10 = 0;
 					int num11 = 0;
 					for (int i = 0; i < NPC.MAX_NPCS; i++)
-					{
-						if (Main.npcs[i].Active && Main.npcs[i].townNPC)
+						if (npcs[i].Active && npcs[i].townNPC)
 						{
-							if (Main.npcs[i].type != NPCType.N37_OLD_MAN && !Main.npcs[i].homeless)
-							{
+							if (npcs[i].type != NPCType.N37_OLD_MAN && !npcs[i].homeless)
 								WorldModify.QuickFindHome(null, i);
-							}
 							else
-							{
 								num8++;
-							}
-							switch (Main.npcs[i].type)
+							switch (npcs[i].type)
 							{
 								case NPCType.N17_MERCHANT:
 									num3++;
@@ -950,7 +769,6 @@ namespace Terraria_Server
 							}
 							num11++;
 						}
-					}
 					if (WorldModify.spawnNPC == 0)
 					{
 						int num12 = 0;
@@ -959,138 +777,78 @@ namespace Terraria_Server
 						bool flag3 = false;
 						bool flag4 = false;
 						for (int i = 0; i < 255; i++)
-						{
-							if (Main.players[i].Active)
+							if (players[i].Active)
 							{
 								for (int j = 0; j < 44; j++)
-								{
-									if (Main.players[i].inventory[j] != null & Main.players[i].inventory[j].Stack > 0)
+									if (players[i].inventory[j] != null & players[i].inventory[j].Stack > 0)
 									{
-										if (Main.players[i].inventory[j].Type == 71)
-										{
-											num12 += Main.players[i].inventory[j].Stack;
-										}
-										if (Main.players[i].inventory[j].Type == 72)
-										{
-											num12 += Main.players[i].inventory[j].Stack * 100;
-										}
-										if (Main.players[i].inventory[j].Type == 73)
-										{
-											num12 += Main.players[i].inventory[j].Stack * 10000;
-										}
-										if (Main.players[i].inventory[j].Type == 74)
-										{
-											num12 += Main.players[i].inventory[j].Stack * 1000000;
-										}
-										if (Main.players[i].inventory[j].Ammo == ProjectileType.N14_BULLET || Main.players[i].inventory[j].UseAmmo == ProjectileType.N14_BULLET)
-										{
+										if (players[i].inventory[j].Type == 71)
+											num12 += players[i].inventory[j].Stack;
+										if (players[i].inventory[j].Type == 72)
+											num12 += players[i].inventory[j].Stack * 100;
+										if (players[i].inventory[j].Type == 73)
+											num12 += players[i].inventory[j].Stack * 10000;
+										if (players[i].inventory[j].Type == 74)
+											num12 += players[i].inventory[j].Stack * 1000000;
+										if (players[i].inventory[j].Ammo == ProjectileType.N14_BULLET || players[i].inventory[j].UseAmmo == ProjectileType.N14_BULLET)
 											flag3 = true;
-										}
-										if (Main.players[i].inventory[j].Type == 166 || Main.players[i].inventory[j].Type == 167 || Main.players[i].inventory[j].Type == 168 || Main.players[i].inventory[j].Type == 235)
-										{
+										if (players[i].inventory[j].Type == 166 || players[i].inventory[j].Type == 167 || players[i].inventory[j].Type == 168 || players[i].inventory[j].Type == 235)
 											flag4 = true;
-										}
 									}
-								}
-								int num14 = Main.players[i].statLifeMax / 20;
+								int num14 = players[i].statLifeMax / 20;
 								if (num14 > 5)
-								{
 									flag2 = true;
-								}
 								num13 += num14;
 							}
-						}
 						if (num7 < 1)
-						{
 							WorldModify.spawnNPC = 22;
-						}
 						if ((double)num12 > 5000.0 && num3 < 1)
-						{
 							WorldModify.spawnNPC = 17;
-						}
 						if (flag2 && num4 < 1)
-						{
 							WorldModify.spawnNPC = 18;
-						}
 						if (flag3 && num6 < 1)
-						{
 							WorldModify.spawnNPC = 19;
-						}
 						if ((NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3) && num5 < 1)
-						{
 							WorldModify.spawnNPC = 20;
-						}
 						if (flag4 && num3 > 0 && num9 < 1)
-						{
 							WorldModify.spawnNPC = 38;
-						}
 						if (NPC.downedBoss3 && num10 < 1)
-						{
 							WorldModify.spawnNPC = 54;
-						}
 						if (num12 > 100000 && num3 < 2 && num2 > 2)
-						{
 							WorldModify.spawnNPC = 17;
-						}
 						if (num13 >= 20 && num4 < 2 && num2 > 2)
-						{
 							WorldModify.spawnNPC = 18;
-						}
 						if (num12 > 5000000 && num3 < 3 && num2 > 4)
-						{
 							WorldModify.spawnNPC = 17;
-						}
 						if (!NPC.downedBoss3 && num8 == 0)
 						{
-							int num15 = NPC.NewNPC(Main.dungeonX * 16 + 8, Main.dungeonY * 16, 37, 0);
-							Main.npcs[num15].homeless = false;
-							Main.npcs[num15].homeTileX = Main.dungeonX;
-							Main.npcs[num15].homeTileY = Main.dungeonY;
+							int num15 = NPC.NewNPC(dungeonX * 16 + 8, dungeonY * 16, 37, 0);
+							npcs[num15].homeless = false;
+							npcs[num15].homeTileX = dungeonX;
+							npcs[num15].homeTileY = dungeonY;
 						}
 						if (WorldModify.spawnNPC == 0 && num7 < 1)
-						{
 							WorldModify.spawnNPC = 22;
-						}
 						if (WorldModify.spawnNPC == 0 && (double)num12 > 5000.0 && num3 < 1)
-						{
 							WorldModify.spawnNPC = 17;
-						}
 						if (WorldModify.spawnNPC == 0 && flag2 && num4 < 1)
-						{
 							WorldModify.spawnNPC = 18;
-						}
 						if (WorldModify.spawnNPC == 0 && flag3 && num6 < 1)
-						{
 							WorldModify.spawnNPC = 19;
-						}
 						if (WorldModify.spawnNPC == 0 && (NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3) && num5 < 1)
-						{
 							WorldModify.spawnNPC = 20;
-						}
 						if (WorldModify.spawnNPC == 0 && flag4 && num3 > 0 && num9 < 1)
-						{
 							WorldModify.spawnNPC = 38;
-						}
 						if (WorldModify.spawnNPC == 0 && NPC.downedBoss3 && num10 < 1)
-						{
 							WorldModify.spawnNPC = 54;
-						}
 						if (WorldModify.spawnNPC == 0 && NPC.savedGoblin && num12 < 1)
-						{
 							WorldModify.spawnNPC = 107;
-						}
 						if (WorldModify.spawnNPC == 0 && NPC.savedWizard && num11 < 1)
-						{
 							WorldModify.spawnNPC = 108;
-						}
 						if (WorldModify.spawnNPC == 0 && NPC.savedMech && num13 < 1)
-						{
 							WorldModify.spawnNPC = 124;
-						}
-						if (WorldModify.spawnNPC == 0 && NPC.downedFrost && num13 < 1 && Main.Xmas)
-						{
+						if (WorldModify.spawnNPC == 0 && NPC.downedFrost && num13 < 1 && Xmas)
 							WorldModify.spawnNPC = 142;
-						}
 					}
 				}
 			}
@@ -1098,7 +856,7 @@ namespace Terraria_Server
 
 		public static int DamageVar(float dmg)
 		{
-			float num = dmg * (1f + (float)Main.rand.Next(-15, 16) * 0.01f);
+			float num = dmg * (1f + (float)rand.Next(-15, 16) * 0.01f);
 			return (int)Math.Round((double)num);
 		}
 
@@ -1106,9 +864,7 @@ namespace Terraria_Server
 		{
 			double num = (double)Damage - (double)Defense * 0.5;
 			if (num < 1.0)
-			{
 				num = 1.0;
-			}
 			return num;
 		}
 
@@ -1120,12 +876,19 @@ namespace Terraria_Server
 		public static int WallOfFlesh_T;
 
 		public static TimeSpan LastPlayerUpdateTime { get; private set; }
+
 		public static TimeSpan LastNPCUpdateTime { get; private set; }
+
 		public static TimeSpan LastItemUpdateTime { get; private set; }
+
 		public static TimeSpan LastProjectileUpdateTime { get; private set; }
+
 		public static TimeSpan LastTimeUpdateTime { get; private set; }
+
 		public static TimeSpan LastWorldUpdateTime { get; private set; }
+
 		public static TimeSpan LastInvasionUpdateTime { get; private set; }
+
 		public static TimeSpan LastServerUpdateTime { get; private set; }
 
 		public static void Update(Stopwatch s)
@@ -1138,7 +901,7 @@ namespace Terraria_Server
 			int serverUpdateErrors = 0;
 
 			var start = s.Elapsed;
-			foreach (Player player in Main.players)
+			foreach (Player player in players)
 			{
 				try
 				{
@@ -1146,7 +909,8 @@ namespace Terraria_Server
 				}
 				catch (Exception e)
 				{
-					if (!Main.ignoreErrors) throw;
+					if (!ignoreErrors)
+						throw;
 
 					ProgramLog.Log(e, String.Format("Player update error, slot={0}, address={1}, name={2}",
 						player.whoAmi, player.IPAddress, player.Name != null ? string.Concat('"', player.Name, '"') : "<null>"));
@@ -1163,18 +927,17 @@ namespace Terraria_Server
 
 				NPC.SpawnNPC();
 
-				foreach (Player player in Main.players)
+				foreach (Player player in players)
 				{
 					player.activeNPCs = 0;
 					player.townNPCs = 0;
 				}
 
-				if (Main.WallOfFlesh >= 0 && !Main.npcs[Main.WallOfFlesh].Active)
-					Main.WallOfFlesh = -1;
+				if (WallOfFlesh >= 0 && !npcs[WallOfFlesh].Active)
+					WallOfFlesh = -1;
 
 				for (int i = 0; i < NPC.MAX_NPCS; i++)
-				{
-					//					if (Main.npcs[i] == null)
+					//					if (npcs[i] == null)
 					//					{
 					//						ProgramLog.Debug.Log ("NPC[{0}] is null", i);
 					//						continue;
@@ -1186,16 +949,16 @@ namespace Terraria_Server
 					}
 					catch (Exception e)
 					{
-						if (!Main.ignoreErrors) throw;
+						if (!ignoreErrors)
+							throw;
 
-						var npc = Main.npcs[i];
+						var npc = npcs[i];
 						ProgramLog.Log(e, String.Format("NPC update error, id={0}, type={1}, name={2}",
 						i, npc.Type, npc.Name));
 
-						Main.npcs[i] = Registries.NPC.Default;
-						Main.npcs[i].netUpdate = true;
+						npcs[i] = Registries.NPC.Default;
+						npcs[i].netUpdate = true;
 					}
-				}
 
 				LastNPCUpdateTime = s.Elapsed - start;
 			}
@@ -1205,8 +968,7 @@ namespace Terraria_Server
 				start = s.Elapsed;
 
 				for (int i = 0; i < 1000; i++)
-				{
-					//					if (Main.projectile[i] == null)
+					//					if (projectile[i] == null)
 					//					{
 					//						ProgramLog.Debug.Log ("Projectile[{0}] is null", i);
 					//						continue;
@@ -1214,19 +976,19 @@ namespace Terraria_Server
 
 					try
 					{
-						Main.projectile[i].Update(null, i);
+						projectile[i].Update(null, i);
 					}
 					catch (Exception e)
 					{
-						if (!Main.ignoreErrors) throw;
+						if (!ignoreErrors)
+							throw;
 
-						var proj = Main.projectile[i];
+						var proj = projectile[i];
 						ProgramLog.Log(e, String.Format("Projectile update error, i={0}, id={1}, owner={2}, type={3}",
 							i, proj.identity, proj.Owner, proj.Type));
-						//Main.projectile[i] = new Projectile();
+						//projectile[i] = new Projectile();
 						Projectile.Reset(i);
 					}
-				}
 
 				LastProjectileUpdateTime = s.Elapsed - start;
 			}
@@ -1236,8 +998,7 @@ namespace Terraria_Server
 				start = s.Elapsed;
 
 				for (int i = 0; i < 200; i++)
-				{
-					//					if (Main.item[i] == null)
+					//					if (item[i] == null)
 					//					{
 					//						ProgramLog.Debug.Log ("Item[{0}] is null", i);
 					//						continue;
@@ -1245,18 +1006,18 @@ namespace Terraria_Server
 
 					try
 					{
-						Main.item[i].UpdateItem(null, i);
+						item[i].UpdateItem(null, i);
 					}
 					catch (Exception e)
 					{
-						if (!Main.ignoreErrors) throw;
+						if (!ignoreErrors)
+							throw;
 
-						var item = Main.item[i];
+						var itm = item[i];
 						ProgramLog.Log(e, String.Format("Projectile update error, i={0}, type={1}, owner={2}, stack={3}",
-							i, item.Type, item.Owner, item.Stack));
-						Main.item[i] = new Item();
+							i, itm.Type, itm.Owner, itm.Stack));
+						item[i] = new Item();
 					}
-				}
 
 				LastItemUpdateTime = s.Elapsed - start;
 			}
@@ -1264,15 +1025,16 @@ namespace Terraria_Server
 			start = s.Elapsed;
 			try
 			{
-				Main.UpdateTime();
+				UpdateTime();
 				timeUpdateErrors = 0;
 			}
 			catch (Exception e)
 			{
-				if (++timeUpdateErrors >= 5 || !Main.ignoreErrors) throw;
+				if (++timeUpdateErrors >= 5 || !ignoreErrors)
+					throw;
 
 				ProgramLog.Log(e, "Time update error");
-				Main.checkForSpawns = 0;
+				checkForSpawns = 0;
 			}
 			LastTimeUpdateTime = s.Elapsed - start;
 
@@ -1284,7 +1046,8 @@ namespace Terraria_Server
 			}
 			catch (Exception e)
 			{
-				if (++worldUpdateErrors >= 5 || !Main.ignoreErrors) throw;
+				if (++worldUpdateErrors >= 5 || !ignoreErrors)
+					throw;
 
 				ProgramLog.Log(e, "World update error");
 			}
@@ -1293,12 +1056,13 @@ namespace Terraria_Server
 			start = s.Elapsed;
 			try
 			{
-				Main.UpdateInvasion();
+				UpdateInvasion();
 				invasionUpdateErrors = 0;
 			}
 			catch (Exception e)
 			{
-				if (++invasionUpdateErrors >= 5 || !Main.ignoreErrors) throw;
+				if (++invasionUpdateErrors >= 5 || !ignoreErrors)
+					throw;
 
 				ProgramLog.Log(e, "Invasion update error");
 			}
@@ -1307,12 +1071,13 @@ namespace Terraria_Server
 			start = s.Elapsed;
 			try
 			{
-				Main.UpdateServer();
+				UpdateServer();
 				serverUpdateErrors = 0;
 			}
 			catch (Exception e)
 			{
-				if (++serverUpdateErrors >= 5 || !Main.ignoreErrors) throw;
+				if (++serverUpdateErrors >= 5 || !ignoreErrors)
+					throw;
 
 				ProgramLog.Log(e, "Server update error");
 			}
@@ -1331,10 +1096,10 @@ namespace Terraria_Server
 			int month = now.Month;
 			if (day >= 15 && month == 12)
 			{
-				Main.Xmas = true;
+				Xmas = true;
 				return;
 			}
-			Main.Xmas = false;
+			Xmas = false;
 		}
 	}
 }
