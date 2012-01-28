@@ -953,11 +953,45 @@ namespace Terraria_Server
 							this.magicDamage += 0.05f;
 							this.moveSpeed += 0.1f;
 							break;
+
+						case 28:
+							//if (!Main.dayTime && Main.moonPhase == 0 && this.wolfAcc && !this.merman)
+							//{
+							//    this.wereWolf = true;
+							//    this.meleeCrit++;
+							//    this.meleeDamage += 0.051f;
+							//    this.meleeSpeed += 0.051f;
+							//    this.statDefense++;
+							//    this.moveSpeed += 0.05f;
+							//}
+							//else
+							//{
+							//    this.DelBuff(l);
+							//}
+							break;
+
+						case 29:
+							magicCrit += 2;
+							magicDamage += 0.05f;
+							statManaMax2 += 20;
+							manaCost -= 0.02f;
+							break;
+
+						case 33:							
+							meleeDamage -= 0.051f;
+							meleeSpeed -= 0.051f;
+							statDefense -= 4;
+							moveSpeed -= 0.1f;
+							break;
+
+						case 39:
+							//onFire2 = true;
+							break;
 					}
 				}
 			}
 		}
-
+		
 		/// <summary>
 		/// Update player values
 		/// </summary>

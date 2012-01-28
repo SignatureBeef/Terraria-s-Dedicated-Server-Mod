@@ -16,7 +16,7 @@ namespace Terraria_Server
 	/// </summary>
 	public class Projectile : BaseEntity, ISender
 	{
-		public const Int32 MAX_PROJECTILES = 108;
+		public const Int32 MAX_PROJECTILES = 111;
 
 		[System.Xml.Serialization.XmlIgnore]
 		public ISender Creator { get; set; }
