@@ -1092,14 +1092,7 @@ namespace Terraria_Server
 		public static void checkXmas()
 		{
 			DateTime now = DateTime.Now;
-			int day = now.Day;
-			int month = now.Month;
-			if (day >= 15 && month == 12)
-			{
-				Xmas = true;
-				return;
-			}
-			Xmas = false;
+			Xmas = now.Day >= 15 && now.Month == 12;
 		}
 	}
 }

@@ -10,11 +10,14 @@ namespace Terraria_Server
 #region Default Values
         private const bool      DEFAULT_ALLOW_EXPLOSIONS        = true;
         private const bool      DEFAULT_ALLOW_TDCMRPG           = true;
+        private const bool		DEFAULT_ALWAYS_GENERATE_SNOW	= false;
         private const bool      DEFAULT_AUTOMATIC_UPDATES       = false;
         private const bool      DEFAULT_BUFFER_LIQUID_UPDATES   = false;
         private const bool      DEFAULT_COLLECT_GARBAGE			= true;
         private const int       DEFAULT_EXIT_USERS              = -1;
         private const string    DEFAULT_GREETING                = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
+        private const bool		DEFAULT_GENERATE_JUNGLE			= true;
+        private const bool		DEFAULT_GENERATE_SNOW			= true;
         private const bool      DEFAULT_HACKED_DATA             = false;
         private const string    DEFAULT_HARDCORE_DEATH_ACTION   = "none";
         private const bool      DEFAULT_LOG_ROTATION            = true;
@@ -45,12 +48,15 @@ namespace Terraria_Server
         private const string    ALLOW_EXPLOSIONS                = "explosions";
         private const string    ALLOW_TDCMRPG                   = "allow-tdcmrpg";
         private const string    AUTOMATIC_UPDATES               = "allowupdates";
+        private const string    ALWAYS_GENERATE_SNOW			= "always-generate-snow";
         private const string    BUFFER_LIQUID_UPDATES           = "buffer-liquid-updates";
         private const string    COLLECT_GARBAGE					= "collect-garbage";
         private const string    EXIT_USERS                      = "exitaccesslevel";
         private const string    DUNGEON_AMOUNT                  = "opt-numdungeons";
         private const string    FLOATING_ISLAND_AMOUNT          = "opt-num-floating-islands";
         private const string    GREETING                        = "greeting";
+        private const string    GENERATE_JUNGLE					= "generate-jungle";
+        private const string    GENERATE_SNOW					= "generate-snow";
         private const string    HACKED_DATA                     = "hackeddata";
         private const string    HARDCORE_DEATH_ACTION           = "hardcore-death-action";
         private const string    LOG_ROTATION                    = "log-rotation";
@@ -88,12 +94,15 @@ namespace Terraria_Server
             object temp = null;
             temp = AllowExplosions;
             temp = AllowTDCMRPG;
+			temp = AlwaysGenerateSnow;
 			temp = AutomaticUpdates;
 			temp = BufferLiquidUpdates;
 			temp = CollectGarbage;
             temp = DungeonAmount;
             temp = ExitAccessLevel;
             temp = FloatingIslandAmount;
+			temp = GenerateJungle;
+			temp = GenerateSnow;
             temp = Greeting;
             temp = HackedData;
             temp = HardcoreDeathAction;
@@ -555,6 +564,24 @@ namespace Terraria_Server
 		{
 			get { return getValue(COLLECT_GARBAGE, DEFAULT_COLLECT_GARBAGE); }
 			set { setValue(COLLECT_GARBAGE, value); }
+		}
+
+		public bool AlwaysGenerateSnow
+		{
+			get { return getValue(ALWAYS_GENERATE_SNOW, DEFAULT_ALWAYS_GENERATE_SNOW); }
+			set { setValue(ALWAYS_GENERATE_SNOW, value); }
+		}
+
+		public bool GenerateJungle
+		{
+			get { return getValue(GENERATE_JUNGLE, DEFAULT_GENERATE_JUNGLE); }
+			set { setValue(GENERATE_JUNGLE, value); }
+		}
+
+		public bool GenerateSnow
+		{
+			get { return getValue(GENERATE_SNOW, DEFAULT_GENERATE_SNOW); }
+			set { setValue(GENERATE_SNOW, value); }
 		}
     }
 }

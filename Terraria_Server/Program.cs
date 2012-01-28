@@ -771,8 +771,8 @@ namespace Terraria_Server
 						{
 							if (properties.CollectGarbage)
 							{
-								ProgramLog.Debug.Log("Performing GC...");
-								//GC.Collect();
+								//ProgramLog.Debug.Log("Performing GC...");
+								GC.Collect();
 								//ProgramLog.Debug.Log("GC Total Memory {0}", GC.GetTotalMemory(false));
 							}
 							collect = 0;

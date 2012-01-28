@@ -101,9 +101,7 @@ namespace Terraria_Server.WorldMod
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
-
-			Main.checkXmas();
-
+			
 			int seed = -1;
 			try
 			{
@@ -302,10 +300,8 @@ namespace Terraria_Server.WorldMod
 
 			GenerateHills(TileRefs);
 
-			if (Main.Xmas || WorldModify.genRand.Next(3) == 0)
-			{
+			if (((Main.Xmas || WorldModify.genRand.Next(3) == 0) || Program.properties.AlwaysGenerateSnow) && Program.properties.GenerateSnow)
 				GenerateSnow(TileRefs);
-			}
 
 			PutDirtBehindDirt(TileRefs);
 
@@ -320,7 +316,10 @@ namespace Terraria_Server.WorldMod
 			GenerateSmallCaves(TileRefs);
 			GenerateLargeCaves(TileRefs);
 			GenerateSurfaceCaves(TileRefs);
-			GenerateJungle(TileRefs, Direction);
+
+			if(Program.properties.GenerateJungle)
+				GenerateJungle(TileRefs, Direction);
+
 			GenerateFloatingIslands(TileRefs);
 
 			AddMushroomPatches(TileRefs);
