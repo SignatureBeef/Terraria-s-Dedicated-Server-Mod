@@ -1189,6 +1189,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Updates specified item's condition
 		/// </summary>
+		/// <param name="TileRefs">Reference to the ITile method, For usage between Sandbox and Realtime</param>
 		/// <param name="i">Item index</param>
 		public void UpdateItem(Func<Int32, Int32, ITile> TileRefs, int i)
 		{
@@ -1338,6 +1339,7 @@ namespace Terraria_Server
 		/// <param name="type">New item type</param>
 		/// <param name="stack">How big of a stack to create. Default 1</param>
 		/// <param name="noBroadcast">Whether to broadcast item creation or not. Default false</param>
+		/// <param name="pfix">Prefix of the new item</param>
 		/// <returns>New item index value</returns>
 		public static int NewItem(int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false, int pfix = 0)
 		{

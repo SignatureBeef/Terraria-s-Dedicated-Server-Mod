@@ -815,6 +815,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Updates the projectile's position, damage variables, etc.
 		/// </summary>
+		/// <param name="TileRefs">Reference to the ITile method, For usage between Sandbox and Realtime</param>
 		/// <param name="i">Projectile index</param>
 		public void Update(Func<Int32, Int32, ITile> TileRefs, int i)
 		{
@@ -1505,7 +1506,7 @@ namespace Terraria_Server
 						this.rotation += 0.4f * (float)this.direction;
 						return;
 					}
-					break;
+					//break;
 				case 4:
 					{
 						this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
@@ -2093,7 +2094,7 @@ namespace Terraria_Server
 						this.rotation += 0.3f * (float)this.direction;
 						return;
 					}
-					break;
+					//break;
 				case 13:
 					{
 						if (Main.players[this.Owner].dead)
@@ -2349,7 +2350,7 @@ namespace Terraria_Server
 						this.rotation = (float)Math.Atan2((double)num74, (double)num73) - this.Velocity.X * 0.1f;
 						return;
 					}
-					break;
+					//break;
 				case 16:
 					{
 						if (this.type == ProjectileType.N108_EXPLOSIVES)
@@ -2505,7 +2506,7 @@ namespace Terraria_Server
 						this.rotation += this.Velocity.X * 0.1f;
 						return;
 					}
-					break;
+					//break;
 				case 17:
 					{
 						if (this.Velocity.Y == 0f)
@@ -2571,7 +2572,7 @@ namespace Terraria_Server
 						}
 						return;
 					}
-					break;
+					//break;
 				case 19:
 					{
 						this.direction = Main.players[this.Owner].direction;
@@ -2929,7 +2930,7 @@ namespace Terraria_Server
 						this.rotation += 0.3f * (float)this.direction;
 						return;
 					}
-					break;
+					//break;
 				case 24:
 					{
 						this.light = this.scale * 0.5f;

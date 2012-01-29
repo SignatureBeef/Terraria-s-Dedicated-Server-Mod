@@ -206,17 +206,17 @@ namespace Terraria_Server.WorldMod
 
 		public const bool noTileActions = false;
 		public bool spawnMeteor = false;
-		private bool mergeUp = false;
-		private bool mergeDown = false;
-		private bool mergeLeft = false;
-		private bool mergeRight = false;
+		//private bool mergeUp = false;
+		//private bool mergeDown = false;
+		//private bool mergeLeft = false;
+		//private bool mergeRight = false;
 		public const bool stopDrops = false;
 		public const bool noLiquidCheck = false;
 
 
 		Random genRand = new Random((int)DateTime.Now.Ticks);
 
-		private bool destroyObject = false;
+		//private bool destroyObject = false;
 
 		public const int maxRoomTiles = 1900;
 

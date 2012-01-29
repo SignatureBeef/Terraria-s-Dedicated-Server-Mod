@@ -150,7 +150,9 @@ namespace Terraria_Server.Commands
 			args.ParseNone();
 
             var players = from p in Main.players where p.Active select p.Name;
-			sender.sendMessage(string.Concat("Current players: ", String.Join(", ", players), "."), 255, 255, 240, 20);
+			var line = String.Concat("Current players: ", String.Join(", ", players), (players.Count() > 0) ? "." : String.Empty);
+
+			sender.sendMessage(line, 255, 255, 240, 20);
 		}
 
 		/// <summary>

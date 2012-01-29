@@ -995,6 +995,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Update player values
 		/// </summary>
+		/// <param name="TileRefs">Reference to the ITile method, For usage between Sandbox and Realtime</param>
 		/// <param name="i">Index of player to update</param>
 		public void UpdatePlayer(Func<Int32, Int32, ITile> TileRefs, int i)
 		{
@@ -5007,6 +5008,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Checks whether location is suitable for assigning to spawn
 		/// </summary>
+		/// <param name="TileRefs">Reference to the ITile method, For usage between Sandbox and Realtime</param>
 		/// <param name="x">X value of location</param>
 		/// <param name="y">Y value of location</param>
 		/// <returns>True if location can be set as spawn</returns>

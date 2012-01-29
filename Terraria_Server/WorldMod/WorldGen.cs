@@ -437,7 +437,7 @@ namespace Terraria_Server.WorldMod
 
 			ProgramLog.Log("Adding NPC's...");
 			NPC.SpawnGuide();
-			NPC.SpawnTDCMQuestGiver();
+			/*NPC.SpawnTDCMQuestGiver(); */
 
 			PlantSunflowers(TileRefs);
 			PlantTrees(TileRefs);

@@ -27,12 +27,12 @@ namespace Terraria_Utilities
             Console.WriteLine(WELCOME_MESSAGE);
 
 			// [START] Test NPC Serializer
-			NPCSerializer.Serialize();
+			/*NPCSerializer.Serialize();
 			Console.ReadKey(true);
-			return;
+			return;*/
 			//[END] Test NPC Serializer */
 
-            var location = "C:\\TerrariaServer.exe";
+			//var location = "C:\\TerrariaServer.exe";
             var typeSet = GetSet();
             var upperCase = GetUppercaseFields();
 
