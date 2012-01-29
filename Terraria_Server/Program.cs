@@ -13,6 +13,7 @@ using System.Security.Policy;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugins;
 using Terraria_Server.Permissions;
+using Terraria_Server.Language;
 
 namespace Terraria_Server
 {
@@ -160,6 +161,8 @@ namespace Terraria_Server
 					Collections.Registries.NPC.Load(Collections.Registries.NPC_FILE);
 				using (var prog = new ProgressLogger(1, "Loading projectile definitions"))
 					Collections.Registries.Projectile.Load(Collections.Registries.PROJECTILE_FILE);
+				using (var prog = new ProgressLogger(1, "Loading language definitions"))
+					LanguageFile.LoadClass(Collections.Registries.LANAGUAGE_FILE);
 
 				commandParser = new CommandParser();
 				commandParser.ReadPermissionNodes();

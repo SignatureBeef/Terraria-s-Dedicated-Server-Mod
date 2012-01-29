@@ -14,6 +14,7 @@ using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
 using Terraria_Server.TDCM;
+using Terraria_Server.Language;
 
 namespace Terraria_Server
 {
@@ -5324,7 +5325,7 @@ namespace Terraria_Server
 			var conn = Connection;
 			if (conn != null)
 			{
-				var message = "You have been Kicked from this Server.";
+				var message = LanguageFile.Disconnected;
 
 				if (reason != null)
 				{

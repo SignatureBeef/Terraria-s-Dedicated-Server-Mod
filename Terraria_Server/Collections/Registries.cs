@@ -8,8 +8,10 @@ namespace Terraria_Server.Collections
 {
     public class Registries
     {
-        public const string NPC_FILE = "NPCs.xml";
-        public const string PROJECTILE_FILE = "Projectiles.xml";
+		public const string NPC_FILE = "NPCs.xml";
+		public const string PROJECTILE_FILE = "Projectiles.xml";
+		public const string LANAGUAGE_FILE = "Language.xml";
+		public const string DEFINITIONS = "Terraria_Server.Definitions.";
 
         public static ItemRegistry Item = new ItemRegistry();
         public static Registry<NPC> NPC = new Registry<NPC> ();

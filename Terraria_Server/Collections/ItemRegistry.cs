@@ -21,7 +21,7 @@ namespace Terraria_Server.Collections
              * lookup dictionary. This is at least until the item list can be fixed so
              * each item has a unique type or other identifier.
              */
-            StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(DEFINITIONS + ITEMS_BY_NAME));
+            StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(Registries.DEFINITIONS + ITEMS_BY_NAME));
             XmlSerializer serializer = new XmlSerializer(typeof(Item[]));
             try
             {

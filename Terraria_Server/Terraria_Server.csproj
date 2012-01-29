@@ -133,6 +133,7 @@
     <Compile Include="Collections\ItemRegistry.cs" />
     <Compile Include="Collections\Registries.cs" />
     <Compile Include="Definitions\Time.cs" />
+    <Compile Include="Language\LanguageFile.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
     <Compile Include="Messages\HitSwitchMessage.cs" />
@@ -303,6 +304,7 @@
     <EmbeddedResource Include="Definitions\Projectiles.xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Definitions\Language.xml" />
     <Content Include="TDSMROGO.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

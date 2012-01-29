@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using System.Reflection;
 using Terraria_Server.Logging;
 using Terraria_Server.Misc;
+using Terraria_Server.Language;
 
 namespace Terraria_Server.Collections
 {
@@ -13,8 +14,6 @@ namespace Terraria_Server.Collections
     {
         protected Dictionary<Int32, List<T>> typeLookup = new Dictionary<Int32, List<T>>();
         protected Dictionary<String, T> nameLookup = new Dictionary<String, T>();
-
-        protected string DEFINITIONS = "Terraria_Server.Definitions.";
 
         private readonly T defaultValue;
 
@@ -42,7 +41,7 @@ namespace Terraria_Server.Collections
 		public void Load (string filePath)
 		{
 			var document = new XmlDocument ();
-			document.Load (Assembly.GetExecutingAssembly().GetManifestResourceStream(DEFINITIONS + filePath));
+			document.Load (Assembly.GetExecutingAssembly().GetManifestResourceStream(Registries.DEFINITIONS + filePath));
 			var nodes = document.SelectNodes ("/*/*");
 			var ser = new XmlSerializer (typeof(T));
 			
