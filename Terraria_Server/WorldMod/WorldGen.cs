@@ -6242,12 +6242,9 @@ namespace Terraria_Server.WorldMod
 									{
 										TileRefs(k, l).SetType((byte)type);
 									}
-									else
+									else if (type == 59)
 									{
-										if (type == 59)
-										{
-											TileRefs(k, l).SetType((byte)type);
-										}
+										TileRefs(k, l).SetType((byte)type);
 									}
 								}
 								if (addTile)

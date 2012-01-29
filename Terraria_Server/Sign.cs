@@ -16,7 +16,6 @@ namespace Terraria_Server
 
         public static void KillSign(int x, int y)
         {
-
             for (int i = 0; i < 1000; i++)
             {
                 if (Main.sign[i] != null && Main.sign[i].x == x && Main.sign[i].y == y)

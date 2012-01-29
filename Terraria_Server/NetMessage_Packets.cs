@@ -128,9 +128,11 @@ namespace Terraria_Server
 			byte flags = 0;
 			
 			if (WorldModify.shadowOrbSmashed) flags += 1;
-			if (NPC.downedBoss1)           flags += 2;
-			if (NPC.downedBoss2)           flags += 4;
-			if (NPC.downedBoss3)           flags += 8;
+			if (NPC.downedBoss1) flags += 2;
+			if (NPC.downedBoss2) flags += 4;
+			if (NPC.downedBoss3) flags += 8;
+			if (Main.hardMode) flags += 16;
+			if (NPC.downedClown) flags += 32;
 			
 			Byte (flags);
 			
@@ -369,9 +371,7 @@ namespace Terraria_Server
 				var tile = Main.tile.At (col, row).Data;
 				
 				Tile (tile);
-				Short (0);
-				
-				continue; //FIXME: make this work
+								
 				int run = 0;
 				
 				for (int i = col + 1; i < firstColumn + numColumns; i++)
@@ -397,6 +397,7 @@ namespace Terraria_Server
 				}
 				
 				Short (run);
+				col += run;
 			}
 			
 			End ();
