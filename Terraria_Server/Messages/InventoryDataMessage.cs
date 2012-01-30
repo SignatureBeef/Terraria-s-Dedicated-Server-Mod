@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Terraria_Server.Collections;
 using Terraria_Server.Plugins;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
@@ -58,7 +59,7 @@ namespace Terraria_Server.Messages
 			var inventorySlot = args.InventorySlot;
 			var stack = args.Amount;
 			
-			if (args.NetID < 0) return; // FIXME
+			//if (args.NetID < 0) return; // FIXME
 
 			var item = Item.netDefaults(args.NetID);
 			item.SetPrefix (args.Prefix);
@@ -75,14 +76,14 @@ namespace Terraria_Server.Messages
 			
 			if (ctx.Result != HookResult.CONTINUE)
 			{
-				if (Server.RejectedItemsContains(itemName) ||
+				if (Server.RejectedItemsContains(item.Name) ||
 					Server.RejectedItemsContains(item.Type.ToString()))
 				{
-					player.Kick(((itemName.Length > 0) ? itemName : item.Type.ToString()) + " is not allowed on this server.");
+					player.Kick(((item.Name.Length > 0) ? item.Name : item.Type.ToString()) + " is not allowed on this server.");
 				}
 			}
-			
-			NetMessage.SendData(5, -1, whoAmI, itemName, playerIndex, (float)inventorySlot, args.Prefix);
+
+			NetMessage.SendData(5, -1, whoAmI, item.Name, playerIndex, (float)inventorySlot, args.Prefix);
         }
     }
 }

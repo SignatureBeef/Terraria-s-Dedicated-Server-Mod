@@ -97,7 +97,7 @@ namespace Terraria_Server
 			
 			Byte (prefix);
 			
-			Byte (item.NetID);
+			Short (item.NetID);
 			
 			End ();
 		}
