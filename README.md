@@ -1,7 +1,7 @@
 Terraria's Dedicated Server Mod
 -------------
 
-Aims to provide a stable Server + API which is compatible with Mono while also being 10% free of charge. However if you wish to donate, please checkout the donation options over at http://tdsm.org
+Aims to provide a stable Server + API which is compatible with Mono while also being 100% free of charge. However if you wish to donate, please checkout the donation options over at http://tdsm.org
 
 (Donating will encourage us to work harder, Because at the moment we are doing this out of shear good will for people in a predicament when we originally left.)
 

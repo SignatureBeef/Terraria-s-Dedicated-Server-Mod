@@ -6,6 +6,7 @@ using Terraria_Server.RemoteConsole;
 using Terraria_Server.Logging;
 using Terraria_Server.Misc;
 using Terraria_Server.Permissions;
+using Terraria_Server.Language;
 
 namespace Terraria_Server.Commands
 {
@@ -95,14 +96,14 @@ namespace Terraria_Server.Commands
 			{
 				if (! CommandParser.CheckAccessLevel (this, sender))
 				{
-					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					sender.sendMessage (Languages.PermissionsError, 255, 238, 130, 238);
 					return;
 				}
 				
 				if (stringCallback != null)
 					stringCallback (sender, args);
 				else
-					sender.sendMessage ("This command is no longer available.", 255, 238, 130, 238);
+					sender.sendMessage (Languages.ExpiredCommandMessage, 255, 238, 130, 238);
 			}
 			finally
 			{
@@ -120,14 +121,14 @@ namespace Terraria_Server.Commands
 			{
 				if (! CommandParser.CheckAccessLevel (this, sender))
 				{
-					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					sender.sendMessage (Languages.PermissionsError, 255, 238, 130, 238);
 					return;
 				}
 				
 				if (tokenCallback != null)
 					tokenCallback (sender, args);
 				else
-					sender.sendMessage ("This command is no longer available.", 255, 238, 130, 238);
+					sender.sendMessage (Languages.ExpiredCommandMessage, 255, 238, 130, 238);
 			}
 			finally
 			{
@@ -153,84 +154,84 @@ namespace Terraria_Server.Commands
 			serverCommands = new Dictionary<String, CommandInfo> ();
 
             AddCommand("exit")
-                .WithDescription("Stop the save the world then exit program.")
+                .WithDescription(Languages.CommandDescription_Exit)
                 .WithAccessLevel(AccessLevel.CONSOLE)
 				.WithPermissionNode("tdsm.admin")
                 .Calls(Commands.Exit);
 
             AddCommand("stop")
-                .WithDescription("Stop the save the world then exit program.")
+                .WithDescription(Languages.CommandDescription_Exit)
                 .WithAccessLevel(AccessLevel.CONSOLE)
 				.WithPermissionNode("tdsm.admin")
                 .Calls(Commands.Exit);
 
             AddCommand("save-all")
-                .WithDescription("Save all world data and backup.")
+				.WithDescription(Languages.CommandDescription_SaveAll)
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.admin")
                 .Calls(Commands.SaveAll);
             
             AddCommand("reload")
-                .WithDescription ("Reload plugins.")
+                .WithDescription (Languages.CommandDescription_ReloadPlugins)
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
                 .WithPermissionNode("tdsm.plugin")
                 .Calls (Commands.Reload);
                 
             AddCommand("list")
                 .WithAccessLevel (AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, playing, online).")
+                .WithDescription(Languages.CommandDescription_OnlinePlayers)
                 .WithPermissionNode("tdsm.who")
                 .Calls (Commands.List);
                 
             AddCommand("who")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: list, players, playing, online).")
+				.WithDescription(Languages.CommandDescription_OnlinePlayers)
                 .WithPermissionNode("tdsm.who")
                 .Calls(Commands.List);
 
             AddCommand("players")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: list, who, playing, online).")
+				.WithDescription(Languages.CommandDescription_OnlinePlayers)
                 .WithPermissionNode("tdsm.who")
                 .Calls(Commands.OldList);
 
             // this is what the server crawler expects
             AddCommand("playing")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: list, who, players, online).")
+				.WithDescription(Languages.CommandDescription_OnlinePlayers)
                 .WithPermissionNode("tdsm.who")
                 .Calls(Commands.OldList);
 
             AddCommand("online")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: list, who, players, playing).")
+				.WithDescription(Languages.CommandDescription_OnlinePlayers)
                 .WithPermissionNode("tdsm.who")
                 .Calls(Commands.List);
                 
             AddCommand("me")
                 .WithAccessLevel (AccessLevel.PLAYER)
-                .WithDescription("Broadcast a message in third person.")
+				.WithDescription(Languages.CommandDescription_Me)
                 .WithPermissionNode("tdsm.me")
                 .Calls (Commands.Action);
                 
             AddCommand("say")
                 .WithAccessLevel (AccessLevel.OP)
-                .WithDescription("Broadcast a message as the Server.")
+				.WithDescription(Languages.CommandDescription_Say)
                 .WithPermissionNode("tdsm.say")
                 .Calls (Commands.Say);
                 
             AddCommand("slots")
-                .WithDescription ("Display information about occupied player slots.")
+                .WithDescription (Languages.CommandDescription_Slots)
                 .WithHelpText ("Usage:   slots [-d] [-p]")
                 .WithHelpText ("Options:")
                 .WithHelpText ("         -d    display information helpful in debugging")
-                .WithHelpText("         -p    display additional player information")
+                .WithHelpText ("         -p    display additional player information")
                 .WithPermissionNode("tdsm.slots")
                 .Calls (Commands.Slots);
 
             AddCommand("kick")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription ("Kick a player by name or slot.")
+                .WithDescription (Languages.CommandDescription_Kick)
                 .WithHelpText ("Usage:   kick name")
                 .WithHelpText("         kick -s number")
                 .WithPermissionNode("tdsm.kick")
@@ -238,7 +239,7 @@ namespace Terraria_Server.Commands
 
             AddCommand("ban")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Ban a player by Name or IP")
+                .WithDescription(Languages.CommandDescription_Ban)
                 .WithHelpText("Usage:   ban <name>")
                 .WithHelpText("         ban <ip>")
                 .WithPermissionNode("tdsm.ban")
@@ -246,21 +247,21 @@ namespace Terraria_Server.Commands
 
             AddCommand("unban")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("UnBan a player by Name or IP")
+                .WithDescription(Languages.CommandDescription_UnBan)
                 .WithHelpText("Usage:   unban <name>")
                 .WithPermissionNode("tdsm.unban")
                 .Calls(Commands.UnBan);
 
             AddCommand("whitelist")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Add or remove a player or IP to the whitelist")
+                .WithDescription(Languages.CommandDescription_Whitelist)
                 .WithHelpText("Usage:   whitelist -add <name:ip>")
                 .WithHelpText("         whitelist -remove <name:ip>")
                 .WithPermissionNode("tdsm.whitelist")
                 .Calls(Commands.WhiteList);
             
             AddCommand("rcon")
-                .WithDescription ("Manage remote console access.")
+                .WithDescription (Languages.CommandDescription_Rcon)
                 .WithAccessLevel (AccessLevel.REMOTE_CONSOLE)
                 .WithHelpText ("Usage:   rcon load       - reload login database")
                 .WithHelpText ("         rcon list       - list rcon connections")
@@ -270,13 +271,13 @@ namespace Terraria_Server.Commands
                 .Calls (RConServer.RConCommand);
             
             AddCommand("status")
-                .WithDescription ("Check the server's status")
+                .WithDescription (Languages.CommandDescription_Status)
                 .WithHelpText("Usage:   status")
                 .WithPermissionNode("tdsm.status")
                 .Calls(Commands.Status);
 
             AddCommand("time")
-                .WithDescription("Change the time of the World.")
+                .WithDescription(Languages.CommandDescription_Time)
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("Usage:   time -set <time>")
                 .WithHelpText("         time -now")
@@ -290,7 +291,7 @@ namespace Terraria_Server.Commands
 
             AddCommand("help")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("Get a printout of active commands.")
+                .WithDescription(Languages.CommandDescription_Help)
                 .WithHelpText("Usage:   help")
                 .WithHelpText("         help <page>")
                 .WithPermissionNode("tdsm.help")
@@ -298,21 +299,21 @@ namespace Terraria_Server.Commands
 
             AddCommand("give")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Give a player items.")
+                .WithDescription(Languages.CommandDescription_Give)
                 .WithHelpText("Usage:   give <player> <amount> <itemname:itemid>")
                 .WithPermissionNode("tdsm.give")
                 .Calls(Commands.Give);
 
             AddCommand("spawnnpc")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Spawn an NPC near a player.")
+                .WithDescription(Languages.CommandDescription_SpawnNpc)
                 .WithHelpText("Usage:   spawnnpc <amount> \"<name:id>\" \"<player>\"")
                 .WithPermissionNode("tdsm.spawnnpc")
                 .Calls(Commands.SpawnNPC);
 
             AddCommand("tp")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Teleport a player to another player.")
+                .WithDescription(Languages.CommandDescription_Teleport)
                 .WithHelpText("Usage:   tp <player> <toplayer> - another player")
                 .WithHelpText("         tp <player> <x> <y>")
                 .WithHelpText("         tp <toplayer>          - yourself")
@@ -323,63 +324,63 @@ namespace Terraria_Server.Commands
 
             AddCommand("tphere")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Teleport a player to yourself.")
+                .WithDescription(Languages.CommandDescription_TeleportHere)
                 .WithHelpText("Usage:   tphere <player>")
                 .WithPermissionNode("tdsm.tphere")
                 .Calls(Commands.TeleportHere);
 
             AddCommand("settle")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Settle Liquids.")
+                .WithDescription(Languages.CommandDescription_SettleLiquids)
                 .WithHelpText("Usage:   settle")
                 .WithPermissionNode("tdsm.settle")
                 .Calls(Commands.SettleWater);
 
             AddCommand("op")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Op a player")
+                .WithDescription(Languages.CommandDescription_Op)
                 .WithHelpText("Usage:   op <player> <password>")
                 .WithPermissionNode("tdsm.op")
                 .Calls(Commands.OpPlayer);
 
             AddCommand("deop")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("De-Op a player")
+                .WithDescription(Languages.CommandDescription_DeOp)
                 .WithHelpText("Usage:   deop <player>")
                 .WithPermissionNode("tdsm.deop")
                 .Calls(Commands.DeopPlayer);
 
             AddCommand("oplogin")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("OP Login System.")
+                .WithDescription(Languages.CommandDescription_OpLogin)
                 .WithHelpText("Usage:   oplogin <password>")
                 .WithPermissionNode("tdsm.oplogin")
                 .Calls(Commands.OpLogin);
 
             AddCommand("oplogout")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("OP Logout System.")
+                .WithDescription(Languages.CommandDescription_OpLogout)
                 .WithHelpText("Usage:   oplogout")
                 .WithPermissionNode("tdsm.oplogout")
                 .Calls(Commands.OpLogout);
 
             AddCommand("npcspawns")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Toggle the state of NPC Spawning.")
+                .WithDescription(Languages.CommandDescription_NpcSpawns)
                 .WithHelpText("Usage:   npcspawns")
                 .WithPermissionNode("tdsm.npcspawns")
                 .Calls(Commands.NPCSpawns);
 
             AddCommand("restart")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Restart the Server.")
+                .WithDescription(Languages.CommandDescription_Restart)
                 .WithHelpText("Usage:   restart")
                 .WithPermissionNode("tdsm.admin")
                 .Calls(Commands.Restart);
             
             AddCommand("purge")
                 .WithAccessLevel (AccessLevel.OP)
-                .WithDescription ("Purge the map of items, NPCs or projectiles.")
+                .WithDescription (Languages.CommandDescription_Purge)
                 .WithHelpText ("Usage:    purge all")
                 .WithHelpText ("          purge proj[ectiles]")
                 .WithHelpText ("          purge item[s]")
@@ -389,14 +390,14 @@ namespace Terraria_Server.Commands
 
             AddCommand("plugins")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List currently enabled plugins.")
+                .WithDescription(Languages.CommandDescription_Plugins)
                 .WithHelpText("Usage:    plugins")
                 .WithPermissionNode("tdsm.plugins")
                 .Calls(Commands.ListPlugins);
 
             AddCommand("plugin")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Enable/disable and get details about specific plugins.")
+                .WithDescription(Languages.CommandDescription_Plugin)
                 .WithHelpText("Usage:    plugin list")
                 .WithHelpText("          plugin stat")
                 .WithHelpText("          plugin info <plugin>")
@@ -410,7 +411,7 @@ namespace Terraria_Server.Commands
 
             AddCommand("spawnboss")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Summon a Boss to the world. <Any Combination>")
+                .WithDescription(Languages.CommandDescription_SpawnBoss)
                 .WithDescription("  (No if no player is entered it will be a random online player)")
                 .WithDescription("  (-night is mainly for Eye of Cthulu, but will set time to night for any Boss.)")
                 .WithHelpText("Usage:    spawnboss <eye, skeletron, eater, kingslime>")
@@ -422,21 +423,21 @@ namespace Terraria_Server.Commands
 
             AddCommand("itemrej")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Add or remove an item from the whitelist.")
+                .WithDescription(Languages.CommandDescription_ItemRej)
                 .WithHelpText("Usage:    itemrej -add/-remove <id:name>")
                 .WithPermissionNode("tdsm.itemrej")
                 .Calls(Commands.ItemRejection);
 
             AddCommand("explosions")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Toggle the allowing of explosions for the server.")
+                .WithDescription(Languages.CommandDescription_Explosions)
                 .WithHelpText("Usage:    explosions")
                 .WithPermissionNode("tdsm.explosions")
                 .Calls(Commands.Explosions);
 
             AddCommand("maxplayers")
                 .WithAccessLevel (AccessLevel.REMOTE_CONSOLE)
-                .WithDescription ("Set the maximum number of player slots.")
+                .WithDescription (Languages.CommandDescription_MaxPlayers)
                 .WithHelpText ("Usage:    maxplayers <num> - set the max number of slots")
                 .WithHelpText("          maxplayers <num> <num> - also set the number of overlimit slots")
                 .WithPermissionNode("tdsm.maxplayers")
@@ -444,19 +445,19 @@ namespace Terraria_Server.Commands
             
             AddCommand("q")
                 .WithAccessLevel (AccessLevel.OP)
-                .WithDescription ("List connections waiting in queues.")
+                .WithDescription (Languages.CommandDescription_Q)
                 .WithHelpText("Usage:    q")
                 .WithPermissionNode("tdsm.q")
                 .Calls (Terraria_Server.Networking.SlotManager.QCommand);
             
             AddCommand ("refresh")
                 .WithAccessLevel (AccessLevel.PLAYER)
-                .WithDescription ("Redownload the area around you from the server.")
+                .WithDescription (Languages.CommandDescription_Refresh)
                 .WithHelpText("Usage:    refresh")
                 .WithPermissionNode("tdsm.refresh")
                 .Calls(Commands.Refresh);
 
-            AddCommand("rpg")
+            /*AddCommand("rpg")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Toggle whether RPG Client can use this server.")
                 .WithHelpText("Usage:    rpg")
@@ -468,7 +469,7 @@ namespace Terraria_Server.Commands
                 .WithDescription("Spawn a TDCM Quest Giver.")
                 .WithHelpText("Usage:    spawngiver")
                 .WithPermissionNode("tdsm.spawngiver")
-                .Calls(Commands.SpawnQuestGiver);
+                .Calls(Commands.SpawnQuestGiver);*/
         }
        
         public readonly Dictionary<String, CommandInfo> serverCommands;
@@ -656,7 +657,7 @@ namespace Terraria_Server.Commands
 					
 					if (ctx.Result != HookResult.CONTINUE && ! CheckAccessLevel (info, sender))
 					{
-						sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+						sender.sendMessage (Languages.PermissionsError, 255, 238, 130, 238);
 						return;
 					}
 					
@@ -700,7 +701,7 @@ namespace Terraria_Server.Commands
 						
 						if (ctx.Result != HookResult.CONTINUE && ! CheckAccessLevel(info, sender))
 						{
-							sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+							sender.sendMessage(Languages.PermissionsError, 255, 238, 130, 238);
 							return;
 						}
 

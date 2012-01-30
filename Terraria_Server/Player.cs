@@ -5325,7 +5325,7 @@ namespace Terraria_Server
 			var conn = Connection;
 			if (conn != null)
 			{
-				var message = LanguageFile.Disconnected;
+				var message = Languages.Disconnected;
 
 				if (reason != null)
 				{

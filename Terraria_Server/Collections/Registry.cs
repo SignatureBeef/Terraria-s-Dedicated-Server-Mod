@@ -83,8 +83,7 @@ namespace Terraria_Server.Collections
 				{
 					ProgramLog.Log (e, "Error adding element");
 					ProgramLog.Error.Log ("Element was:\n" + node.ToString());
-				}
-				
+				}				
 			}
 		}
 

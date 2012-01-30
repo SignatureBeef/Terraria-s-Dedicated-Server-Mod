@@ -14,6 +14,7 @@ using Terraria_Server.Definitions;
 using Terraria_Server.Plugins;
 using Terraria_Server.Networking;
 using System.IO;
+using Terraria_Server.Language;
 
 namespace Terraria_Server.Commands
 {
@@ -29,18 +30,18 @@ namespace Terraria_Server.Commands
             int AccessLevel = Program.properties.ExitAccessLevel;
             if (AccessLevel == -1 && sender is Player)
             {
-                    sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+                    sender.sendMessage(Languages.PermissionsError, 255, 238, 130, 238);
                     return;
             }
             else if (!CommandParser.CheckAccessLevel((AccessLevel)AccessLevel, sender))
             {
-                sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+                sender.sendMessage(Languages.PermissionsError, 255, 238, 130, 238);
                 return;
             }
             
 			args.ParseNone();
 
-			Server.notifyOps("Exiting on request.", false);
+			Server.notifyOps(Languages.ExitRequestCommand, false);
 			NetPlay.StopServer();
 			Statics.Exit = true;
 

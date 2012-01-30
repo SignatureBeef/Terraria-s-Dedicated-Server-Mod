@@ -63,7 +63,6 @@ namespace Languages
 					if (column.Next(ColumnTrigger) == 1)
 					{
 						var col = initialColour.Downgrade(ColumnDepth);
-
 						image.SetPixel(x, y, col);
 					}
 					else
@@ -97,14 +96,15 @@ namespace Languages
 			{
 				string translated;
 				if (Methods.TryTranslateText(keyPair.Value, Methods.Languages[Cb_Languages.Text], out translated))
-				{
 					nodes.UpdateProperty(keyPair.Key, translated);
-				}
 				else
 					failed++;
 			}
 
 			LanguageData.SaveXML(nodes);
+			MessageBox.Show(
+				String.Format("{0} node(s) converted!", nodes.Count - failed)
+			);
 		}
 	}
 
@@ -112,7 +112,7 @@ namespace Languages
 	{
 		public static void RestoreXML()
 		{
-			LanguageFile.LoadClass(Registries.LANAGUAGE_FILE, true);
+			Terraria_Server.Language.Languages.LoadClass(Registries.LANAGUAGE_FILE, true);
 		}
 
 		public static void SaveXML(Dictionary<String, String> data)
@@ -121,18 +121,22 @@ namespace Languages
 			if (File.Exists(filePath))
 				File.Delete(filePath);
 
-			var xml = new string[data.Count];
+			var xml = new string[data.Count + 2];
 			var index = 0;
 
+			xml[index++] = "<Languages>";
+
 			foreach (var keyPair in data)
-				xml[index++] = String.Format("<{0}>{1}</{2}>", keyPair.Key, keyPair.Value, keyPair.Key);
+				xml[index++] = String.Format("\t<{0}>{1}</{2}>", keyPair.Key, keyPair.Value, keyPair.Key);
+
+			xml[index++] = "</Languages>";
 
 			File.WriteAllLines(filePath, xml);
 		}
 
 		public static Dictionary<String, String> GetNodes()
 		{
-			var type = typeof(LanguageFile);
+			var type = typeof(Terraria_Server.Language.Languages);
 			var list = new Dictionary<String, String>();
 
 			var properties = type.GetProperties();

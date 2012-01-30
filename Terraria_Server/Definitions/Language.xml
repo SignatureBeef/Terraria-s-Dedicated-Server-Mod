@@ -1,1 +1,41 @@
-﻿<Disconnected>You have been Kicked from this Server.</Disconnected>
+﻿<Languages>
+  <Disconnected>You have been Kicked from this Server.</Disconnected>
+  <PermissionsError>You cannot perform that action.</PermissionsError>
+  <ExitRequestCommand>Exiting on request.</ExitRequestCommand>
+  <ExpiredCommandMessage>This command is no longer available</ExpiredCommandMessage>
+  <CommandDescription_Exit>Stop the save the world then exit program.</CommandDescription_Exit>
+  <CommandDescription_SaveAll>Save all world data and backup.</CommandDescription_SaveAll>
+  <CommandDescription_ReloadPlugins>Reload plugins.</CommandDescription_ReloadPlugins>
+  <CommandDescription_OnlinePlayers>List active players (also: who, players, playing, online).</CommandDescription_OnlinePlayers>
+  <CommandDescription_Me>Broadcast a message in third person.</CommandDescription_Me>
+  <CommandDescription_Say>Broadcast a message as the Server.</CommandDescription_Say>
+  <CommandDescription_Slots>Display information about occupied player slots.</CommandDescription_Slots>
+  <CommandDescription_Kick>Kick a player by name or slot.</CommandDescription_Kick>
+  <CommandDescription_Ban>Ban a player by Name or IP</CommandDescription_Ban>
+  <CommandDescription_UnBan>UnBan a player by Name or IP</CommandDescription_UnBan>
+  <CommandDescription_Whitelist>Add or remove a player or IP to the whitelist</CommandDescription_Whitelist>
+  <CommandDescription_Rcon>Manage remote console access.</CommandDescription_Rcon>
+  <CommandDescription_Status>Check the server's status</CommandDescription_Status>
+  <CommandDescription_Time>Change the time of the World.</CommandDescription_Time>
+  <CommandDescription_Help>Get a printout of active commands.</CommandDescription_Help>
+  <CommandDescription_Give>Give a player items.</CommandDescription_Give>
+  <CommandDescription_SpawnNpc>Spawn an NPC near a player.</CommandDescription_SpawnNpc>
+  <CommandDescription_Teleport>Teleport a player to another player.</CommandDescription_Teleport>
+  <CommandDescription_TeleportHere>Teleport a player to yourself.</CommandDescription_TeleportHere>
+  <CommandDescription_SettleLiquids>Settle Liquids.</CommandDescription_SettleLiquids>
+  <CommandDescription_Op>Op a player</CommandDescription_Op>
+  <CommandDescription_DeOp>De-Op a player</CommandDescription_DeOp>
+  <CommandDescription_OpLogin>OP Login System.</CommandDescription_OpLogin>
+  <CommandDescription_OpLogout>OP Logout System.</CommandDescription_OpLogout>
+  <CommandDescription_NpcSpawns>Toggle the state of NPC Spawning.</CommandDescription_NpcSpawns>
+  <CommandDescription_Restart>Restart the Server.</CommandDescription_Restart>
+  <CommandDescription_Purge>Purge the map of items, NPCs or projectiles.</CommandDescription_Purge>
+  <CommandDescription_Plugins>List currently enabled plugins.</CommandDescription_Plugins>
+  <CommandDescription_Plugin>Enable/disable and get details about specific plugins.</CommandDescription_Plugin>
+  <CommandDescription_SpawnBoss>Summon a Boss to the world.</CommandDescription_SpawnBoss>
+  <CommandDescription_ItemRej>Add or remove an item from the whitelist.</CommandDescription_ItemRej>
+  <CommandDescription_Explosions>Toggle the allowing of explosions for the server.</CommandDescription_Explosions>
+  <CommandDescription_MaxPlayers>Set the maximum number of player slots.</CommandDescription_MaxPlayers>
+  <CommandDescription_Q>List connections waiting in queues.</CommandDescription_Q>
+  <CommandDescription_Refresh>Redownload the area around you from the server.</CommandDescription_Refresh>
+</Languages>

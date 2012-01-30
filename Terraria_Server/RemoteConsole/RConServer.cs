@@ -9,6 +9,7 @@ using System.Text;
 using Terraria_Server.Misc;
 using Terraria_Server.Logging;
 using Terraria_Server.Commands;
+using Terraria_Server.Language;
 
 namespace Terraria_Server.RemoteConsole
 {
@@ -356,7 +357,7 @@ namespace Terraria_Server.RemoteConsole
 			{
 				if (sender is Player || sender is RConSender)
 				{
-					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					sender.sendMessage (Languages.PermissionsError, 255, 238, 130, 238);
 					return;
 				}
 
@@ -373,7 +374,7 @@ namespace Terraria_Server.RemoteConsole
 			{
 				if (sender is Player || sender is RConSender)
 				{
-					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					sender.sendMessage (Languages.PermissionsError, 255, 238, 130, 238);
 					return;
 				}
 
@@ -399,7 +400,7 @@ namespace Terraria_Server.RemoteConsole
 			{
 				if (sender is Player || sender is RConSender)
 				{
-					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					sender.sendMessage (Languages.PermissionsError, 255, 238, 130, 238);
 					return;
 				}
 
