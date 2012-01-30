@@ -6293,10 +6293,11 @@ namespace Terraria_Server.WorldMod
 					}
 					else if (type == 4)
 					{
-						if ((TileRefs(i - 1, j).Active && (Main.tileSolid[(int)TileRefs(i - 1, j).Type] || (TileRefs(i - 1, j).Type == 5 && TileRefs(i - 1, j - 1).Type == 5 && TileRefs(i - 1, j + 1).Type == 5))) || (TileRefs(i + 1, j).Active && (Main.tileSolid[(int)TileRefs(i + 1, j).Type] || (TileRefs(i + 1, j).Type == 5 && TileRefs(i + 1, j - 1).Type == 5 && TileRefs(i + 1, j + 1).Type == 5))) || (TileRefs(i, j + 1).Active && Main.tileSolid[(int)TileRefs(i, j + 1).Type]))
+						if ((TileRefs(i - 1, j).Active && (Main.tileSolid[(int)TileRefs(i - 1, j).Type] || TileRefs(i - 1, j).Type == 124 || (TileRefs(i - 1, j).Type == 5 && TileRefs(i - 1, j - 1).Type == 5 && TileRefs(i - 1, j + 1).Type == 5))) || (TileRefs(i + 1, j).Active && (Main.tileSolid[(int)TileRefs(i + 1, j).Type] || TileRefs(i + 1, j).Type == 124 || (TileRefs(i + 1, j).Type == 5 && TileRefs(i + 1, j - 1).Type == 5 && TileRefs(i + 1, j + 1).Type == 5))) || (TileRefs(i, j + 1).Active && Main.tileSolid[(int)TileRefs(i, j + 1).Type]))
 						{
 							TileRefs(i, j).SetActive(true);
 							TileRefs(i, j).SetType((byte)type);
+							TileRefs(i, j).SetFrameY((short)(22 * style));
 							SquareTileFrame(TileRefs, i, j);
 						}
 					}
