@@ -1,4 +1,4 @@
-//#define CATCHERROR_UPDATELOOP
+#define CATCHERROR_UPDATELOOP
 
 using System.Threading;
 using System;
