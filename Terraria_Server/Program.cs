@@ -1,3 +1,5 @@
+//#define CATCHERROR_UPDATELOOP
+
 using System.Threading;
 using System;
 using System.IO;
@@ -730,8 +732,10 @@ namespace Terraria_Server
 		
 		public static void UpdateLoop()
 		{
+#if CATCHERROR_UPDATELOOP
 			try
 			{
+#endif
                 if (Terraria_Server.Main.rand == null)
                     Terraria_Server.Main.rand = new Random((int)DateTime.Now.Ticks);
 				
@@ -823,12 +827,14 @@ namespace Terraria_Server
 					}
 					Thread.Sleep(0);
 				}
+			
+#if CATCHERROR_UPDATELOOP
 			}
 			catch (Exception e)
 			{
 				ProgramLog.Log (e, "World update thread crashed");
 			}
+#endif
 		}
-
 	}
 }

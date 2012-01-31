@@ -304,7 +304,9 @@
     <EmbeddedResource Include="Definitions\Projectiles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Definitions\Language.xml" />
+    <EmbeddedResource Include="Definitions\Language.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <Content Include="TDSMROGO.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

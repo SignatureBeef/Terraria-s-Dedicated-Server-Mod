@@ -273,8 +273,6 @@ namespace Terraria_Server
 			foreach (var i in new int[] { 4, 51, 93, 98 })
 				tileWaterDeath[i] = true;
 
-
-
 			foreach (var i in new int[] { 129 })
 				tileShine[i] = 300;
 
@@ -929,8 +927,8 @@ namespace Terraria_Server
 
 				foreach (Player player in players)
 				{
-					player.activeNPCs = 0;
-					player.townNPCs = 0;
+					player.ActiveNPCs = 0;
+					player.TownNPCs = 0;
 				}
 
 				if (WallOfFlesh >= 0 && !npcs[WallOfFlesh].Active)

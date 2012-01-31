@@ -27,25 +27,25 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Exit(ISender sender, ArgumentList args)
 		{
-            int AccessLevel = Program.properties.ExitAccessLevel;
-            if (AccessLevel == -1 && sender is Player)
-            {
-                    sender.sendMessage(Languages.PermissionsError, 255, 238, 130, 238);
-                    return;
-            }
-            else if (!CommandParser.CheckAccessLevel((AccessLevel)AccessLevel, sender))
-            {
-                sender.sendMessage(Languages.PermissionsError, 255, 238, 130, 238);
-                return;
-            }
-            
+			int AccessLevel = Program.properties.ExitAccessLevel;
+			if (AccessLevel == -1 && sender is Player)
+			{
+				sender.sendMessage(Languages.PermissionsError, 255, 238, 130, 238);
+				return;
+			}
+			else if (!CommandParser.CheckAccessLevel((AccessLevel)AccessLevel, sender))
+			{
+				sender.sendMessage(Languages.PermissionsError, 255, 238, 130, 238);
+				return;
+			}
+
 			args.ParseNone();
 
 			Server.notifyOps(Languages.ExitRequestCommand, false);
 			NetPlay.StopServer();
 			Statics.Exit = true;
 
-            throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
+			throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
 		}
 
 		/// <summary>
@@ -111,23 +111,23 @@ namespace Terraria_Server.Commands
 				if (!item.Active) continue;
 				items += 1;
 			}
-			
+
 			sender.sendMessage(String.Format("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}", npcs, unpcs, projs, uprojs, items));
 			//long diff = Connection.TotalOutgoingBytesUnbuffered - Connection.TotalOutgoingBytes;
 			//sender.sendMessage(String.Format("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}, bytes saved: {5:0.0}K ({6:0.0}%)", npcs, unpcs, projs, uprojs, items, diff, diff * 100.0 / Connection.TotalOutgoingBytesUnbuffered));
 
-//#if BANDWIDTH_ANALYSIS
-//			var sb = new System.Text.StringBuilder ();
-//			for (int i = 0; i < 255; i++)
-//			{
-//				var p = Networking.Connection.packetsPerMessage [i];
-//				var b = Networking.Connection.bytesPerMessage [i];
-//				if (p > 0)
-//					sb.AppendFormat ("{0}({1}p, {2}B), ", (Packet)i, p, b);
-//			}
-//			
-//			sender.sendMessage (sb.ToString());
-//#endif
+			//#if BANDWIDTH_ANALYSIS
+			//			var sb = new System.Text.StringBuilder ();
+			//			for (int i = 0; i < 255; i++)
+			//			{
+			//				var p = Networking.Connection.packetsPerMessage [i];
+			//				var b = Networking.Connection.bytesPerMessage [i];
+			//				if (p > 0)
+			//					sb.AppendFormat ("{0}({1}p, {2}B), ", (Packet)i, p, b);
+			//			}
+			//			
+			//			sender.sendMessage (sb.ToString());
+			//#endif
 		}
 
 		/// <summary>
@@ -150,7 +150,7 @@ namespace Terraria_Server.Commands
 		{
 			args.ParseNone();
 
-            var players = from p in Main.players where p.Active select p.Name;
+			var players = from p in Main.players where p.Active select p.Name;
 			var line = String.Concat("Current players: ", String.Join(", ", players), (players.Count() > 0) ? "." : String.Empty);
 
 			sender.sendMessage(line, 255, 255, 240, 20);
@@ -165,8 +165,8 @@ namespace Terraria_Server.Commands
 		{
 			args.ParseNone();
 
-            var players = from p in Main.players where p.Active && !p.Op select p.Name;
-            var ops = from p in Main.players where p.Active && p.Op select p.Name;
+			var players = from p in Main.players where p.Active && !p.Op select p.Name;
+			var ops = from p in Main.players where p.Active && p.Op select p.Name;
 
 			var pn = players.Count();
 			var on = ops.Count();
@@ -216,10 +216,10 @@ namespace Terraria_Server.Commands
 			else
 				NetMessage.SendData(25, -1, -1, "<" + sender.Name + "> " + message, 255, 238, 180, 238);*/
 
-            // 'Say' should be used for Server Messages, OP's only. This is used on many large servers to notify
-            // Users for a quick restart (example), So the OP will most likely be in game, unless it's major.
-            ProgramLog.Chat.Log("<" + sender.Name + "> " + ((sender is ConsoleSender) ? "" : "SERVER: ") + message);
-            NetMessage.SendData(25, -1, -1, "SERVER: " + message, 255, 238, 130, 238);
+			// 'Say' should be used for Server Messages, OP's only. This is used on many large servers to notify
+			// Users for a quick restart (example), So the OP will most likely be in game, unless it's major.
+			ProgramLog.Chat.Log("<" + sender.Name + "> " + ((sender is ConsoleSender) ? "" : "SERVER: ") + message);
+			NetMessage.SendData(25, -1, -1, "SERVER: " + message, 255, 238, 130, 238);
 		}
 
 		/// <summary>
@@ -234,14 +234,14 @@ namespace Terraria_Server.Commands
 			WorldIO.saveWorld(null, Server.World.SavePath, false);
 			while (WorldModify.saveLock)
 			{
-                Thread.Sleep(100);
+				Thread.Sleep(100);
 			}
 
 			Server.notifyOps("Saving Data...", true);
 
 			Server.BanList.Save();
 			Server.WhiteList.Save();
-            Server.OpList.Save();
+			Server.OpList.Save();
 
 			Server.notifyOps("Saving Complete.", true);
 		}
@@ -261,12 +261,12 @@ namespace Terraria_Server.Commands
 					CommandInfo cmdInfo = Program.commandParser.serverCommands.Values.ToArray()[i];
 					if (CommandParser.CheckAccessLevel(cmdInfo, sender) && !Key.StartsWith("."))
 					{
-                        string tab = "\t";
+						string tab = "\t";
 						if (Key.Length < 8)
 						{
 							tab = "\t\t";
 						}
-                        string Message = "\t" + Key + tab + "- " + cmdInfo.description;
+						string Message = "\t" + Key + tab + "- " + cmdInfo.description;
 						if (sender is Player)
 						{
 							Message = Message.Replace("\t", "");
@@ -303,16 +303,16 @@ namespace Terraria_Server.Commands
 
 							for (int i = selectingPage; i < toPage; i++)
 							{
-                                string Key = Program.commandParser.serverCommands.Keys.ToArray()[i];
+								string Key = Program.commandParser.serverCommands.Keys.ToArray()[i];
 								CommandInfo cmdInfo = Program.commandParser.serverCommands.Values.ToArray()[i];
 								if (CommandParser.CheckAccessLevel(cmdInfo, sender) && !Key.StartsWith("."))
 								{
-                                    string tab = "\t";
+									string tab = "\t";
 									if (Key.Length < 8)
 									{
 										tab = "\t\t";
 									}
-                                    string Message = "\t" + Key + tab + "- " + cmdInfo.description;
+									string Message = "\t" + Key + tab + "- " + cmdInfo.description;
 									if (sender is Player)
 									{
 										Message = Message.Replace("\t", "");
@@ -346,7 +346,7 @@ namespace Terraria_Server.Commands
 		public static void WhiteList(ISender sender, ArgumentList args)
 		{
 			// /whitelist <add:remove> <player>
-            string Exception, Type = "removed from";
+			string Exception, Type = "removed from";
 			if (args.TryParseOne<String>("-add", out Exception))
 			{
 				Server.WhiteList.addException(Exception);
@@ -378,28 +378,28 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Ban(ISender sender, ArgumentList args)
 		{
-            Player banee;
-            string playerName = null;
+			Player banee;
+			string playerName = null;
 
-            if (args.TryGetOnlinePlayer(0, out banee))
-            {
-                playerName = banee.Name;
-                banee.Kick("You have been banned from this Server.");
-                Server.BanList.addException(NetPlay.slots[banee.whoAmi].
-                        remoteAddress.Split(':')[0]);
-            }
-            else if(!args.TryGetString(0, out playerName))
-            {
-                throw new CommandError("A player or IP was expected.");
-            }
+			if (args.TryGetOnlinePlayer(0, out banee))
+			{
+				playerName = banee.Name;
+				banee.Kick("You have been banned from this Server.");
+				Server.BanList.addException(NetPlay.slots[banee.whoAmi].
+						remoteAddress.Split(':')[0]);
+			}
+			else if (!args.TryGetString(0, out playerName))
+			{
+				throw new CommandError("A player or IP was expected.");
+			}
 
-            Server.BanList.addException(playerName);
+			Server.BanList.addException(playerName);
 
-            Server.notifyOps(playerName + " has been banned {" + sender.Name + "}", true);
-            if (!Server.BanList.Save())
-            {
-                Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
-            }
+			Server.notifyOps(playerName + " has been banned {" + sender.Name + "}", true);
+			if (!Server.BanList.Save())
+			{
+				Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+			}
 		}
 
 		/// <summary>
@@ -409,20 +409,20 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void UnBan(ISender sender, ArgumentList args)
 		{
-            string playerName;
-            if (!args.TryGetString(0, out playerName))
-            {
-                throw new CommandError("A player or IP was expected.");
-            }
+			string playerName;
+			if (!args.TryGetString(0, out playerName))
+			{
+				throw new CommandError("A player or IP was expected.");
+			}
 
-            Server.BanList.removeException(playerName);
+			Server.BanList.removeException(playerName);
 
-            Server.notifyOps(playerName + " has been unbanned {" + sender.Name + "}", true);
+			Server.notifyOps(playerName + " has been unbanned {" + sender.Name + "}", true);
 
-            if (!Server.BanList.Save())
-            {
-                Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
-            }
+			if (!Server.BanList.Save())
+			{
+				Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+			}
 		}
 
 		/// <summary>
@@ -435,41 +435,41 @@ namespace Terraria_Server.Commands
 			double Time;
 			if (args.TryParseOne<Double>("-set", out Time))
 			{
-                Server.World.setTime(Time, true);
+				Server.World.setTime(Time, true);
 			}
 			else
 			{
-                string caseType = args.GetString(0);
+				string caseType = args.GetString(0);
 				switch (caseType)
 				{
 					case "day":
 						{
-                            Server.World.setTime(13500.0);
+							Server.World.setTime(13500.0);
 							break;
 						}
 					case "dawn":
 						{
-                            Server.World.setTime(0);
+							Server.World.setTime(0);
 							break;
 						}
 					case "dusk":
 						{
-                            Server.World.setTime(0, false, false);
+							Server.World.setTime(0, false, false);
 							break;
 						}
 					case "noon":
 						{
-                            Server.World.setTime(27000.0);
+							Server.World.setTime(27000.0);
 							break;
 						}
 					case "night":
 						{
-                            Server.World.setTime(16200.0, false, false);
+							Server.World.setTime(16200.0, false, false);
 							break;
 						}
 					case "-now":
 						{
-                            string AP = "AM";
+							string AP = "AM";
 							double time = Main.time;
 							if (!Main.dayTime)
 							{
@@ -487,7 +487,7 @@ namespace Terraria_Server.Commands
 
 							int Hours = (int)time;
 							double Minutes = time - (double)Hours;
-                            string MinuteString = (Minutes * 60.0).ToString();
+							string MinuteString = (Minutes * 60.0).ToString();
 							if (Minutes < 10.0)
 							{
 								MinuteString = "0" + MinuteString;
@@ -516,7 +516,7 @@ namespace Terraria_Server.Commands
 				}
 			}
 			NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
-            Server.notifyAll("Time set to " + Main.time.ToString() + " by " + sender.Name);
+			Server.notifyAll("Time set to " + Main.time.ToString() + " by " + sender.Name);
 		}
 
 		/// <summary>
@@ -524,48 +524,48 @@ namespace Terraria_Server.Commands
 		/// </summary>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-        public static void Give(ISender sender, ArgumentList args)
+		public static void Give(ISender sender, ArgumentList args)
 		{
 			// /give <player> <stack> <name> 
 
-            Player receiver = args.GetOnlinePlayer(0);
-            int stack = args.GetInt(1);
-            string NameOrId = args.GetString(2);
+			Player receiver = args.GetOnlinePlayer(0);
+			int stack = args.GetInt(1);
+			string NameOrId = args.GetString(2);
 
-            List<Int32> itemlist;
-            if (Server.TryFindItemByName(NameOrId, out itemlist) && itemlist.Count > 0)
-            {
-                if (itemlist.Count > 1)
-                    throw new CommandError("There were {0} Items found regarding the specified name", itemlist.Count);
+			List<Int32> itemlist;
+			if (Server.TryFindItemByName(NameOrId, out itemlist) && itemlist.Count > 0)
+			{
+				if (itemlist.Count > 1)
+					throw new CommandError("There were {0} Items found regarding the specified name", itemlist.Count);
 
-                foreach (int id in itemlist)
-                    receiver.GiveItem(id, stack, sender);
-            }
-            else
-            {
-                int Id = -1;
-                try
-                {
-                    Id = Int32.Parse(NameOrId);
-                }
-                catch
-                {
-                    throw new CommandError("There were {0} Items found regarding the specified Item Id/Name", itemlist.Count);
-                }
+				foreach (int id in itemlist)
+					receiver.GiveItem(id, stack, sender);
+			}
+			else
+			{
+				int Id = -1;
+				try
+				{
+					Id = Int32.Parse(NameOrId);
+				}
+				catch
+				{
+					throw new CommandError("There were {0} Items found regarding the specified Item Id/Name", itemlist.Count);
+				}
 
-                if (Server.TryFindItemByType(Id, out itemlist) && itemlist.Count > 0)
-                {
-                    if (itemlist.Count > 1)
-                        throw new CommandError("There were {0} Items found regarding the specified Type Id", itemlist.Count);
+				if (Server.TryFindItemByType(Id, out itemlist) && itemlist.Count > 0)
+				{
+					if (itemlist.Count > 1)
+						throw new CommandError("There were {0} Items found regarding the specified Type Id", itemlist.Count);
 
-                    foreach (int id in itemlist)
-                        receiver.GiveItem(id, stack, sender);
-                }
-                else
-                {
-                    throw new CommandError("There were no Items found regarding the specified Item Id/Name");
-                }
-            }            
+					foreach (int id in itemlist)
+						receiver.GiveItem(id, stack, sender);
+				}
+				else
+				{
+					throw new CommandError("There were no Items found regarding the specified Item Id/Name");
+				}
+			}
 		}
 
 		/// <summary>
@@ -580,16 +580,17 @@ namespace Terraria_Server.Commands
 			{
 				throw new CommandError("Too many arguments. NPC and player names with spaces require quotes.");
 			}
-            else if (sender is ConsoleSender && args.Count <= 2)
-            {
-                throw new CommandError("As console you need to specify the player to spawn near.");
-            }
-            else if (args.Count == 3)
-            {
-                player = args.GetOnlinePlayer(2);
-            }
+			else if (sender is ConsoleSender && args.Count <= 2)
+			{
+				if(!NetPlay.anyClients || !Server.TryGetFirstOnlinePlayer(out player))
+					throw new CommandError("There is nobody online!");
+			}
+			else if (args.Count == 3)
+			{
+				player = args.GetOnlinePlayer(2);
+			}
 
-            string npcName = args.GetString(1).ToLower().Trim();
+			string npcName = args.GetString(1).ToLower().Trim();
 
 			// Get the class id of the npc
 			int realNPCId = 0;
@@ -617,7 +618,7 @@ namespace Terraria_Server.Commands
 				NPCAmount = Int32.Parse(args[0]);
 				if (NPCAmount > Program.properties.SpawnNPCMax && sender is Player)
 				{
-					(sender as Player).Kick ("Don't spawn that many.");
+					(sender as Player).Kick("Don't spawn that many.");
 					return;
 				}
 			}
@@ -626,16 +627,16 @@ namespace Terraria_Server.Commands
 				throw new CommandError("Expected integer for number to spawn.");
 			}
 
-            string realNPCName = "";
+			string realNPCName = "";
 			for (int i = 0; i < NPCAmount; i++)
 			{
 				Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
 				int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), fclass.Name);
 				//Registries.NPC.Alter(Main.npcs[npcIndex], fclass.Name);
 				realNPCName = Main.npcs[npcIndex].Name;
-//				var npc = Main.npcs[npcIndex];
-//				Console.WriteLine ("Name: {0}, Type: {1}, NetID: {2}, Scale: {3}, Height: {4}, Width: {5}, Ghost: {6}, Flying: {7}, Life: {8}/{9}, Debuffs: {10}/{11}",
-//					npc.Name, npc.Type, npc.NetID, npc.scale, npc.Height, npc.Width, npc.noTileCollide, npc.noGravity, npc.life, npc.lifeMax, string.Join(",", npc.buffType), string.Join(",", npc.buffTime));
+				//				var npc = Main.npcs[npcIndex];
+				//				Console.WriteLine ("Name: {0}, Type: {1}, NetID: {2}, Scale: {3}, Height: {4}, Width: {5}, Ghost: {6}, Flying: {7}, Life: {8}/{9}, Debuffs: {10}/{11}",
+				//					npc.Name, npc.Type, npc.NetID, npc.scale, npc.Height, npc.Width, npc.noTileCollide, npc.noGravity, npc.life, npc.lifeMax, string.Join(",", npc.buffType), string.Join(",", npc.buffTime));
 			}
 			Server.notifyOps("Spawned " + NPCAmount.ToString() + " of " +
 					realNPCName + " {" + player.Name + "}", true);
@@ -650,92 +651,92 @@ namespace Terraria_Server.Commands
 		{
 			Player subject;
 			Player target;
-			
-			if (! args.TryPopOne (out subject))
+
+			if (!args.TryPopOne(out subject))
 			{
 				subject = sender as Player;
 				if (subject == null)
 				{
-					sender.sendMessage ("Need specify who to teleport.");
+					sender.sendMessage("Need specify who to teleport.");
 					return;
 				}
-				
+
 				if (args.Count == 0)
 				{
-					if (subject.Teleport (Main.spawnTileX, Main.spawnTileY))
+					if (subject.Teleport(Main.spawnTileX, Main.spawnTileY))
 					{
-						Server.notifyOps (string.Concat ("Teleported ", subject.Name, " to spawn."), true);
+						Server.notifyOps(string.Concat("Teleported ", subject.Name, " to spawn."), true);
 					}
 					else
-						sender.sendMessage ("Teleportation failed.");
+						sender.sendMessage("Teleportation failed.");
 					return;
 				}
 			}
 			else if (args.Count == 0)
 			{
 				target = subject;
-				
+
 				subject = sender as Player;
 				if (subject == null)
 				{
-					sender.sendMessage ("Need specify who to teleport.");
+					sender.sendMessage("Need specify who to teleport.");
 					return;
 				}
 
-				if (subject.Teleport (target))
+				if (subject.Teleport(target))
 				{
 
-					Server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+					Server.notifyOps(string.Concat("Teleported ", subject.Name, " to ",
 						target.Name, ". {", sender.Name, "}"), true);
 				}
 				else
-					sender.sendMessage ("Teleportation failed.");
+					sender.sendMessage("Teleportation failed.");
 				return;
 			}
-			
+
 			int x;
 			int y;
-			
+
 			if (args.Count == 1)
 			{
-				if (args.TryParseOne (out target))
+				if (args.TryParseOne(out target))
 				{
-					if (subject.Teleport (target))
+					if (subject.Teleport(target))
 					{
-						Server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+						Server.notifyOps(string.Concat("Teleported ", subject.Name, " to ",
 							target.Name, ". {", sender.Name, "}"), true);
 					}
 					else
-						sender.sendMessage ("Teleportation failed.");
+						sender.sendMessage("Teleportation failed.");
 				}
 				else
-					sender.sendMessage ("Target player not found.");
+					sender.sendMessage("Target player not found.");
 				return;
 			}
 			else if (args.Count == 2)
 			{
-				if (args.TryParseTwo (out x, out y))
+				if (args.TryParseTwo(out x, out y))
 				{
 					if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
 					{
-						sender.sendMessage (String.Format ("Coordinates out of range of (0, {0}); (0, {1}).", Main.maxTilesX - 1, Main.maxTilesY - 1));
+						sender.sendMessage(String.Format("Coordinates out of range of (0, {0}); (0, {1}).", Main.maxTilesX - 1, Main.maxTilesY - 1));
 						return;
 					}
-					
-					if (subject.Teleport (x, y))
+
+					if (subject.Teleport(x, y))
 					{
-						Server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+						Server.notifyOps(string.Concat("Teleported ", subject.Name, " to ",
 							x, ":", y, ". {", sender.Name, "}"), true);
 					}
 					else
-						sender.sendMessage ("Teleportation failed.");
+						sender.sendMessage("Teleportation failed.");
 				}
 				else
-					throw new CommandError ("Invalid coordinates.");
+					throw new CommandError("Invalid coordinates.");
 				return;
 			}
-			
-			throw new CommandError ("");
+
+			throw new CommandError("");
 		}
 
 		/// <summary>
@@ -748,25 +749,25 @@ namespace Terraria_Server.Commands
 			if (sender is Player)
 			{
 				Player player = ((Player)sender);
-                Player subject;
+				Player subject;
 
-                if (args.TryPopOne(out subject))
-                {
-                    if (subject == null)
-                    {
-                        sender.sendMessage("Could not find a Player on the Server");
-                        return;
-                    }
+				if (args.TryPopOne(out subject))
+				{
+					if (subject == null)
+					{
+						sender.sendMessage("Could not find a Player on the Server");
+						return;
+					}
 
-                    subject.Teleport(player);
+					subject.Teleport(player);
 
-                    Server.notifyOps("Teleported " + subject.Name + " to " +
-                        player.Name + " {" + sender.Name + "}", true);
-                }
+					Server.notifyOps("Teleported " + subject.Name + " to " +
+						player.Name + " {" + sender.Name + "}", true);
+				}
 			}
 			else
 			{
-                throw new CommandError("Only a player can call this command!");
+				throw new CommandError("Only a player can call this command!");
 			}
 		}
 
@@ -796,29 +797,29 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void OpPlayer(ISender sender, ArgumentList args)
 		{
-            var playerName = args.GetString(0);
-            var password = args.GetString(1);
-            Player player;
-            if (args.TryGetOnlinePlayer(0, out player))
-            {
-                playerName = player.Name;
+			var playerName = args.GetString(0);
+			var password = args.GetString(1);
+			Player player;
+			if (args.TryGetOnlinePlayer(0, out player))
+			{
+				playerName = player.Name;
 
-                player.sendMessage("You are now OP!", ChatColor.Green);
-                player.Op = true;
-                if (player.HasClientMod)
-                {
-                    NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
-                }
-            }
+				player.sendMessage("You are now OP!", ChatColor.Green);
+				player.Op = true;
+				if (player.HasClientMod)
+				{
+					NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+				}
+			}
 
-            Server.notifyOps("Opping " + playerName + " {" + sender.Name + "}", true);
-            Server.OpList.addException(playerName + ":" + password, true, playerName.Length + 1);
+			Server.notifyOps("Opping " + playerName + " {" + sender.Name + "}", true);
+			Server.OpList.addException(playerName + ":" + password, true, playerName.Length + 1);
 
-            if (!Server.OpList.Save())
-            {
-                Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
-                return;
-            }
+			if (!Server.OpList.Save())
+			{
+				Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+				return;
+			}
 		}
 
 		/// <summary>
@@ -828,35 +829,35 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void DeopPlayer(ISender sender, ArgumentList args)
 		{
-            var playerName = args.GetString(0);
-            Player player;
-            if (args.TryGetOnlinePlayer(0, out player))
-            {
-                playerName = player.Name;
+			var playerName = args.GetString(0);
+			Player player;
+			if (args.TryGetOnlinePlayer(0, out player))
+			{
+				playerName = player.Name;
 
-                if (Player.isInOpList(playerName))
-                {
-                    player.sendMessage("You have been De-Opped!.", ChatColor.Green);
-                }
+				if (Player.isInOpList(playerName))
+				{
+					player.sendMessage("You have been De-Opped!.", ChatColor.Green);
+				}
 
-                player.Op = false;
-                if (player.HasClientMod)
-                {
-                    NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
-                }
-            }
+				player.Op = false;
+				if (player.HasClientMod)
+				{
+					NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+				}
+			}
 
-            if (Player.isInOpList(playerName))
-            {
-                Server.notifyOps("De-Opping " + playerName + " {" + sender.Name + "}", true);
-                Server.OpList.removeException(playerName + ":" + Player.GetPlayerPassword(playerName));
-            }
+			if (Player.isInOpList(playerName))
+			{
+				Server.notifyOps("De-Opping " + playerName + " {" + sender.Name + "}", true);
+				Server.OpList.removeException(playerName + ":" + Player.GetPlayerPassword(playerName));
+			}
 
-            if (!Server.OpList.Save())
-            {
-                Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
-                return;
-            }
+			if (!Server.OpList.Save())
+			{
+				Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+				return;
+			}
 		}
 
 		/// <summary>
@@ -869,23 +870,23 @@ namespace Terraria_Server.Commands
 			if (sender is Player)
 			{
 				Player player = sender as Player;
-                string Password = String.Join(" ", args).Trim();
+				string Password = String.Join(" ", args).Trim();
 				if (player.isInOpList())
 				{
 					if (player.Password.Equals(Password))
 					{
-                        Server.notifyOps("{0} Logged in as OP.", true, player.Name);
+						Server.notifyOps("{0} Logged in as OP.", true, player.Name);
 						player.Op = true;
 						player.sendMessage("Successfully Logged in as OP.", ChatColor.DarkGreen);
-                        
-                        if (player.HasClientMod)
-                        {
-                            NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
-                        }
+
+						if (player.HasClientMod)
+						{
+							NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+						}
 					}
 					else
-                    {
-                        Server.notifyOps("{0} Failed to log in as OP due to incorrect password.", true, player.Name);
+					{
+						Server.notifyOps("{0} Failed to log in as OP due to incorrect password.", true, player.Name);
 						player.sendMessage("Incorrect OP Password.", ChatColor.DarkRed);
 					}
 				}
@@ -905,22 +906,22 @@ namespace Terraria_Server.Commands
 		{
 			if (sender is Player)
 			{
-                var player = sender as Player;
+				var player = sender as Player;
 				if (sender.Op)
 				{
-                    player.Op = false;
-                    player.sendMessage("Successfully Logged Out.", ChatColor.DarkRed);
+					player.Op = false;
+					player.sendMessage("Successfully Logged Out.", ChatColor.DarkRed);
 
-                    Server.notifyOps("{0} logged out.", true, player.Name);
+					Server.notifyOps("{0} logged out.", true, player.Name);
 
-                    if (player.HasClientMod)
-                    {
-                        NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
-                    }
+					if (player.HasClientMod)
+					{
+						NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+					}
 				}
 				else
 				{
-                    player.sendMessage("You need to be Assigned OP Privledges.", ChatColor.DarkRed);
+					player.sendMessage("You need to be Assigned OP Privledges.", ChatColor.DarkRed);
 				}
 			}
 		}
@@ -931,11 +932,11 @@ namespace Terraria_Server.Commands
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
 		public static void NPCSpawns(ISender sender, ArgumentList args)
-        {
-            args.ParseNone();
+		{
+			args.ParseNone();
 
 			Main.stopSpawns = !Main.stopSpawns;
-            sender.sendMessage("NPC Spawning is now " + ((Main.stopSpawns) ? "off" : "on") + "!");
+			sender.sendMessage("NPC Spawning is now " + ((Main.stopSpawns) ? "off" : "on") + "!");
 		}
 
 		/// <summary>
@@ -988,7 +989,7 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Restart(ISender sender, ArgumentList args)
 		{
-            Server.notifyOps("Restarting the Server {" + sender.Name + "}", true);
+			Server.notifyOps("Restarting the Server {" + sender.Name + "}", true);
 			//Statics.keepRunning = true;
 
 			NetPlay.StopServer();
@@ -997,8 +998,8 @@ namespace Terraria_Server.Commands
 			ProgramLog.Log("Starting the Server");
 			Main.Initialize();
 			WorldIO.LoadWorld(null, Server.World.SavePath);
-			Program.updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
-            NetPlay.StartServer();
+			Program.updateThread = new ProgramThread("Updt", Program.UpdateLoop);
+			NetPlay.StartServer();
 			//Statics.keepRunning = false;
 		}
 
@@ -1162,11 +1163,11 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void ListPlugins(ISender sender, ArgumentList args)
 		{
-            if (PluginManager.PluginCount > 0)
+			if (PluginManager.PluginCount > 0)
 			{
-                string plugins = "";
+				string plugins = "";
 
-                foreach (var plugin in PluginManager.EnumeratePlugins)
+				foreach (var plugin in PluginManager.EnumeratePlugins)
 				{
 					if (!plugin.IsEnabled || plugin.Name.Trim().Length > 0)
 					{
@@ -1185,207 +1186,207 @@ namespace Terraria_Server.Commands
 			}
 		}
 
-        /// <summary>
-        /// Summon a Boss
-        /// </summary>
-        /// <param name="sender">Sending player</param>
-        /// <param name="args">Arguments sent with command</param>
-        public static void SummonBoss(ISender sender, ArgumentList args)
-        {
-            //Come to think of it now, It may be 1 boss at a time -_-
-            bool EoW = args.TryPop("eater");
-            bool EyeOC = args.TryPop("eye");
-            bool Skeletron = args.TryPop("skeletron");
-            bool KingSlime = args.TryPop("kingslime");
-            bool NightOverride = args.TryPop("-night");
-
-            Player player = null;
-            if (sender is Player)
-            {
-                player = sender as Player;
-            }
-            else
-            {
-                if (NetPlay.anyClients)
-                {
-                    string PlayerName;
-                    if (args.TryParseOne<String>("-player", out PlayerName))
-                    {
-                        player = Server.GetPlayerByName(PlayerName);
-                    }
-                    else
-                    {
-                        //Find Random
-                        int plr = Main.rand.Next(0, Networking.ClientConnection.All.Count - 1); //Get Random PLayer
-                        player = Main.players[plr];
-                    }
-                    if (player == null)
-                    {
-                        throw new CommandError("There was an issue finding the player.");
-                    }
-                }
-                else
-                {
-                    throw new CommandError("There is no Online Players to spawn near.");
-                }
-            }
-
-            List<Int32> Bosses = new List<Int32>();
-            if (EoW)
-            {
-                Bosses.Add((int)NPCType.N13_EATER_OF_WORLDS_HEAD);
-            }
-            if (EyeOC)
-            {
-                if (Main.dayTime && !NightOverride)
-                    throw new CommandError("This boss needs to be summoned in night time, Please override with -night");
-
-                Bosses.Add((int)NPCType.N04_EYE_OF_CTHULU);
-            }
-            if (Skeletron)
-            {
-                Bosses.Add((int)NPCType.N35_SKELETRON_HEAD);
-            }
-            if (KingSlime)
-            {
-                Bosses.Add((int)NPCType.N50_KING_SLIME);
-            }
-
-            if (Bosses.Count > 0)
-            {
-                if (NightOverride) //Mainly for eye
-                {
-                    Server.World.setTime(16200.0, false, false);
-                    NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
-                }
-
-                foreach (int BossId in Bosses)
-                {
-                    Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
-                    int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
-                    Server.notifyAll(Main.npcs[BossSlot].Name + " has been been summoned by " + sender.Name, ChatColor.Purple, true);
-                    if (!(sender is ConsoleSender))
-                        ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, Main.npcs[BossSlot].Name, BossSlot);
-                }
-            }
-            else
-            {
-                throw new CommandError("You have not specified a Boss.");
-            }            
-        }
-
-        public static void ItemRejection(ISender sender, ArgumentList args)
-        {
-            string exception;
-            if (args.TryParseOne<String>("-add", out exception))
-            {
-                if (!Server.RejectedItems.Contains(exception))
-                {
-                    Server.RejectedItems.Add(exception);
-                    sender.sendMessage(exception + " was added to the Item Rejection list!");
-                }
-                else
-                {
-                    throw new CommandError("That item already exists in the list.");
-                }
-            }
-            else if (args.TryParseOne<String>("-remove", out exception))
-            {
-                if (Server.RejectedItems.Contains(exception))
-                {
-                    Server.RejectedItems.Remove(exception);
-                    sender.sendMessage(exception + " was removed from the Item Rejection list!");
-                }
-                else
-                {
-                    throw new CommandError("That item already does not exist in the list.");
-                }
-            }
-            else if (args.TryPop("-clear"))
-            {
-                Server.RejectedItems.Clear();
-                sender.sendMessage("Item Rejection list has been cleared!");
-            }
-            else
-            {
-                throw new CommandError("No item/id provided with your command");
-            }
-            Program.properties.RejectedItems = String.Join(",", Server.RejectedItems);
-            Program.properties.Save(false);
-        }
-
-        public static void Explosions(ISender sender, ArgumentList args)
-        {
-            args.ParseNone();
-
-            Server.AllowExplosions = !Server.AllowExplosions;
-            Program.properties.AllowExplosions = Server.AllowExplosions;
-            Program.properties.Save();
-
-            sender.sendMessage("Explosions are now " + ((Server.AllowExplosions) ? "allowed" : "disabled") + "!");
-        }
-        
-		public static void Refresh (ISender sender, ArgumentList args)
+		/// <summary>
+		/// Summon a Boss
+		/// </summary>
+		/// <param name="sender">Sending player</param>
+		/// <param name="args">Arguments sent with command</param>
+		public static void SummonBoss(ISender sender, ArgumentList args)
 		{
-			args.ParseNone ();
-			
-			var player = sender as Player;
-			
-			if (player == null)
+			//Come to think of it now, It may be 1 boss at a time -_-
+			bool EoW = args.TryPop("eater");
+			bool EyeOC = args.TryPop("eye");
+			bool Skeletron = args.TryPop("skeletron");
+			bool KingSlime = args.TryPop("kingslime");
+			bool NightOverride = args.TryPop("-night");
+
+			Player player = null;
+			if (sender is Player)
 			{
-				sender.Message (255, "This is a player command.");
-				return;
+				player = sender as Player;
 			}
-			
-			if (player.whoAmi < 0) return;
-			
-			if (! player.Op)
+			else
 			{
-				var diff = DateTime.Now - player.LastCostlyCommand;
-				
-				if (diff < TimeSpan.FromSeconds (30))
+				if (NetPlay.anyClients)
 				{
-					sender.Message (255, "You must wait {0:0} more seconds before using this command.", 30.0 - diff.TotalSeconds);
-					return;
+					string PlayerName;
+					if (args.TryParseOne<String>("-player", out PlayerName))
+					{
+						player = Server.GetPlayerByName(PlayerName);
+					}
+					else
+					{
+						//Find Random
+						int plr = Main.rand.Next(0, Networking.ClientConnection.All.Count - 1); //Get Random PLayer
+						player = Main.players[plr];
+					}
+					if (player == null)
+					{
+						throw new CommandError("There was an issue finding the player.");
+					}
 				}
-				
-				player.LastCostlyCommand = DateTime.Now;
+				else
+				{
+					throw new CommandError("There is no Online Players to spawn near.");
+				}
 			}
-			
-			NetMessage.SendTileSquare (player.whoAmi, (int) (player.Position.X/16), (int) (player.Position.Y/16), 32);
+
+			List<Int32> Bosses = new List<Int32>();
+			if (EoW)
+			{
+				Bosses.Add((int)NPCType.N13_EATER_OF_WORLDS_HEAD);
+			}
+			if (EyeOC)
+			{
+				if (Main.dayTime && !NightOverride)
+					throw new CommandError("This boss needs to be summoned in night time, Please override with -night");
+
+				Bosses.Add((int)NPCType.N04_EYE_OF_CTHULU);
+			}
+			if (Skeletron)
+			{
+				Bosses.Add((int)NPCType.N35_SKELETRON_HEAD);
+			}
+			if (KingSlime)
+			{
+				Bosses.Add((int)NPCType.N50_KING_SLIME);
+			}
+
+			if (Bosses.Count > 0)
+			{
+				if (NightOverride) //Mainly for eye
+				{
+					Server.World.setTime(16200.0, false, false);
+					NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
+				}
+
+				foreach (int BossId in Bosses)
+				{
+					Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
+					int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
+					Server.notifyAll(Main.npcs[BossSlot].Name + " has been been summoned by " + sender.Name, ChatColor.Purple, true);
+					if (!(sender is ConsoleSender))
+						ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, Main.npcs[BossSlot].Name, BossSlot);
+				}
+			}
+			else
+			{
+				throw new CommandError("You have not specified a Boss.");
+			}
 		}
 
-        public static void ToggleRPGClients(ISender sender, ArgumentList args)
-        {
-            Server.AllowTDCMRPG = !Server.AllowTDCMRPG;
-            Program.properties.AllowTDCMRPG = Server.AllowTDCMRPG;
+		public static void ItemRejection(ISender sender, ArgumentList args)
+		{
+			string exception;
+			if (args.TryParseOne<String>("-add", out exception))
+			{
+				if (!Server.RejectedItems.Contains(exception))
+				{
+					Server.RejectedItems.Add(exception);
+					sender.sendMessage(exception + " was added to the Item Rejection list!");
+				}
+				else
+				{
+					throw new CommandError("That item already exists in the list.");
+				}
+			}
+			else if (args.TryParseOne<String>("-remove", out exception))
+			{
+				if (Server.RejectedItems.Contains(exception))
+				{
+					Server.RejectedItems.Remove(exception);
+					sender.sendMessage(exception + " was removed from the Item Rejection list!");
+				}
+				else
+				{
+					throw new CommandError("That item already does not exist in the list.");
+				}
+			}
+			else if (args.TryPop("-clear"))
+			{
+				Server.RejectedItems.Clear();
+				sender.sendMessage("Item Rejection list has been cleared!");
+			}
+			else
+			{
+				throw new CommandError("No item/id provided with your command");
+			}
+			Program.properties.RejectedItems = String.Join(",", Server.RejectedItems);
+			Program.properties.Save(false);
+		}
 
-            foreach (Player player in Main.players)
-            {
-                if (player.HasClientMod)
-                    NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
-            }
+		public static void Explosions(ISender sender, ArgumentList args)
+		{
+			args.ParseNone();
 
-            if (!Server.OpList.Save())
-            {
-                Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
-                return;
-            }
+			Server.AllowExplosions = !Server.AllowExplosions;
+			Program.properties.AllowExplosions = Server.AllowExplosions;
+			Program.properties.Save();
 
-            string message = String.Format("RPG Mode is now {0} on this server:", (Server.AllowTDCMRPG) ? "allowed" : "refused");
-            Server.notifyOps(message);
-        }
+			sender.sendMessage("Explosions are now " + ((Server.AllowExplosions) ? "allowed" : "disabled") + "!");
+		}
 
-        public static void SpawnQuestGiver(ISender sender, ArgumentList args)
-        {
-            if (!Server.AllowTDCMRPG)
-                throw new CommandError("You cannot spawn the Quest Giver without allowing TDCM Clients!");
+		public static void Refresh(ISender sender, ArgumentList args)
+		{
+			args.ParseNone();
 
-            int npcId;
-            if (NPC.TryFindNPCByName(Statics.TDCM_QUEST_GIVER, out npcId))
-                throw new CommandError("The Quest Giver is already spawned!");
+			var player = sender as Player;
 
-            NPC.SpawnTDCMQuestGiver();
-        }
-    }
+			if (player == null)
+			{
+				sender.Message(255, "This is a player command.");
+				return;
+			}
+
+			if (player.whoAmi < 0) return;
+
+			if (!player.Op)
+			{
+				var diff = DateTime.Now - player.LastCostlyCommand;
+
+				if (diff < TimeSpan.FromSeconds(30))
+				{
+					sender.Message(255, "You must wait {0:0} more seconds before using this command.", 30.0 - diff.TotalSeconds);
+					return;
+				}
+
+				player.LastCostlyCommand = DateTime.Now;
+			}
+
+			NetMessage.SendTileSquare(player.whoAmi, (int)(player.Position.X / 16), (int)(player.Position.Y / 16), 32);
+		}
+
+		public static void ToggleRPGClients(ISender sender, ArgumentList args)
+		{
+			Server.AllowTDCMRPG = !Server.AllowTDCMRPG;
+			Program.properties.AllowTDCMRPG = Server.AllowTDCMRPG;
+
+			foreach (Player player in Main.players)
+			{
+				if (player.HasClientMod)
+					NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+			}
+
+			if (!Server.OpList.Save())
+			{
+				Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+				return;
+			}
+
+			string message = String.Format("RPG Mode is now {0} on this server:", (Server.AllowTDCMRPG) ? "allowed" : "refused");
+			Server.notifyOps(message);
+		}
+
+		public static void SpawnQuestGiver(ISender sender, ArgumentList args)
+		{
+			if (!Server.AllowTDCMRPG)
+				throw new CommandError("You cannot spawn the Quest Giver without allowing TDCM Clients!");
+
+			int npcId;
+			if (NPC.TryFindNPCByName(Statics.TDCM_QUEST_GIVER, out npcId))
+				throw new CommandError("The Quest Giver is already spawned!");
+
+			NPC.SpawnTDCMQuestGiver();
+		}
+	}
 }

@@ -106,7 +106,7 @@ namespace Terraria_Server
 		/// Whether player is wearing bone armor
 		/// </summary>
 		public bool boneArmor;
-		public float townNPCs;
+		public float TownNPCs;
 		/// <summary>
 		/// Current speed and direction
 		/// </summary>
@@ -141,7 +141,7 @@ namespace Terraria_Server
 		/// Time left for chat window visibility
 		/// </summary>
 		public int chatShowTime;
-		public float activeNPCs;
+		public float ActiveNPCs;
 		public bool mouseInterface;
 		public int changeItem = -1;
 		/// <summary>

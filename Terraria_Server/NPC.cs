@@ -5022,7 +5022,7 @@ namespace Terraria_Server
 					{
 						if (Main.players[i].Active && rectangle.Intersects(new Rectangle((int)Main.players[i].Position.X, (int)Main.players[i].Position.Y, Main.players[i].Width, Main.players[i].Height)))
 						{
-							Main.players[i].townNPCs += this.slots; //this.npcSlots;
+							Main.players[i].TownNPCs += this.slots; //this.npcSlots;
 						}
 					}
 					return;
@@ -5039,7 +5039,7 @@ namespace Terraria_Server
 							flag = true;
 							if (this.Type != 25 && this.Type != 30 && this.Type != 33 && this.lifeMax > 0)
 							{
-								Main.players[j].activeNPCs += this.slots; // this.npcsSlots;
+								Main.players[j].ActiveNPCs += this.slots; // this.npcsSlots;
 							}
 						}
 						if (rectangle3.Intersects(new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].Width, Main.players[j].Height)))
@@ -5102,42 +5102,42 @@ namespace Terraria_Server
 				return;
 			}
 
-			if (Main.stopSpawns)
-				return;
-
 			bool flag = false;
 			bool flag2 = false;
-			int x = 0;
-			int y = 0;
+			int num = 0;
+			int num2 = 0;
 			int num3 = 0;
-			for (int i = 0; i < 255; i++)
+			for (int i = 0; i < Main.MAX_PLAYERS; i++)
 			{
 				if (Main.players[i].Active)
-				{
 					num3++;
-				}
 			}
-			for (int j = 0; j < 255; j++)
+			for (int j = 0; j < Main.MAX_PLAYERS; j++)
 			{
 				if (Main.players[j].Active && !Main.players[j].dead)
 				{
 					bool flag3 = false;
 					bool flag4 = false;
+					bool flag5 = false;
 					if (Main.players[j].Active && Main.invasionType > 0 && Main.invasionDelay == 0 && Main.invasionSize > 0 && (double)Main.players[j].Position.Y < Main.worldSurface * 16.0 + (double)NPC.sHeight)
 					{
 						int num4 = 3000;
 						if ((double)Main.players[j].Position.X > Main.invasionX * 16.0 - (double)num4 && (double)Main.players[j].Position.X < Main.invasionX * 16.0 + (double)num4)
 						{
-							flag3 = true;
+							flag4 = true;
 						}
 					}
 					flag = false;
 					NPC.spawnRate = NPC.defaultSpawnRate;
 					NPC.maxSpawns = NPC.defaultMaxSpawns;
+					if (Main.hardMode)
+					{
+						NPC.spawnRate = (int)((double)NPC.defaultSpawnRate * 0.9);
+						NPC.maxSpawns = NPC.defaultMaxSpawns + 1;
+					}
 					if (Main.players[j].Position.Y > (float)((Main.maxTilesY - 200) * 16))
 					{
-						//NPC.spawnRate = (int)((float)NPC.spawnRate * 0.4f);
-						NPC.maxSpawns = (int)((float)NPC.maxSpawns * 2.0f);
+						NPC.maxSpawns = (int)((float)NPC.maxSpawns * 2f);
 					}
 					else if ((double)Main.players[j].Position.Y > Main.rockLayer * 16.0 + (double)NPC.sHeight)
 					{
@@ -5146,8 +5146,16 @@ namespace Terraria_Server
 					}
 					else if ((double)Main.players[j].Position.Y > Main.worldSurface * 16.0 + (double)NPC.sHeight)
 					{
-						NPC.spawnRate = (int)((double)NPC.spawnRate * 0.5);
-						NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.7f);
+						if (Main.hardMode)
+						{
+							NPC.spawnRate = (int)((double)NPC.spawnRate * 0.45);
+							NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.8f);
+						}
+						else
+						{
+							NPC.spawnRate = (int)((double)NPC.spawnRate * 0.5);
+							NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.7f);
+						}
 					}
 					else if (!Main.dayTime)
 					{
@@ -5161,13 +5169,13 @@ namespace Terraria_Server
 					}
 					if (Main.players[j].zoneDungeon)
 					{
-						NPC.spawnRate = (int)((double)NPC.defaultSpawnRate * 0.35);
-						NPC.maxSpawns = (int)(NPC.maxSpawns * 1.85);
+						NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
+						NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.7f);
 					}
 					else if (Main.players[j].zoneJungle)
 					{
-						NPC.spawnRate = (int)((double)NPC.spawnRate * 0.3);
-						NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.6f);
+						NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
+						NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.5f);
 					}
 					else if (Main.players[j].zoneEvil)
 					{
@@ -5179,29 +5187,39 @@ namespace Terraria_Server
 						NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
 						NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.1f);
 					}
-					if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.2)
+					if (Main.players[j].zoneHoly && (double)Main.players[j].Position.Y > Main.rockLayer * 16.0 + (double)NPC.sHeight)
+					{
+						NPC.spawnRate = (int)((double)NPC.spawnRate * 0.65);
+						NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.3f);
+					}
+					if (Main.WallOfFlesh >= 0 && Main.players[j].Position.Y > (float)((Main.maxTilesY - 200) * 16))
+					{
+						NPC.maxSpawns = (int)((float)NPC.maxSpawns * 0.3f);
+						NPC.spawnRate *= 3;
+					}
+					if ((double)Main.players[j].ActiveNPCs < (double)NPC.maxSpawns * 0.2)
 					{
 						NPC.spawnRate = (int)((float)NPC.spawnRate * 0.6f);
 					}
-					else if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.4)
+					else if ((double)Main.players[j].ActiveNPCs < (double)NPC.maxSpawns * 0.4)
 					{
 						NPC.spawnRate = (int)((float)NPC.spawnRate * 0.7f);
 					}
-					else if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.6)
+					else if ((double)Main.players[j].ActiveNPCs < (double)NPC.maxSpawns * 0.6)
 					{
 						NPC.spawnRate = (int)((float)NPC.spawnRate * 0.8f);
 					}
-					else if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.8)
+					else if ((double)Main.players[j].ActiveNPCs < (double)NPC.maxSpawns * 0.8)
 					{
 						NPC.spawnRate = (int)((float)NPC.spawnRate * 0.9f);
 					}
 					if ((double)(Main.players[j].Position.Y * 16f) > (Main.worldSurface + Main.rockLayer) / 2.0 || Main.players[j].zoneEvil)
 					{
-						if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.2)
+						if ((double)Main.players[j].ActiveNPCs < (double)NPC.maxSpawns * 0.2)
 						{
 							NPC.spawnRate = (int)((float)NPC.spawnRate * 0.7f);
 						}
-						else if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.4)
+						else if ((double)Main.players[j].ActiveNPCs < (double)NPC.maxSpawns * 0.4)
 						{
 							NPC.spawnRate = (int)((float)NPC.spawnRate * 0.9f);
 						}
@@ -5224,23 +5242,24 @@ namespace Terraria_Server
 					{
 						NPC.maxSpawns = NPC.defaultMaxSpawns * 3;
 					}
-					if (flag3)
+					if (flag4)
 					{
-						NPC.maxSpawns = (int)((double)NPC.defaultMaxSpawns * (1.0 + 0.4 * (double)num3));
-						NPC.spawnRate = 30;
+						NPC.maxSpawns = (int)((double)NPC.defaultMaxSpawns * (2.0 + 0.3 * (double)num3));
+						NPC.spawnRate = 20;
 					}
 					if (Main.players[j].zoneDungeon && !NPC.downedBoss3)
 					{
 						NPC.spawnRate = 10;
 					}
-					bool flag5 = false;
-					if (!flag3 && (!Main.bloodMoon || Main.dayTime) && !Main.players[j].zoneDungeon && !Main.players[j].zoneEvil && !Main.players[j].zoneMeteor)
+					bool flag6 = false;
+					if (!flag4 && (!Main.bloodMoon || Main.dayTime) && !Main.players[j].zoneDungeon && !Main.players[j].zoneEvil && !Main.players[j].zoneMeteor)
 					{
-						if (Main.players[j].townNPCs == 1f)
+						if (Main.players[j].TownNPCs == 1f)
 						{
+							flag3 = true;
 							if (Main.rand.Next(3) <= 1)
 							{
-								flag5 = true;
+								flag6 = true;
 								NPC.maxSpawns = (int)((double)((float)NPC.maxSpawns) * 0.6);
 							}
 							else
@@ -5248,11 +5267,12 @@ namespace Terraria_Server
 								NPC.spawnRate = (int)((float)NPC.spawnRate * 2f);
 							}
 						}
-						else if (Main.players[j].townNPCs == 2f)
+						else if (Main.players[j].TownNPCs == 2f)
 						{
+							flag3 = true;
 							if (Main.rand.Next(3) == 0)
 							{
-								flag5 = true;
+								flag6 = true;
 								NPC.maxSpawns = (int)((double)((float)NPC.maxSpawns) * 0.6);
 							}
 							else
@@ -5260,13 +5280,14 @@ namespace Terraria_Server
 								NPC.spawnRate = (int)((float)NPC.spawnRate * 3f);
 							}
 						}
-						else if (Main.players[j].townNPCs >= 3f)
+						else if (Main.players[j].TownNPCs >= 3f)
 						{
-							flag5 = true;
+							flag3 = true;
+							flag6 = true;
 							NPC.maxSpawns = (int)((double)((float)NPC.maxSpawns) * 0.6);
 						}
 					}
-					if (Main.players[j].Active && !Main.players[j].dead && Main.players[j].activeNPCs < (float)NPC.maxSpawns && Main.rand.Next(NPC.spawnRate) == 0)
+					if (Main.players[j].Active && !Main.players[j].dead && Main.players[j].ActiveNPCs < (float)NPC.maxSpawns && Main.rand.Next(NPC.spawnRate) == 0)
 					{
 						int num5 = (int)(Main.players[j].Position.X / 16f) - NPC.spawnRangeX;
 						int num6 = (int)(Main.players[j].Position.X / 16f) + NPC.spawnRangeX;
@@ -5280,45 +5301,40 @@ namespace Terraria_Server
 						{
 							num5 = 0;
 						}
-						if (num6 >= Main.maxTilesX)
+						if (num6 > Main.maxTilesX)
 						{
-							num6 = Main.maxTilesX - 1;
+							num6 = Main.maxTilesX;
 						}
 						if (num7 < 0)
 						{
 							num7 = 0;
 						}
-						if (num8 >= Main.maxTilesY)
+						if (num8 > Main.maxTilesY)
 						{
-							num8 = Main.maxTilesY - 1;
+							num8 = Main.maxTilesY;
 						}
-
-						if (num5 > num6)
-							num6 = Math.Min(num5 + NPC.spawnRangeX, Main.maxTilesX - 1);
-
-						if (num7 > num8)
-							num8 = Math.Min(num7 + NPC.spawnRangeY, Main.maxTilesY - 1);
-
 						int k = 0;
 						while (k < 50)
 						{
-							if (!(num5 < num6 && num7 < num8))
-							{
-								return;
-							}
 							int num13 = Main.rand.Next(num5, num6);
 							int num14 = Main.rand.Next(num7, num8);
 							if (Main.tile.At(num13, num14).Active && Main.tileSolid[(int)Main.tile.At(num13, num14).Type])
 							{
-								goto IL_ACE;
+								goto IL_C34;
 							}
 							if (!Main.wallHouse[(int)Main.tile.At(num13, num14).Wall])
 							{
-								if (!flag3 && (double)num14 < Main.worldSurface * 0.30000001192092896 && !flag5 && ((double)num13 < (double)Main.maxTilesX * 0.35 || (double)num13 > (double)Main.maxTilesX * 0.65))
+								if (!flag4 && (double)num14 < Main.worldSurface * 0.34999999403953552 && !flag6 && ((double)num13 < (double)Main.maxTilesX * 0.45 || (double)num13 > (double)Main.maxTilesX * 0.55 || Main.hardMode))
 								{
-									byte arg_986_0 = Main.tile.At(num13, num14).Type;
-									x = num13;
-									y = num14;
+									num = num13;
+									num2 = num14;
+									flag = true;
+									flag2 = true;
+								}
+								else if (!flag4 && (double)num14 < Main.worldSurface * 0.44999998807907104 && !flag6 && Main.hardMode && Main.rand.Next(10) == 0)
+								{
+									num = num13;
+									num2 = num14;
 									flag = true;
 									flag2 = true;
 								}
@@ -5331,9 +5347,9 @@ namespace Terraria_Server
 										{
 											if (num13 < num9 || num13 > num10 || l < num11 || l > num12)
 											{
-												byte arg_9F4_0 = Main.tile.At(num13, l).Type;
-												x = num13;
-												y = l;
+												byte arg_B5A_0 = Main.tile.At(num13, l).Type;
+												num = num13;
+												num2 = l;
 												flag = true;
 												break;
 											}
@@ -5347,17 +5363,17 @@ namespace Terraria_Server
 								}
 								if (!flag)
 								{
-									goto IL_ACE;
+									goto IL_C34;
 								}
-								int num15 = x - NPC.spawnSpaceX / 2;
-								int num16 = x + NPC.spawnSpaceX / 2;
-								int num17 = y - NPC.spawnSpaceY;
-								int num18 = y;
+								int num15 = num - NPC.spawnSpaceX / 2;
+								int num16 = num + NPC.spawnSpaceX / 2;
+								int num17 = num2 - NPC.spawnSpaceY;
+								int num18 = num2;
 								if (num15 < 0)
 								{
 									flag = false;
 								}
-								if (num16 >= Main.maxTilesX)
+								if (num16 > Main.maxTilesX)
 								{
 									flag = false;
 								}
@@ -5365,7 +5381,7 @@ namespace Terraria_Server
 								{
 									flag = false;
 								}
-								if (num18 >= Main.maxTilesY)
+								if (num18 > Main.maxTilesY)
 								{
 									flag = false;
 								}
@@ -5387,29 +5403,33 @@ namespace Terraria_Server
 											}
 										}
 									}
-									goto IL_ACE;
+									goto IL_C34;
 								}
-								goto IL_ACE;
+								goto IL_C34;
 							}
-						IL_AD4:
+						IL_C3A:
 							k++;
 							continue;
-						IL_ACE:
+						IL_C34:
 							if (!flag && !flag)
 							{
-								goto IL_AD4;
+								goto IL_C3A;
 							}
 							break;
 						}
 					}
 					if (flag)
 					{
-						Rectangle rectangle = new Rectangle(x * 16, y * 16, 16, 16);
+						Rectangle rectangle = new Rectangle(num * 16, num2 * 16, 16, 16);
 						for (int num19 = 0; num19 < 255; num19++)
 						{
 							if (Main.players[num19].Active)
 							{
-								Rectangle rectangle2 = new Rectangle((int)(Main.players[num19].Position.X + (float)(Main.players[num19].Width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[num19].Position.Y + (float)(Main.players[num19].Height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+								Rectangle rectangle2 = new Rectangle(
+									(int)(Main.players[num19].Position.X + (float)(Main.players[num19].Width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX),
+									(int)(Main.players[num19].Position.Y + (float)(Main.players[num19].Height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY),
+								NPC.sWidth + NPC.safeRangeX * 2,
+								NPC.sHeight + NPC.safeRangeY * 2);
 								if (rectangle.Intersects(rectangle2))
 								{
 									flag = false;
@@ -5419,320 +5439,558 @@ namespace Terraria_Server
 					}
 					if (flag)
 					{
-						if (Main.players[j].zoneDungeon && (!Main.tileDungeon[(int)Main.tile.At(x, y).Type] || Main.tile.At(x, y - 1).Wall == 0))
+						if (Main.players[j].zoneDungeon && (!Main.tileDungeon[(int)Main.tile.At(num, num2).Type] || Main.tile.At(num, num2 - 1).Wall == 0))
 						{
 							flag = false;
 						}
-						if (Main.tile.At(x, y - 1).Liquid > 0 && Main.tile.At(x, y - 2).Liquid > 0 && !Main.tile.At(x, y - 1).Lava)
+						if (Main.tile.At(num, num2 - 1).Liquid > 0 && Main.tile.At(num, num2 - 2).Liquid > 0 && !Main.tile.At(num, num2 - 1).Lava)
 						{
-							flag4 = true;
+							flag5 = true;
 						}
 					}
 					if (flag)
 					{
 						flag = false;
-						int num20 = (int)Main.tile.At(x, y).Type;
-						int npcIndex = MAX_NPCS;
+						int num20 = (int)Main.tile.At(num, num2).Type;
+						int npcIndex = 200;
 						if (flag2)
 						{
-							NPC.NewNPC(x * 16 + 8, y * 16, 48, 0);
-						}
-						else if (flag3)
-						{
-							if (Main.rand.Next(9) == 0)
+							if (Main.hardMode && Main.rand.Next(10) == 0 && !NPC.IsNPCSummoned((int)NPCType.N87_WYVERN_HEAD))
 							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 29, 0);
-							}
-							else if (Main.rand.Next(5) == 0)
-							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 26, 0);
-							}
-							else if (Main.rand.Next(3) == 0)
-							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 27, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N87_WYVERN_HEAD, 1);
 							}
 							else
 							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 28, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N48_HARPY, 0);
 							}
 						}
-						else if (flag4 && (x < 250 || x > Main.maxTilesX - 250) && num20 == 53 && (double)y < Main.rockLayer)
+						else if (flag4)
+						{
+							if (Main.invasionType == 1)
+							{
+								if (Main.rand.Next(9) == 0)
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N29_GOBLIN_SORCERER, 0);
+								}
+								else if (Main.rand.Next(5) == 0)
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N26_GOBLIN_PEON, 0);
+								}
+								else if (Main.rand.Next(3) == 0)
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N111_GOBLIN_ARCHER, 0);
+								}
+								else if (Main.rand.Next(3) == 0)
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N27_GOBLIN_THIEF, 0);
+								}
+								else
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N28_GOBLIN_WARRIOR, 0);
+								}
+							}
+							else if (Main.invasionType == 2)
+							{
+								if (Main.rand.Next(7) == 0)
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N145_SNOW_BALLA, 0);
+								}
+								else if (Main.rand.Next(3) == 0)
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N143_SNOWMAN_GANGSTA, 0);
+								}
+								else
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N144_MISTER_STABBY, 0);
+								}
+							}
+						}
+						else if (flag5 && (num < 250 || num > Main.maxTilesX - 250) && num20 == 53 && (double)num2 < Main.rockLayer)
 						{
 							if (Main.rand.Next(8) == 0)
 							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 65, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N65_SHARK, 0);
 							}
 							if (Main.rand.Next(3) == 0)
 							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 67, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N67_CRAB, 0);
 							}
 							else
 							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 64, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N64_PINK_JELLYFISH, 0);
 							}
 						}
-						else if (flag4 && (((double)y > Main.rockLayer && Main.rand.Next(2) == 0) || num20 == 60))
+						else if (flag5 && (((double)num2 > Main.rockLayer && Main.rand.Next(2) == 0) || num20 == 60))
 						{
-							NPC.NewNPC(x * 16 + 8, y * 16, 58, 0);
+							if (Main.hardMode && Main.rand.Next(3) > 0)
+							{
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N102_ANGLER_FISH, 0);
+							}
+							else
+							{
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N58_PIRANHA, 0);
+							}
 						}
-						else if (flag4 && (double)y > Main.worldSurface && Main.rand.Next(3) == 0)
+						else if (flag5 && (double)num2 > Main.worldSurface && Main.rand.Next(3) == 0)
 						{
-							NPC.NewNPC(x * 16 + 8, y * 16, 63, 0);
+							if (Main.hardMode)
+							{
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N103_GREEN_JELLYFISH, 0);
+							}
+							else
+							{
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N63_BLUE_JELLYFISH, 0);
+							}
 						}
-						else if (flag4 && Main.rand.Next(4) == 0)
+						else if (flag5 && Main.rand.Next(4) == 0)
 						{
 							if (Main.players[j].zoneEvil)
 							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 57, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N57_CORRUPT_GOLDFISH, 0);
 							}
 							else
 							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 55, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N55_GOLDFISH, 0);
 							}
 						}
-						else if (flag5)
+						else if (NPC.downedGoblins && Main.rand.Next(20) == 0 && !flag5 && (double)num2 >= Main.rockLayer && num2 < Main.maxTilesY - 210 && !NPC.savedGoblin && !NPC.IsNPCSummoned(105))
 						{
-							if (flag4)
+							NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N105_BOUND_GOBLIN, 0);
+						}
+						else if (Main.hardMode && Main.rand.Next(20) == 0 && !flag5 && (double)num2 >= Main.rockLayer && num2 < Main.maxTilesY - 210 && !NPC.savedWizard && !NPC.IsNPCSummoned(106))
+						{
+							NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N106_BOUND_WIZARD, 0);
+						}
+						else if (flag6)
+						{
+							if (flag5)
 							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 55, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N55_GOLDFISH, 0);
 							}
 							else
 							{
-								if (num20 != 2)
+								if (num20 != 2 && num20 != 109 && num20 != 147 && (double)num2 <= Main.worldSurface)
 								{
 									return;
 								}
-								NPC.NewNPC(x * 16 + 8, y * 16, 46, 0);
+								if (Main.rand.Next(2) == 0 && (double)num2 <= Main.worldSurface)
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N74_BIRD, 0);
+								}
+								else
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N46_BUNNY, 0);
+								}
 							}
 						}
 						else if (Main.players[j].zoneDungeon)
 						{
 							if (!NPC.downedBoss3)
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 68, 0);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N68_DUNGEON_GUARDIAN, 0);
 							}
-							else if (Main.rand.Next(43) == 0)
+							else if (!NPC.savedMech && Main.rand.Next(5) == 0 && !flag5 && !NPC.IsNPCSummoned(123) && (double)num2 > Main.rockLayer)
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 71, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N123_BOUND_MECHANIC, 0);
 							}
-							else if (Main.rand.Next(3) == 0 && !NPC.NearSpikeBall(x, y))
+							else if (Main.rand.Next(37) == 0)
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 70, 0);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N71_DUNGEON_SLIME, 0);
 							}
-							else if (Main.rand.Next(5) == 0)
+							else if (Main.rand.Next(4) == 0 && !NPC.NearSpikeBall(num, num2))
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 72, 0);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N70_SPIKE_BALL, 0);
+							}
+							else if (Main.rand.Next(15) == 0)
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N72_BLAZING_WHEEL, 0);
+							}
+							else if (Main.rand.Next(9) == 0)
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N43_MAN_EATER, 0);
 							}
 							else if (Main.rand.Next(7) == 0)
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 34, 0);
-							}
-							else if (Main.rand.Next(7) == 0)
-							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 32, 0);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N32_DARK_CASTER, 0);
 							}
 							else
 							{
-								string what = "Angry Bones";
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N31_ANGRY_BONES, 0);
 								if (Main.rand.Next(4) == 0)
-									what = "Big Boned";
+								{
+									Main.npcs[npcIndex].SetDefaults("Big Boned");
+								}
 								else if (Main.rand.Next(5) == 0)
-									what = "Short Bones";
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
+								{
+									Main.npcs[npcIndex].SetDefaults("Short Bones");
+								}
 							}
 						}
 						else if (Main.players[j].zoneMeteor)
 						{
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 23, 0);
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N23_METEOR_HEAD, 0);
 						}
-						else if (Main.players[j].zoneEvil && Main.rand.Next(50) == 0)
+						else if (Main.players[j].zoneEvil && Main.rand.Next(65) == 0)
 						{
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 7, 1);
+							if (Main.hardMode && Main.rand.Next(4) != 0)
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N98_SEEKER_HEAD, 1);
+							}
+							else
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N07_DEVOURER_HEAD, 1);
+							}
+						}
+						else if (Main.hardMode && (double)num2 > Main.worldSurface && Main.rand.Next(75) == 0)
+						{
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N85_MIMIC, 0);
+						}
+						else if (Main.hardMode && Main.tile.At(num, num2 - 1).Wall == 2 && Main.rand.Next(20) == 0)
+						{
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N85_MIMIC, 0);
+						}
+						else if (Main.hardMode && (double)num2 <= Main.worldSurface && !Main.dayTime && (Main.rand.Next(20) == 0 || (Main.rand.Next(5) == 0 && Main.moonPhase == 4)))
+						{
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N82_WRAITH, 0);
 						}
 						else if (num20 == 60 && Main.rand.Next(500) == 0 && !Main.dayTime)
 						{
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 52, 0);
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N52_DOCTOR_BONES, 0);
 						}
-						else if (num20 == 60 && (double)y > (Main.worldSurface + Main.rockLayer) / 2.0)
+						else if (num20 == 60 && (double)num2 > (Main.worldSurface + Main.rockLayer) / 2.0)
 						{
 							if (Main.rand.Next(3) == 0)
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 43, 0);
-								Main.npcs[npcIndex].ai[0] = (float)x;
-								Main.npcs[npcIndex].ai[1] = (float)y;
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N43_MAN_EATER, 0);
+								Main.npcs[npcIndex].ai[0] = (float)num;
+								Main.npcs[npcIndex].ai[1] = (float)num2;
 								Main.npcs[npcIndex].netUpdate = true;
 							}
 							else
 							{
-								string what = "Hornet";
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N42_HORNET, 0);
 								if (Main.rand.Next(4) == 0)
-									what = "Little Stinger";
+								{
+									Main.npcs[npcIndex].SetDefaults("Little Stinger");
+								}
 								else if (Main.rand.Next(4) == 0)
-									what = "Big Stinger";
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
+								{
+									Main.npcs[npcIndex].SetDefaults("Big Stinger");
+								}
 							}
 						}
 						else if (num20 == 60 && Main.rand.Next(4) == 0)
 						{
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 51, 0);
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N51_JUNGLE_BAT, 0);
 						}
 						else if (num20 == 60 && Main.rand.Next(8) == 0)
 						{
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 56, 0);
-							Main.npcs[npcIndex].ai[0] = (float)x;
-							Main.npcs[npcIndex].ai[1] = (float)y;
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N56_SNATCHER, 0);
+							Main.npcs[npcIndex].ai[0] = (float)num;
+							Main.npcs[npcIndex].ai[1] = (float)num2;
 							Main.npcs[npcIndex].netUpdate = true;
 						}
-						else if ((num20 == 22 && Main.players[j].zoneEvil) || num20 == 23 || num20 == 25)
+						else if (Main.hardMode && num20 == 53 && Main.rand.Next(3) == 0)
 						{
-							string what = "Eater of Souls";
-							if (Main.rand.Next(3) == 0)
-								what = "Little Eater";
-							else if (Main.rand.Next(3) == 0)
-								what = "Big Eater";
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N78_MUMMY, 0);
 						}
-						else if ((double)y <= Main.worldSurface)
+						else if (Main.hardMode && num20 == 112 && Main.rand.Next(2) == 0)
 						{
-							if (Main.dayTime)
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N79_DARK_MUMMY, 0);
+						}
+						else if (Main.hardMode && num20 == 116 && Main.rand.Next(2) == 0)
+						{
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N80_LIGHT_MUMMY, 0);
+						}
+						else if (Main.hardMode && !flag5 && (double)num2 < Main.rockLayer && (num20 == 116 || num20 == 117 || num20 == 109))
+						{
+							if (!Main.dayTime && Main.rand.Next(2) == 0)
 							{
-								int num22 = Math.Abs(x - Main.spawnTileX);
-								if (num22 < Main.maxTilesX / 3 && Main.rand.Next(10) == 0 && num20 == 2)
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N122_GASTROPOD, 0);
+							}
+							else if (Main.rand.Next(10) == 0)
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N86_UNICORN, 0);
+							}
+							else
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N75_PIXIE, 0);
+							}
+						}
+						else if (!flag3 && Main.hardMode && Main.rand.Next(50) == 0 && !flag5 && (double)num2 >= Main.rockLayer && (num20 == 116 || num20 == 117 || num20 ==109))
+						{
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N84_ENCHANTED_SWORD, 0);
+						}
+						else if ((num20 == 22 && Main.players[j].zoneEvil) || num20 == 23|| num20 == 25 || num20 == 112)
+						{
+							if (Main.hardMode && (double)num2 >= Main.rockLayer && Main.rand.Next(3) == 0)
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N101_CLINGER, 0);
+								Main.npcs[npcIndex].ai[0] = (float)num;
+								Main.npcs[npcIndex].ai[1] = (float)num2;
+								Main.npcs[npcIndex].netUpdate = true;
+							}
+							else if (Main.hardMode && Main.rand.Next(3) == 0)
+							{
+								if (Main.rand.Next(3) == 0)
 								{
-									NPC.NewNPC(x * 16 + 8, y * 16, 46, 0);
-								}
-								else if (num22 > Main.maxTilesX / 3 && num20 == 2 && Main.rand.Next(300) == 0 && !NPC.IsNPCSummoned(50))
-								{
-									npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 50, 0);
-								}
-								else if (num20 == 53 && Main.rand.Next(5) == 0 && !flag4)
-								{
-									npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 69, 0);
-								}
-								else if (num20 == 53 && !flag4)
-								{
-									npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 61, 0);
-								}
-								else if (num22 > Main.maxTilesX / 3 && Main.rand.Next(20) == 0)
-								{
-									npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 73, 0);
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N121_SLIMER, 0);
 								}
 								else
 								{
-									string what = "Blue Slime";
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N81_CORRUPT_SLIME, 0);
+								}
+							}
+							else if (Main.hardMode && (double)num2 >= Main.rockLayer && Main.rand.Next(40) == 0)
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N83_CURSED_HAMMER, 0);
+							}
+							else if (Main.hardMode && (Main.rand.Next(2) == 0 || (double)num2 > Main.rockLayer))
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N94_CORRUPTOR, 0);
+							}
+							else
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N06_EATER_OF_SOULS, 0);
+								if (Main.rand.Next(3) == 0)
+								{
+									Main.npcs[npcIndex].SetDefaults("Little Eater");
+								}
+								else if (Main.rand.Next(3) == 0)
+								{
+									Main.npcs[npcIndex].SetDefaults("Big Eater");
+								}
+							}
+						}
+						else if ((double)num2 <= Main.worldSurface)
+						{
+							if (Main.dayTime)
+							{
+								int num22 = Math.Abs(num - Main.spawnTileX);
+								if (num22 < Main.maxTilesX / 3 && Main.rand.Next(15) == 0 && 
+									(num20 == 2 || num20 == 109 || num20 == 147))
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N46_BUNNY, 0);
+								}
+								else if (num22 < Main.maxTilesX / 3 && Main.rand.Next(15) == 0 && (num20 == 2 || num20 == 109 || num20 == 147))
+								{
+									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N74_BIRD, 0);
+								}
+								else if (num22 > Main.maxTilesX / 3 && num20 == 2 && Main.rand.Next(300) == 0 && !NPC.IsNPCSummoned(50))
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N50_KING_SLIME, 0);
+								}
+								else if (num20 == 53 && Main.rand.Next(5) == 0 && !flag5)
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N69_ANTLION, 0);
+								}
+								else if (num20 == 53 && !flag5)
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N61_VULTURE, 0);
+								}
+								else if (num22 > Main.maxTilesX / 3 && Main.rand.Next(15) == 0)
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N73_GOBLIN_SCOUT, 0);
+								}
+								else
+								{
+									var what = "Blue Slime";
+
 									if (num20 == 60)
 										what = "Jungle Slime";
-									if (Main.rand.Next(3) == 0 || num22 < 200)
+									else if (Main.rand.Next(3) == 0 || num22 < 200)
 										what = "Green Slime";
 									else if (Main.rand.Next(10) == 0 && num22 > 400)
 										what = "Purple Slime";
-									npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
+
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
 								}
 							}
 							else if (Main.rand.Next(6) == 0 || (Main.moonPhase == 4 && Main.rand.Next(2) == 0))
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 2, 0);
+								if (Main.hardMode && Main.rand.Next(3) == 0)
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N133_WANDERING_EYE, 0);
+								}
+								else
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N02_DEMON_EYE, 0);
+								}
+							}
+							else if (Main.hardMode && Main.rand.Next(50) == 0 && Main.bloodMoon && !NPC.IsNPCSummoned(109))
+							{
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N109_CLOWN, 0);
 							}
 							else if (Main.rand.Next(250) == 0 && Main.bloodMoon)
 							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 53, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N53_THE_GROOM, 0);
+							}
+							else if (Main.moonPhase == 0 && Main.hardMode && Main.rand.Next(3) != 0)
+							{
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N104_WEREWOLF, 0);
+							}
+							else if (Main.hardMode && Main.rand.Next(3) == 0)
+							{
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N140_POSSESSED_ARMOR, 0);
+							}
+							else if (Main.rand.Next(3) == 0)
+							{
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N132_BALD_ZOMBIE, 0);
 							}
 							else
 							{
-								NPC.NewNPC(x * 16 + 8, y * 16, 3, 0);
+								NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N03_ZOMBIE, 0);
 							}
 						}
-						else if ((double)y <= Main.rockLayer)
+						else if ((double)num2 <= Main.rockLayer)
 						{
-							if (Main.rand.Next(50) == 0)
+							if (!flag3 && Main.rand.Next(50) == 0)
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 10, 1);
+								if (Main.hardMode)
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N95_DIGGER_HEAD, 1);
+								}
+								else
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N10_GIANT_WORM_HEAD, 1);
+								}
+							}
+							else if (Main.hardMode && Main.rand.Next(3) == 0)
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N140_POSSESSED_ARMOR, 0);
+							}
+							else if (Main.hardMode && Main.rand.Next(4) != 0)
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N141_TOXIC_SLUDGE, 0);
 							}
 							else
 							{
-								string what = "Red Slime";
+								var what = "Red Slime";
+
 								if (Main.rand.Next(5) == 0)
 									what = "Yellow Slime";
 								else if (Main.rand.Next(2) == 0)
 									what = "Blue Slime";
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
+									
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
 							}
 						}
-						else if (y > Main.maxTilesY - 190)
+						else if (num2 > Main.maxTilesY - 190)
 						{
 							if (Main.rand.Next(40) == 0 && !NPC.IsNPCSummoned(39))
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 39, 1);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N39_BONE_SERPENT_HEAD, 1);
 							}
 							else if (Main.rand.Next(14) == 0)
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 24, 0);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N24_FIRE_IMP, 0);
 							}
-							else if (Main.rand.Next(10) == 0)
+							else if (Main.rand.Next(8) == 0)
 							{
-								if (Main.rand.Next(10) == 0)
+								if (Main.rand.Next(7) == 0)
 								{
-									npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 66, 0);
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N66_VOODOO_DEMON, 0);
 								}
 								else
 								{
-									npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 62, 0);
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N62_DEMON, 0);
 								}
 							}
 							else if (Main.rand.Next(3) == 0)
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 59, 0);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N59_LAVA_SLIME, 0);
 							}
 							else
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 60, 0);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N60_HELLBAT, 0);
 							}
 						}
-						else if (Main.rand.Next(55) == 0)
+						else if ((num20 == 116 || num20 == 117) && !flag3 && Main.rand.Next(8) == 0)
 						{
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 10, 1);
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N120_CHAOS_ELEMENTAL, 0);
 						}
-						else if (Main.rand.Next(10) == 0)
+						else if (!flag3 && Main.rand.Next(75) == 0 && !Main.players[j].zoneHoly)
 						{
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 16, 0);
+							if (Main.hardMode)
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N95_DIGGER_HEAD, 1);
+							}
+							else
+							{
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N10_GIANT_WORM_HEAD, 1);
+							}
 						}
-						else if (Main.rand.Next(4) == 0)
+						else if (!Main.hardMode && Main.rand.Next(10) == 0)
 						{
-							string what = "Black Slime";
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N16_MOTHER_SLIME, 0);
+						}
+						else if (!Main.hardMode && Main.rand.Next(4) == 0)
+						{
+							var what = "Black Slime";
+
 							if (Main.players[j].zoneJungle)
 								what = "Jungle Slime";
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, what, 0);
+
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
 						}
 						else if (Main.rand.Next(2) == 0)
 						{
-							if ((double)y > (Main.rockLayer + (double)Main.maxTilesY) / 2.0 && Main.rand.Next(700) == 0)
+							if ((double)num2 > (Main.rockLayer + (double)Main.maxTilesY) / 2.0 && Main.rand.Next(700) == 0)
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 45, 0);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N45_TIM, 0);
+							}
+							else if (Main.hardMode && Main.rand.Next(10) != 0)
+							{
+								if (Main.rand.Next(2) == 0)
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N77_ARMORED_SKELETON, 0);
+									if ((double)num2 > (Main.rockLayer + (double)Main.maxTilesY) / 2.0 && Main.rand.Next(5) == 0)
+									{
+										Main.npcs[npcIndex].SetDefaults("Heavy Skeleton");
+									}
+								}
+								else
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N110_SKELETON_ARCHER, 0);
+								}
 							}
 							else if (Main.rand.Next(15) == 0)
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 44, 0);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N44_UNDEAD_MINER, 0);
 							}
 							else
 							{
-								npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 21, 0);
+								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N21_SKELETON, 0);
 							}
+						}
+						else if (Main.hardMode && (Main.players[j].zoneHoly & Main.rand.Next(2) == 0))
+						{
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N138_ILLUMINANT_SLIME, 0);
 						}
 						else if (Main.players[j].zoneJungle)
 						{
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 51, 0);
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N51_JUNGLE_BAT, 0);
+						}
+						else if (Main.hardMode && Main.players[j].zoneHoly)
+						{
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N137_ILLUMINANT_BAT, 0);
+						}
+						else if (Main.hardMode && Main.rand.Next(6) > 0)
+						{
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N93_GIANT_BAT, 0);
 						}
 						else
 						{
-							npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, 49, 0);
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N49_CAVE_BAT, 0);
 						}
-						if (Main.npcs[npcIndex].type == NPCType.N01_BLUE_SLIME && Main.rand.Next(250) == 0)
+
+						if (Main.npcs[npcIndex].Type == 1 && Main.rand.Next(250) == 0)
 						{
-							Main.npcs[npcIndex].Transform("Pinky");
+							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, "Pinky", 0);
 						}
-						if (npcIndex < MAX_NPCS)
+						if (npcIndex < 200)
 						{
-							NetMessage.SendData(23, -1, -1, "", npcIndex);
+							NetMessage.SendData(23, -1, -1, "", npcIndex, 0f, 0f, 0f, 0);
 							return;
 						}
 						break;
@@ -6037,17 +6295,17 @@ namespace Terraria_Server
 		{
 			if (Main.stopSpawns)
 				return;
-
+						
 			oldDirection = direction;
 			oldTarget = target;
 			Registries.NPC.SetDefaults(this, type);
 			life = lifeMax;
-			Width = (int)(Width * scale);
+			/*Width = (int)(Width * scale);
 			Height = (int)(Height * scale);
 			if (scaleOverrideAdjustment && (Height == 16 || Height == 32))
 				Height += 1; //FIXME: this is really ugly
 			defDamage = damage;
-			defDefense = defense;
+			defDefense = defense;*/
 		}
 
 		/// <summary>
@@ -6253,7 +6511,7 @@ namespace Terraria_Server
 		/// </summary>
 		public void NPCLoot()
 		{
-			if (Main.hardMode && this.lifeMax > 1 && this.damage > 0 && !this.friendly && 
+			if (Main.hardMode && this.lifeMax > 1 && this.damage > 0 && !this.friendly &&
 				(double)this.Position.Y > Main.rockLayer * 16.0 && Main.rand.Next(7) == 0 && this.type != NPCType.N121_SLIMER && this.value > 0f)
 			{
 				if (Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].zoneEvil)

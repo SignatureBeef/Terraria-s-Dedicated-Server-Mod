@@ -419,5 +419,31 @@ namespace Terraria_Server
         {
             return input.Replace(" ", String.Empty).ToLower();
         }
+
+		/// <summary>
+		/// Attempts to find the first online player
+		///		Usually the Slot Manager assigns them to the lowest possible index
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public static bool TryGetFirstOnlinePlayer(out Player player)
+		{
+			player = null;
+			try
+			{
+				for (var i = 0; i < NetPlay.maxConnections; i++)
+				{
+					var ply = Main.players[i];
+					if (ply.Active && ply.Name.Trim() != String.Empty)
+					{
+						player = ply;
+						return true;
+					}
+				}
+			}
+			catch { }
+
+			return false;
+		}
     }
 }
