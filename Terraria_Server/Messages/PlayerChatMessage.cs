@@ -82,6 +82,10 @@ namespace Terraria_Server.Messages
 			{
 				color = ChatColor.Tomato;
 			}
+			else if (player.team > 0 && player.team < Main.teamColor.Length)
+			{
+				color = Main.teamColor[player.team];
+			}
 			
 			var ctx = new HookContext
 			{

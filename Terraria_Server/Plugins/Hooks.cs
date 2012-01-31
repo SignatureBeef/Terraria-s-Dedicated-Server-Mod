@@ -67,6 +67,7 @@ namespace Terraria_Server.Plugins
 		
 		public static readonly HookPoint<HookArgs.PlayerChat>                PlayerChat;
 		public static readonly HookPoint<HookArgs.Command>                   Command;
+		public static readonly HookPoint<HookArgs.WorldGeneration> WorldGeneration;
 		
 		static HookPoints ()
 		{
@@ -109,6 +110,7 @@ namespace Terraria_Server.Plugins
 			PlayerTriggeredEvent      = new HookPoint<HookArgs.PlayerTriggeredEvent> ("player-triggered-event");
 			PlayerChat                = new HookPoint<HookArgs.PlayerChat> ("player-chat");
 			Command                   = new HookPoint<HookArgs.Command> ("command");
+			WorldGeneration			  = new HookPoint<HookArgs.WorldGeneration> ("WorldGeneration");
 		}
 	}
 	
@@ -135,6 +137,8 @@ namespace Terraria_Server.Plugins
             public float        Number4         { get; set; }
             public int          Number5         { get; set; }
         }
+
+		public struct WorldGeneration { }
 
         public struct NewConnection
         {

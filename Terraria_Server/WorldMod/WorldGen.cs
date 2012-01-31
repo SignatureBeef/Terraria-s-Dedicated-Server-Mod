@@ -7,6 +7,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.WorldMod
 {
@@ -446,6 +447,11 @@ namespace Terraria_Server.WorldMod
 			GrowVines(TileRefs);
 			PlantFlowers(TileRefs);
 			PlantMushrooms(TileRefs);
+
+			var ctx = new HookContext() { };
+			var args = new HookArgs.WorldGeneration() { };
+
+			HookPoints.WorldGeneration.Invoke(ref ctx, ref args);
 
 			WorldModify.gen = false;
 		}
