@@ -1282,7 +1282,6 @@ namespace Terraria_Server
 									NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction), 0);
 									Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction);
 									NPC.SpawnWallOfFlesh(TileRefs, Position);
-									break;
 								}
 							}
 							NetMessage.SendData(21);

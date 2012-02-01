@@ -102,7 +102,7 @@ namespace Terraria_Server.WorldMod
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
-			
+
 			int seed = -1;
 			try
 			{
@@ -318,7 +318,7 @@ namespace Terraria_Server.WorldMod
 			GenerateLargeCaves(TileRefs);
 			GenerateSurfaceCaves(TileRefs);
 
-			if(Program.properties.GenerateJungle)
+			if (Program.properties.GenerateJungle)
 				GenerateJungle(TileRefs, Direction);
 
 			GenerateFloatingIslands(TileRefs);

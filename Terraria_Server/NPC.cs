@@ -1961,11 +1961,11 @@ namespace Terraria_Server
 								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N75_PIXIE, 0);
 							}
 						}
-						else if (!flag3 && Main.hardMode && Main.rand.Next(50) == 0 && !flag5 && (double)num2 >= Main.rockLayer && (num20 == 116 || num20 == 117 || num20 ==109))
+						else if (!flag3 && Main.hardMode && Main.rand.Next(50) == 0 && !flag5 && (double)num2 >= Main.rockLayer && (num20 == 116 || num20 == 117 || num20 == 109))
 						{
 							npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N84_ENCHANTED_SWORD, 0);
 						}
-						else if ((num20 == 22 && Main.players[j].zoneEvil) || num20 == 23|| num20 == 25 || num20 == 112)
+						else if ((num20 == 22 && Main.players[j].zoneEvil) || num20 == 23 || num20 == 25 || num20 == 112)
 						{
 							if (Main.hardMode && (double)num2 >= Main.rockLayer && Main.rand.Next(3) == 0)
 							{
@@ -2011,7 +2011,7 @@ namespace Terraria_Server
 							if (Main.dayTime)
 							{
 								int num22 = Math.Abs(num - Main.spawnTileX);
-								if (num22 < Main.maxTilesX / 3 && Main.rand.Next(15) == 0 && 
+								if (num22 < Main.maxTilesX / 3 && Main.rand.Next(15) == 0 &&
 									(num20 == 2 || num20 == 109 || num20 == 147))
 								{
 									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N46_BUNNY, 0);
@@ -2115,7 +2115,7 @@ namespace Terraria_Server
 									what = "Yellow Slime";
 								else if (Main.rand.Next(2) == 0)
 									what = "Blue Slime";
-									
+
 								npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
 							}
 						}
@@ -2539,7 +2539,7 @@ namespace Terraria_Server
 		{
 			if (Main.stopSpawns)
 				return;
-						
+
 			oldDirection = direction;
 			oldTarget = target;
 			Registries.NPC.SetDefaults(this, type);
@@ -2759,104 +2759,100 @@ namespace Terraria_Server
 				(double)this.Position.Y > Main.rockLayer * 16.0 && Main.rand.Next(7) == 0 && this.type != NPCType.N121_SLIMER && this.value > 0f)
 			{
 				if (Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].zoneEvil)
-				{
 					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 521, 1, false, 0);
-				}
+
 				if (Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].zoneHoly)
-				{
 					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 520, 1, false, 0);
-				}
+
 			}
+
 			if (Main.Xmas && this.lifeMax > 1 && this.damage > 0 && !this.friendly && this.type != NPCType.N121_SLIMER && this.value > 0f && Main.rand.Next(13) == 0)
-			{
 				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, Main.rand.Next(599, 602), 1, false, 0);
-			}
+
 			if (this.type == NPCType.N109_CLOWN && !NPC.downedClown)
 			{
 				NPC.downedClown = true;
 				NetMessage.SendData(7);
 			}
+
 			if (this.type == NPCType.N85_MIMIC && this.value > 0f)
 			{
-				int num = Main.rand.Next(7);
-				if (num == 0)
+				int rdm = Main.rand.Next(7);
+				var item = -1;
+
+				switch (rdm)
 				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 437, 1, false, -1);
+					case 0:
+						item = 437;
+						break;
+					case 1:
+						item = 517;
+						break;
+					case 2:
+						item = 535;
+						break;
+					case 3:
+						item = 536;
+						break;
+					case 4:
+						item = 532;
+						break;
+					case 5:
+						item = 393;
+						break;
+					case 6:
+						item = 554;
+						break;
 				}
-				if (num == 1)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 517, 1, false, -1);
-				}
-				if (num == 2)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 535, 1, false, -1);
-				}
-				if (num == 3)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 536, 1, false, -1);
-				}
-				if (num == 4)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 532, 1, false, -1);
-				}
-				if (num == 5)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 393, 1, false, -1);
-				}
-				if (num == 6)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 554, 1, false, -1);
-				}
+
+				if (item != -1)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, item, 1, false, -1);
 			}
 			if (this.type == NPCType.N87_WYVERN_HEAD)
-			{
 				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 575, Main.rand.Next(5, 11), false, 0);
-			}
+
 			if (this.type == NPCType.N143_SNOWMAN_GANGSTA || this.type == NPCType.N144_MISTER_STABBY || this.type == NPCType.N145_SNOW_BALLA)
-			{
 				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 593, Main.rand.Next(5, 11), false, 0);
-			}
+
 			if (this.type == NPCType.N79_DARK_MUMMY)
 			{
 				if (Main.rand.Next(10) == 0)
-				{
 					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 527, 1, false, 0);
-				}
 			}
 			else if (this.type == NPCType.N80_LIGHT_MUMMY && Main.rand.Next(10) == 0)
-			{
 				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 528, 1, false, 0);
-			}
+
 			if (this.type == NPCType.N101_CLINGER || this.type == NPCType.N98_SEEKER_HEAD)
-			{
 				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 522, Main.rand.Next(2, 6), false, 0);
-			}
+
 			if (this.type == NPCType.N86_UNICORN)
-			{
 				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 526, 1, false, 0);
-			}
+
 			if (this.type == NPCType.N113_WALL_OF_FLESH)
 			{
 				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 367, 1, false, -1);
 				if (Main.rand.Next(2) == 0)
-				{
 					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, Main.rand.Next(489, 492), 1, false, -1);
-				}
 				else
 				{
-					int num2 = Main.rand.Next(3);
-					if (num2 == 0)
+					int rdm = Main.rand.Next(3);
+					var item = -1;
+
+					switch (rdm)
 					{
-						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 514, 1, false, -1);
+						case 0:
+							item = 514;
+							break;
+						case 1:
+							item = 426;
+							break;
+						case 2:
+							item = 434;
+							break;
 					}
-					else if (num2 == 1)
-					{
-						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 426, 1, false, -1);
-					}
-					else if (num2 == 2)
-					{
-						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 434, 1, false, -1);
-					}
+
+					if (item != -1)
+						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, item, 1, false, -1);
 				}
 
 				int num3 = (int)(this.Position.X + (float)(this.Width / 2)) / 16;
@@ -2879,376 +2875,334 @@ namespace Terraria_Server
 				}
 			}
 
-			if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 23, Main.rand.Next(1, 3), false);
-			}
-			else if (this.type == NPCType.N71_DUNGEON_SLIME)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 327, 1, false);
-			}
-			else if (this.type == NPCType.N02_DEMON_EYE)
+			if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME || this.type == NPCType.N138_ILLUMINANT_SLIME || this.type == NPCType.N141_TOXIC_SLUDGE)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 23, Main.rand.Next(1, 3), false, 0);
+
+			if (this.type == NPCType.N75_PIXIE)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 501, Main.rand.Next(1, 4), false, 0);
+
+			if (this.type == NPCType.N81_CORRUPT_SLIME)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 23, Main.rand.Next(2, 5), false, 0);
+
+			if (this.type == NPCType.N122_GASTROPOD)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 23, Main.rand.Next(5, 11), false, 0);
+
+			if (this.type == NPCType.N71_DUNGEON_SLIME)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 327, 1, false, 0);
+
+			if (this.type == NPCType.N02_DEMON_EYE)
 			{
 				if (Main.rand.Next(3) == 0)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 38, 1, false);
-				}
-				else
-				{
-					if (Main.rand.Next(100) == 0)
-					{
-						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 236, 1, false);
-					}
-				}
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 38, 1, false, 0);
+				else if (Main.rand.Next(100) == 0)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 236, 1, false, 0);
 			}
-			else if (this.type == NPCType.N58_PIRANHA)
+
+			if (this.type == NPCType.N104_WEREWOLF && Main.rand.Next(60) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 485, 1, false, -1);
+
+			if (this.type == NPCType.N58_PIRANHA)
 			{
 				if (Main.rand.Next(500) == 0)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 263, 1, false);
-				}
-				else
-				{
-					if (Main.rand.Next(40) == 0)
-					{
-						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 118, 1, false);
-					}
-				}
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 263, 1, false, 0);
+				else if (Main.rand.Next(40) == 0)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 118, 1, false, 0);
 			}
-			else if (this.type == NPCType.N03_ZOMBIE && Main.rand.Next(50) == 0)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 216, 1, false);
-			}
-			else if (this.type == NPCType.N66_VOODOO_DEMON)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 267, 1, false);
-			}
-			else if (this.type == NPCType.N62_DEMON && Main.rand.Next(50) == 0)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 272, 1, false);
-			}
-			else if (this.type == NPCType.N52_DOCTOR_BONES)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 251, 1, false);
-			}
-			else if (this.type == NPCType.N53_THE_GROOM)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 239, 1, false);
-			}
-			else if (this.type == NPCType.N54_CLOTHIER)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 260, 1, false);
-			}
-			else if (this.type == NPCType.N55_GOLDFISH)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 261, 1, false);
-			}
-			else if (this.type == NPCType.N69_ANTLION && Main.rand.Next(10) == 0)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 323, 1, false);
-			}
-			else if (this.type == NPCType.N73_GOBLIN_SCOUT)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 362, 1, false);
-			}
-			else if (this.type == NPCType.N04_EYE_OF_CTHULU)
+
+			if (this.type == NPCType.N102_ANGLER_FISH && Main.rand.Next(500) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 263, 1, false, 0);
+
+			if ((this.type == NPCType.N03_ZOMBIE || this.type == NPCType.N132_BALD_ZOMBIE) && Main.rand.Next(50) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 216, 1, false, -1);
+
+			if (this.type == NPCType.N66_VOODOO_DEMON)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 267, 1, false, 0);
+
+			if (this.type == NPCType.N62_DEMON && Main.rand.Next(50) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 272, 1, false, -1);
+
+			if (this.type == NPCType.N52_DOCTOR_BONES)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 251, 1, false, 0);
+
+			if (this.type == NPCType.N53_THE_GROOM)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 239, 1, false, 0);
+
+			if (this.type == NPCType.N54_CLOTHIER)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 260, 1, false, 0);
+
+			if (this.type == NPCType.N55_GOLDFISH)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 261, 1, false, 0);
+
+			if (this.type == NPCType.N69_ANTLION && Main.rand.Next(7) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 323, 1, false, 0);
+
+			if (this.type == NPCType.N73_GOBLIN_SCOUT)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 362, Main.rand.Next(1, 3), false, 0);
+
+			if (this.type == NPCType.N04_EYE_OF_CTHULU)
 			{
 				int stack = Main.rand.Next(30) + 20;
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 47, stack, false);
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 47, stack, false, 0);
 				stack = Main.rand.Next(20) + 10;
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack, false);
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack, false, 0);
 				stack = Main.rand.Next(20) + 10;
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack, false);
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack, false, 0);
 				stack = Main.rand.Next(20) + 10;
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack, false);
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack, false, 0);
 				stack = Main.rand.Next(3) + 1;
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 59, stack, false);
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 59, stack, false, 0);
 			}
-			else if (this.type == NPCType.N06_EATER_OF_SOULS && Main.rand.Next(3) == 0)
+
+			if ((this.type == NPCType.N06_EATER_OF_SOULS || this.type == NPCType.N94_CORRUPTOR) && Main.rand.Next(3) == 0)
 			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 68, 1, false);
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 68, 1, false, 0);
 			}
-			else if (this.type == NPCType.N07_DEVOURER_HEAD || this.type == NPCType.N08_DEVOURER_BODY || this.type == NPCType.N09_DEVOURER_TAIL)
+			if (this.type == NPCType.N07_DEVOURER_HEAD || this.type == NPCType.N08_DEVOURER_BODY || this.type == NPCType.N09_DEVOURER_TAIL)
 			{
 				if (Main.rand.Next(3) == 0)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 68, Main.rand.Next(1, 3), false);
-				}
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 69, Main.rand.Next(3, 9), false);
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 68, Main.rand.Next(1, 3), false, 0);
+
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 69, Main.rand.Next(3, 9), false, 0);
 			}
-			else if ((this.type == NPCType.N10_GIANT_WORM_HEAD || this.type == NPCType.N11_GIANT_WORM_BODY || this.type == NPCType.N12_GIANT_WORM_TAIL) && Main.rand.Next(500) == 0)
+			if ((this.type == NPCType.N10_GIANT_WORM_HEAD || this.type == NPCType.N11_GIANT_WORM_BODY || this.type == NPCType.N12_GIANT_WORM_TAIL ||
+				this.type == NPCType.N95_DIGGER_HEAD || this.type == NPCType.N96_DIGGER_BODY || this.type == NPCType.N97_DIGGER_TAIL) && Main.rand.Next(500) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 215, 1, false, 0);
+
+			if (this.type == NPCType.N47_CORRUPT_BUNNY && Main.rand.Next(75) == 0)
 			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 215, 1, false);
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 243, 1, false, 0);
 			}
-			else if (this.type == NPCType.N47_CORRUPT_BUNNY && Main.rand.Next(75) == 0)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 243, 1, false);
-			}
-			else if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
+			if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
 			{
 				int stack2 = Main.rand.Next(1, 3);
 				if (Main.rand.Next(2) == 0)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 86, stack2, false);
-				}
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 86, stack2, false, 0);
+
 				if (Main.rand.Next(2) == 0)
 				{
 					stack2 = Main.rand.Next(2, 6);
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false, 0);
 				}
 				if (this.boss)
 				{
 					stack2 = Main.rand.Next(10, 30);
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false, 0);
 					stack2 = Main.rand.Next(10, 31);
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false, 0);
 				}
-				if (Main.rand.Next(3) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLife < Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLifeMax)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false);
-				}
+				if (Main.rand.Next(3) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLife < Main.players[
+					(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLifeMax)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false, 0);
 			}
-			//            if (this.type == NPCType.N39_BONE_SERPENT_HEAD || this.type == NPCType.N40_BONE_SERPENT_BODY || this.type == NPCType.N41_BONE_SERPENT_TAIL)
-			//            {
-			//                if (Main.rand.Next(100) == 0)
-			//                {
-			//                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 220, 1, false);
-			//                }
-			//                else
-			//                {
-			//                    if (Main.rand.Next(100) == 0)
-			//                    {
-			//                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 218, 1, false);
-			//                    }
-			//                }
-			//            }
-			else if (this.type == NPCType.N63_BLUE_JELLYFISH || this.type == NPCType.N64_PINK_JELLYFISH)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 282, Main.rand.Next(1, 5), false);
-			}
-			else if (this.type == NPCType.N21_SKELETON || this.type == NPCType.N44_UNDEAD_MINER)
+			if (this.type == NPCType.N116_THE_HUNGRY_II || this.type == NPCType.N117_LEECH_HEAD || this.type == NPCType.N118_LEECH_BODY ||
+				this.type == NPCType.N119_LEECH_TAIL || this.type == NPCType.N139_PROBE)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false, 0);
+
+			if (this.type == NPCType.N63_BLUE_JELLYFISH || this.type == NPCType.N64_PINK_JELLYFISH || this.type == NPCType.N103_GREEN_JELLYFISH)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 282, Main.rand.Next(1, 5), false, 0);
+
+			if (this.type == NPCType.N21_SKELETON || this.type == NPCType.N44_UNDEAD_MINER)
 			{
 				if (Main.rand.Next(25) == 0)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 118, 1, false, 0);
+				else if (this.type == NPCType.N44_UNDEAD_MINER)
 				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 118, 1, false);
-				}
-				else
-				{
-					if (this.type == NPCType.N44_UNDEAD_MINER)
-					{
-						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 166, Main.rand.Next(1, 4), false);
-					}
-				}
-			}
-			else if (this.type == NPCType.N45_TIM)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 238, 1, false);
-			}
-			else if (this.type == NPCType.N50_KING_SLIME)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, Main.rand.Next(256, 259), 1, false);
-			}
-			else if (this.type == NPCType.N23_METEOR_HEAD && Main.rand.Next(50) == 0)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 116, 1, false);
-			}
-			else if (this.type == NPCType.N24_FIRE_IMP && Main.rand.Next(300) == 0)
-			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 244, 1, false);
-			}
-			else if (this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N32_DARK_CASTER || this.type == NPCType.N34_CURSED_SKULL)
-			{
-				if (Main.rand.Next(75) == 0)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 327, 1, false);
-				}
-				else
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 154, Main.rand.Next(1, 4), false);
-				}
-			}
-			else if (this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR || this.type == NPCType.N29_GOBLIN_SORCERER)
-			{
-				if (Main.rand.Next(400) == 0)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 128, 1, false);
-				}
-				else
-				{
-					if (Main.rand.Next(200) == 0)
-					{
-						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 160, 1, false);
-					}
+					if (Main.rand.Next(20) == 0)
+						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, Main.rand.Next(410, 412), 1, false, 0);
 					else
-					{
-						if (Main.rand.Next(2) == 0)
-						{
-							int stack3 = Main.rand.Next(1, 6);
-							Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 161, stack3, false);
-						}
-					}
+						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 166, Main.rand.Next(1, 4), false, 0);
 				}
 			}
-			else if (this.type == NPCType.N42_HORNET && Main.rand.Next(2) == 0)
+
+			if (this.type == NPCType.N45_TIM)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 238, 1, false, 0);
+
+			if (this.type == NPCType.N50_KING_SLIME)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, Main.rand.Next(256, 259), 1, false, 0);
+
+			if (this.type == NPCType.N23_METEOR_HEAD && Main.rand.Next(50) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 116, 1, false, 0);
+
+			if (this.type == NPCType.N24_FIRE_IMP && Main.rand.Next(300) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 244, 1, false, 0);
+
+			if (this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N32_DARK_CASTER || this.type == NPCType.N34_CURSED_SKULL)
 			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 209, 1, false);
+				if (Main.rand.Next(65) == 0)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 327, 1, false, 0);
+				else
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 154, Main.rand.Next(1, 4), false, 0);
 			}
-			else if (this.type == NPCType.N43_MAN_EATER && Main.rand.Next(4) == 0)
+			if (this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR ||
+				this.type == NPCType.N29_GOBLIN_SORCERER || this.type == NPCType.N111_GOBLIN_ARCHER)
 			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 210, 1, false);
+				if (Main.rand.Next(200) == 0)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 160, 1, false, 0);
+				else if (Main.rand.Next(2) == 0)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 161, Main.rand.Next(1, 6), false, 0);
 			}
-			else if (this.type == NPCType.N65_SHARK)
+
+			if (this.type == NPCType.N42_HORNET && Main.rand.Next(2) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 209, 1, false, 0);
+
+			if (this.type == NPCType.N43_MAN_EATER && Main.rand.Next(4) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 210, 1, false, 0);
+
+			if (this.type == NPCType.N65_SHARK)
 			{
 				if (Main.rand.Next(50) == 0)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 268, 1, false);
-				}
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 268, 1, false, 0);
+				else
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 319, 1, false, 0);
+			}
+
+			if (this.type == NPCType.N48_HARPY && Main.rand.Next(2) == 0)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 320, 1, false, 0);
+
+			if (this.type == NPCType.N125_RETINAZER || this.type == NPCType.N126_SPAZMATISM)
+			{
+				int npcType = (this.type == NPCType.N125_RETINAZER) ? (int)NPCType.N126_SPAZMATISM : (int)NPCType.N125_RETINAZER;
+
+				if (!NPC.IsNPCSummoned(npcType))
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 549, Main.rand.Next(20, 31), false, 0);
 				else
 				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 319, 1, false);
+					this.value = 0f;
+					this.boss = false;
 				}
 			}
-			else if (this.type == NPCType.N48_HARPY && Main.rand.Next(5) == 0)
+			else
 			{
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 320, 1, false);
+				if (this.type == NPCType.N127_SKELETRON_PRIME)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 547, Main.rand.Next(20, 31), false, 0);
+				else if (this.type == NPCType.N134_THE_DESTROYER)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 548, Main.rand.Next(20, 31), false, 0);
 			}
 			if (this.boss)
 			{
-				//boss kill
-				//int BossType = 0;
 				if (this.type == NPCType.N04_EYE_OF_CTHULU)
-				{
 					NPC.downedBoss1 = true;
-					//BossType = 1;
-				}
-				if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
-				{
-					NPC.downedBoss2 = true;
-					this.Name = "Eater of Worlds";
-					//BossType = 2;
-				}
-				if (this.type == NPCType.N35_SKELETRON_HEAD)
-				{
-					NPC.downedBoss3 = true;
-					this.Name = "Skeletron";
-					//BossType = 3;
-				}
-				int stack4 = Main.rand.Next(5, 16);
-				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 28, stack4, false);
-				int num = Main.rand.Next(5) + 5;
-				for (int i = 0; i < num; i++)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false);
-				}
-
-				NetMessage.SendData(25, -1, -1, this.Name + " has been defeated!", 255, 175f, 75f, 255f);
-
-				//                NPCBossDeathEvent npcEvent = new NPCBossDeathEvent();
-				//                npcEvent.Boss = BossType;
-				//                Sender sender = new Sender();
-				//                sender.Op = true;
-				//                npcEvent.Sender = sender;
-				//Server.PluginManager.processHook(Hooks.NPC_BOSSDEATH, npcEvent);
-			}
-			if (Main.rand.Next(6) == 0 && this.lifeMax > 1)
-			{
-				if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statMana < Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statManaMax)
-				{
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 184, 1, false);
-				}
 				else
 				{
-					if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLife < Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLifeMax)
+					if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N134_THE_DESTROYER || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
 					{
-						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false);
+						NPC.downedBoss2 = true;
+						this.Name = "Eater of Worlds";
 					}
-				}
-			}
-			float stackModifier = this.value;
-			stackModifier *= 1f + (float)Main.rand.Next(-20, 21) * 0.01f;
-			if (Main.rand.Next(5) == 0)
-			{
-				stackModifier *= 1f + (float)Main.rand.Next(5, 11) * 0.01f;
-			}
-			if (Main.rand.Next(10) == 0)
-			{
-				stackModifier *= 1f + (float)Main.rand.Next(10, 21) * 0.01f;
-			}
-			if (Main.rand.Next(15) == 0)
-			{
-				stackModifier *= 1f + (float)Main.rand.Next(15, 31) * 0.01f;
-			}
-			if (Main.rand.Next(20) == 0)
-			{
-				stackModifier *= 1f + (float)Main.rand.Next(20, 41) * 0.01f;
-			}
-			while ((int)stackModifier > 0)
-			{
-				if (stackModifier > 1000000f)
-				{
-					int stack = (int)(stackModifier / 1000000f);
-					if (stack > 50 && Main.rand.Next(2) == 0)
+					else if (this.type == NPCType.N35_SKELETRON_HEAD)
 					{
-						stack /= Main.rand.Next(3) + 1;
-					}
-					if (Main.rand.Next(2) == 0)
-					{
-						stack /= Main.rand.Next(3) + 1;
-					}
-					stackModifier -= (float)(1000000 * stack);
-					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 74, stack, false);
-				}
-				else
-				{
-					if (stackModifier > 10000f)
-					{
-						int stack = (int)(stackModifier / 10000f);
-						if (stack > 50 && Main.rand.Next(2) == 0)
-						{
-							stack /= Main.rand.Next(3) + 1;
-						}
-						if (Main.rand.Next(2) == 0)
-						{
-							stack /= Main.rand.Next(3) + 1;
-						}
-						stackModifier -= (float)(10000 * stack);
-						Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 73, stack, false);
+						NPC.downedBoss3 = true;
+						this.Name = "Skeletron";
 					}
 					else
-					{
-						if (stackModifier > 100f)
-						{
-							int stack = (int)(stackModifier / 100f);
-							if (stack > 50 && Main.rand.Next(2) == 0)
-							{
-								stack /= Main.rand.Next(3) + 1;
-							}
-							if (Main.rand.Next(2) == 0)
-							{
-								stack /= Main.rand.Next(3) + 1;
-							}
-							stackModifier -= (float)(100 * stack);
-							Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 72, stack, false);
-						}
-						else
-						{
-							int stack = (int)stackModifier;
-							if (stack > 50 && Main.rand.Next(2) == 0)
-							{
-								stack /= Main.rand.Next(3) + 1;
-							}
-							if (Main.rand.Next(2) == 0)
-							{
-								stack /= Main.rand.Next(4) + 1;
-							}
-							if (stack < 1)
-							{
-								stack = 1;
-							}
-							stackModifier -= (float)stack;
-							Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 71, stack, false);
-						}
-					}
+						this.Name = this.DisplayName;
+				}
+				string str = this.Name;
+				if (!String.IsNullOrEmpty(this.DisplayName))
+					str = this.DisplayName;
+
+				int stack4 = Main.rand.Next(5, 16);
+				int num7 = 28;
+				if (this.type == NPCType.N113_WALL_OF_FLESH)
+					num7 = 188;
+
+				if (this.type > NPCType.N113_WALL_OF_FLESH)
+					num7 = 499;
+
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, num7, stack4, false, 0);
+
+				int num8 = Main.rand.Next(5) + 5;
+				for (int k = 0; k < num8; k++)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false, 0);
+
+				if (this.type == NPCType.N125_RETINAZER || this.type == NPCType.N126_SPAZMATISM)
+					NetMessage.SendData(25, -1, -1, "The Twins has been defeated!", 255, 175f, 75f, 255f, 0);
+				else
+					NetMessage.SendData(25, -1, -1, str + " has been defeated!", 255, 175f, 75f, 255f, 0);
+
+				if (this.type == NPCType.N113_WALL_OF_FLESH)
+					WorldModify.StartHardMode();
+
+				NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+			}
+
+			if (Main.rand.Next(6) == 0 && this.lifeMax > 1 && this.damage > 0)
+			{
+				if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statMana < Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statManaMax)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 184, 1, false, 0);
+				else if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLife < Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLifeMax)
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false, 0);
+			}
+
+			if (Main.rand.Next(2) == 0 && this.lifeMax > 1 && this.damage > 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statMana < Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statManaMax)
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 184, 1, false, 0);
+
+			float num9 = this.value;
+			num9 *= 1f + (float)Main.rand.Next(-20, 21) * 0.01f;
+			if (Main.rand.Next(5) == 0)
+				num9 *= 1f + (float)Main.rand.Next(5, 11) * 0.01f;
+
+			if (Main.rand.Next(10) == 0)
+				num9 *= 1f + (float)Main.rand.Next(10, 21) * 0.01f;
+
+			if (Main.rand.Next(15) == 0)
+				num9 *= 1f + (float)Main.rand.Next(15, 31) * 0.01f;
+
+			if (Main.rand.Next(20) == 0)
+				num9 *= 1f + (float)Main.rand.Next(20, 41) * 0.01f;
+
+			while ((int)num9 > 0)
+			{
+				if (num9 > 1000000f)
+				{
+					int num10 = (int)(num9 / 1000000f);
+					if (num10 > 50 && Main.rand.Next(5) == 0)
+						num10 /= Main.rand.Next(3) + 1;
+
+					if (Main.rand.Next(5) == 0)
+						num10 /= Main.rand.Next(3) + 1;
+
+					num9 -= (float)(1000000 * num10);
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 74, num10, false, 0);
+				}
+				else if (num9 > 10000f)
+				{
+					int num11 = (int)(num9 / 10000f);
+					if (num11 > 50 && Main.rand.Next(5) == 0)
+						num11 /= Main.rand.Next(3) + 1;
+
+					if (Main.rand.Next(5) == 0)
+						num11 /= Main.rand.Next(3) + 1;
+
+					num9 -= (float)(10000 * num11);
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 73, num11, false, 0);
+				}
+				else if (num9 > 100f)
+				{
+					int num12 = (int)(num9 / 100f);
+					if (num12 > 50 && Main.rand.Next(5) == 0)
+						num12 /= Main.rand.Next(3) + 1;
+
+					if (Main.rand.Next(5) == 0)
+						num12 /= Main.rand.Next(3) + 1;
+
+					num9 -= (float)(100 * num12);
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 72, num12, false, 0);
+				}
+				else
+				{
+					int num13 = (int)num9;
+					if (num13 > 50 && Main.rand.Next(5) == 0)
+						num13 /= Main.rand.Next(3) + 1;
+
+					if (Main.rand.Next(5) == 0)
+						num13 /= Main.rand.Next(4) + 1;
+
+					if (num13 < 1)
+						num13 = 1;
+
+					num9 -= (float)num13;
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 71, num13, false, 0);
 				}
 			}
 		}
@@ -13147,7 +13101,6 @@ namespace Terraria_Server
 				return;
 			}
 
-			Player.FindClosest(pos, 16, 16);
 			int direction = 1;
 			if (pos.X / 16f > (float)(Main.maxTilesX / 2))
 				direction = -1;
