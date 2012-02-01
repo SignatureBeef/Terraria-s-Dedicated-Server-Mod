@@ -1266,35 +1266,59 @@ namespace Terraria_Server
 					{
 						this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, false, false);
 					}
-					
-					if (this.Owner == Main.myPlayer && this.LavaWet && this.Type != 312 && this.Type != 318 && this.Type != 173 && this.Type != 174 && this.Type != 175 && this.Rare == 0)
+
+					if (this.LavaWet)
 					{
 						if (this.Type == 267)
 						{
+							Active = false;
+							Type = 0;
+							Name = String.Empty;
+							Stack = 0;
 							for (int l = 0; l < NPC.MAX_NPCS; l++)
 							{
 								if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE)
 								{
-                                    if (Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
-                                    {
-                                        NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
-										NPC.SpawnWallOfFlesh(TileRefs, Position);
-                                    }
+									NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction), 0);
+									Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction);
+									NPC.SpawnWallOfFlesh(TileRefs, Position);
+									break;
 								}
 							}
+							NetMessage.SendData(21);
 						}
-						this.Active = false;
-						this.Type = 0;
-						this.Name = String.Empty;
-						this.Stack = 0;
-						NetMessage.SendData(21, -1, -1, String.Empty, i);
 					}
-					if (this.Type == 75 && Main.dayTime)
+					else
 					{
-						this.Active = false;
-						this.Type = 0;
-						this.Stack = 0;
-						NetMessage.SendData(21, -1, -1, "", i);
+						if (this.Owner == Main.myPlayer && this.LavaWet && this.Type != 312 && this.Type != 318 && this.Type != 173 && this.Type != 174 && this.Type != 175 && this.Rare == 0)
+						{
+							if (this.Type == 267)
+							{
+								for (int l = 0; l < NPC.MAX_NPCS; l++)
+								{
+									if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE)
+									{
+										if (Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
+										{
+											NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
+											NPC.SpawnWallOfFlesh(TileRefs, Position);
+										}
+									}
+								}
+							}
+							this.Active = false;
+							this.Type = 0;
+							this.Name = String.Empty;
+							this.Stack = 0;
+							NetMessage.SendData(21, -1, -1, String.Empty, i);
+						}
+						if (this.Type == 75 && Main.dayTime)
+						{
+							this.Active = false;
+							this.Type = 0;
+							this.Stack = 0;
+							NetMessage.SendData(21, -1, -1, "", i);
+						}
 					}
 				}
 				else

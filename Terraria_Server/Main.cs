@@ -1,3 +1,5 @@
+#define CATCHERROR_NPCUPDATES
+
 using System.Threading;
 using System.Diagnostics;
 using System;
@@ -931,8 +933,13 @@ namespace Terraria_Server
 					player.TownNPCs = 0;
 				}
 
-				if (WallOfFlesh >= 0 && !npcs[WallOfFlesh].Active)
-					WallOfFlesh = -1;
+				if (WallOfFlesh >= 0)
+				{
+					var WoF = npcs[WallOfFlesh];
+					var isWoF =  WoF.type == NPCType.N113_WALL_OF_FLESH;
+					if (!isWoF || !WoF.Active && isWoF)
+						WallOfFlesh = -1;
+				}
 
 				for (int i = 0; i < NPC.MAX_NPCS; i++)
 					//					if (npcs[i] == null)
@@ -940,23 +947,26 @@ namespace Terraria_Server
 					//						ProgramLog.Debug.Log ("NPC[{0}] is null", i);
 					//						continue;
 					//					}
-
-					//try
+#if CATCHERROR_NPCUPDATES
+					try
 					{
+#endif
 						NPC.UpdateNPC(i);
+#if CATCHERROR_NPCUPDATES
 					}
-					//catch (Exception e)
-					//{
-					//    if (!ignoreErrors)
-					//        throw;
+					catch (Exception e)
+					{
+						if (!ignoreErrors)
+							throw;
 
-					//    var npc = npcs[i];
-					//    ProgramLog.Log(e, String.Format("NPC update error, id={0}, type={1}, name={2}",
-					//    i, npc.Type, npc.Name));
+						var npc = npcs[i];
+						ProgramLog.Log(e, String.Format("NPC update error, id={0}, type={1}, name={2}",
+						i, npc.Type, npc.Name));
 
-					//    npcs[i] = Registries.NPC.Default;
-					//    npcs[i].netUpdate = true;
-					//}
+						npcs[i] = Registries.NPC.Default;
+						npcs[i].netUpdate = true;
+					}
+#endif
 
 				LastNPCUpdateTime = s.Elapsed - start;
 			}

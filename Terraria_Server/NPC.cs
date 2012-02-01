@@ -3726,7 +3726,7 @@ namespace Terraria_Server
 			npc.whoAmI = i;
 			if (npc.Active)
 			{
-				if (npc.DisplayName == String.Empty)
+				if (String.IsNullOrEmpty(npc.DisplayName))
 					npc.DisplayName = npc.Name;
 
 				if (npc.townNPC && Main.chrName[npc.Type] != String.Empty)
@@ -13182,11 +13182,12 @@ namespace Terraria_Server
 					{
 						tileY += nextY;
 						posY = tileY * 16;
-						int num7 = NPC.NewNPC(findX, posY, 113, 0);
-						if (Main.npcs[num7].DisplayName == String.Empty)
-							Main.npcs[num7].DisplayName = Main.npcs[num7].Name;
+						int npcIndex = NPC.NewNPC(findX, posY, 113, 0);
+						if (String.IsNullOrEmpty(Main.npcs[npcIndex].DisplayName))
+							Main.npcs[npcIndex].DisplayName = Main.npcs[npcIndex].Name;
 
-						NetMessage.SendData(25, -1, -1, Main.npcs[num7].DisplayName + " has awoken!", 255, 175f, 75f, 255f, 0);
+						NetMessage.SendData(25, -1, -1, Main.npcs[npcIndex].DisplayName + " has awoken!", 255, 175f, 75f, 255f, 0);
+						break;
 					}
 					nextY++;
 				}
@@ -13242,18 +13243,16 @@ namespace Terraria_Server
 				if (this.townNPC && this.Type != 37)
 				{
 					string str = this.Name;
-					if (this.DisplayName != "")
-					{
+					if (!String.IsNullOrEmpty(this.DisplayName))
 						str = this.DisplayName;
-					}
 
 					NetMessage.SendData(25, -1, -1, str + " was slain...", 255, 255f, 25f, 25f, 0);
 
 					//if (Main.netMode != 1)
 					{
-						Main.chrName[this.Type] = "";
+						Main.chrName[this.Type] = String.Empty;
 						NPC.SetNames();
-						NetMessage.SendData(56, -1, -1, "", this.Type, 0f, 0f, 0f, 0);
+						NetMessage.SendData(56, -1, -1, String.Empty, this.Type, 0f, 0f, 0f, 0);
 					}
 				}
 				if (this.townNPC && this.homeless && WorldModify.spawnNPC == this.Type)

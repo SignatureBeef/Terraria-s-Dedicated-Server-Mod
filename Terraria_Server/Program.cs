@@ -1,4 +1,4 @@
-//#define CATCHERROR_UPDATELOOP
+#define CATCHERROR_UPDATELOOP
 
 using System.Threading;
 using System;
@@ -738,8 +738,9 @@ namespace Terraria_Server
 #endif
                 if (Terraria_Server.Main.rand == null)
                     Terraria_Server.Main.rand = new Random((int)DateTime.Now.Ticks);
-				
+
 				bool hibernate = properties.StopUpdatesWhenEmpty;
+				var collect = 0;
 	
 				if (properties.SimpleLoop)
 				{
@@ -748,8 +749,6 @@ namespace Terraria_Server
 	
 					double updateTime = 16.66666666666667;
 					double nextUpdate = s.ElapsedMilliseconds + updateTime;
-
-					var collect = 0;
 					while (!NetPlay.disconnect)
 					{
 						double now = s.ElapsedMilliseconds;
@@ -777,11 +776,8 @@ namespace Terraria_Server
 						if (collect++ >= 1000) //Every 1000 loops should be less intensive.
 						{
 							if (properties.CollectGarbage)
-							{
-								//ProgramLog.Debug.Log("Performing GC...");
 								GC.Collect();
-								//ProgramLog.Debug.Log("GC Total Memory {0}", GC.GetTotalMemory(false));
-							}
+
 							collect = 0;
 						}
 					}
@@ -823,6 +819,14 @@ namespace Terraria_Server
 									Thread.Sleep(10);
 								}
 							}
+						}
+
+						if (collect++ >= 1000) //Every 1000 loops should be less intensive.
+						{
+							if (properties.CollectGarbage)
+								GC.Collect();
+
+							collect = 0;
 						}
 					}
 					Thread.Sleep(0);

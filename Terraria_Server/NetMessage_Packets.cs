@@ -659,8 +659,8 @@ namespace Terraria_Server
 			Byte (r);
 			Byte (g);
 			Byte (b);
-			
-			String (text);
+
+			String (text ?? string.Empty);
 			
 			End ();
 		}
