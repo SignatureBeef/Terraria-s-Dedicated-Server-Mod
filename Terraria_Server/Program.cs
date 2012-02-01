@@ -164,7 +164,7 @@ namespace Terraria_Server
 				using (var prog = new ProgressLogger(1, "Loading projectile definitions"))
 					Collections.Registries.Projectile.Load(Collections.Registries.PROJECTILE_FILE);
 				using (var prog = new ProgressLogger(1, "Loading language definitions"))
-					Languages.LoadClass(Collections.Registries.LANAGUAGE_FILE);
+					Languages.LoadClass(Collections.Registries.LANGUAGE_FILE);
 
 				commandParser = new CommandParser();
 				commandParser.ReadPermissionNodes();
