@@ -3726,14 +3726,12 @@ namespace Terraria_Server
 			npc.whoAmI = i;
 			if (npc.Active)
 			{
-				if (npc.DisplayName == "")
-				{
+				if (npc.DisplayName == String.Empty)
 					npc.DisplayName = npc.Name;
-				}
-				if (npc.townNPC && Main.chrName[npc.Type] != "")
-				{
+
+				if (npc.townNPC && Main.chrName[npc.Type] != String.Empty)
 					npc.DisplayName = Main.chrName[npc.Type];
-				}
+
 				npc.lifeRegen = 0;
 				npc.poisoned = false;
 				npc.onFire = false;
@@ -4967,7 +4965,7 @@ namespace Terraria_Server
 					npc.Velocity.Y = -1f;
 				}
 			}
-			if (Main.dayTime && (double)npc.Position.Y <= Main.worldSurface * 16.0 && npc.Type == 2)
+			if (Main.dayTime && (double)npc.Position.Y <= Main.worldSurface * 16.0 && (npc.type == NPCType.N02_DEMON_EYE || npc.type == NPCType.N133_WANDERING_EYE))
 			{
 				if (npc.timeLeft > 10)
 				{
@@ -4988,85 +4986,350 @@ namespace Terraria_Server
 			{
 				npc.TargetClosest(true);
 			}
-			if (npc.direction == -1 && npc.Velocity.X > -4f)
+			if (npc.type == NPCType.N116_THE_HUNGRY_II)
 			{
-				npc.Velocity.X = npc.Velocity.X - 0.1f;
-				if (npc.Velocity.X > 4f)
+				npc.TargetClosest(true);
+				if (npc.direction == -1 && npc.Velocity.X > -6f)
 				{
 					npc.Velocity.X = npc.Velocity.X - 0.1f;
+					if (npc.Velocity.X > 6f)
+					{
+						npc.Velocity.X = npc.Velocity.X - 0.1f;
+					}
+					else
+					{
+						if (npc.Velocity.X > 0f)
+						{
+							npc.Velocity.X = npc.Velocity.X - 0.2f;
+						}
+					}
+					if (npc.Velocity.X < -6f)
+					{
+						npc.Velocity.X = -6f;
+					}
 				}
 				else
 				{
-					if (npc.Velocity.X > 0f)
-					{
-						npc.Velocity.X = npc.Velocity.X + 0.05f;
-					}
-				}
-				if (npc.Velocity.X < -4f)
-				{
-					npc.Velocity.X = -4f;
-				}
-			}
-			else
-			{
-				if (npc.direction == 1 && npc.Velocity.X < 4f)
-				{
-					npc.Velocity.X = npc.Velocity.X + 0.1f;
-					if (npc.Velocity.X < -4f)
+					if (npc.direction == 1 && npc.Velocity.X < 6f)
 					{
 						npc.Velocity.X = npc.Velocity.X + 0.1f;
+						if (npc.Velocity.X < -6f)
+						{
+							npc.Velocity.X = npc.Velocity.X + 0.1f;
+						}
+						else
+						{
+							if (npc.Velocity.X < 0f)
+							{
+								npc.Velocity.X = npc.Velocity.X + 0.2f;
+							}
+						}
+						if (npc.Velocity.X > 6f)
+						{
+							npc.Velocity.X = 6f;
+						}
+					}
+				}
+				if (npc.directionY == -1 && (double)npc.Velocity.Y > -2.5)
+				{
+					npc.Velocity.Y = npc.Velocity.Y - 0.04f;
+					if ((double)npc.Velocity.Y > 2.5)
+					{
+						npc.Velocity.Y = npc.Velocity.Y - 0.05f;
 					}
 					else
 					{
-						if (npc.Velocity.X < 0f)
+						if (npc.Velocity.Y > 0f)
 						{
-							npc.Velocity.X = npc.Velocity.X - 0.05f;
+							npc.Velocity.Y = npc.Velocity.Y - 0.15f;
 						}
 					}
-					if (npc.Velocity.X > 4f)
+					if ((double)npc.Velocity.Y < -2.5)
 					{
-						npc.Velocity.X = 4f;
+						npc.Velocity.Y = -2.5f;
 					}
-				}
-			}
-			if (npc.directionY == -1 && (double)npc.Velocity.Y > -1.5)
-			{
-				npc.Velocity.Y = npc.Velocity.Y - 0.04f;
-				if ((double)npc.Velocity.Y > 1.5)
-				{
-					npc.Velocity.Y = npc.Velocity.Y - 0.05f;
 				}
 				else
 				{
-					if (npc.Velocity.Y > 0f)
+					if (npc.directionY == 1 && (double)npc.Velocity.Y < 1.5)
 					{
-						npc.Velocity.Y = npc.Velocity.Y + 0.03f;
+						npc.Velocity.Y = npc.Velocity.Y + 0.04f;
+						if ((double)npc.Velocity.Y < -2.5)
+						{
+							npc.Velocity.Y = npc.Velocity.Y + 0.05f;
+						}
+						else
+						{
+							if (npc.Velocity.Y < 0f)
+							{
+								npc.Velocity.Y = npc.Velocity.Y + 0.15f;
+							}
+						}
+						if ((double)npc.Velocity.Y > 2.5)
+						{
+							npc.Velocity.Y = 2.5f;
+						}
 					}
-				}
-				if ((double)npc.Velocity.Y < -1.5)
-				{
-					npc.Velocity.Y = -1.5f;
 				}
 			}
 			else
 			{
-				if (npc.directionY == 1 && (double)npc.Velocity.Y < 1.5)
+				if (npc.type == NPCType.N133_WANDERING_EYE)
 				{
-					npc.Velocity.Y = npc.Velocity.Y + 0.04f;
-					if ((double)npc.Velocity.Y < -1.5)
+					if ((double)npc.life < (double)npc.lifeMax * 0.5)
 					{
-						npc.Velocity.Y = npc.Velocity.Y + 0.05f;
+						if (npc.direction == -1 && npc.Velocity.X > -6f)
+						{
+							npc.Velocity.X = npc.Velocity.X - 0.1f;
+							if (npc.Velocity.X > 6f)
+							{
+								npc.Velocity.X = npc.Velocity.X - 0.1f;
+							}
+							else
+							{
+								if (npc.Velocity.X > 0f)
+								{
+									npc.Velocity.X = npc.Velocity.X + 0.05f;
+								}
+							}
+							if (npc.Velocity.X < -6f)
+							{
+								npc.Velocity.X = -6f;
+							}
+						}
+						else
+						{
+							if (npc.direction == 1 && npc.Velocity.X < 6f)
+							{
+								npc.Velocity.X = npc.Velocity.X + 0.1f;
+								if (npc.Velocity.X < -6f)
+								{
+									npc.Velocity.X = npc.Velocity.X + 0.1f;
+								}
+								else
+								{
+									if (npc.Velocity.X < 0f)
+									{
+										npc.Velocity.X = npc.Velocity.X - 0.05f;
+									}
+								}
+								if (npc.Velocity.X > 6f)
+								{
+									npc.Velocity.X = 6f;
+								}
+							}
+						}
+						if (npc.directionY == -1 && npc.Velocity.Y > -4f)
+						{
+							npc.Velocity.Y = npc.Velocity.Y - 0.1f;
+							if (npc.Velocity.Y > 4f)
+							{
+								npc.Velocity.Y = npc.Velocity.Y - 0.1f;
+							}
+							else
+							{
+								if (npc.Velocity.Y > 0f)
+								{
+									npc.Velocity.Y = npc.Velocity.Y + 0.05f;
+								}
+							}
+							if (npc.Velocity.Y < -4f)
+							{
+								npc.Velocity.Y = -4f;
+							}
+						}
+						else
+						{
+							if (npc.directionY == 1 && npc.Velocity.Y < 4f)
+							{
+								npc.Velocity.Y = npc.Velocity.Y + 0.1f;
+								if (npc.Velocity.Y < -4f)
+								{
+									npc.Velocity.Y = npc.Velocity.Y + 0.1f;
+								}
+								else
+								{
+									if (npc.Velocity.Y < 0f)
+									{
+										npc.Velocity.Y = npc.Velocity.Y - 0.05f;
+									}
+								}
+								if (npc.Velocity.Y > 4f)
+								{
+									npc.Velocity.Y = 4f;
+								}
+							}
+						}
 					}
 					else
 					{
-						if (npc.Velocity.Y < 0f)
+						if (npc.direction == -1 && npc.Velocity.X > -4f)
 						{
-							npc.Velocity.Y = npc.Velocity.Y - 0.03f;
+							npc.Velocity.X = npc.Velocity.X - 0.1f;
+							if (npc.Velocity.X > 4f)
+							{
+								npc.Velocity.X = npc.Velocity.X - 0.1f;
+							}
+							else
+							{
+								if (npc.Velocity.X > 0f)
+								{
+									npc.Velocity.X = npc.Velocity.X + 0.05f;
+								}
+							}
+							if (npc.Velocity.X < -4f)
+							{
+								npc.Velocity.X = -4f;
+							}
+						}
+						else
+						{
+							if (npc.direction == 1 && npc.Velocity.X < 4f)
+							{
+								npc.Velocity.X = npc.Velocity.X + 0.1f;
+								if (npc.Velocity.X < -4f)
+								{
+									npc.Velocity.X = npc.Velocity.X + 0.1f;
+								}
+								else
+								{
+									if (npc.Velocity.X < 0f)
+									{
+										npc.Velocity.X = npc.Velocity.X - 0.05f;
+									}
+								}
+								if (npc.Velocity.X > 4f)
+								{
+									npc.Velocity.X = 4f;
+								}
+							}
+						}
+						if (npc.directionY == -1 && (double)npc.Velocity.Y > -1.5)
+						{
+							npc.Velocity.Y = npc.Velocity.Y - 0.04f;
+							if ((double)npc.Velocity.Y > 1.5)
+							{
+								npc.Velocity.Y = npc.Velocity.Y - 0.05f;
+							}
+							else
+							{
+								if (npc.Velocity.Y > 0f)
+								{
+									npc.Velocity.Y = npc.Velocity.Y + 0.03f;
+								}
+							}
+							if ((double)npc.Velocity.Y < -1.5)
+							{
+								npc.Velocity.Y = -1.5f;
+							}
+						}
+						else
+						{
+							if (npc.directionY == 1 && (double)npc.Velocity.Y < 1.5)
+							{
+								npc.Velocity.Y = npc.Velocity.Y + 0.04f;
+								if ((double)npc.Velocity.Y < -1.5)
+								{
+									npc.Velocity.Y = npc.Velocity.Y + 0.05f;
+								}
+								else
+								{
+									if (npc.Velocity.Y < 0f)
+									{
+										npc.Velocity.Y = npc.Velocity.Y - 0.03f;
+									}
+								}
+								if ((double)npc.Velocity.Y > 1.5)
+								{
+									npc.Velocity.Y = 1.5f;
+								}
+							}
 						}
 					}
-					if ((double)npc.Velocity.Y > 1.5)
+				}
+				else
+				{
+					if (npc.direction == -1 && npc.Velocity.X > -4f)
 					{
-						npc.Velocity.Y = 1.5f;
+						npc.Velocity.X = npc.Velocity.X - 0.1f;
+						if (npc.Velocity.X > 4f)
+						{
+							npc.Velocity.X = npc.Velocity.X - 0.1f;
+						}
+						else
+						{
+							if (npc.Velocity.X > 0f)
+							{
+								npc.Velocity.X = npc.Velocity.X + 0.05f;
+							}
+						}
+						if (npc.Velocity.X < -4f)
+						{
+							npc.Velocity.X = -4f;
+						}
+					}
+					else
+					{
+						if (npc.direction == 1 && npc.Velocity.X < 4f)
+						{
+							npc.Velocity.X = npc.Velocity.X + 0.1f;
+							if (npc.Velocity.X < -4f)
+							{
+								npc.Velocity.X = npc.Velocity.X + 0.1f;
+							}
+							else
+							{
+								if (npc.Velocity.X < 0f)
+								{
+									npc.Velocity.X = npc.Velocity.X - 0.05f;
+								}
+							}
+							if (npc.Velocity.X > 4f)
+							{
+								npc.Velocity.X = 4f;
+							}
+						}
+					}
+					if (npc.directionY == -1 && (double)npc.Velocity.Y > -1.5)
+					{
+						npc.Velocity.Y = npc.Velocity.Y - 0.04f;
+						if ((double)npc.Velocity.Y > 1.5)
+						{
+							npc.Velocity.Y = npc.Velocity.Y - 0.05f;
+						}
+						else
+						{
+							if (npc.Velocity.Y > 0f)
+							{
+								npc.Velocity.Y = npc.Velocity.Y + 0.03f;
+							}
+						}
+						if ((double)npc.Velocity.Y < -1.5)
+						{
+							npc.Velocity.Y = -1.5f;
+						}
+					}
+					else
+					{
+						if (npc.directionY == 1 && (double)npc.Velocity.Y < 1.5)
+						{
+							npc.Velocity.Y = npc.Velocity.Y + 0.04f;
+							if ((double)npc.Velocity.Y < -1.5)
+							{
+								npc.Velocity.Y = npc.Velocity.Y + 0.05f;
+							}
+							else
+							{
+								if (npc.Velocity.Y < 0f)
+								{
+									npc.Velocity.Y = npc.Velocity.Y - 0.03f;
+								}
+							}
+							if ((double)npc.Velocity.Y > 1.5)
+							{
+								npc.Velocity.Y = 1.5f;
+							}
+						}
 					}
 				}
 			}
@@ -13008,7 +13271,7 @@ namespace Terraria_Server
 
 		public static void ClearNames()
 		{
-			for (int i = 0; i < Main.MAX_NAMES; i++)
+			for (int i = 0; i < Main.MAX_NPC_NAMES; i++)
 				Main.chrName[i] = String.Empty;
 		}
 

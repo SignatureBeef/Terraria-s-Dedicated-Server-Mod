@@ -18,7 +18,7 @@ namespace Terraria_Server
 		public const Int32 MAX_TILE_SETS = 150;
 		public const Int32 MAX_WALL_SETS = 40;
 		public const Int32 MAX_BUFFS = 41;
-		public const Int32 MAX_NAMES = 142;
+		public const Int32 MAX_NPC_NAMES = 147;
 
 		public static bool Xmas { get; set; }
 
@@ -86,7 +86,7 @@ namespace Terraria_Server
 		public static bool[] tileNoAttach = new bool[MAX_TILE_SETS];
 		public static bool[] tileNoFail = new bool[MAX_TILE_SETS];
 		public static bool[] tileFrameImportant = new bool[MAX_TILE_SETS];
-		public static string[] chrName = new string[MAX_NAMES];
+		public static string[] chrName = new string[MAX_NPC_NAMES];
 		[ThreadStatic]
 		static Random threadRand;
 
@@ -941,22 +941,22 @@ namespace Terraria_Server
 					//						continue;
 					//					}
 
-					try
+					//try
 					{
 						NPC.UpdateNPC(i);
 					}
-					catch (Exception e)
-					{
-						if (!ignoreErrors)
-							throw;
+					//catch (Exception e)
+					//{
+					//    if (!ignoreErrors)
+					//        throw;
 
-						var npc = npcs[i];
-						ProgramLog.Log(e, String.Format("NPC update error, id={0}, type={1}, name={2}",
-						i, npc.Type, npc.Name));
+					//    var npc = npcs[i];
+					//    ProgramLog.Log(e, String.Format("NPC update error, id={0}, type={1}, name={2}",
+					//    i, npc.Type, npc.Name));
 
-						npcs[i] = Registries.NPC.Default;
-						npcs[i].netUpdate = true;
-					}
+					//    npcs[i] = Registries.NPC.Default;
+					//    npcs[i].netUpdate = true;
+					//}
 
 				LastNPCUpdateTime = s.Elapsed - start;
 			}
