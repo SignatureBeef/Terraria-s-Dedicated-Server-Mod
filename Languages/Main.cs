@@ -112,12 +112,12 @@ namespace Languages
 	{
 		public static void RestoreXML()
 		{
-			Terraria_Server.Language.Languages.LoadClass(Registries.LANAGUAGE_FILE, true);
+			Terraria_Server.Language.Languages.LoadClass(Registries.LANGUAGE_FILE, true);
 		}
 
 		public static void SaveXML(Dictionary<String, String> data)
 		{
-			var filePath = Registries.LANAGUAGE_FILE;
+			var filePath = Registries.LANGUAGE_FILE;
 			if (File.Exists(filePath))
 				File.Delete(filePath);
 
