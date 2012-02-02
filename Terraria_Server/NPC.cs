@@ -13098,7 +13098,7 @@ namespace Terraria_Server
 			if (Main.WallOfFlesh >= 0)
 			{
 				ProgramLog.Log("Attempt to call SpawnWOF with an existing Entity.");
-				return SpawnFlags.SUMMONED;
+				return SpawnFlags.EXISTING;
 			}
 
 			int direction = 1;
