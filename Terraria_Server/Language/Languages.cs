@@ -19,6 +19,30 @@ namespace Terraria_Server.Language
 		public static String PermissionsError { get; set; }
 		public static String ExitRequestCommand { get; set; }
 		public static String ExpiredCommandMessage { get; set; }
+		public static String XRequestedShutdown { get; set; }
+		public static String PropertiesReload { get; set; }
+		public static String CurrentPlayers { get; set; }
+		public static String NoPlayers { get; set; }
+		public static String SavingWorld { get; set; }
+		public static String SavingData { get; set; }
+		public static String SavingComplete { get; set; }
+		public static String InvalidPage { get; set; }
+		public static String RemovedFrom { get; set; }
+		public static String Add { get; set; }
+		public static String Added { get; set; }
+		public static String Remove { get; set; }
+		public static String Removed { get; set; }
+		public static String PleaseReview { get; set; }
+		public static String WhilelistFailedSave { set; get; }
+		public static String Command { get; set; }
+		public static String IPExpected { get; set; }
+		public static String TimeSet { get; set; }
+		public static String CurrentTime { get; set; }
+
+		public static String Ban_You { get; set; }
+		public static String Ban_Banned { get; set; }
+		public static String Ban_FailedToSave { get; set; }
+		public static String Ban_UnBanned { get; set; }
 
 		//Commands
 		public static String CommandDescription_Exit { get; set; }

@@ -45,7 +45,7 @@ namespace Terraria_Server.Commands
 			NetPlay.StopServer();
 			Statics.Exit = true;
 
-			throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
+			throw new ExitException(String.Format(sender.Name + Languages.XRequestedShutdown));
 		}
 
 		/// <summary>
@@ -137,7 +137,7 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Reload(ISender sender, ArgumentList args)
 		{
-			Server.notifyOps("Reloading server.properties.", true);
+			Server.notifyOps(Languages.PropertiesReload, true);
 			Program.properties.Load();
 		}
 
@@ -151,7 +151,7 @@ namespace Terraria_Server.Commands
 			args.ParseNone();
 
 			var players = from p in Main.players where p.Active select p.Name;
-			var line = String.Concat("Current players: ", String.Join(", ", players), (players.Count() > 0) ? "." : String.Empty);
+			var line = String.Concat(Languages.CurrentPlayers, String.Join(", ", players), (players.Count() > 0) ? "." : String.Empty);
 
 			sender.sendMessage(line, 255, 255, 240, 20);
 		}
@@ -173,7 +173,7 @@ namespace Terraria_Server.Commands
 
 			if (on + pn == 0)
 			{
-				sender.sendMessage("No players online.");
+				sender.sendMessage(Languages.NoPlayers);
 				return;
 			}
 
@@ -229,7 +229,7 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void SaveAll(ISender sender, ArgumentList args)
 		{
-			Server.notifyOps("Saving World...", true);
+			Server.notifyOps(Languages.SavingWorld, true);
 
 			WorldIO.saveWorld(null, Server.World.SavePath, false);
 			while (WorldModify.saveLock)
@@ -237,13 +237,13 @@ namespace Terraria_Server.Commands
 				Thread.Sleep(100);
 			}
 
-			Server.notifyOps("Saving Data...", true);
+			Server.notifyOps(Languages.SavingData, true);
 
 			Server.BanList.Save();
 			Server.WhiteList.Save();
 			Server.OpList.Save();
 
-			Server.notifyOps("Saving Complete.", true);
+			Server.notifyOps(Languages.SavingComplete, true);
 		}
 
 		/// <summary>
@@ -323,7 +323,7 @@ namespace Terraria_Server.Commands
 						}
 						else
 						{
-							sender.sendMessage("Invalid page! Use: 0 -> " + (maxPages - 1).ToString());
+							sender.sendMessage(Languages.InvalidPage + ": 0 -> " + (maxPages - 1).ToString());
 						}
 					}
 					catch (Exception)
@@ -346,20 +346,20 @@ namespace Terraria_Server.Commands
 		public static void WhiteList(ISender sender, ArgumentList args)
 		{
 			// /whitelist <add:remove> <player>
-			string Exception, Type = "removed from";
-			if (args.TryParseOne<String>("-add", out Exception))
+			string Exception, Type = "";
+			if (args.TryParseOne<String>(Languages.Add, out Exception))
 			{
 				Server.WhiteList.addException(Exception);
-				Type = "added to";
+				Type = Languages.Added;
 			}
-			else if (args.TryParseOne<String>("-remove", out Exception))
+			else if (args.TryParseOne<String>(Languages.Remove, out Exception))
 			{
-
 				Server.WhiteList.removeException(Exception);
+				Type = Languages.Removed;
 			}
 			else
 			{
-				sender.sendMessage("Please review that command");
+				sender.sendMessage(Languages.PleaseReview);
 				return;
 			}
 
@@ -367,7 +367,7 @@ namespace Terraria_Server.Commands
 
 			if (!Server.WhiteList.Save())
 			{
-				Server.notifyOps("WhiteList Failed to Save due to " + sender.Name + "'s command", true);
+				Server.notifyOps(Languages.WhilelistFailedSave + sender.Name + "'s " + Languages.Command, true);
 			}
 		}
 
@@ -384,21 +384,21 @@ namespace Terraria_Server.Commands
 			if (args.TryGetOnlinePlayer(0, out banee))
 			{
 				playerName = banee.Name;
-				banee.Kick("You have been banned from this Server.");
+				banee.Kick(Languages.Ban_You);
 				Server.BanList.addException(NetPlay.slots[banee.whoAmi].
 						remoteAddress.Split(':')[0]);
 			}
 			else if (!args.TryGetString(0, out playerName))
 			{
-				throw new CommandError("A player or IP was expected.");
+				throw new CommandError(Languages.IPExpected);
 			}
 
 			Server.BanList.addException(playerName);
 
-			Server.notifyOps(playerName + " has been banned {" + sender.Name + "}", true);
+			Server.notifyOps(playerName + Languages.Ban_Banned + " {" + sender.Name + "}", true);
 			if (!Server.BanList.Save())
 			{
-				Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+				Server.notifyOps(Languages.Ban_FailedToSave + sender.Name + "'s " + Languages.Command, true);
 			}
 		}
 
@@ -412,16 +412,16 @@ namespace Terraria_Server.Commands
 			string playerName;
 			if (!args.TryGetString(0, out playerName))
 			{
-				throw new CommandError("A player or IP was expected.");
+				throw new CommandError(Languages.IPExpected);
 			}
 
 			Server.BanList.removeException(playerName);
 
-			Server.notifyOps(playerName + " has been unbanned {" + sender.Name + "}", true);
+			Server.notifyOps(playerName + Languages.Ban_UnBanned + " {" + sender.Name + "}", true);
 
 			if (!Server.BanList.Save())
 			{
-				Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+				Server.notifyOps(Languages.Ban_FailedToSave + sender.Name + "'s " + Languages.Command, true);
 			}
 		}
 
@@ -505,18 +505,18 @@ namespace Terraria_Server.Commands
 								MinuteString = MinuteString.Substring(0, 2);
 							}
 
-							sender.sendMessage("Current Time: " + Hours + ":" + MinuteString + " " + AP);
+							sender.sendMessage(Languages.CurrentTime + ": " + Hours + ":" + MinuteString + " " + AP);
 							return;
 						}
 					default:
 						{
-							sender.sendMessage("Please review that command.");
+							sender.sendMessage(Languages.PleaseReview);
 							return;
 						}
 				}
 			}
 			NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
-			Server.notifyAll("Time set to " + Main.time.ToString() + " by " + sender.Name);
+			Server.notifyAll(Languages.TimeSet + Main.time.ToString() + " by " + sender.Name);
 		}
 
 		/// <summary>
