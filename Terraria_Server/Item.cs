@@ -1277,11 +1277,12 @@ namespace Terraria_Server
 							Stack = 0;
 							for (int l = 0; l < NPC.MAX_NPCS; l++)
 							{
-								if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE)
+								if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE && Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
 								{
-									NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction), 0);
-									Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction);
-									NPC.SpawnWallOfFlesh(TileRefs, Position);
+									NetMessage.SendData(28, -1, -1, String.Empty, l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction), 0);
+
+									if (NPC.SpawnWallOfFlesh(TileRefs, Position) != SpawnFlags.FAILED)
+										break;
 								}
 							}
 							NetMessage.SendData(21);
@@ -1295,13 +1296,12 @@ namespace Terraria_Server
 							{
 								for (int l = 0; l < NPC.MAX_NPCS; l++)
 								{
-									if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE)
+									if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE && Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
 									{
-										if (Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
-										{
-											NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
-											NPC.SpawnWallOfFlesh(TileRefs, Position);
-										}
+										NetMessage.SendData(28, -1, -1, String.Empty, l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
+
+										if (NPC.SpawnWallOfFlesh(TileRefs, Position) != SpawnFlags.FAILED)
+											break;
 									}
 								}
 							}
