@@ -54,7 +54,7 @@
 	<CommandDescription_Purge>Purge the map of items, NPCs or projectiles.</CommandDescription_Purge>
 	<CommandDescription_Plugins>List currently enabled plugins.</CommandDescription_Plugins>
 	<CommandDescription_Plugin>Enable/disable and get details about specific plugins.</CommandDescription_Plugin>
-	<CommandDescription_SpawnBoss>Summon a Boss to the world.</CommandDescription_SpawnBoss>
+  <CommandDescription_SpawnBoss>Summon a Boss to the world.</CommandDescription_SpawnBoss>
 	<CommandDescription_ItemRej>Add or remove an item from the whitelist.</CommandDescription_ItemRej>
 	<CommandDescription_Explosions>Toggle the allowing of explosions for the server.</CommandDescription_Explosions>
 	<CommandDescription_MaxPlayers>Set the maximum number of player slots.</CommandDescription_MaxPlayers>
