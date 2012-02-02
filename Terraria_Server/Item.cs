@@ -178,11 +178,11 @@ namespace Terraria_Server
 		/// <summary>
 		/// String representing hovering tool tip
 		/// </summary>
-        public string ToolTip;
+		public string ToolTip;
 		/// <summary>
 		/// Secondary tool tip string
 		/// </summary>
-        public string ToolTip2;
+		public string ToolTip2;
 		/// <summary>
 		/// Essentially the same as Ammo
 		/// </summary>
@@ -210,7 +210,7 @@ namespace Terraria_Server
 		/// </summary>
 		public bool Wet;
 		public byte WetCount;
-		
+
 		public byte Prefix;
 
 		/// <summary>
@@ -338,9 +338,9 @@ namespace Terraria_Server
 						}
 						else
 						{
-							if (Type == 39 || Type == 44 || Type == 95 || Type == 96 || Type == 98 || Type == 99 || 
-								Type == 120 || Type == 164 || Type == 197 || Type == 219 || Type == 266 || Type == 281 || 
-								Type == 434 || Type == 435 || Type == 436 || Type == 481 || Type == 506 || Type == 533 || 
+							if (Type == 39 || Type == 44 || Type == 95 || Type == 96 || Type == 98 || Type == 99 ||
+								Type == 120 || Type == 164 || Type == 197 || Type == 219 || Type == 266 || Type == 281 ||
+								Type == 434 || Type == 435 || Type == 436 || Type == 481 || Type == 506 || Type == 533 ||
 								Type == 534 || Type == 578)
 							{
 								int _randPre = Main.rand.Next(36);
@@ -381,8 +381,8 @@ namespace Terraria_Server
 							}
 							else
 							{
-								if (Type == 64 || Type == 65 || Type == 112 || Type == 113 || Type == 127 || Type == 157 || 
-									Type == 218 || Type == 272 || Type == 494 || Type == 495 || Type == 496 || Type == 514 || 
+								if (Type == 64 || Type == 65 || Type == 112 || Type == 113 || Type == 127 || Type == 157 ||
+									Type == 218 || Type == 272 || Type == 494 || Type == 495 || Type == 496 || Type == 514 ||
 									Type == 517 || Type == 518 || Type == 519)
 								{
 									int _randPre = Main.rand.Next(36);
@@ -442,13 +442,13 @@ namespace Terraria_Server
 													_pre = 57;
 													break;
 											}
-										}										
+										}
 									}
 									else
 									{
-										if (!Accessory || 
-											Type == 267 || Type == 562 || Type == 563 || Type == 564 || Type == 565 || Type == 566 || 
-											Type == 567 || Type == 568 || Type == 569 || Type == 570 || Type == 571 || Type == 572 || 
+										if (!Accessory ||
+											Type == 267 || Type == 562 || Type == 563 || Type == 564 || Type == 565 || Type == 566 ||
+											Type == 567 || Type == 568 || Type == 569 || Type == 570 || Type == 571 || Type == 572 ||
 											Type == 573 || Type == 574 || Type == 576)
 										{
 											return false;
@@ -464,10 +464,10 @@ namespace Terraria_Server
 				{
 					return true;
 				}
-				if (prefix == -1 && 
-					(_pre == 7 || _pre == 8 || _pre == 9 || _pre == 10 || _pre == 11 || _pre == 22 || 
-					_pre == 23 || _pre == 24 || _pre == 29 || _pre == 30 || _pre == 31 || _pre == 39 || 
-					_pre == 40 || _pre == 56 || _pre == 41 || _pre == 47 || _pre == 48 || _pre == 49) 
+				if (prefix == -1 &&
+					(_pre == 7 || _pre == 8 || _pre == 9 || _pre == 10 || _pre == 11 || _pre == 22 ||
+					_pre == 23 || _pre == 24 || _pre == 29 || _pre == 30 || _pre == 31 || _pre == 39 ||
+					_pre == 40 || _pre == 56 || _pre == 41 || _pre == 47 || _pre == 48 || _pre == 49)
 					&& Main.rand.Next(3) != 0)
 				{
 					_pre = 0;
@@ -743,7 +743,7 @@ namespace Terraria_Server
 						_mnaMod = 0.9f;
 						break;
 				}
-				
+
 				var dmg = _dmgMod != 1f && Math.Round((double)((float)damage * _dmgMod)) == (double)damage;
 				var ani = _useMod != 1f && Math.Round((double)((float)UseAnimation * _useMod)) == (double)UseAnimation;
 				var mna = _mnaMod != 1f && Math.Round((double)((float)Mana * _mnaMod)) == (double)Mana;
@@ -776,7 +776,7 @@ namespace Terraria_Server
 				_curMod *= 1.15f;
 			if (_pre == 65 || _pre == 72 || _pre == 76 || _pre == 80 || _pre == 68)
 				_curMod *= 1.2f;
-			
+
 
 			if ((double)_curMod >= 1.2)
 				Rare += 2;
@@ -1056,7 +1056,7 @@ namespace Terraria_Server
 			}
 
 			return String.Format("{0} {1}", title, Name).Trim();
-		}		
+		}
 
 		public static bool MechSpawn(float x, float y, int type)
 		{
@@ -1082,67 +1082,67 @@ namespace Terraria_Server
 			return X < 3 && Y < 6 && items < 10;
 		}
 
-        public static Item netDefaults(int type)
-        {
-            if (type < 0)
-            {
-                switch (type)
-                {
-                    case -1:
-                        return Registries.Item.Create("Gold Pickaxe");
-                    case -2:
-                        return Registries.Item.Create("Gold Broadsword");
-                    case -3:
-                        return Registries.Item.Create("Gold Shortsword");
-                    case -4:
-                        return Registries.Item.Create("Gold Axe");
-                    case -5:
-                        return Registries.Item.Create("Gold Hammer");
-                    case -6:
-                        return Registries.Item.Create("Gold Bow");
-                    case -7:
-                        return Registries.Item.Create("Silver Pickaxe");
-                    case -8:
-                        return Registries.Item.Create("Silver Broadsword");
-                    case -9:
-                        return Registries.Item.Create("Silver Shortsword");
-                    case -10:
-                        return Registries.Item.Create("Silver Axe");
-                    case -11:
-                        return Registries.Item.Create("Silver Hammer");
-                    case -12:
-                        return Registries.Item.Create("Silver Bow");
-                    case -13:
-                        return Registries.Item.Create("Copper Pickaxe");
-                    case -14:
-                        return Registries.Item.Create("Copper Broadsword");
-                    case -15:
-                        return Registries.Item.Create("Copper Shortsword");
-                    case -16:
-                        return Registries.Item.Create("Copper Axe");
-                    case -17:
-                        return Registries.Item.Create("Copper Hammer");
-                    case -18:
-                        return Registries.Item.Create("Copper Bow");
-                    case -19:
-                        return Registries.Item.Create("Blue Phasesaber");
-                    case -20:
-                        return Registries.Item.Create("Red Phasesaber");
-                    case -21:
-                        return Registries.Item.Create("Green Phasesaber");
-                    case -22:
-                        return Registries.Item.Create("Purple Phasesaber");
-                    case -23:
-                        return Registries.Item.Create("White Phasesaber");
-                    case -24:
-                        return Registries.Item.Create("Yellow Phasesaber");
-                }
+		public static Item netDefaults(int type)
+		{
+			if (type < 0)
+			{
+				switch (type)
+				{
+					case -1:
+						return Registries.Item.Create("Gold Pickaxe");
+					case -2:
+						return Registries.Item.Create("Gold Broadsword");
+					case -3:
+						return Registries.Item.Create("Gold Shortsword");
+					case -4:
+						return Registries.Item.Create("Gold Axe");
+					case -5:
+						return Registries.Item.Create("Gold Hammer");
+					case -6:
+						return Registries.Item.Create("Gold Bow");
+					case -7:
+						return Registries.Item.Create("Silver Pickaxe");
+					case -8:
+						return Registries.Item.Create("Silver Broadsword");
+					case -9:
+						return Registries.Item.Create("Silver Shortsword");
+					case -10:
+						return Registries.Item.Create("Silver Axe");
+					case -11:
+						return Registries.Item.Create("Silver Hammer");
+					case -12:
+						return Registries.Item.Create("Silver Bow");
+					case -13:
+						return Registries.Item.Create("Copper Pickaxe");
+					case -14:
+						return Registries.Item.Create("Copper Broadsword");
+					case -15:
+						return Registries.Item.Create("Copper Shortsword");
+					case -16:
+						return Registries.Item.Create("Copper Axe");
+					case -17:
+						return Registries.Item.Create("Copper Hammer");
+					case -18:
+						return Registries.Item.Create("Copper Bow");
+					case -19:
+						return Registries.Item.Create("Blue Phasesaber");
+					case -20:
+						return Registries.Item.Create("Red Phasesaber");
+					case -21:
+						return Registries.Item.Create("Green Phasesaber");
+					case -22:
+						return Registries.Item.Create("Purple Phasesaber");
+					case -23:
+						return Registries.Item.Create("White Phasesaber");
+					case -24:
+						return Registries.Item.Create("Yellow Phasesaber");
+				}
 
-                ProgramLog.Log("Attempt to set default to an unknown negative ID in netDefaults.");
-            }
-            
-            return Registries.Item.Create(type);
-        }
+				ProgramLog.Log("Attempt to set default to an unknown negative ID in netDefaults.");
+			}
+
+			return Registries.Item.Create(type);
+		}
 
 		/// <summary>
 		/// Finds the names of the cobalt armor based on the current release version of Terraria
@@ -1150,7 +1150,7 @@ namespace Terraria_Server
 		/// <param name="oldName">Previous release name of item</param>
 		/// <param name="release">Release version</param>
 		/// <returns>Currently used name for item</returns>
-        public static string VersionName(string oldName, int release)
+		public static string VersionName(string oldName, int release)
 		{
 			if (release <= 4)
 			{
@@ -1207,9 +1207,9 @@ namespace Terraria_Server
 					addVelocity = 0.08f;
 				}
 				if (this.OwnTime > 0)
-                    this.OwnTime--;
+					this.OwnTime--;
 				else
-                    this.OwnIgnore = -1;
+					this.OwnIgnore = -1;
 				if (this.KeepTime > 0)
 					this.KeepTime--;
 
@@ -1218,12 +1218,12 @@ namespace Terraria_Server
 					this.Velocity.Y = this.Velocity.Y + addVelocity;
 
 					if (this.Velocity.Y > maxVelocity)
-                        this.Velocity.Y = maxVelocity;
+						this.Velocity.Y = maxVelocity;
 
 					this.Velocity.X = this.Velocity.X * 0.95f;
 
 					if ((double)this.Velocity.X < 0.1 && (double)this.Velocity.X > -0.1)
-                        this.Velocity.X = 0f;
+						this.Velocity.X = 0f;
 
 					this.LavaWet = Collision.LavaCollision(this.Position, this.Width, this.Height);
 					if (Collision.WetCollision(this.Position, this.Width, this.Height))
@@ -1277,12 +1277,14 @@ namespace Terraria_Server
 							Stack = 0;
 							for (int l = 0; l < NPC.MAX_NPCS; l++)
 							{
-								if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE && Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
+								if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE)
 								{
-									NetMessage.SendData(28, -1, -1, String.Empty, l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction), 0);
-
-									if (NPC.SpawnWallOfFlesh(TileRefs, Position) != SpawnFlags.FAILED)
-										break;
+									if (NPC.SpawnWallOfFlesh(TileRefs, Position) == SpawnFlags.SUMMONED)
+										if (Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
+										{
+											NetMessage.SendData(28, -1, -1, String.Empty, l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction), 0);
+											break;
+										}
 								}
 							}
 							NetMessage.SendData(21);
@@ -1296,12 +1298,14 @@ namespace Terraria_Server
 							{
 								for (int l = 0; l < NPC.MAX_NPCS; l++)
 								{
-									if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE && Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
+									if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE)
 									{
-										NetMessage.SendData(28, -1, -1, String.Empty, l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
-
-										if (NPC.SpawnWallOfFlesh(TileRefs, Position) != SpawnFlags.FAILED)
-											break;
+										if (NPC.SpawnWallOfFlesh(TileRefs, Position) == SpawnFlags.SUMMONED)
+											if (Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
+											{
+												NetMessage.SendData(28, -1, -1, String.Empty, l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction), 0);
+												break;
+											}
 									}
 								}
 							}
@@ -1367,7 +1371,7 @@ namespace Terraria_Server
 		public static int NewItem(int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false, int pfix = 0)
 		{
 			if (WorldModify.gen)
-                return 0;
+				return 0;
 
 			int itemIndex = 200;
 			for (int i = 0; i < 200; i++)
@@ -1419,7 +1423,7 @@ namespace Terraria_Server
 		public void FindOwner(int whoAmI)
 		{
 			if (this.KeepTime > 0)
-                return;
+				return;
 
 			int currentOwner = this.Owner;
 			this.Owner = 255;

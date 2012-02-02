@@ -3120,7 +3120,7 @@ namespace Terraria_Server
 				else
 					NetMessage.SendData(25, -1, -1, str + " has been defeated!", 255, 175f, 75f, 255f, 0);
 
-				if (this.type == NPCType.N113_WALL_OF_FLESH)
+				if (this.type == NPCType.N113_WALL_OF_FLESH || this.type == NPCType.N114_WALL_OF_FLESH_EYE)
 					WorldModify.StartHardMode();
 
 				NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
@@ -13087,7 +13087,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Server Only
 		/// </summary>
-		public static SpawnFlags SpawnWallOfFlesh(Func<Int32, Int32, ITile> TileRefs, Vector2 pos)
+		/*public static SpawnFlags SpawnWallOfFlesh(Func<Int32, Int32, ITile> TileRefs, Vector2 pos)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -13097,7 +13097,7 @@ namespace Terraria_Server
 
 			if (Main.WallOfFlesh >= 0)
 			{
-				ProgramLog.Log("Attempt to call SpawnWOF with an existing Entity.");
+				ProgramLog.Log("Attempt to spawn WoF while already active.");
 				return SpawnFlags.EXISTING;
 			}
 
@@ -13149,6 +13149,67 @@ namespace Terraria_Server
 			catch { }
 
 			return SpawnFlags.FAILED;
+		}*/
+
+		public static SpawnFlags SpawnWallOfFlesh(Func<Int32, Int32, ITile> TileRefs, Vector2 pos)
+		{
+			if (pos.Y / 16f < (float)(Main.maxTilesY - 205))
+				return SpawnFlags.TILE_CONFLICT;
+
+			if (Main.WallOfFlesh >= 0)
+				return SpawnFlags.SUMMONED;
+
+			//Player.FindClosest(pos, 16, 16);
+
+			int num = 1;
+			if (pos.X / 16f > (float)(Main.maxTilesX / 2))
+				num = -1;
+
+			bool flag = false;
+			int num2 = (int)pos.X;
+
+			while (!flag)
+			{
+				flag = true;
+
+				for (int i = 0; i < 255; i++)
+				{
+					if (Main.players[i].Active && Main.players[i].Position.X > (float)(num2 - 1200) && Main.players[i].Position.X < (float)(num2 + 1200))
+					{
+						num2 -= num * 16;
+						flag = false;
+					}
+				}
+
+				if (num2 / 16 < 20 || num2 / 16 > Main.maxTilesX - 20)
+					flag = true;
+			}
+			int num3 = (int)pos.Y;
+			int num4 = num2 / 16;
+			int num5 = num3 / 16;
+			int num6 = 0;
+			try
+			{
+				while (WorldModify.SolidTile(TileRefs, num4, num5 - num6) || TileRefs(num4, num5 - num6).Liquid >= 100)
+				{
+					if (!WorldModify.SolidTile(TileRefs, num4, num5 + num6) && TileRefs(num4, num5 + num6).Liquid < 100)
+					{
+						num5 += num6;
+						break;
+					}
+					num6++;
+				}
+				num5 -= num6;
+			}
+			catch { }
+
+			num3 = num5 * 16;
+			int num7 = NPC.NewNPC(num2, num3, 113, 0);
+			if (String.IsNullOrEmpty(Main.npcs[num7].DisplayName))
+				Main.npcs[num7].DisplayName = Main.npcs[num7].Name;
+
+			NetMessage.SendData(25, -1, -1, Main.npcs[num7].DisplayName + " has awoken!", 255, 175f, 75f, 255f, 0);
+			return SpawnFlags.SUMMONED;
 		}
 
 		/*public void checkDead()
@@ -15782,8 +15843,8 @@ namespace Terraria_Server
 	{
 		SUMMONED,
 		TILE_CONFLICT,
-		EXISTING,
-		FAILED
+		//EXISTING,
+		//FAILED
 	}
 }
 

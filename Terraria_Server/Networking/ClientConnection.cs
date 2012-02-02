@@ -344,13 +344,10 @@ namespace Terraria_Server.Networking
 				{
 					totalData = 0;
 				}
-				else
+				else if (processed > 0)
 				{
-					if (processed > 0)
-					{
-						Buffer.BlockCopy (readBuffer, processed, readBuffer, 0, totalData - processed);
-						totalData -= processed;
-					}
+					Buffer.BlockCopy(readBuffer, processed, readBuffer, 0, totalData - processed);
+					totalData -= processed;
 				}
 			}
 		}
