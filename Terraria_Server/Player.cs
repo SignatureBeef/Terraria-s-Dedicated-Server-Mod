@@ -4828,7 +4828,7 @@ namespace Terraria_Server
 						num25 = 13;
 					}
 				}
-				for (int j = 0; j < 1000; j++)
+				for (int j = 0; j < NPC.MAX_NPCS; j++)
 				{
 					if (Main.npcs[j].Active && Main.npcs[j].Type == num25)
 					{

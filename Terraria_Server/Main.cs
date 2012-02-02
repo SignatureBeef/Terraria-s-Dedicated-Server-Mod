@@ -936,8 +936,8 @@ namespace Terraria_Server
 				if (WallOfFlesh >= 0)
 				{
 					var WoF = npcs[WallOfFlesh];
-					var isWoF =  WoF.type == NPCType.N113_WALL_OF_FLESH;
-					if (!isWoF || !WoF.Active && isWoF)
+					var isWoF = WoF.type == NPCType.N113_WALL_OF_FLESH || WoF.type == NPCType.N114_WALL_OF_FLESH_EYE;
+					if (!isWoF && WoF.Active || !WoF.Active && isWoF)
 						WallOfFlesh = -1;
 				}
 

@@ -13087,18 +13087,18 @@ namespace Terraria_Server
 		/// <summary>
 		/// Server Only
 		/// </summary>
-		public static void SpawnWallOfFlesh(Func<Int32, Int32, ITile> TileRefs, Vector2 pos)
+		public static SpawnFlags SpawnWallOfFlesh(Func<Int32, Int32, ITile> TileRefs, Vector2 pos)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
 			if (pos.Y / 16f < (float)(Main.maxTilesY - 205))
-				return;
+				return SpawnFlags.TILE_CONFLICT;
 
 			if (Main.WallOfFlesh >= 0)
 			{
 				ProgramLog.Log("Attempt to call SpawnWOF with an existing Entity.");
-				return;
+				return SpawnFlags.SUMMONED;
 			}
 
 			int direction = 1;
@@ -13140,13 +13140,15 @@ namespace Terraria_Server
 							Main.npcs[npcIndex].DisplayName = Main.npcs[npcIndex].Name;
 
 						NetMessage.SendData(25, -1, -1, Main.npcs[npcIndex].DisplayName + " has awoken!", 255, 175f, 75f, 255f, 0);
-						break;
+						return SpawnFlags.SUMMONED;
 					}
 					nextY++;
 				}
 				tileY -= nextY;
 			}
 			catch { }
+
+			return SpawnFlags.FAILED;
 		}
 
 		/*public void checkDead()
@@ -15774,6 +15776,14 @@ namespace Terraria_Server
 
 		//TODO 1.1.2
 		public static bool downedFrost { get; set; }
+	}
+
+	public enum SpawnFlags
+	{
+		SUMMONED,
+		TILE_CONFLICT,
+		EXISTING,
+		FAILED
 	}
 }
 
