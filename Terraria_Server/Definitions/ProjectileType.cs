@@ -11,6 +11,8 @@ namespace Terraria_Server.Definitions
     /// </summary>
     public enum ProjectileType : int
 	{
+		[XmlEnum(Name = "0")]
+		N0_UNKNOWN = 0,
 		[XmlEnum(Name = "1")]
 		N1_WOODEN_ARROW = 1,
 		[XmlEnum(Name = "2")]
