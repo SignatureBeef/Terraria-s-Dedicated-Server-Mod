@@ -34,10 +34,29 @@ namespace Terraria_Server.Language
 		public static String Removed { get; set; }
 		public static String PleaseReview { get; set; }
 		public static String WhilelistFailedSave { set; get; }
+		public static String OPlistFailedSave { get; set; }
 		public static String Command { get; set; }
 		public static String IPExpected { get; set; }
 		public static String TimeSet { get; set; }
 		public static String CurrentTime { get; set; }
+		public static String BossNotSpecified { get; set; }
+		public static String BossSummonedBy { get; set; }
+		public static String Clear { get; set; }
+		public static String NoItemIDNameProvided { get; set; }
+		public static String ExplosionsAreNow { get; set; }
+		public static String ThisIsPlayerCommand { get; set; }
+		public static String CannotQuestGiverWithoutTDCM { get; set; }
+		public static String QuestGiverAlreadySpawned { get; set; }
+		public static String YouMustWaitBeforeAnotherCommand { get; set; }
+
+		public static String RPGMode_Allowed { get; set; }
+		public static String RPGMode_Refused { get; set; }
+
+		public static String ItemRejection_Added { get; set; }
+		public static String ItemRejection_ItemExists { get; set; }
+		public static String ItemRejection_Removed { get; set; }
+		public static String ItemRejection_ItemDoesntExist { get; set; }
+		public static String ItemRejection_Cleared { get; set; }
 
 		public static String Ban_You { get; set; }
 		public static String Ban_Banned { get; set; }

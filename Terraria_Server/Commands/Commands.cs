@@ -1264,52 +1264,52 @@ namespace Terraria_Server.Commands
 				{
 					Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
 					int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
-					Server.notifyAll(Main.npcs[BossSlot].Name + " has been been summoned by " + sender.Name, ChatColor.Purple, true);
+					Server.notifyAll(Main.npcs[BossSlot].Name + Languages.BossSummonedBy + sender.Name, ChatColor.Purple, true);
 					if (!(sender is ConsoleSender))
 						ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, Main.npcs[BossSlot].Name, BossSlot);
 				}
 			}
 			else
 			{
-				throw new CommandError("You have not specified a Boss.");
+				throw new CommandError(Languages.BossNotSpecified);
 			}
 		}
 
 		public static void ItemRejection(ISender sender, ArgumentList args)
 		{
 			string exception;
-			if (args.TryParseOne<String>("-add", out exception))
+			if (args.TryParseOne<String>(Languages.Add, out exception))
 			{
 				if (!Server.RejectedItems.Contains(exception))
 				{
 					Server.RejectedItems.Add(exception);
-					sender.sendMessage(exception + " was added to the Item Rejection list!");
+					sender.sendMessage(exception + Languages.ItemRejection_Added);
 				}
 				else
 				{
-					throw new CommandError("That item already exists in the list.");
+					throw new CommandError(Languages.ItemRejection_ItemExists);
 				}
 			}
-			else if (args.TryParseOne<String>("-remove", out exception))
+			else if (args.TryParseOne<String>(Languages.Remove, out exception))
 			{
 				if (Server.RejectedItems.Contains(exception))
 				{
 					Server.RejectedItems.Remove(exception);
-					sender.sendMessage(exception + " was removed from the Item Rejection list!");
+					sender.sendMessage(exception + Languages.ItemRejection_Removed);
 				}
 				else
 				{
-					throw new CommandError("That item already does not exist in the list.");
+					throw new CommandError(Languages.ItemRejection_ItemDoesntExist);
 				}
 			}
-			else if (args.TryPop("-clear"))
+			else if (args.TryPop(Languages.Clear))
 			{
 				Server.RejectedItems.Clear();
-				sender.sendMessage("Item Rejection list has been cleared!");
+				sender.sendMessage(Languages.ItemRejection_Removed);
 			}
 			else
 			{
-				throw new CommandError("No item/id provided with your command");
+				throw new CommandError(Languages.NoItemIDNameProvided);
 			}
 			Program.properties.RejectedItems = String.Join(",", Server.RejectedItems);
 			Program.properties.Save(false);
@@ -1323,7 +1323,7 @@ namespace Terraria_Server.Commands
 			Program.properties.AllowExplosions = Server.AllowExplosions;
 			Program.properties.Save();
 
-			sender.sendMessage("Explosions are now " + ((Server.AllowExplosions) ? "allowed" : "disabled") + "!");
+			sender.sendMessage(Languages.ExplosionsAreNow + ((Server.AllowExplosions) ? "allowed" : "disabled") + "!");
 		}
 
 		public static void Refresh(ISender sender, ArgumentList args)
@@ -1334,7 +1334,7 @@ namespace Terraria_Server.Commands
 
 			if (player == null)
 			{
-				sender.Message(255, "This is a player command.");
+				sender.Message(255, Languages.ThisIsPlayerCommand);
 				return;
 			}
 
@@ -1346,7 +1346,7 @@ namespace Terraria_Server.Commands
 
 				if (diff < TimeSpan.FromSeconds(30))
 				{
-					sender.Message(255, "You must wait {0:0} more seconds before using this command.", 30.0 - diff.TotalSeconds);
+					sender.Message(255, Languages.YouMustWaitBeforeAnotherCommand, 30.0 - diff.TotalSeconds);
 					return;
 				}
 
@@ -1369,22 +1369,22 @@ namespace Terraria_Server.Commands
 
 			if (!Server.OpList.Save())
 			{
-				Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+				Server.notifyOps(Languages.OPlistFailedSave + " {" + sender.Name + "}", true);
 				return;
 			}
 
-			string message = String.Format("RPG Mode is now {0} on this server:", (Server.AllowTDCMRPG) ? "allowed" : "refused");
+			string message = (Server.AllowTDCMRPG) ? Languages.RPGMode_Allowed : Languages.RPGMode_Refused;
 			Server.notifyOps(message);
 		}
 
 		public static void SpawnQuestGiver(ISender sender, ArgumentList args)
 		{
 			if (!Server.AllowTDCMRPG)
-				throw new CommandError("You cannot spawn the Quest Giver without allowing TDCM Clients!");
+				throw new CommandError(Languages.CannotQuestGiverWithoutTDCM);
 
 			int npcId;
 			if (NPC.TryFindNPCByName(Statics.TDCM_QUEST_GIVER, out npcId))
-				throw new CommandError("The Quest Giver is already spawned!");
+				throw new CommandError(Languages.QuestGiverAlreadySpawned);
 
 			NPC.SpawnTDCMQuestGiver();
 		}
