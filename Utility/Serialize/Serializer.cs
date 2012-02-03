@@ -93,7 +93,8 @@ namespace Terraria_Utilities.Serialize
 					if (obj is Terraria.NPC)
 					{
 						var npc = obj as Terraria.NPC;
-						returnData.Add(npc.Type, value);
+						if(!returnData.ContainsKey(npc.Type))
+							returnData.Add(npc.Type, value);
 					}
 					else
 						returnData.Add(count, value);

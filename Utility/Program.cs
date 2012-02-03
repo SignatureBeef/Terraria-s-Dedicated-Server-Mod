@@ -79,7 +79,7 @@ namespace Terraria_Utilities
                 {
                     var val = pair.Key;
                     var name = pair.Value.ToUpper().Replace(" ", "_").Replace("'", "");
-                    var line = String.Format("\tN{0}_{1},", pair.Key, name);
+					var line = String.Format("\tN{0}_{1} = {2},", pair.Key, name, pair.Key);
                     var attribute = String.Format("\t[XmlEnum(Name = \"{0}\")]", val);
 
                     writer.WriteLine(attribute);

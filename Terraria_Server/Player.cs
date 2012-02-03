@@ -31,6 +31,8 @@ namespace Terraria_Server
 		public const int NUM_ARMOR_BODY = 25;
 		public const int NUM_ARMOR_LEGS = 24;
 
+		public bool tongued { get; set; }
+
 		/// <summary>
 		/// Whether this player is using TDCM
 		/// </summary>
@@ -978,7 +980,7 @@ namespace Terraria_Server
 							manaCost -= 0.02f;
 							break;
 
-						case 33:							
+						case 33:
 							meleeDamage -= 0.051f;
 							meleeSpeed -= 0.051f;
 							statDefense -= 4;
@@ -992,7 +994,7 @@ namespace Terraria_Server
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Update player values
 		/// </summary>

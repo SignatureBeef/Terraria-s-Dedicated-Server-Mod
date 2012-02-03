@@ -470,7 +470,15 @@ namespace Terraria_Server.Commands
                 .WithHelpText("Usage:    spawngiver")
                 .WithPermissionNode("tdsm.spawngiver")
                 .Calls(Commands.SpawnQuestGiver);*/
+
+			AddCommand("test")
+				.Calls(Test);
         }
+
+		static void Test(ISender sender, ArgumentList args)
+		{
+			WorldMod.WorldModify.StartHardMode();
+		}
        
         public readonly Dictionary<String, CommandInfo> serverCommands;
 

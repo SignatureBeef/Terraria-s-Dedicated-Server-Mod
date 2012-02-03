@@ -1241,7 +1241,7 @@ namespace Terraria_Server.Commands
 				if (Main.dayTime && !NightOverride)
 					throw new CommandError("This boss needs to be summoned in night time, Please override with -night");
 
-				Bosses.Add((int)NPCType.N04_EYE_OF_CTHULU);
+				Bosses.Add((int)NPCType.N04_EYE_OF_CTHULHU);
 			}
 			if (Skeletron)
 			{

@@ -2187,7 +2187,10 @@ namespace Terraria_Server
 							{
 								if (Main.rand.Next(2) == 0)
 								{
-									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N77_ARMORED_SKELETON, 0);
+									var type = (int)NPCType.N77_ARMORED_SKELETON;
+									var s = (int)NPCType.N113_WALL_OF_FLESH;
+									var d = (int)NPCType.N75_PIXIE;
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, type, 0);
 									if ((double)num2 > (Main.rockLayer + (double)Main.maxTilesY) / 2.0 && Main.rand.Next(5) == 0)
 									{
 										Main.npcs[npcIndex].SetDefaults("Heavy Skeleton");
@@ -2939,7 +2942,7 @@ namespace Terraria_Server
 			if (this.type == NPCType.N73_GOBLIN_SCOUT)
 				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 362, Main.rand.Next(1, 3), false, 0);
 
-			if (this.type == NPCType.N04_EYE_OF_CTHULU)
+			if (this.type == NPCType.N04_EYE_OF_CTHULHU)
 			{
 				int stack = Main.rand.Next(30) + 20;
 				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 47, stack, false, 0);
@@ -3080,7 +3083,7 @@ namespace Terraria_Server
 			}
 			if (this.boss)
 			{
-				if (this.type == NPCType.N04_EYE_OF_CTHULU)
+				if (this.type == NPCType.N04_EYE_OF_CTHULHU)
 					NPC.downedBoss1 = true;
 				else
 				{
