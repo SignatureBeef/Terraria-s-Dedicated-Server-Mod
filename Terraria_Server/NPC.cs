@@ -5113,7 +5113,7 @@ namespace Terraria_Server
 				}
 				npc.rotation += npc.ai[2];
 				npc.ai[1] += 1f;
-				Color newColor;
+
 				if (npc.ai[1] == 100f)
 				{
 					npc.ai[0] += 1f;
@@ -5602,11 +5602,6 @@ namespace Terraria_Server
 			if (npc.type == NPCType.N117_LEECH_HEAD && npc.localAI[1] == 0f)
 			{
 				npc.localAI[1] = 1f;
-				int num94 = 1;
-				if (npc.Velocity.X < 0f)
-				{
-					num94 = -1;
-				}
 			}
 			if (npc.type >= NPCType.N13_EATER_OF_WORLDS_HEAD && npc.type <= NPCType.N15_EATER_OF_WORLDS_TAIL)
 			{
@@ -5841,9 +5836,9 @@ namespace Terraria_Server
 				{
 					for (int num112 = num109; num112 < num110; num112++)
 					{
-						if (((Main.tile.At(num111, num112).Active && (Main.tileSolid[(int)Main.tile.At(num111, num112).Type] ||
-							(Main.tileSolidTop[(int)Main.tile.At(num111, num112).Type] && Main.tile.At(num111, num112).FrameY == 0))) ||
-							Main.tile.At(num111, num112).Liquid > 64))
+						if (((TileRefs(num111, num112).Active && (Main.tileSolid[(int)TileRefs(num111, num112).Type] ||
+							(Main.tileSolidTop[(int)TileRefs(num111, num112).Type] && TileRefs(num111, num112).FrameY == 0))) ||
+							TileRefs(num111, num112).Liquid > 64))
 						{
 							Vector2 vector13;
 							vector13.X = (float)(num111 * 16);
@@ -5851,7 +5846,7 @@ namespace Terraria_Server
 							if (npc.Position.X + (float)npc.Width > vector13.X && npc.Position.X < vector13.X + 16f && npc.Position.Y + (float)npc.Height > vector13.Y && npc.Position.Y < vector13.Y + 16f)
 							{
 								flag11 = true;
-								if (Main.rand.Next(100) == 0 && npc.type != 117 && Main.tile.At(num111, num112).Activective)
+								if (Main.rand.Next(100) == 0 && npc.type != NPCType.N117_LEECH_HEAD && TileRefs(num111, num112).Active)
 								{
 									WorldModify.KillTile(TileRefs, num111, num112, true, true);
 								}
@@ -5869,7 +5864,7 @@ namespace Terraria_Server
 				bool flag12 = true;
 				for (int num114 = 0; num114 < 255; num114++)
 				{
-					if (Main.players[num114].active)
+					if (Main.players[num114].Active)
 					{
 						Rectangle rectangle2 = new Rectangle((int)Main.players[num114].Position.X - num113, (int)Main.players[num114].Position.Y - num113, num113 * 2, num113 * 2);
 						if (rectangle.Intersects(rectangle2))
@@ -5897,7 +5892,7 @@ namespace Terraria_Server
 			}
 			float num115 = 8f;
 			float num116 = 0.07f;
-			if (npc.type == 95)
+			if (npc.type == NPCType.N95_DIGGER_HEAD)
 			{
 				num115 = 5.5f;
 				num116 = 0.045f;
@@ -5947,7 +5942,7 @@ namespace Terraria_Server
 			num118 -= vector14.X;
 			num119 -= vector14.Y;
 			float num120 = (float)Math.Sqrt((double)(num118 * num118 + num119 * num119));
-			if (npc.ai[1] > 0f && npc.ai[1] < (float)Main.npc.Length)
+			if (npc.ai[1] > 0f && npc.ai[1] < (float)Main.npcs.Length)
 			{
 				try
 				{
@@ -5961,7 +5956,7 @@ namespace Terraria_Server
 				npc.rotation = (float)Math.Atan2((double)num119, (double)num118) + 1.57f;
 				num120 = (float)Math.Sqrt((double)(num118 * num118 + num119 * num119));
 				int num121 = npc.Width;
-				if (npc.type >= 87 && npc.type <= 92)
+				if (npc.type >= NPCType.N87_WYVERN_HEAD && npc.type <= NPCType.N92_WYVERN_TAIL)
 				{
 					num121 = 42;
 				}
@@ -5971,7 +5966,7 @@ namespace Terraria_Server
 				npc.Velocity = default(Vector2);
 				npc.Position.X = npc.Position.X + num118;
 				npc.Position.Y = npc.Position.Y + num119;
-				if (npc.type >= 87 && npc.type <= 92)
+				if (npc.type >= NPCType.N87_WYVERN_HEAD && npc.type <= NPCType.N92_WYVERN_TAIL)
 				{
 					if (num118 < 0f)
 					{
@@ -6043,7 +6038,6 @@ namespace Terraria_Server
 							num122 = 20f;
 						}
 						npc.soundDelay = (int)num122;
-						Main.PlaySound(15, (int)npc.Position.X, (int)npc.Position.Y, 1);
 					}
 					num120 = (float)Math.Sqrt((double)(num118 * num118 + num119 * num119));
 					float num123 = Math.Abs(num118);
@@ -6056,7 +6050,7 @@ namespace Terraria_Server
 						bool flag13 = true;
 						for (int num126 = 0; num126 < 255; num126++)
 						{
-							if (Main.players[num126].active && !Main.players[num126].dead && Main.players[num126].zoneEvil)
+							if (Main.players[num126].Active && !Main.players[num126].dead && Main.players[num126].zoneEvil)
 							{
 								flag13 = false;
 							}
@@ -6065,12 +6059,12 @@ namespace Terraria_Server
 						{
 							if ((double)(npc.Position.Y / 16f) > (Main.rockLayer + (double)Main.maxTilesY) / 2.0)
 							{
-								npc.active = false;
+								npc.Active = false;
 								int num127 = (int)npc.ai[0];
-								while (num127 > 0 && num127 < 200 && Main.npcs[num127].active && Main.npcs[num127].aiStyle == npc.aiStyle)
+								while (num127 > 0 && num127 < 200 && Main.npcs[num127].Active && Main.npcs[num127].aiStyle == npc.aiStyle)
 								{
 									int num128 = (int)Main.npcs[num127].ai[0];
-									Main.npcs[num127].active = false;
+									Main.npcs[num127].Active = false;
 									npc.life = 0;
 
 									NetMessage.SendData(23, -1, -1, String.Empty, num127);
