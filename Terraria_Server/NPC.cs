@@ -1875,17 +1875,13 @@ namespace Terraria_Server
 		public double StrikeNPCInternal(int Damage, float knockBack, int hitDirection, bool crit)
 		{
 			if (!this.Active || this.life <= 0)
-			{
 				return 0.0;
-			}
-			double num = (double)Damage;
-			num = Main.CalculateDamage((int)num, this.defense);
-			if (crit)
-			{
-				num *= 2.0;
-			}
 
-			if (num >= 1.0)
+			double damage = Main.CalculateDamage((int)Damage, this.defense);
+			if (crit)
+				damage *= 2.0;
+
+			if (damage >= 1.0)
 			{
 				this.justHit = true;
 				if (this.townNPC)
@@ -1896,114 +1892,90 @@ namespace Terraria_Server
 					this.direction = hitDirection;
 					this.netUpdate = true;
 				}
+
 				if (this.aiStyle == 8)
 				{
 					this.ai[0] = 400f;
 					this.TargetClosest(true);
 				}
+
 				if (this.realLife >= 0)
 				{
-					Main.npcs[this.realLife].life -= (int)num;
+					Main.npcs[this.realLife].life -= (int)damage;
 					this.life = Main.npcs[this.realLife].life;
 					this.lifeMax = Main.npcs[this.realLife].lifeMax;
 				}
 				else
-				{
-					this.life -= (int)num;
-				}
+					this.life -= (int)damage;
+
 				if (knockBack > 0f && this.knockBackResist > 0f)
 				{
-					float num2 = knockBack * this.knockBackResist;
-					if (num2 > 8f)
-					{
-						num2 = 8f;
-					}
+					float vel = knockBack * this.knockBackResist;
+					if (vel > 8f)
+						vel = 8f;
+
 					if (crit)
+						vel *= 1.4f;
+
+					if (damage * 10.0 < (double)this.lifeMax)
 					{
-						num2 *= 1.4f;
-					}
-					if (num * 10.0 < (double)this.lifeMax)
-					{
-						if (hitDirection < 0 && this.Velocity.X > -num2)
+						if (hitDirection < 0 && this.Velocity.X > -vel)
 						{
 							if (this.Velocity.X > 0f)
-							{
-								this.Velocity.X = this.Velocity.X - num2;
-							}
-							this.Velocity.X = this.Velocity.X - num2;
-							if (this.Velocity.X < -num2)
-							{
-								this.Velocity.X = -num2;
-							}
+								this.Velocity.X = this.Velocity.X - vel;
+
+							this.Velocity.X = this.Velocity.X - vel;
+
+							if (this.Velocity.X < -vel)
+								this.Velocity.X = -vel;
 						}
-						else if (hitDirection > 0 && this.Velocity.X < num2)
+						else if (hitDirection > 0 && this.Velocity.X < vel)
 						{
 							if (this.Velocity.X < 0f)
-							{
-								this.Velocity.X = this.Velocity.X + num2;
-							}
-							this.Velocity.X = this.Velocity.X + num2;
-							if (this.Velocity.X > num2)
-							{
-								this.Velocity.X = num2;
-							}
+								this.Velocity.X = this.Velocity.X + vel;
+
+							this.Velocity.X = this.Velocity.X + vel;
+
+							if (this.Velocity.X > vel)
+								this.Velocity.X = vel;
 						}
 
-						if (!this.noGravity)
+						vel *= (!noGravity) ? -0.75f : -0.5f;
+
+						if (this.Velocity.Y > vel)
 						{
-							num2 *= -0.75f;
-						}
-						else
-						{
-							num2 *= -0.5f;
-						}
-						if (this.Velocity.Y > num2)
-						{
-							this.Velocity.Y = this.Velocity.Y + num2;
-							if (this.Velocity.Y < num2)
-							{
-								this.Velocity.Y = num2;
-							}
+							this.Velocity.Y = this.Velocity.Y + vel;
+
+							if (this.Velocity.Y < vel)
+								this.Velocity.Y = vel;
 						}
 					}
 					else
 					{
-						if (!this.noGravity)
-						{
-							this.Velocity.Y = -num2 * 0.75f * this.knockBackResist;
-						}
-						else
-						{
-							this.Velocity.Y = -num2 * 0.5f * this.knockBackResist;
-						}
-						this.Velocity.X = num2 * (float)hitDirection * this.knockBackResist;
+						var val = (!noGravity) ? 0.75f : 0.5f;
+
+						this.Velocity.Y = -vel * val * this.knockBackResist;
+						this.Velocity.X = vel * (float)hitDirection * this.knockBackResist;
 					}
 				}
 				if ((this.type == NPCType.N113_WALL_OF_FLESH || this.type == NPCType.N114_WALL_OF_FLESH_EYE) && this.life <= 0)
 				{
 					for (int i = 0; i < 200; i++)
 					{
-						if (Main.npcs[i].Active && (Main.npcs[i].type == NPCType.N113_WALL_OF_FLESH || Main.npcs[i].type == NPCType.N114_WALL_OF_FLESH_EYE))
+						if (Main.npcs[i].Active && (Main.npcs[i].type == NPCType.N113_WALL_OF_FLESH ||
+							Main.npcs[i].type == NPCType.N114_WALL_OF_FLESH_EYE))
 						{
-							Main.npcs[i].HitEffect(hitDirection, num);
+							Main.npcs[i].HitEffect(hitDirection, damage);
 						}
 					}
 				}
 				else
-				{
-					this.HitEffect(hitDirection, num);
-				}
+					this.HitEffect(hitDirection, damage);
 
-				if (this.realLife >= 0)
-				{
-					Main.npcs[this.realLife].CheckDead();
-				}
-				else
-				{
-					this.CheckDead();
-				}
+				var npc = (realLife >= 0) ? Main.npcs[this.realLife] : this;
+				npc.CheckDead();
 
-				return num;
+				return damage;
 			}
 			return 0.0;
 		}
@@ -3070,9 +3042,7 @@ namespace Terraria_Server
 		private static Dictionary<Int32, AIFunction> AIFunctions = new Dictionary<Int32, AIFunction>();
 
 		private static bool aiLoaded = false;
-
-		//[ToDo] 1.1 - Implement all
-		private int realLife;
+		private int realLife = -1;
 
 		private void LoadAIFunctions()
 		{
@@ -8941,7 +8911,7 @@ namespace Terraria_Server
 			}
 		}
 
-		// 28
+		// 28 - 1.1.2
 		private void AIWallOfFlesh_Eye(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (Main.WallOfFlesh < 0)
@@ -8955,40 +8925,33 @@ namespace Terraria_Server
 			npc.Position.X = Main.npcs[Main.WallOfFlesh].Position.X;
 			npc.direction = Main.npcs[Main.WallOfFlesh].direction;
 			npc.spriteDirection = npc.direction;
+
 			float num301 = (float)((Main.WallOfFlesh_B + Main.WallOfFlesh_T) / 2);
 			if (npc.ai[0] > 0f)
-			{
 				num301 = (num301 + (float)Main.WallOfFlesh_T) / 2f;
-			}
 			else
-			{
 				num301 = (num301 + (float)Main.WallOfFlesh_B) / 2f;
-			}
+
 			num301 -= (float)(npc.Height / 2);
 			if (npc.Position.Y > num301 + 1f)
 			{
 				npc.Velocity.Y = -1f;
 			}
+			else if (npc.Position.Y < num301 - 1f)
+			{
+				npc.Velocity.Y = 1f;
+			}
 			else
 			{
-				if (npc.Position.Y < num301 - 1f)
-				{
-					npc.Velocity.Y = 1f;
-				}
-				else
-				{
-					npc.Velocity.Y = 0f;
-					npc.Position.Y = num301;
-				}
+				npc.Velocity.Y = 0f;
+				npc.Position.Y = num301;
 			}
+
 			if (npc.Velocity.Y > 5f)
-			{
 				npc.Velocity.Y = 5f;
-			}
 			if (npc.Velocity.Y < -5f)
-			{
 				npc.Velocity.Y = -5f;
-			}
+
 			Vector2 vector30 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
 			float num302 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector30.X;
 			float num303 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector30.Y;
@@ -8996,6 +8959,7 @@ namespace Terraria_Server
 			num302 *= num304;
 			num303 *= num304;
 			bool flag33 = true;
+
 			if (npc.direction > 0)
 			{
 				if (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) > npc.Position.X + (float)(npc.Width / 2))
@@ -9008,18 +8972,16 @@ namespace Terraria_Server
 					flag33 = false;
 				}
 			}
+			else if (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) < npc.Position.X + (float)(npc.Width / 2))
+			{
+				npc.rotation = (float)Math.Atan2((double)num303, (double)num302) + 3.14f;
+			}
 			else
 			{
-				if (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) < npc.Position.X + (float)(npc.Width / 2))
-				{
-					npc.rotation = (float)Math.Atan2((double)num303, (double)num302) + 3.14f;
-				}
-				else
-				{
-					npc.rotation = 0f;
-					flag33 = false;
-				}
+				npc.rotation = 0f;
+				flag33 = false;
 			}
+
 			int num305 = 4;
 			npc.localAI[1] += 1f;
 			if ((double)Main.npcs[Main.WallOfFlesh].life < (double)Main.npcs[Main.WallOfFlesh].lifeMax * 0.75)
@@ -9051,48 +9013,47 @@ namespace Terraria_Server
 					return;
 				}
 			}
-			else
+			else if (npc.localAI[1] > 45f && Collision.CanHit(npc.Position, npc.Width, npc.Height, Main.players[npc.target].Position, Main.players[npc.target].Width, Main.players[npc.target].Height))
 			{
-				if (npc.localAI[1] > 45f && Collision.CanHit(npc.Position, npc.Width, npc.Height, Main.players[npc.target].Position, Main.players[npc.target].Width, Main.players[npc.target].Height))
+				npc.localAI[1] = 0f;
+				npc.localAI[2] += 1f;
+
+				if (npc.localAI[2] >= (float)num305)
+					npc.localAI[2] = 0f;
+
+				if (flag33)
 				{
-					npc.localAI[1] = 0f;
-					npc.localAI[2] += 1f;
-					if (npc.localAI[2] >= (float)num305)
+					float num306 = 9f;
+					int num307 = 11;
+					int num308 = 83;
+
+					if ((double)Main.npcs[Main.WallOfFlesh].life < (double)Main.npcs[Main.WallOfFlesh].lifeMax * 0.5)
 					{
-						npc.localAI[2] = 0f;
+						num307++;
+						num306 += 1f;
 					}
-					if (flag33)
+					if ((double)Main.npcs[Main.WallOfFlesh].life < (double)Main.npcs[Main.WallOfFlesh].lifeMax * 0.25)
 					{
-						float num306 = 9f;
-						int num307 = 11;
-						int num308 = 83;
-						if ((double)Main.npcs[Main.WallOfFlesh].life < (double)Main.npcs[Main.WallOfFlesh].lifeMax * 0.5)
-						{
-							num307++;
-							num306 += 1f;
-						}
-						if ((double)Main.npcs[Main.WallOfFlesh].life < (double)Main.npcs[Main.WallOfFlesh].lifeMax * 0.25)
-						{
-							num307++;
-							num306 += 1f;
-						}
-						if ((double)Main.npcs[Main.WallOfFlesh].life < (double)Main.npcs[Main.WallOfFlesh].lifeMax * 0.1)
-						{
-							num307 += 2;
-							num306 += 2f;
-						}
-						vector30 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
-						num302 = Main.players[npc.target].Position.X + (float)Main.players[npc.target].Width * 0.5f - vector30.X;
-						num303 = Main.players[npc.target].Position.Y + (float)Main.players[npc.target].Height * 0.5f - vector30.Y;
-						num304 = (float)Math.Sqrt((double)(num302 * num302 + num303 * num303));
-						num304 = num306 / num304;
-						num302 *= num304;
-						num303 *= num304;
-						vector30.X += num302;
-						vector30.Y += num303;
-						Projectile.NewProjectile(vector30.X, vector30.Y, num302, num303, num308, num307, 0f, Main.myPlayer);
-						return;
+						num307++;
+						num306 += 1f;
 					}
+					if ((double)Main.npcs[Main.WallOfFlesh].life < (double)Main.npcs[Main.WallOfFlesh].lifeMax * 0.1)
+					{
+						num307 += 2;
+						num306 += 2f;
+					}
+
+					vector30 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+					num302 = Main.players[npc.target].Position.X + (float)Main.players[npc.target].Width * 0.5f - vector30.X;
+					num303 = Main.players[npc.target].Position.Y + (float)Main.players[npc.target].Height * 0.5f - vector30.Y;
+					num304 = (float)Math.Sqrt((double)(num302 * num302 + num303 * num303));
+					num304 = num306 / num304;
+					num302 *= num304;
+					num303 *= num304;
+					vector30.X += num302;
+					vector30.Y += num303;
+					Projectile.NewProjectile(vector30.X, vector30.Y, num302, num303, num308, num307, 0f, Main.myPlayer);
+					return;
 				}
 			}
 		}
@@ -12076,18 +12037,13 @@ namespace Terraria_Server
 
 		public void CheckDead()
 		{
-			if (!this.Active)
-			{
+			if (!this.Active || this.realLife >= 0 && this.realLife != this.whoAmI)
 				return;
-			}
-			if (this.realLife >= 0 && this.realLife != this.whoAmI)
-			{
-				return;
-			}
+
 			if (this.life <= 0)
 			{
 				NPC.noSpawnCycle = true;
-				if (this.townNPC && this.Type != 37)
+				if (this.townNPC && this.type != NPCType.N37_OLD_MAN)
 				{
 					string str = this.Name;
 					if (!String.IsNullOrEmpty(this.DisplayName))
@@ -12095,20 +12051,21 @@ namespace Terraria_Server
 
 					NetMessage.SendData(25, -1, -1, str + " was slain...", 255, 255f, 25f, 25f, 0);
 
-					//if (Main.netMode != 1)
-					{
-						Main.chrName[this.Type] = String.Empty;
-						NPC.SetNames();
-						NetMessage.SendData(56, -1, -1, String.Empty, this.Type, 0f, 0f, 0f, 0);
-					}
+					Main.chrName[(int)this.type] = String.Empty;
+					NPC.SetNames();
+					NetMessage.SendData(56, -1, -1, String.Empty, (int)this.type);
+
 				}
-				if (this.townNPC && this.homeless && WorldModify.spawnNPC == this.Type)
-				{
+
+				if (this.townNPC && this.homeless && WorldModify.spawnNPC == (int)this.type)
 					WorldModify.spawnNPC = 0;
-				}
+
 				this.NPCLoot();
 				this.Active = false;
-				if (this.Type == 26 || this.Type == 27 || this.Type == 28 || this.Type == 29 || this.Type == 111 || this.Type == 143 || this.Type == 144 || this.Type == 145)
+
+				if (this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR ||
+					this.type == NPCType.N29_GOBLIN_SORCERER || this.type == NPCType.N111_GOBLIN_ARCHER || this.type == NPCType.N143_SNOWMAN_GANGSTA ||
+					this.type == NPCType.N144_MISTER_STABBY || this.type == NPCType.N145_SNOW_BALLA)
 				{
 					Main.invasionSize--;
 				}
