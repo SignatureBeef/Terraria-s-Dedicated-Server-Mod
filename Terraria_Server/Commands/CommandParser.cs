@@ -471,14 +471,12 @@ namespace Terraria_Server.Commands
                 .WithPermissionNode("tdsm.spawngiver")
                 .Calls(Commands.SpawnQuestGiver);*/
 
-			AddCommand("test")
-				.Calls(Test);
+			AddCommand("hardmode")
+				.WithAccessLevel(AccessLevel.OP)
+				.WithDescription(Languages.CommandDescription_HardMode)
+				.WithPermissionNode("tdsm.hardmode")
+				.Calls(Commands.HardMode);
         }
-
-		static void Test(ISender sender, ArgumentList args)
-		{
-			WorldMod.WorldModify.StartHardMode();
-		}
        
         public readonly Dictionary<String, CommandInfo> serverCommands;
 

@@ -4095,8 +4095,6 @@ namespace Terraria_Server
 						{
 							damage = 2;
 						}
-
-						// client-code snipped here
 					}
 					else if (selectedItem.UseStyle == 5)
 					{
@@ -4105,321 +4103,6 @@ namespace Terraria_Server
 					}
 				}
 
-				// client code depending on tileTargetX/Y
-				//                if (selectedItem.Type >= 205 && selectedItem.Type <= 207)
-				//                {
-				//                    if (Position.X / 16f - (float)Player.tileRangeX - (float)selectedItem.TileBoost <= (float)Player.tileTargetX
-				//                        && (Position.X + (float)Width) / 16f + (float)Player.tileRangeX + (float)selectedItem.TileBoost - 1f >= (float)Player.tileTargetX
-				//                        && Position.Y / 16f - (float)Player.tileRangeY - (float)selectedItem.TileBoost <= (float)Player.tileTargetY
-				//                        && (this.Position.Y + (float)this.Height) / 16f + (float)Player.tileRangeY + (float)selectedItem.TileBoost - 2f >= (float)Player.tileTargetY)
-				//                    {
-				//                        showItemIcon = true;
-				//
-				//                        if (itemTime == 0 && itemAnimation > 0 && controlUseItem)
-				//                        {
-				//                            if (selectedItem.Type == 205)
-				//                            {
-				//                                bool lava = TileRefs(Player.tileTargetX, Player.tileTargetY).Lava;
-				//                                int num10 = 0;
-				//                                for (int x = Player.tileTargetX - 1; x <= Player.tileTargetX + 1; x++)
-				//                                {
-				//                                    for (int y = Player.tileTargetY - 1; y <= Player.tileTargetY + 1; y++)
-				//                                    {
-				//                                        if (TileRefs(x, y).Lava == lava)
-				//                                        {
-				//                                            num10 += (int)TileRefs(x, y).Liquid;
-				//                                        }
-				//                                    }
-				//                                }
-				//
-				//                                if (TileRefs(Player.tileTargetX, Player.tileTargetY).Liquid > 0 && num10 > 100)
-				//                                {
-				//                                    bool lava2 = TileRefs(Player.tileTargetX, Player.tileTargetY).Lava;
-				//                                    if (!TileRefs(Player.tileTargetX, Player.tileTargetY).Lava)
-				//                                    {
-				//                                        selectedItem = Registries.Item.Create(206);
-				//                                    }
-				//                                    else
-				//                                    {
-				//                                        selectedItem = Registries.Item.Create(207);
-				//                                    }
-				//                                    inventory[selectedItemIndex] = selectedItem;
-				//
-				//                                    itemTime = selectedItem.UseTime;
-				//                                    int num11 = (int)TileRefs(Player.tileTargetX, Player.tileTargetY).Liquid;
-				//                                    TileRefs(Player.tileTargetX, Player.tileTargetY).SetLiquid (0);
-				//                                    TileRefs(Player.tileTargetX, Player.tileTargetY).SetLava (false);
-				//                                    WorldModify.SquareTileFrame(TileRefs, Player.tileTargetX, Player.tileTargetY, false);
-				//
-				//                                    Liquid.AddWater(TileRefs, Player.tileTargetX, Player.tileTargetY);
-				//
-				//                                    for (int x = Player.tileTargetX - 1; x <= Player.tileTargetX + 1; x++)
-				//                                    {
-				//                                        for (int y = Player.tileTargetY - 1; y <= Player.tileTargetY + 1; y++)
-				//                                        {
-				//                                            if (num11 < 256 && TileRefs(x, y).Lava == lava)
-				//                                            {
-				//                                                int num12 = (int)TileRefs(x, y).Liquid;
-				//
-				//                                                if (num12 + num11 > 255)
-				//                                                {
-				//                                                    num12 = 255 - num11;
-				//                                                }
-				//
-				//                                                num11 += num12;
-				//                                                TileRef expr_20A0 = TileRefs(x, y);
-				//                                                expr_20A0.SetLiquid ((byte) (expr_20A0.Liquid - (byte)num12));
-				//                                                TileRefs(x, y).SetLava (lava2);
-				//
-				//                                                if (TileRefs(x, y).Liquid == 0)
-				//                                                {
-				//                                                    TileRefs(x, y).SetLava (false);
-				//                                                }
-				//
-				//                                                WorldModify.SquareTileFrame(TileRefs, x, y, false);
-				//
-				//                                                Liquid.AddWater(TileRefs, x, y);
-				//                                            }
-				//                                        }
-				//                                    }
-				//                                }
-				//                            }
-				//                            else if (TileRefs(Player.tileTargetX, Player.tileTargetY).Liquid < 200)
-				//                            {
-				//                                if (!TileRefs(Player.tileTargetX, Player.tileTargetY).Active || !Main.tileSolid[(int)TileRefs(Player.tileTargetX, Player.tileTargetY).Type] || !Main.tileSolidTop[(int)TileRefs(Player.tileTargetX, Player.tileTargetY).Type])
-				//                                {
-				//                                    if (selectedItem.Type == 207)
-				//                                    {
-				//                                        if (TileRefs(Player.tileTargetX, Player.tileTargetY).Liquid == 0 || TileRefs(Player.tileTargetX, Player.tileTargetY).Lava)
-				//                                        {
-				//                                            TileRefs(Player.tileTargetX, Player.tileTargetY).SetLava (true);
-				//                                            TileRefs(Player.tileTargetX, Player.tileTargetY).SetLiquid (255);
-				//                                            WorldModify.SquareTileFrame(TileRefs, Player.tileTargetX, Player.tileTargetY, true);
-				//                                            selectedItem = Registries.Item.Create(205);
-				//                                            inventory[selectedItemIndex] = selectedItem;
-				//                                            this.itemTime = selectedItem.UseTime;
-				//                                        }
-				//                                    }
-				//                                    else if (TileRefs(Player.tileTargetX, Player.tileTargetY).Liquid == 0 || !TileRefs(Player.tileTargetX, Player.tileTargetY).Lava)
-				//                                    {
-				//                                        TileRefs(Player.tileTargetX, Player.tileTargetY).SetLava (false);
-				//                                        TileRefs(Player.tileTargetX, Player.tileTargetY).SetLiquid (255);
-				//                                        WorldModify.SquareTileFrame(TileRefs, Player.tileTargetX, Player.tileTargetY, true);
-				//                                        selectedItem = Registries.Item.Create(205);
-				//                                        inventory[selectedItemIndex] = selectedItem;
-				//                                        this.itemTime = selectedItem.UseTime;
-				//                                    }
-				//                                }
-				//                            }
-				//                        }
-				//                    }
-				//                }
-				//
-				//                if (selectedItem.Pick > 0 || selectedItem.Axe > 0 || selectedItem.Hammer > 0)
-				//                {
-				//                    if (Position.X / 16f - (float)Player.tileRangeX - (float)selectedItem.TileBoost <= (float)Player.tileTargetX 
-				//                        && (Position.X + (float)Width) / 16f + (float)Player.tileRangeX + (float)selectedItem.TileBoost - 1f >= (float)Player.tileTargetX 
-				//                        && Position.Y / 16f - (float)Player.tileRangeY - (float)selectedItem.TileBoost <= (float)Player.tileTargetY 
-				//                        && (Position.Y + (float)Height) / 16f + (float)Player.tileRangeY + (float)selectedItem.TileBoost - 2f >= (float)Player.tileTargetY)
-				//                    {
-				//                        showItemIcon = true;
-				//                        if (TileRefs(Player.tileTargetX, Player.tileTargetY).Active)
-				//                        {
-				//                            if (itemTime == 0 && itemAnimation > 0 && controlUseItem)
-				//                            {
-				//
-				//                                if (hitTileX != Player.tileTargetX || hitTileY != Player.tileTargetY)
-				//                                {
-				//                                    hitTile = 0;
-				//                                    hitTileX = Player.tileTargetX;
-				//                                    hitTileY = Player.tileTargetY;
-				//                                }
-				//                                if (Main.tileNoFail[(int)TileRefs(Player.tileTargetX, Player.tileTargetY).Type])
-				//                                {
-				//                                    hitTile = 100;
-				//                                }
-				//                                if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type != 27)
-				//                                {
-				//                                    if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 4 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 10 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 11 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 12 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 13 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 14 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 15 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 16 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 17 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 18 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 19 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 21 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 26 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 28 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 29 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 31 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 33 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 34 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 35 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 36 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 42 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 48 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 49 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 50 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 54 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 55 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 77 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 78 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 79)
-				//                                    {
-				//                                        if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 48)
-				//                                        {
-				//                                            hitTile += selectedItem.Hammer / 3;
-				//                                        }
-				//                                        else
-				//                                        {
-				//                                            hitTile += selectedItem.Hammer;
-				//                                        }
-				//
-				//                                        if ((double)Player.tileTargetY > Main.rockLayer 
-				//                                            && TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 77 
-				//                                            && selectedItem.Hammer < 60)
-				//                                        {
-				//                                            hitTile = 0;
-				//                                        }
-				//
-				//                                        if (selectedItem.Hammer > 0)
-				//                                        {
-				//                                            if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 26)
-				//                                            {
-				//                                                Hurt(this.statLife / 2, -direction, false, false);
-				//                                                WorldModify.KillTile(TileRefs, Player.tileTargetX, Player.tileTargetY, true, false, false);
-				//                                            }
-				//                                            else if (hitTile >= 100)
-				//                                            {
-				//                                                hitTile = 0;
-				//                                                WorldModify.KillTile(TileRefs, Player.tileTargetX, Player.tileTargetY, false, false, false);
-				//                                            }
-				//                                            else
-				//                                            {
-				//                                                WorldModify.KillTile(TileRefs, Player.tileTargetX, Player.tileTargetY, true, false, false);
-				//                                            }
-				//
-				//                                            itemTime = inventory[this.selectedItemIndex].UseTime;
-				//                                        }
-				//                                    }
-				//                                    else
-				//                                    {
-				//                                        if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 5 
-				//                                            || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 30 
-				//                                            || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 72)
-				//                                        {
-				//                                            if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 30)
-				//                                            {
-				//                                                hitTile += selectedItem.Axe * 5;
-				//                                            }
-				//                                            else
-				//                                            {
-				//                                                hitTile += selectedItem.Axe;
-				//                                            }
-				//                                            if (selectedItem.Axe > 0)
-				//                                            {
-				//                                                if (hitTile >= 100)
-				//                                                {
-				//                                                    hitTile = 0;
-				//                                                    WorldModify.KillTile(TileRefs, Player.tileTargetX, Player.tileTargetY, false, false, false);
-				//                                                }
-				//                                                else
-				//                                                {
-				//                                                    WorldModify.KillTile(TileRefs, Player.tileTargetX, Player.tileTargetY, true, false, false);
-				//                                                }
-				//                                                this.itemTime = selectedItem.UseTime;
-				//                                            }
-				//                                        }
-				//                                        else
-				//                                        {
-				//                                            if (selectedItem.Pick > 0)
-				//                                            {
-				//                                                if (Main.tileDungeon[(int)TileRefs(Player.tileTargetX, Player.tileTargetY).Type] || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 37 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 25 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 58)
-				//                                                {
-				//                                                    hitTile += selectedItem.Pick / 2;
-				//                                                }
-				//                                                else
-				//                                                {
-				//                                                    hitTile += selectedItem.Pick;
-				//                                                }
-				//                                                if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 25 && selectedItem.Pick < 65)
-				//                                                {
-				//                                                    hitTile = 0;
-				//                                                }
-				//                                                else
-				//                                                {
-				//                                                    if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 37 && selectedItem.Pick < 55)
-				//                                                    {
-				//                                                        hitTile = 0;
-				//                                                    }
-				//                                                    else
-				//                                                    {
-				//                                                        if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 56 && selectedItem.Pick < 65)
-				//                                                        {
-				//                                                            hitTile = 0;
-				//                                                        }
-				//                                                        else
-				//                                                        {
-				//                                                            if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 58 && selectedItem.Pick < 65)
-				//                                                            {
-				//                                                                hitTile = 0;
-				//                                                            }
-				//                                                            else
-				//                                                            {
-				//                                                                if (Main.tileDungeon[(int)TileRefs(Player.tileTargetX, Player.tileTargetY).Type] && selectedItem.Pick < 65)
-				//                                                                {
-				//                                                                    if ((double)Player.tileTargetX < (double)Main.maxTilesX * 0.25 || (double)Player.tileTargetX > (double)Main.maxTilesX * 0.75)
-				//                                                                    {
-				//                                                                        hitTile = 0;
-				//                                                                    }
-				//                                                                }
-				//                                                            }
-				//                                                        }
-				//                                                    }
-				//                                                }
-				//                                                if (TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 0 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 40 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 53 || TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 59)
-				//                                                {
-				//                                                    hitTile += selectedItem.Pick;
-				//                                                }
-				//                                                if (hitTile >= 100)
-				//                                                {
-				//                                                    hitTile = 0;
-				//                                                    WorldModify.KillTile(TileRefs, Player.tileTargetX, Player.tileTargetY, false, false, false);
-				//                                                }
-				//                                                else
-				//                                                {
-				//                                                    WorldModify.KillTile(TileRefs, Player.tileTargetX, Player.tileTargetY, true, false, false);
-				//                                                }
-				//                                                this.itemTime = selectedItem.UseTime;
-				//                                            }
-				//                                        }
-				//                                    }
-				//                                }
-				//                            }
-				//                        }
-				//                        if (TileRefs(Player.tileTargetX, Player.tileTargetY).Wall > 0)
-				//                        {
-				//                            if (this.itemTime == 0 && this.itemAnimation > 0 && this.controlUseItem)
-				//                            {
-				//                                if (selectedItem.Hammer > 0)
-				//                                {
-				//                                    bool flag3 = true;
-				//                                    if (!Main.wallHouse[(int)TileRefs(Player.tileTargetX, Player.tileTargetY).Wall])
-				//                                    {
-				//                                        flag3 = false;
-				//                                        for (int k = Player.tileTargetX - 1; k < Player.tileTargetX + 2; k++)
-				//                                        {
-				//                                            for (int l = Player.tileTargetY - 1; l < Player.tileTargetY + 2; l++)
-				//                                            {
-				//                                                if (TileRefs(k, l).Wall != TileRefs(Player.tileTargetX, Player.tileTargetY).Wall)
-				//                                                {
-				//                                                    flag3 = true;
-				//                                                    break;
-				//                                                }
-				//                                            }
-				//                                        }
-				//                                    }
-				//                                    if (flag3)
-				//                                    {
-				//                                        if (hitTileX != Player.tileTargetX || hitTileY != Player.tileTargetY)
-				//                                        {
-				//                                            hitTile = 0;
-				//                                            hitTileX = Player.tileTargetX;
-				//                                            hitTileY = Player.tileTargetY;
-				//                                        }
-				//                                        hitTile += selectedItem.Hammer;
-				//                                        if (hitTile >= 100)
-				//                                        {
-				//                                            hitTile = 0;
-				//                                            WorldModify.KillWall(Player.tileTargetX, Player.tileTargetY, false);
-				//                                        }
-				//                                        else
-				//                                        {
-				//                                            WorldModify.KillWall(Player.tileTargetX, Player.tileTargetY, true);
-				//                                        }
-				//                                        this.itemTime = selectedItem.UseTime;
-				//                                    }
-				//                                }
-				//                            }
-				//                        }
-				//                    }
-				//                }
 				if (selectedItem.Type == 29 && this.itemAnimation > 0 && this.statLifeMax < 400 && this.itemTime == 0)
 				{
 					if (this.itemTime == 0)
@@ -4446,172 +4129,6 @@ namespace Terraria_Server
 						}
 					}
 				}
-				// client code (tileTargetX/Y), not updated
-				//                if (selectedItem.CreateTile >= 0)
-				//                {
-				//                    if (this.Position.X / 16f - (float)Player.tileRangeX - (float)selectedItem.TileBoost <= (float)Player.tileTargetX && (this.Position.X + (float)this.Width) / 16f + (float)Player.tileRangeX + (float)selectedItem.TileBoost - 1f >= (float)Player.tileTargetX && this.Position.Y / 16f - (float)Player.tileRangeY - (float)selectedItem.TileBoost <= (float)Player.tileTargetY && (this.Position.Y + (float)this.Height) / 16f + (float)Player.tileRangeY + (float)selectedItem.TileBoost - 2f >= (float)Player.tileTargetY)
-				//                    {
-				//                        this.showItemIcon = true;
-				//                        if (!TileRefs(Player.tileTargetX, Player.tileTargetY).Active || selectedItem.CreateTile == 23 || selectedItem.CreateTile == 2 || selectedItem.CreateTile == 60 || selectedItem.CreateTile == 70)
-				//                        {
-				//                            if (this.itemTime == 0 && this.itemAnimation > 0 && this.controlUseItem)
-				//                            {
-				//                                bool flag4 = false;
-				//                                if (selectedItem.CreateTile == 23 || selectedItem.CreateTile == 2)
-				//                                {
-				//                                    if (TileRefs(Player.tileTargetX, Player.tileTargetY).Active && TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 0)
-				//                                    {
-				//                                        flag4 = true;
-				//                                    }
-				//                                }
-				//                                else
-				//                                {
-				//                                    if (selectedItem.CreateTile == 60 || selectedItem.CreateTile == 70)
-				//                                    {
-				//                                        if (TileRefs(Player.tileTargetX, Player.tileTargetY).Active && TileRefs(Player.tileTargetX, Player.tileTargetY).Type == 59)
-				//                                        {
-				//                                            flag4 = true;
-				//                                        }
-				//                                    }
-				//                                    else
-				//                                    {
-				//                                        if (selectedItem.CreateTile == 4)
-				//                                        {
-				//                                            int num13 = (int)TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Type;
-				//                                            int num14 = (int)TileRefs(Player.tileTargetX - 1, Player.tileTargetY).Type;
-				//                                            int num15 = (int)TileRefs(Player.tileTargetX + 1, Player.tileTargetY).Type;
-				//                                            int num16 = (int)TileRefs(Player.tileTargetX - 1, Player.tileTargetY - 1).Type;
-				//                                            int num17 = (int)TileRefs(Player.tileTargetX + 1, Player.tileTargetY - 1).Type;
-				//                                            int num18 = (int)TileRefs(Player.tileTargetX - 1, Player.tileTargetY - 1).Type;
-				//                                            int num19 = (int)TileRefs(Player.tileTargetX + 1, Player.tileTargetY + 1).Type;
-				//                                            if (!TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Active)
-				//                                            {
-				//                                                num13 = -1;
-				//                                            }
-				//                                            if (!TileRefs(Player.tileTargetX - 1, Player.tileTargetY).Active)
-				//                                            {
-				//                                                num14 = -1;
-				//                                            }
-				//                                            if (!TileRefs(Player.tileTargetX + 1, Player.tileTargetY).Active)
-				//                                            {
-				//                                                num15 = -1;
-				//                                            }
-				//                                            if (!TileRefs(Player.tileTargetX - 1, Player.tileTargetY - 1).Active)
-				//                                            {
-				//                                                num16 = -1;
-				//                                            }
-				//                                            if (!TileRefs(Player.tileTargetX + 1, Player.tileTargetY - 1).Active)
-				//                                            {
-				//                                                num17 = -1;
-				//                                            }
-				//                                            if (!TileRefs(Player.tileTargetX - 1, Player.tileTargetY + 1).Active)
-				//                                            {
-				//                                                num18 = -1;
-				//                                            }
-				//                                            if (!TileRefs(Player.tileTargetX + 1, Player.tileTargetY + 1).Active)
-				//                                            {
-				//                                                num19 = -1;
-				//                                            }
-				//                                            if (num13 >= 0 && Main.tileSolid[num13] && !Main.tileNoAttach[num13])
-				//                                            {
-				//                                                flag4 = true;
-				//                                            }
-				//                                            else
-				//                                            {
-				//                                                if ((num14 >= 0 && Main.tileSolid[num14] && !Main.tileNoAttach[num14]) || (num14 == 5 && num16 == 5 && num18 == 5))
-				//                                                {
-				//                                                    flag4 = true;
-				//                                                }
-				//                                                else
-				//                                                {
-				//                                                    if ((num15 >= 0 && Main.tileSolid[num15] && !Main.tileNoAttach[num15]) || (num15 == 5 && num17 == 5 && num19 == 5))
-				//                                                    {
-				//                                                        flag4 = true;
-				//                                                    }
-				//                                                }
-				//                                            }
-				//                                        }
-				//                                        else
-				//                                        {
-				//                                            if (selectedItem.CreateTile == 78)
-				//                                            {
-				//                                                if (TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Active && (Main.tileSolid[(int)TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Type] || Main.tileTable[(int)TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Type]))
-				//                                                {
-				//                                                    flag4 = true;
-				//                                                }
-				//                                            }
-				//                                            else
-				//                                            {
-				//                                                if (selectedItem.CreateTile == 13 || selectedItem.CreateTile == 29 || selectedItem.CreateTile == 33 || selectedItem.CreateTile == 49)
-				//                                                {
-				//                                                    if (TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Active && Main.tileTable[(int)TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Type])
-				//                                                    {
-				//                                                        flag4 = true;
-				//                                                    }
-				//                                                }
-				//                                                else
-				//                                                {
-				//                                                    if (selectedItem.CreateTile == 51)
-				//                                                    {
-				//                                                        if (TileRefs(Player.tileTargetX + 1, Player.tileTargetY).Active || TileRefs(Player.tileTargetX + 1, Player.tileTargetY).Wall > 0 || TileRefs(Player.tileTargetX - 1, Player.tileTargetY).Active || TileRefs(Player.tileTargetX - 1, Player.tileTargetY).Wall > 0 || TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Active || TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Wall > 0 || TileRefs(Player.tileTargetX, Player.tileTargetY - 1).Active || TileRefs(Player.tileTargetX, Player.tileTargetY - 1).Wall > 0)
-				//                                                        {
-				//                                                            flag4 = true;
-				//                                                        }
-				//                                                    }
-				//                                                    else
-				//                                                    {
-				//                                                        if ((TileRefs(Player.tileTargetX + 1, Player.tileTargetY).Active && Main.tileSolid[(int)TileRefs(Player.tileTargetX + 1, Player.tileTargetY).Type]) || TileRefs(Player.tileTargetX + 1, Player.tileTargetY).Wall > 0 || (TileRefs(Player.tileTargetX - 1, Player.tileTargetY).Active && Main.tileSolid[(int)TileRefs(Player.tileTargetX - 1, Player.tileTargetY).Type]) || TileRefs(Player.tileTargetX - 1, Player.tileTargetY).Wall > 0 || (TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Active && Main.tileSolid[(int)TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Type]) || TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Wall > 0 || (TileRefs(Player.tileTargetX, Player.tileTargetY - 1).Active && Main.tileSolid[(int)TileRefs(Player.tileTargetX, Player.tileTargetY - 1).Type]) || TileRefs(Player.tileTargetX, Player.tileTargetY - 1).Wall > 0)
-				//                                                        {
-				//                                                            flag4 = true;
-				//                                                        }
-				//                                                    }
-				//                                                }
-				//                                            }
-				//                                        }
-				//                                    }
-				//                                }
-				//                                if (flag4)
-				//                                {
-				//                                    if (WorldModify.PlaceTile(TileRefs, Player.tileTargetX, Player.tileTargetY, selectedItem.CreateTile, false, false, this.whoAmi))
-				//                                    {
-				//                                        this.itemTime = selectedItem.UseTime;
-				//                                        if (selectedItem.CreateTile == 15)
-				//                                        {
-				//                                            if (this.direction == 1)
-				//                                            {
-				//                                                TileRef expr_40C8 = TileRefs(Player.tileTargetX, Player.tileTargetY);
-				//                                                expr_40C8.SetFrameX ((short) (expr_40C8.FrameX + 18));
-				//                                                TileRef expr_40ED = TileRefs(Player.tileTargetX, Player.tileTargetY - 1);
-				//                                                expr_40ED.SetFrameX ((short) (expr_40ED.FrameX + 18));
-				//                                            }
-				//                                        }
-				//                                    }
-				//                                }
-				//                            }
-				//                        }
-				//                    }
-				//                }
-				//                if (selectedItem.CreateWall >= 0)
-				//                {
-				//                    if (this.Position.X / 16f - (float)Player.tileRangeX - (float)selectedItem.TileBoost <= (float)Player.tileTargetX && (this.Position.X + (float)this.Width) / 16f + (float)Player.tileRangeX + (float)selectedItem.TileBoost - 1f >= (float)Player.tileTargetX && this.Position.Y / 16f - (float)Player.tileRangeY - (float)selectedItem.TileBoost <= (float)Player.tileTargetY && (this.Position.Y + (float)this.Height) / 16f + (float)Player.tileRangeY + (float)selectedItem.TileBoost - 2f >= (float)Player.tileTargetY)
-				//                    {
-				//                        this.showItemIcon = true;
-				//                        if (this.itemTime == 0 && this.itemAnimation > 0 && this.controlUseItem)
-				//                        {
-				//                            if (TileRefs(Player.tileTargetX + 1, Player.tileTargetY).Active || TileRefs(Player.tileTargetX + 1, Player.tileTargetY).Wall > 0 || TileRefs(Player.tileTargetX - 1, Player.tileTargetY).Active || TileRefs(Player.tileTargetX - 1, Player.tileTargetY).Wall > 0 || TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Active || TileRefs(Player.tileTargetX, Player.tileTargetY + 1).Wall > 0 || TileRefs(Player.tileTargetX, Player.tileTargetY - 1).Active || TileRefs(Player.tileTargetX, Player.tileTargetY - 1).Wall > 0)
-				//                            {
-				//                                if ((int)TileRefs(Player.tileTargetX, Player.tileTargetY).Wall != selectedItem.CreateWall)
-				//                                {
-				//                                    WorldModify.PlaceWall(TileRefs, Player.tileTargetX, Player.tileTargetY, selectedItem.CreateWall, false);
-				//                                    if ((int)TileRefs(Player.tileTargetX, Player.tileTargetY).Wall == selectedItem.CreateWall)
-				//                                    {
-				//                                        this.itemTime = selectedItem.UseTime;
-				//                                    }
-				//                                }
-				//                            }
-				//                        }
-				//                    }
-				//                }
 			}
 			if (selectedItem.Damage >= 0 && selectedItem.Type > 0 && !selectedItem.NoMelee)
 			{
@@ -4675,83 +4192,6 @@ namespace Terraria_Server
 								rectangle.Height = (int)((double)rectangle.Height * 0.6);
 							}
 						}
-					}
-					if (!flag5)
-					{
-#if CLIENT_CODE
-                        if (Main.myPlayer == i)
-                        {
-                            int dmgg = (int) (selectedItem.Damage * this.meleeDamage);
-                            int num21 = rectangle.X / 16;
-                            int num22 = (rectangle.X + rectangle.Width) / 16 + 1;
-                            int num23 = rectangle.Y / 16;
-                            int num24 = (rectangle.Y + rectangle.Height) / 16 + 1;
-                            for (int k = num21; k < num22; k++)
-                            {
-                                for (int l = num23; l < num24; l++)
-                                {
-                                    if (TileRefs(k, l).Type == 3 || TileRefs(k, l).Type == 24 || TileRefs(k, l).Type == 28 || TileRefs(k, l).Type == 32 || TileRefs(k, l).Type == 51 || TileRefs(k, l).Type == 52 || TileRefs(k, l).Type == 61 || TileRefs(k, l).Type == 62 || TileRefs(k, l).Type == 69 || TileRefs(k, l).Type == 71 || TileRefs(k, l).Type == 73 || TileRefs(k, l).Type == 74)
-                                    {
-                                        WorldModify.KillTile(TileRefs, k, l, false, false, false);
-                                    }
-                                }
-                            }
-                            for (int j = 0; j < NPC.MAX_NPCS; j++)
-                            {
-                                var npc = Main.npcs[j];
-                                if (npc.Active && npc.immune[i] == 0 && this.attackCD == 0 && !npc.friendly)
-                                {
-                                    Rectangle value = new Rectangle((int)npc.Position.X, (int)npc.Position.Y, npc.Width, npc.Height);
-                                    if (rectangle.Intersects(value))
-                                    {
-                                        if (npc.noTileCollide || Collision.CanHit(this.Position, this.Width, this.Height, npc.Position, npc.Width, npc.Height))
-                                        {
-											bool crit = false;
-											if (Main.rand.Next(1, 101) <= this.meleeCrit)
-											{
-												crit = true;
-											}
-											int dmggg = Main.DamageVar(dmgg);
-											this.StatusNPC (selectedItem.Type, npc);
-                                            npc.StrikeNPC (dmggg, selectedItem.KnockBack, this.direction, crit);
-                                            npc.immune[i] = (ushort) this.itemAnimation;
-                                            this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
-                                        }
-                                    }
-                                }
-                            }
-                            if (this.hostile)
-                            {
-                                for (int j = 0; j < 255; j++)
-                                {
-                                    var player = Main.players[j];
-                                    if (j != i && player.Active && player.hostile && !player.immune && !player.dead)
-                                    {
-                                        if (this.team == 0 || this.team != player.team)
-                                        {
-                                            Rectangle value2 = new Rectangle((int)player.Position.X, (int)player.Position.Y, player.Width, player.Height);
-                                            if (rectangle.Intersects(value2))
-                                            {
-												bool crit = false;
-												if (Main.rand.Next(1, 101) <= 10)
-												{
-													crit = true;
-												}
-												int dmggg = Main.DamageVar(dmgg);
-												this.StatusPvP (selectedItem.Type, player);
-                                                if (Collision.CanHit(this.Position, this.Width, this.Height, player.Position, player.Width, player.Height))
-                                                {
-                                                    player.Hurt (dmggg, this.direction, true, false, "", crit);
-                                                    NetMessage.SendData(26, -1, -1, "", j, (float)this.direction, (float)selectedItem.Damage, 1f, crit ? 1 : 0);
-                                                    this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-#endif //CLIENT_CODE
 					}
 				}
 			}
@@ -4823,13 +4263,11 @@ namespace Terraria_Server
 				{
 					num25 = 4;
 				}
-				else
+				else if (selectedItem.Type == 70)
 				{
-					if (selectedItem.Type == 70)
-					{
-						num25 = 13;
-					}
+					num25 = 13;
 				}
+
 				for (int j = 0; j < NPC.MAX_NPCS; j++)
 				{
 					if (Main.npcs[j].Active && Main.npcs[j].Type == num25)
@@ -4838,16 +4276,8 @@ namespace Terraria_Server
 						break;
 					}
 				}
-				if (flag6)
-				{
-#if CLIENT_CODE
-                    if (Main.myPlayer == this.whoAmi)
-                    {
-                        this.Hurt(this.statLife * (this.statDefense + 1), -this.direction, false, false);
-                    }
-#endif //CLIENT_CODE
-				}
-				else if ((selectedItem.Type == 43 && !Main.dayTime) || (selectedItem.Type == 70 && zoneEvil))
+
+				if ((selectedItem.Type == 43 && !Main.dayTime) || (selectedItem.Type == 70 && zoneEvil))
 				{
 					var ctx = new HookContext
 					{
@@ -4892,47 +4322,21 @@ namespace Terraria_Server
 				{
 					this.itemTime = selectedItem.UseTime;
 				}
-				else
+				else if (this.itemTime == selectedItem.UseTime / 2)
 				{
-					if (this.itemTime == selectedItem.UseTime / 2)
+					this.grappling[0] = -1;
+					this.grapCount = 0;
+					for (int j = 0; j < 1000; j++)
 					{
-						this.grappling[0] = -1;
-						this.grapCount = 0;
-						for (int j = 0; j < 1000; j++)
+						if (Main.projectile[j].Active && Main.projectile[j].Owner == i)
 						{
-							if (Main.projectile[j].Active && Main.projectile[j].Owner == i)
+							if (Main.projectile[j].aiStyle == 7)
 							{
-								if (Main.projectile[j].aiStyle == 7)
-								{
-									Main.projectile[j].Kill(TileRefs);
-								}
+								Main.projectile[j].Kill(TileRefs);
 							}
 						}
-						this.Spawn(TileRefs);
 					}
-				}
-			}
-			if (i == Main.myPlayer)
-			{
-				if (this.itemTime == selectedItem.UseTime && selectedItem.Consumable)
-				{
-					bool flag11 = true;
-					if (selectedItem.Ranged && this.ammoCost80 && Main.rand.Next(5) == 0)
-					{
-						flag11 = false;
-					}
-					if (flag11)
-					{
-						selectedItem.Stack--;
-						if (selectedItem.Stack <= 0)
-						{
-							this.itemTime = this.itemAnimation;
-						}
-					}
-				}
-				if (selectedItem.Stack <= 0 && this.itemAnimation == 0)
-				{
-					inventory[selectedItemIndex] = new Item();
+					this.Spawn(TileRefs);
 				}
 			}
 		}

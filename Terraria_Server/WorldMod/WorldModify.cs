@@ -14150,6 +14150,7 @@ namespace Terraria_Server.WorldMod
 			GERunner(i, 0, (float)(3 * num2), 5f, true);
 			GERunner(i2, 0, (float)(3 * -(float)num2), 5f, false);
 
+			ProgramLog.Log("Hardmode has been applied");
 			NetMessage.SendData(25, -1, -1, "The ancient spirits of light and dark have been released.", 255, 50f, 255f, 130f, 0);
 			NetPlay.ResetSections();
 

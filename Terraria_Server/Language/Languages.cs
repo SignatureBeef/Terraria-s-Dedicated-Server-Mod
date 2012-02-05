@@ -99,9 +99,9 @@ namespace Terraria_Server.Language
 		public static String CommandDescription_MaxPlayers { get; set; }
 		public static String CommandDescription_Q { get; set; }
 		public static String CommandDescription_Refresh { get; set; }
+		public static String CommandDescription_HardMode { get; set; }
 
 #endregion
-
 
 		public static void LoadClass(string filePath, bool restore = false, bool error = true)
 		{

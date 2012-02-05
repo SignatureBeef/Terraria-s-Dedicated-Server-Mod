@@ -5,6 +5,7 @@ using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server
 {
@@ -1296,16 +1297,38 @@ namespace Terraria_Server
 						{
 							if (this.Type == 267)
 							{
-								for (int l = 0; l < NPC.MAX_NPCS; l++)
+								var player = Main.players[this.Owner];
+								var ctx = new HookContext
 								{
-									if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE)
+									Sender = player
+								};
+
+								var args = new HookArgs.PlayerTriggeredEvent
+								{
+									Type = WorldEventType.BOSS									
+								};
+
+								HookPoints.PlayerTriggeredEvent.Invoke(ref ctx, ref args);
+
+								if (ctx.CheckForKick())
+									return;
+								else if (ctx.Result != HookResult.IGNORE)
+								{
+									ProgramLog.Users.Log("{0} @ {1}: Wall Of Flesh triggered by {2}.", player.IPAddress, this.Owner, player.Name);
+
+									for (int l = 0; l < NPC.MAX_NPCS; l++)
 									{
-										if (NPC.SpawnWallOfFlesh(TileRefs, Position) == SpawnFlags.SUMMONED)
-											if (Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
+										if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE)
+										{
+											if (NPC.SpawnWallOfFlesh(TileRefs, Position) == SpawnFlags.SUMMONED)
 											{
-												NetMessage.SendData(28, -1, -1, String.Empty, l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction), 0);
-												break;
+												if (Main.npcs[l].StrikeNPC(World.Sender, 9999, 10f, -Main.npcs[l].direction))
+												{
+													NetMessage.SendData(28, -1, -1, String.Empty, l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction), 0);
+													break;
+												}
 											}
+										}
 									}
 								}
 							}

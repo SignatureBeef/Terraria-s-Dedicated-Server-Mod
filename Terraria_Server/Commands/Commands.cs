@@ -1388,5 +1388,16 @@ namespace Terraria_Server.Commands
 
 			NPC.SpawnTDCMQuestGiver();
 		}
+
+		public static void HardMode(ISender sender, ArgumentList args)
+		{
+			args.ParseNone();
+
+			if (Main.hardMode)
+				throw new CommandError("Hardmode is already in place.");
+
+			ProgramLog.Log("Starting hardmode, This may take a while...");
+			WorldModify.StartHardMode();
+		}
 	}
 }

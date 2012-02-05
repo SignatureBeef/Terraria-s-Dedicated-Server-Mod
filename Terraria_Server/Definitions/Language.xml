@@ -77,4 +77,5 @@
 	<CommandDescription_MaxPlayers>Set the maximum number of player slots.</CommandDescription_MaxPlayers>
 	<CommandDescription_Q>List connections waiting in queues.</CommandDescription_Q>
 	<CommandDescription_Refresh>Redownload the area around you from the server.</CommandDescription_Refresh>
+  <CommandDescription_HardMode>Toggle hardmode for the current world</CommandDescription_HardMode>
 </Languages>
