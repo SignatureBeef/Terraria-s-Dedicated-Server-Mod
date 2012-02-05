@@ -1,0 +1,15 @@
+Terraria's Dedicated Server Mod
+---------------------------------------
+
+This document is dedicated for whenever a developer makes a change to the code. In order for us to keep records
+of what has happened between builds we need to keep this document up to date and in each developers repo.
+
+
+Build: 37
+===================
+	- Updated all NPC AI (38/38)
+	- Added Hardmode
+	- Added all 1.1/.2 NPC's
+	- Added more hooks for new bosses/misc
+	- Snow!
+	- Few more Server Properties Options

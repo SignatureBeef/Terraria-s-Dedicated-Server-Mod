@@ -143,12 +143,6 @@ namespace Terraria_Server.WorldMod
 			if (Main.hardMode)
 			{
 				int type = (int)TileRefs(i, j).Type;
-
-				if (type == 109)
-				{
-					var asd = 0;
-				}
-
 				if (type == 117 && (double)j > Main.rockLayer && Main.rand.Next(110) == 0)
 				{
 					int num = genRand.Next(4);
