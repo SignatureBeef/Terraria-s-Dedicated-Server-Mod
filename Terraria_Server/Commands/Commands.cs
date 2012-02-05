@@ -536,10 +536,9 @@ namespace Terraria_Server.Commands
 			if (Server.TryFindItemByName(NameOrId, out itemlist) && itemlist.Count > 0)
 			{
 				if (itemlist.Count > 1)
-					throw new CommandError("There were {0} Items found regarding the specified name", itemlist.Count);
+					throw new CommandError(String.Format(Languages.MoreThanOneItemFoundNameId, itemlist.Count));
 
-				foreach (int id in itemlist)
-					receiver.GiveItem(id, stack, sender);
+				receiver.GiveItem(itemlist[0], stack, sender);
 			}
 			else
 			{
@@ -550,20 +549,19 @@ namespace Terraria_Server.Commands
 				}
 				catch
 				{
-					throw new CommandError("There were {0} Items found regarding the specified Item Id/Name", itemlist.Count);
+					throw new CommandError(String.Format(Languages.MoreThanOneItemFoundNameId, itemlist.Count));
 				}
 
 				if (Server.TryFindItemByType(Id, out itemlist) && itemlist.Count > 0)
 				{
 					if (itemlist.Count > 1)
-						throw new CommandError("There were {0} Items found regarding the specified Type Id", itemlist.Count);
+						throw new CommandError(String.Format(Languages.MoreThanOneItemFoundType, itemlist.Count));
 
-					foreach (int id in itemlist)
-						receiver.GiveItem(id, stack, sender);
+					receiver.GiveItem(itemlist[0], stack, sender);
 				}
 				else
 				{
-					throw new CommandError("There were no Items found regarding the specified Item Id/Name");
+					throw new CommandError(String.Format(Languages.MoreThanOneItemFoundNameId,"no"));
 				}
 			}
 		}
@@ -578,12 +576,12 @@ namespace Terraria_Server.Commands
 			Player player = sender as Player;
 			if (args.Count > 3)
 			{
-				throw new CommandError("Too many arguments. NPC and player names with spaces require quotes.");
+				throw new CommandError(Languages.TooManyArguments);
 			}
 			else if (sender is ConsoleSender && args.Count <= 2)
 			{
 				if(!NetPlay.anyClients || !Server.TryGetFirstOnlinePlayer(out player))
-					throw new CommandError("There is nobody online!");
+					throw new CommandError(Languages.NobodyOnline);
 			}
 			else if (args.Count == 3)
 			{
