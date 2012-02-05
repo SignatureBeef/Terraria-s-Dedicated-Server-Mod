@@ -165,50 +165,6 @@ namespace Terraria_Server
 		public static int zoneX = 99;
 		public static int zoneY = 87;
 
-		/*protected override void Initialize2()
-		{
-			for (int num9 = 0; num9 < 604; num9++)
-			{
-				Item item = new Item();
-				item.SetDefaults(num9, false);
-				itemName[num9] = item.name;
-				if (item.headSlot > 0)
-					Item.headType[item.headSlot] = item.type;
-				if (item.bodySlot > 0)
-					Item.bodyType[item.bodySlot] = item.type;
-				if (item.legSlot > 0)
-					Item.legType[item.legSlot] = item.type;
-			}
-		
-			this.shop[0] = new Chest();
-			this.shop[1] = new Chest();
-			this.shop[1].SetupShop(1);
-			this.shop[2] = new Chest();
-			this.shop[2].SetupShop(2);
-			this.shop[3] = new Chest();
-			this.shop[3].SetupShop(3);
-			this.shop[4] = new Chest();
-			this.shop[4].SetupShop(4);
-			this.shop[5] = new Chest();
-			this.shop[5].SetupShop(5);
-			this.shop[6] = new Chest();
-			this.shop[6].SetupShop(6);
-			this.shop[7] = new Chest();
-			this.shop[7].SetupShop(7);
-			this.shop[8] = new Chest();
-			this.shop[8].SetupShop(8);
-			this.shop[9] = new Chest();
-			this.shop[9].SetupShop(9);
-
-			for (int num14 = 1; num14 < 112; num14++)
-			{
-				Projectile projectile = new Projectile();
-				projectile.SetDefaults(num14);
-				if (projectile.hostile)
-					projHostile[num14] = true;
-			}
-		}*/
-
 		public static void Initialize()
 		{
 			stopSpawns = Program.properties.StopNPCSpawning;
@@ -540,9 +496,11 @@ namespace Terraria_Server
 						}
 					}
 				}
+
 			for (int i = 0; i < 255; i++)
 				if (players[i].Active && NetPlay.slots[i].state >= SlotState.CONNECTED)
 					NetPlay.slots[i].SpamUpdate();
+
 			Math.IEEERemainder((double)NetplayCounter, 60.0);
 			if (Math.IEEERemainder((double)NetplayCounter, 360.0) == 0.0)
 			{
