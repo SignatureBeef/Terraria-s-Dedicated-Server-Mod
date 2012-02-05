@@ -166,6 +166,9 @@ namespace Terraria_Server
 				using (var prog = new ProgressLogger(1, "Loading language definitions"))
 					Languages.LoadClass(Collections.Registries.LANGUAGE_FILE);
 
+				if (Languages.IsOutOfDate())
+					ProgramLog.Error.Log("Language file is out of date! Please update it in order to use new features.");
+
 				commandParser = new CommandParser();
 				commandParser.ReadPermissionNodes();
 

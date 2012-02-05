@@ -355,7 +355,7 @@ namespace Terraria_Server.Commands
 			else if (args.TryParseOne<String>(Languages.Remove, out Exception))
 			{
 				Server.WhiteList.removeException(Exception);
-				Type = Languages.Removed;
+				Type = Languages.RemovedFrom;
 			}
 			else
 			{

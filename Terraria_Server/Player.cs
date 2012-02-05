@@ -4134,7 +4134,7 @@ namespace Terraria_Server
 			{
 				if (this.itemAnimation > 0)
 				{
-					bool flag5 = false;
+					//bool flag5 = false;
 					Rectangle rectangle = new Rectangle((int)this.itemLocation.X, (int)this.itemLocation.Y, 32, 32);
 					rectangle.Width = (int)((float)rectangle.Width * selectedItem.Scale);
 					rectangle.Height = (int)((float)rectangle.Height * selectedItem.Scale);
@@ -4173,24 +4173,17 @@ namespace Terraria_Server
 							}
 						}
 					}
-					else
+					else if (selectedItem.UseStyle == 3)
 					{
-						if (selectedItem.UseStyle == 3)
+						if (!((double)this.itemAnimation > (double)this.itemAnimationMax * 0.666))
 						{
-							if ((double)this.itemAnimation > (double)this.itemAnimationMax * 0.666)
+							if (this.direction == -1)
 							{
-								flag5 = true;
+								rectangle.X -= (int)((double)rectangle.Width * 1.4 - (double)rectangle.Width);
 							}
-							else
-							{
-								if (this.direction == -1)
-								{
-									rectangle.X -= (int)((double)rectangle.Width * 1.4 - (double)rectangle.Width);
-								}
-								rectangle.Width = (int)((double)rectangle.Width * 1.4);
-								rectangle.Y += (int)((double)rectangle.Height * 0.6);
-								rectangle.Height = (int)((double)rectangle.Height * 0.6);
-							}
+							rectangle.Width = (int)((double)rectangle.Width * 1.4);
+							rectangle.Y += (int)((double)rectangle.Height * 0.6);
+							rectangle.Height = (int)((double)rectangle.Height * 0.6);
 						}
 					}
 				}
@@ -4257,25 +4250,6 @@ namespace Terraria_Server
 			if (this.itemTime == 0 && this.itemAnimation > 0 && (selectedItem.Type == 43 || selectedItem.Type == 70))
 			{
 				this.itemTime = selectedItem.UseTime;
-				bool flag6 = false;
-				int num25 = 4;
-				if (selectedItem.Type == 43)
-				{
-					num25 = 4;
-				}
-				else if (selectedItem.Type == 70)
-				{
-					num25 = 13;
-				}
-
-				for (int j = 0; j < NPC.MAX_NPCS; j++)
-				{
-					if (Main.npcs[j].Active && Main.npcs[j].Type == num25)
-					{
-						flag6 = true;
-						break;
-					}
-				}
 
 				if ((selectedItem.Type == 43 && !Main.dayTime) || (selectedItem.Type == 70 && zoneEvil))
 				{

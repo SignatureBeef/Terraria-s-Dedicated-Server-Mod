@@ -31,7 +31,6 @@ namespace Terraria_Server.Language
 		public static String Add { get; set; }
 		public static String Added { get; set; }
 		public static String Remove { get; set; }
-		public static String Removed { get; set; }
 		public static String PleaseReview { get; set; }
 		public static String WhilelistFailedSave { set; get; }
 		public static String OPlistFailedSave { get; set; }
@@ -147,6 +146,14 @@ namespace Terraria_Server.Language
 					}
 				}
 			}
+		}
+
+		public static bool IsOutOfDate()
+		{
+			var type = typeof(Languages);
+			var properties = from x in type.GetProperties() where x.GetValue(null, null) == null select x;
+			
+			return properties.Count() > 0;
 		}
 	}
 }

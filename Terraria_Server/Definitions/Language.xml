@@ -14,7 +14,7 @@
 	<Add>-add</Add>
 	<Added>added to</Added>
 	<Remove>-remove</Remove>
-	<Removed>removed from</Removed>
+  <RemovedFrom>removed from</RemovedFrom>
 	<PleaseReview>Please review that command</PleaseReview>
 	<WhilelistFailedSave>WhiteList Failed to Save due to </WhilelistFailedSave>
 	<OPlistFailedSave>OpList Failed to Save due.</OPlistFailedSave>
