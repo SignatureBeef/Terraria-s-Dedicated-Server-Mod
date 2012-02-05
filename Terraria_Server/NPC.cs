@@ -8370,12 +8370,6 @@ namespace Terraria_Server
 					npc.Velocity.Y = 1.5f;
 				}
 			}
-
-			if (npc.type == NPCType.N122_GASTROPOD)
-			{
-				Lighting.addLight((int)npc.Position.X / 16, (int)npc.Position.Y / 16, 0.4f, 0f, 0.25f);
-				return;
-			}
 		}
 
 		// 23 - 1.1.2
