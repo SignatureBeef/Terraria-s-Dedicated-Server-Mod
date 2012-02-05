@@ -6,6 +6,7 @@ using Terraria_Server.Commands;
 using Terraria_Server.Messages;
 using Terraria_Server.Misc;
 using Terraria_Server.WorldMod;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
@@ -641,6 +642,9 @@ namespace Terraria_Server
 			Int (npc.NetID);
 			
 			End ();
+
+			if (npc.type == Definitions.NPCType.N108_WIZARD)
+				ProgramLog.Log("Active {0}, NetID {1}", npc.Active, npc.NetID);
 		}
 		
 		public void StrikeNPC (int npcId, int playerId)

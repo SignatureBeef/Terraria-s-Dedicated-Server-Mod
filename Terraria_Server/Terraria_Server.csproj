@@ -138,6 +138,7 @@
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
     <Compile Include="Messages\HitSwitchMessage.cs" />
     <Compile Include="Messages\NPCHomeMessage.cs" />
+    <Compile Include="Messages\SpawnNPCs.cs" />
     <Compile Include="TDCM\Packets\ClientModMessage.cs" />
     <Compile Include="Messages\DamageNPCMessage.cs" />
     <Compile Include="Messages\DoorUpdateMessage.cs" />

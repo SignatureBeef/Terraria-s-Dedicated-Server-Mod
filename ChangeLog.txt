@@ -1,4 +1,4 @@
-Terraria's Dedicated Server Mod
+Terraria's Dedicated Server Mod (TDSM)
 ---------------------------------------
 
 This document is dedicated for whenever a developer makes a change to the code. In order for us to keep records
@@ -13,3 +13,4 @@ Build: 37
 	- Added more hooks for new bosses/misc
 	- Snow!
 	- Few more Server Properties Options
+	- Language file + Generation Tool

@@ -4278,13 +4278,13 @@ namespace Terraria_Server
 						{
 							ProgramLog.Users.Log("{0} @ {1}: Eye of Cthulhu summoned by {2}.", IPAddress, whoAmi, Name);
 							NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, string.Concat(Name, " has summoned the Eye of Cthulhu!"), 255, 255, 128, 150);
-							NPC.SpawnOnPlayer(Main.players[i], i, 4);
+							NPC.SpawnOnPlayer(i, 4);
 						}
 						else if (selectedItem.Type == 70)
 						{
 							ProgramLog.Users.Log("{0} @ {1}: Eater of Worlds summoned by {2}.", IPAddress, whoAmi, Name);
 							NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, string.Concat(Name, " has summoned the Eater of Worlds!"), 255, 255, 128, 150);
-							NPC.SpawnOnPlayer(Main.players[i], i, 13);
+							NPC.SpawnOnPlayer(i, 13);
 						}
 					}
 				}

@@ -503,7 +503,7 @@ namespace Terraria_Server.WorldMod
 									}
 								}
 								if (Main.players[num7].zoneEvil)
-									NPC.SpawnOnPlayer(Main.players[num7], num7, 13);
+									NPC.SpawnOnPlayer(num7, 13);
 							}
 							else
 							{

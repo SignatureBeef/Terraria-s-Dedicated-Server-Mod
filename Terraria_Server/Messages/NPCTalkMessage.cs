@@ -4,7 +4,6 @@ namespace Terraria_Server.Messages
 {
     public class NPCTalkMessage : SlotMessageHandler
     {
-
         public override Packet GetPacket()
         {
             return Packet.NPC_TALK;
@@ -17,8 +16,8 @@ namespace Terraria_Server.Messages
             int talkNPC = (int)BitConverter.ToInt16(readBuffer, num + 1);
 
             Main.players[playerIndex].talkNPC = talkNPC;
-            
-            NetMessage.SendData(40, -1, whoAmI, "", playerIndex);
+
+			NetMessage.SendData(40, -1, whoAmI, "", playerIndex);
         }
     }
 }

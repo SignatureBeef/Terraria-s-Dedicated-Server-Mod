@@ -101,7 +101,7 @@ namespace Terraria_Server.WorldMod
 							{
 								ProgramLog.Users.Log ("{0} @ {1}: Eater of Worlds summoned by {2}.", player.IPAddress, player.whoAmi, player.Name);
 								NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (player.Name, " has summoned the Eater of Worlds!"), 255, 255, 128, 150);
-								NPC.SpawnOnPlayer(player, player.whoAmi, 13);
+								NPC.SpawnOnPlayer(player.whoAmi, 13);
 							}
 						}
 						else

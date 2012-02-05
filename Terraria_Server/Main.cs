@@ -1,4 +1,4 @@
-#define CATCHERROR_NPCUPDATES
+//#define CATCHERROR_NPCUPDATES
 
 using System.Threading;
 using System.Diagnostics;
@@ -375,31 +375,30 @@ namespace Terraria_Server
 			NetMessage.SendData(25, -1, -1, text, 255, 175f, 75f, 255f);
 		}
 
-		public static void StartInvasion()
+		public static void StartInvasion(int type = 1)
 		{
-			if (!WorldModify.shadowOrbSmashed)
-				return;
-
-			if (invasionType == 0 && invasionDelay == 0)
+			if (Main.invasionType == 0 && Main.invasionDelay == 0)
 			{
-				int playerCount = 0;
-				foreach (Player player in players)
+				int players = 0;
+				for (int i = 0; i < MAX_PLAYERS; i++)
 				{
-					if (player.Active && player.statLifeMax >= 200)
-						playerCount++;
+					if (Main.players[i].Active && Main.players[i].statLifeMax >= 200)
+						players++;
 				}
 
-				if (playerCount > 0)
+				if (players > 0)
 				{
-					invasionType = 1;
-					invasionSize = 100 + 50 * playerCount;
-					invasionWarn = 0;
-					if (rand.Next(2) == 0)
+					Main.invasionType = type;
+					Main.invasionSize = 80 + 40 * players;
+					Main.invasionWarn = 0;
+
+					if (Main.rand.Next(2) == 0)
 					{
-						invasionX = 0.0;
+						Main.invasionX = 0.0;
 						return;
 					}
-					invasionX = (double)maxTilesX;
+
+					Main.invasionX = (double)Main.maxTilesX;
 				}
 			}
 		}
@@ -593,7 +592,7 @@ namespace Terraria_Server
 						{
 							if (player.Active && !player.dead && (double)player.Position.Y < worldSurface * 16.0)
 							{
-								NPC.SpawnOnPlayer(player, count, 4);
+								NPC.SpawnOnPlayer(count, 4);
 								WorldModify.spawnEye = false;
 								break;
 							}
