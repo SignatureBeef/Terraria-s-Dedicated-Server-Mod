@@ -1722,6 +1722,9 @@ namespace Terraria_Server
 		/// <returns>Main.npcs[] index value</returns>
 		public static int NewNPC(int x, int y, int type, int start = 0)
 		{
+			if (Main.stopSpawns)
+				return MAX_NPCS;
+
 			NPC hnpc;
 			if (!InvokeNpcCreationHook(x, y, Registries.NPC.GetTemplate(type).Name, out hnpc))
 				return MAX_NPCS;
@@ -1748,6 +1751,9 @@ namespace Terraria_Server
 
 		public static int NewNPC(int x, int y, string name, int start = 0)
 		{
+			if (Main.stopSpawns)
+				return MAX_NPCS;
+
 			NPC hnpc;
 			if (!InvokeNpcCreationHook(x, y, name, out hnpc))
 				return MAX_NPCS;
@@ -1779,6 +1785,9 @@ namespace Terraria_Server
 
 		public static int NewNPC(int x, int y, NPC npc, int npcIndex)
 		{
+			if (Main.stopSpawns)
+				return MAX_NPCS;
+
 			npc.Position.X = (float)(x - npc.Width / 2);
 			npc.Position.Y = (float)(y - npc.Height);
 			npc.Active = true;
@@ -2448,15 +2457,7 @@ namespace Terraria_Server
 		{
 			if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME || this.type == NPCType.N71_DUNGEON_SLIME)
 			{
-				if (this.life > 0)
-				{
-					int pointlessInteger = 0;
-					while ((double)pointlessInteger < dmg / (double)this.lifeMax * 100.0)
-					{
-						pointlessInteger++;
-					}
-				}
-				else
+				if (this.life <= 0)
 				{
 					if (this.type == NPCType.N16_MOTHER_SLIME)
 					{
@@ -2478,27 +2479,7 @@ namespace Terraria_Server
 						}
 					}
 				}
-			}
-			// removed in 1.0.6
-			//            else if (this.type == NPCType.N59_LAVA_SLIME || this.type == NPCType.N60_HELLBAT)
-			//            {
-			//                if (this.life > 0)
-			//                {
-			//                    return;
-			//                }
-			//                if (this.type == NPCType.N59_LAVA_SLIME)
-			//                {
-			//                    int num5 = (int)(this.Position.X + (float)(this.Width / 2)) / 16;
-			//                    int num6 = (int)(this.Position.Y + (float)(this.Height / 2)) / 16;
-			//                    Main.tile.At(num5, num6).SetLava(true);
-			//                    if (Main.tile.At(num5, num6).Liquid < 200)
-			//                    {
-			//                        Main.tile.At(num5, num6).SetLiquid(200);
-			//                    }
-			//                    WorldModify.TileFrame(TileRefs, num5, num6, false, false);
-			//                    return;
-			//                }
-			//            }
+			}			
 			else if (this.type == NPCType.N50_KING_SLIME)
 			{
 				if (this.life > 0)
@@ -12093,7 +12074,6 @@ namespace Terraria_Server
 					Main.chrName[(int)this.type] = String.Empty;
 					NPC.SetNames();
 					NetMessage.SendData(56, -1, -1, String.Empty, (int)this.type);
-
 				}
 
 				if (this.townNPC && this.homeless && WorldModify.spawnNPC == (int)this.type)

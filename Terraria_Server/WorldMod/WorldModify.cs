@@ -35,7 +35,7 @@ namespace Terraria_Server.WorldMod
 		private const int TILE_OFFSET_4 = 23;
 		private const int TILE_SCALE = 16;
 		private const int TREE_RADIUS = 2;
-		private const int MAX_TILE_SETS = 145;
+		private const int MAX_TILE_SETS = 150;
 
 		public static int lavaLine;
 		public static int waterLine;

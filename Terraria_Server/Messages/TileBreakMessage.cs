@@ -60,7 +60,7 @@ namespace Terraria_Server.Messages
 						break;						
 					case 1:
 						
-						if (editor.PlaceTile (x, y, (int)tileType, false, false, whoAmI, style))
+						if (editor.PlaceTile (x, y, (int)tileType, false, true, whoAmI, style))
 						{
 							if (tileType == 15 && player.direction == 1)
 							{
