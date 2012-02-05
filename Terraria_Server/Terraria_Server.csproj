@@ -125,7 +125,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI.cs" />
     <Compile Include="BaseEntity.cs" />
     <Compile Include="Commands\ISender.cs" />
     <Compile Include="Definitions\NPCType.cs" />
