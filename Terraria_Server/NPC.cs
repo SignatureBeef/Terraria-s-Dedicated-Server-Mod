@@ -66,7 +66,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Number of slots NPC takes up when active
 		/// </summary>
-		public static float npcSlots = 1f;
+		//public static float npcSlots = 1f;
 		private static bool noSpawnCycle = false;
 		public static int defaultSpawnRate = 600;
 		public static int defaultMaxSpawns = 5;
@@ -1809,10 +1809,10 @@ namespace Terraria_Server
 			oldTarget = target;
 			Registries.NPC.SetDefaults(this, type);
 			life = lifeMax;
-			Width = (int)(Width * scale);
+			/*Width = (int)(Width * scale);
 			Height = (int)(Height * scale);
 			if (scaleOverrideAdjustment && (Height == 16 || Height == 32))
-				Height += 1; //FIXME: this is really ugly
+				Height += 1; //FIXME: this is really ugly*/
 			defDamage = damage;
 			defDefense = defense;
 		}
@@ -1824,17 +1824,23 @@ namespace Terraria_Server
 		/// <param name="newType"></param>
 		public void Transform(int newType)
 		{
-			var v = Velocity;
-			SetDefaults(newType);
-			Velocity = v;
+			var template = Registries.NPC.GetTemplate(newType);
 
-			if (Main.npcs[whoAmI] == this)
-			{
-				Active = true;
-				TargetClosest(true);
-				netUpdate = true;
-				NetMessage.SendData(23, -1, -1, "", whoAmI);
-			}
+			/* Copy over main data, We should copy over this values to the template by using SetDefaults first. */
+			type = template.type;
+			Width = template.Width;
+			Height = template.Height;
+			lifeMax = template.lifeMax;
+			townNPC = template.townNPC;
+			NetID = template.NetID;
+			slots = template.slots;
+			Name = template.Name;
+			DisplayName = template.DisplayName;			
+
+			Active = true;
+			TargetClosest(true);
+			netUpdate = true;
+			NetMessage.SendData(23, -1, -1, String.Empty, whoAmI);
 		}
 
 		/// <summary>
@@ -3077,23 +3083,23 @@ namespace Terraria_Server
 		// 0 - 1.1.2
 		private void AIUnknown(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs)
 		{
-			for (int i = 0; i < 255; i++)
+			for (int i = 0; i < Main.MAX_PLAYERS; i++)
 			{
 				if (Main.players[i].Active && Main.players[i].talkNPC == npc.whoAmI)
 				{
 					if (npc.type == NPCType.N105_BOUND_GOBLIN)
 					{
-						npc.Transform(107);
+						npc.Transform((int)NPCType.N107_GOBLIN_TINKERER);
 						return;
 					}
 					if (npc.type == NPCType.N106_BOUND_WIZARD)
 					{
-						npc.Transform(108);
+						npc.Transform((int)NPCType.N108_WIZARD);
 						return;
 					}
 					if (npc.type == NPCType.N123_BOUND_MECHANIC)
 					{
-						npc.Transform(124);
+						npc.Transform((int)NPCType.N124_MECHANIC);
 						return;
 					}
 				}
@@ -5940,13 +5946,13 @@ namespace Terraria_Server
 						}
 					}
 					else if ((double)npc.Velocity.X < 1.15 && npc.direction == 1)
+					{
+						npc.Velocity.X = npc.Velocity.X + 0.07f;
+						if (npc.Velocity.X > 1f)
 						{
-							npc.Velocity.X = npc.Velocity.X + 0.07f;
-							if (npc.Velocity.X > 1f)
-							{
-								npc.Velocity.X = 1f;
-							}
+							npc.Velocity.X = 1f;
 						}
+					}
 					else if (npc.Velocity.X > -1f && npc.direction == -1)
 					{
 						npc.Velocity.X = npc.Velocity.X - 0.07f;
