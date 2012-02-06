@@ -1432,12 +1432,12 @@ namespace Terraria_Server
 			Main.item[itemIndex].Velocity.Y = (float)Main.rand.Next(-30, -10) * 0.1f;
 			Main.item[itemIndex].SpawnTime = 0;
 
-			if(NetID != 255 && NetID != type)
+			if (NetID != 255 && NetID != type)
 				Main.item[itemIndex].NetID = NetID;
 
 			if (!noBroadcast)
 			{
-				NetMessage.SendData(21, -1, -1, "", itemIndex);
+				NetMessage.SendData(21, -1, -1, String.Empty, itemIndex);
 				Main.item[itemIndex].FindOwner(itemIndex);
 			}
 
