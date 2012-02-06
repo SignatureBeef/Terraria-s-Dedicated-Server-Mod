@@ -17,7 +17,7 @@
   <RemovedFrom>removed from</RemovedFrom>
 	<PleaseReview>Please review that command</PleaseReview>
 	<WhilelistFailedSave>WhiteList Failed to Save due to </WhilelistFailedSave>
-	<OPlistFailedSave>OpList Failed to Save due.</OPlistFailedSave>
+	<OPlistFailedSave>OpList Failed to Save due to </OPlistFailedSave>
 	<Command>command</Command>
 	<IPExpected>A player or IP was expected.</IPExpected>
 	<TimeSet>Time set to </TimeSet>
@@ -35,6 +35,21 @@
 	<MoreThanOneItemFoundType>There were {0} Items found regarding the specified Type Id</MoreThanOneItemFoundType>
 	<TooManyArguments>Too many arguments. NPC and player names with spaces require quotes.</TooManyArguments>
 	<NobodyOnline>There is nobody online.</NobodyOnline>
+	<NPCDoesntExist>Specified NPC does not exist</NPCDoesntExist>
+	<DontSpawnThatMany>Don't spawn that many.</DontSpawnThatMany>
+	<ExpectedSpawnInteger>Expected integer for number to spawn.</ExpectedSpawnInteger>
+	<NeedTeleportTarget>Need specify to who to teleport.</NeedTeleportTarget>
+	<TeleportedToSpawn>Teleported {0} to spawn.</TeleportedToSpawn>
+	<TeleportFailed>Teleportation failed.</TeleportFailed>
+	<PlayerNotFound>Target player not found.</PlayerNotFound>
+	<InvalidCoords>Invalid coordinates.</InvalidCoords>
+	<CouldNotFindPlayer>Could not find that Player on the Server.</CouldNotFindPlayer>
+	<OnlyPlayerCanUseCommand>Only a player can call this command!</OnlyPlayerCanUseCommand>
+	<SettlingLiquids>Settling Liquids...</SettlingLiquids>
+	<Complete>Complete</Complete>
+	<LiquidsAlreadySettled>Liquids are already settling</LiquidsAlreadySettled>
+	<YouAreNowOP>You are now OP!</YouAreNowOP>
+	<YouAreNowDeop>You have been De-Opped!</YouAreNowDeop>
 	<RPGMode_Allowed>RPG Mode is now allowed on this server:</RPGMode_Allowed>
 	<RPGMode_Refused>RPG Mode is now refused on this server:</RPGMode_Refused>
 	<ItemRejection_Added> was added to the Item Rejection list!</ItemRejection_Added>
