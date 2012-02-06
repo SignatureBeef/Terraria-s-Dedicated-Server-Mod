@@ -163,44 +163,9 @@ namespace Terraria_Server
         public static void notifyAll(string Message, Color ChatColour, bool writeToConsole = true)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, ChatColour.R, ChatColour.G, ChatColour.B);
+
             if (writeToConsole)
-            {
                 ProgramLog.Admin.Log(Message);
-            }
-        }
-
-        /// <summary>
-        /// Get the array of Active NPCs
-        /// </summary>
-        /// <returns></returns>
-        public static NPC[] ActiveNPCs()
-        {
-            NPC[] npcs = null;
-
-            int npcCount = 0;
-            for (int i = 0; i < NPC.MAX_NPCS; i++)
-            {
-                if (Main.npcs[i].Active)
-                {
-                    npcCount++;
-                }
-            }
-
-            if (npcCount > 0)
-            {
-                npcs = new NPC[npcCount];
-                npcCount = 0;
-                for (int i = 0; i < Main.npcs.Length-1; i++)
-                {
-                    if (Main.npcs[i].Active)
-                    {
-                        npcs[npcCount] = Main.npcs[i];
-                        npcCount++;
-                    }
-                }
-            }
-            
-            return npcs;
         }
 
         /// <summary>
@@ -258,7 +223,7 @@ namespace Terraria_Server
         /// <param name="point"></param>
         /// <param name="defaultResist"></param>
         /// <returns></returns>
-        public static bool isValidLocation(Vector2 point, bool defaultResist = true)
+        public static bool IsValidLocation(Vector2 point, bool defaultResist = true)
         {
             if (point != null && (defaultResist) ? (point != default(Vector2)) : true)
                 if (point.X <= Main.maxTilesX && point.X >= 0)
@@ -279,7 +244,7 @@ namespace Terraria_Server
         /// <returns></returns>
         public static bool RejectedItemsContains(string item)
         {
-            if (item != null)
+            if (!String.IsNullOrEmpty(item))
             {
                 foreach (string rItem in RejectedItems)
                 {

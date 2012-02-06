@@ -1805,16 +1805,22 @@ namespace Terraria_Server
 			if (Main.stopSpawns)
 				return;
 
-			oldDirection = direction;
-			oldTarget = target;
+			Transfer(type);
+		}
+
+		public void Transfer(int type)
+		{
+			/* Copy over main data */
+			var pos = Position;
+
 			Registries.NPC.SetDefaults(this, type);
+
 			life = lifeMax;
-			/*Width = (int)(Width * scale);
-			Height = (int)(Height * scale);
-			if (scaleOverrideAdjustment && (Height == 16 || Height == 32))
-				Height += 1; //FIXME: this is really ugly*/
 			defDamage = damage;
 			defDefense = defense;
+			NetID = Type;
+			Active = true;
+			Position = pos;
 		}
 
 		/// <summary>
@@ -1824,18 +1830,7 @@ namespace Terraria_Server
 		/// <param name="newType"></param>
 		public void Transform(int newType)
 		{
-			var template = Registries.NPC.GetTemplate(newType);
-
-			/* Copy over main data, We should copy over this values to the template by using SetDefaults first. */
-			type = template.type;
-			Width = template.Width;
-			Height = template.Height;
-			lifeMax = template.lifeMax;
-			townNPC = template.townNPC;
-			NetID = template.NetID;
-			slots = template.slots;
-			Name = template.Name;
-			DisplayName = template.DisplayName;			
+			Transfer(newType);
 
 			Active = true;
 			TargetClosest(true);
@@ -5215,17 +5210,25 @@ namespace Terraria_Server
 				}
 				if (npc.life == 0)
 				{
-					bool flag10 = true;
-					for (int num106 = 0; num106 < MAX_NPCS; num106++)
+					bool EoWAlive = false;
+					for (int npcId = 0; npcId < MAX_NPCS; npcId++)
 					{
-						if (Main.npcs[num106].Active && (Main.npcs[num106].type == NPCType.N13_EATER_OF_WORLDS_HEAD ||
-							Main.npcs[num106].type == NPCType.N14_EATER_OF_WORLDS_BODY || Main.npcs[num106].type == NPCType.N15_EATER_OF_WORLDS_TAIL))
+						var fNpc = Main.npcs[npcId];
+
+						ProgramLog.Debug.Log("NPC AIWORM - {0}, Active {1}", fNpc.type.ToString(), fNpc.Active);
+						if (fNpc.Active)
 						{
-							flag10 = false;
-							break;
+							EoWAlive = (
+								fNpc.type == NPCType.N13_EATER_OF_WORLDS_HEAD ||
+								fNpc.type == NPCType.N14_EATER_OF_WORLDS_BODY ||
+								fNpc.type == NPCType.N15_EATER_OF_WORLDS_TAIL);
+
+							if (EoWAlive)
+								break;
 						}
 					}
-					if (flag10)
+
+					if (!EoWAlive)
 					{
 						npc.boss = true;
 						npc.NPCLoot();

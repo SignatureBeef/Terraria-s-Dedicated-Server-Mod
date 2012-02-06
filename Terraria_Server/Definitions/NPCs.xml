@@ -68,7 +68,7 @@
 	<NPC>
 		<Name>Eye of Cthulhu</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>5</npcSlots>
+		<slots>5</slots>
 		<Width>100</Width>
 		<Height>110</Height>
 		<Type>4</Type>
@@ -138,7 +138,7 @@
 		<Name>Devourer Head</Name>
 		<netSkip>-2</netSkip>
 		<netAlways>true</netAlways>
-		<npcSlots>3.5</npcSlots>
+		<slots>3.5</slots>
 		<Width>22</Width>
 		<Height>22</Height>
 		<Type>7</Type>
@@ -293,7 +293,7 @@
 		<Name>Eater of Worlds Head</Name>
 		<netSkip>-2</netSkip>
 		<netAlways>true</netAlways>
-		<npcSlots>5</npcSlots>
+		<slots>5</slots>
 		<Width>38</Width>
 		<Height>38</Height>
 		<Type>13</Type>
@@ -371,7 +371,7 @@
 	<NPC>
 		<Name>Mother Slime</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>2</npcSlots>
+		<slots>2</slots>
 		<Width>45</Width>
 		<Height>30</Height>
 		<Type>16</Type>
@@ -557,7 +557,7 @@
 	<NPC>
 		<Name>Fire Imp</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>3</npcSlots>
+		<slots>3</slots>
 		<Width>18</Width>
 		<Height>40</Height>
 		<Type>24</Type>
@@ -738,7 +738,7 @@
 	<NPC>
 		<Name>Dark Caster</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>2</npcSlots>
+		<slots>2</slots>
 		<Width>18</Width>
 		<Height>40</Height>
 		<Type>32</Type>
@@ -783,7 +783,7 @@
 	<NPC>
 		<Name>Cursed Skull</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>0.75</npcSlots>
+		<slots>0.75</slots>
 		<Width>26</Width>
 		<Height>28</Height>
 		<Type>34</Type>
@@ -808,7 +808,7 @@
 	<NPC>
 		<Name>Skeletron Head</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>6</npcSlots>
+		<slots>6</slots>
 		<Width>80</Width>
 		<Height>102</Height>
 		<Type>35</Type>
@@ -904,7 +904,7 @@
 		<Name>Bone Serpent Head</Name>
 		<netSkip>-2</netSkip>
 		<netAlways>true</netAlways>
-		<npcSlots>6</npcSlots>
+		<slots>6</slots>
 		<Width>22</Width>
 		<Height>22</Height>
 		<Type>39</Type>
@@ -1132,7 +1132,7 @@
 	<NPC>
 		<Name>Cave Bat</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>0.5</npcSlots>
+		<slots>0.5</slots>
 		<Width>22</Width>
 		<Height>18</Height>
 		<Type>49</Type>
@@ -1180,7 +1180,7 @@
 	<NPC>
 		<Name>Jungle Bat</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>0.5</npcSlots>
+		<slots>0.5</slots>
 		<Width>22</Width>
 		<Height>18</Height>
 		<Type>51</Type>
@@ -1334,7 +1334,7 @@
 	<NPC>
 		<Name>Piranha</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>0.5</npcSlots>
+		<slots>0.5</slots>
 		<Width>18</Width>
 		<Height>20</Height>
 		<Type>58</Type>
@@ -1381,7 +1381,7 @@
 	<NPC>
 		<Name>Hellbat</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>0.5</npcSlots>
+		<slots>0.5</slots>
 		<Width>24</Width>
 		<Height>19</Height>
 		<Type>60</Type>
@@ -1428,7 +1428,7 @@
 	<NPC>
 		<Name>Demon</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>2</npcSlots>
+		<slots>2</slots>
 		<Width>28</Width>
 		<Height>48</Height>
 		<Type>62</Type>
@@ -1521,7 +1521,7 @@
 	<NPC>
 		<Name>Voodoo Demon</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>2</npcSlots>
+		<slots>2</slots>
 		<Width>28</Width>
 		<Height>48</Height>
 		<Type>66</Type>
@@ -1612,7 +1612,7 @@
 	<NPC>
 		<Name>Spike Ball</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>0.3</npcSlots>
+		<slots>0.3</slots>
 		<Width>51</Width>
 		<Height>51</Height>
 		<Type>70</Type>
@@ -1638,7 +1638,7 @@
 	<NPC>
 		<Name>Dungeon Slime</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>2</npcSlots>
+		<slots>2</slots>
 		<Width>45</Width>
 		<Height>30</Height>
 		<Type>71</Type>
@@ -1663,7 +1663,7 @@
 	<NPC>
 		<Name>Blazing Wheel</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>0.3</npcSlots>
+		<slots>0.3</slots>
 		<Width>40</Width>
 		<Height>40</Height>
 		<Type>72</Type>
@@ -1978,7 +1978,7 @@
 		<Name>Wyvern Head</Name>
 		<netSkip>-2</netSkip>
 		<netAlways>true</netAlways>
-		<npcSlots>5</npcSlots>
+		<slots>5</slots>
 		<Width>32</Width>
 		<Height>32</Height>
 		<Type>87</Type>
@@ -2128,7 +2128,7 @@
 	<NPC>
 		<Name>Giant Bat</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>0.5</npcSlots>
+		<slots>0.5</slots>
 		<Width>26</Width>
 		<Height>20</Height>
 		<Type>93</Type>
@@ -2256,7 +2256,7 @@
 		<Name>Seeker Head</Name>
 		<netSkip>-2</netSkip>
 		<netAlways>true</netAlways>
-		<npcSlots>3.5</npcSlots>
+		<slots>3.5</slots>
 		<Width>22</Width>
 		<Height>22</Height>
 		<Type>98</Type>
@@ -2359,7 +2359,7 @@
 	<NPC>
 		<Name>Angler Fish</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>0.5</npcSlots>
+		<slots>0.5</slots>
 		<Width>18</Width>
 		<Height>20</Height>
 		<Type>102</Type>
@@ -2606,7 +2606,7 @@
 	<NPC>
 		<Name>Wall of Flesh</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>10</npcSlots>
+		<slots>10</slots>
 		<Width>120</Width>
 		<Height>120</Height>
 		<Type>113</Type>
@@ -2890,7 +2890,7 @@
 	<NPC>
 		<Name>Retinazer</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>5</npcSlots>
+		<slots>5</slots>
 		<Width>100</Width>
 		<Height>110</Height>
 		<Type>125</Type>
@@ -2916,7 +2916,7 @@
 	<NPC>
 		<Name>Spazmatism</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>5</npcSlots>
+		<slots>5</slots>
 		<Width>100</Width>
 		<Height>110</Height>
 		<Type>126</Type>
@@ -2942,7 +2942,7 @@
 	<NPC>
 		<Name>Skeletron Prime</Name>
 		<netSkip>-2</netSkip>
-		<npcSlots>6</npcSlots>
+		<slots>6</slots>
 		<Width>80</Width>
 		<Height>102</Height>
 		<Type>127</Type>
@@ -3109,7 +3109,7 @@
 		<Name>The Destroyer</Name>
 		<netSkip>-2</netSkip>
 		<netAlways>true</netAlways>
-		<npcSlots>5</npcSlots>
+		<slots>5</slots>
 		<Width>47</Width>
 		<Height>47</Height>
 		<Type>134</Type>
@@ -3136,7 +3136,7 @@
 		<Name>The Destroyer Body</Name>
 		<netSkip>-2</netSkip>
 		<netAlways>true</netAlways>
-		<npcSlots>5</npcSlots>
+		<slots>5</slots>
 		<Width>47</Width>
 		<Height>47</Height>
 		<Type>135</Type>
@@ -3163,7 +3163,7 @@
 		<Name>The Destroyer Tail</Name>
 		<netSkip>-2</netSkip>
 		<netAlways>true</netAlways>
-		<npcSlots>5</npcSlots>
+		<slots>5</slots>
 		<Width>47</Width>
 		<Height>47</Height>
 		<Type>136</Type>
@@ -3402,7 +3402,7 @@
     <Width>21</Width>
     <Height>17</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <netSkip>-2</netSkip>
     <NetID>-3</NetID>
   </NPC>
@@ -3419,7 +3419,7 @@
     <Width>14</Width>
     <Height>10</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <netSkip>-2</netSkip>
     <NetID>-4</NetID>
   </NPC>
@@ -3436,7 +3436,7 @@
     <Width>21</Width>
     <Height>17</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <netSkip>-2</netSkip>
     <NetID>-5</NetID>
   </NPC>
@@ -3453,7 +3453,7 @@
     <Width>24</Width>
     <Height>18</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <netSkip>-2</netSkip>
     <NetID>-6</NetID>
   </NPC>
@@ -3470,7 +3470,7 @@
     <Width>28</Width>
     <Height>21</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <netSkip>-2</netSkip>
     <NetID>-7</NetID>
   </NPC>
@@ -3487,7 +3487,7 @@
     <Width>24</Width>
     <Height>18</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <netSkip>-2</netSkip>
     <NetID>-8</NetID>
   </NPC>
@@ -3504,7 +3504,7 @@
     <Width>28</Width>
     <Height>21</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <netSkip>-2</netSkip>
     <NetID>-9</NetID>
   </NPC>
@@ -3521,7 +3521,7 @@
     <Width>26</Width>
     <Height>19</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <netSkip>-2</netSkip>
     <NetID>-10</NetID>
   </NPC>
@@ -3538,7 +3538,7 @@
     <Width>25</Width>
     <Height>25</Height>
     <ConfusionImmunity>true</ConfusionImmunity>
-    <npcSlots>0.85</npcSlots>
+    <slots>0.85</slots>
     <noGravity>true</noGravity>
     <netSkip>-2</netSkip>
     <NetID>-11</NetID>
@@ -3556,7 +3556,7 @@
     <Width>34</Width>
     <Height>34</Height>
     <ConfusionImmunity>true</ConfusionImmunity>
-    <npcSlots>1.15</npcSlots>
+    <slots>1.15</slots>
     <noGravity>true</noGravity>
     <netSkip>-2</netSkip>
     <NetID>-12</NetID>
@@ -3574,7 +3574,7 @@
     <Width>16</Width>
     <Height>35</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <netSkip>-2</netSkip>
     <NetID>-13</NetID>
   </NPC>
@@ -3591,7 +3591,7 @@
     <Width>20</Width>
     <Height>45</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>2</npcSlots>
+    <slots>2</slots>
     <netSkip>-2</netSkip>
     <NetID>-14</NetID>
   </NPC>
@@ -3609,7 +3609,7 @@
     <Height>27</Height>
     <PoisonImmunity>true</PoisonImmunity>
     <ConfusionImmunity>true</ConfusionImmunity>
-    <npcSlots>0.85</npcSlots>
+    <slots>0.85</slots>
     <noGravity>true</noGravity>
     <netSkip>-2</netSkip>
     <NetID>-16</NetID>
@@ -3628,7 +3628,7 @@
     <Height>38</Height>
     <PoisonImmunity>true</PoisonImmunity>
     <ConfusionImmunity>true</ConfusionImmunity>
-    <npcSlots>1.2</npcSlots>
+    <slots>1.2</slots>
     <noGravity>true</noGravity>
     <netSkip>-2</netSkip>
     <NetID>-17</NetID>
@@ -3646,7 +3646,7 @@
     <Width>24</Width>
     <Height>18</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <netSkip>-2</netSkip>
     <NetID>-1</NetID>
   </NPC>
@@ -3663,7 +3663,7 @@
     <Width>35</Width>
     <Height>26</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>1</npcSlots>
+    <slots>1</slots>
     <DisplayName>Slimer</DisplayName>
     <netSkip>-2</netSkip>
     <NetID>-2</NetID>
@@ -3681,7 +3681,7 @@
     <Width>20</Width>
     <Height>44</Height>
     <PoisonImmunity>true</PoisonImmunity>
-    <npcSlots>2</npcSlots>
+    <slots>2</slots>
     <netSkip>-2</netSkip>
     <NetID>-15</NetID>
   </NPC>

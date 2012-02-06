@@ -1269,9 +1269,12 @@ namespace Terraria_Server.Commands
 					if (!String.IsNullOrEmpty(npc.DisplayName))
 						name = npc.DisplayName;
 
+					npc.TargetClosest(true);
+
 					Server.notifyAll(name + Languages.BossSummonedBy + sender.Name, ChatColor.Purple, true);
-					if (!(sender is ConsoleSender))
-						ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, name, BossSlot);
+
+					//if (!(sender is ConsoleSender))
+					//    ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, name, BossSlot);
 				}
 			}
 			else

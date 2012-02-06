@@ -23,7 +23,7 @@ namespace Regions.RegionWork
 
         public bool IsValidRegion()
         {
-            bool LocationCheck = Server.isValidLocation(Point1, false) && Server.isValidLocation(Point2, false);
+            bool LocationCheck = Server.IsValidLocation(Point1, false) && Server.IsValidLocation(Point2, false);
             bool NameCheck = Name != null && Name.Trim().Length > 0;
             return NameCheck && LocationCheck;
         }

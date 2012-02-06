@@ -23,7 +23,7 @@ namespace Terraria_Utilities.Serialize
 			"Name", "Type", "aiStyle", "scale",
 			"damage", "defense", "lifeMax", "value",
 			"knockBackResist", "Width", "Height", "PoisonImmunity",
-			"ConfusionImmunity", "BurningImmunity", "CurseImmunity", "npcSlots",
+			"ConfusionImmunity", "BurningImmunity", "CurseImmunity", "slots",
 			"noTileCollide", "noGravity", "behindTiles", "NetAlways",
 			"DisplayName", "netSkip", "NetID"
 		};
@@ -133,7 +133,7 @@ namespace Terraria_Utilities.Serialize
 					case "Height":
 						writer.WriteCustomObject(npc.Height, feild);
 						break;
-					case "npcSlots":
+					case "slots":
 						writer.WriteCustomObject(npc.npcSlots, feild);
 						break;
 					case "noTileCollide":

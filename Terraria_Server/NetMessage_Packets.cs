@@ -661,7 +661,7 @@ namespace Terraria_Server
 			Byte (g);
 			Byte (b);
 
-			String (text ?? string.Empty);
+			String (text ?? System.String.Empty);
 			
 			End ();
 		}
@@ -806,7 +806,7 @@ namespace Terraria_Server
 		
 		public void KillTile ()
 		{
-			throw new NotImplementedException ("NetMessage.KillTile(TileRefs, )");
+			throw new NotImplementedException ("NetMessage.KillTile()");
 		}
 		
 		public void HealPlayer (int playerId, int amount)
@@ -1087,8 +1087,6 @@ namespace Terraria_Server
 
             //Tell whether RPG is allowed.
             Int((Server.AllowTDCMRPG) ? 1 : 0);
-
-            End();
         }
 
         public void RpgNPCSpawned(int npcId)
@@ -1096,8 +1094,6 @@ namespace Terraria_Server
             Header(Packet.CLIENT_MOD_SPAWN_NPC, 4);
 
             Int(npcId);
-
-            End();
         }
 
 		public void SpawnNPC(int PlayerId, int NPCId) //Can do invasion too (-1)
