@@ -122,9 +122,9 @@ namespace Terraria_Server.Logging
 			Write (new LogEntry { message = format, args = args, thread = Thread.CurrentThread, channel = channel });
 		}
 
-		public static void Log (string text)
+		public static void Log(string text)
 		{
-			Write (new LogEntry (text, null));
+			Write(new LogEntry(text, null));
 		}
 		
 		public static void Log (string format, params object[] args)
@@ -132,9 +132,17 @@ namespace Terraria_Server.Logging
 			Write (new LogEntry (format, args));
 		}
 		
-		public static void Log (LogChannel channel, string text)
+		public static void Log (LogChannel channel, string text, bool multi = false)
 		{
-			Write (new LogEntry (text, null) { channel = channel });
+			if (!multi)
+				Write(new LogEntry(text, null) { channel = channel });
+			else
+			{
+				var split = text.Split('\n');
+
+				foreach (var line in split)
+					Write(new LogEntry(line, null) { channel = channel });
+			}
 		}
 		
 		public static void Log (LogChannel channel, string format, params object[] args)

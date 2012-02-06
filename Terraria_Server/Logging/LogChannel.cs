@@ -13,9 +13,9 @@ namespace Terraria_Server.Logging
 			Name = name;
 		}
 		
-		public void Log (string text)
+		public void Log (string text, bool multi = false)
 		{
-			ProgramLog.Log (this, text);
+			ProgramLog.Log(this, text, multi);
 		}
 		
 		public void Log (string fmt, params object[] args)
