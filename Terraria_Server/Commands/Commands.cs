@@ -605,7 +605,7 @@ namespace Terraria_Server.Commands
 				}
 				catch
 				{
-					throw new CommandError("Specified NPC does not exist");
+					throw new CommandError(Languages.NPCDoesntExist);
 				}
 			}
 
@@ -616,13 +616,13 @@ namespace Terraria_Server.Commands
 				NPCAmount = Int32.Parse(args[0]);
 				if (NPCAmount > Program.properties.SpawnNPCMax && sender is Player)
 				{
-					(sender as Player).Kick("Don't spawn that many.");
+					(sender as Player).Kick(Languages.DontSpawnThatMany);
 					return;
 				}
 			}
 			catch
 			{
-				throw new CommandError("Expected integer for number to spawn.");
+				throw new CommandError(Languages.ExpectedSpawnInteger);
 			}
 
 			string realNPCName = "";
@@ -655,7 +655,7 @@ namespace Terraria_Server.Commands
 				subject = sender as Player;
 				if (subject == null)
 				{
-					sender.sendMessage("Need specify who to teleport.");
+					sender.sendMessage(Languages.NeedTeleportTarget);
 					return;
 				}
 
@@ -663,10 +663,10 @@ namespace Terraria_Server.Commands
 				{
 					if (subject.Teleport(Main.spawnTileX, Main.spawnTileY))
 					{
-						Server.notifyOps(string.Concat("Teleported ", subject.Name, " to spawn."), true);
+						Server.notifyOps(String.Format(Languages.TeleportedToSpawn, subject.Name), true);
 					}
 					else
-						sender.sendMessage("Teleportation failed.");
+						sender.sendMessage(Languages.TeleportFailed);
 					return;
 				}
 			}
@@ -677,7 +677,7 @@ namespace Terraria_Server.Commands
 				subject = sender as Player;
 				if (subject == null)
 				{
-					sender.sendMessage("Need specify who to teleport.");
+					sender.sendMessage(Languages.NeedTeleportTarget);
 					return;
 				}
 
@@ -688,7 +688,7 @@ namespace Terraria_Server.Commands
 						target.Name, ". {", sender.Name, "}"), true);
 				}
 				else
-					sender.sendMessage("Teleportation failed.");
+					sender.sendMessage(Languages.TeleportFailed);
 				return;
 			}
 
@@ -705,10 +705,10 @@ namespace Terraria_Server.Commands
 							target.Name, ". {", sender.Name, "}"), true);
 					}
 					else
-						sender.sendMessage("Teleportation failed.");
+						sender.sendMessage(Languages.TeleportFailed);
 				}
 				else
-					sender.sendMessage("Target player not found.");
+					sender.sendMessage(Languages.PlayerNotFound);
 				return;
 			}
 			else if (args.Count == 2)
@@ -727,10 +727,10 @@ namespace Terraria_Server.Commands
 							x, ":", y, ". {", sender.Name, "}"), true);
 					}
 					else
-						sender.sendMessage("Teleportation failed.");
+						sender.sendMessage(Languages.TeleportFailed);
 				}
 				else
-					throw new CommandError("Invalid coordinates.");
+					throw new CommandError(Languages.InvalidCoords);
 				return;
 			}
 
@@ -753,7 +753,7 @@ namespace Terraria_Server.Commands
 				{
 					if (subject == null)
 					{
-						sender.sendMessage("Could not find a Player on the Server");
+						sender.sendMessage(Languages.CouldNotFindPlayer);
 						return;
 					}
 
@@ -765,7 +765,7 @@ namespace Terraria_Server.Commands
 			}
 			else
 			{
-				throw new CommandError("Only a player can call this command!");
+				throw new CommandError(Languages.OnlyPlayerCanUseCommand);
 			}
 		}
 
@@ -778,13 +778,13 @@ namespace Terraria_Server.Commands
 		{
 			if (!Liquid.panicMode)
 			{
-				sender.sendMessage("Settling Liquids...");
+				sender.sendMessage(Languages.SettlingLiquids);
 				Liquid.StartPanic();
-				sender.sendMessage("Complete.");
+				sender.sendMessage(Languages.Complete);
 			}
 			else
 			{
-				sender.sendMessage("Liquids are already settling");
+				sender.sendMessage(Languages.LiquidsAlreadySettled);
 			}
 		}
 
@@ -802,7 +802,7 @@ namespace Terraria_Server.Commands
 			{
 				playerName = player.Name;
 
-				player.sendMessage("You are now OP!", ChatColor.Green);
+				player.sendMessage(Languages.YouAreNowOP, ChatColor.Green);
 				player.Op = true;
 				if (player.HasClientMod)
 				{
@@ -815,7 +815,7 @@ namespace Terraria_Server.Commands
 
 			if (!Server.OpList.Save())
 			{
-				Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+				Server.notifyOps(Languages.OPlistFailedSave + " {" + sender.Name + "}", true);
 				return;
 			}
 		}
@@ -835,7 +835,7 @@ namespace Terraria_Server.Commands
 
 				if (Player.isInOpList(playerName))
 				{
-					player.sendMessage("You have been De-Opped!.", ChatColor.Green);
+					player.sendMessage(Languages.YouAreNowDeop, ChatColor.Green);
 				}
 
 				player.Op = false;
@@ -853,7 +853,7 @@ namespace Terraria_Server.Commands
 
 			if (!Server.OpList.Save())
 			{
-				Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+				Server.notifyOps(Languages.OPlistFailedSave + " {" + sender.Name + "}", true);
 				return;
 			}
 		}

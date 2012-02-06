@@ -51,6 +51,21 @@ namespace Terraria_Server.Language
 		public static String MoreThanOneItemFoundType { get; set; }
 		public static String TooManyArguments { get; set; }
 		public static String NobodyOnline { get; set; }
+		public static String NPCDoesntExist { get; set; }
+		public static String DontSpawnThatMany { get; set; }
+		public static String ExpectedSpawnInteger { get; set; }
+		public static String NeedTeleportTarget { get; set; }
+		public static String TeleportedToSpawn { get; set; }
+		public static String TeleportFailed { get; set; }
+		public static String PlayerNotFound { get; set; }
+		public static String InvalidCoords { get; set; }
+		public static String CouldNotFindPlayer { get; set; }
+		public static String OnlyPlayerCanUseCommand { get; set; }
+		public static String SettlingLiquids { get; set; }
+		public static String Complete { get; set; }
+		public static String LiquidsAlreadySettled { get; set; }
+		public static String YouAreNowOP { get; set; }
+		public static String YouAreNowDeop { get; set; }
 
 		public static String RPGMode_Allowed { get; set; }
 		public static String RPGMode_Refused { get; set; }
