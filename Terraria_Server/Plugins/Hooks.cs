@@ -267,11 +267,11 @@ namespace Terraria_Server.Plugins
 				{
 					if (c < 32 || c > 126)
 					{
-						Console.Write ((byte) c);
+						//Console.Write ((byte) c);
 						error = "Invalid name: contains non-printable characters.";
 						return false;
 					}
-					Console.Write (c);
+					//Console.Write (c);
 				}
 				
 				if (Name.Contains (" " + " "))
