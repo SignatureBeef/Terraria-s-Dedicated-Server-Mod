@@ -14,7 +14,7 @@
 		<soundKilled>1</soundKilled>
 		<lifeMax>25</lifeMax>
 		<Name>Blue Slime</Name>
-		<displayName>Blue Slime</displayName>
+		<DisplayName>Blue Slime</DisplayName>
 		<alpha>175</alpha>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -36,7 +36,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>60</lifeMax>
-		<displayName>Demon Eye</displayName>
+		<DisplayName>Demon Eye</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -58,7 +58,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>45</lifeMax>
-		<displayName>Zombie</displayName>
+		<DisplayName>Zombie</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -81,7 +81,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>2800</lifeMax>
-		<displayName>Eye of Cthulhu</displayName>
+		<DisplayName>Eye of Cthulhu</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -104,7 +104,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>8</lifeMax>
-		<displayName>Servant of Cthulhu</displayName>
+		<DisplayName>Servant of Cthulhu</DisplayName>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
@@ -126,7 +126,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>40</lifeMax>
-		<displayName>Eater of Souls</displayName>
+		<DisplayName>Eater of Souls</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -151,7 +151,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>100</lifeMax>
-		<displayName>Devourer</displayName>
+		<DisplayName>Devourer</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -177,7 +177,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>100</lifeMax>
-		<displayName>Devourer</displayName>
+		<DisplayName>Devourer</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -203,7 +203,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>100</lifeMax>
-		<displayName>Devourer</displayName>
+		<DisplayName>Devourer</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -227,7 +227,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>30</lifeMax>
-		<displayName>Giant Worm</displayName>
+		<DisplayName>Giant Worm</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -253,7 +253,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>30</lifeMax>
-		<displayName>Giant Worm</displayName>
+		<DisplayName>Giant Worm</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -279,7 +279,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>30</lifeMax>
-		<displayName>Giant Worm</displayName>
+		<DisplayName>Giant Worm</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -306,7 +306,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>65</lifeMax>
-		<displayName>Eater of Worlds</displayName>
+		<DisplayName>Eater of Worlds</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -332,7 +332,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>150</lifeMax>
-		<displayName>Eater of Worlds</displayName>
+		<DisplayName>Eater of Worlds</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -358,7 +358,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>220</lifeMax>
-		<displayName>Eater of Worlds</displayName>
+		<DisplayName>Eater of Worlds</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -384,7 +384,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>90</lifeMax>
-		<displayName>Mother Slime</displayName>
+		<DisplayName>Mother Slime</DisplayName>
 		<alpha>120</alpha>
 		<scale>1.25</scale>
 		<knockBackResist>0.6</knockBackResist>
@@ -408,7 +408,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Merchant</displayName>
+		<DisplayName>Merchant</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -431,7 +431,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Nurse</displayName>
+		<DisplayName>Nurse</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -454,7 +454,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Arms Dealer</displayName>
+		<DisplayName>Arms Dealer</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -477,7 +477,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Dryad</displayName>
+		<DisplayName>Dryad</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -500,7 +500,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>60</lifeMax>
-		<displayName>Skeleton</displayName>
+		<DisplayName>Skeleton</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -522,7 +522,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Guide</displayName>
+		<DisplayName>Guide</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -545,7 +545,7 @@
 		<soundHit>3</soundHit>
 		<soundKilled>3</soundKilled>
 		<lifeMax>26</lifeMax>
-		<displayName>Meteor Head</displayName>
+		<DisplayName>Meteor Head</DisplayName>
 		<knockBackResist>0.4</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -570,7 +570,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>70</lifeMax>
-		<displayName>Fire Imp</displayName>
+		<DisplayName>Fire Imp</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -591,7 +591,7 @@
 		<soundHit>3</soundHit>
 		<soundKilled>3</soundKilled>
 		<lifeMax>1</lifeMax>
-		<displayName>Burning Sphere</displayName>
+		<DisplayName>Burning Sphere</DisplayName>
 		<alpha>100</alpha>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -615,7 +615,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>60</lifeMax>
-		<displayName>Goblin Peon</displayName>
+		<DisplayName>Goblin Peon</DisplayName>
 		<scale>0.9</scale>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -638,7 +638,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>80</lifeMax>
-		<displayName>Goblin Thief</displayName>
+		<DisplayName>Goblin Thief</DisplayName>
 		<scale>0.95</scale>
 		<knockBackResist>0.7</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -661,7 +661,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>110</lifeMax>
-		<displayName>Goblin Warrior</displayName>
+		<DisplayName>Goblin Warrior</DisplayName>
 		<scale>1.1</scale>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -684,7 +684,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>40</lifeMax>
-		<displayName>Goblin Sorcerer</displayName>
+		<DisplayName>Goblin Sorcerer</DisplayName>
 		<knockBackResist>0.6</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -704,7 +704,7 @@
 		<soundHit>3</soundHit>
 		<soundKilled>3</soundKilled>
 		<lifeMax>1</lifeMax>
-		<displayName>Chaos Ball</displayName>
+		<DisplayName>Chaos Ball</DisplayName>
 		<alpha>100</alpha>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -728,7 +728,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>80</lifeMax>
-		<displayName>Angry Bones</displayName>
+		<DisplayName>Angry Bones</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -751,7 +751,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>50</lifeMax>
-		<displayName>Dark Caster</displayName>
+		<DisplayName>Dark Caster</DisplayName>
 		<knockBackResist>0.6</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -771,7 +771,7 @@
 		<soundHit>3</soundHit>
 		<soundKilled>3</soundKilled>
 		<lifeMax>1</lifeMax>
-		<displayName>Water Sphere</displayName>
+		<DisplayName>Water Sphere</DisplayName>
 		<alpha>100</alpha>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -796,7 +796,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>40</lifeMax>
-		<displayName>Cursed Skull</displayName>
+		<DisplayName>Cursed Skull</DisplayName>
 		<knockBackResist>0.2</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -821,7 +821,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>4400</lifeMax>
-		<displayName>Skeletron</displayName>
+		<DisplayName>Skeletron</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -846,7 +846,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>600</lifeMax>
-		<displayName>Skeletron</displayName>
+		<DisplayName>Skeletron</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -869,7 +869,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Old Man</displayName>
+		<DisplayName>Old Man</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -892,7 +892,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Demolitionist</displayName>
+		<DisplayName>Demolitionist</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -917,7 +917,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>5</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Bone Serpent</displayName>
+		<DisplayName>Bone Serpent</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -943,7 +943,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>5</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Bone Serpent</displayName>
+		<DisplayName>Bone Serpent</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -969,7 +969,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>5</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Bone Serpent</displayName>
+		<DisplayName>Bone Serpent</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -994,7 +994,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>50</lifeMax>
-		<displayName>Hornet</displayName>
+		<DisplayName>Hornet</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -1017,7 +1017,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>130</lifeMax>
-		<displayName>Man Eater</displayName>
+		<DisplayName>Man Eater</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -1041,7 +1041,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>70</lifeMax>
-		<displayName>Undead Miner</displayName>
+		<DisplayName>Undead Miner</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1063,7 +1063,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Tim</displayName>
+		<DisplayName>Tim</DisplayName>
 		<knockBackResist>0.6</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1081,7 +1081,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>5</lifeMax>
-		<displayName>Bunny</displayName>
+		<DisplayName>Bunny</DisplayName>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
 		<NetID>46</NetID>
@@ -1101,7 +1101,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>70</lifeMax>
-		<displayName>Corrupt Bunny</displayName>
+		<DisplayName>Corrupt Bunny</DisplayName>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
 		<value>500</value>
@@ -1122,7 +1122,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>100</lifeMax>
-		<displayName>Harpy</displayName>
+		<DisplayName>Harpy</DisplayName>
 		<knockBackResist>0.6</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1145,7 +1145,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>4</soundKilled>
 		<lifeMax>16</lifeMax>
-		<displayName>Cave Bat</displayName>
+		<DisplayName>Cave Bat</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1167,7 +1167,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>2000</lifeMax>
-		<displayName>King Slime</displayName>
+		<DisplayName>King Slime</DisplayName>
 		<alpha>30</alpha>
 		<scale>1.25</scale>
 		<knockBackResist>0</knockBackResist>
@@ -1193,7 +1193,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>4</soundKilled>
 		<lifeMax>34</lifeMax>
-		<displayName>Jungle Bat</displayName>
+		<DisplayName>Jungle Bat</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1215,7 +1215,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>500</lifeMax>
-		<displayName>Doctor Bones</displayName>
+		<DisplayName>Doctor Bones</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1237,7 +1237,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>The Groom</displayName>
+		<DisplayName>The Groom</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1259,7 +1259,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Clothier</displayName>
+		<DisplayName>Clothier</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1278,7 +1278,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>5</lifeMax>
-		<displayName>Goldfish</displayName>
+		<DisplayName>Goldfish</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -1300,7 +1300,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>60</lifeMax>
-		<displayName>Snatcher</displayName>
+		<DisplayName>Snatcher</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -1324,7 +1324,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>100</lifeMax>
-		<displayName>Corrupt Goldfish</displayName>
+		<DisplayName>Corrupt Goldfish</DisplayName>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
 		<netUpdate>true</netUpdate>
@@ -1347,7 +1347,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>30</lifeMax>
-		<displayName>Piranha</displayName>
+		<DisplayName>Piranha</DisplayName>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
 		<netUpdate>true</netUpdate>
@@ -1369,7 +1369,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>50</lifeMax>
-		<displayName>Lava Slime</displayName>
+		<DisplayName>Lava Slime</DisplayName>
 		<alpha>50</alpha>
 		<scale>1.1</scale>
 		<oldTarget>255</oldTarget>
@@ -1394,7 +1394,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>4</soundKilled>
 		<lifeMax>46</lifeMax>
-		<displayName>Hellbat</displayName>
+		<DisplayName>Hellbat</DisplayName>
 		<scale>1.1</scale>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -1418,7 +1418,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>40</lifeMax>
-		<displayName>Vulture</displayName>
+		<DisplayName>Vulture</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1441,7 +1441,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>120</lifeMax>
-		<displayName>Demon</displayName>
+		<DisplayName>Demon</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1464,7 +1464,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>30</lifeMax>
-		<displayName>Blue Jellyfish</displayName>
+		<DisplayName>Blue Jellyfish</DisplayName>
 		<alpha>20</alpha>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -1487,7 +1487,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>70</lifeMax>
-		<displayName>Pink Jellyfish</displayName>
+		<DisplayName>Pink Jellyfish</DisplayName>
 		<alpha>20</alpha>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -1510,7 +1510,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>300</lifeMax>
-		<displayName>Shark</displayName>
+		<DisplayName>Shark</DisplayName>
 		<knockBackResist>0.7</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -1534,7 +1534,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>140</lifeMax>
-		<displayName>Voodoo Demon</displayName>
+		<DisplayName>Voodoo Demon</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1557,7 +1557,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>40</lifeMax>
-		<displayName>Crab</displayName>
+		<DisplayName>Crab</DisplayName>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
 		<value>60</value>
@@ -1578,7 +1578,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>9999</lifeMax>
-		<displayName>Dungeon Guardian</displayName>
+		<DisplayName>Dungeon Guardian</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -1601,7 +1601,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>45</lifeMax>
-		<displayName>Antlion</displayName>
+		<DisplayName>Antlion</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1625,7 +1625,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>100</lifeMax>
-		<displayName>Spike Ball</displayName>
+		<DisplayName>Spike Ball</DisplayName>
 		<scale>1.5</scale>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -1651,7 +1651,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>150</lifeMax>
-		<displayName>Dungeon Slime</displayName>
+		<DisplayName>Dungeon Slime</DisplayName>
 		<alpha>60</alpha>
 		<scale>1.25</scale>
 		<knockBackResist>0.6</knockBackResist>
@@ -1676,7 +1676,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>100</lifeMax>
-		<displayName>Blazing Wheel</displayName>
+		<DisplayName>Blazing Wheel</DisplayName>
 		<alpha>100</alpha>
 		<scale>1.2</scale>
 		<knockBackResist>0</knockBackResist>
@@ -1702,7 +1702,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>80</lifeMax>
-		<displayName>Goblin Scout</displayName>
+		<DisplayName>Goblin Scout</DisplayName>
 		<scale>0.95</scale>
 		<knockBackResist>0.7</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -1721,7 +1721,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>5</lifeMax>
-		<displayName>Bird</displayName>
+		<DisplayName>Bird</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1742,7 +1742,7 @@
 		<soundHit>5</soundHit>
 		<soundKilled>7</soundKilled>
 		<lifeMax>150</lifeMax>
-		<displayName>Pixie</displayName>
+		<DisplayName>Pixie</DisplayName>
 		<knockBackResist>0.6</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -1765,7 +1765,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>340</lifeMax>
-		<displayName>Armored Skeleton</displayName>
+		<DisplayName>Armored Skeleton</DisplayName>
 		<knockBackResist>0.4</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1787,7 +1787,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>130</lifeMax>
-		<displayName>Mummy</displayName>
+		<DisplayName>Mummy</DisplayName>
 		<knockBackResist>0.6</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1809,7 +1809,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>180</lifeMax>
-		<displayName>Dark Mummy</displayName>
+		<DisplayName>Dark Mummy</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1831,7 +1831,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Light Mummy</displayName>
+		<DisplayName>Light Mummy</DisplayName>
 		<knockBackResist>0.55</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1853,7 +1853,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>170</lifeMax>
-		<displayName>Corrupt Slime</displayName>
+		<DisplayName>Corrupt Slime</DisplayName>
 		<alpha>55</alpha>
 		<scale>1.1</scale>
 		<oldTarget>255</oldTarget>
@@ -1876,7 +1876,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Wraith</displayName>
+		<DisplayName>Wraith</DisplayName>
 		<alpha>100</alpha>
 		<knockBackResist>0.7</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -1901,7 +1901,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Cursed Hammer</displayName>
+		<DisplayName>Cursed Hammer</DisplayName>
 		<knockBackResist>0.4</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1923,7 +1923,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Enchanted Sword</displayName>
+		<DisplayName>Enchanted Sword</DisplayName>
 		<knockBackResist>0.4</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1945,7 +1945,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>500</lifeMax>
-		<displayName>Mimic</displayName>
+		<DisplayName>Mimic</DisplayName>
 		<knockBackResist>0.3</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1967,7 +1967,7 @@
 		<soundHit>10</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>400</lifeMax>
-		<displayName>Unicorn</displayName>
+		<DisplayName>Unicorn</DisplayName>
 		<knockBackResist>0.3</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -1991,7 +1991,7 @@
 		<soundHit>7</soundHit>
 		<soundKilled>8</soundKilled>
 		<lifeMax>4000</lifeMax>
-		<displayName>Wyvern</displayName>
+		<DisplayName>Wyvern</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2016,7 +2016,7 @@
 		<soundHit>7</soundHit>
 		<soundKilled>8</soundKilled>
 		<lifeMax>4000</lifeMax>
-		<displayName>Wyvern</displayName>
+		<DisplayName>Wyvern</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2041,7 +2041,7 @@
 		<soundHit>7</soundHit>
 		<soundKilled>8</soundKilled>
 		<lifeMax>4000</lifeMax>
-		<displayName>Wyvern</displayName>
+		<DisplayName>Wyvern</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2066,7 +2066,7 @@
 		<soundHit>7</soundHit>
 		<soundKilled>8</soundKilled>
 		<lifeMax>4000</lifeMax>
-		<displayName>Wyvern</displayName>
+		<DisplayName>Wyvern</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2091,7 +2091,7 @@
 		<soundHit>7</soundHit>
 		<soundKilled>8</soundKilled>
 		<lifeMax>4000</lifeMax>
-		<displayName>Wyvern</displayName>
+		<DisplayName>Wyvern</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2116,7 +2116,7 @@
 		<soundHit>7</soundHit>
 		<soundKilled>8</soundKilled>
 		<lifeMax>4000</lifeMax>
-		<displayName>Wyvern</displayName>
+		<DisplayName>Wyvern</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2141,7 +2141,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>4</soundKilled>
 		<lifeMax>160</lifeMax>
-		<displayName>Giant Bat</displayName>
+		<DisplayName>Giant Bat</DisplayName>
 		<knockBackResist>0.75</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -2163,7 +2163,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>230</lifeMax>
-		<displayName>Corruptor</displayName>
+		<DisplayName>Corruptor</DisplayName>
 		<knockBackResist>0.55</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2187,7 +2187,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Digger</displayName>
+		<DisplayName>Digger</DisplayName>
 		<scale>0.9</scale>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -2214,7 +2214,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Digger</displayName>
+		<DisplayName>Digger</DisplayName>
 		<scale>0.9</scale>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -2241,7 +2241,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Digger</displayName>
+		<DisplayName>Digger</DisplayName>
 		<scale>0.9</scale>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -2269,7 +2269,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>500</lifeMax>
-		<displayName>World Feeder</displayName>
+		<DisplayName>World Feeder</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2295,7 +2295,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>500</lifeMax>
-		<displayName>World Feeder</displayName>
+		<DisplayName>World Feeder</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2321,7 +2321,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>500</lifeMax>
-		<displayName>World Feeder</displayName>
+		<DisplayName>World Feeder</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2346,7 +2346,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>320</lifeMax>
-		<displayName>Clinger</displayName>
+		<DisplayName>Clinger</DisplayName>
 		<knockBackResist>0.2</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2372,7 +2372,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>90</lifeMax>
-		<displayName>Angler Fish</displayName>
+		<DisplayName>Angler Fish</DisplayName>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
 		<netUpdate>true</netUpdate>
@@ -2394,7 +2394,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>120</lifeMax>
-		<displayName>Green Jellyfish</displayName>
+		<DisplayName>Green Jellyfish</DisplayName>
 		<alpha>20</alpha>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2417,7 +2417,7 @@
 		<soundHit>6</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>400</lifeMax>
-		<displayName>Werewolf</displayName>
+		<DisplayName>Werewolf</DisplayName>
 		<knockBackResist>0.4</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -2438,7 +2438,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Bound Goblin</displayName>
+		<DisplayName>Bound Goblin</DisplayName>
 		<scale>0.9</scale>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -2460,7 +2460,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Bound Wizard</displayName>
+		<DisplayName>Bound Wizard</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -2482,7 +2482,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Goblin Tinkerer</displayName>
+		<DisplayName>Goblin Tinkerer</DisplayName>
 		<scale>0.9</scale>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -2506,7 +2506,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Wizard</displayName>
+		<DisplayName>Wizard</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -2529,7 +2529,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>400</lifeMax>
-		<displayName>Clown</displayName>
+		<DisplayName>Clown</DisplayName>
 		<knockBackResist>0.4</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -2551,7 +2551,7 @@
 		<soundHit>2</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>260</lifeMax>
-		<displayName>Skeleton Archer</displayName>
+		<DisplayName>Skeleton Archer</DisplayName>
 		<knockBackResist>0.55</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -2573,7 +2573,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>80</lifeMax>
-		<displayName>Goblin Archer</displayName>
+		<DisplayName>Goblin Archer</DisplayName>
 		<scale>0.95</scale>
 		<knockBackResist>0.7</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -2593,7 +2593,7 @@
 		<defDamage>65</defDamage>
 		<soundKilled>9</soundKilled>
 		<lifeMax>1</lifeMax>
-		<displayName>Vile Spit</displayName>
+		<DisplayName>Vile Spit</DisplayName>
 		<alpha>80</alpha>
 		<scale>0.9</scale>
 		<knockBackResist>0</knockBackResist>
@@ -2619,7 +2619,7 @@
 		<soundHit>8</soundHit>
 		<soundKilled>10</soundKilled>
 		<lifeMax>8000</lifeMax>
-		<displayName>Wall of Flesh</displayName>
+		<DisplayName>Wall of Flesh</DisplayName>
 		<scale>1.2</scale>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -2644,7 +2644,7 @@
 		<soundHit>8</soundHit>
 		<soundKilled>10</soundKilled>
 		<lifeMax>8000</lifeMax>
-		<displayName>Wall of Flesh</displayName>
+		<DisplayName>Wall of Flesh</DisplayName>
 		<scale>1.2</scale>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -2670,7 +2670,7 @@
 		<soundHit>9</soundHit>
 		<soundKilled>11</soundKilled>
 		<lifeMax>240</lifeMax>
-		<displayName>The Hungry</displayName>
+		<DisplayName>The Hungry</DisplayName>
 		<knockBackResist>1.1</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2694,7 +2694,7 @@
 		<soundHit>9</soundHit>
 		<soundKilled>12</soundKilled>
 		<lifeMax>80</lifeMax>
-		<displayName>The Hungry</displayName>
+		<DisplayName>The Hungry</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -2716,7 +2716,7 @@
 		<soundHit>9</soundHit>
 		<soundKilled>12</soundKilled>
 		<lifeMax>60</lifeMax>
-		<displayName>Leech</displayName>
+		<DisplayName>Leech</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2741,7 +2741,7 @@
 		<soundHit>9</soundHit>
 		<soundKilled>12</soundKilled>
 		<lifeMax>60</lifeMax>
-		<displayName>Leech</displayName>
+		<DisplayName>Leech</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2766,7 +2766,7 @@
 		<soundHit>9</soundHit>
 		<soundKilled>12</soundKilled>
 		<lifeMax>60</lifeMax>
-		<displayName>Leech</displayName>
+		<DisplayName>Leech</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2790,7 +2790,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>370</lifeMax>
-		<displayName>Chaos Elemental</displayName>
+		<DisplayName>Chaos Elemental</DisplayName>
 		<knockBackResist>0.4</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -2811,7 +2811,7 @@
 		<defDefense>20</defDefense>
 		<soundHit>1</soundHit>
 		<lifeMax>60</lifeMax>
-		<displayName>Slimer</displayName>
+		<DisplayName>Slimer</DisplayName>
 		<alpha>55</alpha>
 		<scale>1.1</scale>
 		<knockBackResist>0.8</knockBackResist>
@@ -2834,7 +2834,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>220</lifeMax>
-		<displayName>Gastropod</displayName>
+		<DisplayName>Gastropod</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2856,7 +2856,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Bound Mechanic</displayName>
+		<DisplayName>Bound Mechanic</DisplayName>
 		<scale>0.9</scale>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -2879,7 +2879,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Mechanic</displayName>
+		<DisplayName>Mechanic</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -2903,7 +2903,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>24000</lifeMax>
-		<displayName>Retinazer</displayName>
+		<DisplayName>Retinazer</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2929,7 +2929,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>24000</lifeMax>
-		<displayName>Spazmatism</displayName>
+		<DisplayName>Spazmatism</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2955,7 +2955,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>30000</lifeMax>
-		<displayName>Skeletron Prime</displayName>
+		<DisplayName>Skeletron Prime</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -2981,7 +2981,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>7000</lifeMax>
-		<displayName>Prime Cannon</displayName>
+		<DisplayName>Prime Cannon</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -3005,7 +3005,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>10000</lifeMax>
-		<displayName>Prime Saw</displayName>
+		<DisplayName>Prime Saw</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -3029,7 +3029,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>10000</lifeMax>
-		<displayName>Prime Vice</displayName>
+		<DisplayName>Prime Vice</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -3053,7 +3053,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>6000</lifeMax>
-		<displayName>Prime Laser</displayName>
+		<DisplayName>Prime Laser</DisplayName>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -3076,7 +3076,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>2</soundKilled>
 		<lifeMax>45</lifeMax>
-		<displayName>Zombie</displayName>
+		<DisplayName>Zombie</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -3098,7 +3098,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>300</lifeMax>
-		<displayName>Wandering Eye</displayName>
+		<DisplayName>Wandering Eye</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -3120,7 +3120,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>80000</lifeMax>
-		<displayName>The Destroyer</displayName>
+		<DisplayName>The Destroyer</DisplayName>
 		<scale>1.25</scale>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -3149,7 +3149,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>80000</lifeMax>
-		<displayName>The Destroyer</displayName>
+		<DisplayName>The Destroyer</DisplayName>
 		<scale>1.25</scale>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -3176,7 +3176,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>80000</lifeMax>
-		<displayName>The Destroyer</displayName>
+		<DisplayName>The Destroyer</DisplayName>
 		<scale>1.25</scale>
 		<knockBackResist>0</knockBackResist>
 		<oldTarget>255</oldTarget>
@@ -3201,7 +3201,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Illuminant Bat</displayName>
+		<DisplayName>Illuminant Bat</DisplayName>
 		<knockBackResist>0.75</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -3223,7 +3223,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>180</lifeMax>
-		<displayName>Illuminant Slime</displayName>
+		<DisplayName>Illuminant Slime</DisplayName>
 		<alpha>100</alpha>
 		<scale>1.05</scale>
 		<knockBackResist>0.85</knockBackResist>
@@ -3247,7 +3247,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>14</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Probe</displayName>
+		<DisplayName>Probe</DisplayName>
 		<knockBackResist>0.8</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<noGravity>true</noGravity>
@@ -3270,7 +3270,7 @@
 		<soundHit>4</soundHit>
 		<soundKilled>6</soundKilled>
 		<lifeMax>260</lifeMax>
-		<displayName>Possessed Armor</displayName>
+		<DisplayName>Possessed Armor</DisplayName>
 		<knockBackResist>0.4</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -3292,7 +3292,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>150</lifeMax>
-		<displayName>Toxic Sludge</displayName>
+		<DisplayName>Toxic Sludge</DisplayName>
 		<alpha>55</alpha>
 		<scale>1.1</scale>
 		<knockBackResist>0.8</knockBackResist>
@@ -3316,7 +3316,7 @@
 		<soundHit>1</soundHit>
 		<soundKilled>1</soundKilled>
 		<lifeMax>250</lifeMax>
-		<displayName>Santa Claus</displayName>
+		<DisplayName>Santa Claus</DisplayName>
 		<knockBackResist>0.5</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -3339,7 +3339,7 @@
 		<soundHit>11</soundHit>
 		<soundKilled>15</soundKilled>
 		<lifeMax>200</lifeMax>
-		<displayName>Snowman Gangsta</displayName>
+		<DisplayName>Snowman Gangsta</DisplayName>
 		<knockBackResist>0.6</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -3361,7 +3361,7 @@
 		<soundHit>11</soundHit>
 		<soundKilled>15</soundKilled>
 		<lifeMax>240</lifeMax>
-		<displayName>Mister Stabby</displayName>
+		<DisplayName>Mister Stabby</DisplayName>
 		<knockBackResist>0.6</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>
@@ -3383,7 +3383,7 @@
 		<soundHit>11</soundHit>
 		<soundKilled>15</soundKilled>
 		<lifeMax>220</lifeMax>
-		<displayName>Snow Balla</displayName>
+		<DisplayName>Snow Balla</DisplayName>
 		<knockBackResist>0.6</knockBackResist>
 		<oldTarget>255</oldTarget>
 		<netUpdate>true</netUpdate>

@@ -1262,9 +1262,16 @@ namespace Terraria_Server.Commands
 				{
 					Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
 					int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
-					Server.notifyAll(Main.npcs[BossSlot].Name + Languages.BossSummonedBy + sender.Name, ChatColor.Purple, true);
+
+					var npc = Main.npcs[BossSlot];
+					var name = npc.Name;
+
+					if (!String.IsNullOrEmpty(npc.DisplayName))
+						name = npc.DisplayName;
+
+					Server.notifyAll(name + Languages.BossSummonedBy + sender.Name, ChatColor.Purple, true);
 					if (!(sender is ConsoleSender))
-						ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, Main.npcs[BossSlot].Name, BossSlot);
+						ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, name, BossSlot);
 				}
 			}
 			else
