@@ -31,6 +31,10 @@
 	<CannotQuestGiverWithoutTDCM>You cannot spawn the Quest Giver without allowing TDCM Clients!</CannotQuestGiverWithoutTDCM>
 	<QuestGiverAlreadySpawned>The Quest Giver is already spawned!</QuestGiverAlreadySpawned>
 	<YouMustWaitBeforeAnotherCommand>You must wait {0:0} more seconds before using this command.</YouMustWaitBeforeAnotherCommand>
+	<MoreThanOneItemFoundNameId>There were {0} Items found regarding the specified name/id</MoreThanOneItemFoundNameId>
+	<MoreThanOneItemFoundType>There were {0} Items found regarding the specified Type Id</MoreThanOneItemFoundType>
+	<TooManyArguments>Too many arguments. NPC and player names with spaces require quotes.</TooManyArguments>
+	<NobodyOnline>There is nobody online.</NobodyOnline>
 	<RPGMode_Allowed>RPG Mode is now allowed on this server:</RPGMode_Allowed>
 	<RPGMode_Refused>RPG Mode is now refused on this server:</RPGMode_Refused>
 	<ItemRejection_Added> was added to the Item Rejection list!</ItemRejection_Added>

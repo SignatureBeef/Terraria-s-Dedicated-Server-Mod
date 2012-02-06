@@ -47,6 +47,10 @@ namespace Terraria_Server.Language
 		public static String CannotQuestGiverWithoutTDCM { get; set; }
 		public static String QuestGiverAlreadySpawned { get; set; }
 		public static String YouMustWaitBeforeAnotherCommand { get; set; }
+		public static String MoreThanOneItemFoundNameId { get; set; }
+		public static String MoreThanOneItemFoundType { get; set; }
+		public static String TooManyArguments { get; set; }
+		public static String NobodyOnline { get; set; }
 
 		public static String RPGMode_Allowed { get; set; }
 		public static String RPGMode_Refused { get; set; }
