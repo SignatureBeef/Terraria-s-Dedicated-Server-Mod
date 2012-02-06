@@ -1437,8 +1437,8 @@ namespace Terraria_Server
 
 			if (!noBroadcast)
 			{
-				NetMessage.SendData(21, -1, -1, "", Main.item[itemIndex]Index);
-				Main.item[itemIndex].FindOwner(Main.item[itemIndex]Index);
+				NetMessage.SendData(21, -1, -1, "", itemIndex);
+				Main.item[itemIndex].FindOwner(itemIndex);
 			}
 
 			return itemIndex;

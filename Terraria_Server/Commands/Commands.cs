@@ -584,6 +584,7 @@ namespace Terraria_Server.Commands
 		public static void SpawnNPC(ISender sender, ArgumentList args)
 		{
 			Player player = sender as Player;
+			int NPCAmount;
 			if (args.Count > 3)
 			{
 				throw new CommandError(Languages.TooManyArguments);
@@ -603,27 +604,14 @@ namespace Terraria_Server.Commands
 			// Get the class id of the npc
 			int realNPCId = 0;
 			NPC fclass = Registries.NPC.FindClass(npcName);
-			if (fclass.type != Registries.NPC.Default.type)
-			{
+			if (fclass != Registries.NPC.Default)
 				realNPCId = fclass.Type;
-			}
 			else
-			{
-				try
-				{
-					realNPCId = Int32.Parse(npcName);
-				}
-				catch
-				{
-					throw new CommandError(Languages.NPCDoesntExist);
-				}
-			}
-
-			int NPCAmount = 0;
+				throw new CommandError(Languages.NPCDoesntExist);
 
 			try
 			{
-				NPCAmount = Int32.Parse(args[0]);
+				NPCAmount = args.GetInt(0);
 				if (NPCAmount > Program.properties.SpawnNPCMax && sender is Player)
 				{
 					(sender as Player).Kick(Languages.DontSpawnThatMany);
@@ -635,16 +623,13 @@ namespace Terraria_Server.Commands
 				throw new CommandError(Languages.ExpectedSpawnInteger);
 			}
 
-			string realNPCName = "";
+			string realNPCName = String.Empty;
 			for (int i = 0; i < NPCAmount; i++)
 			{
 				Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
 				int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), fclass.Name);
-				//Registries.NPC.Alter(Main.npcs[npcIndex], fclass.Name);
+
 				realNPCName = Main.npcs[npcIndex].Name;
-				//				var npc = Main.npcs[npcIndex];
-				//				Console.WriteLine ("Name: {0}, Type: {1}, NetID: {2}, Scale: {3}, Height: {4}, Width: {5}, Ghost: {6}, Flying: {7}, Life: {8}/{9}, Debuffs: {10}/{11}",
-				//					npc.Name, npc.Type, npc.NetID, npc.scale, npc.Height, npc.Width, npc.noTileCollide, npc.noGravity, npc.life, npc.lifeMax, string.Join(",", npc.buffType), string.Join(",", npc.buffTime));
 			}
 			Server.notifyOps("Spawned " + NPCAmount.ToString() + " of " +
 					realNPCName + " {" + player.Name + "}", true);
