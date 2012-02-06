@@ -44,15 +44,15 @@ namespace Terraria_Server.Messages
 				if (typeOrInvasion >= 0)
 					return;
 
-				int num124 = -1;
+				int invasionType = typeOrInvasion;
 
 				if (typeOrInvasion == -1 || typeOrInvasion == -2)
-					num124 *= 1;
+					invasionType *= 1;
 
-				if (num124 > 0 && Main.invasionType == 0)
+				if (invasionType > 0 && Main.invasionType == 0)
 				{
 					Main.invasionDelay = 0;
-					Main.StartInvasion(typeOrInvasion);
+					Main.StartInvasion(invasionType);
 				}
 			}
 		}
