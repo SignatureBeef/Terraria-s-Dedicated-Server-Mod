@@ -68,7 +68,7 @@ namespace Terraria_Server
 
         public static int FindChest(int X, int Y)
         {
-            for (int i = 0; i < Main.maxChests; i++)
+            for (int i = 0; i < Main.MAX_CHESTS; i++)
             {
                 if (Main.chest[i] != null && Main.chest[i].x == X && Main.chest[i].y == Y)
                     return i;
@@ -82,7 +82,7 @@ namespace Terraria_Server
             if (FindChest(X, Y) != -1)
                 return -1;
 
-            for (int i = 0; i < Main.maxChests; i++)
+            for (int i = 0; i < Main.MAX_CHESTS; i++)
             {
                 if (Main.chest[i] == null)
                 {

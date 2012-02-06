@@ -166,14 +166,10 @@ namespace Terraria_Server
 				catch { }
 			}
 
-			if (false == WorldIO.saveWorld(null, Server.World.SavePath, true))
-			{
-				WorldIO.saveWorld(null, Server.World.SavePath, true);
+			if (!WorldIO.saveWorld(Server.World.SavePath, true))
 				ProgramLog.Error.Log("Saving failed.  Quitting without saving.");
-			}
 
 			ServerUp = false;
-			//Statics.serverStarted = false;
 		}
 
 		static bool AcceptClient(Socket client)

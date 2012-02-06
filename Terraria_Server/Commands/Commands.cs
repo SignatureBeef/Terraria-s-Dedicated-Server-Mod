@@ -231,11 +231,10 @@ namespace Terraria_Server.Commands
 		{
 			Server.notifyOps(Languages.SavingWorld, true);
 
-			WorldIO.saveWorld(null, Server.World.SavePath, false);
+			WorldIO.saveWorld(Server.World.SavePath, false);
+
 			while (WorldModify.saveLock)
-			{
 				Thread.Sleep(100);
-			}
 
 			Server.notifyOps(Languages.SavingData, true);
 

@@ -1808,9 +1808,13 @@ namespace Terraria_Server
 			Transfer(type);
 		}
 
+		/// <summary>
+		/// Mainly to manage the code when cloning and transfroming NPC's
+		/// </summary>
+		/// <param name="type">New type of the NPC</param>
 		public void Transfer(int type)
 		{
-			/* Copy over main data */
+			/* Preserve data - [todo] Look into others */
 			var pos = Position;
 
 			Registries.NPC.SetDefaults(this, type);
@@ -1820,6 +1824,7 @@ namespace Terraria_Server
 			defDefense = defense;
 			NetID = Type;
 			Active = true;
+
 			Position = pos;
 		}
 
@@ -1832,7 +1837,6 @@ namespace Terraria_Server
 		{
 			Transfer(newType);
 
-			Active = true;
 			TargetClosest(true);
 			netUpdate = true;
 			NetMessage.SendData(23, -1, -1, String.Empty, whoAmI);
