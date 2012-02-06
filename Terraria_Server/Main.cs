@@ -21,6 +21,8 @@ namespace Terraria_Server
 		public const Int32 MAX_WALL_SETS = 40;
 		public const Int32 MAX_BUFFS = 41;
 		public const Int32 MAX_NPC_NAMES = 147;
+		public const Int32 MAX_CHESTS = 1000;
+		public const Int32 MAX_SIGNS = 1000;
 
 		public static bool Xmas { get; set; }
 
@@ -29,7 +31,6 @@ namespace Terraria_Server
 		public static bool[] debuff = new bool[MAX_BUFFS];
 		public const int maxItemText = 100;
 		public const int MAX_PLAYERS = 255;
-		public const int maxChests = 1000;
 		public const int maxItemTypes = 586;
 		public const int maxProjectileTypes = 109;
 		public const int maxProjectiles = 1000;
@@ -109,8 +110,8 @@ namespace Terraria_Server
 		public static Item[] item = new Item[201];
 		public static NPC[] npcs = new NPC[NPC.MAX_NPCS + 1];
 		public static Projectile[] projectile = new Projectile[1001];
-		public static Chest[] chest = new Chest[1000];
-		public static Sign[] sign = new Sign[1000];
+		public static Chest[] chest = new Chest[MAX_CHESTS];
+		public static Sign[] sign = new Sign[MAX_SIGNS];
 		public static Vector2 screenPosition;
 		public static Vector2 screenLastPosition;
 		public static int screenWidth = 800;

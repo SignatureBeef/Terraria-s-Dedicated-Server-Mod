@@ -31,7 +31,7 @@ namespace Terraria_Server.WorldMod
 
         public static void SaveWorldCallback(object threadContext)
         {
-            saveWorld(null, Server.World.SavePath, false);
+            saveWorld(Server.World.SavePath, false);
         }
 
         public static void SaveWorldThreaded()
@@ -176,11 +176,8 @@ namespace Terraria_Server.WorldMod
 			worldCleared = true;
 		}
 
-		public static bool saveWorld(Func<Int32, Int32, ITile> TileRefs, string savePath, bool resetTime = false)
+		public static bool saveWorld(string savePath, bool resetTime = false)
 		{
-			if (TileRefs == null)
-				TileRefs = TileCollection.ITileAt;
-
             bool success = true;
 
 			if (savePath == null)
@@ -269,15 +266,15 @@ namespace Terraria_Server.WorldMod
 
 									for (int y = 0; y < Main.maxTilesY; y++)
 									{
-										if (TileRefs(x, y).Type == 127 && TileRefs(x, y).Active)
+										if (Main.tile.At(x, y).Type == 127 && Main.tile.At(x, y).Active)
 										{
-											WorldModify.KillTile(TileRefs, x, y);
-											WorldModify.KillTile(TileRefs, x, y);
-											if (!TileRefs(x, y).Active)
+											WorldModify.KillTile(null, x, y);
+											WorldModify.KillTile(null, x, y);
+											if (!Main.tile.At(x, y).Active)
 												NetMessage.SendData(17, -1, -1, String.Empty, 0, (float)x, (float)y);
 										}
 
-										var tile = TileRefs(x, y); //.FieldwiseClone();
+										var tile = Main.tile.At(x, y); //.FieldwiseClone();
 										binaryWriter.Write(tile.Active);
 										if (tile.Active)
 										{
@@ -290,7 +287,7 @@ namespace Terraria_Server.WorldMod
 										}
 
 										//binaryWriter.Write(tile.Lighted);
-										if (TileRefs(x, y).Wall > 0)
+										if (Main.tile.At(x, y).Wall > 0)
 										{
 											binaryWriter.Write(true);
 											binaryWriter.Write(tile.Wall);
@@ -312,7 +309,7 @@ namespace Terraria_Server.WorldMod
 										}
                                         binaryWriter.Write(tile.Wire);
                                         int num2 = 1;
-                                        while (y + num2 < Main.maxTilesY && tile.Equals(TileRefs(x, y + num2)))
+                                        while (y + num2 < Main.maxTilesY && tile.Equals(Main.tile.At(x, y + num2)))
                                         {
                                             num2++;
                                         }
@@ -324,7 +321,7 @@ namespace Terraria_Server.WorldMod
 							}
 
 							Chest chest;
-							for (int i = 0; i < Main.maxChests; i++)
+							for (int i = 0; i < Main.MAX_CHESTS; i++)
 							{
 								chest = Main.chest[i];
 								if (chest == null)
@@ -345,7 +342,7 @@ namespace Terraria_Server.WorldMod
 										binaryWriter.Write((byte)chest.contents[l].Stack);
 										if (chest.contents[l].Stack > 0)
 										{
-											binaryWriter.Write(chest.contents[l].Name);
+											binaryWriter.Write(chest.contents[l].NetID);
                                             binaryWriter.Write(chest.contents[l].Prefix);
 										}
 									}
@@ -353,7 +350,7 @@ namespace Terraria_Server.WorldMod
 							}
 
 							Sign sign;
-							for (int i = 0; i < Sign.MAX_SIGNS; i++)
+							for (int i = 0; i < Main.MAX_SIGNS; i++)
 							{
 								sign = Main.sign[i];
 								if (sign == null || sign.text == null)
@@ -372,7 +369,7 @@ namespace Terraria_Server.WorldMod
 							NPC npc;
 							for (int i = 0; i < NPC.MAX_NPCS; i++)
 							{
-								npc = Main.npcs[i];
+								npc = (NPC)Main.npcs[i].Clone();
 								if (npc.Active && npc.townNPC)
 								{
 									binaryWriter.Write(true);
@@ -399,6 +396,7 @@ namespace Terraria_Server.WorldMod
 							binaryWriter.Write(true);
 							binaryWriter.Write(Main.worldName);
 							binaryWriter.Write(Main.worldID);
+
 							binaryWriter.Close();
 							fileStream.Close();
 
@@ -552,6 +550,10 @@ namespace Terraria_Server.WorldMod
 										if (Main.tile.At(j, k).Active)
 										{
 											Main.tile.At(j, k).SetType(binaryReader.ReadByte());
+
+											if (Main.tile.At(j, k).Type == 127)
+												Main.tile.At(j, k).SetActive(false);
+
 											if (Main.tileFrameImportant[(int)Main.tile.At(j, k).Type])
 											{
 												if (Terraria_Release < 28 && Main.tile.At(j, k).Type == 4)
@@ -619,7 +621,7 @@ namespace Terraria_Server.WorldMod
 								}
 							}
 
-							for (int l = 0; l < Main.maxChests; l++)
+							for (int l = 0; l < Main.MAX_CHESTS; l++)
 							{
 								if (binaryReader.ReadBoolean())
 								{
@@ -632,16 +634,24 @@ namespace Terraria_Server.WorldMod
 										int stack = binaryReader.ReadByte();
 										if (stack > 0)
 										{
-                                            string defaults = Item.VersionName(binaryReader.ReadString(), Terraria_Release);
-											Main.chest[l].contents[m] = Registries.Item.Create(defaults, stack);
-											//Main.chest[l].contents[m].Stack = (int)stack;
-                                            if (Terraria_Release >= 36)
+											if (Terraria_Release >= 38)
+											{
+												Main.chest[l].contents[m] = Item.netDefaults(binaryReader.ReadInt32());
+												Main.chest[l].contents[m].Stack = stack;
+											}
+											else
+											{
+												string defaults = Item.VersionName(binaryReader.ReadString(), Terraria_Release);
+												Main.chest[l].contents[m] = Registries.Item.Create(defaults, stack);
+											}                                            
+											
+											if (Terraria_Release >= 36)
 												Main.chest[l].contents[m].SetPrefix((int)binaryReader.ReadByte());
 										}
 									}
 								}
 							}
-							for (int n = 0; n < Sign.MAX_SIGNS; n++)
+							for (int n = 0; n < Main.MAX_SIGNS; n++)
 							{
 								if (binaryReader.ReadBoolean())
 								{
@@ -690,9 +700,9 @@ namespace Terraria_Server.WorldMod
 							if (Terraria_Release >= 7)
 							{
 								bool flag2 = binaryReader.ReadBoolean();
-                                string a = binaryReader.ReadString();
+                                string worldName = binaryReader.ReadString();
 								int num6 = binaryReader.ReadInt32();
-								if (!flag2 || !(a == Main.worldName) || num6 != Main.worldID)
+								if (!flag2 || !(worldName == Main.worldName) || num6 != Main.worldID)
 								{
 									WorldModify.loadSuccess = false;
 									WorldModify.loadFailed = true;

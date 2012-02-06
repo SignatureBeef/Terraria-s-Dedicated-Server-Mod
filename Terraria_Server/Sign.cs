@@ -4,7 +4,6 @@ namespace Terraria_Server
 {
     public class Sign
     {
-        public const int MAX_SIGNS = 1000;
         public int x;
         public int y;
         public string text;
@@ -16,7 +15,7 @@ namespace Terraria_Server
 
         public static void KillSign(int x, int y)
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < Main.MAX_SIGNS; i++)
             {
                 if (Main.sign[i] != null && Main.sign[i].x == x && Main.sign[i].y == y)
                 {
@@ -41,7 +40,7 @@ namespace Terraria_Server
                 return -1;
             }
             int num4 = -1;
-            for (int l = 0; l < 1000; l++)
+			for (int l = 0; l < Main.MAX_SIGNS; l++)
             {
                 if (Main.sign[l] != null && Main.sign[l].x == num2 && Main.sign[l].y == num3)
                 {
@@ -51,7 +50,7 @@ namespace Terraria_Server
             }
             if (num4 < 0)
             {
-                for (int m = 0; m < 1000; m++)
+				for (int m = 0; m < Main.MAX_SIGNS; m++)
                 {
                     if (Main.sign[m] == null)
                     {

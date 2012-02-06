@@ -265,7 +265,7 @@ namespace Terraria_Server
 						WorldModify.ficount = (int)((double)Terraria_Server.Main.maxTilesX * 0.0008); //The Statics one was generating with default values, We want it to use the actual tileX for the world
 					}
 					WorldGen.GenerateWorld(null, seed);
-					WorldIO.saveWorld(null, worldFile, true);
+					WorldIO.saveWorld(worldFile, true);
 				}
 
 				ctx = new HookContext

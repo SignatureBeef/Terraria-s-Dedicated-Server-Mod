@@ -15,3 +15,4 @@ Build: 37
 	- Few more Server Properties Options
 	- Language file + Generation Tool
 	- Minor method changes in Server.cs
+	- More commands.
