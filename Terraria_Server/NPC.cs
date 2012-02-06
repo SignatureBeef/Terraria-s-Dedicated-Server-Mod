@@ -5219,7 +5219,6 @@ namespace Terraria_Server
 					{
 						var fNpc = Main.npcs[npcId];
 
-						ProgramLog.Debug.Log("NPC AIWORM - {0}, Active {1}", fNpc.type.ToString(), fNpc.Active);
 						if (fNpc.Active)
 						{
 							EoWAlive = (

@@ -1305,7 +1305,7 @@ namespace Terraria_Server
 
 								var args = new HookArgs.PlayerTriggeredEvent
 								{
-									Type = WorldEventType.BOSS									
+									Type = WorldEventType.BOSS
 								};
 
 								HookPoints.PlayerTriggeredEvent.Invoke(ref ctx, ref args);
@@ -1390,8 +1390,9 @@ namespace Terraria_Server
 		/// <param name="stack">How big of a stack to create. Default 1</param>
 		/// <param name="noBroadcast">Whether to broadcast item creation or not. Default false</param>
 		/// <param name="pfix">Prefix of the new item</param>
+		/// <param name="NetID">New NetID</param>
 		/// <returns>New item index value</returns>
-		public static int NewItem(int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false, int pfix = 0)
+		public static int NewItem(int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false, int pfix = 0, int NetID = 255)
 		{
 			if (WorldModify.gen)
 				return 0;
@@ -1431,11 +1432,15 @@ namespace Terraria_Server
 			Main.item[itemIndex].Velocity.Y = (float)Main.rand.Next(-30, -10) * 0.1f;
 			Main.item[itemIndex].SpawnTime = 0;
 
+			if(NetID != 255 && NetID != type)
+				Main.item[itemIndex].NetID = NetID;
+
 			if (!noBroadcast)
 			{
-				NetMessage.SendData(21, -1, -1, "", itemIndex);
-				Main.item[itemIndex].FindOwner(itemIndex);
+				NetMessage.SendData(21, -1, -1, "", Main.item[itemIndex]Index);
+				Main.item[itemIndex].FindOwner(Main.item[itemIndex]Index);
 			}
+
 			return itemIndex;
 		}
 

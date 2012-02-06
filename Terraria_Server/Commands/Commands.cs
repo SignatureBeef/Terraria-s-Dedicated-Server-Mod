@@ -531,13 +531,18 @@ namespace Terraria_Server.Commands
 			int stack = args.GetInt(1);
 			string NameOrId = args.GetString(2);
 
-			List<Int32> itemlist;
+			List<ItemInfo> itemlist;
 			if (Server.TryFindItemByName(NameOrId, out itemlist) && itemlist.Count > 0)
 			{
 				if (itemlist.Count > 1)
 					throw new CommandError(String.Format(Languages.MoreThanOneItemFoundNameId, itemlist.Count));
 
-				receiver.GiveItem(itemlist[0], stack, sender);
+				var item = itemlist[0];
+
+				var index = receiver.GiveItem(item.Type, stack, sender, item.NetID);
+
+				if(item.NetID < 0)
+					Main.item[index] = Item.netDefaults(item.NetID);
 			}
 			else
 			{
@@ -556,7 +561,13 @@ namespace Terraria_Server.Commands
 					if (itemlist.Count > 1)
 						throw new CommandError(String.Format(Languages.MoreThanOneItemFoundType, itemlist.Count));
 
-					receiver.GiveItem(itemlist[0], stack, sender);
+					//receiver.GiveItem(itemlist[0].Type, stack, sender);
+					var item = itemlist[0];
+
+					var index = receiver.GiveItem(item.Type, stack, sender, item.NetID);
+
+					if (item.NetID < 0)
+						Main.item[index] = Item.netDefaults(item.NetID);
 				}
 				else
 				{

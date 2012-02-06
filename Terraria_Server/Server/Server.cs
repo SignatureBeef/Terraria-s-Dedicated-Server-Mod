@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Terraria_Server.Misc;
 using Terraria_Server.Logging;
@@ -293,9 +294,9 @@ namespace Terraria_Server
         /// <param name="ItemIdOrName"></param>
         /// <param name="ItemList"></param>
         /// <returns></returns>
-        public static bool TryFindItem<T>(T ItemIdOrName, out List<Int32> ItemList)
+        public static bool TryFindItem<T>(T ItemIdOrName, out List<ItemInfo> ItemList)
         {
-            ItemList = new List<Int32>();
+			ItemList = new List<ItemInfo>();
 
             foreach (var pair in Registries.Item.TypesById)
             {
@@ -308,8 +309,12 @@ namespace Terraria_Server
                     foreach (var item in items)
                     {
                         var type = item.Type;
-                        if (type == itemT && !ItemList.Contains(type))
-                            ItemList.Add(type);
+						if (type == itemT && !ItemList.ContainsType(type))
+							ItemList.Add(new ItemInfo()
+							{
+								Type = type,
+								NetID = item.NetID
+							});
                     }
                 }
                 else if (ItemIdOrName is String)
@@ -321,8 +326,12 @@ namespace Terraria_Server
                         var type = item.Type;
                         var curItem = CleanName(item.Name);
 
-                        if (curItem == findItem && !ItemList.Contains(type))
-                            ItemList.Add(type);
+						if (curItem == findItem && !ItemList.ContainsType(type))
+							ItemList.Add(new ItemInfo()
+							{
+								Type = type,
+								NetID = item.NetID
+							});
                     }
                 }
             }
@@ -336,8 +345,12 @@ namespace Terraria_Server
                     var itemT = Int32.Parse(ItemIdOrName.ToString());
                     var type = item.Type;
 
-                    if (type == itemT && !ItemList.Contains(type))
-                        ItemList.Add(type);
+                    if (type == itemT && !ItemList.ContainsType(type))
+						ItemList.Add(new ItemInfo()
+						{
+							Type = type,
+							NetID = item.NetID
+						});
                 }
                 else if (ItemIdOrName is String)
                 {
@@ -345,8 +358,12 @@ namespace Terraria_Server
                     var findItem = CleanName(ItemIdOrName as String);
                     var curItem = CleanName(item.Name);
 
-                    if (curItem == findItem && !ItemList.Contains(type))
-                        ItemList.Add(type);
+					if (curItem == findItem && !ItemList.ContainsType(type))
+						ItemList.Add(new ItemInfo()
+						{
+							Type = type,
+							NetID = item.NetID
+						});
                 }
             }
 
@@ -359,7 +376,7 @@ namespace Terraria_Server
         /// <param name="ItemID"></param>
         /// <param name="ItemList"></param>
         /// <returns></returns>
-        public static bool TryFindItemByType(int ItemID, out List<Int32> ItemList)
+		public static bool TryFindItemByType(int ItemID, out List<ItemInfo> ItemList)
         {
             return TryFindItem(ItemID, out ItemList);
         }
@@ -370,7 +387,7 @@ namespace Terraria_Server
         /// <param name="ItemName"></param>
         /// <param name="ItemList"></param>
         /// <returns></returns>
-        public static bool TryFindItemByName(string ItemName, out List<Int32> ItemList)
+        public static bool TryFindItemByName(string ItemName, out List<ItemInfo> ItemList)
         {
             return TryFindItem(ItemName, out ItemList);
         }
@@ -410,5 +427,16 @@ namespace Terraria_Server
 
 			return false;
 		}
+
+		public static bool ContainsType(this List<ItemInfo> list, int type)
+		{
+			return list.Where(x => x.Type == type).Count() > 0;
+		}
     }
+
+	public struct ItemInfo
+	{
+		public int NetID { get; set; }
+		public int Type { get; set; }
+	}
 }
