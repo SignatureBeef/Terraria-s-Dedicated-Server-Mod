@@ -6,22 +6,7 @@ namespace Terraria_Server
 {
     public abstract class BaseEntity : IRegisterableEntity
     {
-		private bool active;
-		public bool Active
-		{
-			get
-			{
-				return active;
-			}
-			set
-			{
-				if (!value)
-				{
-				}
-
-				active = value;
-			}
-		}
+		public bool Active { get; set; }
         public int Height { get; set; }
 		public string Name { get; set; }
         public Vector2 Position;

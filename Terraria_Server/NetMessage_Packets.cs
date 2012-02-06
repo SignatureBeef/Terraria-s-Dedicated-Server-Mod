@@ -642,9 +642,6 @@ namespace Terraria_Server
 			Int (npc.NetID);
 			
 			End ();
-
-			if (npc.type == Definitions.NPCType.N108_WIZARD || npc.type == Definitions.NPCType.N106_BOUND_WIZARD || npc.type == Definitions.NPCType.N22_GUIDE)
-				ProgramLog.Debug.Log("Active {0}, NetID {1}, Homeless {2}, Type {3}, TownNPC {4}", npc.Active, npc.NetID, npc.homeless, npc.type.ToString(), npc.townNPC);
 		}
 		
 		public void StrikeNPC (int npcId, int playerId)
