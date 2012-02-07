@@ -6552,6 +6552,8 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
+			var type = TileRefs(i, j).Type;
+
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
 			{
 				if (TileRefs(i, j).Active)
@@ -6635,6 +6637,7 @@ namespace Terraria_Server.WorldMod
 					{
 						num = 3;
 					}
+
 					if (TileRefs(i, j).Type == 138)
 					{
 						num = 0;
@@ -8379,7 +8382,7 @@ namespace Terraria_Server.WorldMod
 
 		public static void SquareTileFrame(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool resetFrame = true)
 		{
-			if (TileRefs == null)
+			//if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
 			TileFrame(TileRefs, i - 1, j - 1, false, false);

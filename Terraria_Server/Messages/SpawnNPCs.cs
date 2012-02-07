@@ -47,7 +47,7 @@ namespace Terraria_Server.Messages
 				int invasionType = typeOrInvasion;
 
 				if (typeOrInvasion == -1 || typeOrInvasion == -2)
-					invasionType *= 1;
+					invasionType *= -1;
 
 				if (invasionType > 0 && Main.invasionType == 0)
 				{
