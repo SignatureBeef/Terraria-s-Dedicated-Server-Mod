@@ -29,13 +29,6 @@ namespace Terraria_Server.Messages
 				typeOrInvasion == (int)NPCType.N127_SKELETRON_PRIME ||
 				typeOrInvasion == (int)NPCType.N128_PRIME_CANNON)
 			{
-				//bool flag8 = true;
-				//for (int num123 = 0; num123 < NPC.MAX_NPCS; num123++)
-				//{
-				//    if (Main.npcs[num123].Active && Main.npcs[num123].Type == typeOrInvasion)
-				//        flag8 = false;
-				//}
-
 				if (!NPC.IsNPCSummoned(typeOrInvasion))
 					NPC.SpawnOnPlayer(plr, typeOrInvasion);
 			}

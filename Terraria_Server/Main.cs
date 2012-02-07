@@ -361,19 +361,20 @@ namespace Terraria_Server
 
 		private static void InvasionWarning()
 		{
-			if (invasionType == 0)
-				return;
-			string text = "";
-			if (invasionSize <= 0)
-				text = "The goblin army has been defeated!";
-			else if (invasionX < (double)spawnTileX)
-				text = "A goblin army is approaching from the west!";
-			else if (invasionX > (double)spawnTileX)
-				text = "A goblin army is approaching from the east!";
-			else
-				text = "The goblin army has arrived!";
+			var info = String.Empty;
+			var type = (invasionType == 2) ? "The Frost Legion" : "A goblin army";
 
-			NetMessage.SendData(25, -1, -1, text, 255, 175f, 75f, 255f);
+			if (Main.invasionSize <= 0)
+				info = type + " has been defeated!";
+			else if (Main.invasionX < (double)Main.spawnTileX)
+				info = type + " is approaching from the west!";
+			else if (Main.invasionX > (double)Main.spawnTileX)
+				info = type + " is approaching from the east!";
+			else if (Main.invasionType == 2)
+				info = type + " has arrived!";
+
+			if(info != String.Empty)
+				NetMessage.SendData(25, -1, -1, info, 255, 175f, 75f, 255f);
 		}
 
 		public static void StartInvasion(int type = 1)
@@ -909,7 +910,7 @@ namespace Terraria_Server
 					try
 					{
 #endif
-						NPC.UpdateNPC(i);
+					NPC.UpdateNPC(i);
 #if CATCHERROR_NPCUPDATES
 					}
 					catch (Exception e)
