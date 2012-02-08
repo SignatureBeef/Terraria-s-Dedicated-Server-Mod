@@ -66,6 +66,28 @@ namespace Terraria_Server.Language
 		public static String LiquidsAlreadySettled { get; set; }
 		public static String YouAreNowOP { get; set; }
 		public static String YouAreNowDeop { get; set; }
+		public static String SuccessfullyLoggedInOP { get; set; }
+		public static String FailedLoginWrongPassword { get; set; }
+		public static String IncorrectOPPassword { get; set; }
+		public static String YouNeedPrivileges { get; set; }
+		public static String SuccessfullyLoggedOutOP { get; set; }
+		public static String NPCSpawningIsNow { get; set; }
+		public static String YouHaveBeenKickedBy { get; set; }
+		public static String HasBeenKickedBy { get; set; }
+		public static String KickSlotIsEmpty { get; set; }
+		public static String KickPlayerNameNull { get; set; }
+		public static String RestartingServer { get; set; }
+		public static String StartingServer { get; set; }
+		public static String PurgingProjectiles { get; set; }
+		public static String PurgingNPC { get; set; }
+		public static String PurgingItems { get; set; }
+		public static String LoadedPlugins { get; set; }
+		public static String NoPluginsLoaded { get; set; }
+		public static String IssueFindingPlayer { get; set; }
+		public static String NoOnlinePlayersToSpawnNear { get; set; }
+		public static String NeedsToBeNightTime { get; set; }
+		public static String HardModeAlreadyEnabled { get; set; }
+		public static String StartingHardMode { get; set; }
 
 		public static String RPGMode_Allowed { get; set; }
 		public static String RPGMode_Refused { get; set; }

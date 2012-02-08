@@ -50,6 +50,28 @@
 	<LiquidsAlreadySettled>Liquids are already settling</LiquidsAlreadySettled>
 	<YouAreNowOP>You are now OP!</YouAreNowOP>
 	<YouAreNowDeop>You have been De-Opped!</YouAreNowDeop>
+	<SuccessfullyLoggedInOP>Successfully Logged in as OP.</SuccessfullyLoggedInOP>
+	<FailedLoginWrongPassword>Failed to log in as OP due to incorrect password.</FailedLoginWrongPassword>
+	<IncorrectOPPassword>Incorrect OP Password.</IncorrectOPPassword>
+	<YouNeedPrivileges>You need to be Assigned OP Privledges.</YouNeedPrivileges>
+	<SuccessfullyLoggedOutOP>Successfully Logged Out.</SuccessfullyLoggedOutOP>
+	<NPCSpawningIsNow>NPC Spawning is now </NPCSpawningIsNow>
+	<YouHaveBeenKickedBy>You have been kicked by </YouHaveBeenKickedBy>
+	<HasBeenKickedBy> has been kicked by </HasBeenKickedBy>
+	<KickSlotIsEmpty>kick: Slot is vacant.</KickSlotIsEmpty>
+	<KickPlayerNameNull>kick: Error, player has null name.</KickPlayerNameNull>
+	<RestartingServer>Restarting the Server</RestartingServer>
+	<StartingServer>Starting the Server</StartingServer>
+	<PurgingProjectiles>Purging all projectiles.</PurgingProjectiles>
+	<PurgingNPC>Purging all NPCs.</PurgingNPC>
+	<PurgingItems>Purging all items.</PurgingItems>
+	<LoadedPlugins>Loaded Plugins: </LoadedPlugins>
+	<NoPluginsLoaded>There are no loaded plugins.</NoPluginsLoaded>
+	<IssueFindingPlayer>There was an issue finding the player.</IssueFindingPlayer>
+	<NoOnlinePlayersToSpawnNear>There is no Online Players to spawn near.</NoOnlinePlayersToSpawnNear>
+	<NeedsToBeNightTime>This boss needs to be summoned in night time, Please override with -night</NeedsToBeNightTime>
+	<HardModeAlreadyEnabled>Hardmode is already in place.</HardModeAlreadyEnabled>
+	<StartingHardMode>Starting hardmode, This may take a while...</StartingHardMode>
 	<RPGMode_Allowed>RPG Mode is now allowed on this server:</RPGMode_Allowed>
 	<RPGMode_Refused>RPG Mode is now refused on this server:</RPGMode_Refused>
 	<ItemRejection_Added> was added to the Item Rejection list!</ItemRejection_Added>

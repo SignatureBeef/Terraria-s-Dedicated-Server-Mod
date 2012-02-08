@@ -868,9 +868,9 @@ namespace Terraria_Server.Commands
 				{
 					if (player.Password.Equals(Password))
 					{
-						Server.notifyOps("{0} Logged in as OP.", true, player.Name);
+						Server.notifyOps("{0} " + Languages.SuccessfullyLoggedInOP, true, player.Name);
 						player.Op = true;
-						player.sendMessage("Successfully Logged in as OP.", ChatColor.DarkGreen);
+						player.sendMessage(Languages.SuccessfullyLoggedInOP, ChatColor.DarkGreen);
 
 						if (player.HasClientMod)
 						{
@@ -879,13 +879,13 @@ namespace Terraria_Server.Commands
 					}
 					else
 					{
-						Server.notifyOps("{0} Failed to log in as OP due to incorrect password.", true, player.Name);
-						player.sendMessage("Incorrect OP Password.", ChatColor.DarkRed);
+						Server.notifyOps("{0} " + Languages.FailedLoginWrongPassword, true, player.Name);
+						player.sendMessage(Languages.IncorrectOPPassword, ChatColor.DarkRed);
 					}
 				}
 				else
 				{
-					player.sendMessage("You need to be Assigned OP Privledges.", ChatColor.DarkRed);
+					player.sendMessage(Languages.YouNeedPrivileges, ChatColor.DarkRed);
 				}
 			}
 		}
@@ -903,9 +903,9 @@ namespace Terraria_Server.Commands
 				if (sender.Op)
 				{
 					player.Op = false;
-					player.sendMessage("Successfully Logged Out.", ChatColor.DarkRed);
+					player.sendMessage(Languages.SuccessfullyLoggedOutOP, ChatColor.DarkRed);
 
-					Server.notifyOps("{0} logged out.", true, player.Name);
+					Server.notifyOps("{0} " + Languages.SuccessfullyLoggedOutOP, true, player.Name);
 
 					if (player.HasClientMod)
 					{
@@ -914,7 +914,7 @@ namespace Terraria_Server.Commands
 				}
 				else
 				{
-					player.sendMessage("You need to be Assigned OP Privledges.", ChatColor.DarkRed);
+					player.sendMessage(Languages.YouNeedPrivileges, ChatColor.DarkRed);
 				}
 			}
 		}
@@ -929,7 +929,7 @@ namespace Terraria_Server.Commands
 			args.ParseNone();
 
 			Main.stopSpawns = !Main.stopSpawns;
-			sender.sendMessage("NPC Spawning is now " + ((Main.stopSpawns) ? "off" : "on") + "!");
+			sender.sendMessage(Languages.NPCSpawningIsNow + ((Main.stopSpawns) ? "off" : "on") + "!");
 		}
 
 		/// <summary>
@@ -948,15 +948,15 @@ namespace Terraria_Server.Commands
 
 				if (slot.state != SlotState.VACANT)
 				{
-					slot.Kick("You have been kicked by " + sender.Name + ".");
+					slot.Kick(Languages.YouHaveBeenKickedBy + sender.Name + ".");
 
 					var player = Main.players[s];
 					if (player != null && player.Name != null)
-						NetMessage.SendData(25, -1, -1, player.Name + " has been kicked by " + sender.Name + ".", 255);
+						NetMessage.SendData(25, -1, -1, player.Name + Languages.HasBeenKickedBy + sender.Name + ".", 255);
 				}
 				else
 				{
-					sender.sendMessage("kick: Slot is vacant.");
+					sender.sendMessage(Languages.KickSlotIsEmpty);
 				}
 			}
 			else
@@ -966,12 +966,12 @@ namespace Terraria_Server.Commands
 
 				if (player.Name == null)
 				{
-					sender.sendMessage("kick: Error, player has null name.");
+					sender.sendMessage(Languages.KickPlayerNameNull);
 					return;
 				}
 
-				player.Kick("You have been kicked by " + sender.Name + ".");
-				NetMessage.SendData(25, -1, -1, player.Name + " has been kicked by " + sender.Name + ".", 255);
+				player.Kick(Languages.YouHaveBeenKickedBy + sender.Name + ".");
+				NetMessage.SendData(25, -1, -1, player.Name + Languages.HasBeenKickedBy + sender.Name + ".", 255);
 			}
 		}
 
@@ -982,13 +982,13 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Restart(ISender sender, ArgumentList args)
 		{
-			Server.notifyOps("Restarting the Server {" + sender.Name + "}", true);
+			Server.notifyOps(Languages.RestartingServer + " {" + sender.Name + "}", true);
 			//Statics.keepRunning = true;
 
 			NetPlay.StopServer();
 			while (NetPlay.ServerUp) { Thread.Sleep(10); }
 
-			ProgramLog.Log("Starting the Server");
+			ProgramLog.Log(Languages.StartingServer);
 			Main.Initialize();
 			WorldIO.LoadWorld(null, World.SavePath);
 			Program.updateThread = new ProgramThread("Updt", Program.UpdateLoop);
@@ -1069,11 +1069,11 @@ namespace Terraria_Server.Commands
 			{
 				something = true;
 
-				ProgramLog.Admin.Log("Purging all projectiles.");
+				ProgramLog.Admin.Log(Languages.PurgingProjectiles);
 
 				var msg = NetMessage.PrepareThreadInstance();
 
-				msg.PlayerChat(255, "<Server> Purging all projectiles.", 255, 180, 100);
+				msg.PlayerChat(255, "<Server> " + Languages.PurgingProjectiles, 255, 180, 100);
 
 				lock (Main.updatingProjectiles)
 				{
@@ -1093,11 +1093,11 @@ namespace Terraria_Server.Commands
 			{
 				something = true;
 
-				ProgramLog.Admin.Log("Purging all NPCs.");
+				ProgramLog.Admin.Log(Languages.PurgingNPC);
 
 				var msg = NetMessage.PrepareThreadInstance();
 
-				msg.PlayerChat(255, "<Server> Purging all NPCs.", 255, 180, 100);
+				msg.PlayerChat(255, "<Server> " + Languages.PurgingNPC, 255, 180, 100);
 
 				lock (Main.updatingNPCs)
 				{
@@ -1122,11 +1122,11 @@ namespace Terraria_Server.Commands
 			{
 				something = true;
 
-				ProgramLog.Admin.Log("Purging all items.");
+				ProgramLog.Admin.Log(Languages.PurgingItems);
 
 				var msg = NetMessage.PrepareThreadInstance();
 
-				msg.PlayerChat(255, "<Server> Purging all items.", 255, 180, 100);
+				msg.PlayerChat(255, "<Server> " + Languages.PurgingItems, 255, 180, 100);
 
 				lock (Main.updatingItems)
 				{
@@ -1171,11 +1171,11 @@ namespace Terraria_Server.Commands
 				{
 					plugins = plugins.Remove(0, 1).Trim(); //Remove the ', ' from the start and trim the ends
 				}
-				sender.sendMessage("Loaded Plugins: " + plugins + ".");
+				sender.sendMessage(Languages.LoadedPlugins + plugins + ".");
 			}
 			else
 			{
-				sender.sendMessage("There are no loaded plugins.");
+				sender.sendMessage(Languages.NoPluginsLoaded);
 			}
 		}
 
@@ -1215,12 +1215,12 @@ namespace Terraria_Server.Commands
 					}
 					if (player == null)
 					{
-						throw new CommandError("There was an issue finding the player.");
+						throw new CommandError(Languages.IssueFindingPlayer);
 					}
 				}
 				else
 				{
-					throw new CommandError("There is no Online Players to spawn near.");
+					throw new CommandError(Languages.NoOnlinePlayersToSpawnNear);
 				}
 			}
 
@@ -1232,7 +1232,7 @@ namespace Terraria_Server.Commands
 			if (EyeOC)
 			{
 				if (Main.dayTime && !NightOverride)
-					throw new CommandError("This boss needs to be summoned in night time, Please override with -night");
+					throw new CommandError(Languages.NeedsToBeNightTime);
 
 				Bosses.Add((int)NPCType.N04_EYE_OF_CTHULHU);
 			}
@@ -1397,9 +1397,9 @@ namespace Terraria_Server.Commands
 			args.ParseNone();
 
 			if (Main.hardMode)
-				throw new CommandError("Hardmode is already in place.");
+				throw new CommandError(Languages.HardModeAlreadyEnabled);
 
-			ProgramLog.Log("Starting hardmode, This may take a while...");
+			ProgramLog.Log(Languages.StartingHardMode);
 			WorldModify.StartHardMode();
 		}
 	}
