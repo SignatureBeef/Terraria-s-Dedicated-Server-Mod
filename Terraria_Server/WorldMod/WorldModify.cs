@@ -6566,7 +6566,7 @@ namespace Terraria_Server.WorldMod
 					{
 						return;
 					}
-					if (!effectOnly && !WorldModify.stopDrops)
+					if (!effectOnly && !stopDrops)
 					{
 						if (tileType == 3 || tileType == 110)
 						{
@@ -6668,7 +6668,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (tileType == 2)
 						{
-							if (WorldModify.genRand.Next(2) == 0)
+							if (genRand.Next(2) == 0)
 							{
 								num5 = 0;
 							}
@@ -6791,7 +6791,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (tileType == 109)
 						{
-							if (WorldModify.genRand.Next(2) == 0)
+							if (genRand.Next(2) == 0)
 							{
 								num5 = 0;
 							}
@@ -6850,7 +6850,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (tileType == 61)
 						{
-							if (WorldModify.genRand.Next(2) == 0)
+							if (genRand.Next(2) == 0)
 							{
 								num5 = 38;
 							}
@@ -6861,7 +6861,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (tileType == 58 || tileType == 76 || tileType == 77)
 						{
-							if (WorldModify.genRand.Next(2) == 0)
+							if (genRand.Next(2) == 0)
 							{
 								num5 = 6;
 							}
@@ -6872,7 +6872,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (tileType == 37)
 						{
-							if (WorldModify.genRand.Next(2) == 0)
+							if (genRand.Next(2) == 0)
 							{
 								num5 = 6;
 							}
@@ -6883,7 +6883,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (tileType == 32)
 						{
-							if (WorldModify.genRand.Next(2) == 0)
+							if (genRand.Next(2) == 0)
 							{
 								num5 = 14;
 							}
@@ -6894,7 +6894,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (tileType == 23 || tileType == 24)
 						{
-							if (WorldModify.genRand.Next(2) == 0)
+							if (genRand.Next(2) == 0)
 							{
 								num5 = 14;
 							}
@@ -6905,7 +6905,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (tileType == 25 || tileType == 31)
 						{
-							if (WorldModify.genRand.Next(2) == 0)
+							if (genRand.Next(2) == 0)
 							{
 								num5 = 14;
 							}
@@ -6916,7 +6916,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (tileType == 20)
 						{
-							if (WorldModify.genRand.Next(2) == 0)
+							if (genRand.Next(2) == 0)
 							{
 								num5 = 7;
 							}
@@ -6927,7 +6927,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (tileType == 27)
 						{
-							if (WorldModify.genRand.Next(2) == 0)
+							if (genRand.Next(2) == 0)
 							{
 								num5 = 3;
 							}
@@ -6988,7 +6988,7 @@ namespace Terraria_Server.WorldMod
 							TileRefs(i, j).SetType(59);
 							tileType = 59;
 						}
-						WorldModify.SquareTileFrame(TileRefs, i, j, true);
+						SquareTileFrame(TileRefs, i, j, true);
 						return;
 					}
 					if (tileType == 21)
@@ -7005,7 +7005,7 @@ namespace Terraria_Server.WorldMod
 							return;
 						}
 					}
-					if (!noItem && !WorldModify.stopDrops)
+					if (!noItem && !stopDrops)
 					{
 						int num8 = 0;
 						if (tileType == 0 || tileType == 2 || tileType == 109)
@@ -7043,7 +7043,7 @@ namespace Terraria_Server.WorldMod
 						{
 							if (TileRefs(i, j).FrameX >= 22 && TileRefs(i, j).FrameY >= 198)
 							{
-								if (WorldModify.genRand.Next(2) == 0)
+								if (genRand.Next(2) == 0)
 								{
 									int num10 = j;
 									while ((!TileRefs(i, num10).Active || !Main.tileSolid[(int)TileRefs(i, num10).Type] ||
@@ -7383,17 +7383,17 @@ namespace Terraria_Server.WorldMod
 						{
 							if (TileRefs(i, j).FrameX == 144)
 							{
-								Item.NewItem(i * 16, j * 16, 16, 16, 331, WorldModify.genRand.Next(2, 4), false, 0);
+								Item.NewItem(i * 16, j * 16, 16, 16, 331, genRand.Next(2, 4), false, 0);
 							}
 							else if (TileRefs(i, j).FrameX == 162)
 							{
 								num8 = 223;
 							}
-							else if (TileRefs(i, j).FrameX >= 108 && TileRefs(i, j).FrameX <= 126 && WorldModify.genRand.Next(100) == 0)
+							else if (TileRefs(i, j).FrameX >= 108 && TileRefs(i, j).FrameX <= 126 && genRand.Next(100) == 0)
 							{
 								num8 = 208;
 							}
-							else if (WorldModify.genRand.Next(100) == 0)
+							else if (genRand.Next(100) == 0)
 							{
 								num8 = 195;
 							}
@@ -7404,11 +7404,11 @@ namespace Terraria_Server.WorldMod
 						}
 						else if (tileType == 71 || tileType == 72)
 						{
-							if (WorldModify.genRand.Next(50) == 0)
+							if (genRand.Next(50) == 0)
 							{
 								num8 = 194;
 							}
-							else if (WorldModify.genRand.Next(2) == 0)
+							else if (genRand.Next(2) == 0)
 							{
 								num8 = 183;
 							}
@@ -7453,7 +7453,7 @@ namespace Terraria_Server.WorldMod
 
 							if (flag)
 							{
-								Item.NewItem(i * 16, j * 16, 16, 16, 307 + num11, WorldModify.genRand.Next(1, 4), false, 0);
+								Item.NewItem(i * 16, j * 16, 16, 16, 307 + num11, genRand.Next(1, 4), false, 0);
 							}
 						}
 
@@ -7476,7 +7476,7 @@ namespace Terraria_Server.WorldMod
 
 					TileRefs(i, j).SetType(0);
 					tileType = 0;
-					WorldModify.SquareTileFrame(TileRefs, i, j, true);
+					SquareTileFrame(TileRefs, i, j, true);
 				}
 			}
 		}
@@ -7963,7 +7963,7 @@ namespace Terraria_Server.WorldMod
 					{
 						if (TileRefs(num28, num29).Active)
 						{
-							WorldModify.hardUpdateWorld(TileRefs, num31, num32);
+							hardUpdateWorld(TileRefs, num31, num32);
 							if (TileRefs(num28, num29).Type == 23 && !TileRefs(num28, num29).Active && genRand.Next(1) == 0)
 							{
 								PlaceTile(TileRefs, num28, num32, 24, true, false, -1, 0);
@@ -14129,10 +14129,10 @@ namespace Terraria_Server.WorldMod
 
 			hardLock = true;
 			Main.hardMode = true;
-			if (WorldModify.genRand == null)
+			if (genRand == null)
 			{
 				DateTime now = DateTime.Now;
-				WorldModify.genRand = new Random((int)now.Ticks);
+				genRand = new Random((int)now.Ticks);
 			}
 
 			float num = (float)genRand.Next(300, 400) * 0.001f;
