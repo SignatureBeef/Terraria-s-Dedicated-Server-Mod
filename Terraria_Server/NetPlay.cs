@@ -166,7 +166,7 @@ namespace Terraria_Server
 				catch { }
 			}
 
-			if (!WorldIO.saveWorld(Server.World.SavePath, true))
+			if (!WorldIO.saveWorld(World.SavePath, true))
 				ProgramLog.Error.Log("Saving failed.  Quitting without saving.");
 
 			ServerUp = false;

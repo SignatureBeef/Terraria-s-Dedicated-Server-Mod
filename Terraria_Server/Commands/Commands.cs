@@ -231,7 +231,7 @@ namespace Terraria_Server.Commands
 		{
 			Server.notifyOps(Languages.SavingWorld, true);
 
-			WorldIO.saveWorld(Server.World.SavePath, false);
+			WorldIO.saveWorld(World.SavePath, false);
 
 			while (WorldModify.saveLock)
 				Thread.Sleep(100);
@@ -434,7 +434,7 @@ namespace Terraria_Server.Commands
 			double Time;
 			if (args.TryParseOne<Double>("-set", out Time))
 			{
-				Server.World.setTime(Time, true);
+				World.SetTime(Time, true);
 			}
 			else
 			{
@@ -443,27 +443,27 @@ namespace Terraria_Server.Commands
 				{
 					case "day":
 						{
-							Server.World.setTime(13500.0);
+							World.SetTime(13500.0);
 							break;
 						}
 					case "dawn":
 						{
-							Server.World.setTime(0);
+							World.SetTime(0);
 							break;
 						}
 					case "dusk":
 						{
-							Server.World.setTime(0, false, false);
+							World.SetTime(0, false, false);
 							break;
 						}
 					case "noon":
 						{
-							Server.World.setTime(27000.0);
+							World.SetTime(27000.0);
 							break;
 						}
 					case "night":
 						{
-							Server.World.setTime(16200.0, false, false);
+							World.SetTime(16200.0, false, false);
 							break;
 						}
 					case "-now":
@@ -990,7 +990,7 @@ namespace Terraria_Server.Commands
 
 			ProgramLog.Log("Starting the Server");
 			Main.Initialize();
-			WorldIO.LoadWorld(null, Server.World.SavePath);
+			WorldIO.LoadWorld(null, World.SavePath);
 			Program.updateThread = new ProgramThread("Updt", Program.UpdateLoop);
 			NetPlay.StartServer();
 			//Statics.keepRunning = false;
@@ -1249,7 +1249,7 @@ namespace Terraria_Server.Commands
 			{
 				if (NightOverride) //Mainly for eye
 				{
-					Server.World.setTime(16200.0, false, false);
+					World.SetTime(16200.0, false, false);
 					NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
 				}
 

@@ -4,9 +4,10 @@ using Terraria_Server.Commands;
 
 namespace Terraria_Server
 {
-    public class World
+    public static class World
     {
 		public static readonly ISender Sender = new WorldSender ();
+		public static string SavePath { get; set; }
 		
         public enum MAP_SIZE : int
         {
@@ -22,61 +23,8 @@ namespace Terraria_Server
         private const float DEFAULT_RIGHT_WORLD = 134400f;
         private const float DEFAULT_TOP_WORLD = 0.0f;
         private const float DEFAULT_BOTTOM_WORLD = 38400f;
-        
-        private int maxTilesX;
-        private int maxTilesY;
-
-        public World(int MaxTilesX, int MaxTilesY)
-        {
-            BottomWorld = DEFAULT_BOTTOM_WORLD;
-            TopWorld = DEFAULT_TOP_WORLD;
-            LeftWorld = DEFAULT_LEFT_WORLD;
-            RightWorld = DEFAULT_RIGHT_WORLD;
-            maxTilesY = MaxTilesY;
-            maxTilesX = MaxTilesX;
-
-            UpdateWorldCoords(false);
-        }
-
-        public string Name { get; set; }
-
-        public int Seed { get; set; }
-
-        public int Id { get; set; }
-
-        public string SavePath { get; set; }
-
-        public int MaxSectionsY { get; set; }
-
-        public int MaxSectionsX { get; set; }
-
-        public float BottomWorld { get; set; }
-
-        public float TopWorld { get; set; }
-
-        public float RightWorld { get; set; }
-
-        public float LeftWorld { get; set; }
-
-        public void UpdateWorldCoords(bool useWorld) {
-            if (useWorld)
-            {
-                maxTilesX = (int)RightWorld / 16 + 1;
-                maxTilesY = (int)BottomWorld / 16 + 1;
-            }
-            MaxSectionsX = maxTilesX / 200;
-            MaxSectionsY = maxTilesY / 150;
-        }
-
-        public double Time
-        {
-            get
-            {
-                return Main.time;
-            }
-        }
-
-        public void setTime(double Time, bool baseDay = false, bool dayTime = true)
+		
+        public static void SetTime(double Time, bool baseDay = false, bool dayTime = true)
         {
             Main.time = Time;
             Main.dayTime = dayTime;
@@ -95,40 +43,7 @@ namespace Terraria_Server
             if(Main.dayTime)
                 Main.bloodMoon = false;
         }
-
-        public int MaxTilesY
-        {
-            get {
-                return maxTilesY;
-            }
-        }
-
-        public void setMaxTilesY(int MaxTilesY, bool updateSection = true)
-        {
-            maxTilesY = MaxTilesY;
-            if (updateSection)
-            {
-                UpdateWorldCoords(false);
-            }
-        }
-
-        public int MaxTilesX
-        {
-            get
-            {
-                return maxTilesX;
-            }
-        }
-
-        public void setMaxTilesX(int MaxTilesX, bool updateSection = true)
-        {
-            maxTilesX = MaxTilesX;
-            if (updateSection)
-            {
-                UpdateWorldCoords(false);
-            }
-        }
-
+		
         public static bool IsTileValid(int TileX, int TileY)
         {
             return (TileX >= 0 && TileX <= Main.maxTilesX && TileY >= 0 && TileY <= Main.maxTilesY);
@@ -176,30 +91,5 @@ namespace Terraria_Server
             }
             return tileLocation;
         }
-
-        public int SpawnX
-        {
-            get
-            {
-                return Main.spawnTileX;
-            }
-            set
-            {
-                Main.spawnTileX = value;
-            }
-        }
-
-        public int SpawnY
-        {
-            get
-            {
-                return Main.spawnTileY;
-            }
-            set
-            {
-                Main.spawnTileY = value;
-            }
-        }
-
     }
 }

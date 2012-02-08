@@ -21,7 +21,7 @@ namespace Terraria_Server.WorldMod
 		private static bool tempBloodMoon = Main.bloodMoon;
 		private static double tempTime = Main.time;
 
-		public static void setWorldSize()
+		public static void SetWorldSize()
 		{
 			Main.bottomWorld = (float)(Main.maxTilesY * 16);
 			Main.rightWorld = (float)(Main.maxTilesX * 16);
@@ -31,7 +31,7 @@ namespace Terraria_Server.WorldMod
 
         public static void SaveWorldCallback(object threadContext)
         {
-            saveWorld(Server.World.SavePath, false);
+            saveWorld(World.SavePath, false);
         }
 
         public static void SaveWorldThreaded()
@@ -169,7 +169,7 @@ namespace Terraria_Server.WorldMod
 					prog.Value++;
 				}
 			}
-			setWorldSize();
+			SetWorldSize();
 			
 			LiquidUpdateBuffer.Initialize (Main.maxSectionsX, Main.maxSectionsY);
 			

@@ -22,11 +22,6 @@ namespace Terraria_Server
         /// Items which the player should be kicked for attemting to join the server
         /// </summary>
         public static List<String> RejectedItems { get; set; }
-
-        /// <summary>
-        /// Current world instance
-        /// </summary>
-        public static World World { get; set; }
         
         /// <summary>
         /// Gets the White list
@@ -57,15 +52,13 @@ namespace Terraria_Server
         /// <summary>
         /// When the server is ran, Data needs to be set
         /// </summary>
-        /// <param name="NewWorld"></param>
         /// <param name="PlayerCap"></param>
         /// <param name="myWhiteList"></param>
         /// <param name="myBanList"></param>
         /// <param name="myOpList"></param>
-        public static void InitializeData(World NewWorld, int PlayerCap, string myWhiteList, string myBanList, string myOpList)
+        public static void InitializeData(int PlayerCap, string myWhiteList, string myBanList, string myOpList)
         {
             UsingLoginSystem = false;
-            World = NewWorld;
             
             WhiteList = new DataRegister(myWhiteList);
             WhiteList.Load();

@@ -304,10 +304,9 @@ namespace Terraria_Server
 					ProgramLog.Log("Using world with custom map size: {0}x{1}", worldXtiles, worldYtiles);
 				}
 
-				World world = new World(worldXtiles, worldYtiles);
-				world.SavePath = worldFile;
+				World.SavePath = worldFile;
 
-				Server.InitializeData(world, properties.MaxPlayers,
+				Server.InitializeData(properties.MaxPlayers,
 					Statics.DataPath + Path.DirectorySeparatorChar + "whitelist.txt",
 					Statics.DataPath + Path.DirectorySeparatorChar + "banlist.txt",
 					Statics.DataPath + Path.DirectorySeparatorChar + "oplist.txt");
@@ -321,7 +320,7 @@ namespace Terraria_Server
 				Terraria_Server.Main.maxSectionsX = worldXtiles / 200;
 				Terraria_Server.Main.maxSectionsY = worldYtiles / 150;
 
-				WorldIO.LoadWorld(null, Server.World.SavePath);
+				WorldIO.LoadWorld(null, World.SavePath);
 
 				ctx = new HookContext
 				{
