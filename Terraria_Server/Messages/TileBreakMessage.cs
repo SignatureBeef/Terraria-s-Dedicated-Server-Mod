@@ -56,10 +56,11 @@ namespace Terraria_Server.Messages
 				switch (tileAction)
 				{
 					case 0:
-						editor.KillTile(x, y, failFlag, false, false);
+						//editor.KillTile(x, y, failFlag);
+						//[TODO] Get block modifications outside the x,y axis to update on Client end
+						WorldModify.KillTile(null, x, y, failFlag);
 						break;						
-					case 1:
-						
+					case 1:						
 						if (editor.PlaceTile (x, y, (int)tileType, false, true, whoAmI, style))
 						{
 							if (tileType == 15 && player.direction == 1)
@@ -160,31 +161,34 @@ namespace Terraria_Server.Messages
 					
 					return;
 				}
-				
-				lock (player.rowsToRectify)
+
+				if (player.rowsToRectify.Count > 0)
 				{
-					foreach (var kv in sandbox.changedRows)
+					lock (player.rowsToRectify)
 					{
-						int y0 = kv.Key;
-						var x1 = kv.Value.Min;
-						var x2 = kv.Value.Max;
-						uint row;
-						if (player.rowsToRectify.TryGetValue ((ushort) y0, out row))
+						foreach (var kv in sandbox.changedRows)
 						{
-							player.rowsToRectify[(ushort) y0] = (uint) (Math.Min (x1, row >> 16) << 16) | (uint) (Math.Max (x2, row & 0xffff));
-						}
-						else
-						{
-							player.rowsToRectify[(ushort) y0] = (uint) (x1 << 16) | (uint) x2;
+							int y0 = kv.Key;
+							var x1 = kv.Value.Min;
+							var x2 = kv.Value.Max;
+							uint row;
+							if (player.rowsToRectify.TryGetValue((ushort)y0, out row))
+							{
+								player.rowsToRectify[(ushort)y0] = (uint)(Math.Min(x1, row >> 16) << 16) | (uint)(Math.Max(x2, row & 0xffff));
+							}
+							else
+							{
+								player.rowsToRectify[(ushort)y0] = (uint)(x1 << 16) | (uint)x2;
+							}
 						}
 					}
 				}
 			}
-			
-//            if (tileAction == 1 && tileType == 53)
-//            {
-//                NetMessage.SendTileSquare(-1, x, y, 1);
-//            }
+
+			//if (tileAction == 1 && tileType == 53)
+			//{
+			//    NetMessage.SendTileSquare(-1, x, y, 1);
+			//}
         }
     }
 }
