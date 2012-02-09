@@ -1587,10 +1587,20 @@ namespace Terraria_Server.WorldMod
 			hitWire(TileRefs, i, j, Sender);
 
 			if (numInPump > 0 && numOutPump > 0)
-				xferWater();
+				xferWater(TileRefs);
 		}
 
-		public static void xferWater(Func<Int32, Int32, ITile> TileRefs = null)
+		public static void noWire(int i, int j)
+		{
+			if (numNoWire >= MAX_WIRE - 1)
+				return;
+
+			noWireX[numNoWire] = i;
+			noWireY[numNoWire] = j;
+			numNoWire++;
+		}
+
+		public static void xferWater(Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -1600,6 +1610,7 @@ namespace Terraria_Server.WorldMod
 				int num = inPumpX[i];
 				int num2 = inPumpY[i];
 				int liquid = (int)TileRefs(num, num2).Liquid;
+
 				if (liquid > 0)
 				{
 					bool lava = TileRefs(num, num2).Lava;
@@ -1612,24 +1623,24 @@ namespace Terraria_Server.WorldMod
 						{
 							bool flag = TileRefs(num3, num4).Lava;
 							if (liquid2 == 0)
+							{
 								flag = lava;
-
+							}
 							if (lava == flag)
 							{
 								int num5 = liquid;
 								if (num5 + liquid2 > 255)
+								{
 									num5 = 255 - liquid2;
+								}
 
-								short frameX = (short)(TileRefs(num3, num4).FrameX + (byte)num5);
-								TileRefs(num3, num4).SetFrameX(frameX);
-
-								byte lqd = (byte)(TileRefs(num, num2).Liquid - (byte)num5);
-								TileRefs(num, num2).SetLiquid(lqd);
-
+								TileRefs(num3, num4).AddLiquid((byte)num5);
+								TileRefs(num, num2).AddLiquid(-(byte)num5);
 
 								liquid = (int)TileRefs(num, num2).Liquid;
 								TileRefs(num3, num4).SetLava(lava);
 								SquareTileFrame(TileRefs, num3, num4, true);
+
 								if (TileRefs(num, num2).Liquid == 0)
 								{
 									TileRefs(num, num2).SetLava(false);
@@ -1644,19 +1655,10 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 
-		public static void noWire(int i, int j)
-		{
-			if (numNoWire >= MAX_WIRE - 1)
-				return;
-
-			noWireX[numNoWire] = i;
-			noWireY[numNoWire] = j;
-			numNoWire++;
-		}
-
 		public static void hitWire(Func<Int32, Int32, ITile> TileRefs, int i, int j, ISender Sender)
 		{
-			TileRefs = TileCollection.ITileAt;
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
 
 			if (numWire >= MAX_WIRE - 1)
 			{
@@ -1693,572 +1695,469 @@ namespace Terraria_Server.WorldMod
 					SquareTileFrame(TileRefs, i, j, true);
 					NetMessage.SendTileSquare(-1, i, j, 1);
 				}
-				else
+				else if (type == 130)
 				{
-					if (type == 130)
+					TileRefs(i, j).SetType(131);
+					SquareTileFrame(TileRefs, i, j, true);
+					NetMessage.SendTileSquare(-1, i, j, 1);
+				}
+				else if (type == 131)
+				{
+					TileRefs(i, j).SetType(130);
+					SquareTileFrame(TileRefs, i, j, true);
+					NetMessage.SendTileSquare(-1, i, j, 1);
+				}
+				else if (type == 11)
+				{
+					if (CloseDoor(TileRefs, i, j, true, Sender))
 					{
-						TileRefs(i, j).SetType (131);
-						SquareTileFrame(TileRefs, i, j, true);
-						NetMessage.SendTileSquare(-1, i, j, 1);
+						NetMessage.SendData(19, -1, -1, "", 1, (float)i, (float)j, 0f, 0);
+					}
+				}
+				else if (type == 10)
+				{
+					int num = 1;
+					if (Main.rand.Next(2) == 0)
+					{
+						num = -1;
+					}
+					if (!OpenDoor(TileRefs, i, j, num, Sender))
+					{
+						if (OpenDoor(TileRefs, i, j, -num, Sender))
+						{
+							NetMessage.SendData(19, -1, -1, "", 0, (float)i, (float)j, (float)(-(float)num), 0);
+						}
 					}
 					else
 					{
-						if (type == 131)
+						NetMessage.SendData(19, -1, -1, "", 0, (float)i, (float)j, (float)num, 0);
+					}
+				}
+				else if (type == 4)
+				{
+					if (TileRefs(i, j).FrameX < 66)
+					{
+						TileRefs(i, j).AddFrameX(66);
+					}
+					else
+					{
+						TileRefs(i, j).AddFrameX(-66);
+					}
+					NetMessage.SendTileSquare(-1, i, j, 1);
+				}
+				else if (type == 149)
+				{
+					if (TileRefs(i, j).FrameX < 54)
+					{
+						TileRefs(i, j).AddFrameX(54);
+					}
+					else
+					{
+						TileRefs(i, j).AddFrameX(54);
+					}
+					NetMessage.SendTileSquare(-1, i, j, 1);
+				}
+				else if (type == 42)
+				{
+					int num2 = j - (int)(TileRefs(i, j).FrameY / 18);
+					short num3 = 18;
+					if (TileRefs(i, j).FrameX > 0)
+					{
+						num3 = -18;
+					}
+
+					TileRefs(i, num2).AddFrameX(num3);
+					TileRefs(i, num2 + 1).AddFrameX(num3);
+
+					noWire(i, num2);
+					noWire(i, num2 + 1);
+					NetMessage.SendTileSquare(-1, i, j, 2);
+				}
+				else if (type == 93)
+				{
+					int num4 = j - (int)(TileRefs(i, j).FrameY / 18);
+					short num5 = 18;
+					if (TileRefs(i, j).FrameX > 0)
+					{
+						num5 = -18;
+					}
+
+					TileRefs(i, num4).AddFrameX(num5);
+					TileRefs(i, num4 + 1).AddFrameX(num5);
+					TileRefs(i, num4 + 2).AddFrameX(num5);
+
+					noWire(i, num4);
+					noWire(i, num4 + 1);
+					noWire(i, num4 + 2);
+					NetMessage.SendTileSquare(-1, i, num4 + 1, 3);
+				}
+				else if (type == 126 || type == 100 || type == 95)
+				{
+					int num6 = j - (int)(TileRefs(i, j).FrameY / 18);
+					int num7 = (int)(TileRefs(i, j).FrameX / 18);
+					if (num7 > 1)
+					{
+						num7 -= 2;
+					}
+					num7 = i - num7;
+					short num8 = 36;
+					if (TileRefs(num7, num6).FrameX > 0)
+					{
+						num8 = -36;
+					}
+
+					TileRefs(num7, num6).AddFrameX(num8);
+					TileRefs(num7, num6 + 1).AddFrameX(num8);
+					TileRefs(num7 + 1, num6).AddFrameX(num8);
+					TileRefs(num7 + 1, num6 + 1).AddFrameX(num8);
+
+					noWire(num7, num6);
+					noWire(num7, num6 + 1);
+					noWire(num7 + 1, num6);
+					noWire(num7 + 1, num6 + 1);
+					NetMessage.SendTileSquare(-1, num7, num6, 3);
+				}
+				else if (type == 34 || type == 35 || type == 36)
+				{
+					int num9 = j - (int)(TileRefs(i, j).FrameY / 18);
+					int num10 = (int)(TileRefs(i, j).FrameX / 18);
+					if (num10 > 2)
+					{
+						num10 -= 3;
+					}
+					num10 = i - num10;
+					short num11 = 54;
+					if (TileRefs(num10, num9).FrameX > 0)
+					{
+						num11 = -54;
+					}
+					for (int m = num10; m < num10 + 3; m++)
+					{
+						for (int n = num9; n < num9 + 3; n++)
 						{
-							TileRefs(i, j).SetType ( 130);
-							SquareTileFrame(TileRefs, i, j, true);
-							NetMessage.SendTileSquare(-1, i, j, 1);
+							TileRefs(m, n).AddFrameX(num11);
+							noWire(m, n);
 						}
-						else
+					}
+					NetMessage.SendTileSquare(-1, num10 + 1, num9 + 1, 3);
+				}
+				else if (type == 33)
+				{
+					short num12 = 18;
+					if (TileRefs(i, j).FrameX > 0)
+					{
+						num12 = -18;
+					}
+					TileRefs(i, j).AddFrameX(num12);
+					NetMessage.SendTileSquare(-1, i, j, 3);
+				}
+				else if (type == 92)
+				{
+					int num13 = j - (int)(TileRefs(i, j).FrameY / 18);
+					short num14 = 18;
+					if (TileRefs(i, j).FrameX > 0)
+					{
+						num14 = -18;
+					}
+
+					TileRefs(i, num13).AddFrameX(num14);
+					TileRefs(i, num13 + 1).AddFrameX(num14);
+					TileRefs(i, num13 + 2).AddFrameX(num14);
+					TileRefs(i, num13 + 3).AddFrameX(num14);
+					TileRefs(i, num13 + 4).AddFrameX(num14);
+					TileRefs(i, num13 + 5).AddFrameX(num14);
+
+					noWire(i, num13);
+					noWire(i, num13 + 1);
+					noWire(i, num13 + 2);
+					noWire(i, num13 + 3);
+					noWire(i, num13 + 4);
+					noWire(i, num13 + 5);
+					NetMessage.SendTileSquare(-1, i, num13 + 3, 7);
+				}
+				else if (type == 137)
+				{
+					if (checkMech(i, j, 180))
+					{
+						int num15 = -1;
+						if (TileRefs(i, j).FrameX != 0)
 						{
-							if (type == 11)
+							num15 = 1;
+						}
+						float speedX = (float)(12 * num15);
+						int damage = 20;
+						int type2 = 98;
+						Vector2 vector = new Vector2((float)(i * 16 + 8), (float)(j * 16 + 7));
+						vector.X += (float)(10 * num15);
+						vector.Y += 2f;
+						Projectile.NewProjectile((float)((int)vector.X), (float)((int)vector.Y), speedX, 0f, type2, damage, 2f, Main.myPlayer);
+					}
+				}
+				else if (type == 139)
+				{
+					SwitchMB(TileRefs, i, j);
+				}
+				else if (type == 141)
+				{
+					KillTile(TileRefs, i, j, false, false, true);
+					NetMessage.SendTileSquare(-1, i, j, 1);
+					Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0f, 108, 250, 10f, Main.myPlayer);
+				}
+				else if (type == 142 || type == 143)
+				{
+					int num16 = j - (int)(TileRefs(i, j).FrameY / 18);
+					int num17 = (int)(TileRefs(i, j).FrameX / 18);
+					if (num17 > 1)
+					{
+						num17 -= 2;
+					}
+					num17 = i - num17;
+					noWire(num17, num16);
+					noWire(num17, num16 + 1);
+					noWire(num17 + 1, num16);
+					noWire(num17 + 1, num16 + 1);
+					if (type == 142)
+					{
+						int num18 = num17;
+						int num19 = num16;
+						for (int num20 = 0; num20 < 4; num20++)
+						{
+							if (numInPump >= MAX_PUMP - 1)
 							{
-								if (CloseDoor(TileRefs, i, j, true, Sender))
-								{
-									NetMessage.SendData(19, -1, -1, "", 1, (float)i, (float)j, 0f, 0);
-								}
+								break;
+							}
+							if (num20 == 0)
+							{
+								num18 = num17;
+								num19 = num16 + 1;
+							}
+							else if (num20 == 1)
+							{
+								num18 = num17 + 1;
+								num19 = num16 + 1;
+							}
+							else if (num20 == 2)
+							{
+								num18 = num17;
+								num19 = num16;
 							}
 							else
 							{
-								if (type == 10)
+								num18 = num17 + 1;
+								num19 = num16;
+							}
+
+							inPumpX[numInPump] = num18;
+							inPumpY[numInPump] = num19;
+							numInPump++;
+						}
+					}
+					else
+					{
+						int num21 = num17;
+						int num22 = num16;
+						for (int num23 = 0; num23 < 4; num23++)
+						{
+							if (numOutPump >= MAX_PUMP - 1)
+							{
+								break;
+							}
+							if (num23 == 0)
+							{
+								num21 = num17;
+								num22 = num16 + 1;
+							}
+							else if (num23 == 1)
+							{
+								num21 = num17 + 1;
+								num22 = num16 + 1;
+							}
+							else if (num23 == 2)
+							{
+								num21 = num17;
+								num22 = num16;
+							}
+							else
+							{
+								num21 = num17 + 1;
+								num22 = num16;
+							}
+
+							outPumpX[numOutPump] = num21;
+							outPumpY[numOutPump] = num22;
+							numOutPump++;
+						}
+					}
+				}
+				else if (type == 105)
+				{
+					int num24 = j - (int)(TileRefs(i, j).FrameY / 18);
+					int num25 = (int)(TileRefs(i, j).FrameX / 18);
+					int num26 = 0;
+					while (num25 >= 2)
+					{
+						num25 -= 2;
+						num26++;
+					}
+					num25 = i - num25;
+					noWire(num25, num24);
+					noWire(num25, num24 + 1);
+					noWire(num25, num24 + 2);
+					noWire(num25 + 1, num24);
+					noWire(num25 + 1, num24 + 1);
+					noWire(num25 + 1, num24 + 2);
+					int num27 = num25 * 16 + 16;
+					int num28 = (num24 + 3) * 16;
+					int num29 = -1;
+					if (num26 == 4)
+					{
+						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 1))
+						{
+							num29 = NPC.NewNPC(num27, num28 - 12, 1, 0);
+						}
+					}
+					else if (num26 == 7)
+					{
+						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 49))
+						{
+							num29 = NPC.NewNPC(num27 - 4, num28 - 6, 49, 0);
+						}
+					}
+					else if (num26 == 8)
+					{
+						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 55))
+						{
+							num29 = NPC.NewNPC(num27, num28 - 12, 55, 0);
+						}
+					}
+					else if (num26 == 9)
+					{
+						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 46))
+						{
+							num29 = NPC.NewNPC(num27, num28 - 12, 46, 0);
+						}
+					}
+					else if (num26 == 10)
+					{
+						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 21))
+						{
+							num29 = NPC.NewNPC(num27, num28, 21, 0);
+						}
+					}
+					else if (num26 == 18)
+					{
+						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 67))
+						{
+							num29 = NPC.NewNPC(num27, num28 - 12, 67, 0);
+						}
+					}
+					else if (num26 == 23)
+					{
+						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 63))
+						{
+							num29 = NPC.NewNPC(num27, num28 - 12, 63, 0);
+						}
+					}
+					else if (num26 == 27)
+					{
+						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 85))
+						{
+							num29 = NPC.NewNPC(num27 - 9, num28, 85, 0);
+						}
+					}
+					else if (num26 == 28)
+					{
+						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 74))
+						{
+							num29 = NPC.NewNPC(num27, num28 - 12, 74, 0);
+						}
+					}
+					else if (num26 == 42)
+					{
+						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 58))
+						{
+							num29 = NPC.NewNPC(num27, num28 - 12, 58, 0);
+						}
+					}
+					else if (num26 == 37)
+					{
+						if (checkMech(i, j, 600) && Item.MechSpawn((float)num27, (float)num28, 58))
+						{
+							Item.NewItem(num27, num28 - 16, 0, 0, 58, 1, false, 0);
+						}
+					}
+					else if (num26 == 2)
+					{
+						if (checkMech(i, j, 600) && Item.MechSpawn((float)num27, (float)num28, 184))
+						{
+							Item.NewItem(num27, num28 - 16, 0, 0, 184, 1, false, 0);
+						}
+					}
+					else if (num26 == 17)
+					{
+						if (checkMech(i, j, 600) && Item.MechSpawn((float)num27, (float)num28, 166))
+						{
+							Item.NewItem(num27, num28 - 20, 0, 0, 166, 1, false, 0);
+						}
+					}
+					else if (num26 == 40)
+					{
+						if (checkMech(i, j, 300))
+						{
+							int[] array = new int[10];
+							int num30 = 0;
+							for (int num31 = 0; num31 < 200; num31++)
+							{
+								if (Main.npcs[num31].Active && (Main.npcs[num31].Type == 17 || Main.npcs[num31].Type == 19 ||
+									Main.npcs[num31].Type == 22 || Main.npcs[num31].Type == 38 || Main.npcs[num31].Type == 54 ||
+										Main.npcs[num31].Type == 107 || Main.npcs[num31].Type == 108))
 								{
-									int num = 1;
-									if (Main.rand.Next(2) == 0)
+									array[num30] = num31;
+									num30++;
+									if (num30 >= 9)
 									{
-										num = -1;
-									}
-									if (!OpenDoor(TileRefs, i, j, num, Sender))
-									{
-										if (OpenDoor(TileRefs, i, j, -num, Sender))
-										{
-											NetMessage.SendData(19, -1, -1, "", 0, (float)i, (float)j, (float)(-(float)num), 0);
-										}
-									}
-									else
-									{
-										NetMessage.SendData(19, -1, -1, "", 0, (float)i, (float)j, (float)num, 0);
-									}
-								}
-								else
-								{
-									if (type == 4)
-									{
-										if (TileRefs(i, j).FrameX < 66)
-										{
-											TileRefs(i, j).AddFrameX(66);
-										}
-										else
-										{
-											TileRefs(i,j).AddFrameX(-66);
-										}
-										NetMessage.SendTileSquare(-1, i, j, 1);
-									}
-									else
-									{
-										if (type == 149)
-										{
-											if (TileRefs(i, j).FrameX < 54)
-											{
-												TileRefs(i, j).AddFrameX (54);
-											}
-											else
-											{
-												TileRefs(i, j).AddFrameX (54);
-											}
-											NetMessage.SendTileSquare(-1, i, j, 1);
-										}
-										else
-										{
-											if (type == 42)
-											{
-												int num2 = j - (int)(TileRefs(i, j).FrameY / 18);
-												short num3 = 18;
-												if (TileRefs(i, j).FrameX > 0)
-												{
-													num3 = -18;
-												}
-
-												TileRefs(i, num2).AddFrameX(num3);
-												TileRefs(i, num2 + 1).AddFrameX(num3);
-
-												noWire(i, num2);
-												noWire(i, num2 + 1);
-												NetMessage.SendTileSquare(-1, i, j, 2);
-											}
-											else
-											{
-												if (type == 93)
-												{
-													int num4 = j - (int)(TileRefs(i, j).FrameY / 18);
-													short num5 = 18;
-													if (TileRefs(i, j).FrameX > 0)
-													{
-														num5 = -18;
-													}
-													
-													TileRefs(i, num4).AddFrameX(num5);
-													TileRefs(i, num4 + 1).AddFrameX(num5);													
-													TileRefs(i, num4 + 2).AddFrameX(num5);
-
-													noWire(i, num4);
-													noWire(i, num4 + 1);
-													noWire(i, num4 + 2);
-													NetMessage.SendTileSquare(-1, i, num4 + 1, 3);
-												}
-												else
-												{
-													if (type == 126 || type == 100 || type == 95)
-													{
-														int num6 = j - (int)(TileRefs(i, j).FrameY / 18);
-														int num7 = (int)(TileRefs(i, j).FrameX / 18);
-														if (num7 > 1)
-														{
-															num7 -= 2;
-														}
-														num7 = i - num7;
-														short num8 = 36;
-														if (TileRefs(num7, num6).FrameX > 0)
-														{
-															num8 = -36;
-														}
-														
-														TileRefs(num7, num6).AddFrameX(num8);
-														TileRefs(num7, num6 + 1).AddFrameX(num8);
-														TileRefs(num7 + 1, num6).AddFrameX(num8);
-														TileRefs(num7 + 1, num6 + 1).AddFrameX(num8);
-
-														noWire(num7, num6);
-														noWire(num7, num6 + 1);
-														noWire(num7 + 1, num6);
-														noWire(num7 + 1, num6 + 1);
-														NetMessage.SendTileSquare(-1, num7, num6, 3);
-													}
-													else
-													{
-														if (type == 34 || type == 35 || type == 36)
-														{
-															int num9 = j - (int)(TileRefs(i, j).FrameY / 18);
-															int num10 = (int)(TileRefs(i, j).FrameX / 18);
-															if (num10 > 2)
-															{
-																num10 -= 3;
-															}
-															num10 = i - num10;
-															short num11 = 54;
-															if (TileRefs(num10, num9).FrameX > 0)
-															{
-																num11 = -54;
-															}
-															for (int m = num10; m < num10 + 3; m++)
-															{
-																for (int n = num9; n < num9 + 3; n++)
-																{
-																	TileRefs(m, n).AddFrameX(num11);
-																	noWire(m, n);
-																}
-															}
-															NetMessage.SendTileSquare(-1, num10 + 1, num9 + 1, 3);
-														}
-														else
-														{
-															if (type == 33)
-															{
-																short num12 = 18;
-																if (TileRefs(i, j).FrameX > 0)
-																{
-																	num12 = -18;
-																}
-																TileRefs(i, j).AddFrameX(num12);
-																NetMessage.SendTileSquare(-1, i, j, 3);
-															}
-															else
-															{
-																if (type == 92)
-																{
-																	int num13 = j - (int)(TileRefs(i, j).FrameY / 18);
-																	short num14 = 18;
-																	if (TileRefs(i, j).FrameX > 0)
-																	{
-																		num14 = -18;
-																	}
-																	
-																	TileRefs(i, num13).AddFrameX(num14);
-																	TileRefs(i, num13 + 1).AddFrameX(num14);
-																	TileRefs(i, num13 + 2).AddFrameX(num14);
-																	TileRefs(i, num13 + 3).AddFrameX(num14);
-																	TileRefs(i, num13 + 4).AddFrameX(num14);
-																	TileRefs(i, num13 + 5).AddFrameX(num14);
-
-																	noWire(i, num13);
-																	noWire(i, num13 + 1);
-																	noWire(i, num13 + 2);
-																	noWire(i, num13 + 3);
-																	noWire(i, num13 + 4);
-																	noWire(i, num13 + 5);
-																	NetMessage.SendTileSquare(-1, i, num13 + 3, 7);
-																}
-																else
-																{
-																	if (type == 137)
-																	{
-																		if (checkMech(i, j, 180))
-																		{
-																			int num15 = -1;
-																			if (TileRefs(i, j).FrameX != 0)
-																			{
-																				num15 = 1;
-																			}
-																			float speedX = (float)(12 * num15);
-																			int damage = 20;
-																			int type2 = 98;
-																			Vector2 vector = new Vector2((float)(i * 16 + 8), (float)(j * 16 + 7));
-																			vector.X += (float)(10 * num15);
-																			vector.Y += 2f;
-																			Projectile.NewProjectile((float)((int)vector.X), (float)((int)vector.Y), speedX, 0f, type2, damage, 2f, Main.myPlayer);
-																		}
-																	}
-																	else
-																	{
-																		if (type == 139)
-																		{
-																			SwitchMB(TileRefs, i, j);
-																		}
-																		else
-																		{
-																			if (type == 141)
-																			{
-																				KillTile(TileRefs, i, j, false, false, true);
-																				NetMessage.SendTileSquare(-1, i, j, 1);
-																				Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0f, 108, 250, 10f, Main.myPlayer);
-																			}
-																			else
-																			{
-																				if (type == 142 || type == 143)
-																				{
-																					int num16 = j - (int)(TileRefs(i, j).FrameY / 18);
-																					int num17 = (int)(TileRefs(i, j).FrameX / 18);
-																					if (num17 > 1)
-																					{
-																						num17 -= 2;
-																					}
-																					num17 = i - num17;
-																					noWire(num17, num16);
-																					noWire(num17, num16 + 1);
-																					noWire(num17 + 1, num16);
-																					noWire(num17 + 1, num16 + 1);
-																					if (type == 142)
-																					{
-																						int num18 = num17;
-																						int num19 = num16;
-																						for (int num20 = 0; num20 < 4; num20++)
-																						{
-																							if (numInPump >= MAX_PUMP - 1)
-																							{
-																								break;
-																							}
-																							if (num20 == 0)
-																							{
-																								num18 = num17;
-																								num19 = num16 + 1;
-																							}
-																							else
-																							{
-																								if (num20 == 1)
-																								{
-																									num18 = num17 + 1;
-																									num19 = num16 + 1;
-																								}
-																								else
-																								{
-																									if (num20 == 2)
-																									{
-																										num18 = num17;
-																										num19 = num16;
-																									}
-																									else
-																									{
-																										num18 = num17 + 1;
-																										num19 = num16;
-																									}
-																								}
-																							}
-																							inPumpX[numInPump] = num18;
-																							inPumpY[numInPump] = num19;
-																							numInPump++;
-																						}
-																					}
-																					else
-																					{
-																						int num21 = num17;
-																						int num22 = num16;
-																						for (int num23 = 0; num23 < 4; num23++)
-																						{
-																							if (numOutPump >= MAX_PUMP - 1)
-																							{
-																								break;
-																							}
-																							if (num23 == 0)
-																							{
-																								num21 = num17;
-																								num22 = num16 + 1;
-																							}
-																							else
-																							{
-																								if (num23 == 1)
-																								{
-																									num21 = num17 + 1;
-																									num22 = num16 + 1;
-																								}
-																								else
-																								{
-																									if (num23 == 2)
-																									{
-																										num21 = num17;
-																										num22 = num16;
-																									}
-																									else
-																									{
-																										num21 = num17 + 1;
-																										num22 = num16;
-																									}
-																								}
-																							}
-																							outPumpX[numOutPump] = num21;
-																							outPumpY[numOutPump] = num22;
-																							numOutPump++;
-																						}
-																					}
-																				}
-																				else
-																				{
-																					if (type == 105)
-																					{
-																						int num24 = j - (int)(TileRefs(i, j).FrameY / 18);
-																						int num25 = (int)(TileRefs(i, j).FrameX / 18);
-																						int num26 = 0;
-																						while (num25 >= 2)
-																						{
-																							num25 -= 2;
-																							num26++;
-																						}
-																						num25 = i - num25;
-																						noWire(num25, num24);
-																						noWire(num25, num24 + 1);
-																						noWire(num25, num24 + 2);
-																						noWire(num25 + 1, num24);
-																						noWire(num25 + 1, num24 + 1);
-																						noWire(num25 + 1, num24 + 2);
-																						int num27 = num25 * 16 + 16;
-																						int num28 = (num24 + 3) * 16;
-																						int num29 = -1;
-																						if (num26 == 4)
-																						{
-																							if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 1))
-																							{
-																								num29 = NPC.NewNPC(num27, num28 - 12, 1, 0);
-																							}
-																						}
-																						else
-																						{
-																							if (num26 == 7)
-																							{
-																								if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 49))
-																								{
-																									num29 = NPC.NewNPC(num27 - 4, num28 - 6, 49, 0);
-																								}
-																							}
-																							else
-																							{
-																								if (num26 == 8)
-																								{
-																									if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 55))
-																									{
-																										num29 = NPC.NewNPC(num27, num28 - 12, 55, 0);
-																									}
-																								}
-																								else
-																								{
-																									if (num26 == 9)
-																									{
-																										if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 46))
-																										{
-																											num29 = NPC.NewNPC(num27, num28 - 12, 46, 0);
-																										}
-																									}
-																									else
-																									{
-																										if (num26 == 10)
-																										{
-																											if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 21))
-																											{
-																												num29 = NPC.NewNPC(num27, num28, 21, 0);
-																											}
-																										}
-																										else
-																										{
-																											if (num26 == 18)
-																											{
-																												if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 67))
-																												{
-																													num29 = NPC.NewNPC(num27, num28 - 12, 67, 0);
-																												}
-																											}
-																											else
-																											{
-																												if (num26 == 23)
-																												{
-																													if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 63))
-																													{
-																														num29 = NPC.NewNPC(num27, num28 - 12, 63, 0);
-																													}
-																												}
-																												else
-																												{
-																													if (num26 == 27)
-																													{
-																														if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 85))
-																														{
-																															num29 = NPC.NewNPC(num27 - 9, num28, 85, 0);
-																														}
-																													}
-																													else
-																													{
-																														if (num26 == 28)
-																														{
-																															if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 74))
-																															{
-																																num29 = NPC.NewNPC(num27, num28 - 12, 74, 0);
-																															}
-																														}
-																														else
-																														{
-																															if (num26 == 42)
-																															{
-																																if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 58))
-																																{
-																																	num29 = NPC.NewNPC(num27, num28 - 12, 58, 0);
-																																}
-																															}
-																															else
-																															{
-																																if (num26 == 37)
-																																{
-																																	if (checkMech(i, j, 600) && Item.MechSpawn((float)num27, (float)num28, 58))
-																																	{
-																																		Item.NewItem(num27, num28 - 16, 0, 0, 58, 1, false, 0);
-																																	}
-																																}
-																																else
-																																{
-																																	if (num26 == 2)
-																																	{
-																																		if (checkMech(i, j, 600) && Item.MechSpawn((float)num27, (float)num28, 184))
-																																		{
-																																			Item.NewItem(num27, num28 - 16, 0, 0, 184, 1, false, 0);
-																																		}
-																																	}
-																																	else
-																																	{
-																																		if (num26 == 17)
-																																		{
-																																			if (checkMech(i, j, 600) && Item.MechSpawn((float)num27, (float)num28, 166))
-																																			{
-																																				Item.NewItem(num27, num28 - 20, 0, 0, 166, 1, false, 0);
-																																			}
-																																		}
-																																		else
-																																		{
-																																			if (num26 == 40)
-																																			{
-																																				if (checkMech(i, j, 300))
-																																				{
-																																					int[] array = new int[10];
-																																					int num30 = 0;
-																																					for (int num31 = 0; num31 < 200; num31++)
-																																					{
-																																						if (Main.npcs[num31].Active && (Main.npcs[num31].Type == 17 || Main.npcs[num31].Type == 19 ||
-																																							Main.npcs[num31].Type == 22 || Main.npcs[num31].Type == 38 || Main.npcs[num31].Type == 54 || 
-																																								Main.npcs[num31].Type == 107 || Main.npcs[num31].Type == 108))
-																																						{
-																																							array[num30] = num31;
-																																							num30++;
-																																							if (num30 >= 9)
-																																							{
-																																								break;
-																																							}
-																																						}
-																																					}
-																																					if (num30 > 0)
-																																					{
-																																						int num32 = array[Main.rand.Next(num30)];
-																																						Main.npcs[num32].Position.X = (float)(num27 - Main.npcs[num32].Width / 2);
-																																						Main.npcs[num32].Position.Y = (float)(num28 - Main.npcs[num32].Height - 1);
-																																						NetMessage.SendData(23, -1, -1, "", num32, 0f, 0f, 0f, 0);
-																																					}
-																																				}
-																																			}
-																																			else
-																																			{
-																																				if (num26 == 41 && checkMech(i, j, 300))
-																																				{
-																																					int[] array2 = new int[10];
-																																					int num33 = 0;
-																																					for (int num34 = 0; num34 < 200; num34++)
-																																					{
-																																						if (Main.npcs[num34].Active && (Main.npcs[num34].Type == 18 || Main.npcs[num34].Type == 20 || 
-																																							Main.npcs[num34].Type == 124))
-																																						{
-																																							array2[num33] = num34;
-																																							num33++;
-																																							if (num33 >= 9)
-																																							{
-																																								break;
-																																							}
-																																						}
-																																					}
-																																					if (num33 > 0)
-																																					{
-																																						int num35 = array2[Main.rand.Next(num33)];
-																																						Main.npcs[num35].Position.X = (float)(num27 - Main.npcs[num35].Width / 2);
-																																						Main.npcs[num35].Position.Y = (float)(num28 - Main.npcs[num35].Height - 1);
-																																						NetMessage.SendData(23, -1, -1, "", num35, 0f, 0f, 0f, 0);
-																																					}
-																																				}
-																																			}
-																																		}
-																																	}
-																																}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																						if (num29 >= 0)
-																						{
-																							Main.npcs[num29].value = 0f;
-																							Main.npcs[num29].slots = 0f;
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
+										break;
 									}
 								}
 							}
+							if (num30 > 0)
+							{
+								int num32 = array[Main.rand.Next(num30)];
+								Main.npcs[num32].Position.X = (float)(num27 - Main.npcs[num32].Width / 2);
+								Main.npcs[num32].Position.Y = (float)(num28 - Main.npcs[num32].Height - 1);
+								NetMessage.SendData(23, -1, -1, "", num32, 0f, 0f, 0f, 0);
+							}
 						}
+					}
+					else if (num26 == 41 && checkMech(i, j, 300))
+					{
+						int[] array2 = new int[10];
+						int num33 = 0;
+						for (int num34 = 0; num34 < 200; num34++)
+						{
+							if (Main.npcs[num34].Active && (Main.npcs[num34].Type == 18 || Main.npcs[num34].Type == 20 ||
+								Main.npcs[num34].Type == 124))
+							{
+								array2[num33] = num34;
+								num33++;
+								if (num33 >= 9)
+								{
+									break;
+								}
+							}
+						}
+						if (num33 > 0)
+						{
+							int num35 = array2[Main.rand.Next(num33)];
+							Main.npcs[num35].Position.X = (float)(num27 - Main.npcs[num35].Width / 2);
+							Main.npcs[num35].Position.Y = (float)(num28 - Main.npcs[num35].Height - 1);
+							NetMessage.SendData(23, -1, -1, "", num35, 0f, 0f, 0f, 0);
+						}
+					}
+					if (num29 >= 0)
+					{
+						Main.npcs[num29].value = 0f;
+						Main.npcs[num29].slots = 0f;
 					}
 				}
 			}
