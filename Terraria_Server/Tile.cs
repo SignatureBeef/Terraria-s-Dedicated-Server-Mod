@@ -66,7 +66,7 @@ namespace Terraria_Server
 
 		bool Wire { get; }
 
-		void SetWire(bool value);		
+		void SetWire(bool value);
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
