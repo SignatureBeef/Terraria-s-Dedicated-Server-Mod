@@ -283,7 +283,7 @@ namespace Terraria_Server.Networking
 					
 					if (msgLen <= 4 || msgLen > 4096)
 					{
-						Kick ("Client sent invalid network message (" + msgLen + ")");
+						Kick ("Client sent invalid network message (" + msgLen + " | " + readBuffer[processed + 4] + ")");
 						msgLen = 0;
 						return;
 					}
@@ -330,7 +330,7 @@ namespace Terraria_Server.Networking
 						
 						if (msgLen <= 4 || msgLen > 4096)
 						{
-							Kick ("Client sent invalid network message (" + msgLen + ")");
+							Kick("Client sent invalid network message (" + msgLen + " | " + readBuffer[processed + 4] + ")");
 							msgLen = 0;
 							return;
 						}
