@@ -2750,49 +2750,43 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			var num247max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0001);
-			using (var prog = new ProgressLogger(num247max - 1, "Placing hellforges"))
+			var max = Main.maxTilesX / 200;
+			using (var prog = new ProgressLogger(max - 1, "Placing hellforges"))
 			{
-				for (int num247 = 0; num247 < num247max; num247++)
+				for (int num294 = 0; num294 < Main.maxTilesX / 200; num294++)
 				{
-					prog.Value = num247;
-
-					bool flag19 = false;
-					int num249 = 0;
-					while (!flag19)
+					float num295 = (float)(num294 / (Main.maxTilesX / 200));
+					bool flag21 = false;
+					int num296 = 0;
+					while (!flag21)
 					{
-						int num250 = WorldModify.genRand.Next(1, Main.maxTilesX);
-						int num251 = WorldModify.genRand.Next(Main.maxTilesY - 250, Main.maxTilesY - 5);
+						int num297 = WorldModify.genRand.Next(1, Main.maxTilesX);
+						int num298 = WorldModify.genRand.Next(Main.maxTilesY - 250, Main.maxTilesY - 5);
 						try
 						{
-							if (TileRefs(num250, num251).Wall == 13)
+							if (TileRefs(num297, num298).Wall != 13 && TileRefs(num297, num298).Wall != 14)
+								continue;
+
+							while (!TileRefs(num297, num298).Active)
+								num298++;
+
+							num298--;
+							WorldModify.PlaceTile(TileRefs, num297, num298, 77, false, false, -1, 0);
+							if (TileRefs(num297, num298).Type == 77)
+								flag21 = true;
+							else
 							{
-								while (!TileRefs(num250, num251).Active)
-								{
-									num251++;
-								}
-								num251--;
-								WorldModify.PlaceTile(TileRefs, num250, num251, 77, false, false, -1, 0);
-								if (TileRefs(num250, num251).Type == 77)
-								{
-									flag19 = true;
-								}
-								else
-								{
-									num249++;
-									if (num249 >= 10000)
-									{
-										flag19 = true;
-									}
-								}
+								num296++;
+								if (num296 >= 10000)
+									flag21 = true;
 							}
 						}
 						catch
-						{
-						}
+						{ }
 					}
 				}
-			} // end hellforges
+				prog.Value++;
+			}
 		}
 
 		public static void SpreadGrass(Func<Int32, Int32, ITile> TileRefs)

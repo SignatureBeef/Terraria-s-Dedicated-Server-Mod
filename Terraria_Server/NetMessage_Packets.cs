@@ -931,7 +931,7 @@ namespace Terraria_Server
 			Int (sign.x);
 			Int (sign.y);
 			
-			String (sign.text);
+			String (sign.text, true);
 			
 			End ();
 		}
@@ -944,7 +944,7 @@ namespace Terraria_Server
 			Int (x);
 			Int (y);
 			
-			String (text);
+			String (text, true);
 			
 			End ();
 		}
