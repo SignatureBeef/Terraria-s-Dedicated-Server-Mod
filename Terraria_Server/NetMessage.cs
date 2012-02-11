@@ -868,7 +868,7 @@ namespace Terraria_Server
 		{
 			foreach (char c in data)
 			{
-				if (c < 32 || c > 126 && !newLineOverride)
+				if ((c < 32 || c > 126) && !newLineOverride)
 					sink.WriteByte ((byte) '?');
 				else
 					sink.WriteByte ((byte) c);
