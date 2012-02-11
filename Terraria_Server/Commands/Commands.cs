@@ -604,7 +604,7 @@ namespace Terraria_Server.Commands
 			// Get the class id of the npc
 			int realNPCId = 0;
 			NPC fclass = Registries.NPC.FindClass(npcName);
-			if (fclass != Registries.NPC.Default)
+			if (fclass.Name != String.Empty)
 				realNPCId = fclass.Type;
 			else
 				throw new CommandError(Languages.NPCDoesntExist);
