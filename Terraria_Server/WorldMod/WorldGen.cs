@@ -290,9 +290,9 @@ namespace Terraria_Server.WorldMod
 				}
 				for (int m = 0; m < 10; m++)
 				{
-					WorldGen.TileRunner(TileRefs, array[m], array2[m], (double)WorldModify.genRand.Next(5, 8),
+					TileRunner(TileRefs, array[m], array2[m], (double)WorldModify.genRand.Next(5, 8),
 						WorldModify.genRand.Next(6, 9), 0, true, -2f, -0.3f, false, true);
-					WorldGen.TileRunner(TileRefs, array[m], array2[m], (double)WorldModify.genRand.Next(5, 8),
+					TileRunner(TileRefs, array[m], array2[m], (double)WorldModify.genRand.Next(5, 8),
 						WorldModify.genRand.Next(6, 9), 0, true, 2f, -0.3f, false, true);
 				}
 			}
@@ -1050,6 +1050,14 @@ namespace Terraria_Server.WorldMod
 				int section1Y = posY;
 				TileRunner(TileRefs, posX, posY, (double)WorldModify.genRand.Next((int)(250f * jungleSize), (int)(500f * jungleSize)), WorldModify.genRand.Next(50, 150), 59, false, (float)(direction * 3), 0f, false, true);
 
+				int num82 = 0;
+				while ((float)num82 < 6f * jungleSize)
+				{
+					TileRunner(TileRefs, posX + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), posY + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(63, 65), false, 0f, 0f, false, true);
+					num82++;
+				}
+				mudWall = true;
+
 				jungleprog.Value = 15;
 
 				posX += WorldModify.genRand.Next((int)(-250f * jungleSize), (int)(251f * jungleSize));
@@ -1060,6 +1068,15 @@ namespace Terraria_Server.WorldMod
 				int keepY = posY;
 				TileRunner(TileRefs, posX, posY, (double)WorldModify.genRand.Next((int)(250f * jungleSize), (int)(500f * jungleSize)), WorldModify.genRand.Next(50, 150), 59, false, 0f, 0f, false, true);
 
+				mudWall = false;
+				int num87 = 0;
+				while ((float)num87 < 6f * jungleSize)
+				{
+					TileRunner(TileRefs, posX + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), posY + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(65, 67), false, 0f, 0f, false, true);
+					num87++;
+				}
+
+				mudWall = true;
 				jungleprog.Value = 30;
 
 				posX += WorldModify.genRand.Next((int)(-400f * jungleSize), (int)(401f * jungleSize));
@@ -1067,6 +1084,15 @@ namespace Terraria_Server.WorldMod
 				int section3X = posX;
 				int section3Y = posY;
 				TileRunner(TileRefs, posX, posY, (double)WorldModify.genRand.Next((int)(250f * jungleSize), (int)(500f * jungleSize)), WorldModify.genRand.Next(50, 150), 59, false, (float)(direction * -3), 0f, false, true);
+
+				mudWall = false;
+				int num90 = 0;
+				while ((float)num90 < 6f * jungleSize)
+				{
+					TileRunner(TileRefs, posX + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), posY + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(67, 69), false, 0f, 0f, false, true);
+					num90++;
+				}
+				mudWall = true;
 
 				jungleprog.Value = 45;
 
@@ -1076,6 +1102,19 @@ namespace Terraria_Server.WorldMod
 				JungleRunner(TileRefs, posX, posY);
 
 				jungleprog.Value = 60;
+				mudWall = false;
+
+				for (int num91 = 0; num91 < Main.maxTilesX / 10; num91++)
+				{
+					posX = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
+					posY = WorldModify.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 200);
+					while (TileRefs(posX, posY).Wall != 15)
+					{
+						posX = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
+						posY = WorldModify.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 200);
+					}
+					MudWallRunner(TileRefs, posX, posY);
+				}
 
 				posX = keepX;
 				posY = keepY;
@@ -2482,6 +2521,16 @@ namespace Terraria_Server.WorldMod
 						if (AddBuriedChest(TileRefs, num224, num225, 0, false))
 						{
 							flag13 = true;
+							var num266 = num225;
+
+							while (TileRefs(num224, num266).Type != 21 && num266 < Main.maxTilesY - 300)
+							{
+								num266++;
+							}
+							if (num225 < Main.maxTilesY - 300)
+							{
+								MineHouse(TileRefs, num224, num266);
+							}
 						}
 						else
 						{
@@ -2514,7 +2563,7 @@ namespace Terraria_Server.WorldMod
 						int num229 = WorldModify.genRand.Next(300, Main.maxTilesX - 300);
 						int num230 = WorldModify.genRand.Next((int)terrarainMaxY, (int)Main.worldSurface);
 						bool flag15 = false;
-						if (TileRefs(num229, num230).Wall == 2)
+						if (TileRefs(num229, num230).Wall == 2 && !TileRefs(num229, num230).Active)
 						{
 							flag15 = true;
 						}
@@ -2525,7 +2574,7 @@ namespace Terraria_Server.WorldMod
 						else
 						{
 							num228++;
-							if (num228 >= 3000)
+							if (num228 >= 2000)
 							{
 								flag14 = true;
 							}
@@ -2880,7 +2929,7 @@ namespace Terraria_Server.WorldMod
 				num269++;
 			}
 
-			WorldGen.AddTrees(TileRefs);
+			AddTrees(TileRefs);
 		}
 
 		public static void PlantHerbs(Func<Int32, Int32, ITile> TileRefs)
@@ -3071,7 +3120,7 @@ namespace Terraria_Server.WorldMod
 					}
 					if (num > Main.maxTilesY - 205 && contain == 0)
 					{
-						if (WorldGen.hellChest == 0)
+						if (hellChest == 0)
 						{
 							contain = 274;
 							style = 4;
@@ -3079,7 +3128,7 @@ namespace Terraria_Server.WorldMod
 						}
 						else
 						{
-							if (WorldGen.hellChest == 1)
+							if (hellChest == 1)
 							{
 								contain = 220;
 								style = 4;
@@ -3087,7 +3136,7 @@ namespace Terraria_Server.WorldMod
 							}
 							else
 							{
-								if (WorldGen.hellChest == 2)
+								if (hellChest == 2)
 								{
 									contain = 112;
 									style = 4;
@@ -3095,12 +3144,12 @@ namespace Terraria_Server.WorldMod
 								}
 								else
 								{
-									if (WorldGen.hellChest == 3)
+									if (hellChest == 3)
 									{
 										contain = 218;
 										style = 4;
 										flag = true;
-										WorldGen.hellChest = 0;
+										hellChest = 0;
 									}
 								}
 							}
@@ -3111,7 +3160,7 @@ namespace Terraria_Server.WorldMod
 					{
 						if (flag)
 						{
-							WorldGen.hellChest++;
+							hellChest++;
 						}
 						int num3 = 0;
 						while (num3 == 0)
@@ -4404,14 +4453,14 @@ namespace Terraria_Server.WorldMod
 				prog.Value = 95;
 
 				int num76 = 0;
-				for (int num77 = 0; num77 < WorldGen.numDRooms; num77++)
+				for (int num77 = 0; num77 < numDRooms; num77++)
 				{
 					int num78 = 0;
 					while (num78 < 1000)
 					{
-						int num79 = (int)((double)WorldGen.dRoomSize[num77] * 0.4);
-						int i2 = WorldGen.dRoomX[num77] + WorldModify.genRand.Next(-num79, num79 + 1);
-						int num80 = WorldGen.dRoomY[num77] + WorldModify.genRand.Next(-num79, num79 + 1);
+						int num79 = (int)((double)dRoomSize[num77] * 0.4);
+						int i2 = dRoomX[num77] + WorldModify.genRand.Next(-num79, num79 + 1);
+						int num80 = dRoomY[num77] + WorldModify.genRand.Next(-num79, num79 + 1);
 						int num81 = 0;
 						num76++;
 						int style = 2;
@@ -4455,7 +4504,7 @@ namespace Terraria_Server.WorldMod
 						}
 						else
 						{
-							if (WorldGen.AddBuriedChest(TileRefs, i2, num80, num81, false, style))
+							if (AddBuriedChest(TileRefs, i2, num80, num81, false, style))
 							{
 								num78 += 1000;
 							}
@@ -4545,8 +4594,8 @@ namespace Terraria_Server.WorldMod
 				while (num14 < Main.maxTilesX / 500)
 				{
 					num12++;
-					int num90 = WorldModify.genRand.Next(WorldGen.dMinX, WorldGen.dMaxX);
-					int num91 = WorldModify.genRand.Next(WorldGen.dMinY, WorldGen.dMaxY);
+					int num90 = WorldModify.genRand.Next(dMinX, dMaxX);
+					int num91 = WorldModify.genRand.Next(dMinY, dMaxY);
 
 					if ((int)TileRefs(num90, num91).Wall == wallType && WorldModify.placeTrap(TileRefs, num90, num91, 0))
 						num12 = num13;
@@ -8530,6 +8579,390 @@ namespace Terraria_Server.WorldMod
 
 				if (WorldModify.genRand.Next(3) == 0 || WorldModify.genRand.Next(4) == 0)
 					x++;
+			}
+		}
+
+
+		public static void MineHouse(Func<Int32, Int32, ITile> TileRefs, int x, int y)
+		{
+			if (x < 50 || x > Main.maxTilesX - 50 || y < 50 || y > Main.maxTilesY - 50 || WorldModify.SolidTile(TileRefs, x, y) || TileRefs(x, y).Wall > 0)
+				return;
+
+			int num = WorldModify.genRand.Next(6, 12);
+			int num2 = WorldModify.genRand.Next(3, 6);
+			int num3 = WorldModify.genRand.Next(15, 30);
+			int num4 = WorldModify.genRand.Next(15, 30);
+
+			int num5 = y - num;
+			int num6 = y + num2;
+			for (int k = 0; k < 2; k++)
+			{
+				bool flag = true;
+				int num7 = x;
+				int num8 = y;
+				int num9 = -1;
+				int num10 = num3;
+				if (k == 1)
+				{
+					num9 = 1;
+					num10 = num4;
+					num7++;
+				}
+				while (flag)
+				{
+					if (num8 - num < num5)
+					{
+						num5 = num8 - num;
+					}
+					if (num8 + num2 > num6)
+					{
+						num6 = num8 + num2;
+					}
+					for (int l = 0; l < 2; l++)
+					{
+						int num11 = num8;
+						bool flag2 = true;
+						int num12 = num;
+						int num13 = -1;
+						if (l == 1)
+						{
+							num11++;
+							num12 = num2;
+							num13 = 1;
+						}
+						while (flag2)
+						{
+							if (num7 != x && TileRefs(num7 - num9, num11).Wall != 27 && (WorldModify.SolidTile(TileRefs, num7 - num9, num11) ||
+								!TileRefs(num7 - num9, num11).Active))
+							{
+								TileRefs(num7 - num9, num11).SetActive(true);
+								TileRefs(num7 - num9, num11).SetType(30);
+							}
+							if (WorldModify.SolidTile(TileRefs, num7 - 1, num11))
+							{
+								TileRefs(num7 - 1, num11).SetType(30);
+							}
+							if (WorldModify.SolidTile(TileRefs, num7 + 1, num11))
+							{
+								TileRefs(num7 + 1, num11).SetType(30);
+							}
+							if (WorldModify.SolidTile(TileRefs, num7, num11))
+							{
+								int num14 = 0;
+								if (WorldModify.SolidTile(TileRefs, num7 - 1, num11) || WorldModify.SolidTile(TileRefs, num7 + 1, num11) ||
+									WorldModify.SolidTile(TileRefs, num7, num11 - 1) || WorldModify.SolidTile(TileRefs, num7, num11 + 1))
+								{
+									num14++;
+								}
+
+								if (num14 < 2)
+								{
+									TileRefs(num7, num11).SetActive(false);
+								}
+								else
+								{
+									flag2 = false;
+									TileRefs(num7, num11).SetType(30);
+								}
+							}
+							else
+							{
+								TileRefs(num7, num11).SetWall(27);
+								TileRefs(num7, num11).SetLiquid(0);
+								TileRefs(num7, num11).SetLava(false);
+							}
+							num11 += num13;
+							num12--;
+							if (num12 <= 0)
+							{
+								if (!TileRefs(num7, num11).Active)
+								{
+									TileRefs(num7, num11).SetActive(true);
+									TileRefs(num7, num11).SetType(30);
+								}
+								flag2 = false;
+							}
+						}
+					}
+					num10--;
+					num7 += num9;
+					if (WorldModify.SolidTile(TileRefs, num7, num8))
+					{
+						int num15 = 0;
+						int num16 = 0;
+						int num17 = num8;
+						bool flag3 = true;
+						while (flag3)
+						{
+							num17--;
+							num15++;
+							if (WorldModify.SolidTile(TileRefs, num7 - num9, num17))
+							{
+								num15 = 999;
+								flag3 = false;
+							}
+							else if (!WorldModify.SolidTile(TileRefs, num7, num17))
+							{
+								flag3 = false;
+							}
+						}
+						num17 = num8;
+						flag3 = true;
+						while (flag3)
+						{
+							num17++;
+							num16++;
+							if (WorldModify.SolidTile(TileRefs, num7 - num9, num17))
+							{
+								num16 = 999;
+								flag3 = false;
+							}
+							else if (!WorldModify.SolidTile(TileRefs, num7, num17))
+							{
+								flag3 = false;
+							}
+						}
+						if (num16 <= num15)
+						{
+							if (num16 > num2)
+							{
+								num10 = 0;
+							}
+							else
+							{
+								num8 += num16 + 1;
+							}
+						}
+						else if (num15 > num)
+						{
+							num10 = 0;
+						}
+						else
+						{
+							num8 -= num15 + 1;
+						}
+					}
+					if (num10 <= 0)
+					{
+						flag = false;
+					}
+				}
+			}
+			int num18 = x - num3 - 1;
+			int num19 = x + num4 + 2;
+			int num20 = num5 - 1;
+			int num21 = num6 + 2;
+			for (int m = num18; m < num19; m++)
+			{
+				for (int n = num20; n < num21; n++)
+				{
+					if (TileRefs(m, n).Wall == 27 && !TileRefs(m, n).Active)
+					{
+						if (TileRefs(m - 1, n).Wall != 27 && m < x && !WorldModify.SolidTile(TileRefs, m - 1, n))
+						{
+							WorldModify.PlaceTile(TileRefs, m, n, 30, true, false, -1, 0);
+							TileRefs(m, n).SetWall(0);
+						}
+						if (TileRefs(m + 1, n).Wall != 27 && m > x && !WorldModify.SolidTile(TileRefs, m + 1, n))
+						{
+							WorldModify.PlaceTile(TileRefs, m, n, 30, true, false, -1, 0);
+							TileRefs(m, n).SetWall(0);
+						}
+						for (int num22 = m - 1; num22 <= m + 1; num22++)
+						{
+							for (int num23 = n - 1; num23 <= n + 1; num23++)
+							{
+								if (WorldModify.SolidTile(TileRefs, num22, num23))
+								{
+									TileRefs(num22, num23).SetType(30);
+								}
+							}
+						}
+					}
+					if (TileRefs(m, n).Type == 30 && TileRefs(m - 1, n).Wall == 27 && TileRefs(m + 1, n).Wall == 27 && (TileRefs(m, n - 1).Wall == 27 || TileRefs(m, n - 1).Active) && (TileRefs(m, n + 1).Wall == 27 || TileRefs(m, n + 1).Active))
+					{
+						TileRefs(m, n).SetActive(false);
+						TileRefs(m, n).SetWall(27);
+					}
+				}
+			}
+			for (int num24 = num18; num24 < num19; num24++)
+			{
+				for (int num25 = num20; num25 < num21; num25++)
+				{
+					if (TileRefs(num24, num25).Type == 30)
+					{
+						if (TileRefs(num24 - 1, num25).Wall == 27 && TileRefs(num24 + 1, num25).Wall == 27 && !TileRefs(num24 - 1, num25).Active && !TileRefs(num24 + 1, num25).Active)
+						{
+							TileRefs(num24, num25).SetActive(false);
+							TileRefs(num24, num25).SetWall(27);
+						}
+						if (TileRefs(num24, num25 - 1).Type != 21 && TileRefs(num24 - 1, num25).Wall == 27 && TileRefs(num24 + 1, num25).Type == 30 && TileRefs(num24 + 2, num25).Wall == 27 && !TileRefs(num24 - 1, num25).Active && !TileRefs(num24 + 2, num25).Active)
+						{
+							TileRefs(num24, num25).SetActive(false);
+							TileRefs(num24, num25).SetWall(27);
+							TileRefs(num24 + 1, num25).SetActive(false);
+							TileRefs(num24 + 1, num25).SetWall(27);
+						}
+						if (TileRefs(num24, num25 - 1).Wall == 27 && TileRefs(num24, num25 + 1).Wall == 27 && !TileRefs(num24, num25 - 1).Active && !TileRefs(num24, num25 + 1).Active)
+						{
+							TileRefs(num24, num25).SetActive(false);
+							TileRefs(num24, num25).SetWall(27);
+						}
+					}
+				}
+			}
+			for (int num26 = num18; num26 < num19; num26++)
+			{
+				for (int num27 = num21; num27 > num20; num27--)
+				{
+					bool flag4 = false;
+					if (TileRefs(num26, num27).Active && TileRefs(num26, num27).Type == 30)
+					{
+						int num28 = -1;
+						for (int num29 = 0; num29 < 2; num29++)
+						{
+							if (!WorldModify.SolidTile(TileRefs, num26 + num28, num27) && TileRefs(num26 + num28, num27).Wall == 0)
+							{
+								int num30 = 0;
+								int num31 = num27;
+								int num32 = num27;
+
+								while (TileRefs(num26, num31).Active && TileRefs(num26, num31).Type == 30 && !WorldModify.SolidTile(TileRefs, num26 + num28, num31) &&
+									TileRefs(num26 + num28, num31).Wall == 0)
+								{
+									num31--;
+									num30++;
+								}
+
+								num31++;
+								int num33 = num31 + 1;
+								if (num30 > 4)
+								{
+									if (WorldModify.genRand.Next(2) == 0)
+									{
+										num31 = num32 - 1;
+										bool flag5 = true;
+										for (int num34 = num26 - 2; num34 <= num26 + 2; num34++)
+										{
+											for (int num35 = num31 - 2; num35 <= num31; num35++)
+											{
+												if (num34 != num26 && TileRefs(num34, num35).Active)
+													flag5 = false;
+											}
+										}
+										if (flag5)
+										{
+											TileRefs(num26, num31).SetActive(false);
+											TileRefs(num26, num31 - 1).SetActive(false);
+											TileRefs(num26, num31 - 2).SetActive(false);
+											WorldModify.PlaceTile(TileRefs, num26, num31, 10, true);
+											flag4 = true;
+										}
+									}
+
+									if (!flag4)
+									{
+										for (int num36 = num33; num36 < num32; num36++)
+											TileRefs(num26, num36).SetType(124);
+									}
+								}
+							}
+							num28 = 1;
+						}
+					}
+					if (flag4)
+					{
+						break;
+					}
+				}
+			}
+
+			for (int num37 = num18; num37 < num19; num37++)
+			{
+				bool flag6 = true;
+				for (int num38 = num20; num38 < num21; num38++)
+				{
+					for (int num39 = num37 - 2; num39 <= num37 + 2; num39++)
+					{
+						if (TileRefs(num39, num38).Active && (!WorldModify.SolidTile(TileRefs, num39, num38) || TileRefs(num39, num38).Type == 10))
+							flag6 = false;
+					}
+				}
+				if (flag6)
+				{
+					for (int num40 = num20; num40 < num21; num40++)
+					{
+						if (TileRefs(num37, num40).Wall == 27 && !TileRefs(num37, num40).Active)
+							WorldModify.PlaceTile(TileRefs, num37, num40, 124, true);
+					}
+				}
+				num37 += WorldModify.genRand.Next(3);
+			}
+
+			for (int num41 = 0; num41 < 4; num41++)
+			{
+				int num42 = WorldModify.genRand.Next(num18 + 2, num19 - 1);
+				int num43 = WorldModify.genRand.Next(num20 + 2, num21 - 1);
+
+				while (TileRefs(num42, num43).Wall != 27)
+				{
+					num42 = WorldModify.genRand.Next(num18 + 2, num19 - 1);
+					num43 = WorldModify.genRand.Next(num20 + 2, num21 - 1);
+				}
+
+				while (TileRefs(num42, num43).Active)
+					num43--;
+
+				while (!TileRefs(num42, num43).Active)
+					num43++;
+
+				num43--;
+				if (TileRefs(num42, num43).Wall == 27)
+				{
+					if (WorldModify.genRand.Next(3) == 0)
+					{
+						int type = WorldModify.genRand.Next(9);
+
+						switch (type)
+						{
+							case 0:
+								type = 14;
+								break;
+							case 1:
+								type = 16;
+								break;
+							case 2:
+								type = 18;
+								break;
+							case 3:
+								type = 86;
+								break;
+							case 4:
+								type = 87;
+								break;
+							case 5:
+								type = 94;
+								break;
+							case 6:
+								type = 101;
+								break;
+							case 7:
+								type = 104;
+								break;
+							case 8:
+								type = 106;
+								break;
+						}
+
+						WorldModify.PlaceTile(TileRefs, num42, num43, type, true);
+					}
+					else
+					{
+						int style = WorldModify.genRand.Next(2, 43);
+						WorldModify.PlaceTile(TileRefs, num42, num43, 105, true, true, -1, style);
+					}
+				}
 			}
 		}
 	}
