@@ -590,16 +590,22 @@ namespace Terraria_Server
 						for (int k = (int)this.ai[0]; k > 0; k = (int)Main.npcs[k].ai[0])
 						{
 							if (Main.npcs[k].Active)
-							{
-								Main.npcs[k].Active = false;
-								Main.npcs[k].life = 0;
-								Main.npcs[k].netSkip = -1;
-								NetMessage.SendData(23, -1, -1, String.Empty, k);
-							}
+								Main.npcs[k].Kill();
 						}
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Kills the NPC
+		/// </summary>
+		public void Kill()
+		{
+			Active = false;
+			life = 0;
+			netSkip = -1;
+			NetMessage.SendData(23, -1, -1, String.Empty, whoAmI);
 		}
 
 		/// <summary>
@@ -1975,7 +1981,7 @@ namespace Terraria_Server
 				}
 				if ((this.type == NPCType.N113_WALL_OF_FLESH || this.type == NPCType.N114_WALL_OF_FLESH_EYE) && this.life <= 0)
 				{
-					for (int i = 0; i < 200; i++)
+					for (int i = 0; i < MAX_NPCS; i++)
 					{
 						if (Main.npcs[i].Active && (Main.npcs[i].type == NPCType.N113_WALL_OF_FLESH ||
 							Main.npcs[i].type == NPCType.N114_WALL_OF_FLESH_EYE))
@@ -12141,6 +12147,18 @@ namespace Terraria_Server
 					this.type == NPCType.N144_MISTER_STABBY || this.type == NPCType.N145_SNOW_BALLA)
 				{
 					Main.invasionSize--;
+				}
+
+				if (type >= NPCType.N87_WYVERN_HEAD && type <= NPCType.N92_WYVERN_TAIL)
+				{
+					for (int i = 0; i < MAX_NPCS; i++)
+					{
+						if (Main.npcs[i].Active &&
+							Main.npcs[i].type >= NPCType.N87_WYVERN_HEAD && Main.npcs[i].type <= NPCType.N92_WYVERN_TAIL)
+						{
+							Main.npcs[i].Kill();
+						}
+					}
 				}
 			}
 		}

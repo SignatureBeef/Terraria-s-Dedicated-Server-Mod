@@ -587,26 +587,27 @@ namespace Terraria_Server.Networking
 				{
 					if (argz.LastOperation == SocketAsyncOperation.Disconnect)
 					{
-						kickPool.Put (argz);
-						HandleError (SocketError.Disconnecting);
+						kickPool.Put(argz);
+						HandleError(SocketError.Disconnecting);
 					}
 					else
 					{
-						if (! socket.DisconnectAsync (argz))
+						if (!socket.DisconnectAsync(argz))
 						{
-							kickPool.Put (argz);
-							HandleError (SocketError.Disconnecting);
+							kickPool.Put(argz);
+							HandleError(SocketError.Disconnecting);
 						}
 					}
 				}
 				else
 				{
-					HandleError (argz.SocketError);
-					kickPool.Put (argz);
+					HandleError(argz.SocketError);
+					kickPool.Put(argz);
 				}
-				
-//				kicking = false;
+
+				//				kicking = false;
 			}
+			catch (ObjectDisposedException) { }
 			catch (Exception e)
 			{
 				ProgramLog.Log (e, "Exception in connection disconnect callback");
