@@ -2,12 +2,42 @@ using System;
 
 namespace Terraria_Server
 {
-    public class Chest
+    public struct Chest
     {
-        public static int MAX_ITEMS = 20;
-        public Item[] contents = new Item[MAX_ITEMS];
+        public const Int32 MAX_ITEMS = 20;
+        public Item[] contents;
         public int x;
 		public int y;
+
+		public static Chest InitChest()
+		{
+			return InitChest(0, 0);
+		}
+
+		public static Chest InitChest(int X, int Y)
+		{
+			var chest = new Chest()
+			{
+				x = X,
+				y = Y,
+				contents = new Item[MAX_ITEMS]
+			};
+
+			for (int i = 0; i < chest.contents.Length; i++)
+				chest.contents[i] = new Item();
+
+			return chest;
+		}
+
+		//public Chest(int X, int Y)
+		//{
+		//    x = X;
+		//    y = Y;
+
+		//    contents = new Item[MAX_ITEMS];
+		//    for (int i = 0; i < contents.Length; i++)
+		//        this.contents[i] = new Item();
+		//}
 
 		public object Clone()
 		{
@@ -29,13 +59,7 @@ namespace Terraria_Server
 			}
 		}
 
-        public Chest()
-        {
-            for (int i = 0; i < contents.Length; i++)
-                this.contents[i] = new Item();
-        }
-
-        public bool hasContents()
+        public bool HasContents()
         {
             foreach (Item item in contents)
             {
@@ -48,7 +72,7 @@ namespace Terraria_Server
         public static int UsingChest(int i)
         {
 			var chest = Main.chest[i];
-			if (chest != null)
+			if (chest != default(Chest))
 			{
 				int index = 0;
 				foreach(Player player in Main.players)
@@ -70,7 +94,7 @@ namespace Terraria_Server
         {
             for (int i = 0; i < Main.MAX_CHESTS; i++)
             {
-                if (Main.chest[i] != null && Main.chest[i].x == X && Main.chest[i].y == Y)
+				if (Main.chest[i] != default(Chest) && Main.chest[i].x == X && Main.chest[i].y == Y)
                     return i;
             }
             return -1;
@@ -84,14 +108,9 @@ namespace Terraria_Server
 
             for (int i = 0; i < Main.MAX_CHESTS; i++)
             {
-                if (Main.chest[i] == null)
+				if (Main.chest[i] == default(Chest))
                 {
-                    Main.chest[i] = new Chest();
-                    Main.chest[i].x = X;
-                    Main.chest[i].y = Y;
-                    for (int j = 0; j < Chest.MAX_ITEMS; j++)
-                        Main.chest[i].contents[j] = new Item();
-
+					Main.chest[i] = InitChest(X, Y);
                     return i;
                 }
             }
@@ -105,11 +124,40 @@ namespace Terraria_Server
                 return true;
 
             Chest chestToDestroy = Main.chest[chestIndex];
-            if (chestToDestroy.hasContents())
+            if (chestToDestroy.HasContents())
                 return false;
 
-            Main.chest[chestIndex] = null;
+            Main.chest[chestIndex] = default(Chest);
             return true;
         }
+
+		public static bool operator !=(Chest chest1, Chest chest2)
+		{
+			return
+				chest1.x != chest2.x ||
+				chest1.y != chest2.y ||
+				chest1.contents != chest2.contents;
+		}
+
+		public static bool operator ==(Chest chest1, Chest chest2)
+		{
+			return
+				chest1.x == chest2.x &&
+				chest1.y == chest2.y &&
+				chest1.contents == chest2.contents;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is Chest)
+				return ((Chest)obj) == this;
+
+			return false;
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
     }
 }

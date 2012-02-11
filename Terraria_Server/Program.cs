@@ -223,7 +223,7 @@ namespace Terraria_Server
 					string seed = properties.Seed;
 					if (seed == "-1")
 					{
-						seed = new Random().Next(100).ToString();
+						seed = WorldModify.genRand.Next(Int32.MaxValue).ToString();
 						ProgramLog.Log("Generated seed: {0}", seed);
 					}
 

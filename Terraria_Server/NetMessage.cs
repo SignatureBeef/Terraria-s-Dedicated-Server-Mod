@@ -864,11 +864,11 @@ namespace Terraria_Server
 		}
 #endif
 		
-		public void String (string data)
+		public void String (string data, bool newLineOverride = false)
 		{
 			foreach (char c in data)
 			{
-				if (c < 32 || c > 126)
+				if ((c < 32 || c > 126) && !newLineOverride)
 					sink.WriteByte ((byte) '?');
 				else
 					sink.WriteByte ((byte) c);

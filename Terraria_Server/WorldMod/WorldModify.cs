@@ -62,7 +62,7 @@ namespace Terraria_Server.WorldMod
 		public static object playerEditLock = new object();
 
 		[ThreadStatic]
-		static Random threadRand;
+		internal static Random threadRand;
 
 		public static Random genRand
 		{

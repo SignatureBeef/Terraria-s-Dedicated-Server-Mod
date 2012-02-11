@@ -120,8 +120,8 @@ namespace Terraria_Server.WorldMod
 				for (int num4 = 0; num4 < 1000; num4++)
 				{
 					Main.projectile[num4] = null;
-					Main.chest[num4] = null;
-					Main.sign[num4] = null;
+					Main.chest[num4] = default(Chest);
+					Main.sign[num4] = default(Sign);
 				}
 				prog.Value++;
 				
@@ -324,7 +324,7 @@ namespace Terraria_Server.WorldMod
 							for (int i = 0; i < Main.MAX_CHESTS; i++)
 							{
 								chest = Main.chest[i];
-								if (chest == null)
+								if (chest == default(Chest))
 								{
 									binaryWriter.Write(false);
 								}
@@ -353,7 +353,7 @@ namespace Terraria_Server.WorldMod
 							for (int i = 0; i < Main.MAX_SIGNS; i++)
 							{
 								sign = Main.sign[i];
-								if (sign == null || sign.text == null)
+								if (sign == default(Sign) || sign.text == null)
 								{
 									binaryWriter.Write(false);
 								}
@@ -625,9 +625,10 @@ namespace Terraria_Server.WorldMod
 							{
 								if (binaryReader.ReadBoolean())
 								{
-									Main.chest[l] = new Chest();
-									Main.chest[l].x = binaryReader.ReadInt32();
-									Main.chest[l].y = binaryReader.ReadInt32();
+									var x = binaryReader.ReadInt32();
+									var y = binaryReader.ReadInt32();
+									Main.chest[l] = Chest.InitChest(x, y);
+
 									for (int m = 0; m < Chest.MAX_ITEMS; m++)
 									{
 										Main.chest[l].contents[m] = new Item();
@@ -787,10 +788,8 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 			
-			if (Main.worldName == null || Main.worldName == "")
-			{
+			if (String.IsNullOrEmpty(Main.worldName))
 				Main.worldName = System.IO.Path.GetFileNameWithoutExtension (LoadPath);
-			}
 			
 			Statics.WorldLoaded = true;
 			

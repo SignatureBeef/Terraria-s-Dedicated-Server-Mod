@@ -20,10 +20,8 @@ namespace Terraria_Server.Messages
             int prefix = (int)readBuffer[num++];
             int netID = BitConverter.ToInt16 (readBuffer, num);
 
-            if (Main.chest[chestIndex] == null)
-            {
-                Main.chest[chestIndex] = new Chest();
-            }
+            if (Main.chest[chestIndex] == null) //Shouldn't this return..no axis?
+				Main.chest[chestIndex] = Chest.InitChest();
 			
             var item = Item.netDefaults(netID);
             item.SetPrefix (prefix);
