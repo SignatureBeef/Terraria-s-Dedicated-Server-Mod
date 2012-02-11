@@ -14,7 +14,7 @@
 	<Add>-add</Add>
 	<Added>added to</Added>
 	<Remove>-remove</Remove>
-  <RemovedFrom>removed from</RemovedFrom>
+	<RemovedFrom>removed from</RemovedFrom>
 	<PleaseReview>Please review that command</PleaseReview>
 	<WhilelistFailedSave>WhiteList Failed to Save due to </WhilelistFailedSave>
 	<OPlistFailedSave>OpList Failed to Save due to </OPlistFailedSave>
@@ -112,11 +112,12 @@
 	<CommandDescription_Purge>Purge the map of items, NPCs or projectiles.</CommandDescription_Purge>
 	<CommandDescription_Plugins>List currently enabled plugins.</CommandDescription_Plugins>
 	<CommandDescription_Plugin>Enable/disable and get details about specific plugins.</CommandDescription_Plugin>
-  <CommandDescription_SpawnBoss>Summon a Boss to the world.</CommandDescription_SpawnBoss>
+	<CommandDescription_SpawnBoss>Summon a Boss to the world.</CommandDescription_SpawnBoss>
 	<CommandDescription_ItemRej>Add or remove an item from the whitelist.</CommandDescription_ItemRej>
 	<CommandDescription_Explosions>Toggle the allowing of explosions for the server.</CommandDescription_Explosions>
 	<CommandDescription_MaxPlayers>Set the maximum number of player slots.</CommandDescription_MaxPlayers>
 	<CommandDescription_Q>List connections waiting in queues.</CommandDescription_Q>
 	<CommandDescription_Refresh>Redownload the area around you from the server.</CommandDescription_Refresh>
-  <CommandDescription_HardMode>Toggle hardmode for the current world</CommandDescription_HardMode>
+	<CommandDescription_HardMode>Toggle hardmode for the current world</CommandDescription_HardMode>
+	<CommandDescription_LanguageReload>Reloads the Langauge File</CommandDescription_LanguageReload>
 </Languages>

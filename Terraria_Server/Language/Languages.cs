@@ -140,10 +140,11 @@ namespace Terraria_Server.Language
 		public static String CommandDescription_Q { get; set; }
 		public static String CommandDescription_Refresh { get; set; }
 		public static String CommandDescription_HardMode { get; set; }
+		public static String CommandDescription_LanguageReload { get; set; }
 
 #endregion
 
-		public static void LoadClass(string filePath, bool restore = false, bool error = true)
+		public static bool LoadClass(string filePath, bool restore = false, bool error = true)
 		{
 			if (!File.Exists(filePath) || restore)
 			{
@@ -183,10 +184,14 @@ namespace Terraria_Server.Language
 					catch (Exception e)
 					{
 						if (error)
+						{
 							ProgramLog.Error.Log("Error parsing language file\n{0}", e);
+							return false;
+						}
 					}
 				}
 			}
+			return true;
 		}
 
 		public static bool IsOutOfDate()

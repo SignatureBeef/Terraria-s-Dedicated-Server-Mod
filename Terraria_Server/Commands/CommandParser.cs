@@ -476,6 +476,12 @@ namespace Terraria_Server.Commands
 				.WithDescription(Languages.CommandDescription_HardMode)
 				.WithPermissionNode("tdsm.hardmode")
 				.Calls(Commands.HardMode);
+
+			AddCommand("languagereload")
+				.WithAccessLevel(AccessLevel.OP)
+				.WithDescription(Languages.CommandDescription_LanguageReload)
+				.WithPermissionNode("tdsm.op")
+				.Calls(Commands.LanguageReload);
         }
        
         public readonly Dictionary<String, CommandInfo> serverCommands;
