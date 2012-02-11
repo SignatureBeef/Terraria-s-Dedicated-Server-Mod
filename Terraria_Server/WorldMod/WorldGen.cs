@@ -86,15 +86,14 @@ namespace Terraria_Server.WorldMod
 		}
 
 		//Works to what is needed.
-		public static int asciiInt32(string input)
+		public static int AsciiToInt32(string input)
 		{
 			System.Text.Encoding ascii = System.Text.Encoding.ASCII;
-			Byte[] encodedBytes = ascii.GetBytes(input);
+			byte[] encodedBytes = ascii.GetBytes(input);
 			int ret = 0;
-			foreach (Byte b in encodedBytes)
-			{
+			foreach (byte b in encodedBytes)
 				ret += (int)b;
-			}
+
 			return ret;
 		}
 
@@ -106,7 +105,7 @@ namespace Terraria_Server.WorldMod
 			int seed = -1;
 			try
 			{
-				seed = asciiInt32(Seed);
+				seed = AsciiToInt32(Seed);
 			}
 			catch (Exception) { }
 			GenerateWorld(TileRefs, seed);
@@ -125,7 +124,7 @@ namespace Terraria_Server.WorldMod
 			WorldModify.gen = true;
 			resetGen();
 			if (seed > 0)
-				WorldModify.genRand = new Random(seed);
+				WorldModify.threadRand = new Random(seed);
 			else
 				WorldModify.genRand = new Random((int)DateTime.Now.Ticks);
 
