@@ -143,19 +143,9 @@ namespace Terraria_Server.WorldMod
 				editor.sandbox.SetFrameAt(x, y, val);
 			}
 
-			public short FrameX
-			{
-				get
-				{
-					if (x == 2106 && y == 203)
-					{
-						var fmx = editor.sandbox.FrameXAt(x, y);
-					}
-				return editor.sandbox.FrameXAt(x, y); 
-			} }
+			public short FrameX { get { return editor.sandbox.FrameXAt(x, y); } }
 			public void SetFrameX(short val)
 			{
-				if (x == 2106 && y == 203) { }
 				editor.sandbox.SetFrameXAt(x, y, val);
 			}
 
