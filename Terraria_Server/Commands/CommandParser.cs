@@ -480,7 +480,7 @@ namespace Terraria_Server.Commands
 			AddCommand("languagereload")
 				.WithAccessLevel(AccessLevel.OP)
 				.WithDescription(Languages.CommandDescription_LanguageReload)
-				.WithPermissionNode("tdsm.op")
+				.WithPermissionNode("tdsm.languagereload")
 				.Calls(Commands.LanguageReload);
         }
        

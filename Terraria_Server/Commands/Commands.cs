@@ -1402,12 +1402,13 @@ namespace Terraria_Server.Commands
 			ProgramLog.Log(Languages.StartingHardMode);
 			WorldModify.StartHardMode();
 		}
+
 		public static void LanguageReload(ISender sender, ArgumentList args)
 		{
 			args.ParseNone();
 
-			ProgramLog.Log("Reloading Language File.......");
-			ProgramLog.Log("Reloading " + ((Languages.LoadClass(Collections.Registries.LANGUAGE_FILE) ? "Succeeded" : "Failed")));
+			ProgramLog.Log("Reloading Language File...");
+			ProgramLog.Log("Reloading " + (Languages.LoadClass(Collections.Registries.LANGUAGE_FILE) ? "Succeeded" : "Failed"));
 		}
 	}
 }

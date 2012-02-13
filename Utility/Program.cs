@@ -26,6 +26,14 @@ namespace Terraria_Utilities
         {
             Console.WriteLine(WELCOME_MESSAGE);
 
+			var err = 0;
+			var res = ConsistencyCheck.CheckTileSets(out err);
+			if (!res)
+			{
+				Console.WriteLine("TDSM tile set incorrect");
+			}
+			else { return; }
+
 			// [START] Test NPC Serializer
 			/*NPCSerializer.Serialize();
 			Console.ReadKey(true);

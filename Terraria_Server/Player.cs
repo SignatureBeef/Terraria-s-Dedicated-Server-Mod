@@ -3937,19 +3937,14 @@ namespace Terraria_Server
 					this.manaRegenDelay = (int)this.maxRegenDelay;
 				}
 
-				if (Main.dedServ)
-				{
-					itemHeight = selectedItem.Height;
-					itemWidth = selectedItem.Width;
-				}
+				itemHeight = selectedItem.Height;
+				itemWidth = selectedItem.Width;
 				itemAnimation--;
 			}
 			else if (selectedItem.HoldStyle == 1)
 			{
-				if (Main.dedServ)
-				{
-					this.itemLocation.X = this.Position.X + (float)this.Width * 0.5f + 20f * (float)this.direction;
-				}
+				this.itemLocation.X = this.Position.X + (float)this.Width * 0.5f + 20f * (float)this.direction;
+
 				this.itemLocation.Y = this.Position.Y + 24f;
 				this.itemRotation = 0f;
 				if (this.gravDir == -1f)

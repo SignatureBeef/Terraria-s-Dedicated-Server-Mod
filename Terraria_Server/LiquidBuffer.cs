@@ -9,17 +9,17 @@ namespace Terraria_Server
         public int x;
         public int y;
 
-        public static void AddBuffer(int x, int y)
+        public static void AddBuffer(Func<Int32, Int32, ITile> TileRefs, int x, int y)
         {
             if (LiquidBuffer.numLiquidBuffer == 9999)
             {
                 return;
             }
-            if (Main.tile.At(x, y).CheckingLiquid)
+			if (TileRefs(x, y).CheckingLiquid)
             {
                 return;
             }
-            Main.tile.At(x, y).SetCheckingLiquid (true);
+			TileRefs(x, y).SetCheckingLiquid(true);
             Main.liquidBuffer[LiquidBuffer.numLiquidBuffer].x = x;
             Main.liquidBuffer[LiquidBuffer.numLiquidBuffer].y = y;
             LiquidBuffer.numLiquidBuffer++;

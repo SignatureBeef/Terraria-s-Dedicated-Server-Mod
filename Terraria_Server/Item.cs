@@ -17,6 +17,7 @@ namespace Terraria_Server
 		public const Int32 MAX_HEAD_TYPES = 44;
 		public const Int32 MAX_BODY_TYPES = 25;
 		public const Int32 MAX_LEG_TYPES = 24;
+		public const Int32 MAX_ITEMS = 200;
 
 		public static int[] headType = new int[MAX_HEAD_TYPES];
 		public static int[] bodyType = new int[MAX_BODY_TYPES];

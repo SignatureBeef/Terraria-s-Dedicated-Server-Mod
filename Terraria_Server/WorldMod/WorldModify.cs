@@ -522,9 +522,6 @@ namespace Terraria_Server.WorldMod
 
 		public static void CheckTree(Func<Int32, Int32, ITile> TileRefs, int i, int j)
 		{
-			if (TileRefs == null)
-				TileRefs = TileCollection.ITileAt;
-
 			int num = -1;
 			int num2 = -1;
 			int num3 = -1;
@@ -536,7 +533,6 @@ namespace Terraria_Server.WorldMod
 			int type = (int)TileRefs(i, j).Type;
 			int frameX = (int)TileRefs(i, j).FrameX;
 			int frameY = (int)TileRefs(i, j).FrameY;
-
 			if (TileRefs(i - 1, j).Active)
 			{
 				num4 = (int)TileRefs(i - 1, j).Type;
@@ -621,11 +617,11 @@ namespace Terraria_Server.WorldMod
 			{
 				if (num7 != 2)
 				{
-					KillTile(TileRefs, i, j);
+					KillTile(TileRefs, i, j, false, false, false);
 				}
 				else if ((TileRefs(i, j).FrameX != 22 || num4 != type) && (TileRefs(i, j).FrameX != 44 || num5 != type))
 				{
-					KillTile(TileRefs, i, j);
+					KillTile(TileRefs, i, j, false, false, false);
 				}
 			}
 			else
@@ -716,7 +712,7 @@ namespace Terraria_Server.WorldMod
 			{
 				if (num7 != 2)
 				{
-					KillTile(TileRefs, i, j);
+					KillTile(TileRefs, i, j, false, false, false);
 				}
 				if (num4 != type && num5 != type)
 				{
@@ -801,7 +797,7 @@ namespace Terraria_Server.WorldMod
 			{
 				if (num5 != type)
 				{
-					KillTile(TileRefs, i, j);
+					KillTile(TileRefs, i, j, false, false, false);
 				}
 			}
 			else
@@ -810,14 +806,14 @@ namespace Terraria_Server.WorldMod
 				{
 					if (num4 != type)
 					{
-						KillTile(TileRefs, i, j);
+						KillTile(TileRefs, i, j, false, false, false);
 					}
 				}
 				else
 				{
 					if (num7 == -1 || num7 == 23)
 					{
-						KillTile(TileRefs, i, j);
+						KillTile(TileRefs, i, j, false, false, false);
 					}
 					else
 					{
@@ -8523,13 +8519,13 @@ namespace Terraria_Server.WorldMod
 					{
 						if (TileRefs(i, j).Active)
 						{
-							if (Main.tileWaterDeath[(int)TileRefs(i, j).Type])
+							if (Main.tileWaterDeath[(int)TileRefs(i, j).Type] && (TileRefs(i, j).Type != 4 || TileRefs(i, j).FrameY != 176))
 							{
-								KillTile(TileRefs, i, j);
+								KillTile(TileRefs, i, j, false, false, false);
 							}
 							if (TileRefs(i, j).Lava && Main.tileLavaDeath[(int)TileRefs(i, j).Type])
 							{
-								KillTile(TileRefs, i, j);
+								KillTile(TileRefs, i, j, false, false, false);
 							}
 						}
 						if ((!TileRefs(i, j + 1).Active || !Main.tileSolid[(int)TileRefs(i, j + 1).Type] || Main.tileSolidTop[(int)TileRefs(i, j + 1).Type]) && TileRefs(i, j + 1).Liquid < 255)
@@ -8551,6 +8547,7 @@ namespace Terraria_Server.WorldMod
 						{
 							Liquid.AddWater(TileRefs, i, j);
 						}
+
 						if (TileRefs(i, j).Lava)
 						{
 							if (TileRefs(i - 1, j).Liquid > 0 && !TileRefs(i - 1, j).Lava)
@@ -8572,9 +8569,9 @@ namespace Terraria_Server.WorldMod
 						}
 					}
 				}
-				if (prog != null)
-					prog.Value++;
 			}
+			if (prog != null)
+				prog.Value++;
 		}
 
 		public static void EveryTileFrame(Func<Int32, Int32, ITile> TileRefs)
@@ -8613,52 +8610,23 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			int num = -1;
-			int type = (int)TileRefs(i, j).Type;
-			//int arg_19_0 = i - 1;
-			//int arg_23_0 = i + 1;
-			//int arg_22_0 = Main.maxTilesX;
-			//int arg_29_0 = j - 1;
+			int num2 = (int)TileRefs(i, j).Type;
+
 			if (j + 1 >= Main.maxTilesY)
 			{
-				num = type;
+				num = num2;
 			}
-			//if (i - 1 >= 0 && TileRefs(i - 1, j).Active)
-			//{
-			//    byte arg_74_0 = TileRefs(i - 1, j).Type;
-			//}
-			//if (i + 1 < Main.maxTilesX && TileRefs(i + 1, j).Active)
-			//{
-			//    byte arg_B7_0 = TileRefs(i + 1, j).Type;
-			//}
-			//if (j - 1 >= 0 && TileRefs(i, j - 1).Active)
-			//{
-			//    byte arg_F6_0 = TileRefs(i, j - 1).Type;
-			//}
+
 			if (j + 1 < Main.maxTilesY && TileRefs(i, j + 1).Active)
 			{
 				num = (int)TileRefs(i, j + 1).Type;
 			}
-			//if (i - 1 >= 0 && j - 1 >= 0 && TileRefs(i - 1, j - 1).Active)
-			//{
-			//    byte arg_184_0 = TileRefs(i - 1, j - 1).Type;
-			//}
-			//if (i + 1 < Main.maxTilesX && j - 1 >= 0 && TileRefs(i + 1, j - 1).Active)
-			//{
-			//    byte arg_1D3_0 = TileRefs(i + 1, j - 1).Type;
-			//}
-			//if (i - 1 >= 0 && j + 1 < Main.maxTilesY && TileRefs(i - 1, j + 1).Active)
-			//{
-			//    byte arg_222_0 = TileRefs(i - 1, j + 1).Type;
-			//}
-			//if (i + 1 < Main.maxTilesX && j + 1 < Main.maxTilesY && TileRefs(i + 1, j + 1).Active)
-			//{
-			//    byte arg_275_0 = TileRefs(i + 1, j + 1).Type;
-			//}
-			if ((type == 3 && num != 2 && num != 78) || (type == 24 && num != 23) || (type == 61 && num != 60) || (type == 71 && num != 70) || (type == 73 && num != 2 && num != 78) || (type == 74 && num != 60) || (type == 110 && type != 109) || (type == 113 && type != 109))
+
+			if ((num2 == 3 && num != 2 && num != 78) || (num2 == 24 && num != 23) || (num2 == 61 && num != 60) || (num2 == 71 && num != 70) || (num2 == 73 && num != 2 && num != 78) || (num2 == 74 && num != 60) || (num2 == 110 && num != 109) || (num2 == 113 && num != 109))
 			{
 				if (num == 23)
 				{
-					type = 24;
+					num2 = 24;
 					if (TileRefs(i, j).FrameX >= 162)
 					{
 						TileRefs(i, j).SetFrameX(126);
@@ -8666,24 +8634,32 @@ namespace Terraria_Server.WorldMod
 				}
 				else if (num == 2)
 				{
-					if (type == 113)
-						type = 73;
+					if (num2 == 113)
+					{
+						num2 = 73;
+					}
 					else
-						type = 3;
+					{
+						num2 = 3;
+					}
 				}
 				else if (num == 109)
 				{
-					if (type == 73)
-						type = 113;
+					if (num2 == 73)
+					{
+						num2 = 113;
+					}
 					else
-						type = 110;
+					{
+						num2 = 110;
+					}
 				}
-				if (type != (int)TileRefs(i, j).Type)
+				if (num2 != (int)TileRefs(i, j).Type)
 				{
-					TileRefs(i, j).SetType((byte)type);
+					TileRefs(i, j).SetType((byte)num2);
 					return;
 				}
-				KillTile(TileRefs, i, j);
+				KillTile(TileRefs, i, j, false, false, false);
 			}
 		}
 
@@ -14230,7 +14206,11 @@ namespace Terraria_Server.WorldMod
 				num2 = (float)Math.Round((double)(num2 * 100f));
 				tGood = (byte)num;
 				tEvil = (byte)num2;
-				NetMessage.SendData(57, -1, -1, "", 0, 0f, 0f, 0f, 0);
+				NetMessage.SendData(57);
+
+				totalEvil2 = 0;
+				totalSolid2 = 0;
+				totalGood2 = 0;
 			}
 			for (int i = 0; i < Main.maxTilesY; i++)
 			{

@@ -18,7 +18,7 @@ namespace Terraria_Server
 	public class Main
 	{
 		public const Int32 MAX_TILE_SETS = 150;
-		public const Int32 MAX_WALL_SETS = 40;
+		public const Int32 MAX_WALL_SETS = 32;
 		public const Int32 MAX_BUFFS = 41;
 		public const Int32 MAX_NPC_NAMES = 147;
 		public const Int32 MAX_CHESTS = 1000;
@@ -56,7 +56,6 @@ namespace Terraria_Server
 		public static int dungeonY;
 		public static Liquid[] liquid = new Liquid[Liquid.resLiquid];
 		public static LiquidBuffer[] liquidBuffer = new LiquidBuffer[10000];
-		public static bool dedServ = true;
 		public static string worldName = "";
 		public static int worldID;
 		public static double worldSurface;
@@ -168,7 +167,8 @@ namespace Terraria_Server
 
 		public static void Initialize()
 		{
-			stopSpawns = Program.properties.StopNPCSpawning;
+			if(Program.properties != null)
+				stopSpawns = Program.properties.StopNPCSpawning;
 
 			NPC.ClearNames();
 			NPC.SetNames();
@@ -232,58 +232,48 @@ namespace Terraria_Server
 			foreach (var i in new int[] { 4, 51, 93, 98 })
 				tileWaterDeath[i] = true;
 
-			foreach (var i in new int[] { 129 })
-				tileShine[i] = 300;
-
-			foreach (var i in new int[] { 129, 63, 64, 65, 66, 67, 68, 108 })
-				tileShine[i] = 900;
-
-			foreach (var i in new int[] { 22, 6 })
-				tileShine[i] = 1150;
-
-			foreach (var i in new int[] { 7 })
-				tileShine[i] = 1100;
 
 			foreach (var i in new int[] { 8, 12 })
 				tileShine[i] = 1000;
-
 			foreach (var i in new int[] { 9 })
 				tileShine[i] = 1050;
-
+			foreach (var i in new int[] { 7 })
+				tileShine[i] = 1100;
+			foreach (var i in new int[] { 6, 22 })
+				tileShine[i] = 1150;
 			foreach (var i in new int[] { 21 })
 				tileShine[i] = 1200;
-
-			foreach (var i in new int[] { 109, 110, 116, 117 })
-				tileShine[i] = 9000;
-
-			foreach (var i in new int[] { 45 })
-				tileShine[i] = 1900;
-
-			foreach (var i in new int[] { 46 })
-				tileShine[i] = 2000;
-
-			foreach (var i in new int[] { 47 })
-				tileShine[i] = 2100;
-
 			foreach (var i in new int[] { 122 })
 				tileShine[i] = 1800;
-
 			foreach (var i in new int[] { 121 })
 				tileShine[i] = 1850;
-
+			foreach (var i in new int[] { 45 })
+				tileShine[i] = 1900;
+			foreach (var i in new int[] { 46 })
+				tileShine[i] = 2000;
+			foreach (var i in new int[] { 47 })
+				tileShine[i] = 2100;
+			foreach (var i in new int[] { 63, 64, 65, 66, 67, 68, 108 })
+				tileShine[i] = 900;
+			foreach (var i in new int[] { 111 })
+				tileShine[i] = 850;
+			foreach (var i in new int[] { 107 })
+				tileShine[i] = 950;
+			foreach (var i in new int[] { 129 })
+				tileShine[i] = 300;
+			foreach (var i in new int[] { 109, 110, 117, 116 })
+				tileShine[i] = 9000;
 			foreach (var i in new int[] { 118 })
 				tileShine[i] = 8000;
-
 			foreach (var i in new int[] { 125 })
 				tileShine[i] = 600;
 
-			foreach (var i in new int[] { 107 })
-				tileShine[i] = 950;
 
-			foreach (var i in new int[] { 111 })
-				tileShine[i] = 850;
+			foreach (var i in new int[] { 14, 16, 18, 19, 87, 88, 101, 114 })
+				tileSolidTop[i] = true;
 
-			for (int l = 0; l < 201; l++)
+
+			for (int l = 0; l < Item.MAX_ITEMS + 1; l++)
 				item[l] = new Item();
 			for (int m = 0; m < NPC.MAX_NPCS + 1; m++)
 			{
