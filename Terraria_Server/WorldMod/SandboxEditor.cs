@@ -148,11 +148,6 @@ namespace Terraria_Server.WorldMod
 			public short FrameX { get { return editor.sandbox.FrameXAt(x, y); } }
 			public void SetFrameX(short val)
 			{
-				if (x == 2106 && y == 203)
-				{
-
-				}
-
 				editor.sandbox.SetFrameXAt(x, y, val);
 			}
 
@@ -201,41 +196,6 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
-
-		private const int RECTANGLE_OFFSET = 25;
-		private const int TILE_OFFSET = 15;
-		private const int TILES_OFFSET_2 = 10;
-		private const int TILE_OFFSET_3 = 16;
-		private const int TILE_OFFSET_4 = 23;
-		private const int TILE_SCALE = 16;
-		private const int TREE_RADIUS = 2;
-		private const int MAX_TILE_SETS = 107;
-
-		public const bool noTileActions = false;
-		public bool spawnMeteor = false;
-		//private bool mergeUp = false;
-		//private bool mergeDown = false;
-		//private bool mergeLeft = false;
-		//private bool mergeRight = false;
-		public const bool stopDrops = false;
-		public const bool noLiquidCheck = false;
-
-
-		Random genRand = new Random((int)DateTime.Now.Ticks);
-
-		//private bool destroyObject = false;
-
-		public const int maxRoomTiles = 1900;
-
-		//public TRef TileAt(int x, int y)
-		//{
-		//    return new TRef(this, x, y);
-		//}
-
-		//public static ITile ITileAt(SandboxEditor<TBox> editor, int x, int y)
-		//{
-		//    return new TRef(editor, x, y);
-		//}
 
 		public ITile ITileAt(int x, int y)
 		{

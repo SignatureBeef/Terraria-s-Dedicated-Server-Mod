@@ -61,7 +61,7 @@ namespace Terraria_Server.Messages
 						WorldModify.KillTile(null, x, y, failFlag);
 						break;						
 					case 1:
-						if (WorldModify.PlaceTile(null, x, y, (int)tileType, false, true, whoAmI, style))
+						if (editor.PlaceTile(x, y, (int)tileType, false, true, whoAmI, style))
 						{
 							if (tileType == 15 && player.direction == 1)
 							{
