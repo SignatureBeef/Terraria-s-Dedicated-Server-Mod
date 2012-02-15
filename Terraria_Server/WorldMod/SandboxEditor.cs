@@ -1,3 +1,5 @@
+#define USE_SANDBOX
+
 using System;
 using System.IO;
 using System.Diagnostics;
@@ -146,6 +148,11 @@ namespace Terraria_Server.WorldMod
 			public short FrameX { get { return editor.sandbox.FrameXAt(x, y); } }
 			public void SetFrameX(short val)
 			{
+				if (x == 2106 && y == 203)
+				{
+
+				}
+
 				editor.sandbox.SetFrameXAt(x, y, val);
 			}
 
@@ -220,19 +227,23 @@ namespace Terraria_Server.WorldMod
 
 		public const int maxRoomTiles = 1900;
 
-		public TRef TileAt(int x, int y)
-		{
-			return new TRef(this, x, y);
-		}
+		//public TRef TileAt(int x, int y)
+		//{
+		//    return new TRef(this, x, y);
+		//}
 
-		public static ITile ITileAt(SandboxEditor<TBox> editor, int x, int y)
-		{
-			return new TRef(editor, x, y);
-		}
+		//public static ITile ITileAt(SandboxEditor<TBox> editor, int x, int y)
+		//{
+		//    return new TRef(editor, x, y);
+		//}
 
 		public ITile ITileAt(int x, int y)
 		{
+#if USE_SANDBOX
 			return new TRef(this, x, y);
+#else
+			return TileCollection.ITileAt(x, y); //Disables SandBox
+#endif
 		}
 
 		public bool EmptyTileCheck(int startX, int endX, int startY, int endY, int ignoreStyle = -1)

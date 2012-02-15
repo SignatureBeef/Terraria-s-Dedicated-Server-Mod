@@ -4866,6 +4866,8 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var frx = (int)TileRefs(x, y).FrameX;
+			var shifted = (short)frx << (short)1;
+
 			int num = x, k;
 			for (k = frx; k >= 36; k -= 36) { }
 

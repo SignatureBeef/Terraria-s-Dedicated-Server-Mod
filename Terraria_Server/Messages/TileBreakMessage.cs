@@ -60,8 +60,8 @@ namespace Terraria_Server.Messages
 						//[TODO] Get block modifications outside the x,y axis to update on Client end
 						WorldModify.KillTile(null, x, y, failFlag);
 						break;						
-					case 1:						
-						if (editor.PlaceTile (x, y, (int)tileType, false, true, whoAmI, style))
+					case 1:
+						if (WorldModify.PlaceTile(null, x, y, (int)tileType, false, true, whoAmI, style))
 						{
 							if (tileType == 15 && player.direction == 1)
 							{

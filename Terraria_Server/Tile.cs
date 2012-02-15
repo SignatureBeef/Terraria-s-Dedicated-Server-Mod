@@ -307,7 +307,8 @@ namespace Terraria_Server
 				wall = (byte)((wall & 63) | (value << 6));
 			}
 		}
-
+		
+		private byte frameX_Size;
 		public short FrameX
 		{
 			get
@@ -315,14 +316,28 @@ namespace Terraria_Server
 				if (frameX == 255)
 					return -1;
 				else
-					return (short)(frameX << 1);
+				{
+					if (frameX_Size > 0)
+						return (short)((frameX << 3) + (frameX_Size - 1));
+					else
+						return (short)(frameX << 1);
+				}
 			}
 			set
 			{
+				frameX_Size = 0;
 				if (value == -1)
 					frameX = 255;
 				else
-					frameX = (byte)(value >> 1);
+				{
+					if (value > 255)
+					{
+						frameX = (byte)(value >> 3);
+						frameX_Size = (byte)(value - (value >> 3 << 3) + 1); //Get's how many left over Because frameX should be 1026 but when shifted and reverted it = 1024
+					}
+					else
+						frameX = (byte)(value >> 1);
+				}
 			}
 		}
 
