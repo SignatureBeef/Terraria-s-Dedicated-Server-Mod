@@ -4318,11 +4318,11 @@ namespace Terraria_Server.WorldMod
 
 		public static void Check3x2(Func<Int32, Int32, ITile> TileRefs, int i, int j, int type)
 		{
-			if (TileRefs == null)
-				TileRefs = TileCollection.ITileAt;
-
 			if (destroyObject)
 				return;
+
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
 
 			bool flag = false;
 			int num = i + (int)(TileRefs(i, j).FrameX / 18 * -1);
@@ -4331,7 +4331,8 @@ namespace Terraria_Server.WorldMod
 			{
 				for (int l = num2; l < num2 + 2; l++)
 				{
-					if (!TileRefs(k, l).Active || (int)TileRefs(k, l).Type != type || (int)TileRefs(k, l).FrameX != (k - num) * 18 || (int)TileRefs(k, l).FrameY != (l - num2) * 18)
+					if (!TileRefs(k, l).Active || (int)TileRefs(k, l).Type != type || (int)TileRefs(k, l).FrameX != (k - num) * 18 ||
+						(int)TileRefs(k, l).FrameY != (l - num2) * 18)
 					{
 						flag = true;
 					}
@@ -4349,36 +4350,58 @@ namespace Terraria_Server.WorldMod
 					for (int n = num2; n < num2 + 3; n++)
 					{
 						if ((int)TileRefs(m, n).Type == type && TileRefs(m, n).Active)
-						{
 							KillTile(TileRefs, m, n);
-						}
 					}
 				}
-
 				if (type == 14)
-					Item.NewItem(i * 16, j * 16, 32, 32, 32);
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 32, 1, false, 0);
+				}
+				else if (type == 114)
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 398, 1, false, 0);
+				}
+				else if (type == 26)
+				{
+					if (!noTileActions)
+					{
+						SmashAltar(TileRefs, i, j);
+					}
+				}
 				else if (type == 17)
-					Item.NewItem(i * 16, j * 16, 32, 32, 33);
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 33, 1, false, 0);
+				}
 				else if (type == 77)
-					Item.NewItem(i * 16, j * 16, 32, 32, 221);
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 221, 1, false, 0);
+				}
 				else if (type == 86)
-					Item.NewItem(i * 16, j * 16, 32, 32, 332);
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 332, 1, false, 0);
+				}
 				else if (type == 87)
-					Item.NewItem(i * 16, j * 16, 32, 32, 333);
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 333, 1, false, 0);
+				}
 				else if (type == 88)
-					Item.NewItem(i * 16, j * 16, 32, 32, 334);
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 334, 1, false, 0);
+				}
 				else if (type == 89)
-					Item.NewItem(i * 16, j * 16, 32, 32, 335);
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 335, 1, false, 0);
+				}
 				else if (type == 133)
-					Item.NewItem(i * 16, j * 16, 32, 32, 524);
+				{
+					Item.NewItem(i * 16, j * 16, 32, 32, 524, 1, false, 0);
+				}
 
 				destroyObject = false;
 				for (int num3 = num - 1; num3 < num + 4; num3++)
 				{
 					for (int num4 = num2 - 1; num4 < num2 + 4; num4++)
-					{
-						TileFrame(TileRefs, num3, num4, false, false);
-					}
+						TileFrame(TileRefs, num3, num4);
 				}
 			}
 		}
@@ -14367,6 +14390,157 @@ namespace Terraria_Server.WorldMod
 
 				if (value.X < (float)(-(float)num) || value.Y < (float)(-(float)num) || value.X > (float)(Main.maxTilesX + num) || value.Y > (float)(Main.maxTilesX + num))
 					flag = false;
+			}
+		}
+
+		public static void SmashAltar(Func<Int32, Int32, ITile> TileRefs, int i, int j)
+		{
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
+			if (!Main.hardMode || noTileActions|| gen)
+				return;
+
+			int num = altarCount % 3;
+			int num2 = altarCount / 3 + 1;
+			float num3 = (float)(Main.maxTilesX / 4200);
+			int num4 = 1 - num;
+			num3 = num3 * 310f - (float)(85 * num);
+			num3 *= 0.85f;
+			num3 /= (float)num2;
+			if (num == 0)
+			{
+
+				NetMessage.SendData(25, -1, -1, "Your world has been blessed with Cobalt!", 255, 50f, 255f, 130f, 0);
+				num = 107;
+				num3 *= 1.05f;
+			}
+			else if (num == 1)
+			{
+				NetMessage.SendData(25, -1, -1, "Your world has been blessed with Mythril!", 255, 50f, 255f, 130f, 0);
+				num = 108;
+			}
+			else
+			{
+				NetMessage.SendData(25, -1, -1, "Your world has been blessed with Adamantite!", 255, 50f, 255f, 130f, 0);
+				num = 111;
+			}
+
+			int num5 = 0;
+			while ((float)num5 < num3)
+			{
+				int i2 = genRand.Next(100, Main.maxTilesX - 100);
+				double num6 = Main.worldSurface;
+				if (num == 108)
+				{
+					num6 = Main.rockLayer;
+				}
+				if (num == 111)
+				{
+					num6 = (Main.rockLayer + Main.rockLayer + (double)Main.maxTilesY) / 3.0;
+				}
+				int j2 = genRand.Next((int)num6, Main.maxTilesY - 150);
+				OreRunner(TileRefs, i2, j2, (double)genRand.Next(5, 9 + num4), genRand.Next(5, 9 + num4), num);
+				num5++;
+			}
+			int num7 = genRand.Next(3);
+			while (num7 != 2)
+			{
+				int num8 = genRand.Next(100, Main.maxTilesX - 100);
+				int num9 = genRand.Next((int)Main.rockLayer + 50, Main.maxTilesY - 300);
+				if (TileRefs(num8, num9).Active && TileRefs(num8, num9).Type == 1)
+				{
+					if (num7 == 0)
+					{
+						TileRefs(num8, num9).SetType(25);
+					}
+					else
+					{
+						TileRefs(num8, num9).SetType(117);
+					}
+
+					NetMessage.SendTileSquare(-1, num8, num9, 1);
+					break;
+
+				}
+			}
+
+			int num10 = Main.rand.Next(2) + 1;
+			for (int k = 0; k < num10; k++)
+			{
+				NPC.SpawnOnPlayer((int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16), 82);
+			}
+
+			altarCount++;
+		}
+
+		public static void OreRunner(Func<Int32, Int32, ITile> TileRefs, int i, int j, double strength, int steps, int type)
+		{
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
+			double num = strength;
+			float num2 = (float)steps;
+			Vector2 value;
+			value.X = (float)i;
+			value.Y = (float)j;
+			Vector2 value2;
+			value2.X = (float)genRand.Next(-10, 11) * 0.1f;
+			value2.Y = (float)genRand.Next(-10, 11) * 0.1f;
+			while (num > 0.0 && num2 > 0f)
+			{
+				if (value.Y < 0f && num2 > 0f && type == 59)
+				{
+					num2 = 0f;
+				}
+				num = strength * (double)(num2 / (float)steps);
+				num2 -= 1f;
+				int num3 = (int)((double)value.X - num * 0.5);
+				int num4 = (int)((double)value.X + num * 0.5);
+				int num5 = (int)((double)value.Y - num * 0.5);
+				int num6 = (int)((double)value.Y + num * 0.5);
+				if (num3 < 0)
+				{
+					num3 = 0;
+				}
+				if (num4 > Main.maxTilesX)
+				{
+					num4 = Main.maxTilesX;
+				}
+				if (num5 < 0)
+				{
+					num5 = 0;
+				}
+				if (num6 > Main.maxTilesY)
+				{
+					num6 = Main.maxTilesY;
+				}
+				for (int k = num3; k < num4; k++)
+				{
+					for (int l = num5; l < num6; l++)
+					{
+						if ((double)(Math.Abs((float)k - value.X) + Math.Abs((float)l - value.Y)) < strength * 0.5 * (1.0 + (double)genRand.Next(-10, 11) * 0.015) &&
+							TileRefs(k, l).Active && (TileRefs(k, l).Type == 0 || TileRefs(k, l).Type == 1 || TileRefs(k, l).Type == 23 || TileRefs(k, l).Type == 25 ||
+								TileRefs(k, l).Type == 40 || TileRefs(k, l).Type == 53 || TileRefs(k, l).Type == 57 || TileRefs(k, l).Type == 59 ||
+									TileRefs(k, l).Type == 60 || TileRefs(k, l).Type == 70 || TileRefs(k, l).Type == 109 || TileRefs(k, l).Type == 112 ||
+										TileRefs(k, l).Type == 116 || TileRefs(k, l).Type == 117))
+						{
+							TileRefs(k, l).SetType((byte)type);
+							SquareTileFrame(TileRefs, k, l, true);
+							NetMessage.SendTileSquare(-1, k, l, 1);
+						}
+					}
+				}
+				value += value2;
+				value2.X += (float)genRand.Next(-10, 11) * 0.05f;
+				if (value2.X > 1f)
+				{
+					value2.X = 1f;
+				}
+				if (value2.X < -1f)
+				{
+					value2.X = -1f;
+				}
 			}
 		}
 	}
