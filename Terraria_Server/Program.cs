@@ -475,7 +475,7 @@ namespace Terraria_Server
 			{
 				for (int i = 0; i < args.Length; i++)
 				{
-					if (i == (args.Length - 1) && args.Length > 1) { break; }
+					//if (i == (args.Length - 1) && args.Length > 1) { break; }
                     string commandMessage = args[i].ToLower().Trim();
 					// 0 for Ops
 					if (commandMessage.Equals("-ignoremessages:0"))
