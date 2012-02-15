@@ -463,7 +463,8 @@ namespace Terraria_Server.WorldMod
 			int sandLines = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.0008), (int)((double)Main.maxTilesX * 0.0025)) + 2;
 			//var someotherCaveGen = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 8E-06);
 			sandLines += 2;
-			using (var sandProg = new ProgressLogger(sandLines, "Adding sand"))
+			var extra = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 8E-06);
+			using (var sandProg = new ProgressLogger(sandLines + extra, "Adding sand"))
 			{
 				for (int k = 0; k < sandLines; k++)
 				{
@@ -639,73 +640,64 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			int snowLines = WorldModify.genRand.Next(Main.maxTilesX);
-			using (var snowProg = new ProgressLogger(snowLines, "Adding Snow"))
+			int snowX = WorldModify.genRand.Next(Main.maxTilesX);
+			while ((float)snowX < (float)Main.maxTilesX * 0.35f || (float)snowX > (float)Main.maxTilesX * 0.65f)
+				snowX = WorldModify.genRand.Next(Main.maxTilesX);
+
+			int snowLenX = WorldModify.genRand.Next(35, 90);
+			float modifier = (float)(Main.maxTilesX / 4200);
+
+			snowLenX += (int)((float)WorldModify.genRand.Next(20, 40) * modifier);
+			snowLenX += (int)((float)WorldModify.genRand.Next(20, 40) * modifier);
+
+			int snowStartX = snowX - snowLenX;
+			snowLenX = WorldModify.genRand.Next(35, 90);
+			snowLenX += (int)((float)WorldModify.genRand.Next(20, 40) * modifier);
+			snowLenX += (int)((float)WorldModify.genRand.Next(20, 40) * modifier);
+
+			int snowPosXEnd = snowX + snowLenX;
+			if (snowStartX < 0)
+				snowStartX = 0;
+			if (snowPosXEnd > Main.maxTilesX)
+				snowPosXEnd = Main.maxTilesX;
+
+			int startX = WorldModify.genRand.Next(50, 100);
+
+			using (var snowProg = new ProgressLogger(snowPosXEnd - snowStartX, "Adding Snow"))
 			{
-				for (int s = 0; s < snowLines; s++)
+				for (int posX = snowStartX; posX < snowPosXEnd; posX++)
 				{
-					while ((float)snowLines < (float)Main.maxTilesX * 0.35f || (float)snowLines > (float)Main.maxTilesX * 0.65f)
+					if (WorldModify.genRand.Next(2) == 0)
 					{
-						snowLines = WorldModify.genRand.Next(Main.maxTilesX);
+						startX += WorldModify.genRand.Next(-1, 2);
+
+						if (startX < 50)
+							startX = 50;
+						if (startX > 100)
+							startX = 100;
 					}
-					int num34 = WorldModify.genRand.Next(35, 90);
-					float num35 = (float)(Main.maxTilesX / 4200);
-					num34 += (int)((float)WorldModify.genRand.Next(20, 40) * num35);
-					num34 += (int)((float)WorldModify.genRand.Next(20, 40) * num35);
-					int num36 = snowLines - num34;
-					num34 = WorldModify.genRand.Next(35, 90);
-					num34 += (int)((float)WorldModify.genRand.Next(20, 40) * num35);
-					num34 += (int)((float)WorldModify.genRand.Next(20, 40) * num35);
-					int num37 = snowLines + num34;
-					if (num36 < 0)
+					int posY = 0;
+					while ((double)posY < Main.worldSurface)
 					{
-						num36 = 0;
-					}
-					if (num37 > Main.maxTilesX)
-					{
-						num37 = Main.maxTilesX;
-					}
-					int num38 = WorldModify.genRand.Next(50, 100);
-					for (int num39 = num36; num39 < num37; num39++)
-					{
-						if (WorldModify.genRand.Next(2) == 0)
+						if (Main.tile.At(posX, posY).Active)
 						{
-							num38 += WorldModify.genRand.Next(-1, 2);
-							if (num38 < 50)
+							int lenY = startX;
+
+							if (posX - snowStartX < lenY)
+								lenY = posX - snowStartX;
+
+							if (snowPosXEnd - posX < lenY)
+								lenY = snowPosXEnd - posX;
+
+							lenY += WorldModify.genRand.Next(5);
+							for (int tileY = posY; tileY < posY + lenY; tileY++)
 							{
-								num38 = 50;
+								if (posX > snowStartX + WorldModify.genRand.Next(5) && posX < snowPosXEnd - WorldModify.genRand.Next(5))
+									Main.tile.At(posX, tileY).SetType (147);
 							}
-							if (num38 > 100)
-							{
-								num38 = 100;
-							}
+							break;
 						}
-						int num40 = 0;
-						while ((double)num40 < Main.worldSurface)
-						{
-							if (TileRefs(num39, num40).Active)
-							{
-								int num41 = num38;
-								if (num39 - num36 < num41)
-								{
-									num41 = num39 - num36;
-								}
-								if (num37 - num39 < num41)
-								{
-									num41 = num37 - num39;
-								}
-								num41 += WorldModify.genRand.Next(5);
-								for (int num42 = num40; num42 < num40 + num41; num42++)
-								{
-									if (num39 > num36 + WorldModify.genRand.Next(5) && num39 < num37 - WorldModify.genRand.Next(5))
-									{
-										TileRefs(num39, num42).SetType(147);
-									}
-								}
-								break;
-							}
-							num40++;
-						}
+						posY++;
 					}
 					snowProg.Value++;
 				}

@@ -12,7 +12,7 @@ Build: 37
 	- Added all 1.1/.2 NPC's + invasions
 	- Added more hooks for new bosses/misc
 	- Snow!
-	- Few more Server Properties Options
+	- Few more Server Properties Options && Command Line Args
 	- Language file + Generation Tool
 	- Minor method changes in Server.cs & upgrade to World.cs
 	- More commands.

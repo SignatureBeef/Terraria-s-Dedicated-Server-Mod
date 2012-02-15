@@ -231,7 +231,7 @@ namespace Terraria_Server.Commands
 		{
 			Server.notifyOps(Languages.SavingWorld, true);
 
-			WorldIO.saveWorld(World.SavePath, false);
+			WorldIO.SaveWorld(World.SavePath, false);
 
 			while (WorldModify.saveLock)
 				Thread.Sleep(100);
@@ -1278,6 +1278,11 @@ namespace Terraria_Server.Commands
 			}
 		}
 
+		/// <summary>
+		/// Disallow an item from the server
+		/// </summary>
+		/// <param name="sender">Sending player</param>
+		/// <param name="args">Arguments sent with command</param>
 		public static void ItemRejection(ISender sender, ArgumentList args)
 		{
 			string exception;
@@ -1318,6 +1323,11 @@ namespace Terraria_Server.Commands
 			Program.properties.Save(false);
 		}
 
+		/// <summary>
+		/// Toggle whether the server allows explosions
+		/// </summary>
+		/// <param name="sender">Sending player</param>
+		/// <param name="args">Arguments sent with command</param>
 		public static void Explosions(ISender sender, ArgumentList args)
 		{
 			args.ParseNone();
@@ -1329,6 +1339,11 @@ namespace Terraria_Server.Commands
 			sender.sendMessage(Languages.ExplosionsAreNow + ((Server.AllowExplosions) ? "allowed" : "disabled") + "!");
 		}
 
+		/// <summary>
+		/// Refreshes a players area
+		/// </summary>
+		/// <param name="sender">Sending player</param>
+		/// <param name="args">Arguments sent with command</param>
 		public static void Refresh(ISender sender, ArgumentList args)
 		{
 			args.ParseNone();
@@ -1359,6 +1374,11 @@ namespace Terraria_Server.Commands
 			NetMessage.SendTileSquare(player.whoAmi, (int)(player.Position.X / 16), (int)(player.Position.Y / 16), 32);
 		}
 
+		/// <summary>
+		/// Toggles whether the server allows RPG.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		public static void ToggleRPGClients(ISender sender, ArgumentList args)
 		{
 			Server.AllowTDCMRPG = !Server.AllowTDCMRPG;
@@ -1380,6 +1400,11 @@ namespace Terraria_Server.Commands
 			Server.notifyOps(message);
 		}
 
+		/// <summary>
+		/// Spawns the TDCM Quest Giver
+		/// </summary>
+		/// <param name="sender">Sending player</param>
+		/// <param name="args">Arguments sent with command</param>
 		public static void SpawnQuestGiver(ISender sender, ArgumentList args)
 		{
 			if (!Server.AllowTDCMRPG)
@@ -1392,6 +1417,11 @@ namespace Terraria_Server.Commands
 			NPC.SpawnTDCMQuestGiver();
 		}
 
+		/// <summary>
+		/// Enables hardmode
+		/// </summary>
+		/// <param name="sender">Sending player</param>
+		/// <param name="args">Arguments sent with command</param>
 		public static void HardMode(ISender sender, ArgumentList args)
 		{
 			args.ParseNone();
@@ -1403,6 +1433,11 @@ namespace Terraria_Server.Commands
 			WorldModify.StartHardMode();
 		}
 
+		/// <summary>
+		/// Reloads the language definitions
+		/// </summary>
+		/// <param name="sender">Sending player</param>
+		/// <param name="args">Arguments sent with command</param>
 		public static void LanguageReload(ISender sender, ArgumentList args)
 		{
 			args.ParseNone();

@@ -31,7 +31,7 @@ namespace Terraria_Server.WorldMod
 
 		public static void SaveWorldCallback(object threadContext)
 		{
-			saveWorld(World.SavePath, false);
+			SaveWorld(World.SavePath, false);
 		}
 
 		public static void SaveWorldThreaded()
@@ -177,19 +177,12 @@ namespace Terraria_Server.WorldMod
 			worldCleared = true;
 		}
 
-		public static bool saveWorld(string savePath, bool resetTime = false)
+		public static bool SaveWorld(string savePath, bool resetTime = false)
 		{
 			bool success = true;
 
-			if (savePath == null)
-			{
+			if (savePath == null || WorldModify.saveLock)
 				return false;
-			}
-
-			if (WorldModify.saveLock)
-			{
-				return false;
-			}
 
 			try
 			{

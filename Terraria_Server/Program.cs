@@ -266,7 +266,7 @@ namespace Terraria_Server
 						WorldModify.ficount = (int)((double)Terraria_Server.Main.maxTilesX * 0.0008); //The Statics one was generating with default values, We want it to use the actual tileX for the world
 					}
 					WorldGen.GenerateWorld(null, seed);
-					WorldIO.saveWorld(worldFile, true);
+					WorldIO.SaveWorld(worldFile, true);
 				}
 
 				ctx = new HookContext
@@ -471,180 +471,187 @@ namespace Terraria_Server
 
         public static void ParseArgs(string[] args)
 		{
-			if (args != null && args.Length > 0)
+			try
 			{
-				for (int i = 0; i < args.Length; i++)
+				if (args != null && args.Length > 0)
 				{
-					//if (i == (args.Length - 1) && args.Length > 1) { break; }
-                    string commandMessage = args[i].ToLower().Trim();
-					// 0 for Ops
-					if (commandMessage.Equals("-ignoremessages:0"))
+					for (int i = 0; i < args.Length; i++)
 					{
-						Statics.cmdMessages = false;
-					}
-					else if (commandMessage.Equals("-maxplayers"))
-					{
-						int val;
-						if (Int32.TryParse(args[i + 1], out val))
-							properties.MaxPlayers = val;
-					}
-					else if (commandMessage.Equals("-ip"))
-					{
-						properties.ServerIP = args[i + 1];
-					}
-					else if (commandMessage.Equals("-port"))
-					{
-						int val;
-						if (Int32.TryParse(args[i + 1], out val))
-							properties.Port = val;
-					}
-					else if (commandMessage.Equals("-greeting"))
-					{
-						properties.Greeting = args[i + 1];
-					}
-					else if (commandMessage.Equals("-worldpath"))
-					{
-						properties.WorldPath = args[i + 1];
-					}
-					else if (commandMessage.Equals("-password"))
-					{
-						properties.Password = args[i + 1];
-					}
-					else if (commandMessage.Equals("-allowupdates"))
-					{
-						bool val;
-						if (Boolean.TryParse(args[i + 1], out val))
-							properties.AutomaticUpdates = val;
-					}
-					else if (commandMessage.Equals("-npcdoorcancel"))
-					{
-						bool val;
-						if (Boolean.TryParse(args[i + 1], out val))
-							properties.NPCDoorOpenCancel = val;
-					}
-					else if (commandMessage.Equals("-seed"))
-					{
-						try
+						//if (i == (args.Length - 1) && args.Length > 1) { break; }
+						string commandMessage = args[i].ToLower().Trim();
+						// 0 for Ops
+						if (commandMessage.Equals("-ignoremessages:0"))
 						{
-							properties.Seed = args[i + 1];
+							Statics.cmdMessages = false;
 						}
-						catch (Exception)
-						{ }
-					}
-					else if (commandMessage.Equals("-mapsize"))
-					{
-						properties.MapSize = args[i + 1];
-					}
-					else if (commandMessage.Equals("-usecustomtiles"))
-					{
-						bool val;
-						if (Boolean.TryParse(args[i + 1], out val))
-							properties.UseCustomTiles = val;
-					}
-					else if (commandMessage.Equals("-maxtilesx"))
-					{
-						int val;
-						if (Int32.TryParse(args[i + 1], out val))
-							properties.MaxTilesX = val;
-					}
-					else if (commandMessage.Equals("-maxtilesy"))
-					{
-						int val;
-						if (Int32.TryParse(args[i + 1], out val))
-							properties.MaxTilesY = val;
-					}
-					else if (commandMessage.Equals("-numdungeons"))
-					{
-						int val;
-						if (Int32.TryParse(args[i + 1], out val))
-							properties.DungeonAmount = val;
-					}
-					else if (commandMessage.Equals("-customworldgen"))
-					{
-						bool val;
-						if (Boolean.TryParse(args[i + 1], out val))
-							properties.UseCustomGenOpts = val;
-					}
-					else if (commandMessage.Equals("-numislands"))
-					{
-						int val;
-						if (Int32.TryParse(args[i + 1], out val))
-							properties.FloatingIslandAmount = val;
-					}
-					else if (commandMessage.Equals("-whitelist"))
-					{
-						bool val;
-						if (Boolean.TryParse(args[i + 1], out val))
-							properties.UseWhiteList = val;
-					}
-					else if (commandMessage.Equals("-pidfile"))
-					{
-						try
+						else if (commandMessage.Equals("-maxplayers"))
 						{
-							properties.PIDFile = args[i + 1];
+							int val;
+							if (Int32.TryParse(args[i + 1], out val))
+								properties.MaxPlayers = val;
 						}
-						catch { }
-					}
-					else if (commandMessage.Equals("-simpleloop"))
-					{
-						bool val;
-						if (Boolean.TryParse(args[i + 1], out val))
-							properties.SimpleLoop = val;
-					}
-					else if (commandMessage.Equals("-windowsoutput"))
-					{
-						Platform.Type = Platform.PlatformType.WINDOWS;
-						bool val;
-						if (Boolean.TryParse(args[i + 1], out val) && !val)
-							Platform.Type = Platform.PlatformType.LINUX;
-					}
-					else if (commandMessage.Equals("-hackeddata"))
-					{
-						bool val;
-						if (Boolean.TryParse(args[i + 1], out val))
-							properties.HackedData = val;
-					}
-					else if (commandMessage.Equals("-rconip"))
-					{
-						try
+						else if (commandMessage.Equals("-ip"))
 						{
-							properties.RConBindAddress = args[i + 1];
+							properties.ServerIP = args[i + 1];
 						}
-						catch { }
-					}
-					else if (commandMessage.Equals("-rconsalt"))
-					{
-						try
+						else if (commandMessage.Equals("-port"))
 						{
-							properties.RConHashNonce = args[i + 1];
+							int val;
+							if (Int32.TryParse(args[i + 1], out val))
+								properties.Port = val;
 						}
-						catch { }
+						else if (commandMessage.Equals("-greeting"))
+						{
+							properties.Greeting = args[i + 1];
+						}
+						else if (commandMessage.Equals("-worldpath"))
+						{
+							properties.WorldPath = args[i + 1];
+						}
+						else if (commandMessage.Equals("-password"))
+						{
+							properties.Password = args[i + 1];
+						}
+						else if (commandMessage.Equals("-allowupdates"))
+						{
+							bool val;
+							if (Boolean.TryParse(args[i + 1], out val))
+								properties.AutomaticUpdates = val;
+						}
+						else if (commandMessage.Equals("-npcdoorcancel"))
+						{
+							bool val;
+							if (Boolean.TryParse(args[i + 1], out val))
+								properties.NPCDoorOpenCancel = val;
+						}
+						else if (commandMessage.Equals("-seed"))
+						{
+							try
+							{
+								properties.Seed = args[i + 1];
+							}
+							catch (Exception)
+							{ }
+						}
+						else if (commandMessage.Equals("-mapsize"))
+						{
+							properties.MapSize = args[i + 1];
+						}
+						else if (commandMessage.Equals("-usecustomtiles"))
+						{
+							bool val;
+							if (Boolean.TryParse(args[i + 1], out val))
+								properties.UseCustomTiles = val;
+						}
+						else if (commandMessage.Equals("-maxtilesx"))
+						{
+							int val;
+							if (Int32.TryParse(args[i + 1], out val))
+								properties.MaxTilesX = val;
+						}
+						else if (commandMessage.Equals("-maxtilesy"))
+						{
+							int val;
+							if (Int32.TryParse(args[i + 1], out val))
+								properties.MaxTilesY = val;
+						}
+						else if (commandMessage.Equals("-numdungeons"))
+						{
+							int val;
+							if (Int32.TryParse(args[i + 1], out val))
+								properties.DungeonAmount = val;
+						}
+						else if (commandMessage.Equals("-customworldgen"))
+						{
+							bool val;
+							if (Boolean.TryParse(args[i + 1], out val))
+								properties.UseCustomGenOpts = val;
+						}
+						else if (commandMessage.Equals("-numislands"))
+						{
+							int val;
+							if (Int32.TryParse(args[i + 1], out val))
+								properties.FloatingIslandAmount = val;
+						}
+						else if (commandMessage.Equals("-whitelist"))
+						{
+							bool val;
+							if (Boolean.TryParse(args[i + 1], out val))
+								properties.UseWhiteList = val;
+						}
+						else if (commandMessage.Equals("-pidfile"))
+						{
+							try
+							{
+								properties.PIDFile = args[i + 1];
+							}
+							catch { }
+						}
+						else if (commandMessage.Equals("-simpleloop"))
+						{
+							bool val;
+							if (Boolean.TryParse(args[i + 1], out val))
+								properties.SimpleLoop = val;
+						}
+						else if (commandMessage.Equals("-windowsoutput"))
+						{
+							Platform.Type = Platform.PlatformType.WINDOWS;
+							bool val;
+							if (Boolean.TryParse(args[i + 1], out val) && !val)
+								Platform.Type = Platform.PlatformType.LINUX;
+						}
+						else if (commandMessage.Equals("-hackeddata"))
+						{
+							bool val;
+							if (Boolean.TryParse(args[i + 1], out val))
+								properties.HackedData = val;
+						}
+						else if (commandMessage.Equals("-rconip"))
+						{
+							try
+							{
+								properties.RConBindAddress = args[i + 1];
+							}
+							catch { }
+						}
+						else if (commandMessage.Equals("-rconsalt"))
+						{
+							try
+							{
+								properties.RConHashNonce = args[i + 1];
+							}
+							catch { }
+						}
+						else if (commandMessage.Equals("-rotatelog"))
+						{
+							bool val;
+							if (Boolean.TryParse(args[i + 1], out val))
+								properties.LogRotation = val;
+						}
+						else if (commandMessage.Equals("-spawnnpcmax"))
+						{
+							int val;
+							if (Int32.TryParse(args[i + 1], out val))
+								properties.SpawnNPCMax = val;
+						}
+						else if (commandMessage.Equals("-disablemaxplayers"))
+							SlotManager.MaxPlayersDisabled = true;
+						else if (commandMessage.Equals("-allowexplosions"))
+						{
+							bool val;
+							if (Boolean.TryParse(args[i + 1], out val))
+								properties.AllowExplosions = val;
+						}
+						else if (commandMessage.Equals("-rejectitems"))
+							properties.RejectedItems = args[i + 1];
 					}
-					else if (commandMessage.Equals("-rotatelog"))
-					{
-						bool val;
-						if (Boolean.TryParse(args[i + 1], out val))
-							properties.LogRotation = val;
-					}
-					else if (commandMessage.Equals("-spawnnpcmax"))
-					{
-						int val;
-						if (Int32.TryParse(args[i + 1], out val))
-							properties.SpawnNPCMax = val;
-					}
-					else if (commandMessage.Equals("-disablemaxplayers"))
-						SlotManager.MaxPlayersDisabled = true;
-					else if (commandMessage.Equals("-allowexplosions"))
-					{
-						bool val;
-						if (Boolean.TryParse(args[i + 1], out val))
-							properties.AllowExplosions = val;
-					}
-					else if (commandMessage.Equals("-rejectitems"))
-						properties.RejectedItems = args[i + 1];
-				}
 
-				properties.Save();
+					properties.Save();
+				}
+			}
+			catch (Exception e)
+			{
+				ProgramLog.Log(e);
 			}
 		}
 		
