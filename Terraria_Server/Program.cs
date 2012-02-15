@@ -16,6 +16,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Plugins;
 using Terraria_Server.Permissions;
 using Terraria_Server.Language;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server
 {
@@ -459,6 +460,11 @@ namespace Terraria_Server
 		{
 			properties = new ServerProperties("server.properties");
 			properties.Load();
+
+			properties.AddHeaderLine("TDSM Properties File.");
+			properties.AddHeaderLine("Rejected items need to be seperated by commas ','");
+			properties.AddHeaderLine("For other help visit http://wiki.tdsm.org");
+
 			properties.pushData();
 			properties.Save();
 		}
@@ -469,7 +475,7 @@ namespace Terraria_Server
 			{
 				for (int i = 0; i < args.Length; i++)
 				{
-					if (i == (args.Length - 1)) { break; }
+					if (i == (args.Length - 1) && args.Length > 1) { break; }
                     string commandMessage = args[i].ToLower().Trim();
 					// 0 for Ops
 					if (commandMessage.Equals("-ignoremessages:0"))
@@ -626,15 +632,16 @@ namespace Terraria_Server
 						if (Int32.TryParse(args[i + 1], out val))
 							properties.SpawnNPCMax = val;
 					}
-					else if (commandMessage.Equals("-disablemaxslots"))
+					else if (commandMessage.Equals("-disablemaxplayers"))
+						SlotManager.MaxPlayersDisabled = true;
+					else if (commandMessage.Equals("-allowexplosions"))
 					{
 						bool val;
 						if (Boolean.TryParse(args[i + 1], out val))
-							properties.DisableMaxSlots = val;
+							properties.AllowExplosions = val;
 					}
-
-                    //explosions
-                    //rejectplayeritems
+					else if (commandMessage.Equals("-rejectitems"))
+						properties.RejectedItems = args[i + 1];
 				}
 
 				properties.Save();

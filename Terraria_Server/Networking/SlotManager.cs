@@ -429,10 +429,11 @@ namespace Terraria_Server.Networking
 			
 			return String.Format (waitingMessage, i, suffix);
 		}
-		
+
+		public static bool MaxPlayersDisabled = false;
 		internal static void MaxPlayersCommand (ISender sender, ArgumentList args)
 		{
-			if (Program.properties.DisableMaxSlots)
+			if (MaxPlayersDisabled)
 			{
 				sender.Message (255, "This command has been disabled.");
 				return;
