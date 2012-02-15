@@ -57,8 +57,9 @@ namespace Terraria_Server
 		public static int sHeight = 1050;
 		private static int spawnRangeX = (int)((double)(NPC.sWidth / 16) * 0.7);
 		private static int spawnRangeY = (int)((double)(NPC.sHeight / 16) * 0.7);
-		public static int safeRangeX = (int)((double)(NPC.sWidth / 16) * 0.52);
+		public static int pawnsafeRangeX = (int)((double)(NPC.sWidth / 16) * 0.52);
 		public static int safeRangeY = (int)((double)(NPC.sHeight / 16) * 0.52);
+		public static int safeRangeX = (int)((double)(NPC.sWidth / 16) * 0.52);
 		private static int activeRangeX = (int)((double)NPC.sWidth * 1.7);
 		private static int activeRangeY = (int)((double)NPC.sHeight * 1.7);
 		private static int townRangeX = NPC.sWidth;
@@ -1526,48 +1527,38 @@ namespace Terraria_Server
 		/// </summary>
 		/// <param name="playerIndex">Index of player to spawn on</param>
 		/// <param name="Type">Type of NPC to spawn</param>
+
 		public static void SpawnOnPlayer(int playerIndex, int Type)
 		{
-			if (Main.stopSpawns)
-				return;
-
-			var player = Main.players[playerIndex];
-
 			bool flag = false;
 			int x = 0;
 			int y = 0;
-			int minX = (int)(player.Position.X / 16f) - NPC.spawnRangeX * 3;
-			int maxX = (int)(player.Position.X / 16f) + NPC.spawnRangeX * 3;
-			int minY = (int)(player.Position.Y / 16f) - NPC.spawnRangeY * 3;
-			int maxY = (int)(player.Position.Y / 16f) + NPC.spawnRangeY * 3;
-			int xLeft = (int)(player.Position.X / 16f) - NPC.safeRangeX;
-			int xRight = (int)(player.Position.X / 16f) + NPC.safeRangeX;
-			int yLeft = (int)(player.Position.Y / 16f) - NPC.safeRangeY;
-			int yRight = (int)(player.Position.Y / 16f) + NPC.safeRangeY;
-			if (minX < 0)
-			{
-				minX = 0;
-			}
-			if (maxX >= Main.maxTilesX)
-			{
-				maxX = Main.maxTilesX - 1;
-			}
-			if (minY < 0)
-			{
-				minY = 0;
-			}
-			if (maxY >= Main.maxTilesY)
-			{
-				maxY = Main.maxTilesY - 1;
-			}
-			for (int i = 0; i < MAX_NPCS; i++)
+			int num3 = (int)(Main.players[playerIndex].Position.X / 16f) - NPC.spawnRangeX * 2;
+			int num4 = (int)(Main.players[playerIndex].Position.X / 16f) + NPC.spawnRangeX * 2;
+			int num5 = (int)(Main.players[playerIndex].Position.Y / 16f) - NPC.spawnRangeY * 2;
+			int num6 = (int)(Main.players[playerIndex].Position.Y / 16f) + NPC.spawnRangeY * 2;
+			int num7 = (int)(Main.players[playerIndex].Position.X / 16f) - NPC.safeRangeX;
+			int num8 = (int)(Main.players[playerIndex].Position.X / 16f) + NPC.safeRangeX;
+			int num9 = (int)(Main.players[playerIndex].Position.Y / 16f) - NPC.safeRangeY;
+			int num10 = (int)(Main.players[playerIndex].Position.Y / 16f) + NPC.safeRangeY;
+			
+			if (num3 < 0)
+				num3 = 0;
+			if (num4 > Main.maxTilesX)
+				num4 = Main.maxTilesX;
+			if (num5 < 0)
+				num5 = 0;
+			if (num6 > Main.maxTilesY)
+				num6 = Main.maxTilesY;
+
+			for (int i = 0; i < 1000; i++)
 			{
 				int j = 0;
 				while (j < 100)
 				{
-					int tileX = Main.rand.Next(minX, maxX);
-					int tileY = Main.rand.Next(minY, maxY);
-					if (Main.tile.At(tileX, tileY).Active && Main.tileSolid[(int)Main.tile.At(tileX, tileY).Type])
+					int num11 = Main.rand.Next(num3, num4);
+					int num12 = Main.rand.Next(num5, num6);
+					if (Main.tile.At(num11, num12).Active && Main.tileSolid[(int)Main.tile.At(num11, num12).Type])
 					{
 						if (!flag && !flag)
 						{
@@ -1576,29 +1567,27 @@ namespace Terraria_Server
 						}
 						break;
 					}
-					if (Main.tile.At(tileX, tileY).Wall != 1)
+					if (!Main.wallHouse[(int)Main.tile.At(num11, num12).Wall] || i >= 999)
 					{
-						int yTile = tileY;
-						while (yTile < Main.maxTilesY)
+						int k = num12;
+						while (k < Main.maxTilesY)
 						{
-							if (Main.tile.At(tileX, yTile).Active && Main.tileSolid[(int)Main.tile.At(tileX, yTile).Type])
+							if (Main.tile.At(num11, k).Active && Main.tileSolid[(int)Main.tile.At(num11, k).Type])
 							{
-								if (tileX < xLeft || tileX > xRight || yTile < yLeft || yTile > yRight)
+								if (num11 < num7 || num11 > num8 || k < num9 || k > num10 || i == 999)
 								{
-									//byte arg_220_0 = Main.tile.At(tileX, y).Type;
-									x = tileX;
-									y = yTile;
+									x = num11;
+									y = k;
 									flag = true;
-									break;
 								}
 								break;
 							}
 							else
 							{
-								yTile++;
+								k++;
 							}
 						}
-						if (!flag)
+						if (!flag || i >= 999)
 						{
 							if (!flag && !flag)
 							{
@@ -1607,31 +1596,31 @@ namespace Terraria_Server
 							}
 							break;
 						}
-						int spawnMinX = x - NPC.spawnSpaceX / 2;
-						int spawnMaxX = x + NPC.spawnSpaceX / 2;
-						int spawnMinY = y - NPC.spawnSpaceY;
-						int spawnMaxY = y;
-						if (spawnMinX < 0)
+						int num13 = x - NPC.spawnSpaceX / 2;
+						int num14 = x + NPC.spawnSpaceX / 2;
+						int num15 = y - NPC.spawnSpaceY;
+						int num16 = y;
+						if (num13 < 0)
 						{
 							flag = false;
 						}
-						if (spawnMaxX >= Main.maxTilesX)
+						if (num14 > Main.maxTilesX)
 						{
 							flag = false;
 						}
-						if (spawnMinY < 0)
+						if (num15 < 0)
 						{
 							flag = false;
 						}
-						if (spawnMaxY >= Main.maxTilesY)
+						if (num16 > Main.maxTilesY)
 						{
 							flag = false;
 						}
 						if (flag)
 						{
-							for (int l = spawnMinX; l < spawnMaxX; l++)
+							for (int l = num13; l < num14; l++)
 							{
-								for (int m = spawnMinY; m < spawnMaxY; m++)
+								for (int m = num15; m < num16; m++)
 								{
 									if (Main.tile.At(l, m).Active && Main.tileSolid[(int)Main.tile.At(l, m).Type])
 									{
@@ -1641,53 +1630,51 @@ namespace Terraria_Server
 								}
 							}
 						}
-						if (!flag && !flag)
-						{
-							j++;
-							continue;
-						}
-						break;
+						j++;
+						continue;
 					}
 				}
-				if (flag)
+				if (flag && i < 999)
 				{
 					Rectangle rectangle = new Rectangle(x * 16, y * 16, 16, 16);
-					for (int n = 0; n < 255; n++)
+					for (int n = 0; n < Main.MAX_PLAYERS; n++)
 					{
 						if (Main.players[n].Active)
 						{
-							Rectangle rectangle2 = new Rectangle((int)(Main.players[n].Position.X + (float)(Main.players[n].Width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[n].Position.Y + (float)(Main.players[n].Height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+							Rectangle rectangle2 = new Rectangle((int)(Main.players[n].Position.X + (float)(Main.players[n].Width / 2) - (float)(NPC.sWidth / 2) - 
+								(float)NPC.safeRangeX), (int)(Main.players[n].Position.Y + (float)(Main.players[n].Height / 2) - (float)(NPC.sHeight / 2) - 
+								(float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
 							if (rectangle.Intersects(rectangle2))
-							{
-								flag = false;
-							}
+								flag = true;
 						}
 					}
 				}
-				if (flag)
-				{
+				if(flag)
 					break;
-				}
 			}
 			if (flag)
 			{
 				int npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, Type, 1);
-				Main.npcs[npcIndex].target = playerIndex;
-				string str = Main.npcs[npcIndex].Name;
-				if (Main.npcs[npcIndex].type == NPCType.N13_EATER_OF_WORLDS_HEAD)
-				{
-					str = "Eater of Worlds";
-				}
-				if (Main.npcs[npcIndex].type == NPCType.N35_SKELETRON_HEAD)
-				{
-					str = "Skeletron";
-				}
-				if (npcIndex < MAX_NPCS)
-				{
-					NetMessage.SendData(23, -1, -1, "", npcIndex);
-				}
+				if (npcIndex == 200)
+					return;
 
-				NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f);
+				Main.npcs[npcIndex].target = playerIndex;
+				Main.npcs[npcIndex].timeLeft *= 20;
+
+				string npcName = Main.npcs[npcIndex].Name;
+				if (!String.IsNullOrEmpty(Main.npcs[npcIndex].DisplayName))
+					npcName = Main.npcs[npcIndex].DisplayName;
+
+				if (npcIndex < 200)
+					NetMessage.SendData(23, -1, -1, "", npcIndex);
+
+				if (Type == (int)NPCType.N125_RETINAZER)
+				{
+					NetMessage.SendData(25, -1, -1, "The Twins has awoken!", 255, 175f, 75f, 255f);
+						return;
+				}
+				else if (Type != (int)NPCType.N82_WRAITH && Type != (int)NPCType.N126_SPAZMATISM && Type != (int)NPCType.N50_KING_SLIME)
+					NetMessage.SendData(25, -1, -1, npcName + " has awoken!", 255, 175f, 75f, 255f);				
 			}
 		}
 
