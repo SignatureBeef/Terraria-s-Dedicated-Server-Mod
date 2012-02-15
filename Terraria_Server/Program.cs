@@ -478,14 +478,9 @@ namespace Terraria_Server
 					}
 					else if (commandMessage.Equals("-maxplayers"))
 					{
-						try
-						{
-							properties.MaxPlayers = Convert.ToInt32(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						int val;
+						if (Int32.TryParse(args[i + 1], out val))
+							properties.MaxPlayers = val;
 					}
 					else if (commandMessage.Equals("-ip"))
 					{
@@ -493,14 +488,9 @@ namespace Terraria_Server
 					}
 					else if (commandMessage.Equals("-port"))
 					{
-						try
-						{
-							properties.Port = Convert.ToInt32(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						int val;
+						if (Int32.TryParse(args[i + 1], out val))
+							properties.Port = val;
 					}
 					else if (commandMessage.Equals("-greeting"))
 					{
@@ -516,25 +506,15 @@ namespace Terraria_Server
 					}
 					else if (commandMessage.Equals("-allowupdates"))
 					{
-						try
-						{
-							properties.AutomaticUpdates = Convert.ToBoolean(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						bool val;
+						if (Boolean.TryParse(args[i + 1], out val))
+							properties.AutomaticUpdates = val;
 					}
 					else if (commandMessage.Equals("-npcdoorcancel"))
 					{
-						try
-						{
-							properties.NPCDoorOpenCancel = Convert.ToBoolean(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						bool val;
+						if (Boolean.TryParse(args[i + 1], out val))
+							properties.NPCDoorOpenCancel = val;
 					}
 					else if (commandMessage.Equals("-seed"))
 					{
@@ -543,9 +523,7 @@ namespace Terraria_Server
 							properties.Seed = args[i + 1];
 						}
 						catch (Exception)
-						{
-
-						}
+						{ }
 					}
 					else if (commandMessage.Equals("-mapsize"))
 					{
@@ -553,80 +531,45 @@ namespace Terraria_Server
 					}
 					else if (commandMessage.Equals("-usecustomtiles"))
 					{
-						try
-						{
-							properties.UseCustomTiles = Convert.ToBoolean(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						bool val;
+						if (Boolean.TryParse(args[i + 1], out val))
+							properties.UseCustomTiles = val;
 					}
 					else if (commandMessage.Equals("-maxtilesx"))
 					{
-						try
-						{
-							properties.MaxTilesX = Convert.ToInt32(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						int val;
+						if (Int32.TryParse(args[i + 1], out val))
+							properties.MaxTilesX = val;
 					}
 					else if (commandMessage.Equals("-maxtilesy"))
 					{
-						try
-						{
-							properties.MaxTilesY = Convert.ToInt32(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						int val;
+						if (Int32.TryParse(args[i + 1], out val))
+							properties.MaxTilesY = val;
 					}
 					else if (commandMessage.Equals("-numdungeons"))
 					{
-						try
-						{
-							properties.DungeonAmount = Convert.ToInt32(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						int val;
+						if (Int32.TryParse(args[i + 1], out val))
+							properties.DungeonAmount = val;
 					}
 					else if (commandMessage.Equals("-customworldgen"))
 					{
-						try
-						{
-							properties.UseCustomGenOpts = Convert.ToBoolean(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						bool val;
+						if (Boolean.TryParse(args[i + 1], out val))
+							properties.UseCustomGenOpts = val;
 					}
 					else if (commandMessage.Equals("-numislands"))
 					{
-						try
-						{
-							properties.FloatingIslandAmount = Convert.ToInt32(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						int val;
+						if (Int32.TryParse(args[i + 1], out val))
+							properties.FloatingIslandAmount = val;
 					}
 					else if (commandMessage.Equals("-whitelist"))
 					{
-						try
-						{
-							properties.UseWhiteList = Convert.ToBoolean(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						bool val;
+						if (Boolean.TryParse(args[i + 1], out val))
+							properties.UseWhiteList = val;
 					}
 					else if (commandMessage.Equals("-pidfile"))
 					{
@@ -634,48 +577,26 @@ namespace Terraria_Server
 						{
 							properties.PIDFile = args[i + 1];
 						}
-						catch
-						{
-
-						}
+						catch { }
 					}
 					else if (commandMessage.Equals("-simpleloop"))
 					{
-						try
-						{
-							properties.SimpleLoop = Convert.ToBoolean(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						bool val;
+						if (Boolean.TryParse(args[i + 1], out val))
+							properties.SimpleLoop = val;
 					}
 					else if (commandMessage.Equals("-windowsoutput"))
 					{
 						Platform.Type = Platform.PlatformType.WINDOWS;
-						try
-						{
-							bool windows = Convert.ToBoolean(args[i + 1]);
-							if (!windows)
-							{
-								Platform.Type = Platform.PlatformType.LINUX;
-							}
-						}
-						catch
-						{
-
-						}
+						bool val;
+						if (Boolean.TryParse(args[i + 1], out val) && !val)
+							Platform.Type = Platform.PlatformType.LINUX;
 					}
 					else if (commandMessage.Equals("-hackeddata"))
 					{
-						try
-						{
-							properties.HackedData = Convert.ToBoolean(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						bool val;
+						if (Boolean.TryParse(args[i + 1], out val))
+							properties.HackedData = val;
 					}
 					else if (commandMessage.Equals("-rconip"))
 					{
@@ -683,10 +604,7 @@ namespace Terraria_Server
 						{
 							properties.RConBindAddress = args[i + 1];
 						}
-						catch
-						{
-
-						}
+						catch { }
 					}
 					else if (commandMessage.Equals("-rconsalt"))
 					{
@@ -694,32 +612,25 @@ namespace Terraria_Server
 						{
 							properties.RConHashNonce = args[i + 1];
 						}
-						catch
-						{
-
-						}
+						catch { }
 					}
 					else if (commandMessage.Equals("-rotatelog"))
 					{
-						try
-						{
-							properties.LogRotation = Convert.ToBoolean(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						bool val;
+						if (Boolean.TryParse(args[i + 1], out val))
+							properties.LogRotation = val;
 					}
 					else if (commandMessage.Equals("-spawnnpcmax"))
 					{
-						try
-						{
-							properties.SpawnNPCMax = Convert.ToInt16(args[i + 1]);
-						}
-						catch
-						{
-
-						}
+						int val;
+						if (Int32.TryParse(args[i + 1], out val))
+							properties.SpawnNPCMax = val;
+					}
+					else if (commandMessage.Equals("-disablemaxslots"))
+					{
+						bool val;
+						if (Boolean.TryParse(args[i + 1], out val))
+							properties.DisableMaxSlots = val;
 					}
 
                     //explosions

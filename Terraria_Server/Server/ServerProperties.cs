@@ -14,6 +14,7 @@ namespace Terraria_Server
         private const bool      DEFAULT_AUTOMATIC_UPDATES       = false;
         private const bool      DEFAULT_BUFFER_LIQUID_UPDATES   = false;
         private const bool      DEFAULT_COLLECT_GARBAGE			= true;
+		private const bool		DEFAULT_DISABLE_MAX_SLOTS		= false;
         private const int       DEFAULT_EXIT_USERS              = -1;
         private const string    DEFAULT_GREETING                = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
         private const bool		DEFAULT_GENERATE_JUNGLE			= true;
@@ -52,6 +53,7 @@ namespace Terraria_Server
         private const string    BUFFER_LIQUID_UPDATES           = "buffer-liquid-updates";
         private const string    COLLECT_GARBAGE					= "collect-garbage";
         private const string    EXIT_USERS                      = "exitaccesslevel";
+        private const string    DISABLE_MAX_SLOTS               = "disable-max-slots";
         private const string    DUNGEON_AMOUNT                  = "opt-numdungeons";
         private const string    FLOATING_ISLAND_AMOUNT          = "opt-num-floating-islands";
         private const string    GREETING                        = "greeting";
@@ -98,6 +100,7 @@ namespace Terraria_Server
 			temp = AutomaticUpdates;
 			temp = BufferLiquidUpdates;
 			temp = CollectGarbage;
+			temp = DisableMaxSlots;
             temp = DungeonAmount;
             temp = ExitAccessLevel;
             temp = FloatingIslandAmount;
@@ -582,6 +585,12 @@ namespace Terraria_Server
 		{
 			get { return getValue(GENERATE_SNOW, DEFAULT_GENERATE_SNOW); }
 			set { setValue(GENERATE_SNOW, value); }
+		}
+
+		public bool DisableMaxSlots
+		{
+			get { return getValue(DISABLE_MAX_SLOTS, DEFAULT_DISABLE_MAX_SLOTS); }
+			set { setValue(DISABLE_MAX_SLOTS, value); }
 		}
     }
 }
