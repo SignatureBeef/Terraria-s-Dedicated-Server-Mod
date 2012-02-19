@@ -5951,140 +5951,6 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 
-		public static int PlaceChest(Func<Int32, Int32, ITile> TileRefs, int x, int y, int type = 21, bool notNearOtherChests = false, int style = 0)
-		{
-			if (TileRefs == null)
-				TileRefs = TileCollection.ITileAt;
-
-			bool placed = true;
-			int index = -1;
-			for (int i = x; i < x + 2; i++)
-			{
-				for (int j = y - 1; j < y + 1; j++)
-				{
-					if (TileRefs(i, j).Active)
-						placed = false;
-
-					if (TileRefs(i, j).Lava)
-						placed = false;
-				}
-				if (!TileRefs(i, y + 1).Active || !Main.tileSolid[(int)TileRefs(i, y + 1).Type])
-					placed = false;
-			}
-			if (placed && notNearOtherChests)
-			{
-				for (int k = x - 25; k < x + 25; k++)
-				{
-					for (int l = y - 8; l < y + 8; l++)
-					{
-						if (TileRefs(k, l).Active && TileRefs(k, l).Type == 21)
-						{
-							placed = false;
-							return -1;
-						}
-					}
-				}
-			}
-			if (placed)
-			{
-				index = Chest.CreateChest(x, y - 1);
-				if (index == -1)
-					placed = false;
-			}
-			if (placed)
-			{
-				TileRefs(x, y - 1).SetActive(true);
-				TileRefs(x, y - 1).SetFrameY(0);
-				TileRefs(x, y - 1).SetFrameX((short)(36 * style));
-				TileRefs(x, y - 1).SetType((byte)type);
-				TileRefs(x + 1, y - 1).SetActive(true);
-				TileRefs(x + 1, y - 1).SetFrameY(0);
-				TileRefs(x + 1, y - 1).SetFrameX((short)(18 + 36 * style));
-				TileRefs(x + 1, y - 1).SetType((byte)type);
-				TileRefs(x, y).SetActive(true);
-				TileRefs(x, y).SetFrameY(18);
-				TileRefs(x, y).SetFrameX((short)(36 * style));
-				TileRefs(x, y).SetType((byte)type);
-				TileRefs(x + 1, y).SetActive(true);
-				TileRefs(x + 1, y).SetFrameY(18);
-				TileRefs(x + 1, y).SetFrameX((short)(18 + 36 * style));
-				TileRefs(x + 1, y).SetType((byte)type);
-			}
-			return index;
-		}
-
-		public static void CheckChest(Func<Int32, Int32, ITile> TileRefs, int i, int j, int type)
-		{
-			if (TileRefs == null)
-				TileRefs = TileCollection.ITileAt;
-
-			if (destroyObject)
-				return;
-
-			bool flag = false;
-			int k = 0;
-			k += (int)(TileRefs(i, j).FrameX / 18);
-			int num = j + (int)(TileRefs(i, j).FrameY / 18 * -1);
-
-			while (k > 1)
-				k -= 2;
-
-			k *= -1;
-			k += i;
-			for (int l = k; l < k + 2; l++)
-			{
-				for (int m = num; m < num + 2; m++)
-				{
-					int n;
-					for (n = (int)(TileRefs(l, m).FrameX / 18); n > 1; n -= 2)
-					{
-					}
-					if (!TileRefs(l, m).Active || (int)TileRefs(l, m).Type != type || n != l - k || (int)TileRefs(l, m).FrameY != (m - num) * 18)
-					{
-						flag = true;
-					}
-				}
-				if (!TileRefs(l, num + 2).Active || !Main.tileSolid[(int)TileRefs(l, num + 2).Type])
-				{
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				int type2 = 48;
-				if (TileRefs(i, j).FrameX >= 216)
-				{
-					type2 = 348;
-				}
-				else if (TileRefs(i, j).FrameX >= 180)
-				{
-					type2 = 343;
-				}
-				else if (TileRefs(i, j).FrameX >= 108)
-				{
-					type2 = 328;
-				}
-				else if (TileRefs(i, j).FrameX >= 36)
-				{
-					type2 = 306;
-				}
-				destroyObject = true;
-				for (int num2 = k; num2 < k + 2; num2++)
-				{
-					for (int num3 = num; num3 < num + 3; num3++)
-					{
-						if ((int)TileRefs(num2, num3).Type == type && TileRefs(num2, num3).Active)
-						{
-							Chest.DestroyChest(num2, num3);
-							KillTile(TileRefs, num2, num3);
-						}
-					}
-				}
-				Item.NewItem(i * 16, j * 16, 32, 32, type2);
-				destroyObject = false;
-			}
-		}
-
 		public static void Place1xX(Func<Int32, Int32, ITile> TileRefs, int x, int y, int type, int style = 0)
 		{
 			if (TileRefs == null)
@@ -6528,7 +6394,7 @@ namespace Terraria_Server.WorldMod
 			return result;
 		}
 
-		public static void KillWall(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool fail = false)
+		/*public static void KillWall(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool fail = false)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -7550,6 +7416,1416 @@ namespace Terraria_Server.WorldMod
 
 					TileRefs(i, j).SetType(0);
 					tileType = 0;
+					SquareTileFrame(TileRefs, i, j, true);
+				}
+			}
+		}*/
+
+		public static void KillWall(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool fail = false)
+		{
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
+			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
+			{
+				if (Main.tile.At(i, j).Wall > 0)
+				{
+					int num = 10;
+					if (fail)
+					{
+						num = 3;
+					}
+					for (int k = 0; k < num; k++)
+					{
+						int type = 0;
+						if (Main.tile.At(i, j).Wall == 1 || Main.tile.At(i, j).Wall == 5 || Main.tile.At(i, j).Wall == 6 || Main.tile.At(i, j).Wall == 7 || Main.tile.At(i, j).Wall == 8 || Main.tile.At(i, j).Wall == 9)
+						{
+							type = 1;
+						}
+						if (Main.tile.At(i, j).Wall == 3)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								type = 14;
+							}
+							else
+							{
+								type = 1;
+							}
+						}
+						if (Main.tile.At(i, j).Wall == 4)
+						{
+							type = 7;
+						}
+						if (Main.tile.At(i, j).Wall == 12)
+						{
+							type = 9;
+						}
+						if (Main.tile.At(i, j).Wall == 10)
+						{
+							type = 10;
+						}
+						if (Main.tile.At(i, j).Wall == 11)
+						{
+							type = 11;
+						}
+						if (Main.tile.At(i, j).Wall == 21)
+						{
+							type = 13;
+						}
+						if (Main.tile.At(i, j).Wall == 22 || Main.tile.At(i, j).Wall == 28)
+						{
+							type = 51;
+						}
+						if (Main.tile.At(i, j).Wall == 23)
+						{
+							type = 38;
+						}
+						if (Main.tile.At(i, j).Wall == 24)
+						{
+							type = 36;
+						}
+						if (Main.tile.At(i, j).Wall == 25)
+						{
+							type = 48;
+						}
+						if (Main.tile.At(i, j).Wall == 26 || Main.tile.At(i, j).Wall == 30)
+						{
+							type = 49;
+						}
+						if (Main.tile.At(i, j).Wall == 29)
+						{
+							type = 50;
+						}
+						if (Main.tile.At(i, j).Wall == 31)
+						{
+							type = 51;
+						}
+						if (Main.tile.At(i, j).Wall == 27)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								type = 7;
+							}
+							else
+							{
+								type = 1;
+							}
+						}
+					}
+					if (fail)
+					{
+						SquareWallFrame(TileRefs, i, j, true);
+						return;
+					}
+					int num2 = 0;
+					if (Main.tile.At(i, j).Wall == 1)
+					{
+						num2 = 26;
+					}
+					if (Main.tile.At(i, j).Wall == 4)
+					{
+						num2 = 93;
+					}
+					if (Main.tile.At(i, j).Wall == 5)
+					{
+						num2 = 130;
+					}
+					if (Main.tile.At(i, j).Wall == 6)
+					{
+						num2 = 132;
+					}
+					if (Main.tile.At(i, j).Wall == 7)
+					{
+						num2 = 135;
+					}
+					if (Main.tile.At(i, j).Wall == 8)
+					{
+						num2 = 138;
+					}
+					if (Main.tile.At(i, j).Wall == 9)
+					{
+						num2 = 140;
+					}
+					if (Main.tile.At(i, j).Wall == 10)
+					{
+						num2 = 142;
+					}
+					if (Main.tile.At(i, j).Wall == 11)
+					{
+						num2 = 144;
+					}
+					if (Main.tile.At(i, j).Wall == 12)
+					{
+						num2 = 146;
+					}
+					if (Main.tile.At(i, j).Wall == 14)
+					{
+						num2 = 330;
+					}
+					if (Main.tile.At(i, j).Wall == 16)
+					{
+						num2 = 30;
+					}
+					if (Main.tile.At(i, j).Wall == 17)
+					{
+						num2 = 135;
+					}
+					if (Main.tile.At(i, j).Wall == 18)
+					{
+						num2 = 138;
+					}
+					if (Main.tile.At(i, j).Wall == 19)
+					{
+						num2 = 140;
+					}
+					if (Main.tile.At(i, j).Wall == 20)
+					{
+						num2 = 330;
+					}
+					if (Main.tile.At(i, j).Wall == 21)
+					{
+						num2 = 392;
+					}
+					if (Main.tile.At(i, j).Wall == 22)
+					{
+						num2 = 417;
+					}
+					if (Main.tile.At(i, j).Wall == 23)
+					{
+						num2 = 418;
+					}
+					if (Main.tile.At(i, j).Wall == 24)
+					{
+						num2 = 419;
+					}
+					if (Main.tile.At(i, j).Wall == 25)
+					{
+						num2 = 420;
+					}
+					if (Main.tile.At(i, j).Wall == 26)
+					{
+						num2 = 421;
+					}
+					if (Main.tile.At(i, j).Wall == 29)
+					{
+						num2 = 587;
+					}
+					if (Main.tile.At(i, j).Wall == 30)
+					{
+						num2 = 592;
+					}
+					if (Main.tile.At(i, j).Wall == 31)
+					{
+						num2 = 595;
+					}
+					if (Main.tile.At(i, j).Wall == 27)
+					{
+						num2 = 479;
+					}
+					if (num2 > 0)
+					{
+						Item.NewItem(i * 16, j * 16, 16, 16, num2, 1, false, 0);
+					}
+					Main.tile.At(i, j).SetWall(0);
+					SquareWallFrame(TileRefs, i, j, true);
+				}
+			}
+		}
+
+		public static void KillTile(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool fail = false, bool effectOnly = false, bool noItem = false)
+		{
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
+			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
+			{
+				if (TileRefs(i, j).Active)
+				{
+					if (j >= 1 && TileRefs(i, j - 1).Active && ((TileRefs(i, j - 1).Type == 5 && TileRefs(i, j).Type != 5) || (TileRefs(i, j - 1).Type == 21 && TileRefs(i, j).Type != 21) || (TileRefs(i, j - 1).Type == 26 && TileRefs(i, j).Type != 26) || (TileRefs(i, j - 1).Type == 72 && TileRefs(i, j).Type != 72) || (TileRefs(i, j - 1).Type == 12 && TileRefs(i, j).Type != 12)) && (TileRefs(i, j - 1).Type != 5 || ((TileRefs(i, j - 1).FrameX != 66 || TileRefs(i, j - 1).FrameY < 0 || TileRefs(i, j - 1).FrameY > 44) && (TileRefs(i, j - 1).FrameX != 88 || TileRefs(i, j - 1).FrameY < 66 || TileRefs(i, j - 1).FrameY > 110) && TileRefs(i, j - 1).FrameY < 198)))
+					{
+						return;
+					}
+					if (!effectOnly && !stopDrops)
+					{
+						if (TileRefs(i, j).Type == 127)
+						{
+						}
+						else
+						{
+							if (TileRefs(i, j).Type == 3 || TileRefs(i, j).Type == 110)
+							{
+								if (TileRefs(i, j).FrameX == 144)
+								{
+									Item.NewItem(i * 16, j * 16, 16, 16, 5, 1, false, 0);
+								}
+							}
+							else
+							{
+								if (TileRefs(i, j).Type == 24)
+								{
+									if (TileRefs(i, j).FrameX == 144)
+									{
+										Item.NewItem(i * 16, j * 16, 16, 16, 60, 1, false, 0);
+									}
+								}
+							}
+						}
+						if (TileRefs(i, j).Type == 129 && !fail)
+						{
+
+						}
+					}
+					int num = 10;
+					if (TileRefs(i, j).Type == 128)
+					{
+						int num2 = i;
+						int k = (int)TileRefs(i, j).FrameX;
+						int l;
+						for (l = (int)TileRefs(i, j).FrameX; l >= 100; l -= 100)
+						{
+						}
+						while (l >= 36)
+						{
+							l -= 36;
+						}
+						if (l == 18)
+						{
+							k = (int)TileRefs(i - 1, j).FrameX;
+							num2--;
+						}
+						if (k >= 100)
+						{
+							int num3 = 0;
+							while (k >= 100)
+							{
+								k -= 100;
+								num3++;
+							}
+							int num4 = (int)(TileRefs(num2, j).FrameY / 18);
+							if (num4 == 0)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, Item.headType[num3], 1, false, 0);
+							}
+							if (num4 == 1)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, Item.bodyType[num3], 1, false, 0);
+							}
+							if (num4 == 2)
+							{
+								Item.NewItem(i * 16, j * 16, 16, 16, Item.legType[num3], 1, false, 0);
+							}
+							for (k = (int)TileRefs(num2, j).FrameX; k >= 100; k -= 100)
+							{
+							}
+							TileRefs(num2, j).SetFrameX((short)k);
+						}
+					}
+					if (fail)
+					{
+						num = 3;
+					}
+					if (TileRefs(i, j).Type == 138)
+					{
+						num = 0;
+					}
+					for (int m = 0; m < num; m++)
+					{
+						int num5 = 0;
+						if (TileRefs(i, j).Type == 0)
+						{
+							num5 = 0;
+						}
+						if (TileRefs(i, j).Type == 1 || TileRefs(i, j).Type == 16 || TileRefs(i, j).Type == 17 || TileRefs(i, j).Type == 38 || TileRefs(i, j).Type == 39 || TileRefs(i, j).Type == 41 || TileRefs(i, j).Type == 43 || TileRefs(i, j).Type == 44 || TileRefs(i, j).Type == 48 || Main.tileStone[(int)TileRefs(i, j).Type] || TileRefs(i, j).Type == 85 || TileRefs(i, j).Type == 90 || TileRefs(i, j).Type == 92 || TileRefs(i, j).Type == 96 || TileRefs(i, j).Type == 97 || TileRefs(i, j).Type == 99 || TileRefs(i, j).Type == 105 || TileRefs(i, j).Type == 117 || TileRefs(i, j).Type == 130 || TileRefs(i, j).Type == 131 || TileRefs(i, j).Type == 132 || TileRefs(i, j).Type == 135 || TileRefs(i, j).Type == 135 || TileRefs(i, j).Type == 137 || TileRefs(i, j).Type == 142 || TileRefs(i, j).Type == 143 || TileRefs(i, j).Type == 144)
+						{
+							num5 = 1;
+						}
+						if (TileRefs(i, j).Type == 33 || TileRefs(i, j).Type == 95 || TileRefs(i, j).Type == 98 || TileRefs(i, j).Type == 100)
+						{
+							num5 = 6;
+						}
+						if (TileRefs(i, j).Type == 5 || TileRefs(i, j).Type == 10 || TileRefs(i, j).Type == 11 || TileRefs(i, j).Type == 14 || TileRefs(i, j).Type == 15 || TileRefs(i, j).Type == 19 || TileRefs(i, j).Type == 30 || TileRefs(i, j).Type == 86 || TileRefs(i, j).Type == 87 || TileRefs(i, j).Type == 88 || TileRefs(i, j).Type == 89 || TileRefs(i, j).Type == 93 || TileRefs(i, j).Type == 94 || TileRefs(i, j).Type == 104 || TileRefs(i, j).Type == 106 || TileRefs(i, j).Type == 114 || TileRefs(i, j).Type == 124 || TileRefs(i, j).Type == 128 || TileRefs(i, j).Type == 139)
+						{
+							num5 = 7;
+						}
+						if (TileRefs(i, j).Type == 21)
+						{
+							if (TileRefs(i, j).FrameX >= 108)
+							{
+								num5 = 37;
+							}
+							else
+							{
+								if (TileRefs(i, j).FrameX >= 36)
+								{
+									num5 = 10;
+								}
+								else
+								{
+									num5 = 7;
+								}
+							}
+						}
+						if (TileRefs(i, j).Type == 2)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 0;
+							}
+							else
+							{
+								num5 = 2;
+							}
+						}
+						if (TileRefs(i, j).Type == 127)
+						{
+							num5 = 67;
+						}
+						if (TileRefs(i, j).Type == 91)
+						{
+							num5 = -1;
+						}
+						if (TileRefs(i, j).Type == 6 || TileRefs(i, j).Type == 26)
+						{
+							num5 = 8;
+						}
+						if (TileRefs(i, j).Type == 7 || TileRefs(i, j).Type == 34 || TileRefs(i, j).Type == 47)
+						{
+							num5 = 9;
+						}
+						if (TileRefs(i, j).Type == 8 || TileRefs(i, j).Type == 36 || TileRefs(i, j).Type == 45 || TileRefs(i, j).Type == 102)
+						{
+							num5 = 10;
+						}
+						if (TileRefs(i, j).Type == 9 || TileRefs(i, j).Type == 35 || TileRefs(i, j).Type == 42 || TileRefs(i, j).Type == 46 || TileRefs(i, j).Type == 126 || TileRefs(i, j).Type == 136)
+						{
+							num5 = 11;
+						}
+						if (TileRefs(i, j).Type == 12)
+						{
+							num5 = 12;
+						}
+						if (TileRefs(i, j).Type == 3 || TileRefs(i, j).Type == 73)
+						{
+							num5 = 3;
+						}
+						if (TileRefs(i, j).Type == 13 || TileRefs(i, j).Type == 54)
+						{
+							num5 = 13;
+						}
+						if (TileRefs(i, j).Type == 22 || TileRefs(i, j).Type == 140)
+						{
+							num5 = 14;
+						}
+						if (TileRefs(i, j).Type == 28 || TileRefs(i, j).Type == 78)
+						{
+							num5 = 22;
+						}
+						if (TileRefs(i, j).Type == 29)
+						{
+							num5 = 23;
+						}
+						if (TileRefs(i, j).Type == 40 || TileRefs(i, j).Type == 103)
+						{
+							num5 = 28;
+						}
+						if (TileRefs(i, j).Type == 49)
+						{
+							num5 = 29;
+						}
+						if (TileRefs(i, j).Type == 50)
+						{
+							num5 = 22;
+						}
+						if (TileRefs(i, j).Type == 51)
+						{
+							num5 = 30;
+						}
+						if (TileRefs(i, j).Type == 52)
+						{
+							num5 = 3;
+						}
+						if (TileRefs(i, j).Type == 53 || TileRefs(i, j).Type == 81)
+						{
+							num5 = 32;
+						}
+						if (TileRefs(i, j).Type == 56 || TileRefs(i, j).Type == 75)
+						{
+							num5 = 37;
+						}
+						if (TileRefs(i, j).Type == 57 || TileRefs(i, j).Type == 119 || TileRefs(i, j).Type == 141)
+						{
+							num5 = 36;
+						}
+						if (TileRefs(i, j).Type == 59 || TileRefs(i, j).Type == 120)
+						{
+							num5 = 38;
+						}
+						if (TileRefs(i, j).Type == 61 || TileRefs(i, j).Type == 62 || TileRefs(i, j).Type == 74 || TileRefs(i, j).Type == 80)
+						{
+							num5 = 40;
+						}
+						if (TileRefs(i, j).Type == 69)
+						{
+							num5 = 7;
+						}
+						if (TileRefs(i, j).Type == 71 || TileRefs(i, j).Type == 72)
+						{
+							num5 = 26;
+						}
+						if (TileRefs(i, j).Type == 70)
+						{
+							num5 = 17;
+						}
+						if (TileRefs(i, j).Type == 112)
+						{
+							num5 = 14;
+						}
+						if (TileRefs(i, j).Type == 123)
+						{
+							num5 = 53;
+						}
+						if (TileRefs(i, j).Type == 116 || TileRefs(i, j).Type == 118 || TileRefs(i, j).Type == 147 || TileRefs(i, j).Type == 148)
+						{
+							num5 = 51;
+						}
+						if (TileRefs(i, j).Type == 109)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 0;
+							}
+							else
+							{
+								num5 = 47;
+							}
+						}
+						if (TileRefs(i, j).Type == 110 || TileRefs(i, j).Type == 113 || TileRefs(i, j).Type == 115)
+						{
+							num5 = 47;
+						}
+						if (TileRefs(i, j).Type == 107 || TileRefs(i, j).Type == 121)
+						{
+							num5 = 48;
+						}
+						if (TileRefs(i, j).Type == 108 || TileRefs(i, j).Type == 122 || TileRefs(i, j).Type == 134 || TileRefs(i, j).Type == 146)
+						{
+							num5 = 49;
+						}
+						if (TileRefs(i, j).Type == 111 || TileRefs(i, j).Type == 133 || TileRefs(i, j).Type == 145)
+						{
+							num5 = 50;
+						}
+						if (TileRefs(i, j).Type == 149)
+						{
+							num5 = 49;
+						}
+						if (Main.tileAlch[(int)TileRefs(i, j).Type])
+						{
+							int num6 = (int)(TileRefs(i, j).FrameX / 18);
+							if (num6 == 0)
+							{
+								num5 = 3;
+							}
+							if (num6 == 1)
+							{
+								num5 = 3;
+							}
+							if (num6 == 2)
+							{
+								num5 = 7;
+							}
+							if (num6 == 3)
+							{
+								num5 = 17;
+							}
+							if (num6 == 4)
+							{
+								num5 = 3;
+							}
+							if (num6 == 5)
+							{
+								num5 = 6;
+							}
+						}
+						if (TileRefs(i, j).Type == 61)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 38;
+							}
+							else
+							{
+								num5 = 39;
+							}
+						}
+						if (TileRefs(i, j).Type == 58 || TileRefs(i, j).Type == 76 || TileRefs(i, j).Type == 77)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 6;
+							}
+							else
+							{
+								num5 = 25;
+							}
+						}
+						if (TileRefs(i, j).Type == 37)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 6;
+							}
+							else
+							{
+								num5 = 23;
+							}
+						}
+						if (TileRefs(i, j).Type == 32)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 14;
+							}
+							else
+							{
+								num5 = 24;
+							}
+						}
+						if (TileRefs(i, j).Type == 23 || TileRefs(i, j).Type == 24)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 14;
+							}
+							else
+							{
+								num5 = 17;
+							}
+						}
+						if (TileRefs(i, j).Type == 25 || TileRefs(i, j).Type == 31)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 14;
+							}
+							else
+							{
+								num5 = 1;
+							}
+						}
+						if (TileRefs(i, j).Type == 20)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 7;
+							}
+							else
+							{
+								num5 = 2;
+							}
+						}
+						if (TileRefs(i, j).Type == 27)
+						{
+							if (genRand.Next(2) == 0)
+							{
+								num5 = 3;
+							}
+							else
+							{
+								num5 = 19;
+							}
+						}
+						if (TileRefs(i, j).Type == 129)
+						{
+							if (TileRefs(i, j).FrameX == 0 || TileRefs(i, j).FrameX == 54 || TileRefs(i, j).FrameX == 108)
+							{
+								num5 = 68;
+							}
+							else
+							{
+								if (TileRefs(i, j).FrameX == 18 || TileRefs(i, j).FrameX == 72 || TileRefs(i, j).FrameX == 126)
+								{
+									num5 = 69;
+								}
+								else
+								{
+									num5 = 70;
+								}
+							}
+						}
+						if (TileRefs(i, j).Type == 4)
+						{
+							int num7 = (int)(TileRefs(i, j).FrameY / 22);
+							if (num7 == 0)
+							{
+								num5 = 6;
+							}
+							else
+							{
+								if (num7 == 8)
+								{
+									num5 = 75;
+								}
+								else
+								{
+									num5 = 58 + num7;
+								}
+							}
+						}
+						if ((TileRefs(i, j).Type == 34 || TileRefs(i, j).Type == 35 || TileRefs(i, j).Type == 36 || TileRefs(i, j).Type == 42) && Main.rand.Next(2) == 0)
+						{
+							num5 = 6;
+						}
+					}
+					if (effectOnly)
+					{
+						return;
+					}
+					if (fail)
+					{
+						if (TileRefs(i, j).Type == 2 || TileRefs(i, j).Type == 23 || TileRefs(i, j).Type == 109)
+						{
+							TileRefs(i, j).SetType(0);
+						}
+						if (TileRefs(i, j).Type == 60 || TileRefs(i, j).Type == 70)
+						{
+							TileRefs(i, j).SetType(59);
+						}
+						SquareTileFrame(TileRefs, i, j, true);
+						return;
+					}
+					if (TileRefs(i, j).Type == 21)
+					{
+						int n = (int)(TileRefs(i, j).FrameX / 18);
+						int y = j - (int)(TileRefs(i, j).FrameY / 18);
+						while (n > 1)
+						{
+							n -= 2;
+						}
+						n = i - n;
+						if (!Chest.DestroyChest(n, y))
+						{
+							return;
+						}
+					}
+					if (!noItem && !stopDrops)
+					{
+						int num8 = 0;
+						if (TileRefs(i, j).Type == 0 || TileRefs(i, j).Type == 2 || TileRefs(i, j).Type == 109)
+						{
+							num8 = 2;
+						}
+						else
+						{
+							if (TileRefs(i, j).Type == 1)
+							{
+								num8 = 3;
+							}
+							else
+							{
+								if (TileRefs(i, j).Type == 3 || TileRefs(i, j).Type == 73)
+								{
+									if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].HasItem(281))
+									{
+										num8 = 283;
+									}
+								}
+								else
+								{
+									if (TileRefs(i, j).Type == 4)
+									{
+										int num9 = (int)(TileRefs(i, j).FrameY / 22);
+										if (num9 == 0)
+										{
+											num8 = 8;
+										}
+										else
+										{
+											if (num9 == 8)
+											{
+												num8 = 523;
+											}
+											else
+											{
+												num8 = 426 + num9;
+											}
+										}
+									}
+									else
+									{
+										if (TileRefs(i, j).Type == 5)
+										{
+											if (TileRefs(i, j).FrameX >= 22 && TileRefs(i, j).FrameY >= 198)
+											{
+												//if (Main.netMode != 1)
+												{
+													if (genRand.Next(2) == 0)
+													{
+														int num10 = j;
+														while ((!TileRefs(i, num10).Active || !Main.tileSolid[(int)TileRefs(i, num10).Type] || Main.tileSolidTop[(int)TileRefs(i, num10).Type]))
+														{
+															num10++;
+														}
+														//if (TileRefs(i, num10] != null)
+														{
+															if (TileRefs(i, num10).Type == 2 || TileRefs(i, num10).Type == 109)
+															{
+																num8 = 27;
+															}
+															else
+															{
+																num8 = 9;
+															}
+														}
+													}
+													else
+													{
+														num8 = 9;
+													}
+												}
+											}
+											else
+											{
+												num8 = 9;
+											}
+										}
+										else
+										{
+											if (TileRefs(i, j).Type == 6)
+											{
+												num8 = 11;
+											}
+											else
+											{
+												if (TileRefs(i, j).Type == 7)
+												{
+													num8 = 12;
+												}
+												else
+												{
+													if (TileRefs(i, j).Type == 8)
+													{
+														num8 = 13;
+													}
+													else
+													{
+														if (TileRefs(i, j).Type == 9)
+														{
+															num8 = 14;
+														}
+														else
+														{
+															if (TileRefs(i, j).Type == 123)
+															{
+																num8 = 424;
+															}
+															else
+															{
+																if (TileRefs(i, j).Type == 124)
+																{
+																	num8 = 480;
+																}
+																else
+																{
+																	if (TileRefs(i, j).Type == 149)
+																	{
+																		if (TileRefs(i, j).FrameX == 0 || TileRefs(i, j).FrameX == 54)
+																		{
+																			num8 = 596;
+																		}
+																		else
+																		{
+																			if (TileRefs(i, j).FrameX == 18 || TileRefs(i, j).FrameX == 72)
+																			{
+																				num8 = 597;
+																			}
+																			else
+																			{
+																				if (TileRefs(i, j).FrameX == 36 || TileRefs(i, j).FrameX == 90)
+																				{
+																					num8 = 598;
+																				}
+																			}
+																		}
+																	}
+																	else
+																	{
+																		if (TileRefs(i, j).Type == 13)
+																		{
+																			if (TileRefs(i, j).FrameX == 18)
+																			{
+																				num8 = 28;
+																			}
+																			else
+																			{
+																				if (TileRefs(i, j).FrameX == 36)
+																				{
+																					num8 = 110;
+																				}
+																				else
+																				{
+																					if (TileRefs(i, j).FrameX == 54)
+																					{
+																						num8 = 350;
+																					}
+																					else
+																					{
+																						if (TileRefs(i, j).FrameX == 72)
+																						{
+																							num8 = 351;
+																						}
+																						else
+																						{
+																							num8 = 31;
+																						}
+																					}
+																				}
+																			}
+																		}
+																		else
+																		{
+																			if (TileRefs(i, j).Type == 19)
+																			{
+																				num8 = 94;
+																			}
+																			else
+																			{
+																				if (TileRefs(i, j).Type == 22)
+																				{
+																					num8 = 56;
+																				}
+																				else
+																				{
+																					if (TileRefs(i, j).Type == 140)
+																					{
+																						num8 = 577;
+																					}
+																					else
+																					{
+																						if (TileRefs(i, j).Type == 23)
+																						{
+																							num8 = 2;
+																						}
+																						else
+																						{
+																							if (TileRefs(i, j).Type == 25)
+																							{
+																								num8 = 61;
+																							}
+																							else
+																							{
+																								if (TileRefs(i, j).Type == 30)
+																								{
+																									num8 = 9;
+																								}
+																								else
+																								{
+																									if (TileRefs(i, j).Type == 33)
+																									{
+																										num8 = 105;
+																									}
+																									else
+																									{
+																										if (TileRefs(i, j).Type == 37)
+																										{
+																											num8 = 116;
+																										}
+																										else
+																										{
+																											if (TileRefs(i, j).Type == 38)
+																											{
+																												num8 = 129;
+																											}
+																											else
+																											{
+																												if (TileRefs(i, j).Type == 39)
+																												{
+																													num8 = 131;
+																												}
+																												else
+																												{
+																													if (TileRefs(i, j).Type == 40)
+																													{
+																														num8 = 133;
+																													}
+																													else
+																													{
+																														if (TileRefs(i, j).Type == 41)
+																														{
+																															num8 = 134;
+																														}
+																														else
+																														{
+																															if (TileRefs(i, j).Type == 43)
+																															{
+																																num8 = 137;
+																															}
+																															else
+																															{
+																																if (TileRefs(i, j).Type == 44)
+																																{
+																																	num8 = 139;
+																																}
+																																else
+																																{
+																																	if (TileRefs(i, j).Type == 45)
+																																	{
+																																		num8 = 141;
+																																	}
+																																	else
+																																	{
+																																		if (TileRefs(i, j).Type == 46)
+																																		{
+																																			num8 = 143;
+																																		}
+																																		else
+																																		{
+																																			if (TileRefs(i, j).Type == 47)
+																																			{
+																																				num8 = 145;
+																																			}
+																																			else
+																																			{
+																																				if (TileRefs(i, j).Type == 48)
+																																				{
+																																					num8 = 147;
+																																				}
+																																				else
+																																				{
+																																					if (TileRefs(i, j).Type == 49)
+																																					{
+																																						num8 = 148;
+																																					}
+																																					else
+																																					{
+																																						if (TileRefs(i, j).Type == 51)
+																																						{
+																																							num8 = 150;
+																																						}
+																																						else
+																																						{
+																																							if (TileRefs(i, j).Type == 53)
+																																							{
+																																								num8 = 169;
+																																							}
+																																							else
+																																							{
+																																								if (TileRefs(i, j).Type == 54)
+																																								{
+																																									num8 = 170;
+																																								}
+																																								else
+																																								{
+																																									if (TileRefs(i, j).Type == 56)
+																																									{
+																																										num8 = 173;
+																																									}
+																																									else
+																																									{
+																																										if (TileRefs(i, j).Type == 57)
+																																										{
+																																											num8 = 172;
+																																										}
+																																										else
+																																										{
+																																											if (TileRefs(i, j).Type == 58)
+																																											{
+																																												num8 = 174;
+																																											}
+																																											else
+																																											{
+																																												if (TileRefs(i, j).Type == 60)
+																																												{
+																																													num8 = 176;
+																																												}
+																																												else
+																																												{
+																																													if (TileRefs(i, j).Type == 70)
+																																													{
+																																														num8 = 176;
+																																													}
+																																													else
+																																													{
+																																														if (TileRefs(i, j).Type == 75)
+																																														{
+																																															num8 = 192;
+																																														}
+																																														else
+																																														{
+																																															if (TileRefs(i, j).Type == 76)
+																																															{
+																																																num8 = 214;
+																																															}
+																																															else
+																																															{
+																																																if (TileRefs(i, j).Type == 78)
+																																																{
+																																																	num8 = 222;
+																																																}
+																																																else
+																																																{
+																																																	if (TileRefs(i, j).Type == 81)
+																																																	{
+																																																		num8 = 275;
+																																																	}
+																																																	else
+																																																	{
+																																																		if (TileRefs(i, j).Type == 80)
+																																																		{
+																																																			num8 = 276;
+																																																		}
+																																																		else
+																																																		{
+																																																			if (TileRefs(i, j).Type == 107)
+																																																			{
+																																																				num8 = 364;
+																																																			}
+																																																			else
+																																																			{
+																																																				if (TileRefs(i, j).Type == 108)
+																																																				{
+																																																					num8 = 365;
+																																																				}
+																																																				else
+																																																				{
+																																																					if (TileRefs(i, j).Type == 111)
+																																																					{
+																																																						num8 = 366;
+																																																					}
+																																																					else
+																																																					{
+																																																						if (TileRefs(i, j).Type == 112)
+																																																						{
+																																																							num8 = 370;
+																																																						}
+																																																						else
+																																																						{
+																																																							if (TileRefs(i, j).Type == 116)
+																																																							{
+																																																								num8 = 408;
+																																																							}
+																																																							else
+																																																							{
+																																																								if (TileRefs(i, j).Type == 117)
+																																																								{
+																																																									num8 = 409;
+																																																								}
+																																																								else
+																																																								{
+																																																									if (TileRefs(i, j).Type == 129)
+																																																									{
+																																																										num8 = 502;
+																																																									}
+																																																									else
+																																																									{
+																																																										if (TileRefs(i, j).Type == 118)
+																																																										{
+																																																											num8 = 412;
+																																																										}
+																																																										else
+																																																										{
+																																																											if (TileRefs(i, j).Type == 119)
+																																																											{
+																																																												num8 = 413;
+																																																											}
+																																																											else
+																																																											{
+																																																												if (TileRefs(i, j).Type == 120)
+																																																												{
+																																																													num8 = 414;
+																																																												}
+																																																												else
+																																																												{
+																																																													if (TileRefs(i, j).Type == 121)
+																																																													{
+																																																														num8 = 415;
+																																																													}
+																																																													else
+																																																													{
+																																																														if (TileRefs(i, j).Type == 122)
+																																																														{
+																																																															num8 = 416;
+																																																														}
+																																																														else
+																																																														{
+																																																															if (TileRefs(i, j).Type == 136)
+																																																															{
+																																																																num8 = 538;
+																																																															}
+																																																															else
+																																																															{
+																																																																if (TileRefs(i, j).Type == 137)
+																																																																{
+																																																																	num8 = 539;
+																																																																}
+																																																																else
+																																																																{
+																																																																	if (TileRefs(i, j).Type == 141)
+																																																																	{
+																																																																		num8 = 580;
+																																																																	}
+																																																																	else
+																																																																	{
+																																																																		if (TileRefs(i, j).Type == 145)
+																																																																		{
+																																																																			num8 = 586;
+																																																																		}
+																																																																		else
+																																																																		{
+																																																																			if (TileRefs(i, j).Type == 146)
+																																																																			{
+																																																																				num8 = 591;
+																																																																			}
+																																																																			else
+																																																																			{
+																																																																				if (TileRefs(i, j).Type == 147)
+																																																																				{
+																																																																					num8 = 593;
+																																																																				}
+																																																																				else
+																																																																				{
+																																																																					if (TileRefs(i, j).Type == 148)
+																																																																					{
+																																																																						num8 = 594;
+																																																																					}
+																																																																					else
+																																																																					{
+																																																																						if (TileRefs(i, j).Type == 135)
+																																																																						{
+																																																																							if (TileRefs(i, j).FrameY == 0)
+																																																																							{
+																																																																								num8 = 529;
+																																																																							}
+																																																																							if (TileRefs(i, j).FrameY == 18)
+																																																																							{
+																																																																								num8 = 541;
+																																																																							}
+																																																																							if (TileRefs(i, j).FrameY == 36)
+																																																																							{
+																																																																								num8 = 542;
+																																																																							}
+																																																																							if (TileRefs(i, j).FrameY == 54)
+																																																																							{
+																																																																								num8 = 543;
+																																																																							}
+																																																																						}
+																																																																						else
+																																																																						{
+																																																																							if (TileRefs(i, j).Type == 144)
+																																																																							{
+																																																																								if (TileRefs(i, j).FrameX == 0)
+																																																																								{
+																																																																									num8 = 583;
+																																																																								}
+																																																																								if (TileRefs(i, j).FrameX == 18)
+																																																																								{
+																																																																									num8 = 584;
+																																																																								}
+																																																																								if (TileRefs(i, j).FrameX == 36)
+																																																																								{
+																																																																									num8 = 585;
+																																																																								}
+																																																																							}
+																																																																							else
+																																																																							{
+																																																																								if (TileRefs(i, j).Type == 130)
+																																																																								{
+																																																																									num8 = 511;
+																																																																								}
+																																																																								else
+																																																																								{
+																																																																									if (TileRefs(i, j).Type == 131)
+																																																																									{
+																																																																										num8 = 512;
+																																																																									}
+																																																																									else
+																																																																									{
+																																																																										if (TileRefs(i, j).Type == 61 || TileRefs(i, j).Type == 74)
+																																																																										{
+																																																																											if (TileRefs(i, j).FrameX == 144)
+																																																																											{
+																																																																												Item.NewItem(i * 16, j * 16, 16, 16, 331, genRand.Next(2, 4), false, 0);
+																																																																											}
+																																																																											else
+																																																																											{
+																																																																												if (TileRefs(i, j).FrameX == 162)
+																																																																												{
+																																																																													num8 = 223;
+																																																																												}
+																																																																												else
+																																																																												{
+																																																																													if (TileRefs(i, j).FrameX >= 108 && TileRefs(i, j).FrameX <= 126 && genRand.Next(100) == 0)
+																																																																													{
+																																																																														num8 = 208;
+																																																																													}
+																																																																													else
+																																																																													{
+																																																																														if (genRand.Next(100) == 0)
+																																																																														{
+																																																																															num8 = 195;
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																										else
+																																																																										{
+																																																																											if (TileRefs(i, j).Type == 59 || TileRefs(i, j).Type == 60)
+																																																																											{
+																																																																												num8 = 176;
+																																																																											}
+																																																																											else
+																																																																											{
+																																																																												if (TileRefs(i, j).Type == 71 || TileRefs(i, j).Type == 72)
+																																																																												{
+																																																																													if (genRand.Next(50) == 0)
+																																																																													{
+																																																																														num8 = 194;
+																																																																													}
+																																																																													else
+																																																																													{
+																																																																														if (genRand.Next(2) == 0)
+																																																																														{
+																																																																															num8 = 183;
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																												else
+																																																																												{
+																																																																													if (TileRefs(i, j).Type >= 63 && TileRefs(i, j).Type <= 68)
+																																																																													{
+																																																																														num8 = (int)(TileRefs(i, j).Type - 63 + 177);
+																																																																													}
+																																																																													else
+																																																																													{
+																																																																														if (TileRefs(i, j).Type == 50)
+																																																																														{
+																																																																															if (TileRefs(i, j).FrameX == 90)
+																																																																															{
+																																																																																num8 = 165;
+																																																																															}
+																																																																															else
+																																																																															{
+																																																																																num8 = 149;
+																																																																															}
+																																																																														}
+																																																																														else
+																																																																														{
+																																																																															if (Main.tileAlch[(int)TileRefs(i, j).Type] && TileRefs(i, j).Type > 82)
+																																																																															{
+																																																																																int num11 = (int)(TileRefs(i, j).FrameX / 18);
+																																																																																bool flag = false;
+																																																																																if (TileRefs(i, j).Type == 84)
+																																																																																{
+																																																																																	flag = true;
+																																																																																}
+																																																																																if (num11 == 0 && Main.dayTime)
+																																																																																{
+																																																																																	flag = true;
+																																																																																}
+																																																																																if (num11 == 1 && !Main.dayTime)
+																																																																																{
+																																																																																	flag = true;
+																																																																																}
+																																																																																if (num11 == 3 && Main.bloodMoon)
+																																																																																{
+																																																																																	flag = true;
+																																																																																}
+																																																																																num8 = 313 + num11;
+																																																																																if (flag)
+																																																																																{
+																																																																																	Item.NewItem(i * 16, j * 16, 16, 16, 307 + num11, genRand.Next(1, 4), false, 0);
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						if (num8 > 0)
+						{
+							Item.NewItem(i * 16, j * 16, 16, 16, num8, 1, false, -1);
+						}
+					}
+					TileRefs(i, j).SetActive(false);
+					TileRefs(i, j).SetFrameX(-1);
+					TileRefs(i, j).SetFrameY(-1);
+					TileRefs(i, j).SetFrameNumber(0);
+					if (TileRefs(i, j).Type == 58 && j > Main.maxTilesY - 200)
+					{
+						TileRefs(i, j).SetLava(true);
+						TileRefs(i, j).SetLiquid(128);
+					}
+					TileRefs(i, j).SetType(0);
 					SquareTileFrame(TileRefs, i, j, true);
 				}
 			}
@@ -8637,7 +9913,7 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 
-		public static void PlantCheck(Func<Int32, Int32, ITile> TileRefs, int i, int j)
+		/*public static void PlantCheck(Func<Int32, Int32, ITile> TileRefs, int i, int j)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -9205,7 +10481,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs(i, j).SetFrameX((byte)rectangle.X);
 				TileRefs(i, j).SetFrameY((byte)rectangle.Y);
 			}
-		}
+		}*/
 
 		public static void TileFrame(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool resetFrame = false, bool noBreak = false)
 		{
@@ -14150,6 +15426,596 @@ namespace Terraria_Server.WorldMod
 			{ }
 		}
 
+		public static void PlantCheck(Func<Int32, Int32, ITile> TileRefs, int i, int j)
+		{
+			int num = -1;
+			int num2 = (int)TileRefs(i, j).Type;
+
+			if (j + 1 >= Main.maxTilesY)
+			{
+				num = num2;
+			}
+
+			if (j + 1 < Main.maxTilesY && TileRefs(i, j + 1).Active)
+			{
+				num = (int)TileRefs(i, j + 1).Type;
+			}
+
+			if ((num2 == 3 && num != 2 && num != 78) || (num2 == 24 && num != 23) || (num2 == 61 && num != 60) || (num2 == 71 && num != 70) ||
+				(num2 == 73 && num != 2 && num != 78) || (num2 == 74 && num != 60) || (num2 == 110 && num != 109) || (num2 == 113 && num != 109))
+			{
+				if (num == 23)
+				{
+					num2 = 24;
+					if (TileRefs(i, j).FrameX >= 162)
+					{
+						TileRefs(i, j).SetFrameX(126);
+					}
+				}
+				else if (num == 2)
+				{
+					if (num2 == 113)
+					{
+						num2 = 73;
+					}
+					else
+					{
+						num2 = 3;
+					}
+				}
+				else if (num == 109)
+				{
+					if (num2 == 73)
+					{
+						num2 = 113;
+					}
+					else
+					{
+						num2 = 110;
+					}
+				}
+
+				if (num2 != (int)TileRefs(i, j).Type)
+				{
+					TileRefs(i, j).SetType((byte)num2);
+					return;
+				}
+				KillTile(TileRefs, i, j);
+			}
+		}
+
+		public static void WallFrame(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool resetFrame = false)
+		{
+			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY && TileRefs(i, j).Wall > 0)
+			{
+				int num = -1;
+				int num2 = -1;
+				int num3 = -1;
+				int num4 = -1;
+				int num5 = -1;
+				int num6 = -1;
+				int num7 = -1;
+				int num8 = -1;
+				int wall = (int)TileRefs(i, j).Wall;
+
+				if (wall == 0)
+				{
+					return;
+				}
+
+				Rectangle rectangle;
+				rectangle.X = -1;
+				rectangle.Y = -1;
+				if (i - 1 < 0)
+				{
+					num = wall;
+					num4 = wall;
+					num6 = wall;
+				}
+				if (i + 1 >= Main.maxTilesX)
+				{
+					num3 = wall;
+					num5 = wall;
+					num8 = wall;
+				}
+				if (j - 1 < 0)
+				{
+					num = wall;
+					num2 = wall;
+					num3 = wall;
+				}
+				if (j + 1 >= Main.maxTilesY)
+				{
+					num6 = wall;
+					num7 = wall;
+					num8 = wall;
+				}
+				if (i - 1 >= 0)
+				{
+					num4 = (int)TileRefs(i - 1, j).Wall;
+				}
+				if (i + 1 < Main.maxTilesX)
+				{
+					num5 = (int)TileRefs(i + 1, j).Wall;
+				}
+				if (j - 1 >= 0)
+				{
+					num2 = (int)TileRefs(i, j - 1).Wall;
+				}
+				if (j + 1 < Main.maxTilesY)
+				{
+					num7 = (int)TileRefs(i, j + 1).Wall;
+				}
+				if (i - 1 >= 0 && j - 1 >= 0)
+				{
+					num = (int)TileRefs(i - 1, j - 1).Wall;
+				}
+				if (i + 1 < Main.maxTilesX && j - 1 >= 0)
+				{
+					num3 = (int)TileRefs(i + 1, j - 1).Wall;
+				}
+				if (i - 1 >= 0 && j + 1 < Main.maxTilesY)
+				{
+					num6 = (int)TileRefs(i - 1, j + 1).Wall;
+				}
+				if (i + 1 < Main.maxTilesX && j + 1 < Main.maxTilesY)
+				{
+					num8 = (int)TileRefs(i + 1, j + 1).Wall;
+				}
+				if (wall == 2)
+				{
+					if (j == (int)Main.worldSurface)
+					{
+						num7 = wall;
+						num6 = wall;
+						num8 = wall;
+					}
+					else if (j >= (int)Main.worldSurface)
+					{
+						num7 = wall;
+						num6 = wall;
+						num8 = wall;
+						num2 = wall;
+						num = wall;
+						num3 = wall;
+						num4 = wall;
+						num5 = wall;
+					}
+				}
+				if (num7 > 0)
+				{
+					num7 = wall;
+				}
+				if (num6 > 0)
+				{
+					num6 = wall;
+				}
+				if (num8 > 0)
+				{
+					num8 = wall;
+				}
+				if (num2 > 0)
+				{
+					num2 = wall;
+				}
+				if (num > 0)
+				{
+					num = wall;
+				}
+				if (num3 > 0)
+				{
+					num3 = wall;
+				}
+				if (num4 > 0)
+				{
+					num4 = wall;
+				}
+				if (num5 > 0)
+				{
+					num5 = wall;
+				}
+				int num9 = 0;
+				if (resetFrame)
+				{
+					num9 = genRand.Next(0, 3);
+					//TileRefs(i, j).SetWallFrameNumber((byte)num9);
+				}
+				//else
+				//{
+				//    //num9 = (int)TileRefs(i, j).WallFrameNumber;
+				//}
+
+				if (rectangle.X < 0 || rectangle.Y < 0)
+				{
+					if (num2 == wall && num7 == wall && (num4 == wall & num5 == wall))
+					{
+						if (num != wall && num3 != wall)
+						{
+							if (num9 == 0)
+							{
+								rectangle.X = 108;
+								rectangle.Y = 18;
+							}
+							if (num9 == 1)
+							{
+								rectangle.X = 126;
+								rectangle.Y = 18;
+							}
+							if (num9 == 2)
+							{
+								rectangle.X = 144;
+								rectangle.Y = 18;
+							}
+						}
+						else if (num6 != wall && num8 != wall)
+						{
+							if (num9 == 0)
+							{
+								rectangle.X = 108;
+								rectangle.Y = 36;
+							}
+							if (num9 == 1)
+							{
+								rectangle.X = 126;
+								rectangle.Y = 36;
+							}
+							if (num9 == 2)
+							{
+								rectangle.X = 144;
+								rectangle.Y = 36;
+							}
+						}
+						else if (num != wall && num6 != wall)
+						{
+							if (num9 == 0)
+							{
+								rectangle.X = 180;
+								rectangle.Y = 0;
+							}
+							if (num9 == 1)
+							{
+								rectangle.X = 180;
+								rectangle.Y = 18;
+							}
+							if (num9 == 2)
+							{
+								rectangle.X = 180;
+								rectangle.Y = 36;
+							}
+						}
+						else if (num3 != wall && num8 != wall)
+						{
+							if (num9 == 0)
+							{
+								rectangle.X = 198;
+								rectangle.Y = 0;
+							}
+							if (num9 == 1)
+							{
+								rectangle.X = 198;
+								rectangle.Y = 18;
+							}
+							if (num9 == 2)
+							{
+								rectangle.X = 198;
+								rectangle.Y = 36;
+							}
+						}
+						else
+						{
+							if (num9 == 0)
+							{
+								rectangle.X = 18;
+								rectangle.Y = 18;
+							}
+							if (num9 == 1)
+							{
+								rectangle.X = 36;
+								rectangle.Y = 18;
+							}
+							if (num9 == 2)
+							{
+								rectangle.X = 54;
+								rectangle.Y = 18;
+							}
+						}
+					}
+					else if (num2 != wall && num7 == wall && (num4 == wall & num5 == wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 18;
+							rectangle.Y = 0;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 36;
+							rectangle.Y = 0;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 54;
+							rectangle.Y = 0;
+						}
+					}
+					else if (num2 == wall && num7 != wall && (num4 == wall & num5 == wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 18;
+							rectangle.Y = 36;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 36;
+							rectangle.Y = 36;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 54;
+							rectangle.Y = 36;
+						}
+					}
+					else if (num2 == wall && num7 == wall && (num4 != wall & num5 == wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 0;
+							rectangle.Y = 0;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 0;
+							rectangle.Y = 18;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 0;
+							rectangle.Y = 36;
+						}
+					}
+					else if (num2 == wall && num7 == wall && (num4 == wall & num5 != wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 72;
+							rectangle.Y = 0;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 72;
+							rectangle.Y = 18;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 72;
+							rectangle.Y = 36;
+						}
+					}
+					else if (num2 != wall && num7 == wall && (num4 != wall & num5 == wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 0;
+							rectangle.Y = 54;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 36;
+							rectangle.Y = 54;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 72;
+							rectangle.Y = 54;
+						}
+					}
+					else if (num2 != wall && num7 == wall && (num4 == wall & num5 != wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 18;
+							rectangle.Y = 54;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 54;
+							rectangle.Y = 54;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 90;
+							rectangle.Y = 54;
+						}
+					}
+					else if (num2 == wall && num7 != wall && (num4 != wall & num5 == wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 0;
+							rectangle.Y = 72;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 36;
+							rectangle.Y = 72;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 72;
+							rectangle.Y = 72;
+						}
+					}
+					else if (num2 == wall && num7 != wall && (num4 == wall & num5 != wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 18;
+							rectangle.Y = 72;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 54;
+							rectangle.Y = 72;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 90;
+							rectangle.Y = 72;
+						}
+					}
+					else if (num2 == wall && num7 == wall && (num4 != wall & num5 != wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 90;
+							rectangle.Y = 0;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 90;
+							rectangle.Y = 18;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 90;
+							rectangle.Y = 36;
+						}
+					}
+					else if (num2 != wall && num7 != wall && (num4 == wall & num5 == wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 108;
+							rectangle.Y = 72;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 126;
+							rectangle.Y = 72;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 144;
+							rectangle.Y = 72;
+						}
+					}
+					else if (num2 != wall && num7 == wall && (num4 != wall & num5 != wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 108;
+							rectangle.Y = 0;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 126;
+							rectangle.Y = 0;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 144;
+							rectangle.Y = 0;
+						}
+					}
+					else if (num2 == wall && num7 != wall && (num4 != wall & num5 != wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 108;
+							rectangle.Y = 54;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 126;
+							rectangle.Y = 54;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 144;
+							rectangle.Y = 54;
+						}
+					}
+					else if (num2 != wall && num7 != wall && (num4 != wall & num5 == wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 162;
+							rectangle.Y = 0;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 162;
+							rectangle.Y = 18;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 162;
+							rectangle.Y = 36;
+						}
+					}
+					else if (num2 != wall && num7 != wall && (num4 == wall & num5 != wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 216;
+							rectangle.Y = 0;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 216;
+							rectangle.Y = 18;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 216;
+							rectangle.Y = 36;
+						}
+					}
+					else if (num2 != wall && num7 != wall && (num4 != wall & num5 != wall))
+					{
+						if (num9 == 0)
+						{
+							rectangle.X = 162;
+							rectangle.Y = 54;
+						}
+						if (num9 == 1)
+						{
+							rectangle.X = 180;
+							rectangle.Y = 54;
+						}
+						if (num9 == 2)
+						{
+							rectangle.X = 198;
+							rectangle.Y = 54;
+						}
+					}
+				}
+
+				if (rectangle.X <= -1 || rectangle.Y <= -1)
+				{
+					if (num9 <= 0)
+					{
+						rectangle.X = 18;
+						rectangle.Y = 18;
+					}
+					if (num9 == 1)
+					{
+						rectangle.X = 36;
+						rectangle.Y = 18;
+					}
+					if (num9 >= 2)
+					{
+						rectangle.X = 54;
+						rectangle.Y = 18;
+					}
+				}
+
+				TileRefs(i, j).SetWallFrameX((byte)rectangle.X);
+				TileRefs(i, j).SetWallFrameY((byte)rectangle.Y);
+			}
+		}
+
 		public static void StartHardMode()
 		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback(smCallBack), 1);
@@ -14398,7 +16264,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			if (!Main.hardMode || noTileActions|| gen)
+			if (!Main.hardMode || noTileActions || gen)
 				return;
 
 			int num = altarCount % 3;
@@ -14541,6 +16407,150 @@ namespace Terraria_Server.WorldMod
 				{
 					value2.X = -1f;
 				}
+			}
+		}
+
+		public static int PlaceChest(Func<Int32, Int32, ITile> TileRefs, int x, int y, int type = 21, bool notNearOtherChests = false, int style = 0)
+		{
+			bool flag = true;
+			int num = -1;
+			for (int i = x; i < x + 2; i++)
+			{
+				for (int j = y - 1; j < y + 1; j++)
+				{
+					if (TileRefs(i, j).Active)
+					{
+						flag = false;
+					}
+					if (TileRefs(i, j).Lava)
+					{
+						flag = false;
+					}
+				}
+
+				if (!TileRefs(i, y + 1).Active || !Main.tileSolid[(int)TileRefs(i, y + 1).Type])
+				{
+					flag = false;
+				}
+			}
+			if (flag && notNearOtherChests)
+			{
+				for (int k = x - 25; k < x + 25; k++)
+				{
+					for (int l = y - 8; l < y + 8; l++)
+					{
+						try
+						{
+							if (TileRefs(k, l).Active && TileRefs(k, l).Type == 21)
+							{
+								flag = false;
+								return -1;
+							}
+						}
+						catch
+						{
+						}
+					}
+				}
+			}
+			if (flag)
+			{
+				num = Chest.CreateChest(x, y - 1);
+				if (num == -1)
+				{
+					flag = false;
+				}
+			}
+			if (flag)
+			{
+				TileRefs(x, y - 1).SetActive(true);
+				TileRefs(x, y - 1).SetFrameY(0);
+				TileRefs(x, y - 1).SetFrameX((short)(36 * style));
+				TileRefs(x, y - 1).SetType((byte)type);
+				TileRefs(x + 1, y - 1).SetActive(true);
+				TileRefs(x + 1, y - 1).SetFrameY(0);
+				TileRefs(x + 1, y - 1).SetFrameX((short)(18 + 36 * style));
+				TileRefs(x + 1, y - 1).SetType((byte)type);
+				TileRefs(x, y).SetActive(true);
+				TileRefs(x, y).SetFrameY(18);
+				TileRefs(x, y).SetFrameX((short)(36 * style));
+				TileRefs(x, y).SetType((byte)type);
+				TileRefs(x + 1, y).SetActive(true);
+				TileRefs(x + 1, y).SetFrameY(18);
+				TileRefs(x + 1, y).SetFrameX((short)(18 + 36 * style));
+				TileRefs(x + 1, y).SetType((byte)type);
+			}
+			return num;
+		}
+
+		public static void CheckChest(Func<Int32, Int32, ITile> TileRefs, int i, int j, int type)
+		{
+			if (destroyObject)
+				return;
+
+			bool flag = false;
+			int k = 0;
+			k += (int)(TileRefs(i, j).FrameX / 18);
+			int num = j + (int)(TileRefs(i, j).FrameY / 18 * -1);
+
+			while (k > 1)
+				k -= 2;
+
+			k *= -1;
+			k += i;
+			for (int l = k; l < k + 2; l++)
+			{
+				for (int m = num; m < num + 2; m++)
+				{
+					int n;
+					for (n = (int)(TileRefs(l, m).FrameX / 18); n > 1; n -= 2) { }
+
+					if (!TileRefs(l, m).Active || (int)TileRefs(l, m).Type != type || n != l - k || (int)TileRefs(l, m).FrameY != (m - num) * 18)
+					{
+						flag = true;
+					}
+				}
+
+				if (!TileRefs(l, num + 2).Active || !Main.tileSolid[(int)TileRefs(l, num + 2).Type])
+				{
+					flag = true;
+				}
+			}
+			if (flag)
+			{
+				int type2 = 48;
+				if (TileRefs(i, j).FrameX >= 216)
+				{
+					type2 = 348;
+				}
+				else if (TileRefs(i, j).FrameX >= 180)
+				{
+					type2 = 343;
+				}
+				else if (TileRefs(i, j).FrameX >= 108)
+				{
+					type2 = 328;
+				}
+				else if (TileRefs(i, j).FrameX >= 36)
+				{
+					type2 = 306;
+				}
+
+				destroyObject = true;
+				for (int num2 = k; num2 < k + 2; num2++)
+				{
+					for (int num3 = num; num3 < num + 3; num3++)
+					{
+						if ((int)TileRefs(num2, num3).Type == type && TileRefs(num2, num3).Active)
+						{
+							Chest.DestroyChest(num2, num3);
+							KillTile(TileRefs, num2, num3, false, false, false);
+						}
+					}
+				}
+
+				Item.NewItem(i * 16, j * 16, 32, 32, type2, 1, false, 0);
+				destroyObject = false;
 			}
 		}
 	}

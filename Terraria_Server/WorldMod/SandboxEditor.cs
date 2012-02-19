@@ -1,4 +1,4 @@
-#define USE_SANDBOX
+//#define USE_SANDBOX
 
 using System;
 using System.IO;
@@ -195,6 +195,15 @@ namespace Terraria_Server.WorldMod
 					return editor.sandbox.Exists(x, y);
 				}
 			}
+
+			//public byte WallFrameNumber { get { return 0; } }
+			//public void SetWallFrameNumber(byte val) { }
+
+			public byte WallFrameX { get { return 0; } }
+			public void SetWallFrameX(byte val) { }
+
+			public byte WallFrameY { get { return 0; } }
+			public void SetWallFrameY(byte val) { }
 		}
 
 		public ITile ITileAt(int x, int y)

@@ -39,7 +39,7 @@ namespace Terraria_Server.WorldMod
 			ThreadPool.QueueUserWorkItem(new WaitCallback(SaveWorldCallback), 1);
 		}
 
-		public static void clearWorld()
+		public static void ClearWorld()
 		{
 			Statics.WorldLoaded = false;
 
@@ -118,7 +118,7 @@ namespace Terraria_Server.WorldMod
 				}
 				prog.Value++;
 
-				for (int num4 = 0; num4 < 1000; num4++)
+				for (int num4 = 0; num4 < Main.MAX_CHESTS; num4++)
 				{
 					Main.projectile[num4] = null;
 					Main.chest[num4] = default(Chest);
@@ -487,7 +487,7 @@ namespace Terraria_Server.WorldMod
 							Main.maxTilesX = binaryReader.ReadInt32();
 							Main.maxSectionsX = Main.maxTilesX / 200;
 							Main.maxSectionsY = Main.maxTilesY / 150;
-							clearWorld();
+							ClearWorld();
 							Main.spawnTileX = binaryReader.ReadInt32();
 							Main.spawnTileY = binaryReader.ReadInt32();
 							Main.worldSurface = binaryReader.ReadDouble();
@@ -621,11 +621,10 @@ namespace Terraria_Server.WorldMod
 								{
 									var x = binaryReader.ReadInt32();
 									var y = binaryReader.ReadInt32();
-									Main.chest[l] = Chest.InitChest(x, y);
-
+									Main.chest[l] = Chest.InitializeChest(x, y);
 									for (int m = 0; m < Chest.MAX_ITEMS; m++)
 									{
-										Main.chest[l].contents[m] = new Item();
+										//Main.chest[l].contents[m] = new Item();
 										int stack = binaryReader.ReadByte();
 										if (stack > 0)
 										{

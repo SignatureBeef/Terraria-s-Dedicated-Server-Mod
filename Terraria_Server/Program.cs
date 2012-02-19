@@ -253,7 +253,7 @@ namespace Terraria_Server
 					Terraria_Server.Main.maxTilesX = worldX;
 					Terraria_Server.Main.maxTilesY = worldY;
 
-					WorldIO.clearWorld();
+					WorldIO.ClearWorld();
 					Terraria_Server.Main.Initialize();
 					if (properties.UseCustomGenOpts)
 					{
@@ -425,7 +425,6 @@ namespace Terraria_Server
 			CreateFile(Statics.DataPath + Path.DirectorySeparatorChar + "whitelist.txt");
 			CreateFile(Statics.DataPath + Path.DirectorySeparatorChar + "banlist.txt");
 			CreateFile(Statics.DataPath + Path.DirectorySeparatorChar + "oplist.txt");
-			CreateFile(Statics.DataPath + Path.DirectorySeparatorChar + "server.log");
 			return true;
 		}
 

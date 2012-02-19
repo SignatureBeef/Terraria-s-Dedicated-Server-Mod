@@ -1,9 +1,9 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Terraria_Server.Plugins;
 using Terraria_Server.Logging;
+
 namespace Terraria_Server.WorldMod
 {
 	public class PlayerSandbox : ISandbox

@@ -26,7 +26,7 @@ namespace Terraria_Server.Messages
 				int x = BitConverter.ToInt32 (readBuffer, num); num += 4;
 				int y = BitConverter.ToInt32 (readBuffer, num);
 				
-				Chest.Unlock (x, y);
+				Chest.Unlock (null, x, y);
 				
 				NetMessage.SendData (52, -1, whoAmI, "", playerId, action, x, y, 0);
 				NetMessage.SendTileSquare (-1, x, y, 2);

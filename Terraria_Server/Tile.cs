@@ -6,12 +6,6 @@ namespace Terraria_Server
 {
 	public interface ITile
 	{
-		//TileData Data { get; }
-
-		//void SetData(TileData value);
-
-		//bool Exists { get; }
-
 		bool Active { get; }
 
 		bool Exists { get; }
@@ -67,6 +61,18 @@ namespace Terraria_Server
 		bool Wire { get; }
 
 		void SetWire(bool value);
+
+		byte WallFrameX { get; }
+
+		void SetWallFrameX(byte value);
+
+		byte WallFrameY { get; }
+
+		void SetWallFrameY(byte value);
+
+		//byte WallFrameNumber { get; }
+
+		//void SetWallFrameNumber(byte value);
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -198,7 +204,13 @@ namespace Terraria_Server
 
 		public short FrameX
 		{
-			get { return Main.tile.data[x, y].FrameX; }
+			get {
+				if (x == 2125 || y == 201)
+				{
+					var c1 = Main.tile.data[x, y];
+				}
+				
+				return Main.tile.data[x, y].FrameX; }
 		}
 
 		public void SetFrameX(short value)
@@ -235,6 +247,26 @@ namespace Terraria_Server
 		{
 			Main.tile.data[x, y].Wire = value;
 		}
+
+		public byte WallFrameX
+		{
+			get { return Main.tile.data[x, y].WallFrameX; }
+		}
+
+		public void SetWallFrameX(byte value)
+		{
+			Main.tile.data[x, y].WallFrameX = value;
+		}
+
+		public byte WallFrameY
+		{
+			get { return Main.tile.data[x, y].WallFrameY; }
+		}
+
+		public void SetWallFrameY(byte value)
+		{
+			Main.tile.data[x, y].WallFrameY = value;
+		}
 	}
 
 	[Flags]
@@ -263,6 +295,10 @@ namespace Terraria_Server
 		byte frameX;
 		byte frameY;
 		internal byte liquid;
+
+		//internal byte wallFrameNumber;
+		internal byte wallFrameX;
+		internal byte wallFrameY;
 
 		internal void SetFlag(TileFlags f, bool value)
 		{
@@ -387,7 +423,7 @@ namespace Terraria_Server
 		{
 			get
 			{
-				return this.liquid;
+				return liquid;
 			}
 			set
 			{
@@ -411,7 +447,7 @@ namespace Terraria_Server
 		{
 			get
 			{
-				return this.type;
+				return type;
 			}
 			set
 			{
@@ -441,6 +477,18 @@ namespace Terraria_Server
 			{
 				SetFlag(TileFlags.Wire, value);
 			}
+		}
+
+		public byte WallFrameX
+		{
+			get { return wallFrameX; }
+			set { wallFrameX = value; }
+		}
+
+		public byte WallFrameY
+		{
+			get { return wallFrameY; }
+			set { wallFrameY = value; }
 		}
 	}
 }
