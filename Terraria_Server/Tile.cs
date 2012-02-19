@@ -204,13 +204,7 @@ namespace Terraria_Server
 
 		public short FrameX
 		{
-			get {
-				if (x == 2125 || y == 201)
-				{
-					var c1 = Main.tile.data[x, y];
-				}
-				
-				return Main.tile.data[x, y].FrameX; }
+			get { return Main.tile.data[x, y].FrameX; }
 		}
 
 		public void SetFrameX(short value)
