@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Terraria_Server")]
 [assembly: AssemblyDescription("Terraria Server Mod")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TServer")]
-[assembly: AssemblyProduct("Terraria_Server")]
+[assembly: AssemblyCompany("TDSM")]
+[assembly: AssemblyProduct("Terraria's Dedicated Server Mod")]
 [assembly: AssemblyCopyright("Copyright © DeathCradle 2011")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("TDSM")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

@@ -21,10 +21,7 @@ using Terraria_Server.Networking;
 namespace Terraria_Server
 {
 	public class Program
-    {
-
-#pragma warning disable 618
-		
+    {		
 		public static ProgramThread updateThread = null;
 		public static ServerProperties properties = null;
 		public static CommandParser commandParser = null;
@@ -412,8 +409,10 @@ namespace Terraria_Server
                 CreateDirectory(Statics.DataPath);
                 CreateDirectory(Statics.LibrariesPath);
 
-                AppDomain.CurrentDomain.AppendPrivatePath(Statics.LibrariesPath); //For Mono, The config setting doesn't fucking work.
-            }
+#pragma warning disable 618
+				AppDomain.CurrentDomain.AppendPrivatePath(Statics.LibrariesPath); //For Mono, The config setting doesn't fucking work.
+#pragma warning restore 618
+			}
             catch (Exception exception)
             {
                 ProgramLog.Log(exception);
