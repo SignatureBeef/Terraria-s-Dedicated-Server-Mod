@@ -1530,6 +1530,9 @@ namespace Terraria_Server
 
 		public static void SpawnOnPlayer(int playerIndex, int Type)
 		{
+			if (Main.stopSpawns)
+				return;
+
 			bool flag = false;
 			int x = 0;
 			int y = 0;
@@ -1541,7 +1544,7 @@ namespace Terraria_Server
 			int num8 = (int)(Main.players[playerIndex].Position.X / 16f) + NPC.safeRangeX;
 			int num9 = (int)(Main.players[playerIndex].Position.Y / 16f) - NPC.safeRangeY;
 			int num10 = (int)(Main.players[playerIndex].Position.Y / 16f) + NPC.safeRangeY;
-			
+
 			if (num3 < 0)
 				num3 = 0;
 			if (num4 > Main.maxTilesX)
@@ -1641,15 +1644,15 @@ namespace Terraria_Server
 					{
 						if (Main.players[n].Active)
 						{
-							Rectangle rectangle2 = new Rectangle((int)(Main.players[n].Position.X + (float)(Main.players[n].Width / 2) - (float)(NPC.sWidth / 2) - 
-								(float)NPC.safeRangeX), (int)(Main.players[n].Position.Y + (float)(Main.players[n].Height / 2) - (float)(NPC.sHeight / 2) - 
+							Rectangle rectangle2 = new Rectangle((int)(Main.players[n].Position.X + (float)(Main.players[n].Width / 2) - (float)(NPC.sWidth / 2) -
+								(float)NPC.safeRangeX), (int)(Main.players[n].Position.Y + (float)(Main.players[n].Height / 2) - (float)(NPC.sHeight / 2) -
 								(float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
 							if (rectangle.Intersects(rectangle2))
 								flag = true;
 						}
 					}
 				}
-				if(flag)
+				if (flag)
 					break;
 			}
 			if (flag)
@@ -1671,10 +1674,10 @@ namespace Terraria_Server
 				if (Type == (int)NPCType.N125_RETINAZER)
 				{
 					NetMessage.SendData(25, -1, -1, "The Twins has awoken!", 255, 175f, 75f, 255f);
-						return;
+					return;
 				}
 				else if (Type != (int)NPCType.N82_WRAITH && Type != (int)NPCType.N126_SPAZMATISM && Type != (int)NPCType.N50_KING_SLIME)
-					NetMessage.SendData(25, -1, -1, npcName + " has awoken!", 255, 175f, 75f, 255f);				
+					NetMessage.SendData(25, -1, -1, npcName + " has awoken!", 255, 175f, 75f, 255f);
 			}
 		}
 
@@ -2356,14 +2359,17 @@ namespace Terraria_Server
 					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false, 0);
 
 				if (this.type == NPCType.N125_RETINAZER || this.type == NPCType.N126_SPAZMATISM)
-					NetMessage.SendData(25, -1, -1, "The Twins has been defeated!", 255, 175f, 75f, 255f, 0);
+				{
+					if (!IsNPCSummoned(NPCType.N125_RETINAZER) || !IsNPCSummoned(NPCType.N126_SPAZMATISM))
+						NetMessage.SendData(25, -1, -1, "The Twins has been defeated!", 255, 175f, 75f, 255f, 0);
+				}
 				else
 					NetMessage.SendData(25, -1, -1, str + " has been defeated!", 255, 175f, 75f, 255f, 0);
 
 				if (this.type == NPCType.N113_WALL_OF_FLESH || this.type == NPCType.N114_WALL_OF_FLESH_EYE)
 					WorldModify.StartHardMode();
 
-				NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+				NetMessage.SendData(7);
 			}
 
 			if (Main.rand.Next(6) == 0 && this.lifeMax > 1 && this.damage > 0)
@@ -11967,6 +11973,16 @@ namespace Terraria_Server
 			{
 				npc.Velocity.X = -4f;
 			}
+		}
+
+		/// <summary>
+		/// Checks if there are any active NPCs of specified type
+		/// </summary>
+		/// <param name="type">NPCType of the NPC to check for</param>
+		/// <returns>True if active, false if not</returns>
+		public static bool IsNPCSummoned(NPCType type)
+		{
+			return IsNPCSummoned((int)type);
 		}
 
 		/// <summary>

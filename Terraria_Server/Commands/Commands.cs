@@ -1191,59 +1191,43 @@ namespace Terraria_Server.Commands
 			bool EyeOC = args.TryPop("eye");
 			bool Skeletron = args.TryPop("skeletron");
 			bool KingSlime = args.TryPop("kingslime");
+			bool Twins = args.TryPop("-twins");
+			bool All = args.TryPop("-all");
 			bool NightOverride = args.TryPop("-night");
 
 			Player player = null;
-			if (sender is Player)
+			if (sender is Player)player = sender as Player;
+			else if (NetPlay.anyClients)
 			{
-				player = sender as Player;
-			}
-			else
-			{
-				if (NetPlay.anyClients)
-				{
-					string PlayerName;
-					if (args.TryParseOne<String>("-player", out PlayerName))
-					{
-						player = Server.GetPlayerByName(PlayerName);
-					}
-					else
-					{
-						//Find Random
-						int plr = Main.rand.Next(0, Networking.ClientConnection.All.Count - 1); //Get Random PLayer
-						player = Main.players[plr];
-					}
-					if (player == null)
-					{
-						throw new CommandError(Languages.IssueFindingPlayer);
-					}
-				}
+				string PlayerName;
+				if (args.TryParseOne<String>("-player", out PlayerName))
+					player = Server.GetPlayerByName(PlayerName);
 				else
 				{
-					throw new CommandError(Languages.NoOnlinePlayersToSpawnNear);
+					//Find Random
+					int plr = Main.rand.Next(0, Networking.ClientConnection.All.Count - 1); //Get Random PLayer
+					player = Main.players[plr];
 				}
+
+				if (player == null)
+					throw new CommandError(Languages.IssueFindingPlayer);
 			}
+			else
+				throw new CommandError(Languages.NoOnlinePlayersToSpawnNear);
 
 			List<Int32> Bosses = new List<Int32>();
-			if (EoW)
-			{
-				Bosses.Add((int)NPCType.N13_EATER_OF_WORLDS_HEAD);
-			}
-			if (EyeOC)
+
+			if (EyeOC || All)
 			{
 				if (Main.dayTime && !NightOverride)
 					throw new CommandError(Languages.NeedsToBeNightTime);
 
 				Bosses.Add((int)NPCType.N04_EYE_OF_CTHULHU);
 			}
-			if (Skeletron)
-			{
-				Bosses.Add((int)NPCType.N35_SKELETRON_HEAD);
-			}
-			if (KingSlime)
-			{
-				Bosses.Add((int)NPCType.N50_KING_SLIME);
-			}
+			if (Skeletron || All) Bosses.Add((int)NPCType.N35_SKELETRON_HEAD);
+			if (KingSlime || All) Bosses.Add((int)NPCType.N50_KING_SLIME);
+			if (EoW || All) Bosses.Add((int)NPCType.N13_EATER_OF_WORLDS_HEAD);
+			if (Twins || All) Bosses.Add((int)NPCType.N125_RETINAZER); Bosses.Add((int)NPCType.N126_SPAZMATISM);
 
 			if (Bosses.Count > 0)
 			{
@@ -1255,21 +1239,23 @@ namespace Terraria_Server.Commands
 
 				foreach (int BossId in Bosses)
 				{
-					Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
-					int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
+					//Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
+					//int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
 
-					var npc = Main.npcs[BossSlot];
-					var name = npc.Name;
+					//var npc = Main.npcs[BossSlot];
+					//var name = npc.Name;
 
-					if (!String.IsNullOrEmpty(npc.DisplayName))
-						name = npc.DisplayName;
+					//if (!String.IsNullOrEmpty(npc.DisplayName))
+					//    name = npc.DisplayName;
 
-					npc.TargetClosest(true);
+					//npc.TargetClosest(true);
 
-					Server.notifyAll(name + Languages.BossSummonedBy + sender.Name, ChatColor.Purple, true);
+					//Server.notifyAll(name + Languages.BossSummonedBy + sender.Name, ChatColor.Purple, true);
 
 					//if (!(sender is ConsoleSender))
 					//    ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, name, BossSlot);
+
+					NPC.SpawnOnPlayer(player.whoAmi, BossId);
 				}
 			}
 			else
