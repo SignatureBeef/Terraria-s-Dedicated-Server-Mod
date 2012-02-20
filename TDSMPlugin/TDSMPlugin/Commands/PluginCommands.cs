@@ -22,21 +22,21 @@ namespace TDSMPlugin.Commands
             else
             {
                 //For new people to .NET, I would not really expect you to understand everything just yet.
-                string Platform = Terraria_Server.Definitions.Platform.Type.ToString();
-                switch (Terraria_Server.Definitions.Platform.Type)
+                string platform = Platform.Type.ToString();
+                switch (Platform.Type)
                 {
-                    case Terraria_Server.Definitions.Platform.PlatformType.LINUX:
-                        Platform = "Linux";
+                    case Platform.PlatformType.LINUX:
+						platform = "Linux";
                         break;
-                    case Terraria_Server.Definitions.Platform.PlatformType.MAC:
-                        Platform = "Mac";
+                    case Platform.PlatformType.MAC:
+						platform = "Mac";
                         break;
-                    case Terraria_Server.Definitions.Platform.PlatformType.WINDOWS:
-                        Platform = "Windows";
+                    case Platform.PlatformType.WINDOWS:
+						platform = "Windows";
                         break;
                 }
 
-                (sender as Player).sendMessage("TDSM Plugin Example, Running OS: " + Platform, ChatColor.DarkGreen);
+				(sender as Player).sendMessage("TDSM Plugin Example, Running OS: " + platform, ChatColor.DarkGreen);
             }                
         }
     }

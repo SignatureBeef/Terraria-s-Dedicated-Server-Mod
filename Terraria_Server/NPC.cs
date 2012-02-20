@@ -984,7 +984,7 @@ namespace Terraria_Server
 						}
 						else if (flag4)
 						{
-							if (Main.invasionType == 1)
+							if (Main.invasionType == InvasionType.GOBLIN_ARMY)
 							{
 								if (Main.rand.Next(9) == 0)
 								{
@@ -1007,7 +1007,7 @@ namespace Terraria_Server
 									NPC.NewNPC(num * 16 + 8, num2 * 16, (int)NPCType.N28_GOBLIN_WARRIOR, 0);
 								}
 							}
-							else if (Main.invasionType == 2)
+							else if (Main.invasionType == InvasionType.FROST_LEGION)
 							{
 								if (Main.rand.Next(7) == 0)
 								{
@@ -1523,11 +1523,10 @@ namespace Terraria_Server
 		}
 
 		/// <summary>
-		/// Spawns specified NPC type on specified player
+		/// Spawns specified NPC type on specified player. (Generally a BOSS)
 		/// </summary>
 		/// <param name="playerIndex">Index of player to spawn on</param>
 		/// <param name="Type">Type of NPC to spawn</param>
-
 		public static void SpawnOnPlayer(int playerIndex, int Type)
 		{
 			if (Main.stopSpawns)
@@ -2004,7 +2003,6 @@ namespace Terraria_Server
 
 				if (Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].zoneHoly)
 					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 520, 1, false, 0);
-
 			}
 
 			if (Main.Xmas && this.lifeMax > 1 && this.damage > 0 && !this.friendly && this.type != NPCType.N121_SLIMER && this.value > 0f && Main.rand.Next(13) == 0)

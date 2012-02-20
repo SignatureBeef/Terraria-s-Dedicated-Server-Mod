@@ -132,7 +132,8 @@
     <Compile Include="Collections\IRegisterableEntity.cs" />
     <Compile Include="Collections\ItemRegistry.cs" />
     <Compile Include="Collections\Registries.cs" />
-    <Compile Include="Definitions\Time.cs" />
+    <Compile Include="Misc\InvasionType.cs" />
+    <Compile Include="Misc\Time.cs" />
     <Compile Include="Language\Languages.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
@@ -180,9 +181,9 @@
     <Compile Include="Messages\UpdatePlayersMessage.cs" />
     <Compile Include="Messages\WorldRequestMessage.cs" />
     <Compile Include="Messages\WriteSignMessage.cs" />
-    <Compile Include="Definitions\Key.cs" />
-    <Compile Include="Definitions\Tile\TileAction.cs" />
-    <Compile Include="Definitions\Tile\TileType.cs" />
+    <Compile Include="Misc\Key.cs" />
+    <Compile Include="Misc\Tile\TileAction.cs" />
+    <Compile Include="Misc\Tile\TileType.cs" />
     <Compile Include="Collections\Registry.cs" />
     <Compile Include="Misc\BackupManager.cs" />
     <Compile Include="Misc\ChatColor.cs" />
@@ -205,7 +206,7 @@
     <Compile Include="Definitions\DoorOpener.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projectile.cs" />
-    <Compile Include="Definitions\Platform.cs" />
+    <Compile Include="Misc\Platform.cs" />
     <Compile Include="Server\ServerProperties.cs" />
     <Compile Include="Misc\PropertiesFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

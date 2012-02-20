@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Terraria_Server.Definitions
+namespace Terraria_Server.Misc
 {
-    public class Platform
+    public static class Platform
     {
         public static PlatformType Type { get; set; }
 
-        public enum PlatformType
+        public enum PlatformType : int
         {
             UNKNOWN = 0,
             LINUX = 1,
@@ -44,11 +44,8 @@ namespace Terraria_Server.Definitions
             {
                 int platformCode = (int)Environment.OSVersion.Platform;
                 if (platformCode == 4 || platformCode == 6 || platformCode == 128)
-                {
-                    Type = PlatformType.LINUX;
-                }
+					Type = PlatformType.LINUX;
             }
         }
-
     }
 }

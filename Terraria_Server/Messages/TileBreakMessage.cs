@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugins;
-using Terraria_Server.Definitions.Tile;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
 

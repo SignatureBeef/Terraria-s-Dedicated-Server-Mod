@@ -2505,16 +2505,13 @@ namespace Terraria_Server
 					this.onFire = false;
 					this.blind = false;
 					this.gravDir = 1f;
+
 					for (int num92 = 0; num92 < 10; num92++)
 					{
 						this.buffTime[num92] = 0;
 						this.buffType[num92] = 0;
 					}
-					if (i == Main.myPlayer)
-					{
-						Main.npcChatText = "";
-						Main.editSign = false;
-					}
+
 					this.grappling[0] = -1;
 					this.grappling[1] = -1;
 					this.grappling[2] = -1;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Terraria_Server.Definitions
+namespace Terraria_Server.Misc
 {
     public enum Time
     {

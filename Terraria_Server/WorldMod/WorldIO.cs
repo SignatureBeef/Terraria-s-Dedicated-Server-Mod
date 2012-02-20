@@ -249,7 +249,7 @@ namespace Terraria_Server.WorldMod
 							binaryWriter.Write(Main.hardMode);
 							binaryWriter.Write(Main.invasionDelay);
 							binaryWriter.Write(Main.invasionSize);
-							binaryWriter.Write(Main.invasionType);
+							binaryWriter.Write((int)Main.invasionType);
 							binaryWriter.Write(Main.invasionX);
 
 							using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Saving world data"))
@@ -529,7 +529,7 @@ namespace Terraria_Server.WorldMod
 							}
 							Main.invasionDelay = binaryReader.ReadInt32();
 							Main.invasionSize = binaryReader.ReadInt32();
-							Main.invasionType = binaryReader.ReadInt32();
+							Main.invasionType = (InvasionType)binaryReader.ReadInt32();
 							Main.invasionX = binaryReader.ReadDouble();
 
 							using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Loading world tiles"))

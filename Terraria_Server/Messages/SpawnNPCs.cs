@@ -64,7 +64,7 @@ namespace Terraria_Server.Messages
 					if (invasionType > 0)
 					{
 						Main.invasionDelay = 0;
-						Main.StartInvasion(invasionType);
+						Main.StartInvasion((InvasionType)invasionType);
 					}
 				}
 				else

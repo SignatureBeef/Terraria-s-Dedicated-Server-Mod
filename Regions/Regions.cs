@@ -10,7 +10,6 @@ using Terraria_Server.Logging;
 using Terraria_Server.Commands;
 using Terraria_Server.Definitions;
 using Terraria_Server.Permissions;
-using Terraria_Server.Definitions.Tile;
 
 using Regions.RegionWork;
 using Terraria_Server.Plugins;

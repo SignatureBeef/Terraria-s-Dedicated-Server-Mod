@@ -120,10 +120,7 @@ namespace Terraria_Server
 		public static Player[] players = new Player[MAX_PLAYERS + 1];
 		public static int spawnTileX;
 		public static int spawnTileY;
-		public static bool editSign = false;
-		public static string signText = "";
-		public static string npcChatText = "";
-		public static int invasionType = 0;
+		public static InvasionType invasionType = 0;
 		public static double invasionX = 0.0;
 		public static int invasionSize = 0;
 		public static int invasionDelay = 0;
@@ -304,12 +301,12 @@ namespace Terraria_Server
 			{
 				if (invasionSize <= 0)
 				{
-					if (invasionType == 1)
+					if (invasionType == InvasionType.GOBLIN_ARMY)
 					{
 						NPC.downedGoblins = true;
 						NetMessage.SendData(7);
 					}
-					else if (invasionType == 2)
+					else if (invasionType == InvasionType.FROST_LEGION)
 						NPC.downedFrost = true;
 
 					InvasionWarning();
@@ -352,7 +349,7 @@ namespace Terraria_Server
 		private static void InvasionWarning()
 		{
 			var info = String.Empty;
-			var type = (invasionType == 2) ? "The Frost Legion" : "A goblin army";
+			var type = (invasionType == InvasionType.FROST_LEGION) ? "The Frost Legion" : "A goblin army";
 
 			if (Main.invasionSize <= 0)
 				info = type + " has been defeated!";
@@ -360,14 +357,18 @@ namespace Terraria_Server
 				info = type + " is approaching from the west!";
 			else if (Main.invasionX > (double)Main.spawnTileX)
 				info = type + " is approaching from the east!";
-			else if (Main.invasionType == 2)
+			else if (Main.invasionType == InvasionType.FROST_LEGION)
 				info = type + " has arrived!";
 
 			if(info != String.Empty)
 				NetMessage.SendData(25, -1, -1, info, 255, 175f, 75f, 255f);
 		}
 
-		public static void StartInvasion(int type = 1)
+		/// <summary>
+		/// Invokes a new invasion based on the type.
+		/// </summary>
+		/// <param name="type"></param>
+		public static void StartInvasion(InvasionType type = InvasionType.GOBLIN_ARMY)
 		{
 			if (Main.invasionType == 0 && Main.invasionDelay == 0)
 			{
