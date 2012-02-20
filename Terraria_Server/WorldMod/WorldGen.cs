@@ -8566,8 +8566,7 @@ namespace Terraria_Server.WorldMod
 					x++;
 			}
 		}
-
-
+		
 		public static void MineHouse(Func<Int32, Int32, ITile> TileRefs, int x, int y)
 		{
 			if (x < 50 || x > Main.maxTilesX - 50 || y < 50 || y > Main.maxTilesY - 50 || WorldModify.SolidTile(TileRefs, x, y) || TileRefs(x, y).Wall > 0)

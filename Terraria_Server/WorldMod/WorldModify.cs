@@ -2286,6 +2286,9 @@ namespace Terraria_Server.WorldMod
 
 		public static void SpawnNPC(Func<Int32, Int32, ITile> TileRefs, int x, int y)
 		{
+			if (Main.stopSpawns)
+				return;
+
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
