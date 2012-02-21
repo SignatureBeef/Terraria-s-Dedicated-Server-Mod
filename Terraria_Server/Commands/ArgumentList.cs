@@ -537,6 +537,29 @@ namespace Terraria_Server.Commands
 			
 			return false;
 		}
+
+		/// <summary>
+		/// Searched through the arguments for a match, then removes both the literal and the value.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="literal"></param>
+		/// <param name="t"></param>
+		/// <returns></returns>
+		public bool TryPopAny<T>(string literal, out T t)
+		{
+			t = default(T);
+
+			for (var i = 0; i < Count; i++)
+			{
+				if(this[i] == literal && TryParseAt(i + 1, out t))
+				{
+					RemoveRange(i, 2);
+					return true;
+				}
+			}
+
+			return false;
+		}
 	}
 }
 

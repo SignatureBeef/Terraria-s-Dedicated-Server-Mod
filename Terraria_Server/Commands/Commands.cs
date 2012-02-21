@@ -581,25 +581,25 @@ namespace Terraria_Server.Commands
 		/// </summary>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
+		/// <remarks>This function also allows NPC custom health.</remarks>
 		public static void SpawnNPC(ISender sender, ArgumentList args)
 		{
+			var health = -1;
+			var customHealth = args.TryPopAny<Int32>("-health", out health);
+
 			Player player = sender as Player;
 			int NPCAmount;
 			if (args.Count > 3)
-			{
 				throw new CommandError(Languages.TooManyArguments);
-			}
 			else if (sender is ConsoleSender && args.Count <= 2)
 			{
 				if(!NetPlay.anyClients || !Server.TryGetFirstOnlinePlayer(out player))
 					throw new CommandError(Languages.NobodyOnline);
 			}
 			else if (args.Count == 3)
-			{
 				player = args.GetOnlinePlayer(2);
-			}
 
-			string npcName = args.GetString(1).ToLower().Trim();
+			var npcName = args.GetString(1).ToLower().Trim();
 
 			// Get the class id of the npc
 			int realNPCId = 0;
@@ -628,6 +628,12 @@ namespace Terraria_Server.Commands
 			{
 				Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
 				int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), fclass.Name);
+
+				if (customHealth)
+				{
+					Main.npcs[npcIndex].life = health;
+					Main.npcs[npcIndex].lifeMax = health;
+				}
 
 				realNPCName = Main.npcs[npcIndex].Name;
 			}
