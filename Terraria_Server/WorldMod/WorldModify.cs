@@ -58,6 +58,7 @@ namespace Terraria_Server.WorldMod
 		private static bool mergeRight = false;
 		public static bool stopDrops = false;
 		public static bool noLiquidCheck = false;
+		private static int grassSpread = 0;
 
 		public static object playerEditLock = new object();
 
@@ -76,8 +77,6 @@ namespace Terraria_Server.WorldMod
 			{
 			}
 		}
-
-		public static string statusText = "";
 
 		// not sure about this, but sure looks like it was supposed to be thread static
 		[ThreadStatic]
@@ -8560,62 +8559,78 @@ namespace Terraria_Server.WorldMod
 
 		public static void SpreadGrass(Func<Int32, Int32, ITile> TileRefs, int i, int j, int dirt = 0, int grass = 2, bool repeat = true)
 		{
-			if (TileRefs == null)
-				TileRefs = TileCollection.ITileAt;
-
-			if ((int)TileRefs(i, j).Type != dirt || !TileRefs(i, j).Active || ((double)j < Main.worldSurface && grass == 70) || ((double)j >= Main.worldSurface && dirt == 0))
+			try
 			{
-				return;
-			}
-			int num = i - 1;
-			int num2 = i + 2;
-			int num3 = j - 1;
-			int num4 = j + 2;
-			if (num < 0)
-			{
-				num = 0;
-			}
-			if (num2 > Main.maxTilesX)
-			{
-				num2 = Main.maxTilesX;
-			}
-			if (num3 < 0)
-			{
-				num3 = 0;
-			}
-			if (num4 > Main.maxTilesY)
-			{
-				num4 = Main.maxTilesY;
-			}
-			bool flag = true;
-			for (int k = num; k < num2; k++)
-			{
-				for (int l = num3; l < num4; l++)
+				if ((int)TileRefs(i, j).Type == dirt && TileRefs(i, j).Active && ((double)j >= Main.worldSurface || grass != 70) && ((double)j < Main.worldSurface || dirt != 0))
 				{
-					if (!TileRefs(k, l).Active || !Main.tileSolid[(int)TileRefs(k, l).Type])
+					int num = i - 1;
+					int num2 = i + 2;
+					int num3 = j - 1;
+					int num4 = j + 2;
+					if (num < 0)
 					{
-						flag = false;
-						break;
+						num = 0;
 					}
-				}
-			}
-			if (!flag)
-			{
-				if (grass == 23 && TileRefs(i, j - 1).Type == 27)
-				{
-					return;
-				}
-				TileRefs(i, j).SetType((byte)grass);
-				for (int m = num; m < num2; m++)
-				{
-					for (int n = num3; n < num4; n++)
+					if (num2 > Main.maxTilesX)
 					{
-						if (TileRefs(m, n).Active && (int)TileRefs(m, n).Type == dirt && repeat)
+						num2 = Main.maxTilesX;
+					}
+					if (num3 < 0)
+					{
+						num3 = 0;
+					}
+					if (num4 > Main.maxTilesY)
+					{
+						num4 = Main.maxTilesY;
+					}
+					bool flag = true;
+					for (int k = num; k < num2; k++)
+					{
+						for (int l = num3; l < num4; l++)
 						{
-							SpreadGrass(TileRefs, m, n, dirt, grass);
+							if (!TileRefs(k, l).Active || !Main.tileSolid[(int)TileRefs(k, l).Type])
+							{
+								flag = false;
+							}
+							if (TileRefs(k, l).Lava && TileRefs(k, l).Liquid > 0)
+							{
+								flag = true;
+								break;
+							}
+						}
+					}
+					if (!flag)
+					{
+						if (grass != 23 || TileRefs(i, j - 1).Type != 27)
+						{
+							TileRefs(i, j).SetType ( (byte)grass);
+							for (int m = num; m < num2; m++)
+							{
+								for (int n = num3; n < num4; n++)
+								{
+									if (TileRefs(m, n).Active && (int)TileRefs(m, n).Type == dirt)
+									{
+										try
+										{
+											if (repeat && grassSpread < 1000)
+											{
+												WorldModify.grassSpread++;
+												SpreadGrass(TileRefs, m, n, dirt, grass, true);
+												grassSpread--;
+											}
+										}
+										catch
+										{
+										}
+									}
+								}
+							}
 						}
 					}
 				}
+			}
+			catch
+			{
 			}
 		}
 

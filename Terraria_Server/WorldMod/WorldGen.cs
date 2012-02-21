@@ -693,7 +693,7 @@ namespace Terraria_Server.WorldMod
 							for (int tileY = posY; tileY < posY + lenY; tileY++)
 							{
 								if (posX > snowStartX + WorldModify.genRand.Next(5) && posX < snowPosXEnd - WorldModify.genRand.Next(5))
-									Main.tile.At(posX, tileY).SetType (147);
+									Main.tile.At(posX, tileY).SetType(147);
 							}
 							break;
 						}
@@ -1021,250 +1021,264 @@ namespace Terraria_Server.WorldMod
 
 			using (var jungleprog = new ProgressLogger(100, "Generating jungle"))
 			{
-				float jungleSize = (float)(Main.maxTilesX / 4200);
-				jungleSize *= 1.5f;
-				int posX = 0;
-				float sizeModifier = (float)WorldModify.genRand.Next(15, 30) * 0.01f;
+				float num76 = (float)(Main.maxTilesX / 4200);
+				num76 *= 1.5f;
+				int num77 = 0;
+				float num78 = (float)WorldModify.genRand.Next(15, 30) * 0.01f;
 				if (direction == -1)
 				{
-					sizeModifier = 1f - sizeModifier;
-					posX = (int)((float)Main.maxTilesX * sizeModifier);
+					num78 = 1f - num78;
+					num77 = (int)((float)Main.maxTilesX * num78);
 				}
 				else
 				{
-					posX = (int)((float)Main.maxTilesX * sizeModifier);
+					num77 = (int)((float)Main.maxTilesX * num78);
 				}
-				int posY = (int)((double)Main.maxTilesY + Main.rockLayer) / 2;
-				posX += WorldModify.genRand.Next((int)(-100f * jungleSize), (int)(101f * jungleSize));
-				posY += WorldModify.genRand.Next((int)(-100f * jungleSize), (int)(101f * jungleSize));
-				int section1X = posX;
-				int section1Y = posY;
-				TileRunner(TileRefs, posX, posY, (double)WorldModify.genRand.Next((int)(250f * jungleSize), (int)(500f * jungleSize)), WorldModify.genRand.Next(50, 150), 59, false, (float)(direction * 3), 0f, false, true);
-
+				int num79 = (int)((double)Main.maxTilesY + Main.rockLayer) / 2;
+				num77 += WorldModify.genRand.Next((int)(-100f * num76), (int)(101f * num76));
+				num79 += WorldModify.genRand.Next((int)(-100f * num76), (int)(101f * num76));
+				int num80 = num77;
+				int num81 = num79;
+				WorldGen.TileRunner(TileRefs, num77, num79, (double)WorldModify.genRand.Next((int)(250f * num76), (int)(500f * num76)),
+					WorldModify.genRand.Next(50, 150), 59, false, (float)(direction * 3), 0f, false, true);
 				int num82 = 0;
-				while ((float)num82 < 6f * jungleSize)
+				while ((float)num82 < 6f * num76)
 				{
-					TileRunner(TileRefs, posX + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), posY + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(63, 65), false, 0f, 0f, false, true);
+					WorldGen.TileRunner(TileRefs, num77 + WorldModify.genRand.Next(-(int)(125f * num76), (int)(125f * num76)),
+						num79 + WorldModify.genRand.Next(-(int)(125f * num76), (int)(125f * num76)), (double)WorldModify.genRand.Next(3, 7),
+						WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(63, 65), false, 0f, 0f, false, true);
 					num82++;
 				}
-				mudWall = true;
+				WorldGen.mudWall = true;
 
 				jungleprog.Value = 15;
 
-				posX += WorldModify.genRand.Next((int)(-250f * jungleSize), (int)(251f * jungleSize));
-				posY += WorldModify.genRand.Next((int)(-150f * jungleSize), (int)(151f * jungleSize));
-				int section2X = posX;
-				int section2Y = posY;
-				int keepX = posX;
-				int keepY = posY;
-				TileRunner(TileRefs, posX, posY, (double)WorldModify.genRand.Next((int)(250f * jungleSize), (int)(500f * jungleSize)), WorldModify.genRand.Next(50, 150), 59, false, 0f, 0f, false, true);
-
-				mudWall = false;
+				num77 += WorldModify.genRand.Next((int)(-250f * num76), (int)(251f * num76));
+				num79 += WorldModify.genRand.Next((int)(-150f * num76), (int)(151f * num76));
+				int num83 = num77;
+				int num84 = num79;
+				int num85 = num77;
+				int num86 = num79;
+				WorldGen.TileRunner(TileRefs, num77, num79, (double)WorldModify.genRand.Next((int)(250f * num76), (int)(500f * num76)),
+					WorldModify.genRand.Next(50, 150), 59, false, 0f, 0f, false, true);
+				WorldGen.mudWall = false;
 				int num87 = 0;
-				while ((float)num87 < 6f * jungleSize)
+				while ((float)num87 < 6f * num76)
 				{
-					TileRunner(TileRefs, posX + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), posY + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(65, 67), false, 0f, 0f, false, true);
+					WorldGen.TileRunner(TileRefs, num77 + WorldModify.genRand.Next(-(int)(125f * num76), (int)(125f * num76)), num79 +
+						WorldModify.genRand.Next(-(int)(125f * num76), (int)(125f * num76)), (double)WorldModify.genRand.Next(3, 7),
+						WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(65, 67), false, 0f, 0f, false, true);
 					num87++;
 				}
+				WorldGen.mudWall = true;
 
-				mudWall = true;
 				jungleprog.Value = 30;
 
-				posX += WorldModify.genRand.Next((int)(-400f * jungleSize), (int)(401f * jungleSize));
-				posY += WorldModify.genRand.Next((int)(-150f * jungleSize), (int)(151f * jungleSize));
-				int section3X = posX;
-				int section3Y = posY;
-				TileRunner(TileRefs, posX, posY, (double)WorldModify.genRand.Next((int)(250f * jungleSize), (int)(500f * jungleSize)), WorldModify.genRand.Next(50, 150), 59, false, (float)(direction * -3), 0f, false, true);
-
-				mudWall = false;
-				int num90 = 0;
-				while ((float)num90 < 6f * jungleSize)
+				num77 += WorldModify.genRand.Next((int)(-400f * num76), (int)(401f * num76));
+				num79 += WorldModify.genRand.Next((int)(-150f * num76), (int)(151f * num76));
+				int num88 = num77;
+				int num89 = num79;
+				WorldGen.TileRunner(TileRefs, num77, num79, (double)WorldModify.genRand.Next((int)(250f * num76), (int)(500f * num76)),
+					WorldModify.genRand.Next(50, 150), 59, false, (float)(direction * -3), 0f, false, true);
+				WorldGen.mudWall = false;
+				int direction0 = 0;
+				while ((float)direction0 < 6f * num76)
 				{
-					TileRunner(TileRefs, posX + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), posY + WorldModify.genRand.Next(-(int)(125f * jungleSize), (int)(125f * jungleSize)), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(67, 69), false, 0f, 0f, false, true);
-					num90++;
+					WorldGen.TileRunner(TileRefs, num77 + WorldModify.genRand.Next(-(int)(125f * num76), (int)(125f * num76)), num79 +
+						WorldModify.genRand.Next(-(int)(125f * num76), (int)(125f * num76)), (double)WorldModify.genRand.Next(3, 7),
+						WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(67, 69), false, 0f, 0f, false, true);
+					direction0++;
 				}
-				mudWall = true;
+				WorldGen.mudWall = true;
 
 				jungleprog.Value = 45;
 
-				posX = (section1X + section2X + section3X) / 3;
-				posY = (section1Y + section2Y + section3Y) / 3;
-				TileRunner(TileRefs, posX, posY, (double)WorldModify.genRand.Next((int)(400f * jungleSize), (int)(600f * jungleSize)), 10000, 59, false, 0f, -20f, true, true);
-				JungleRunner(TileRefs, posX, posY);
+				num77 = (num80 + num83 + num88) / 3;
+				num79 = (num81 + num84 + num89) / 3;
+				WorldGen.TileRunner(TileRefs, num77, num79, (double)WorldModify.genRand.Next((int)(400f * num76), (int)(600f * num76)), 10000, 59, false, 0f, -20f, true, true);
+				WorldGen.JungleRunner(TileRefs, num77, num79);
 
 				jungleprog.Value = 60;
-				mudWall = false;
 
-				for (int num91 = 0; num91 < Main.maxTilesX / 10; num91++)
+				WorldGen.mudWall = false;
+				for (int direction1 = 0; direction1 < Main.maxTilesX / 10; direction1++)
 				{
-					posX = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
-					posY = WorldModify.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 200);
-					while (TileRefs(posX, posY).Wall != 15)
+					num77 = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
+					num79 = WorldModify.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 200);
+					while (TileRefs(num77, num79).Wall != 15)
 					{
-						posX = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
-						posY = WorldModify.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 200);
+						num77 = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
+						num79 = WorldModify.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 200);
 					}
-					MudWallRunner(TileRefs, posX, posY);
+					WorldGen.MudWallRunner(TileRefs, num77, num79);
 				}
-
-				posX = keepX;
-				posY = keepY;
-				int i = 0;
-				while ((float)i <= 20f * jungleSize)
+				num77 = num85;
+				num79 = num86;
+				int direction2 = 0;
+				while ((float)direction2 <= 20f * num76)
 				{
-					jungleprog.Value = (int)(60f + (float)i / jungleSize);
+					jungleprog.Value = (int)(60f + (float)direction2 / num76);
 
-					posX += WorldModify.genRand.Next((int)(-5f * jungleSize), (int)(6f * jungleSize));
-					posY += WorldModify.genRand.Next((int)(-5f * jungleSize), (int)(6f * jungleSize));
-					TileRunner(TileRefs, posX, posY, (double)WorldModify.genRand.Next(40, 100), WorldModify.genRand.Next(300, 500), 59, false, 0f, 0f, false, true);
-					i++;
+					num77 += WorldModify.genRand.Next((int)(-5f * num76), (int)(6f * num76));
+					num79 += WorldModify.genRand.Next((int)(-5f * num76), (int)(6f * num76));
+					WorldGen.TileRunner(TileRefs, num77, num79, (double)WorldModify.genRand.Next(40, 100), WorldModify.genRand.Next(300, 500), 59, false, 0f, 0f, false, true);
+					direction2++;
 				}
-				i = 0;
-				while ((float)i <= 10f * jungleSize)
+				int direction3 = 0;
+				while ((float)direction3 <= 10f * num76)
 				{
-					jungleprog.Value = (int)(80f + (float)i / jungleSize * 2f);
+					jungleprog.Value = (int)(80f + (float)direction3 / num76 * 2f);
 
-					posX = keepX + WorldModify.genRand.Next((int)(-600f * jungleSize), (int)(600f * jungleSize));
-					posY = keepY + WorldModify.genRand.Next((int)(-200f * jungleSize), (int)(200f * jungleSize));
-					while (posX < 1 || posX >= Main.maxTilesX - 1 || posY < 1 || posY >= Main.maxTilesY - 1 || TileRefs(posX, posY).Type != 59)
+					num77 = num85 + WorldModify.genRand.Next((int)(-600f * num76), (int)(600f * num76));
+					num79 = num86 + WorldModify.genRand.Next((int)(-200f * num76), (int)(200f * num76));
+					while (num77 < 1 || num77 >= Main.maxTilesX - 1 || num79 < 1 || num79 >= Main.maxTilesY - 1 || TileRefs(num77, num79).Type != 59)
 					{
-						posX = keepX + WorldModify.genRand.Next((int)(-600f * jungleSize), (int)(600f * jungleSize));
-						posY = keepY + WorldModify.genRand.Next((int)(-200f * jungleSize), (int)(200f * jungleSize));
+						num77 = num85 + WorldModify.genRand.Next((int)(-600f * num76), (int)(600f * num76));
+						num79 = num86 + WorldModify.genRand.Next((int)(-200f * num76), (int)(200f * num76));
 					}
-					int i2 = 0;
-					while ((float)i2 < 8f * jungleSize)
+					int direction4 = 0;
+					while ((float)direction4 < 8f * num76)
 					{
-						posX += WorldModify.genRand.Next(-30, 31);
-						posY += WorldModify.genRand.Next(-30, 31);
+						num77 += WorldModify.genRand.Next(-30, 31);
+						num79 += WorldModify.genRand.Next(-30, 31);
 						int type4 = -1;
 						if (WorldModify.genRand.Next(7) == 0)
 						{
 							type4 = -2;
 						}
-						TileRunner(TileRefs, posX, posY, (double)WorldModify.genRand.Next(10, 20), WorldModify.genRand.Next(30, 70), type4, false, 0f, 0f, false, true);
-						i2++;
+						WorldGen.TileRunner(TileRefs, num77, num79, (double)WorldModify.genRand.Next(10, 20), WorldModify.genRand.Next(30, 70), type4, false, 0f, 0f, false, true);
+						direction4++;
 					}
-					i++;
+					direction3++;
 				}
-				i = 0;
-				while ((float)i <= 300f * jungleSize)
+				int direction5 = 0;
+				while ((float)direction5 <= 300f * num76)
 				{
-					posX = keepX + WorldModify.genRand.Next((int)(-600f * jungleSize), (int)(600f * jungleSize));
-					posY = keepY + WorldModify.genRand.Next((int)(-200f * jungleSize), (int)(200f * jungleSize));
-					while (posX < 1 || posX >= Main.maxTilesX - 1 || posY < 1 || posY >= Main.maxTilesY - 1 || TileRefs(posX, posY).Type != 59)
+					num77 = num85 + WorldModify.genRand.Next((int)(-600f * num76), (int)(600f * num76));
+					num79 = num86 + WorldModify.genRand.Next((int)(-200f * num76), (int)(200f * num76));
+					while (num77 < 1 || num77 >= Main.maxTilesX - 1 || num79 < 1 || num79 >= Main.maxTilesY - 1 || TileRefs(num77, num79).Type != 59)
 					{
-						posX = keepX + WorldModify.genRand.Next((int)(-600f * jungleSize), (int)(600f * jungleSize));
-						posY = keepY + WorldModify.genRand.Next((int)(-200f * jungleSize), (int)(200f * jungleSize));
+						num77 = num85 + WorldModify.genRand.Next((int)(-600f * num76), (int)(600f * num76));
+						num79 = num86 + WorldModify.genRand.Next((int)(-200f * num76), (int)(200f * num76));
 					}
-					TileRunner(TileRefs, posX, posY, (double)WorldModify.genRand.Next(4, 10), WorldModify.genRand.Next(5, 30), 1, false, 0f, 0f, false, true);
+					WorldGen.TileRunner(TileRefs, num77, num79, (double)WorldModify.genRand.Next(4, 10), WorldModify.genRand.Next(5, 30), 1, false, 0f, 0f, false, true);
 					if (WorldModify.genRand.Next(4) == 0)
 					{
 						int type5 = WorldModify.genRand.Next(63, 69);
-						TileRunner(TileRefs, posX + WorldModify.genRand.Next(-1, 2), posY + WorldModify.genRand.Next(-1, 2), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(4, 8), type5, false, 0f, 0f, false, true);
+						WorldGen.TileRunner(TileRefs, num77 + WorldModify.genRand.Next(-1, 2), num79 + WorldModify.genRand.Next(-1, 2),
+							(double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(4, 8), type5, false, 0f, 0f, false, true);
 					}
-					i++;
+					direction5++;
 				}
-				posX = keepX;
-				posY = keepY;
-				float num75 = (float)WorldModify.genRand.Next(6, 10);
-				float num76 = (float)(Main.maxTilesX / 4200);
-				num75 *= num76;
-				i = 0;
-				while ((float)i < num75)
+				num77 = num85;
+				num79 = num86;
+				float direction6 = (float)WorldModify.genRand.Next(6, 10);
+				float direction7 = (float)(Main.maxTilesX / 4200);
+				direction6 *= direction7;
+				int direction8 = 0;
+				while ((float)direction8 < direction6)
 				{
-					bool flag4 = true;
-					while (flag4)
+					bool flag5 = true;
+					while (flag5)
 					{
-						posX = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
-						posY = WorldModify.genRand.Next((int)(Main.worldSurface + Main.rockLayer) / 2, Main.maxTilesY - 300);
-						if (TileRefs(posX, posY).Type == 59)
+						num77 = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
+						num79 = WorldModify.genRand.Next((int)(Main.worldSurface + Main.rockLayer) / 2, Main.maxTilesY - 300);
+						if (TileRefs(num77, num79).Type == 59)
 						{
-							flag4 = false;
-							int additionX = WorldModify.genRand.Next(2, 4);
-							int additionY = WorldModify.genRand.Next(2, 4);
-							for (int tileX = posX - additionX - 1; tileX <= posX + additionX + 1; tileX++)
+							flag5 = false;
+							int direction9 = WorldModify.genRand.Next(2, 4);
+							int num100 = WorldModify.genRand.Next(2, 4);
+							for (int num101 = num77 - direction9 - 1; num101 <= num77 + direction9 + 1; num101++)
 							{
-								for (int tileY = posY - additionY - 1; tileY <= posY + additionY + 1; tileY++)
+								for (int num102 = num79 - num100 - 1; num102 <= num79 + num100 + 1; num102++)
 								{
-									TileRefs(tileX, tileY).SetActive(true);
-									TileRefs(tileX, tileY).SetType(45);
-									TileRefs(tileX, tileY).SetLiquid(0);
-									TileRefs(tileX, tileY).SetLava(false);
+									TileRefs(num101, num102).SetActive(true);
+									TileRefs(num101, num102).SetType(45);
+									TileRefs(num101, num102).SetLiquid(0);
+									TileRefs(num101, num102).SetLava(false);
 								}
 							}
-							for (int tileX = posX - additionX; tileX <= posX + additionX; tileX++)
+							for (int num103 = num77 - direction9; num103 <= num77 + direction9; num103++)
 							{
-								for (int tileY = posY - additionY; tileY <= posY + additionY; tileY++)
+								for (int num104 = num79 - num100; num104 <= num79 + num100; num104++)
 								{
-									TileRefs(tileX, tileY).SetActive(false);
-									TileRefs(tileX, tileY).SetWall(10);
+									TileRefs(num103, num104).SetActive(false);
 								}
 							}
-							bool flag5 = false;
-							int i2 = 0;
-							while (!flag5 && i2 < 100)
+							bool flag6 = false;
+							int num105 = 0;
+							while (!flag6 && num105 < 100)
 							{
-								i2++;
-								int tileX = WorldModify.genRand.Next(posX - additionX, posX + additionX + 1);
-								int tileY = WorldModify.genRand.Next(posY - additionY, posY + additionY - 2);
-								WorldModify.PlaceTile(TileRefs, tileX, tileY, 4, true, false, -1, 0);
-								if (TileRefs(tileX, tileY).Type == 4)
+								num105++;
+								int num106 = WorldModify.genRand.Next(num77 - direction9, num77 + direction9 + 1);
+								int num107 = WorldModify.genRand.Next(num79 - num100, num79 + num100 - 2);
+								WorldModify.PlaceTile(TileRefs, num106, num107, 4, true, false, -1, 0);
+								if (TileRefs(num106, num107).Type == 4)
 								{
-									flag5 = true;
+									flag6 = true;
 								}
 							}
-							for (int tileX = posX - additionX - 1; tileX <= posX + additionX + 1; tileX++)
+							for (int num108 = num77 - direction9 - 1; num108 <= num77 + direction9 + 1; num108++)
 							{
-								for (int tileY = posY + additionY - 2; tileY <= posY + additionY; tileY++)
+								for (int num109 = num79 + num100 - 2; num109 <= num79 + num100; num109++)
 								{
-									TileRefs(tileX, tileY).SetActive(false);
+									TileRefs(num108, num109).SetActive(false);
 								}
 							}
-							for (int tileX = posX - additionX - 1; tileX <= posX + additionX + 1; tileX++)
+							for (int num110 = num77 - direction9 - 1; num110 <= num77 + direction9 + 1; num110++)
 							{
-								for (int tileY = posY + additionY - 2; tileY <= posY + additionY - 1; tileY++)
+								for (int num111 = num79 + num100 - 2; num111 <= num79 + num100 - 1; num111++)
 								{
-									TileRefs(tileX, tileY).SetActive(false);
+									TileRefs(num110, num111).SetActive(false);
 								}
 							}
-							for (int tileX = posX - additionX - 1; tileX <= posX + additionX + 1; tileX++)
+							for (int num112 = num77 - direction9 - 1; num112 <= num77 + direction9 + 1; num112++)
 							{
-								int amount = 4;
-								int tileY = posY + additionY + 2;
-								while (!TileRefs(tileX, tileY).Active && tileY < Main.maxTilesY && amount > 0)
+								int num113 = 4;
+								int num114 = num79 + num100 + 2;
+								while (!TileRefs(num112, num114).Active && num114 < Main.maxTilesY && num113 > 0)
 								{
-									TileRefs(tileX, tileY).SetActive(true);
-									TileRefs(tileX, tileY).SetType(59);
-									tileY++;
-									amount--;
+									TileRefs(num112, num114).SetActive(true);
+									TileRefs(num112, num114).SetType(59);
+									num114++;
+									num113--;
 								}
 							}
-							additionX -= WorldModify.genRand.Next(1, 3);
-							int _tileY = posY - additionY - 2;
-							while (additionX > -1)
+							direction9 -= WorldModify.genRand.Next(1, 3);
+							int num115 = num79 - num100 - 2;
+							while (direction9 > -1)
 							{
-								for (int tileX = posX - additionX - 1; tileX <= posX + additionX + 1; tileX++)
+								for (int num116 = num77 - direction9 - 1; num116 <= num77 + direction9 + 1; num116++)
 								{
-									TileRefs(tileX, _tileY).SetActive(true);
-									TileRefs(tileX, _tileY).SetType(45);
+									TileRefs(num116, num115).SetActive(true);
+									TileRefs(num116, num115).SetType(45);
 								}
-								additionX -= WorldModify.genRand.Next(1, 3);
-								_tileY--;
+								direction9 -= WorldModify.genRand.Next(1, 3);
+								num115--;
 							}
-							JChestX[numJChests] = posX;
-							JChestY[numJChests] = posY;
-							numJChests++;
+							WorldGen.JChestX[WorldGen.numJChests] = num77;
+							WorldGen.JChestY[WorldGen.numJChests] = num79;
+							WorldGen.numJChests++;
 						}
 					}
-					i++;
+					direction8++;
 				}
-				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
+				for (int num117 = 0; num117 < Main.maxTilesX; num117++)
 				{
-					for (int tileY = 0; tileY < Main.maxTilesY; tileY++)
+					for (int num118 = 0; num118 < Main.maxTilesY; num118++)
 					{
-						if (TileRefs(tileX, tileY).Active)
+						if (TileRefs(num117, num118).Active)
 						{
-							WorldModify.SpreadGrass(TileRefs, tileX, tileY, 59, 60, true);
+							try
+							{
+								//WorldGen.grassSpread = 0;
+								WorldModify.SpreadGrass(TileRefs, num117, num118, 59, 60, true);
+							}
+							catch
+							{
+								//WorldGen.grassSpread = 0;
+								WorldModify.SpreadGrass(TileRefs, num117, num118, 59, 60, false);
+							}
 						}
 					}
 				}
@@ -1527,132 +1541,136 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			var num138max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.002);
-			using (var uwprog = new ProgressLogger(((Main.maxTilesX * 5) - 10 + num138max) +
-				(int)(Main.maxTilesX * 2.85), "Creating the underworld"))
+			using (var uwprog = new ProgressLogger(100, "Creating the underworld"))
 			{
-				var uwtotal = 0;
-				int posY = Main.maxTilesY - WorldModify.genRand.Next(150, 190);
-				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
+				int num148 = Main.maxTilesY - WorldModify.genRand.Next(150, 190);
+				for (int num149 = 0; num149 < Main.maxTilesX; num149++)
 				{
-					uwprog.Value = (uwtotal++);
-					posY += WorldModify.genRand.Next(-3, 4);
-					if (posY < Main.maxTilesY - 190)
+					num148 += WorldModify.genRand.Next(-3, 4);
+					if (num148 < Main.maxTilesY - 190)
 					{
-						posY = Main.maxTilesY - 190;
+						num148 = Main.maxTilesY - 190;
 					}
-					if (posY > Main.maxTilesY - 160)
+					if (num148 > Main.maxTilesY - 160)
 					{
-						posY = Main.maxTilesY - 160;
+						num148 = Main.maxTilesY - 160;
 					}
-					for (int tileY = posY - 20 - WorldModify.genRand.Next(3); tileY < Main.maxTilesY; tileY++)
+					for (int num150 = num148 - 20 - WorldModify.genRand.Next(3); num150 < Main.maxTilesY; num150++)
 					{
-						if (tileY >= posY)
+						if (num150 >= num148)
 						{
-							TileRefs(tileX, tileY).SetActive(false);
-							TileRefs(tileX, tileY).SetLava(false);
-							TileRefs(tileX, tileY).SetLiquid(0);
+							TileRefs(num149, num150).SetActive(false);
+							TileRefs(num149, num150).SetLava(false);
+							TileRefs(num149, num150).SetLiquid(0);
 						}
 						else
 						{
-							TileRefs(tileX, tileY).SetType(57);
+							TileRefs(num149, num150).SetType(57);
 						}
 					}
 				}
-				int lavaPosY = Main.maxTilesY - WorldModify.genRand.Next(40, 70);
-				for (int tileX = 10; tileX < Main.maxTilesX - 10; tileX++)
+				int num151 = Main.maxTilesY - WorldModify.genRand.Next(40, 70);
+				for (int num152 = 10; num152 < Main.maxTilesX - 10; num152++)
 				{
-					uwprog.Value = (uwtotal++);
-					lavaPosY += WorldModify.genRand.Next(-10, 11);
-					if (lavaPosY > Main.maxTilesY - 60)
+					num151 += WorldModify.genRand.Next(-10, 11);
+					if (num151 > Main.maxTilesY - 60)
 					{
-						lavaPosY = Main.maxTilesY - 60;
+						num151 = Main.maxTilesY - 60;
 					}
-					if (lavaPosY < Main.maxTilesY - 100)
+					if (num151 < Main.maxTilesY - 100)
 					{
-						lavaPosY = Main.maxTilesY - 120;
+						num151 = Main.maxTilesY - 120;
 					}
-					for (int tileY = lavaPosY; tileY < Main.maxTilesY - 10; tileY++)
+					for (int num153 = num151; num153 < Main.maxTilesY - 10; num153++)
 					{
-						if (!TileRefs(tileX, tileY).Active)
+						if (!TileRefs(num152, num153).Active)
 						{
-							TileRefs(tileX, tileY).SetLava(true);
-							TileRefs(tileX, tileY).SetLiquid(255);
+							TileRefs(num152, num153).SetLava(true);
+							TileRefs(num152, num153).SetLiquid(255);
 						}
 					}
 				}
-				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
+				for (int num154 = 0; num154 < Main.maxTilesX; num154++)
 				{
-					uwprog.Value = (uwtotal++);
 					if (WorldModify.genRand.Next(50) == 0)
 					{
-						int tileY = Main.maxTilesY - 65;
-						while (!TileRefs(tileX, tileY).Active && tileY > Main.maxTilesY - 135)
+						int num155 = Main.maxTilesY - 65;
+						while (!TileRefs(num154, num155).Active && num155 > Main.maxTilesY - 135)
 						{
-							tileY--;
+							num155--;
 						}
-						TileRunner(TileRefs, WorldModify.genRand.Next(0, Main.maxTilesX), tileY + WorldModify.genRand.Next(20, 50), (double)WorldModify.genRand.Next(15, 20), 1000, 57, true, 0f, (float)WorldModify.genRand.Next(1, 3), true, true);
+						WorldGen.TileRunner(TileRefs, WorldModify.genRand.Next(0, Main.maxTilesX), num155 + WorldModify.genRand.Next(20, 50), 
+							(double)WorldModify.genRand.Next(15, 20), 1000, 57, true, 0f, (float)WorldModify.genRand.Next(1, 3), true, true);
 					}
 				}
-
 				Liquid.QuickWater(TileRefs, -2, -1, -1, uwprog);
-				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
+				for (int num156 = 0; num156 < Main.maxTilesX; num156++)
 				{
-					uwprog.Value = (uwtotal++);
+					float num157 = (float)num156 / (float)(Main.maxTilesX - 1);
+
+					uwprog.Value = (int)(num157 * 100f / 2f + 50f);
 
 					if (WorldModify.genRand.Next(13) == 0)
 					{
-						int tileY = Main.maxTilesY - 65;
-						while ((TileRefs(tileX, tileY).Liquid > 0 || TileRefs(tileX, tileY).Active) && tileY > Main.maxTilesY - 140)
+						int num158 = Main.maxTilesY - 65;
+						while ((TileRefs(num156, num158).Liquid > 0 || TileRefs(num156, num158).Active) && num158 > Main.maxTilesY - 140)
 						{
-							tileY--;
+							num158--;
 						}
-						TileRunner(TileRefs, tileX, tileY - WorldModify.genRand.Next(2, 5), (double)WorldModify.genRand.Next(5, 30), 1000, 57, true, 0f, (float)WorldModify.genRand.Next(1, 3), true, true);
-						float num136 = (float)WorldModify.genRand.Next(1, 3);
+						WorldGen.TileRunner(TileRefs, num156, num158 - WorldModify.genRand.Next(2, 5), (double)WorldModify.genRand.Next(5, 30), 1000, 57, true, 0f, 
+							(float)WorldModify.genRand.Next(1, 3), true, true);
+						float num159 = (float)WorldModify.genRand.Next(1, 3);
 						if (WorldModify.genRand.Next(3) == 0)
 						{
-							num136 *= 0.5f;
+							num159 *= 0.5f;
 						}
 						if (WorldModify.genRand.Next(2) == 0)
 						{
-							TileRunner(TileRefs, tileX, tileY - WorldModify.genRand.Next(2, 5), (double)((int)((float)WorldModify.genRand.Next(5, 15) * num136)), (int)((float)WorldModify.genRand.Next(10, 15) * num136), 57, true, 1f, 0.3f, false, true);
+							WorldGen.TileRunner(TileRefs, num156, num158 - WorldModify.genRand.Next(2, 5), (double)((int)((float)WorldModify.genRand.Next(5, 15) * num159)),
+								(int)((float)WorldModify.genRand.Next(10, 15) * num159), 57, true, 1f, 0.3f, false, true);
 						}
 						if (WorldModify.genRand.Next(2) == 0)
 						{
-							num136 = (float)WorldModify.genRand.Next(1, 3);
-							TileRunner(TileRefs, tileX, tileY - WorldModify.genRand.Next(2, 5), (double)((int)((float)WorldModify.genRand.Next(5, 15) * num136)), (int)((float)WorldModify.genRand.Next(10, 15) * num136), 57, true, -1f, 0.3f, false, true);
+							num159 = (float)WorldModify.genRand.Next(1, 3);
+							WorldGen.TileRunner(TileRefs, num156, num158 - WorldModify.genRand.Next(2, 5), (double)((int)((float)WorldModify.genRand.Next(5, 15) * num159)), 
+								(int)((float)WorldModify.genRand.Next(10, 15) * num159), 57, true, -1f, 0.3f, false, true);
 						}
-						TileRunner(TileRefs, tileX + WorldModify.genRand.Next(-10, 10), tileY + WorldModify.genRand.Next(-10, 10), (double)WorldModify.genRand.Next(5, 15), WorldModify.genRand.Next(5, 10), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
+						WorldGen.TileRunner(TileRefs, num156 + WorldModify.genRand.Next(-10, 10), num158 + WorldModify.genRand.Next(-10, 10), 
+							(double)WorldModify.genRand.Next(5, 15), WorldModify.genRand.Next(5, 10), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
 						if (WorldModify.genRand.Next(3) == 0)
 						{
-							TileRunner(TileRefs, tileX + WorldModify.genRand.Next(-10, 10), tileY + WorldModify.genRand.Next(-10, 10), (double)WorldModify.genRand.Next(10, 30), WorldModify.genRand.Next(10, 20), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
+							WorldGen.TileRunner(TileRefs, num156 + WorldModify.genRand.Next(-10, 10), num158 + WorldModify.genRand.Next(-10, 10), 
+								(double)WorldModify.genRand.Next(10, 30), WorldModify.genRand.Next(10, 20), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
 						}
 						if (WorldModify.genRand.Next(5) == 0)
 						{
-							TileRunner(TileRefs, tileX + WorldModify.genRand.Next(-15, 15), tileY + WorldModify.genRand.Next(-15, 10), (double)WorldModify.genRand.Next(15, 30), WorldModify.genRand.Next(5, 20), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
+							WorldGen.TileRunner(TileRefs, num156 + WorldModify.genRand.Next(-15, 15), num158 + WorldModify.genRand.Next(-15, 10), 
+								(double)WorldModify.genRand.Next(15, 30), WorldModify.genRand.Next(5, 20), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
 						}
 					}
 				}
-				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
+				for (int num160 = 0; num160 < Main.maxTilesX; num160++)
 				{
-					uwprog.Value = (uwtotal++);
-					if (!TileRefs(tileX, Main.maxTilesY - 145).Active)
+					WorldGen.TileRunner(TileRefs, WorldModify.genRand.Next(20, Main.maxTilesX - 20), WorldModify.genRand.Next(Main.maxTilesY - 180, Main.maxTilesY - 10),
+						(double)WorldModify.genRand.Next(2, 7), WorldModify.genRand.Next(2, 7), -2, false, 0f, 0f, false, true);
+				}
+				for (int num161 = 0; num161 < Main.maxTilesX; num161++)
+				{
+					if (!TileRefs(num161, Main.maxTilesY - 145).Active)
 					{
-						TileRefs(tileX, Main.maxTilesY - 145).SetLiquid(255);
-						TileRefs(tileX, Main.maxTilesY - 145).SetLava(true);
+						TileRefs(num161, Main.maxTilesY - 145).SetLiquid(255);
+						TileRefs(num161, Main.maxTilesY - 145).SetLava(true);
 					}
-					if (!TileRefs(tileX, Main.maxTilesY - 144).Active)
+					if (!TileRefs(num161, Main.maxTilesY - 144).Active)
 					{
-						TileRefs(tileX, Main.maxTilesY - 144).SetLiquid(255);
-						TileRefs(tileX, Main.maxTilesY - 144).SetLava(true);
+						TileRefs(num161, Main.maxTilesY - 144).SetLiquid(255);
+						TileRefs(num161, Main.maxTilesY - 144).SetLava(true);
 					}
 				}
-				for (int i = 0; i < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.002); i++)
+				for (int num162 = 0; num162 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0008); num162++)
 				{
-					uwprog.Value = (uwtotal++);
-					TileRunner(TileRefs, WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next(Main.maxTilesY - 140,
-						Main.maxTilesY), (double)WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(3, 8), 58, false,
-						0f, 0f, false, true);
+					WorldGen.TileRunner(TileRefs, WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next(Main.maxTilesY - 140, Main.maxTilesY), 
+						(double)WorldModify.genRand.Next(2, 7), WorldModify.genRand.Next(3, 7), 58, false, 0f, 0f, false, true);
 				}
 			}
 		}
@@ -8566,7 +8584,7 @@ namespace Terraria_Server.WorldMod
 					x++;
 			}
 		}
-		
+
 		public static void MineHouse(Func<Int32, Int32, ITile> TileRefs, int x, int y)
 		{
 			if (x < 50 || x > Main.maxTilesX - 50 || y < 50 || y > Main.maxTilesY - 50 || WorldModify.SolidTile(TileRefs, x, y) || TileRefs(x, y).Wall > 0)
