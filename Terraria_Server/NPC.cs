@@ -1672,7 +1672,7 @@ namespace Terraria_Server
 
 				if (Type == (int)NPCType.N125_RETINAZER)
 				{
-					NetMessage.SendData(25, -1, -1, "The Twins has awoken!", 255, 175f, 75f, 255f);
+					NetMessage.SendData(25, -1, -1, "The Twins have awoken!", 255, 175f, 75f, 255f);
 					return;
 				}
 				else if (Type != (int)NPCType.N82_WRAITH && Type != (int)NPCType.N126_SPAZMATISM && Type != (int)NPCType.N50_KING_SLIME)
@@ -2358,8 +2358,8 @@ namespace Terraria_Server
 
 				if (this.type == NPCType.N125_RETINAZER || this.type == NPCType.N126_SPAZMATISM)
 				{
-					if (!IsNPCSummoned(NPCType.N125_RETINAZER) || !IsNPCSummoned(NPCType.N126_SPAZMATISM))
-						NetMessage.SendData(25, -1, -1, "The Twins has been defeated!", 255, 175f, 75f, 255f, 0);
+					if (!IsNPCSummoned(NPCType.N125_RETINAZER) && !IsNPCSummoned(NPCType.N126_SPAZMATISM))
+						NetMessage.SendData(25, -1, -1, "The Twins have been defeated!", 255, 175f, 75f, 255f, 0);
 				}
 				else
 					NetMessage.SendData(25, -1, -1, str + " has been defeated!", 255, 175f, 75f, 255f, 0);
