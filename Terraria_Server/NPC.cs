@@ -1527,9 +1527,10 @@ namespace Terraria_Server
 		/// </summary>
 		/// <param name="playerIndex">Index of player to spawn on</param>
 		/// <param name="Type">Type of NPC to spawn</param>
-		public static void SpawnOnPlayer(int playerIndex, int Type)
+		/// <param name="makespawn">Forces the NPC to spawn even if spawning is disallowed</param>
+		public static void SpawnOnPlayer(int playerIndex, int Type, bool makespawn = false)
 		{
-			if (Main.stopSpawns)
+			if (Main.stopSpawns && !makespawn)
 				return;
 
 			bool flag = false;
@@ -1656,7 +1657,7 @@ namespace Terraria_Server
 			}
 			if (flag)
 			{
-				int npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, Type, 1);
+				int npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, Type, 1, makespawn);
 				if (npcIndex == 200)
 					return;
 
@@ -1712,13 +1713,14 @@ namespace Terraria_Server
 		/// Creates new instance of specified NPC at specified
 		/// </summary>
 		/// <param name="x">X coordinate to create at</param>
+		/// <param name="start">Index to start from looking for free index</param>
 		/// <param name="y">Y coordinate to create at</param>
 		/// <param name="type">Type of NPC to create</param>
-		/// <param name="start">Index to start from looking for free index</param>
+		/// <param name="makespawn">Forces the NPC to spawn even if spawning is disabled</param>
 		/// <returns>Main.npcs[] index value</returns>
-		public static int NewNPC(int x, int y, int type, int start = 0)
+		public static int NewNPC(int x, int y, int type, int start = 0, bool makespawn = false)
 		{
-			if (Main.stopSpawns)
+			if (Main.stopSpawns && !makespawn)
 				return MAX_NPCS;
 
 			NPC hnpc;
@@ -1729,7 +1731,7 @@ namespace Terraria_Server
 			if (id >= 0)
 			{
 				var npc = hnpc ?? Registries.NPC.Create(type);
-				id = NewNPC(x, y, npc, id);
+				id = NewNPC(x, y, npc, id, makespawn);
 
 				if (id >= 0 && type == 50)
 				{
@@ -1745,9 +1747,9 @@ namespace Terraria_Server
 			return MAX_NPCS;
 		}
 
-		public static int NewNPC(int x, int y, string name, int start = 0)
+		public static int NewNPC(int x, int y, string name, int start = 0, bool makespawn = false)
 		{
-			if (Main.stopSpawns)
+			if (Main.stopSpawns && !makespawn)
 				return MAX_NPCS;
 
 			NPC hnpc;
@@ -1757,7 +1759,7 @@ namespace Terraria_Server
 			int id = FindNPCSlot(start);
 			if (id >= 0)
 			{
-				NewNPC(x, y, hnpc ?? Registries.NPC.Create(name), id);
+				NewNPC(x, y, hnpc ?? Registries.NPC.Create(name), id, makespawn);
 
 				if (NPCSpawnHandler != null)
 					NPCSpawnHandler.Invoke(id);
@@ -1779,9 +1781,9 @@ namespace Terraria_Server
 			return -1;
 		}
 
-		public static int NewNPC(int x, int y, NPC npc, int npcIndex)
+		public static int NewNPC(int x, int y, NPC npc, int npcIndex, bool makespawn = false)
 		{
-			if (Main.stopSpawns)
+			if (Main.stopSpawns && !makespawn)
 				return MAX_NPCS;
 
 			npc.Position.X = (float)(x - npc.Width / 2);

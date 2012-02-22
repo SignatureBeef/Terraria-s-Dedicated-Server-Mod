@@ -32,13 +32,12 @@ namespace Terraria_Server
 			Thread.CurrentThread.Name = "Main";
 
 			string MODInfo = String.Format(
-					"Terraria's Dedicated Server Mod. ({0} {1}{2}{3}) #{4}/{5}",
+					"Terraria's Dedicated Server Mod. ({0} {1}{2}{3}) #{4}",
 					Statics.VERSION_NUMBER,
 					"{",
 					Statics.CURRENT_TERRARIA_RELEASE,
 					"}",
-					Statics.BUILD,
-					Statics.PRE_RELEASE_BUILD
+					Statics.BUILD
 			);
 
 			try
@@ -79,7 +78,7 @@ namespace Terraria_Server
 						return;
 					}
 				}
-
+				
 				var logFile = Statics.DataPath + Path.DirectorySeparatorChar + "server.log";
 				ProgramLog.OpenLogFile(logFile);
 
