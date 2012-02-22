@@ -630,7 +630,7 @@ namespace Terraria_Server.Commands
 			for (int i = 0; i < NPCAmount; i++)
 			{
 				Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
-				int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), fclass.Name, 0, true);
+				int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), fclass.Name, 0, Main.SpawnsOverride);
 
 				if (customHealth)
 				{
