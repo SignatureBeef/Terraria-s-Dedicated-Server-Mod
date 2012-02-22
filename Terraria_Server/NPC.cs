@@ -1721,6 +1721,14 @@ namespace Terraria_Server
 			if (Main.stopSpawns)
 				return MAX_NPCS;
 
+            if (type == (int)NPCType.N124_MECHANIC && IsNPCSummoned(NPCType.N124_MECHANIC))
+            {
+                for (int i = 0; i < MAX_NPCS; i++)
+                {
+                    if (Main.npcs[i].Type == type) return i;
+                }
+            }
+
 			NPC hnpc;
 			if (!InvokeNpcCreationHook(x, y, Registries.NPC.GetTemplate(type).Name, out hnpc))
 				return MAX_NPCS;
@@ -1749,6 +1757,15 @@ namespace Terraria_Server
 		{
 			if (Main.stopSpawns)
 				return MAX_NPCS;
+            int type;
+
+            if (TryFindNPCByName(name, out type) && type == (int)NPCType.N124_MECHANIC && IsNPCSummoned(NPCType.N124_MECHANIC))
+            {
+                for (int i = 0; i < MAX_NPCS; i++)
+                {
+                    if (Main.npcs[i].Type == type) return i;
+                }
+            }
 
 			NPC hnpc;
 			if (!InvokeNpcCreationHook(x, y, name, out hnpc))
@@ -13050,6 +13067,7 @@ namespace Terraria_Server
 
 		public static bool MechSpawn(float x, float y, int type)
 		{
+
 			int found = 0;
 			int num2 = 0;
 			int num3 = 0;
