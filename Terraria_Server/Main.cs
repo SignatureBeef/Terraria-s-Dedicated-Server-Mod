@@ -36,7 +36,10 @@ namespace Terraria_Server
 		public const int maxProjectiles = 1000;
 		public const int maxNPCTypes = 74;
 		public const double dayLength = 54000.0;
+
 		public static bool stopSpawns = false;
+		public static bool SpawnsOverride = false;
+
 		public static bool ignoreErrors = true;
 		public static bool webProtect = false;
 		//private static bool webAuth = false;
@@ -164,8 +167,11 @@ namespace Terraria_Server
 
 		public static void Initialize()
 		{
-			if(Program.properties != null)
-				stopSpawns = Program.properties.StopNPCSpawning;
+			if (Program.properties != null)
+			{
+				stopSpawns		= Program.properties.StopNPCSpawning;
+				SpawnsOverride	= Program.properties.NPCSpawnsOverride;
+			}
 
 			NPC.ClearNames();
 			NPC.SetNames();

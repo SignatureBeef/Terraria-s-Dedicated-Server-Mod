@@ -584,6 +584,9 @@ namespace Terraria_Server.Commands
 		/// <remarks>This function also allows NPC custom health.</remarks>
 		public static void SpawnNPC(ISender sender, ArgumentList args)
 		{
+			if (Main.stopSpawns && !Program.properties.NPCSpawnsOverride)
+				throw new CommandError("NPC Spawing is disabled.");
+
 			var health = -1;
 			var customHealth = args.TryPopAny<Int32>("-health", out health);
 
@@ -627,7 +630,7 @@ namespace Terraria_Server.Commands
 			for (int i = 0; i < NPCAmount; i++)
 			{
 				Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
-				int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), fclass.Name);
+				int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), fclass.Name, 0, Main.SpawnsOverride);
 
 				if (customHealth)
 				{
@@ -937,6 +940,8 @@ namespace Terraria_Server.Commands
 
 			Main.stopSpawns = !Main.stopSpawns;
 			sender.sendMessage(Languages.NPCSpawningIsNow + ((Main.stopSpawns) ? "off" : "on") + "!");
+
+			Program.properties.StopNPCSpawning = Main.stopSpawns;
 		}
 
 		/// <summary>
@@ -1262,7 +1267,7 @@ namespace Terraria_Server.Commands
 					//if (!(sender is ConsoleSender))
 					//    ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, name, BossSlot);
 
-					NPC.SpawnOnPlayer(player.whoAmi, BossId);
+					NPC.SpawnOnPlayer(player.whoAmi, BossId, Main.SpawnsOverride);
 				}
 			}
 			else

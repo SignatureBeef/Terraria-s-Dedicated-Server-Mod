@@ -2008,70 +2008,70 @@ namespace Terraria_Server.WorldMod
 					{
 						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 1))
 						{
-							num29 = NPC.NewNPC(num27, num28 - 12, 1, 0);
+							num29 = NPC.NewNPC(num27, num28 - 12, 1, 0, Main.SpawnsOverride);
 						}
 					}
 					else if (num26 == 7)
 					{
 						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 49))
 						{
-							num29 = NPC.NewNPC(num27 - 4, num28 - 6, 49, 0);
+							num29 = NPC.NewNPC(num27 - 4, num28 - 6, 49, 0, Main.SpawnsOverride);
 						}
 					}
 					else if (num26 == 8)
 					{
 						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 55))
 						{
-							num29 = NPC.NewNPC(num27, num28 - 12, 55, 0);
+							num29 = NPC.NewNPC(num27, num28 - 12, 55, 0, Main.SpawnsOverride);
 						}
 					}
 					else if (num26 == 9)
 					{
 						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 46))
 						{
-							num29 = NPC.NewNPC(num27, num28 - 12, 46, 0);
+							num29 = NPC.NewNPC(num27, num28 - 12, 46, 0, Main.SpawnsOverride);
 						}
 					}
 					else if (num26 == 10)
 					{
 						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 21))
 						{
-							num29 = NPC.NewNPC(num27, num28, 21, 0);
+							num29 = NPC.NewNPC(num27, num28, 21, 0, Main.SpawnsOverride);
 						}
 					}
 					else if (num26 == 18)
 					{
 						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 67))
 						{
-							num29 = NPC.NewNPC(num27, num28 - 12, 67, 0);
+							num29 = NPC.NewNPC(num27, num28 - 12, 67, 0, Main.SpawnsOverride);
 						}
 					}
 					else if (num26 == 23)
 					{
 						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 63))
 						{
-							num29 = NPC.NewNPC(num27, num28 - 12, 63, 0);
+							num29 = NPC.NewNPC(num27, num28 - 12, 63, 0, Main.SpawnsOverride);
 						}
 					}
 					else if (num26 == 27)
 					{
 						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 85))
 						{
-							num29 = NPC.NewNPC(num27 - 9, num28, 85, 0);
+							num29 = NPC.NewNPC(num27 - 9, num28, 85, 0, Main.SpawnsOverride);
 						}
 					}
 					else if (num26 == 28)
 					{
 						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 74))
 						{
-							num29 = NPC.NewNPC(num27, num28 - 12, 74, 0);
+							num29 = NPC.NewNPC(num27, num28 - 12, 74, 0, Main.SpawnsOverride);
 						}
 					}
 					else if (num26 == 42)
 					{
 						if (checkMech(i, j, 30) && NPC.MechSpawn((float)num27, (float)num28, 58))
 						{
-							num29 = NPC.NewNPC(num27, num28 - 12, 58, 0);
+							num29 = NPC.NewNPC(num27, num28 - 12, 58, 0, Main.SpawnsOverride);
 						}
 					}
 					else if (num26 == 37)

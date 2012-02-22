@@ -25,6 +25,7 @@ namespace Terraria_Server
         private const int       DEFAULT_MAX_PLAYERS             = 8;
         private const int       DEFAULT_MAX_RESPAWNTIME         = 0;
         private const bool      DEFAULT_NPC_DOOR_OPEN_CANCEL    = false;
+        private const bool      DEFAULT_NPCSPAWN_OVERRIDE		= true;
         private const int       DEFAULT_OVERLIMIT_SLOTS         = 1;
         private const string    DEFAULT_PID_FILE                = "";
         private const int       DEFAULT_PORT                    = 7777;
@@ -66,6 +67,7 @@ namespace Terraria_Server
         private const string    MAX_TILES_X                     = "opt-maxtilesx";
         private const string    MAX_TILES_Y                     = "opt-maxtilesy";
         private const string    NPC_DOOR_OPEN_CANCEL            = "npc-cancelopendoor";
+		private const string	NPCSPAWN_OVERRIDE				= "npcspawns-override";
         private const string    OVERLIMIT_SLOTS                 = "overlimit-slots";
         private const string    PASSWORD                        = "server-password";
         private const string    PID_FILE                        = "pid-file";
@@ -111,8 +113,9 @@ namespace Terraria_Server
             temp = MaxPlayers;
             temp = MaxRespawnTime;
             temp = MaxTilesX;
-            temp = MaxTilesY;
-            temp = NPCDoorOpenCancel;
+			temp = MaxTilesY;
+			temp = NPCDoorOpenCancel;
+			temp = NPCSpawnsOverride;
             temp = OverlimitSlots;
             temp = Password;
             temp = PIDFile;
@@ -582,6 +585,13 @@ namespace Terraria_Server
 		{
 			get { return getValue(GENERATE_SNOW, DEFAULT_GENERATE_SNOW); }
 			set { setValue(GENERATE_SNOW, value); }
+		}
+
+		//Cache me
+		public bool NPCSpawnsOverride
+		{
+			get { return getValue(NPCSPAWN_OVERRIDE, DEFAULT_NPCSPAWN_OVERRIDE); }
+			set { setValue(NPCSPAWN_OVERRIDE, value); }
 		}
     }
 }

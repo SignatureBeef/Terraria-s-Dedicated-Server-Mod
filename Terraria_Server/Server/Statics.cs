@@ -5,19 +5,21 @@ namespace Terraria_Server
 {
     public static class Statics
     {
-		public const String TDCM_QUEST_GIVER = "Quest Giver";
-
+		/* Terraria */
 		public const String VERSION_NUMBER = "v1.1.2";
-
-		public const Int32 PRE_RELEASE_BUILD = 1;
-		public const Int32 BUILD = 37;
 		public const Int32 CURRENT_TERRARIA_RELEASE = 39;
-        public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
+		public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
+
+		/* TDSM */
+		public const Int32 BUILD = 37;
+		public const String CODENAME = "Hello World!";
 
         private const String WORLDS = "Worlds";
 		private const String PLUGINS = "Plugins";
 		private const String DATA = "Data";
 		private const String LIBRARIES = "Libs";
+
+		public const String TDCM_QUEST_GIVER = "Quest Giver";
         
 		public static bool WorldLoaded
 		{

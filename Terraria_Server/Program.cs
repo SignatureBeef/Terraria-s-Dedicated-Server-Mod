@@ -22,23 +22,22 @@ namespace Terraria_Server
 {
 	public class Program
     {		
-		public static ProgramThread updateThread = null;
-		public static ServerProperties properties = null;
-		public static CommandParser commandParser = null;
-		public static PermissionManager permissionManager = null;
+		public static ProgramThread		updateThread		= null;
+		public static ServerProperties	properties			= null;
+		public static CommandParser		commandParser		= null;
+		public static PermissionManager permissionManager	= null;
 
         public static void Main(string[] args)
 		{
 			Thread.CurrentThread.Name = "Main";
 
+			//header: Terraria's Dedicated Server Mod. (1.1.2 #36) ~ Build: 37 [CodeName]
 			string MODInfo = String.Format(
-					"Terraria's Dedicated Server Mod. ({0} {1}{2}{3}) #{4}/{5}",
-					Statics.VERSION_NUMBER,
-					"{",
-					Statics.CURRENT_TERRARIA_RELEASE,
-					"}",
-					Statics.BUILD,
-					Statics.PRE_RELEASE_BUILD
+				"Terraria's Dedicated Server Mod. ({0} #{1}) ~ Build: {2} [{3}]",
+				Statics.VERSION_NUMBER,
+				Statics.CURRENT_TERRARIA_RELEASE,
+				Statics.BUILD,
+				Statics.CODENAME
 			);
 
 			try
@@ -79,7 +78,7 @@ namespace Terraria_Server
 						return;
 					}
 				}
-
+				
 				var logFile = Statics.DataPath + Path.DirectorySeparatorChar + "server.log";
 				ProgramLog.OpenLogFile(logFile);
 
