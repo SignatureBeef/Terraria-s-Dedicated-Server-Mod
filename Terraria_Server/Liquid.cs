@@ -719,16 +719,15 @@ namespace Terraria_Server
 			}
 		}
 
-		public static void UpdateLiquid(Func<Int32, Int32, ITile> TileRefs, bool Initializing = false)
+		public static void UpdateLiquid(Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			if (!Initializing)
-			{
-				Liquid.cycles = 30;
-				Liquid.maxLiquid = 6000;
-			}
+			//{
+			    //Liquid.cycles = 30;
+			//    Liquid.maxLiquid = 6000;
+			//}
 
 			if (!WorldModify.gen)
 			{

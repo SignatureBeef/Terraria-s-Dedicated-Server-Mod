@@ -762,7 +762,7 @@ namespace Terraria_Server.WorldMod
 
 										prog.Value = Liquid.numLiquid;
 
-										Liquid.UpdateLiquid(TileRefs, true);
+										Liquid.UpdateLiquid(TileRefs);
 									}
 								}
 

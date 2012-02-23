@@ -2448,7 +2448,7 @@ namespace Terraria_Server.WorldMod
                         }
                         if (liquidLeft <= 10)
                         {
-                            Liquid.UpdateLiquid(TileRefs, true);
+                            Liquid.UpdateLiquid(TileRefs);
                         }
                     }
                     WorldModify.WaterCheck(TileRefs, prog);
