@@ -132,6 +132,7 @@
     <Compile Include="Collections\IRegisterableEntity.cs" />
     <Compile Include="Collections\ItemRegistry.cs" />
     <Compile Include="Collections\Registries.cs" />
+    <Compile Include="Messages\SpammableMessage.cs" />
     <Compile Include="Misc\InvasionType.cs" />
     <Compile Include="Misc\Time.cs" />
     <Compile Include="Language\Languages.cs" />

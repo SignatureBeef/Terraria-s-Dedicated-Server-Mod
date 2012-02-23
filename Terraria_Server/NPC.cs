@@ -1533,6 +1533,11 @@ namespace Terraria_Server
 			if (Main.stopSpawns && !makespawn)
 				return;
 
+			if (!makespawn && IsNPCSummoned(Type)) //Monitor this, Possible hack
+			{
+				return;
+			}
+
 			bool flag = false;
 			int x = 0;
 			int y = 0;

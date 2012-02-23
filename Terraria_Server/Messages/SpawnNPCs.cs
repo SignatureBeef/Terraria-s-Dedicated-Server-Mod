@@ -7,12 +7,14 @@ using Terraria_Server.Misc;
 
 namespace Terraria_Server.Messages
 {
-	public class SpawnNPCs : SlotMessageHandler
+	public class SpawnNPCs : SpammableMessage<Int32, DateTime>
 	{
 		public override Packet GetPacket()
 		{
 			return Packet.SPAWN_NPCS;
 		}
+
+		public const Int32 MIN_KICK = 10;
 
 		public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
 		{
@@ -28,6 +30,18 @@ namespace Terraria_Server.Messages
 				player.Kick("SpawnNPC Player Forgery!");
 				return;
 			}
+
+			DateTime last;
+			if (Register.TryGetValue(plr, out last))
+			{
+				if ((DateTime.Now - last).TotalSeconds > MIN_KICK)
+				{
+					player.Kick("SpawnNPC packet spam!");
+					return;
+				}
+			}
+
+			AddOrUpdate(plr, DateTime.Now);
 
 			if (typeOrInvasion == (int)NPCType.N04_EYE_OF_CTHULHU ||
 				typeOrInvasion == (int)NPCType.N13_EATER_OF_WORLDS_HEAD ||
