@@ -10,7 +10,11 @@
 /Regions/bin
 /TDSMPlugin/obj
 /TDSMPlugin/bin
-/TDSMPermissions/TDSMPlugin/bin
-/TDSMPermissions/TDSMPlugin/obj
+/TDSMPermissions/TDSMPermissions/bin
+/TDSMPermissions/TDSMPermissions/obj
 /Languages/bin
 /Languages/obj
+/Restrict/bin
+/Restrict/obj
+/TDSMPlugin/TDSMPlugin/bin
+/TDSMPlugin/TDSMPlugin/obj
