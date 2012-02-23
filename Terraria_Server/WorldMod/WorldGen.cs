@@ -6768,7 +6768,7 @@ namespace Terraria_Server.WorldMod
             {
                 contain = 158;
             }
-            AddBuriedChest(TileRefs, i, num10 - 3, contain, false);
+            AddBuriedChest(TileRefs, i, num10 - 3, contain, false, 2);
             houseCount++;
         }
 
