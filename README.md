@@ -15,20 +15,21 @@ TDSM IS NOT tMod nor is it TShock. TDSM was actually under development before tM
 
 Status
 -------------
-We are actually started on a new beta release, Found here and is seperate from the official main repo found over at GitHub.
-There are many things still left to do, such as new Biomes and tile modifications.
+Currently it is in a PreRelease state until further notice.
 
 Features
 -------------
 Oh god. There is too many to tell, Such things as 
 
-	- Memory/CPU optimizations (at this stage 56mb on a testing state)
+	- Memory/CPU optimizations
 	
 	- No Client code (Runs a hell of a lot faster...)
 	
 	- Permissions System
 	
-	- Player sandboxing! (This keeps track of player world alterations!)
+	- [WIP] Player sandboxing! (This keeps track of player world alterations!)
+
+	- Hack preventions
 	
 	
 These are just only a few, But there is a larger list located at http://tdsm.org
@@ -45,10 +46,7 @@ The server also allows command line arguments, We will be adding documentation t
 
 Contact
 -------------
-Usually we always had talked on IRC or the Forums.
-
-During the beta development we setup #TDSMBeta on esper; Invite only. So you might want to hop on #TDSM or #TDSMGit and have a chat to DeathCradle.
-
+We have IRC channels on esper, #TDSM, #TDSMDev, #TDSMGit, #TDSMBeta.
 
 Developers
 =============
