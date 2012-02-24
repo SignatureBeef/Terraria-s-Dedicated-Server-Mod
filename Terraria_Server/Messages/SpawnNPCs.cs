@@ -15,6 +15,7 @@ namespace Terraria_Server.Messages
 		}
 
 		public const Int32 MIN_KICK = 10;
+		public const Int32 PURGE_TIME = 10;
 
 		public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
 		{
@@ -34,13 +35,14 @@ namespace Terraria_Server.Messages
 			DateTime last;
 			if (Register.TryGetValue(plr, out last))
 			{
-				if ((DateTime.Now - last).TotalSeconds > MIN_KICK)
+				if ((DateTime.Now - last).TotalSeconds <= MIN_KICK)
 				{
 					player.Kick("SpawnNPC packet spam!");
 					return;
 				}
 			}
 
+			Purge();
 			AddOrUpdate(plr, DateTime.Now);
 
 			if (typeOrInvasion == (int)NPCType.N04_EYE_OF_CTHULHU ||
@@ -84,6 +86,17 @@ namespace Terraria_Server.Messages
 				else
 					player.sendMessage("Please wait until the current invasion has been defeated.", ChatColor.Purple);
 			}
+		}
+
+		/// <summary>
+		/// Clears data when over time
+		/// </summary>
+		public void Purge()
+		{
+			var removable = from x in Register where (DateTime.Now - x.Value).TotalSeconds > MIN_KICK select x.Key;
+
+			foreach (var id in removable)
+				Register.Remove(id);
 		}
 	}
 }
