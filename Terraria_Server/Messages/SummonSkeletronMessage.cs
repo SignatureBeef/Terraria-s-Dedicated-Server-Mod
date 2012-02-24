@@ -14,8 +14,15 @@ namespace Terraria_Server.Messages
 
         public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
-            int playerId = readBuffer[num++]; //TODO: maybe check for forgery
+            int playerId = readBuffer[num++];
             byte action = readBuffer[num];
+
+			if (playerId != whoAmI)
+			{
+				Main.players[whoAmI].Kick("SummonSkeletron Player Forgery.");
+				return;
+			}
+
             if (action == 1)
             {
 				var player = Main.players[whoAmI];

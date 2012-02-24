@@ -541,7 +541,7 @@ namespace Terraria_Server.Commands
 
 				var index = receiver.GiveItem(item.Type, stack, sender, item.NetID);
 
-				if(item.NetID < 0)
+				if (item.NetID < 0)
 					Main.item[index] = Item.netDefaults(item.NetID);
 			}
 			else
@@ -571,7 +571,7 @@ namespace Terraria_Server.Commands
 				}
 				else
 				{
-					throw new CommandError(String.Format(Languages.MoreThanOneItemFoundNameId,"no"));
+					throw new CommandError(String.Format(Languages.MoreThanOneItemFoundNameId, "no"));
 				}
 			}
 		}
@@ -596,7 +596,7 @@ namespace Terraria_Server.Commands
 				throw new CommandError(Languages.TooManyArguments);
 			else if (sender is ConsoleSender && args.Count <= 2)
 			{
-				if(!NetPlay.anyClients || !Server.TryGetFirstOnlinePlayer(out player))
+				if (!NetPlay.anyClients || !Server.TryGetFirstOnlinePlayer(out player))
 					throw new CommandError(Languages.NobodyOnline);
 			}
 			else if (args.Count == 3)
@@ -1208,7 +1208,7 @@ namespace Terraria_Server.Commands
 			bool NightOverride = args.TryPop("-night");
 
 			Player player = null;
-			if (sender is Player)player = sender as Player;
+			if (sender is Player) player = sender as Player;
 			else if (NetPlay.anyClients)
 			{
 				string PlayerName;
@@ -1229,17 +1229,17 @@ namespace Terraria_Server.Commands
 
 			List<Int32> Bosses = new List<Int32>();
 
-			if (EyeOC || All)
+			if (EyeOC || Twins || All)
 			{
 				if (Main.dayTime && !NightOverride)
 					throw new CommandError(Languages.NeedsToBeNightTime);
-
-				Bosses.Add((int)NPCType.N04_EYE_OF_CTHULHU);
 			}
+
+			if (EyeOC || All) Bosses.Add((int)NPCType.N04_EYE_OF_CTHULHU);
 			if (Skeletron || All) Bosses.Add((int)NPCType.N35_SKELETRON_HEAD);
 			if (KingSlime || All) Bosses.Add((int)NPCType.N50_KING_SLIME);
 			if (EoW || All) Bosses.Add((int)NPCType.N13_EATER_OF_WORLDS_HEAD);
-			if (Twins || All) Bosses.Add((int)NPCType.N125_RETINAZER); Bosses.Add((int)NPCType.N126_SPAZMATISM);
+			if (Twins || All) { Bosses.Add((int)NPCType.N125_RETINAZER); Bosses.Add((int)NPCType.N126_SPAZMATISM); }
 
 			if (Bosses.Count > 0)
 			{

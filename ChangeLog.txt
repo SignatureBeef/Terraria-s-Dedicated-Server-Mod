@@ -16,6 +16,7 @@ Build: 37
 	- Language file + generation tool
 	- Minor method changes in Server.cs & upgrade to World.cs + other misc API changes
 	- More commands.
-	- Allowed spawning through statues and spawnnpc when summing is disabled (configurable)
+	- Allowed spawning through statues and spawnnpc when summoning is disabled (configurable)
 	- Code names.
 	- Standard tile compression
+	- WorldGen/Modify function semi-overhaul

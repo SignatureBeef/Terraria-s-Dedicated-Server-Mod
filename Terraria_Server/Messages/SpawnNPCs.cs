@@ -7,9 +7,15 @@ using Terraria_Server.Misc;
 
 namespace Terraria_Server.Messages
 {
-	public class SpawnNPCs : SpammableMessage<Int32, DateTime>
+	public struct SentMessage
 	{
-		public const Int32 MIN_KICK = 10;
+	    public DateTime Time { get; set; }
+		public int Type { get; set; }
+	}
+
+	public class SpawnNPCs : SpammableMessage<Int32, SentMessage>
+	{
+		public const Int32 MIN_WAIT = 10;
 
 		public override Packet GetPacket()
 		{
@@ -21,7 +27,6 @@ namespace Terraria_Server.Messages
 			int plr = BitConverter.ToInt32(readBuffer, num);
 			num += 4;
 			int typeOrInvasion = BitConverter.ToInt32(readBuffer, num);
-			num += 4;
 
 			var player = Main.players[whoAmI];
 
@@ -31,10 +36,12 @@ namespace Terraria_Server.Messages
 				return;
 			}
 
-			DateTime last;
-			if (Register.TryGetValue(plr, out last))
+			Terraria_Server.Logging.ProgramLog.Log("{0} summoning {1}", plr, typeOrInvasion);
+
+			SentMessage last;
+			if (Register.TryGetValue(plr, out last) && last.Type == typeOrInvasion)
 			{
-				if ((DateTime.Now - last).TotalSeconds <= MIN_KICK)
+				if ((DateTime.Now - last.Time).TotalSeconds >= MIN_WAIT)
 				{
 					player.Kick("SpawnNPC packet spam!");
 					return;
@@ -42,7 +49,11 @@ namespace Terraria_Server.Messages
 			}
 
 			Purge();
-			AddOrUpdate(plr, DateTime.Now);
+			AddOrUpdate(plr, new SentMessage()
+			{
+				Time = DateTime.Now,
+				Type = typeOrInvasion
+			});
 
 			if (typeOrInvasion == (int)NPCType.N04_EYE_OF_CTHULHU ||
 				typeOrInvasion == (int)NPCType.N13_EATER_OF_WORLDS_HEAD ||
@@ -92,10 +103,13 @@ namespace Terraria_Server.Messages
 		/// </summary>
 		public void Purge()
 		{
-			var removable = from x in Register where (DateTime.Now - x.Value).TotalSeconds > MIN_KICK select x.Key;
+			var removable = from x in Register where (DateTime.Now - x.Value.Time).TotalSeconds > MIN_WAIT select x.Key;
 
-			foreach (var id in removable)
-				Register.Remove(id);
+			lock (Register)
+			{
+				foreach (var id in removable)
+					Register.Remove(id);
+			}
 		}
 	}
 }

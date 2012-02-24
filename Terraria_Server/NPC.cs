@@ -1728,13 +1728,13 @@ namespace Terraria_Server
 			if (Main.stopSpawns && !makespawn)
 				return MAX_NPCS;
 
-            if (type == (int)NPCType.N124_MECHANIC && IsNPCSummoned(NPCType.N124_MECHANIC))
-            {
-                for (int i = 0; i < MAX_NPCS; i++)
-                {
-                    if (Main.npcs[i].Type == type) return i;
-                }
-            }
+			if (type == (int)NPCType.N124_MECHANIC && IsNPCSummoned(NPCType.N124_MECHANIC))
+			{
+				for (int i = 0; i < MAX_NPCS; i++)
+				{
+					if (Main.npcs[i].Type == type) return i;
+				}
+			}
 
 			NPC hnpc;
 			if (!InvokeNpcCreationHook(x, y, Registries.NPC.GetTemplate(type).Name, out hnpc))
@@ -1764,15 +1764,15 @@ namespace Terraria_Server
 		{
 			if (Main.stopSpawns && !makespawn)
 				return MAX_NPCS;
-            int type;
+			int type;
 
-            if (TryFindNPCByName(name, out type) && type == (int)NPCType.N124_MECHANIC && IsNPCSummoned(NPCType.N124_MECHANIC))
-            {
-                for (int i = 0; i < MAX_NPCS; i++)
-                {
-                    if (Main.npcs[i].Type == type) return i;
-                }
-            }
+			if (TryFindNPCByName(name, out type) && type == (int)NPCType.N124_MECHANIC && IsNPCSummoned(NPCType.N124_MECHANIC))
+			{
+				for (int i = 0; i < MAX_NPCS; i++)
+				{
+					if (Main.npcs[i].Type == type) return i;
+				}
+			}
 
 			NPC hnpc;
 			if (!InvokeNpcCreationHook(x, y, name, out hnpc))
@@ -9804,11 +9804,13 @@ namespace Terraria_Server
 			{
 				num357 += 6.283f;
 			}
-			else if ((double)num357 > 6.283)
+			else
 			{
-				num357 -= 6.283f;
+				if ((double)num357 > 6.283)
+				{
+					num357 -= 6.283f;
+				}
 			}
-
 			float num358 = 0.15f;
 			if (npc.rotation < num357)
 			{
@@ -9821,18 +9823,20 @@ namespace Terraria_Server
 					npc.rotation += num358;
 				}
 			}
-			else if (npc.rotation > num357)
+			else
 			{
-				if ((double)(npc.rotation - num357) > 3.1415)
+				if (npc.rotation > num357)
 				{
-					npc.rotation += num358;
-				}
-				else
-				{
-					npc.rotation -= num358;
+					if ((double)(npc.rotation - num357) > 3.1415)
+					{
+						npc.rotation += num358;
+					}
+					else
+					{
+						npc.rotation -= num358;
+					}
 				}
 			}
-
 			if (npc.rotation > num357 - num358 && npc.rotation < num357 + num358)
 			{
 				npc.rotation = num357;
@@ -9841,11 +9845,13 @@ namespace Terraria_Server
 			{
 				npc.rotation += 6.283f;
 			}
-			else if ((double)npc.rotation > 6.283)
+			else
 			{
-				npc.rotation -= 6.283f;
+				if ((double)npc.rotation > 6.283)
+				{
+					npc.rotation -= 6.283f;
+				}
 			}
-
 			if (npc.rotation > num357 - num358 && npc.rotation < num357 + num358)
 			{
 				npc.rotation = num357;
@@ -9889,15 +9895,17 @@ namespace Terraria_Server
 								npc.Velocity.X = npc.Velocity.X + num361;
 							}
 						}
-						else if (npc.Velocity.X > num363)
+						else
 						{
-							npc.Velocity.X = npc.Velocity.X - num361;
-							if (npc.Velocity.X > 0f && num363 < 0f)
+							if (npc.Velocity.X > num363)
 							{
 								npc.Velocity.X = npc.Velocity.X - num361;
+								if (npc.Velocity.X > 0f && num363 < 0f)
+								{
+									npc.Velocity.X = npc.Velocity.X - num361;
+								}
 							}
 						}
-
 						if (npc.Velocity.Y < num364)
 						{
 							npc.Velocity.Y = npc.Velocity.Y + num361;
@@ -9906,15 +9914,17 @@ namespace Terraria_Server
 								npc.Velocity.Y = npc.Velocity.Y + num361;
 							}
 						}
-						else if (npc.Velocity.Y > num364)
+						else
 						{
-							npc.Velocity.Y = npc.Velocity.Y - num361;
-							if (npc.Velocity.Y > 0f && num364 < 0f)
+							if (npc.Velocity.Y > num364)
 							{
 								npc.Velocity.Y = npc.Velocity.Y - num361;
+								if (npc.Velocity.Y > 0f && num364 < 0f)
+								{
+									npc.Velocity.Y = npc.Velocity.Y - num361;
+								}
 							}
 						}
-
 						npc.ai[2] += 1f;
 						if (npc.ai[2] >= 600f)
 						{
@@ -10040,7 +10050,7 @@ namespace Terraria_Server
 						}
 						npc.rotation += npc.ai[2];
 						npc.ai[1] += 1f;
-
+						Color newColor;
 						if (npc.ai[1] == 100f)
 						{
 							npc.ai[0] += 1f;
@@ -10053,7 +10063,6 @@ namespace Terraria_Server
 
 						npc.Velocity.X = npc.Velocity.X * 0.98f;
 						npc.Velocity.Y = npc.Velocity.Y * 0.98f;
-
 						if ((double)npc.Velocity.X > -0.1 && (double)npc.Velocity.X < 0.1)
 						{
 							npc.Velocity.X = 0f;
@@ -10093,15 +10102,17 @@ namespace Terraria_Server
 									npc.Velocity.X = npc.Velocity.X + num376;
 								}
 							}
-							else if (npc.Velocity.X > num378)
+							else
 							{
-								npc.Velocity.X = npc.Velocity.X - num376;
-								if (npc.Velocity.X > 0f && num378 < 0f)
+								if (npc.Velocity.X > num378)
 								{
 									npc.Velocity.X = npc.Velocity.X - num376;
+									if (npc.Velocity.X > 0f && num378 < 0f)
+									{
+										npc.Velocity.X = npc.Velocity.X - num376;
+									}
 								}
 							}
-
 							if (npc.Velocity.Y < num379)
 							{
 								npc.Velocity.Y = npc.Velocity.Y + num376;
@@ -10110,15 +10121,17 @@ namespace Terraria_Server
 									npc.Velocity.Y = npc.Velocity.Y + num376;
 								}
 							}
-							else if (npc.Velocity.Y > num379)
+							else
 							{
-								npc.Velocity.Y = npc.Velocity.Y - num376;
-								if (npc.Velocity.Y > 0f && num379 < 0f)
+								if (npc.Velocity.Y > num379)
 								{
 									npc.Velocity.Y = npc.Velocity.Y - num376;
+									if (npc.Velocity.Y > 0f && num379 < 0f)
+									{
+										npc.Velocity.Y = npc.Velocity.Y - num376;
+									}
 								}
 							}
-
 							npc.ai[2] += 1f;
 							if (npc.ai[2] >= 400f)
 							{
@@ -10135,45 +10148,47 @@ namespace Terraria_Server
 								{
 									npc.localAI[2] = 0f;
 								}
-
-								npc.localAI[1] += 1f;
-								if ((double)npc.life < (double)npc.lifeMax * 0.75)
+								//if (Main.netMode != 1)
 								{
 									npc.localAI[1] += 1f;
-								}
-								if ((double)npc.life < (double)npc.lifeMax * 0.5)
-								{
-									npc.localAI[1] += 1f;
-								}
-								if ((double)npc.life < (double)npc.lifeMax * 0.25)
-								{
-									npc.localAI[1] += 1f;
-								}
-								if ((double)npc.life < (double)npc.lifeMax * 0.1)
-								{
-									npc.localAI[1] += 2f;
-								}
-								if (npc.localAI[1] > 8f)
-								{
-									npc.localAI[1] = 0f;
-									float num381 = 6f;
-									int num382 = 30;
-									int num383 = 101;
-									vector38 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
-									num378 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector38.X;
-									num379 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector38.Y;
-									num380 = (float)Math.Sqrt((double)(num378 * num378 + num379 * num379));
-									num380 = num381 / num380;
-									num378 *= num380;
-									num379 *= num380;
-									num379 += (float)Main.rand.Next(-40, 41) * 0.01f;
-									num378 += (float)Main.rand.Next(-40, 41) * 0.01f;
-									num379 += npc.Velocity.Y * 0.5f;
-									num378 += npc.Velocity.X * 0.5f;
-									vector38.X -= num378 * 1f;
-									vector38.Y -= num379 * 1f;
-									Projectile.NewProjectile(vector38.X, vector38.Y, num378, num379, num383, num382, 0f, Main.myPlayer);
-									return;
+									if ((double)npc.life < (double)npc.lifeMax * 0.75)
+									{
+										npc.localAI[1] += 1f;
+									}
+									if ((double)npc.life < (double)npc.lifeMax * 0.5)
+									{
+										npc.localAI[1] += 1f;
+									}
+									if ((double)npc.life < (double)npc.lifeMax * 0.25)
+									{
+										npc.localAI[1] += 1f;
+									}
+									if ((double)npc.life < (double)npc.lifeMax * 0.1)
+									{
+										npc.localAI[1] += 2f;
+									}
+									if (npc.localAI[1] > 8f)
+									{
+										npc.localAI[1] = 0f;
+										float num381 = 6f;
+										int num382 = 30;
+										int num383 = 101;
+										vector38 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+										num378 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector38.X;
+										num379 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector38.Y;
+										num380 = (float)Math.Sqrt((double)(num378 * num378 + num379 * num379));
+										num380 = num381 / num380;
+										num378 *= num380;
+										num379 *= num380;
+										num379 += (float)Main.rand.Next(-40, 41) * 0.01f;
+										num378 += (float)Main.rand.Next(-40, 41) * 0.01f;
+										num379 += npc.Velocity.Y * 0.5f;
+										num378 += npc.Velocity.X * 0.5f;
+										vector38.X -= num378 * 1f;
+										vector38.Y -= num379 * 1f;
+										Projectile.NewProjectile(vector38.X, vector38.Y, num378, num379, num383, num382, 0f, Main.myPlayer);
+										return;
+									}
 								}
 							}
 						}

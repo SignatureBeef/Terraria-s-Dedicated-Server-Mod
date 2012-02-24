@@ -21,15 +21,17 @@ Features
 -------------
 Oh god. There is too many to tell, Such things as 
 
-	- Memory/CPU optimizations
+	- Memory/CPU Optimizations
 	
-	- No Client code (Runs a hell of a lot faster...)
+	- No Client Code (Runs a hell of a lot faster...)
 	
 	- Permissions System
-	
-	- [WIP] Player sandboxing! (This keeps track of player world alterations!)
 
-	- Hack preventions
+	- Hack Preventions
+	
+	- [WIP] Player Sandboxing! (This keeps track of player world alterations!)
+	
+	- [WIP] Language System
 	
 	
 These are just only a few, But there is a larger list located at http://tdsm.org
@@ -51,7 +53,7 @@ We have IRC channels on esper, #TDSM, #TDSMDev, #TDSMGit, #TDSMBeta.
 Developers
 =============
 TDSM is developed in C# so you will find it reasonably easy to manipulate.
-Plugins HAVE to be developed on the .Net 4.0 framework (In Visual Studio you have multiple choices, Choose 4.0) otherwise TDSM will not be able to load your plugin! (Sometimes it may work, Mono?).
+Plugins HAVE to be developed on the .Net 4.0 framework (In Visual Studio you have multiple choices, Choose 4.0) otherwise TDSM will not be able to load your plugin!.
 
 Usually when the TDSM Team has an upcoming release which changes a lot of code, We will post a prerelease for Developers to update prior to release; Located in the PreRelease directory on this GitHub page.
 
