@@ -8788,6 +8788,7 @@ namespace Terraria_Server.WorldMod
 					}
 				}
 			}
+
 			if (prog != null)
 				prog.Value++;
 		}
