@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Terraria_Server.Messages
 {
-	public class SpammableMessage<T, V> : SlotMessageHandler
+	public abstract class SpammableMessage<T, V> : SlotMessageHandler
 	{
 		public Dictionary<T, V> Register = new Dictionary<T, V>();
 
