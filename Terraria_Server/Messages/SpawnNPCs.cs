@@ -9,13 +9,12 @@ namespace Terraria_Server.Messages
 {
 	public class SpawnNPCs : SpammableMessage<Int32, DateTime>
 	{
+		public const Int32 MIN_KICK = 10;
+
 		public override Packet GetPacket()
 		{
 			return Packet.SPAWN_NPCS;
 		}
-
-		public const Int32 MIN_KICK = 10;
-		public const Int32 PURGE_TIME = 10;
 
 		public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
 		{
