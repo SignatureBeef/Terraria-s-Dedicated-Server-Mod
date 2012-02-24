@@ -15,7 +15,7 @@ using Terraria_Server.Plugins;
 
 namespace Terraria_Server
 {
-	public class Main
+	public static class Main
 	{
 		public const Int32 MAX_TILE_SETS = 150;
 		public const Int32 MAX_WALL_SETS = 32;
@@ -42,19 +42,21 @@ namespace Terraria_Server
 
 		public static bool ignoreErrors = true;
 		public static bool webProtect = false;
-		//private static bool webAuth = false;
+
 		public static float leftWorld = 0f;
 		public static float rightWorld = 134400f;
 		public static float topWorld = 0f;
 		public static float bottomWorld = 38400f;
+
 		public static int maxTilesX = -1;
-		//(int)rightWorld / 16 + 1;
 		public static int maxTilesY = -1;
-		//(int)bottomWorld / 16 + 1;
+
 		public static int maxSectionsX = maxTilesX / 200;
 		public static int maxSectionsY = maxTilesY / 150;
+
 		//[Obsolete("Replaced by SlotManager.MaxSlots")]
 		//public static int maxNetplayers = 254;
+
 		public static int dungeonX;
 		public static int dungeonY;
 		public static Liquid[] liquid = new Liquid[Liquid.resLiquid];
@@ -73,7 +75,6 @@ namespace Terraria_Server
 		public static int helpText = 0;
 		public static int evilTiles;
 
-		// [TODO] 1.1
 		public static float harpNote = 0f;
 		public static bool[] tileMergeDirt = new bool[MAX_TILE_SETS];
 		public static bool[] tileCut = new bool[MAX_TILE_SETS];
@@ -92,6 +93,7 @@ namespace Terraria_Server
 		public static bool[] tileNoFail = new bool[MAX_TILE_SETS];
 		public static bool[] tileFrameImportant = new bool[MAX_TILE_SETS];
 		public static string[] chrName = new string[MAX_NPC_NAMES];
+
 		[ThreadStatic]
 		static Random threadRand;
 
@@ -103,9 +105,7 @@ namespace Terraria_Server
 					threadRand = new Random((int)DateTime.Now.Ticks);
 				return threadRand;
 			}
-			set
-			{
-			}
+			set { }
 		}
 
 		public static TileCollection tile;
@@ -115,7 +115,6 @@ namespace Terraria_Server
 		public static Chest[] chest = new Chest[MAX_CHESTS];
 		public static Sign[] sign = new Sign[MAX_SIGNS];
 		public static Vector2 screenPosition;
-		public static Vector2 screenLastPosition;
 		public static int screenWidth = 800;
 		public static int screenHeight = 600;
 		public static bool playerInventory = false;

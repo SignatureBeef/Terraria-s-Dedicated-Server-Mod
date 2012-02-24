@@ -12,9 +12,10 @@ Build: 37
 	- Added all 1.1/.2 NPC's + invasions
 	- Added more hooks for new bosses/misc
 	- Snow!
-	- Few more server properties options && command line arguments
+	- Few more server properties options & command line arguments
 	- Language file + generation tool
 	- Minor method changes in Server.cs & upgrade to World.cs + other misc API changes
 	- More commands.
 	- Allowed spawning through statues and spawnnpc when summing is disabled (configurable)
 	- Code names.
+	- Standard tile compression
