@@ -105,7 +105,6 @@ namespace RestrictPlugin
 				.WithHelpText ("    -f    force action even if player isn't online")
                 .WithPermissionNode("restrict.ru")
 				.Calls (LockUsers<ISender, ArgumentList>(this.RegisterCommand));
-
 			
 			AddCommand ("ur")
 				.WithDescription ("Unregister users")
@@ -182,12 +181,12 @@ namespace RestrictPlugin
 		
 		protected override void Enabled ()
 		{
-			ProgramLog.Log(base.Name + " enabled.");
+			ProgramLog.Plugin.Log(base.Name + " enabled.");
 		}
 		
 		protected override void Disabled ()
 		{
-			ProgramLog.Log(base.Name + " disabled.");
+			ProgramLog.Plugin.Log(base.Name + " disabled.");
 		}
 		
 		[Hook(HookOrder.EARLY)]

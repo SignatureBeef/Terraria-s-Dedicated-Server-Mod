@@ -11,10 +11,13 @@ namespace Terraria_Server.Messages
 
 		public void AddOrUpdate(T key, V val)
 		{
-			if (Register.ContainsKey(key))
-				Register.Remove(key);
+			lock (Register)
+			{
+				if (Register.ContainsKey(key))
+					Register.Remove(key);
 
-			Register.Add(key, val);
+				Register.Add(key, val);
+			}
 		}
 	}
 }

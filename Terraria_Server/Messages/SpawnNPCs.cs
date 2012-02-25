@@ -35,9 +35,7 @@ namespace Terraria_Server.Messages
 				player.Kick("SpawnNPC Player Forgery!");
 				return;
 			}
-
-			Terraria_Server.Logging.ProgramLog.Log("{0} summoning {1}", plr, typeOrInvasion);
-
+			
 			SentMessage last;
 			if (Register.TryGetValue(plr, out last) && last.Type == typeOrInvasion)
 			{

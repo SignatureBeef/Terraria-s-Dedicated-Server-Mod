@@ -57,12 +57,12 @@ namespace TDSMPermissions
 
         protected override void Enabled()
         {
-            ProgramLog.Log(base.Name + " enabled.");
+            ProgramLog.Plugin.Log(base.Name + " enabled.");
         }
 
         protected override void Disabled()
         {
-            ProgramLog.Log(base.Name + " disabled.");
+			ProgramLog.Plugin.Log(base.Name + " disabled.");
         }
         
         [Hook(HookOrder.NORMAL)]

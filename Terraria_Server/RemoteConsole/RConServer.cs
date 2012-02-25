@@ -352,8 +352,22 @@ namespace Terraria_Server.RemoteConsole
 		
 		internal static void RConCommand (ISender sender, ArgumentList args)
 		{
-			string name;
-			if (args.TryParseOne ("cut", out name))
+			string name, pass;
+			if (args.GetString(0) == "add" && args.TryParseTwo("user", out name, "pass", out pass))
+			{
+				if (sender is ConsoleSender)
+				{
+					var password = Hash(name, pass);
+					LoginDatabase.setValue(name, password);
+					LoginDatabase.Save();
+				}
+				else
+				{
+					sender.sendMessage(Languages.PermissionsError, 255, 238, 130, 238);
+					return;
+				}
+			}
+			else if (args.TryParseOne ("cut", out name))
 			{
 				if (sender is Player || sender is RConSender)
 				{
@@ -409,7 +423,7 @@ namespace Terraria_Server.RemoteConsole
 			}
 			else
 			{
-				throw new CommandError ("");
+				throw new CommandError("");
 			}
 		}
 	}
