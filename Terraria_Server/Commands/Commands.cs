@@ -1334,7 +1334,7 @@ namespace Terraria_Server.Commands
 			Program.properties.AllowExplosions = Server.AllowExplosions;
 			Program.properties.Save();
 
-			sender.sendMessage(Languages.ExplosionsAreNow + ((Server.AllowExplosions) ? "allowed" : "disabled") + "!");
+			sender.sendMessage(Languages.ExplosionsAreNow + (Server.AllowExplosions ? "allowed" : "disabled") + "!");
 		}
 
 		/// <summary>
@@ -1427,7 +1427,7 @@ namespace Terraria_Server.Commands
 			if (Main.hardMode)
 				throw new CommandError(Languages.HardModeAlreadyEnabled);
 
-			ProgramLog.Log(Languages.StartingHardMode);
+			sender.sendMessage(Languages.StartingHardMode);
 			WorldModify.StartHardMode();
 		}
 
@@ -1440,8 +1440,8 @@ namespace Terraria_Server.Commands
 		{
 			args.ParseNone();
 
-			ProgramLog.Log("Reloading Language File...");
-			ProgramLog.Log("Reloading " + (Languages.LoadClass(Collections.Registries.LANGUAGE_FILE) ? "Succeeded" : "Failed"));
+			sender.sendMessage("Reloading Language File...");
+			sender.sendMessage("Reloading " + (Languages.LoadClass(Collections.Registries.LANGUAGE_FILE) ? "Succeeded" : "Failed"));
 		}
 	}
 }
