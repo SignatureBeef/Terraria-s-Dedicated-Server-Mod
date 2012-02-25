@@ -550,6 +550,11 @@ namespace Terraria_Server.Plugins
 				get { return (ProjectileType) TypeByte; }
 				set { TypeByte = (byte) value; }
 			}
+
+			public Projectile Current
+			{
+				get { return Main.projectile[Id]; }
+			}
 		}
 		
 		public struct KillProjectileReceived

@@ -6,10 +6,10 @@ using System.Xml.Serialization;
 
 namespace Terraria_Server.Definitions
 {
-    /// <summary>
-    /// All available projectile types
-    /// </summary>
-    public enum ProjectileType : int
+	/// <summary>
+	/// All available projectile types
+	/// </summary>
+	public enum ProjectileType : int
 	{
 		[XmlEnum(Name = "0")]
 		N0_UNKNOWN = 0,
@@ -236,15 +236,22 @@ namespace Terraria_Server.Definitions
 		[XmlEnum(Name = "111")]
 		N111_BUNNY = 111,
 	}
-    
+
 	public static class ProjectileTypeExtensions
 	{
-		public static bool IsHighExplosive (this ProjectileType type)
+		public static bool IsHighExplosive(this ProjectileType type)
 		{
-			return  type == ProjectileType.N29_DYNAMITE || 
-                    type == ProjectileType.N102_BOMB || 
-                    type == ProjectileType.N37_STICKY_BOMB ||
+			return type == ProjectileType.N29_DYNAMITE ||
+					type == ProjectileType.N102_BOMB ||
+					type == ProjectileType.N37_STICKY_BOMB ||
 					type == ProjectileType.N108_EXPLOSIVES;
+		}
+
+		public static bool IsExplosive(this ProjectileType type)
+		{
+			return IsHighExplosive(type) ||
+					type == ProjectileType.N30_GRENADE ||
+					type == ProjectileType.N41_HELLFIRE_ARROW;
 		}
 	}
 }

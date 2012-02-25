@@ -204,7 +204,6 @@
     <Compile Include="NetMessage.cs" />
     <Compile Include="NPC.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Definitions\DoorOpener.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projectile.cs" />
     <Compile Include="Misc\Platform.cs" />
