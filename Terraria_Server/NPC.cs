@@ -1727,15 +1727,7 @@ namespace Terraria_Server
 		{
 			if (Main.stopSpawns && !makespawn)
 				return MAX_NPCS;
-
-			if (type == (int)NPCType.N124_MECHANIC && IsNPCSummoned(NPCType.N124_MECHANIC))
-			{
-				for (int i = 0; i < MAX_NPCS; i++)
-				{
-					if (Main.npcs[i].Type == type) return i;
-				}
-			}
-
+			
 			NPC hnpc;
 			if (!InvokeNpcCreationHook(x, y, Registries.NPC.GetTemplate(type).Name, out hnpc))
 				return MAX_NPCS;
@@ -1764,15 +1756,6 @@ namespace Terraria_Server
 		{
 			if (Main.stopSpawns && !makespawn)
 				return MAX_NPCS;
-			int type;
-
-			if (TryFindNPCByName(name, out type) && type == (int)NPCType.N124_MECHANIC && IsNPCSummoned(NPCType.N124_MECHANIC))
-			{
-				for (int i = 0; i < MAX_NPCS; i++)
-				{
-					if (Main.npcs[i].Type == type) return i;
-				}
-			}
 
 			NPC hnpc;
 			if (!InvokeNpcCreationHook(x, y, name, out hnpc))
@@ -1806,6 +1789,9 @@ namespace Terraria_Server
 		public static int NewNPC(int x, int y, NPC npc, int npcIndex, bool makespawn = false)
 		{
 			if (Main.stopSpawns && !makespawn)
+				return MAX_NPCS;
+
+			if (npc.townNPC && IsNPCSummoned(npc.type))
 				return MAX_NPCS;
 
 			npc.Position.X = (float)(x - npc.Width / 2);
@@ -3044,7 +3030,6 @@ namespace Terraria_Server
 		}
 
 		//AI Stuff
-
 		private delegate void AIFunction(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs);
 
 		private static Dictionary<Int32, AIFunction> AIFunctions = new Dictionary<Int32, AIFunction>();
