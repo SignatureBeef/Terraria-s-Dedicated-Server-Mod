@@ -36,7 +36,7 @@ namespace TDSMExamplePlugin
             Description = "Plugin Example for TDSM.";
             Author = "DeathCradle";
             Version = "1";
-            TDSMBuild = 36; //You put here the release this plugin was made/build for.
+            TDSMBuild = 37; //You put here the release this plugin was made/build for.
         }
 
         protected override void Initialized(object state)

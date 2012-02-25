@@ -18,13 +18,6 @@ namespace Regions
 {
     public class Regions : BasePlugin
     {
-        /*
-         * @Developers
-         * 
-         * Plugins need to be in .NET 4.0
-         * Otherwise TDSM will be unable to load it. 
-         */
-
         public static int SelectorItem = 0;
         public static bool UsingPermissions = false;
 
@@ -33,8 +26,8 @@ namespace Regions
             base.Name = "Regions";
             base.Description = "A region plugin for TDSM";
             base.Author = "DeathCradle";
-            base.Version = "6";
-            base.TDSMBuild = 36;
+            base.Version = "7";
+            base.TDSMBuild = 37;
         }
 
         public static string RegionsFolder
