@@ -320,7 +320,6 @@ namespace Terraria_Server.WorldMod
 		{
 			var eff = AddSideEffect (SideEffectType.FALLING_BLOCK_PROJECTILE, x, y);
 			eff.Type = type;
-			ProgramLog.Debug.Log("Falling Block Projectile {0},{1} : {2}", x, y, type);
 		}
 		
 		public TileData TileAt (int x, int y)
