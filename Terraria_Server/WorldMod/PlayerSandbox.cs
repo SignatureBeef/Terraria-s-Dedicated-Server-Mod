@@ -295,14 +295,16 @@ namespace Terraria_Server.WorldMod
 		{
 			AddSideEffect (SideEffectType.SMASH_SHADOW_ORB, x, y);
 		}
-		
-		public void NewItem          (int x, int y, int w, int h, int type, int stack = 1, bool noBroadcast = false)
+
+		public void NewItem(int x, int y, int w, int h, int type, int stack = 1, bool noBroadcast = false, int pfix = 0, int NetID = 255)
 		{
 			var eff = AddSideEffect (SideEffectType.NEW_ITEM, x, y);
 			eff.Width = w;
 			eff.Height = h;
 			eff.Type = type;
 			eff.Stack = stack;
+			eff.Prefix = pfix;
+			eff.NetId = NetID;
 			eff.NoBroadcast = noBroadcast;
 		}
 		

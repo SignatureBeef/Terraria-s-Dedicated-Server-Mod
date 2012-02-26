@@ -134,6 +134,30 @@ namespace Terraria_Server.WorldMod
 		public static int[] noWireX = new int[MAX_WIRE];
 		public static int[] noWireY = new int[MAX_WIRE];
 
+		/*public static void StorePlayerItem(int ID, int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false, int pfix = 0, int NetID = 255)
+		{
+			if (ID >= 0)
+				ItemManager.AppendItem(ID, new ItemReference(X, Y, Width, Height, type, stack, noBroadcast, pfix, NetID));
+			else
+			{
+				/* return * / Item.NewItem(X, Y, Width, Height, type, stack, noBroadcast, pfix, NetID);
+			}
+
+			//return 0;
+		}*/
+
+		public static int StorePlayerItem(ISandbox sandbox, int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false, int pfix = 0, int NetID = 255)
+		{
+			if (sandbox != null)
+				sandbox.NewItem(X, Y, Width, Height, type, stack, noBroadcast, pfix, NetID);
+			else
+			{
+				return Item.NewItem(X, Y, Width, Height, type, stack, noBroadcast, pfix, NetID);
+			}
+
+			return 0;
+		}
+
 		public static void hardUpdateWorld(Func<Int32, Int32, ITile> TileRefs, int i, int j)
 		{
 			if (TileRefs == null)
@@ -6401,7 +6425,7 @@ namespace Terraria_Server.WorldMod
 			}
 			return result;
 		}
-		
+
 		public static void KillWall(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool fail = false)
 		{
 			if (TileRefs == null)
@@ -6532,7 +6556,7 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 
-		public static void KillTile(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool fail = false, bool effectOnly = false, bool noItem = false)
+		public static void KillTile(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool fail = false, bool effectOnly = false, bool noItem = false, ISandbox sandbox = null)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -6547,32 +6571,19 @@ namespace Terraria_Server.WorldMod
 					}
 					if (!effectOnly && !stopDrops)
 					{
-						if (TileRefs(i, j).Type == 127)
+						if (TileRefs(i, j).Type == 3 || TileRefs(i, j).Type == 110)
 						{
-						}
-						else
-						{
-							if (TileRefs(i, j).Type == 3 || TileRefs(i, j).Type == 110)
+							if (TileRefs(i, j).FrameX == 144)
 							{
-								if (TileRefs(i, j).FrameX == 144)
-								{
-									Item.NewItem(i * 16, j * 16, 16, 16, 5, 1, false, 0);
-								}
-							}
-							else
-							{
-								if (TileRefs(i, j).Type == 24)
-								{
-									if (TileRefs(i, j).FrameX == 144)
-									{
-										Item.NewItem(i * 16, j * 16, 16, 16, 60, 1, false, 0);
-									}
-								}
+								StorePlayerItem(sandbox, i * 16, j * 16, 16, 16, 5, 1, false, 0);
 							}
 						}
-						if (TileRefs(i, j).Type == 129 && !fail)
+						else if (TileRefs(i, j).Type == 24)
 						{
-
+							if (TileRefs(i, j).FrameX == 144)
+							{
+								StorePlayerItem(sandbox, i * 16, j * 16, 16, 16, 60, 1, false, 0);
+							}
 						}
 					}
 					int num = 10;
@@ -6581,9 +6592,8 @@ namespace Terraria_Server.WorldMod
 						int num2 = i;
 						int k = (int)TileRefs(i, j).FrameX;
 						int l;
-						for (l = (int)TileRefs(i, j).FrameX; l >= 100; l -= 100)
-						{
-						}
+						for (l = (int)TileRefs(i, j).FrameX; l >= 100; l -= 100) { }
+
 						while (l >= 36)
 						{
 							l -= 36;
@@ -6604,15 +6614,15 @@ namespace Terraria_Server.WorldMod
 							int num4 = (int)(TileRefs(num2, j).FrameY / 18);
 							if (num4 == 0)
 							{
-								Item.NewItem(i * 16, j * 16, 16, 16, Item.headType[num3], 1, false, 0);
+								StorePlayerItem(sandbox, i * 16, j * 16, 16, 16, Item.headType[num3], 1, false, 0);
 							}
 							if (num4 == 1)
 							{
-								Item.NewItem(i * 16, j * 16, 16, 16, Item.bodyType[num3], 1, false, 0);
+								StorePlayerItem(sandbox, i * 16, j * 16, 16, 16, Item.bodyType[num3], 1, false, 0);
 							}
 							if (num4 == 2)
 							{
-								Item.NewItem(i * 16, j * 16, 16, 16, Item.legType[num3], 1, false, 0);
+								StorePlayerItem(sandbox, i * 16, j * 16, 16, 16, Item.legType[num3], 1, false, 0);
 							}
 							for (k = (int)TileRefs(num2, j).FrameX; k >= 100; k -= 100)
 							{
@@ -7544,7 +7554,7 @@ namespace Terraria_Server.WorldMod
 																																																																										{
 																																																																											if (TileRefs(i, j).FrameX == 144)
 																																																																											{
-																																																																												Item.NewItem(i * 16, j * 16, 16, 16, 331, genRand.Next(2, 4), false, 0);
+																																																																												StorePlayerItem(sandbox, i * 16, j * 16, 16, 16, 331, genRand.Next(2, 4), false, 0);
 																																																																											}
 																																																																											else
 																																																																											{
@@ -7634,7 +7644,7 @@ namespace Terraria_Server.WorldMod
 																																																																																num8 = 313 + num11;
 																																																																																if (flag)
 																																																																																{
-																																																																																	Item.NewItem(i * 16, j * 16, 16, 16, 307 + num11, genRand.Next(1, 4), false, 0);
+																																																																																	StorePlayerItem(sandbox, i * 16, j * 16, 16, 16, 307 + num11, genRand.Next(1, 4), false, 0);
 																																																																																}
 																																																																															}
 																																																																														}
@@ -7712,7 +7722,7 @@ namespace Terraria_Server.WorldMod
 						}
 						if (num8 > 0)
 						{
-							Item.NewItem(i * 16, j * 16, 16, 16, num8, 1, false, -1);
+							StorePlayerItem(sandbox, i * 16, j * 16, 16, 16, num8, 1, false, -1);
 						}
 					}
 					TileRefs(i, j).SetActive(false);
@@ -8612,7 +8622,7 @@ namespace Terraria_Server.WorldMod
 					{
 						if (grass != 23 || TileRefs(i, j - 1).Type != 27)
 						{
-							TileRefs(i, j).SetType ( (byte)grass);
+							TileRefs(i, j).SetType((byte)grass);
 							for (int m = num; m < num2; m++)
 							{
 								for (int n = num3; n < num4; n++)
@@ -13741,7 +13751,7 @@ namespace Terraria_Server.WorldMod
 											}
 
 											TileRefs(i, j).SetActive(false);
-											
+
 											/*int num39 = Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 2.5f, type2, 10, 0f, Main.myPlayer);
 											Main.projectile[num39].Velocity.Y = 0.5f;
 											Main.projectile[num39].Position.Y += 2f;

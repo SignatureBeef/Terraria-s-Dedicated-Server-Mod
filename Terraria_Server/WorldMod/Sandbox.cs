@@ -19,8 +19,8 @@ namespace Terraria_Server.WorldMod
 		public void ShadowOrbSmashed (int x, int y)
 		{
 		}
-		
-		public void NewItem          (int x, int y, int w, int h, int type, int stack = 1, bool noBroadcast = false)
+
+		public void NewItem(int x, int y, int w, int h, int type, int stack = 1, bool noBroadcast = false, int pfix = 0, int NetID = 255)
 		{
 		}
 		
@@ -204,8 +204,8 @@ namespace Terraria_Server.WorldMod
 		public void ShadowOrbSmashed (int x, int y)
 		{
 		}
-		
-		public void NewItem          (int x, int y, int w, int h, int type, int stack = 1, bool noBroadcast = false)
+
+		public void NewItem(int x, int y, int w, int h, int type, int stack = 1, bool noBroadcast = false, int pfix = 0, int NetID = 255)
 		{
 		}
 		
@@ -530,8 +530,8 @@ namespace Terraria_Server.WorldMod
 		public void ShadowOrbSmashed (int x, int y)
 		{
 		}
-		
-		public void NewItem          (int x, int y, int w, int h, int type, int stack = 1, bool noBroadcast = false)
+
+		public void NewItem(int x, int y, int w, int h, int type, int stack = 1, bool noBroadcast = false, int pfix = 0, int NetID = 255)
 		{
 		}
 		

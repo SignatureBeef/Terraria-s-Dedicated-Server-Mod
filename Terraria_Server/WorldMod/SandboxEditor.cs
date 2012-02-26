@@ -18,7 +18,7 @@ namespace Terraria_Server.WorldMod
 
 		void AddWater(int x, int y);
 		void ShadowOrbSmashed(int x, int y);
-		void NewItem(int x, int y, int w, int h, int type, int stack = 1, bool noBroadcast = false);
+		void NewItem(int x, int y, int w, int h, int type, int stack = 1, bool noBroadcast = false, int pfix = 0, int NetID = 255);
 		void KillSign(int x, int y);
 		void DestroyChest(int x, int y);
 
@@ -451,9 +451,9 @@ namespace Terraria_Server.WorldMod
 			WorldModify.KillWall(ITileAt, i, j, fail);
 		}
 
-		public void KillTile(int x, int y, bool fail = false, bool effectOnly = false, bool noItem = false, Player player = null) 
+		public void KillTile(int x, int y, bool fail = false, bool effectOnly = false, bool noItem = false) 
 		{
-			WorldModify.KillTile(ITileAt, x, y, fail, effectOnly, noItem);
+			WorldModify.KillTile(ITileAt, x, y, fail, effectOnly, noItem, this.Sandbox);
 		}
 
 		//Remove

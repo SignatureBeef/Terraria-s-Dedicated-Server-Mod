@@ -1507,4 +1507,23 @@ namespace Terraria_Server
 
 		public bool Accessory { get; set; }
 	}
+
+	public struct ItemReference
+	{
+		int x, y, width, height, type, stack, prefix, netId;
+		bool noBroadcast;
+
+		public ItemReference(int X, int Y, int Width, int Height, int Type, int Stack = 1, bool NoBroadcast = false, int pfix = 0, int NetID = 255)
+		{
+			x = X;
+			y = Y;
+			width = Width;
+			height = Height;
+			type = Type;
+			stack = Stack;
+			noBroadcast = NoBroadcast;
+			prefix = pfix;
+			netId = NetID;
+		}
+	}
 }

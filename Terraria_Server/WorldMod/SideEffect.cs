@@ -26,6 +26,8 @@ namespace Terraria_Server.WorldMod
 		internal int Width { get; set; }
 		internal int Height { get; set; }
 		public int Stack { get; set; }
+		public int Prefix { get; set; }
+		public int NetId { get; set; }
 		internal bool NoBroadcast { get; set; }
 		
 		internal void Reset ()
