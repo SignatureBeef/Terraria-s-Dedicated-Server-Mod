@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections;
 
 namespace Terraria_Server.Messages
 {
@@ -17,6 +18,16 @@ namespace Terraria_Server.Messages
 					Register.Remove(key);
 
 				Register.Add(key, val);
+			}
+		}
+
+		public void Purge(IEnumerable<T> removable)
+		{
+			lock (Register)
+			{
+
+				foreach (var id in removable)
+					Register.Remove(id);
 			}
 		}
 	}

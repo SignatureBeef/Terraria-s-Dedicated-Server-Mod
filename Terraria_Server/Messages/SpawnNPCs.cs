@@ -22,6 +22,14 @@ namespace Terraria_Server.Messages
 			return Packet.SPAWN_NPCS;
 		}
 
+		public IEnumerable<Int32> GetRemovable
+		{
+			get
+			{
+				return from x in Register where (DateTime.Now - x.Value.Time).TotalSeconds > MIN_WAIT select x.Key;
+			}
+		}
+
 		public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
 		{
 			int plr = BitConverter.ToInt32(readBuffer, num);
@@ -46,7 +54,7 @@ namespace Terraria_Server.Messages
 				}
 			}
 
-			Purge();
+			Purge(GetRemovable);
 			AddOrUpdate(plr, new SentMessage()
 			{
 				Time = DateTime.Now,
@@ -93,20 +101,6 @@ namespace Terraria_Server.Messages
 				}
 				else
 					player.sendMessage("Please wait until the current invasion has been defeated.", ChatColor.Purple);
-			}
-		}
-
-		/// <summary>
-		/// Clears data when over time
-		/// </summary>
-		public void Purge()
-		{
-			lock (Register)
-			{
-				var removable = from x in Register where (DateTime.Now - x.Value.Time).TotalSeconds > MIN_WAIT select x.Key;
-
-				foreach (var id in removable)
-					Register.Remove(id);
 			}
 		}
 	}
