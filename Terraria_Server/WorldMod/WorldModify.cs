@@ -2189,7 +2189,7 @@ namespace Terraria_Server.WorldMod
 			if (!StartRoomCheck(TileRefs, x, y))
 				return NPCMove_Result.NOT_VALID;
 
-			if (!RoomNeeds(spawnNPC))
+			if (!RoomNeeds())
 			{
 				var moveResult = NPCMove_Result.REQUIRED_MULTIPLE;
 				var amount = 0;
@@ -2245,15 +2245,14 @@ namespace Terraria_Server.WorldMod
 			SpawnNPC(TileRefs, x, y);
 		}
 
-		public static bool RoomNeeds(int npcType)
+		public static bool RoomNeeds()
 		{
 			roomChair = houseTile[15] || houseTile[79] || houseTile[89] || houseTile[102];
 			roomDoor = houseTile[10] || houseTile[11] || houseTile[19];
 			roomTable = houseTile[14] || houseTile[18] || houseTile[87] || houseTile[88] || houseTile[90] || houseTile[101];
-			roomTorch = houseTile[4] || houseTile[33] || houseTile[34] || houseTile[35] || houseTile[36] || houseTile[42] || houseTile[49] || houseTile[93] || houseTile[95] || houseTile[98] || houseTile[100];
-
+			roomTorch = houseTile[4] || houseTile[33] || houseTile[34] || houseTile[35] || houseTile[36] || houseTile[42] || houseTile[49] || houseTile[93] || houseTile[95] || houseTile[98] || houseTile[100] || houseTile[149];
 			canSpawn = roomChair && roomTable && roomDoor && roomTorch;
-
+			
 			return canSpawn;
 		}
 
@@ -2318,7 +2317,7 @@ namespace Terraria_Server.WorldMod
 			if (!StartRoomCheck(TileRefs, x, y))
 				return;
 
-			if (!RoomNeeds(spawnNPC))
+			if (!RoomNeeds())
 				return;
 
 			ScoreRoom(TileRefs, -1);
@@ -2470,7 +2469,7 @@ namespace Terraria_Server.WorldMod
 				}
 				if (canSpawn)
 				{
-					RoomNeeds(Main.npcs[npc].Type);
+					RoomNeeds();
 					if (canSpawn)
 						ScoreRoom(TileRefs, npc);
 
