@@ -22,7 +22,7 @@ namespace Terraria_Server.Messages
 			return Packet.SPAWN_NPCS;
 		}
 
-		public IEnumerable<Int32> GetRemovable
+		public override IEnumerable<Int32> GetRemovable
 		{
 			get
 			{
@@ -47,14 +47,17 @@ namespace Terraria_Server.Messages
 			SentMessage last;
 			if (Register.TryGetValue(plr, out last) && last.Type == typeOrInvasion)
 			{
-				if ((DateTime.Now - last.Time).TotalSeconds >= MIN_WAIT)
+				/* Checks if out of time, While also, if npc's are purged, check if are summoned, or is a Invasion. */
+
+				if ((DateTime.Now - last.Time).TotalSeconds >= MIN_WAIT && (NPC.IsNPCSummoned(typeOrInvasion) || 
+					(typeOrInvasion == -1 || typeOrInvasion == -2 && Main.IsInvasionOccurring(typeOrInvasion, true))))
 				{
-					player.Kick("SpawnNPC packet spam!");
+					player.Kick("SpawnNPC packet abuse!");
 					return;
 				}
 			}
 
-			Purge(GetRemovable);
+			Purge();
 			AddOrUpdate(plr, new SentMessage()
 			{
 				Time = DateTime.Now,

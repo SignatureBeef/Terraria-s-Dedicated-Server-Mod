@@ -10,6 +10,8 @@ namespace Terraria_Server.Messages
 	{
 		public Dictionary<T, V> Register = new Dictionary<T, V>();
 
+		public abstract IEnumerable<T> GetRemovable { get; }
+
 		public void AddOrUpdate(T key, V val)
 		{
 			lock (Register)
@@ -21,11 +23,11 @@ namespace Terraria_Server.Messages
 			}
 		}
 
-		public void Purge(IEnumerable<T> removable)
+		public void Purge()
 		{
 			lock (Register)
 			{
-
+				var removable = (T[])GetRemovable.ToArray().Clone();
 				foreach (var id in removable)
 					Register.Remove(id);
 			}

@@ -164,6 +164,33 @@ namespace Terraria_Server
 		public static int zoneX = 99;
 		public static int zoneY = 87;
 
+		/// <summary>
+		/// Checks whether an invasion is occurring.
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns></returns>
+		public static bool IsInvasionOccurring(InvasionType type)
+		{
+			return type == invasionType;
+		}
+
+		/// <summary>
+		/// Checks whether an invasion is occurring.
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns></returns>
+		public static bool IsInvasionOccurring(int type, bool transform = false)
+		{
+			if (transform)
+			{
+				if (type == -1 || type == -2)
+					type *= -1;
+				else return false;
+			}
+
+			return IsInvasionOccurring((InvasionType)type);
+		}
+
 		public static void Initialize()
 		{
 			if (Program.properties != null)
