@@ -133,19 +133,7 @@ namespace Terraria_Server.WorldMod
 		public static int[] wireY = new int[MAX_WIRE];
 		public static int[] noWireX = new int[MAX_WIRE];
 		public static int[] noWireY = new int[MAX_WIRE];
-
-		/*public static void StorePlayerItem(int ID, int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false, int pfix = 0, int NetID = 255)
-		{
-			if (ID >= 0)
-				ItemManager.AppendItem(ID, new ItemReference(X, Y, Width, Height, type, stack, noBroadcast, pfix, NetID));
-			else
-			{
-				/* return * / Item.NewItem(X, Y, Width, Height, type, stack, noBroadcast, pfix, NetID);
-			}
-
-			//return 0;
-		}*/
-
+		
 		public static int StorePlayerItem(ISandbox sandbox, int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false, int pfix = 0, int NetID = 255)
 		{
 			if (sandbox != null)
@@ -1778,7 +1766,7 @@ namespace Terraria_Server.WorldMod
 					}
 					else
 					{
-						TileRefs(i, j).AddFrameX(54);
+						TileRefs(i, j).AddFrameX(-54);
 					}
 					NetMessage.SendTileSquare(-1, i, j, 1);
 				}
