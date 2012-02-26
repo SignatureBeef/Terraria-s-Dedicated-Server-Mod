@@ -8,6 +8,7 @@ using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
 using Terraria_Server.Plugins;
+using System.Text;
 
 namespace Terraria_Server.WorldMod
 {
@@ -88,8 +89,8 @@ namespace Terraria_Server.WorldMod
 		//Works to what is needed.
 		public static int AsciiToInt32(string input)
 		{
-			System.Text.Encoding ascii = System.Text.Encoding.ASCII;
-			byte[] encodedBytes = ascii.GetBytes(input);
+			var encodedBytes = Encoding.ASCII.GetBytes(input);
+
 			int ret = 0;
 			foreach (byte b in encodedBytes)
 				ret += (int)b;
@@ -8593,6 +8594,9 @@ namespace Terraria_Server.WorldMod
 
 		public static void MineHouse(Func<Int32, Int32, ITile> TileRefs, int x, int y)
 		{
+			if (TileRefs == null)
+				TileRefs = TileCollection.ITileAt;
+
 			if (x < 50 || x > Main.maxTilesX - 50 || y < 50 || y > Main.maxTilesY - 50 || WorldModify.SolidTile(TileRefs, x, y) || TileRefs(x, y).Wall > 0)
 				return;
 

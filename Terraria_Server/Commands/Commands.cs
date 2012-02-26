@@ -1428,7 +1428,7 @@ namespace Terraria_Server.Commands
 				throw new CommandError(Languages.HardModeAlreadyEnabled);
 
 			sender.sendMessage(Languages.StartingHardMode);
-			WorldModify.StartHardMode();
+			WorldModify.StartHardMode(null);
 		}
 
 		/// <summary>

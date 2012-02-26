@@ -265,7 +265,7 @@ namespace RestrictPlugin
 			{
 				entry = users.getValue (pname) ?? users.getValue (oname);
 			}
-			
+						
 			if (entry == null)
 			{
 				if (allowGuests)
@@ -282,7 +282,9 @@ namespace RestrictPlugin
 			
 			var split = entry.Split (':');
 			var hash  = split[0];
-			var hash2 = Hash (name, args.Password);
+			var hash2 = Hash(name, args.Password);
+
+			String.Format("User: {0}, Pass: {1}, Hash: {3}, Hash2: {2}", name, args.Password, hash2, hash);
 			
 			if (hash != hash2)
 			{

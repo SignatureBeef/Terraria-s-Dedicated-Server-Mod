@@ -2375,7 +2375,7 @@ namespace Terraria_Server
 					NetMessage.SendData(25, -1, -1, str + " has been defeated!", 255, 175f, 75f, 255f, 0);
 
 				if (this.type == NPCType.N113_WALL_OF_FLESH || this.type == NPCType.N114_WALL_OF_FLESH_EYE)
-					WorldModify.StartHardMode();
+					WorldModify.StartHardMode(null);
 
 				NetMessage.SendData(7);
 			}

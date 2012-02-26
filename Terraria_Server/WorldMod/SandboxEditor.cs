@@ -1,4 +1,4 @@
-//#define USE_SANDBOX
+#define USE_SANDBOX
 
 using System;
 using System.IO;

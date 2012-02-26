@@ -16,7 +16,7 @@ namespace Terraria_Server.Messages
             return Packet.TILE_BREAK;
         }
 						
-		static SandboxEditor<PlayerSandbox> staticEditor = new SandboxEditor<PlayerSandbox> (new PlayerSandbox ());
+		public static SandboxEditor<PlayerSandbox> staticEditor = new SandboxEditor<PlayerSandbox> (new PlayerSandbox ());
 		
         public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
@@ -55,9 +55,9 @@ namespace Terraria_Server.Messages
 				switch (tileAction)
 				{
 					case 0:
-						//editor.KillTile(x, y, failFlag);
+						editor.KillTile(x, y, failFlag);
 						//[TODO] Get block modifications outside the x,y axis to update on Client end
-						WorldModify.KillTile(null, x, y, failFlag);
+						//WorldModify.KillTile(null, x, y, failFlag);
 						break;						
 					case 1:
 						if (editor.PlaceTile(x, y, (int)tileType, false, true, whoAmI, style))
@@ -161,7 +161,7 @@ namespace Terraria_Server.Messages
 					return;
 				}
 
-				if (player.rowsToRectify.Count > 0)
+				if (player.rowsToRectify.Count > 0 || sandbox.changedRows.Count > 0)
 				{
 					lock (player.rowsToRectify)
 					{

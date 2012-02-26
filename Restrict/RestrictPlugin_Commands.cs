@@ -56,7 +56,10 @@ namespace RestrictPlugin
 				if (password != null)
 					hash = Hash (name, password);
 				else if (args.Count == 2)
-					hash = args[1];
+					hash = Hash(name, args[1]);
+					//hash = args[1];
+
+				String.Format("User: {0}, Pass: {1}, Hash: {2}", name, password, hash);
 				
 				if (hash != null)
 				{
