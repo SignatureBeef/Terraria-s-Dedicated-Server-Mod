@@ -9,7 +9,7 @@ namespace Terraria_Server.Messages
 {
 	public struct SentMessage
 	{
-	    public DateTime Time { get; set; }
+		public DateTime Time { get; set; }
 		public int Type { get; set; }
 	}
 
@@ -35,7 +35,7 @@ namespace Terraria_Server.Messages
 				player.Kick("SpawnNPC Player Forgery!");
 				return;
 			}
-			
+
 			SentMessage last;
 			if (Register.TryGetValue(plr, out last) && last.Type == typeOrInvasion)
 			{
@@ -101,10 +101,10 @@ namespace Terraria_Server.Messages
 		/// </summary>
 		public void Purge()
 		{
-			var removable = from x in Register where (DateTime.Now - x.Value.Time).TotalSeconds > MIN_WAIT select x.Key;
-
 			lock (Register)
 			{
+				var removable = from x in Register where (DateTime.Now - x.Value.Time).TotalSeconds > MIN_WAIT select x.Key;
+
 				foreach (var id in removable)
 					Register.Remove(id);
 			}
