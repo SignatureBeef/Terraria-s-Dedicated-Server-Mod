@@ -3555,7 +3555,7 @@ namespace Terraria_Server
 				this.pvpDeath = true;
 			}
 
-			if (this.Difficulty > 0)
+			//if (this.Difficulty == 0)
 			{
 				float num = (float)Main.rand.Next(-35, 36) * 0.1f;
 				while (num < 2f && num > -2f)
