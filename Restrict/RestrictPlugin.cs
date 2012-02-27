@@ -41,10 +41,15 @@ namespace RestrictPlugin
 		{
 			get { return properties.getValue ("restrict-guests", true); }
 		}
-		
+
 		bool restrictGuestsDoors
 		{
-			get { return properties.getValue ("restrict-guests-doors", true); }
+			get { return properties.getValue("restrict-guests-doors", true); }
+		}
+
+		bool restrictGuestsNPCs
+		{
+			get { return properties.getValue("restrict-guests-npcs", true); }
 		}
         		
 		string serverId
@@ -86,6 +91,7 @@ namespace RestrictPlugin
 			var dummy2 = restrictGuests;
 			var dummy3 = restrictGuestsDoors;
 			var dummy4 = serverId;
+			var dummy5 = restrictGuestsNPCs;
 			properties.Save(false);
 			
 			users = new PropertiesFile (pluginFolder + Path.DirectorySeparatorChar + "restrict_users.properties");
@@ -545,6 +551,28 @@ namespace RestrictPlugin
                 player.sendMessage("<Restrict> You are not allowed to open and close doors without permissions.");
             }
         }
+
+		[Hook(HookOrder.EARLY)]
+		void OnNPCHurt(ref HookContext ctx, ref HookArgs.NpcHurt args)
+		{
+			if ((!restrictGuests) || (!restrictGuestsNPCs)) return;
+
+			var player = ctx.Player;
+
+			if (player == null) return;
+
+			if (player.AuthenticatedAs == null)
+			{
+				ctx.SetResult(HookResult.IGNORE);
+				player.sendMessage("<Restrict> You are not allowed to hurt NPCs as a guest.");
+				player.sendMessage("<Restrict> Type \"/reg password\" to request registration.");
+			}
+			else if (IsRestrictedForUser(ctx.Player, DoorChange))
+			{
+				ctx.SetResult(HookResult.IGNORE);
+				player.sendMessage("<Restrict> You are not allowed to hurt NPCs without permissions.");
+			}
+		}
 
 #region Permissions
         public bool IsRunningPermissions()
