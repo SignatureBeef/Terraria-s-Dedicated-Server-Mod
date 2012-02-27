@@ -178,6 +178,7 @@ namespace Terraria_Server
 		/// Checks whether an invasion is occurring.
 		/// </summary>
 		/// <param name="type"></param>
+		/// <param name="transform">Used when the SpawnNPC packet receives a message about a new Invasion</param>
 		/// <returns></returns>
 		public static bool IsInvasionOccurring(int type, bool transform = false)
 		{

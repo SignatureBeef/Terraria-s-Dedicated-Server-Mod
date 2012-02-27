@@ -22,11 +22,11 @@ namespace Terraria_Server.Messages
 			return Packet.SPAWN_NPCS;
 		}
 
-		public override IEnumerable<Int32> GetRemovable
+		public override IEnumerable<Record<Int32, SentMessage>> GetRemovable
 		{
 			get
 			{
-				return from x in Register where (DateTime.Now - x.Value.Time).TotalSeconds > MIN_WAIT select x.Key;
+				return from x in Register where (DateTime.Now - x.Val.Time).TotalSeconds > MIN_WAIT select x;
 			}
 		}
 
@@ -44,21 +44,25 @@ namespace Terraria_Server.Messages
 				return;
 			}
 
-			SentMessage last;
-			if (Register.TryGetValue(plr, out last) && last.Type == typeOrInvasion)
-			{
-				/* Checks if out of time, While also, if npc's are purged, check if are summoned, or is a Invasion. */
-
-				if ((DateTime.Now - last.Time).TotalSeconds >= MIN_WAIT && (NPC.IsNPCSummoned(typeOrInvasion) || 
-					(typeOrInvasion == -1 || typeOrInvasion == -2 && Main.IsInvasionOccurring(typeOrInvasion, true))))
+			SentMessage[] records;
+			if (Register.GetAllResults(plr, out records))
+				foreach (var record in records)
 				{
-					player.Kick("SpawnNPC packet abuse!");
-					return;
+					if (record.Type == typeOrInvasion)
+					{
+						/* Checks if out of time, While also, if npc's are purged, check if are summoned, or is a Invasion. */
+
+						if ((DateTime.Now - record.Time).TotalSeconds >= MIN_WAIT && (NPC.IsNPCSummoned(typeOrInvasion) ||
+							(typeOrInvasion == -1 || typeOrInvasion == -2 && Main.IsInvasionOccurring(typeOrInvasion, true))))
+						{
+							player.Kick("SpawnNPC packet abuse!");
+							return;
+						}
+					}
 				}
-			}
 
 			Purge();
-			AddOrUpdate(plr, new SentMessage()
+			Add(plr, new SentMessage()
 			{
 				Time = DateTime.Now,
 				Type = typeOrInvasion
