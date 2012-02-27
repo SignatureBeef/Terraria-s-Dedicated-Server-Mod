@@ -17,6 +17,9 @@ DEL "Debug\Regions.dll"
 DEL "Debug\Regions.pdb"
 DEL "Debug\Regions.mdb"
 
+DEL "Debug\Languages.exe"
+DEL "Debug\Languages.pdb"
+
 :Copy new versions
 copy "..\Terraria_Server\bin\Debug\Terraria_Server.exe" "Debug\Terraria_Server.exe"
 copy "..\Terraria_Server\bin\Debug\Terraria_Server.pdb" "Debug\Terraria_Server.pdb"
@@ -29,6 +32,9 @@ copy "..\TDSMPermissions\TDSMPermissions\bin\Debug\TDSMPermissions.pdb" "Debug\T
 
 copy "..\Regions\bin\Debug\Regions.dll" "Debug\Regions.dll"
 copy "..\Regions\bin\Debug\Regions.pdb" "Debug\Regions.pdb"
+
+copy "..\Languages\bin\Debug\Languages.exe" "Debug\Languages.exe"
+copy "..\Languages\bin\Debug\Languages.pdb" "Debug\Languages.pdb"
 
 cd "Debug\"
 

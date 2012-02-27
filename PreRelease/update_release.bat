@@ -30,6 +30,9 @@ copy "..\TDSMPermissions\TDSMPermissions\bin\Release\TDSMPermissions.pdb" "Relea
 copy "..\Regions\bin\Release\Regions.dll" "Release\Regions.dll"
 copy "..\Regions\bin\Release\Regions.pdb" "Release\Regions.pdb"
 
+copy "..\Languages\bin\Release\Languages.exe" "Release\Languages.exe"
+copy "..\Languages\bin\Release\Languages.pdb" "Release\Languages.pdb"
+
 cd "Release\"
 
 :Update exe to mdb
