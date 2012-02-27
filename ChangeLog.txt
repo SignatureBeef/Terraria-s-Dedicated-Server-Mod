@@ -20,3 +20,4 @@ Build: 37
 	- Code names.
 	- Standard tile compression
 	- WorldGen/Modify function semi-overhaul
+	- Player Sandbox! (Logs tile modifications)
