@@ -273,8 +273,8 @@ namespace Terraria_Server
 			var projectile = Registries.Projectile.Create((int)Type);
 			if (Owner < 255)
 				projectile.Creator = Main.players[Owner];
-			projectile.Position.X = X - (float)Main.projectile[num].Width * 0.5f;
-			projectile.Position.Y = Y - (float)Main.projectile[num].Height * 0.5f;
+			projectile.Position.X = X - (float)projectile.Width * 0.5f;
+			projectile.Position.Y = Y - (float)projectile.Height * 0.5f;
 			projectile.Owner = Owner;
 			projectile.Velocity.X = SpeedX;
 			projectile.Velocity.Y = SpeedY;
@@ -282,7 +282,7 @@ namespace Terraria_Server
 			projectile.knockBack = KnockBack;
 			projectile.identity = num;
 			projectile.whoAmI = num;
-			projectile.wet = Collision.WetCollision(Main.projectile[num].Position, Main.projectile[num].Width, Main.projectile[num].Height);
+			projectile.wet = Collision.WetCollision(projectile.Position, projectile.Width, projectile.Height);
 			Main.projectile[num] = projectile;
 			if (Owner == Main.myPlayer)
 			{
@@ -472,13 +472,14 @@ namespace Terraria_Server
 		/// <summary>
 		/// Runs damage calculation on hostile mobs and players
 		/// </summary>
-		public void Damage(Func<Int32,Int32,ITile> TileRefs)
+		public void Damage(Func<Int32, Int32, ITile> TileRefs)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
 			if (this.type == ProjectileType.N18_ORB_OF_LIGHT || this.type == ProjectileType.N72_BLUE_FAIRY ||
-				this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY)
+				this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY ||
+				this.type == ProjectileType.N111_BUNNY)
 			{
 				return;
 			}
@@ -976,7 +977,7 @@ namespace Terraria_Server
 							}
 						}
 					}
-					if (value2 != this.Velocity)
+					if (value2 != this.Velocity && this.type != ProjectileType.N111_BUNNY)
 					{
 						if (this.type == ProjectileType.N94_CRYSTAL_STORM)
 						{
@@ -1168,7 +1169,7 @@ namespace Terraria_Server
 														this.Velocity.X = this.Velocity.X * 0.8f;
 													}
 												}
-												if (this.Velocity.Y != value2.Y && (double)value2.Y > 0.7)
+												if (this.Velocity.Y != value2.Y && (double)value2.Y > 0.7 && this.type != ProjectileType.N102_BOMB)
 												{
 													this.Velocity.Y = value2.Y * -0.4f;
 													if (this.type == ProjectileType.N29_DYNAMITE)
@@ -1177,7 +1178,7 @@ namespace Terraria_Server
 													}
 												}
 											}
-											else
+											else if (this.aiStyle != 9 || this.Owner == Main.myPlayer)
 											{
 												this.Position += this.Velocity;
 												this.Kill(TileRefs);
@@ -1506,7 +1507,7 @@ namespace Terraria_Server
 						this.rotation += 0.4f * (float)this.direction;
 						return;
 					}
-					//break;
+				//break;
 				case 4:
 					{
 						this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
@@ -2094,7 +2095,7 @@ namespace Terraria_Server
 						this.rotation += 0.3f * (float)this.direction;
 						return;
 					}
-					//break;
+				//break;
 				case 13:
 					{
 						if (Main.players[this.Owner].dead)
@@ -2350,7 +2351,7 @@ namespace Terraria_Server
 						this.rotation = (float)Math.Atan2((double)num74, (double)num73) - this.Velocity.X * 0.1f;
 						return;
 					}
-					//break;
+				//break;
 				case 16:
 					{
 						if (this.type == ProjectileType.N108_EXPLOSIVES)
@@ -2506,7 +2507,7 @@ namespace Terraria_Server
 						this.rotation += this.Velocity.X * 0.1f;
 						return;
 					}
-					//break;
+				//break;
 				case 17:
 					{
 						if (this.Velocity.Y == 0f)
@@ -2572,7 +2573,7 @@ namespace Terraria_Server
 						}
 						return;
 					}
-					//break;
+				//break;
 				case 19:
 					{
 						this.direction = Main.players[this.Owner].direction;
@@ -2930,7 +2931,7 @@ namespace Terraria_Server
 						this.rotation += 0.3f * (float)this.direction;
 						return;
 					}
-					//break;
+				//break;
 				case 24:
 					{
 						this.light = this.scale * 0.5f;
