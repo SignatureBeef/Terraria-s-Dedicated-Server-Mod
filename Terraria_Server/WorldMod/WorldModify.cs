@@ -3185,15 +3185,15 @@ namespace Terraria_Server.WorldMod
 			}
 
 			int num = 0;
-			if (Main.tile.At(x, y - 1).FrameY == 0 && Main.tile.At(x, y - 1).Type == Main.tile.At(x, y).Type)
+			if (TileRefs(x, y - 1).FrameY == 0 && TileRefs(x, y - 1).Type == TileRefs(x, y).Type)
 			{
 				num = y - 1;
 			}
-			else if (Main.tile.At(x, y - 2).FrameY == 0 && Main.tile.At(x, y - 2).Type == Main.tile.At(x, y).Type)
+			else if (TileRefs(x, y - 2).FrameY == 0 && TileRefs(x, y - 2).Type == TileRefs(x, y).Type)
 			{
 				num = y - 2;
 			}
-			else if (Main.tile.At(x, y + 1).FrameY == 0 && Main.tile.At(x, y + 1).Type == Main.tile.At(x, y).Type)
+			else if (TileRefs(x, y + 1).FrameY == 0 && TileRefs(x, y + 1).Type == TileRefs(x, y).Type)
 			{
 				num = y + 1;
 			}
@@ -3218,9 +3218,9 @@ namespace Terraria_Server.WorldMod
 			bool flag = true;
 			for (int k = num; k < num + 3; k++)
 			{
-				if (Main.tile.At(num4, k).Active)
+				if (TileRefs(num4, k).Active)
 				{
-					if (Main.tile.At(num4, k).Type != 3 && Main.tile.At(num4, k).Type != 24 && Main.tile.At(num4, k).Type != 52 && Main.tile.At(num4, k).Type != 61 && Main.tile.At(num4, k).Type != 62 && Main.tile.At(num4, k).Type != 69 && Main.tile.At(num4, k).Type != 71 && Main.tile.At(num4, k).Type != 73 && Main.tile.At(num4, k).Type != 74)
+					if (TileRefs(num4, k).Type != 3 && TileRefs(num4, k).Type != 24 && TileRefs(num4, k).Type != 52 && TileRefs(num4, k).Type != 61 && TileRefs(num4, k).Type != 62 && TileRefs(num4, k).Type != 69 && TileRefs(num4, k).Type != 71 && TileRefs(num4, k).Type != 73 && TileRefs(num4, k).Type != 74)
 					{
 						flag = false;
 						break;
@@ -3230,30 +3230,30 @@ namespace Terraria_Server.WorldMod
 			}
 			if (flag)
 			{
-				Main.tile.At(num2, num).SetActive(true);
-				Main.tile.At(num2, num).SetType(11);
-				Main.tile.At(num2, num).SetFrameY(0);
-				Main.tile.At(num2, num).SetFrameX(num3);
-				Main.tile.At(num2 + 1, num).SetActive(true);
-				Main.tile.At(num2 + 1, num).SetType(11);
-				Main.tile.At(num2 + 1, num).SetFrameY(0);
-				Main.tile.At(num2 + 1, num).SetFrameX((short)(num3 + 18));
-				Main.tile.At(num2, num + 1).SetActive(true);
-				Main.tile.At(num2, num + 1).SetType(11);
-				Main.tile.At(num2, num + 1).SetFrameY(18);
-				Main.tile.At(num2, num + 1).SetFrameX(num3);
-				Main.tile.At(num2 + 1, num + 1).SetActive(true);
-				Main.tile.At(num2 + 1, num + 1).SetType(11);
-				Main.tile.At(num2 + 1, num + 1).SetFrameY(18);
-				Main.tile.At(num2 + 1, num + 1).SetFrameX((short)(num3 + 18));
-				Main.tile.At(num2, num + 2).SetActive(true);
-				Main.tile.At(num2, num + 2).SetType(11);
-				Main.tile.At(num2, num + 2).SetFrameY(36);
-				Main.tile.At(num2, num + 2).SetFrameX(num3);
-				Main.tile.At(num2 + 1, num + 2).SetActive(true);
-				Main.tile.At(num2 + 1, num + 2).SetType(11);
-				Main.tile.At(num2 + 1, num + 2).SetFrameY(36);
-				Main.tile.At(num2 + 1, num + 2).SetFrameX((short)(num3 + 18));
+				TileRefs(num2, num).SetActive(true);
+				TileRefs(num2, num).SetType(11);
+				TileRefs(num2, num).SetFrameY(0);
+				TileRefs(num2, num).SetFrameX(num3);
+				TileRefs(num2 + 1, num).SetActive(true);
+				TileRefs(num2 + 1, num).SetType(11);
+				TileRefs(num2 + 1, num).SetFrameY(0);
+				TileRefs(num2 + 1, num).SetFrameX((short)(num3 + 18));
+				TileRefs(num2, num + 1).SetActive(true);
+				TileRefs(num2, num + 1).SetType(11);
+				TileRefs(num2, num + 1).SetFrameY(18);
+				TileRefs(num2, num + 1).SetFrameX(num3);
+				TileRefs(num2 + 1, num + 1).SetActive(true);
+				TileRefs(num2 + 1, num + 1).SetType(11);
+				TileRefs(num2 + 1, num + 1).SetFrameY(18);
+				TileRefs(num2 + 1, num + 1).SetFrameX((short)(num3 + 18));
+				TileRefs(num2, num + 2).SetActive(true);
+				TileRefs(num2, num + 2).SetType(11);
+				TileRefs(num2, num + 2).SetFrameY(36);
+				TileRefs(num2, num + 2).SetFrameX(num3);
+				TileRefs(num2 + 1, num + 2).SetActive(true);
+				TileRefs(num2 + 1, num + 2).SetType(11);
+				TileRefs(num2 + 1, num + 2).SetFrameY(36);
+				TileRefs(num2 + 1, num + 2).SetFrameX((short)(num3 + 18));
 				for (int l = num2 - 1; l <= num2 + 2; l++)
 				{
 					for (int m = num - 1; m <= num + 2; m++)
@@ -6420,7 +6420,7 @@ namespace Terraria_Server.WorldMod
 
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
 			{
-				if (Main.tile.At(i, j).Wall > 0)
+				if (TileRefs(i, j).Wall > 0)
 				{
 					if (fail)
 					{
@@ -6429,107 +6429,107 @@ namespace Terraria_Server.WorldMod
 					}
 
 					int num2 = 0;
-					if (Main.tile.At(i, j).Wall == 1)
+					if (TileRefs(i, j).Wall == 1)
 					{
 						num2 = 26;
 					}
-					if (Main.tile.At(i, j).Wall == 4)
+					if (TileRefs(i, j).Wall == 4)
 					{
 						num2 = 93;
 					}
-					if (Main.tile.At(i, j).Wall == 5)
+					if (TileRefs(i, j).Wall == 5)
 					{
 						num2 = 130;
 					}
-					if (Main.tile.At(i, j).Wall == 6)
+					if (TileRefs(i, j).Wall == 6)
 					{
 						num2 = 132;
 					}
-					if (Main.tile.At(i, j).Wall == 7)
+					if (TileRefs(i, j).Wall == 7)
 					{
 						num2 = 135;
 					}
-					if (Main.tile.At(i, j).Wall == 8)
+					if (TileRefs(i, j).Wall == 8)
 					{
 						num2 = 138;
 					}
-					if (Main.tile.At(i, j).Wall == 9)
+					if (TileRefs(i, j).Wall == 9)
 					{
 						num2 = 140;
 					}
-					if (Main.tile.At(i, j).Wall == 10)
+					if (TileRefs(i, j).Wall == 10)
 					{
 						num2 = 142;
 					}
-					if (Main.tile.At(i, j).Wall == 11)
+					if (TileRefs(i, j).Wall == 11)
 					{
 						num2 = 144;
 					}
-					if (Main.tile.At(i, j).Wall == 12)
+					if (TileRefs(i, j).Wall == 12)
 					{
 						num2 = 146;
 					}
-					if (Main.tile.At(i, j).Wall == 14)
+					if (TileRefs(i, j).Wall == 14)
 					{
 						num2 = 330;
 					}
-					if (Main.tile.At(i, j).Wall == 16)
+					if (TileRefs(i, j).Wall == 16)
 					{
 						num2 = 30;
 					}
-					if (Main.tile.At(i, j).Wall == 17)
+					if (TileRefs(i, j).Wall == 17)
 					{
 						num2 = 135;
 					}
-					if (Main.tile.At(i, j).Wall == 18)
+					if (TileRefs(i, j).Wall == 18)
 					{
 						num2 = 138;
 					}
-					if (Main.tile.At(i, j).Wall == 19)
+					if (TileRefs(i, j).Wall == 19)
 					{
 						num2 = 140;
 					}
-					if (Main.tile.At(i, j).Wall == 20)
+					if (TileRefs(i, j).Wall == 20)
 					{
 						num2 = 330;
 					}
-					if (Main.tile.At(i, j).Wall == 21)
+					if (TileRefs(i, j).Wall == 21)
 					{
 						num2 = 392;
 					}
-					if (Main.tile.At(i, j).Wall == 22)
+					if (TileRefs(i, j).Wall == 22)
 					{
 						num2 = 417;
 					}
-					if (Main.tile.At(i, j).Wall == 23)
+					if (TileRefs(i, j).Wall == 23)
 					{
 						num2 = 418;
 					}
-					if (Main.tile.At(i, j).Wall == 24)
+					if (TileRefs(i, j).Wall == 24)
 					{
 						num2 = 419;
 					}
-					if (Main.tile.At(i, j).Wall == 25)
+					if (TileRefs(i, j).Wall == 25)
 					{
 						num2 = 420;
 					}
-					if (Main.tile.At(i, j).Wall == 26)
+					if (TileRefs(i, j).Wall == 26)
 					{
 						num2 = 421;
 					}
-					if (Main.tile.At(i, j).Wall == 29)
+					if (TileRefs(i, j).Wall == 29)
 					{
 						num2 = 587;
 					}
-					if (Main.tile.At(i, j).Wall == 30)
+					if (TileRefs(i, j).Wall == 30)
 					{
 						num2 = 592;
 					}
-					if (Main.tile.At(i, j).Wall == 31)
+					if (TileRefs(i, j).Wall == 31)
 					{
 						num2 = 595;
 					}
-					if (Main.tile.At(i, j).Wall == 27)
+					if (TileRefs(i, j).Wall == 27)
 					{
 						num2 = 479;
 					}
@@ -6537,7 +6537,7 @@ namespace Terraria_Server.WorldMod
 					{
 						Item.NewItem(i * 16, j * 16, 16, 16, num2, 1, false, 0);
 					}
-					Main.tile.At(i, j).SetWall(0);
+					TileRefs(i, j).SetWall(0);
 					SquareWallFrame(TileRefs, i, j, true);
 				}
 			}
