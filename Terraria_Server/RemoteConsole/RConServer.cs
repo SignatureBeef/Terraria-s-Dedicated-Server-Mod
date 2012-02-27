@@ -355,18 +355,16 @@ namespace Terraria_Server.RemoteConsole
 			string name, pass;
 			if (args.TryPop("add") && args.TryParseTwo(out name, out pass))
 			{
-				if (sender is ConsoleSender)
-				{
-					var password = Hash(name, pass);
-					LoginDatabase.setValue(name, password);
-					LoginDatabase.Save(false);
-					ProgramLog.Log("User `{0}` was added to the RCON Database.", name);
-				}
-				else
+				if (sender is Player || sender is RConSender)
 				{
 					sender.sendMessage(Languages.PermissionsError, 255, 238, 130, 238);
 					return;
 				}
+
+				var password = Hash(name, pass);
+				LoginDatabase.setValue(name, password);
+				LoginDatabase.Save(false);
+				ProgramLog.Log("User `{0}` was added to the RCON Database.", name);
 			}
 			else if (args.TryParseOne("cut", out name))
 			{
