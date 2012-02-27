@@ -45,5 +45,40 @@ namespace Terraria_Server
 		{
 			recpt.sendMessage (String.Format (fmt, args), sender, color.R, color.G, color.B);
 		}
+
+		public static bool IsSender(this ISender sender, SenderType type)
+		{
+			switch (type)
+			{
+				case SenderType.CONSOLE:
+					return sender is ConsoleSender && !(sender is RemoteConsole.RConSender);
+				case SenderType.PLAYER:
+					return sender is Player;
+				case SenderType.RCON:
+					return sender is RemoteConsole.RConSender;
+				default:
+					throw new InvalidOperationException("No such sender.");
+			}
+		}
+
+		public static SenderType GetSenderType(this ISender sender)
+		{
+			if (sender is ConsoleSender && !(sender is RemoteConsole.RConSender))
+				return SenderType.CONSOLE;
+			else if (sender is Player)
+				return SenderType.PLAYER;
+			else if (sender is RemoteConsole.RConSender)
+				return SenderType.RCON;
+
+			return SenderType.UNKNOWN;
+		}
+	}
+
+	public enum SenderType
+	{
+		CONSOLE,
+		PLAYER,
+		RCON,
+		UNKNOWN
 	}
 }

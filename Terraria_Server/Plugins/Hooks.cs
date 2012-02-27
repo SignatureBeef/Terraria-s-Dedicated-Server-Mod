@@ -67,7 +67,7 @@ namespace Terraria_Server.Plugins
 		
 		public static readonly HookPoint<HookArgs.PlayerChat>                PlayerChat;
 		public static readonly HookPoint<HookArgs.Command>                   Command;
-		public static readonly HookPoint<HookArgs.WorldGeneration> WorldGeneration;
+		public static readonly HookPoint<HookArgs.WorldGeneration>			 WorldGeneration;
 		
 		static HookPoints ()
 		{
