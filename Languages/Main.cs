@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using Languages.Translation;
 using Terraria_Server.Language;
 using Terraria_Server.Collections;
+using System.Reflection;
 
 namespace Languages
 {
@@ -35,9 +36,11 @@ namespace Languages
 
 			GB_Main.Location = Methods.CenterControl(sender as Main, GB_Main);
 
+			CheckOrInitConfig();
 			if (!Methods.TryGetTranslations())
 			{
-				MessageBox.Show("Unable to retrieve Translation data.");
+				//MessageBox.Show("Unable to retrieve Translation data.");
+				this.Close();
 				return;
 			}
 
@@ -105,6 +108,30 @@ namespace Languages
 			MessageBox.Show(
 				String.Format("{0} node(s) converted!", nodes.Count - failed)
 			);
+		}
+
+		const String CONFIG = "Languages.exe.config";
+		const String NAMESPACE = "Languages.";
+		public void CheckOrInitConfig()
+		{
+			if (!File.Exists(CONFIG))
+			{
+				using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(NAMESPACE + CONFIG))
+				{
+					using (var ctx = File.Open(CONFIG, FileMode.Create))
+					{
+						var len = (int)resource.Length;
+						var buff = new byte[len];
+						resource.Read(buff, 0, len);
+						ctx.Write(buff, 0, len);
+						ctx.Flush();
+					}
+				}
+
+				var me = Assembly.GetExecutingAssembly().Location;
+				System.Diagnostics.Process.Start(me);
+				Environment.Exit(0);
+			}
 		}
 	}
 
@@ -227,7 +254,7 @@ namespace Languages
 
 				return true;
 			}
-			catch { }
+			catch (Exception e) { MessageBox.Show(e.Message); }
 
 			return false;
 		}
