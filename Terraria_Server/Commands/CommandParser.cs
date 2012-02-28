@@ -483,6 +483,12 @@ namespace Terraria_Server.Commands
 				.WithDescription(Languages.CommandDescription_LanguageReload)
 				.WithPermissionNode("tdsm.languagereload")
 				.Calls(Commands.LanguageReload);
+
+			AddCommand("backup")
+				.WithAccessLevel(AccessLevel.OP)
+				.WithDescription(Languages.CommandDescription_Backups)
+				.WithPermissionNode("tdsm.backup")
+				.Calls(Commands.Backups);
 		}
 
 		public readonly Dictionary<String, CommandInfo> serverCommands;

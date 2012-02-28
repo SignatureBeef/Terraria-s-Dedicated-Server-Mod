@@ -20,7 +20,7 @@ using Terraria_Server.Networking;
 
 namespace Terraria_Server
 {
-	public class Program
+	public static class Program
     {		
 		public static ProgramThread		updateThread		= null;
 		public static ServerProperties	properties			= null;
@@ -402,11 +402,12 @@ namespace Terraria_Server
         private static bool SetupPaths()
 		{
             try
-            {
+			{
+				CreateDirectory(Statics.DataPath);
                 CreateDirectory(Statics.WorldPath);
                 CreateDirectory(Statics.PluginPath);
-                CreateDirectory(Statics.DataPath);
-                CreateDirectory(Statics.LibrariesPath);
+				CreateDirectory(Statics.LibrariesPath);
+				CreateDirectory(Statics.WorldBackupPath);
 
 #pragma warning disable 618
 				AppDomain.CurrentDomain.AppendPrivatePath(Statics.LibrariesPath); //For Mono, The config setting doesn't fucking work.

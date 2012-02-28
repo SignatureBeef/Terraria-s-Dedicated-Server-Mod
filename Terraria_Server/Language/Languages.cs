@@ -141,6 +141,7 @@ namespace Terraria_Server.Language
 		public static String CommandDescription_Refresh { get; set; }
 		public static String CommandDescription_HardMode { get; set; }
 		public static String CommandDescription_LanguageReload { get; set; }
+		public static String CommandDescription_Backups { get; set; }
 
 #endregion
 

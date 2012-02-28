@@ -1443,5 +1443,22 @@ namespace Terraria_Server.Commands
 			sender.sendMessage("Reloading Language File...");
 			sender.sendMessage("Reloading " + (Languages.LoadClass(Collections.Registries.LANGUAGE_FILE) ? "Succeeded" : "Failed"));
 		}
+
+		public static void Backups(ISender sender, ArgumentList args)
+		{
+			var perform = args.TryPop("now");
+			var purge = args.TryPop("purge");
+
+			if (perform)
+			{
+				//BackupManager.PerformBackup();
+			}
+			else if (purge)
+			{
+				var backups = BackupManager.GetBackupsBefore(Main.worldName, DateTime.Now);
+			}
+			else
+				throw new CommandError("Argument expected.");
+		}
 	}
 }

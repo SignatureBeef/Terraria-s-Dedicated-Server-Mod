@@ -120,4 +120,5 @@
 	<CommandDescription_Refresh>Redownload the area around you from the server.</CommandDescription_Refresh>
 	<CommandDescription_HardMode>Toggle hardmode for the current world</CommandDescription_HardMode>
 	<CommandDescription_LanguageReload>Reloads the Langauge File</CommandDescription_LanguageReload>
+  <CommandDescription_Backups>Allows backups to be performed or removed.</CommandDescription_Backups>
 </Languages>
