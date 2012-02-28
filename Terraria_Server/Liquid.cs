@@ -26,7 +26,7 @@ namespace Terraria_Server
 		public int kill;
 		public int delay;
 
-		public static double QuickWater(Func<Int32, Int32, ITile> TileRefs, int verbose = 0, int minY = -1, int maxY = -1, ProgressLogger prog = null)
+		public static double QuickWater(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int verbose = 0, int minY = -1, int maxY = -1, ProgressLogger prog = null)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -153,44 +153,44 @@ namespace Terraria_Server
 							{
 								if (flag2)
 								{
-									Liquid.LavaCheck(TileRefs, num9, num10);
+									Liquid.LavaCheck(TileRefs, sandbox, num9, num10);
 								}
 								else
 								{
-									Liquid.LavaCheck(TileRefs, num9 - 1, num10);
+									Liquid.LavaCheck(TileRefs, sandbox, num9 - 1, num10);
 								}
 							}
 							else if (TileRefs(num9 + 1, num10).Liquid > 0 && TileRefs(num9 + 1, num10).Lava != flag2)
 							{
 								if (flag2)
 								{
-									Liquid.LavaCheck(TileRefs, num9, num10);
+									Liquid.LavaCheck(TileRefs, sandbox, num9, num10);
 								}
 								else
 								{
-									Liquid.LavaCheck(TileRefs, num9 + 1, num10);
+									Liquid.LavaCheck(TileRefs, sandbox, num9 + 1, num10);
 								}
 							}
 							else if (TileRefs(num9, num10 - 1).Liquid > 0 && TileRefs(num9, num10 - 1).Lava != flag2)
 							{
 								if (flag2)
 								{
-									Liquid.LavaCheck(TileRefs, num9, num10);
+									Liquid.LavaCheck(TileRefs, sandbox, num9, num10);
 								}
 								else
 								{
-									Liquid.LavaCheck(TileRefs, num9, num10 - 1);
+									Liquid.LavaCheck(TileRefs, sandbox, num9, num10 - 1);
 								}
 							}
 							else if (TileRefs(num9, num10 + 1).Liquid > 0 && TileRefs(num9, num10 + 1).Lava != flag2)
 							{
 								if (flag2)
 								{
-									Liquid.LavaCheck(TileRefs, num9, num10);
+									Liquid.LavaCheck(TileRefs, sandbox, num9, num10);
 								}
 								else
 								{
-									Liquid.LavaCheck(TileRefs, num9, num10 + 1);
+									Liquid.LavaCheck(TileRefs, sandbox, num9, num10 + 1);
 								}
 							}
 						}
@@ -201,7 +201,7 @@ namespace Terraria_Server
 			return (double)num;
 		}
 
-		public void Update(Func<Int32, Int32, ITile> TileRefs)
+		public void Update(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -231,7 +231,7 @@ namespace Terraria_Server
 
 			if (TileRefs(this.x, this.y).Lava)
 			{
-				Liquid.LavaCheck(TileRefs, this.x, this.y);
+				Liquid.LavaCheck(TileRefs, sandbox, this.x, this.y);
 				if (!Liquid.quickFall)
 				{
 					if (this.delay < 5)
@@ -245,16 +245,16 @@ namespace Terraria_Server
 			else
 			{
 				if (TileRefs(this.x - 1, this.y).Lava)
-					Liquid.AddWater(TileRefs, this.x - 1, this.y);
+					Liquid.AddWater(TileRefs, sandbox, this.x - 1, this.y);
 
 				if (TileRefs(this.x + 1, this.y).Lava)
-					Liquid.AddWater(TileRefs, this.x + 1, this.y);
+					Liquid.AddWater(TileRefs, sandbox, this.x + 1, this.y);
 
 				if (TileRefs(this.x, this.y - 1).Lava)
-					Liquid.AddWater(TileRefs, this.x, this.y - 1);
+					Liquid.AddWater(TileRefs, sandbox, this.x, this.y - 1);
 
 				if (TileRefs(this.x, this.y + 1).Lava)
-					Liquid.AddWater(TileRefs, this.x, this.y + 1);
+					Liquid.AddWater(TileRefs, sandbox, this.x, this.y + 1);
 			}
 			if ((!TileRefs(this.x, this.y + 1).Active || !Main.tileSolid[(int)TileRefs(this.x, this.y + 1).Type] || Main.tileSolidTop[(int)TileRefs(this.x, this.y + 1).Type]) && (TileRefs(this.x, this.y + 1).Liquid <= 0 || TileRefs(this.x, this.y + 1).Lava == TileRefs(this.x, this.y).Lava) && TileRefs(this.x, this.y + 1).Liquid < 255)
 			{
@@ -267,7 +267,7 @@ namespace Terraria_Server
 
 				TileRefs(this.x, this.y + 1).SetLava(TileRefs(this.x, this.y).Lava);
 
-				Liquid.AddWater(TileRefs, this.x, this.y + 1);
+				Liquid.AddWater(TileRefs, sandbox, this.x, this.y + 1);
 
 				TileRefs(this.x, this.y + 1).SetSkipLiquid(true);
 				TileRefs(this.x, this.y).SetSkipLiquid(true);
@@ -276,8 +276,8 @@ namespace Terraria_Server
 					TileRefs(this.x, this.y).SetLiquid(255);
 				else
 				{
-					Liquid.AddWater(TileRefs, this.x - 1, this.y);
-					Liquid.AddWater(TileRefs, this.x + 1, this.y);
+					Liquid.AddWater(TileRefs, sandbox, this.x - 1, this.y);
+					Liquid.AddWater(TileRefs, sandbox, this.x + 1, this.y);
 				}
 			}
 			if (TileRefs(this.x, this.y).Liquid > 0)
@@ -375,7 +375,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x - 1, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 1, this.y);
 								TileRefs(this.x - 1, this.y).SetLiquid((byte)num);
 							}
 							else
@@ -387,7 +387,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x + 1, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 1, this.y);
 								TileRefs(this.x + 1, this.y).SetLiquid((byte)num);
 							}
 							else
@@ -399,7 +399,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x - 2, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 2, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 2, this.y);
 								TileRefs(this.x - 2, this.y).SetLiquid((byte)num);
 							}
 							else
@@ -411,7 +411,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x + 2, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 2, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 2, this.y);
 								TileRefs(this.x + 2, this.y).SetLiquid((byte)num);
 							}
 							else
@@ -423,7 +423,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x - 3, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 3, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 3, this.y);
 								TileRefs(this.x - 3, this.y).SetLiquid((byte)num);
 							}
 							else
@@ -435,7 +435,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x + 3, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 3, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 3, this.y);
 								TileRefs(this.x + 3, this.y).SetLiquid((byte)num);
 							}
 							else
@@ -445,27 +445,27 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x - 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 1, this.y);
 							}
 							if (TileRefs(this.x + 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 1, this.y);
 							}
 							if (TileRefs(this.x - 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 2, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 2, this.y);
 							}
 							if (TileRefs(this.x + 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 2, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 2, this.y);
 							}
 							if (TileRefs(this.x - 3, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 3, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 3, this.y);
 							}
 							if (TileRefs(this.x + 3, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 3, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 3, this.y);
 							}
 							if (num3 != 6 || TileRefs(this.x, this.y - 1).Liquid <= 0)
 							{
@@ -482,7 +482,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x - 1, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 1, this.y);
 								TileRefs(this.x - 1, this.y).SetLiquid((byte)num);
 							}
 							else
@@ -494,7 +494,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x + 1, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 1, this.y);
 								TileRefs(this.x + 1, this.y).SetLiquid((byte)num);
 							}
 							else
@@ -506,7 +506,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x - 2, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 2, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 2, this.y);
 								TileRefs(this.x - 2, this.y).SetLiquid((byte)num);
 							}
 							else
@@ -518,7 +518,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x + 2, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 2, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 2, this.y);
 								TileRefs(this.x + 2, this.y).SetLiquid((byte)num);
 							}
 							else
@@ -528,19 +528,19 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x - 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 1, this.y);
 							}
 							if (TileRefs(this.x + 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 1, this.y);
 							}
 							if (TileRefs(this.x - 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 2, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 2, this.y);
 							}
 							if (TileRefs(this.x + 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 2, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 2, this.y);
 							}
 							if (num4 != 4 || TileRefs(this.x, this.y - 1).Liquid <= 0)
 							{
@@ -559,7 +559,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x - 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x - 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 1, this.y);
 								TileRefs(this.x - 1, this.y).SetLiquid((byte)num);
 							}
 
@@ -567,7 +567,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x + 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 1, this.y);
 								TileRefs(this.x + 1, this.y).SetLiquid((byte)num);
 							}
 
@@ -576,7 +576,7 @@ namespace Terraria_Server
 							if (TileRefs(this.x - 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 							{
 								TileRefs(this.x - 2, this.y).SetLiquid((byte)num);
-								Liquid.AddWater(TileRefs, this.x - 2, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x - 2, this.y);
 							}
 
 							TileRefs(this.x, this.y).SetLiquid((byte)num);
@@ -592,7 +592,7 @@ namespace Terraria_Server
 
 								if (TileRefs(this.x - 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 								{
-									Liquid.AddWater(TileRefs, this.x - 1, this.y);
+									Liquid.AddWater(TileRefs, sandbox, this.x - 1, this.y);
 									TileRefs(this.x - 1, this.y).SetLiquid((byte)num);
 								}
 
@@ -600,7 +600,7 @@ namespace Terraria_Server
 
 								if (TileRefs(this.x + 1, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 								{
-									Liquid.AddWater(TileRefs, this.x + 1, this.y);
+									Liquid.AddWater(TileRefs, sandbox, this.x + 1, this.y);
 									TileRefs(this.x + 1, this.y).SetLiquid((byte)num);
 								}
 
@@ -609,7 +609,7 @@ namespace Terraria_Server
 								if (TileRefs(this.x + 2, this.y).Liquid != (byte)num || TileRefs(this.x, this.y).Liquid != (byte)num)
 								{
 									TileRefs(this.x + 2, this.y).SetLiquid((byte)num);
-									Liquid.AddWater(TileRefs, this.x + 2, this.y);
+									Liquid.AddWater(TileRefs, sandbox, this.x + 2, this.y);
 								}
 
 								TileRefs(this.x, this.y).SetLiquid((byte)num);
@@ -627,7 +627,7 @@ namespace Terraria_Server
 								}
 								if (TileRefs(this.x, this.y).Liquid != (byte)num || TileRefs(this.x - 1, this.y).Liquid != (byte)num)
 								{
-									Liquid.AddWater(TileRefs, this.x - 1, this.y);
+									Liquid.AddWater(TileRefs, sandbox, this.x - 1, this.y);
 								}
 
 								TileRefs(this.x + 1, this.y).SetLava(TileRefs(this.x, this.y).Lava);
@@ -638,7 +638,7 @@ namespace Terraria_Server
 								}
 								if (TileRefs(this.x, this.y).Liquid != (byte)num || TileRefs(this.x + 1, this.y).Liquid != (byte)num)
 								{
-									Liquid.AddWater(TileRefs, this.x + 1, this.y);
+									Liquid.AddWater(TileRefs, sandbox, this.x + 1, this.y);
 								}
 
 								TileRefs(this.x, this.y).SetLiquid((byte)num);
@@ -661,7 +661,7 @@ namespace Terraria_Server
 
 						if (TileRefs(this.x, this.y).Liquid != (byte)num || TileRefs(this.x - 1, this.y).Liquid != (byte)num)
 						{
-							Liquid.AddWater(TileRefs, this.x - 1, this.y);
+							Liquid.AddWater(TileRefs, sandbox, this.x - 1, this.y);
 						}
 
 						TileRefs(this.x, this.y).SetLiquid((byte)num);
@@ -681,7 +681,7 @@ namespace Terraria_Server
 
 							if (TileRefs(this.x, this.y).Liquid != (byte)num || TileRefs(this.x + 1, this.y).Liquid != (byte)num)
 							{
-								Liquid.AddWater(TileRefs, this.x + 1, this.y);
+								Liquid.AddWater(TileRefs, sandbox, this.x + 1, this.y);
 							}
 
 							TileRefs(this.x, this.y).SetLiquid((byte)num);
@@ -700,7 +700,7 @@ namespace Terraria_Server
 				this.kill++;
 				return;
 			}
-			Liquid.AddWater(TileRefs, this.x, this.y - 1);
+			Liquid.AddWater(TileRefs, sandbox, this.x, this.y - 1);
 			this.kill = 0;
 		}
 
@@ -719,7 +719,7 @@ namespace Terraria_Server
 			}
 		}
 
-		public static void UpdateLiquid(Func<Int32, Int32, ITile> TileRefs)
+		public static void UpdateLiquid(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -749,7 +749,7 @@ namespace Terraria_Server
 					while (Liquid.panicY >= 3 && num < 5)
 					{
 						num++;
-						Liquid.QuickWater(TileRefs, 0, Liquid.panicY, Liquid.panicY);
+						Liquid.QuickWater(TileRefs, sandbox, 0, Liquid.panicY, Liquid.panicY);
 						Liquid.panicY--;
 						if (Liquid.panicY < 3)
 						{
@@ -758,7 +758,7 @@ namespace Terraria_Server
 							Liquid.panicMode = false;
 
 							using (var prog = new ProgressLogger(Main.maxTilesX - 2, "Performing water check"))
-								WorldModify.WaterCheck(TileRefs, prog);
+								WorldModify.WaterCheck(TileRefs, sandbox, prog);
 
 							for (int i = 0; i < 255; i++)
 							{
@@ -795,7 +795,7 @@ namespace Terraria_Server
 				for (int l = num3; l < num4; l++)
 				{
 					Main.liquid[l].delay = 10;
-					Main.liquid[l].Update(TileRefs);
+					Main.liquid[l].Update(TileRefs, sandbox);
 					TileRefs(Main.liquid[l].x, Main.liquid[l].y).SetSkipLiquid(false);
 				}
 			}
@@ -804,7 +804,7 @@ namespace Terraria_Server
 				for (int m = num3; m < num4; m++)
 				{
 					if (!TileRefs(Main.liquid[m].x, Main.liquid[m].y).SkipLiquid)
-						Main.liquid[m].Update(TileRefs);
+						Main.liquid[m].Update(TileRefs, sandbox);
 					else
 						TileRefs(Main.liquid[m].x, Main.liquid[m].y).SetSkipLiquid(false);
 				}
@@ -817,7 +817,7 @@ namespace Terraria_Server
 				for (int n = Liquid.numLiquid - 1; n >= 0; n--)
 				{
 					if (Main.liquid[n].kill > 3)
-						Liquid.DelWater(TileRefs, n);
+						Liquid.DelWater(TileRefs, sandbox, n);
 				}
 
 				int num5 = Liquid.maxLiquid - (Liquid.maxLiquid - Liquid.numLiquid);
@@ -827,7 +827,7 @@ namespace Terraria_Server
 				for (int num6 = 0; num6 < num5; num6++)
 				{
 					TileRefs(Main.liquidBuffer[0].x, Main.liquidBuffer[0].y).SetCheckingLiquid(false);
-					Liquid.AddWater(TileRefs, Main.liquidBuffer[0].x, Main.liquidBuffer[0].y);
+					Liquid.AddWater(TileRefs, sandbox, Main.liquidBuffer[0].x, Main.liquidBuffer[0].y);
 					LiquidBuffer.DelBuffer(0);
 				}
 
@@ -839,7 +839,7 @@ namespace Terraria_Server
 						Liquid.stuck = true;
 
 						for (int num7 = Liquid.numLiquid - 1; num7 >= 0; num7--)
-							Liquid.DelWater(TileRefs, num7);
+							Liquid.DelWater(TileRefs, sandbox, num7);
 
 						Liquid.stuck = false;
 						Liquid.stuckCount = 0;
@@ -854,7 +854,7 @@ namespace Terraria_Server
 			}
 		}
 
-		public static void AddWater(Func<Int32, Int32, ITile> TileRefs, int x, int y)
+		public static void AddWater(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int x, int y)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -891,12 +891,12 @@ namespace Terraria_Server
 					TileRefs(x, y).SetActive(false);
 					return;
 				}
-				WorldModify.KillTile(TileRefs, x, y);
+				WorldModify.KillTile(TileRefs, sandbox, x, y);
 				NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
 			}
 		}
 
-		public static void LavaCheck(Func<Int32, Int32, ITile> TileRefs, int x, int y)
+		public static void LavaCheck(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int x, int y)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -923,8 +923,8 @@ namespace Terraria_Server
 				{
 					TileRefs(x, y).SetLiquid(0);
 					TileRefs(x, y).SetLava(false);
-					WorldModify.PlaceTile(TileRefs, x, y, 56, true, true, -1, 0);
-					WorldModify.SquareTileFrame(TileRefs, x, y, true);
+					WorldModify.PlaceTile(TileRefs, sandbox, x, y, 56, true, true, -1, 0);
+					WorldModify.SquareTileFrame(TileRefs, sandbox,x, y, true);
 
 					NetMessage.SendTileSquare(-1, x - 1, y - 1, 3);
 					return;
@@ -935,13 +935,13 @@ namespace Terraria_Server
 				TileRefs(x, y).SetLiquid(0);
 				TileRefs(x, y).SetLava(false);
 				TileRefs(x, y + 1).SetLiquid(0);
-				WorldModify.PlaceTile(TileRefs, x, y + 1, 56, true, true, -1, 0);
-				WorldModify.SquareTileFrame(TileRefs, x, y + 1, true);
+				WorldModify.PlaceTile(TileRefs, sandbox, x, y + 1, 56, true, true, -1, 0);
+				WorldModify.SquareTileFrame(TileRefs, sandbox,x, y + 1, true);
 				NetMessage.SendTileSquare(-1, x - 1, y, 3);
 			}
 		}
 
-		public static void DelWater(Func<Int32, Int32, ITile> TileRefs, int id)
+		public static void DelWater(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int id)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -972,7 +972,7 @@ namespace Terraria_Server
 			}
 
 			if (TileRefs(x, y).Liquid < 250 && TileRefs(x, y - 1).Liquid > 0)
-				Liquid.AddWater(TileRefs, x, y - 1);
+				Liquid.AddWater(TileRefs, sandbox, x, y - 1);
 
 			if (TileRefs(x, y).Liquid == 0)
 			{
@@ -982,12 +982,12 @@ namespace Terraria_Server
 			{
 				if ((TileRefs(x + 1, y).Liquid > 0 && TileRefs(x + 1, y + 1).Liquid < 250 && !TileRefs(x + 1, y + 1).Active) || (TileRefs(x - 1, y).Liquid > 0 && TileRefs(x - 1, y + 1).Liquid < 250 && !TileRefs(x - 1, y + 1).Active))
 				{
-					Liquid.AddWater(TileRefs, x - 1, y);
-					Liquid.AddWater(TileRefs, x + 1, y);
+					Liquid.AddWater(TileRefs, sandbox, x - 1, y);
+					Liquid.AddWater(TileRefs, sandbox, x + 1, y);
 				}
 				if (TileRefs(x, y).Lava)
 				{
-					Liquid.LavaCheck(TileRefs, x, y);
+					Liquid.LavaCheck(TileRefs, sandbox, x, y);
 					for (int i = x - 1; i <= x + 1; i++)
 					{
 						for (int j = y - 1; j <= y + 1; j++)
@@ -997,13 +997,13 @@ namespace Terraria_Server
 								if (TileRefs(i, j).Type == 2 || TileRefs(i, j).Type == 23 || TileRefs(i, j).Type == 109)
 								{
 									TileRefs(i, j).SetType(0);
-									WorldModify.SquareTileFrame(TileRefs, i, j, true);
+									WorldModify.SquareTileFrame(TileRefs, sandbox,i, j, true);
 									NetMessage.SendTileSquare(-1, x, y, 3);
 								}
 								else if (TileRefs(i, j).Type == 60 || TileRefs(i, j).Type == 70)
 								{
 									TileRefs(i, j).SetType(59);
-									WorldModify.SquareTileFrame(TileRefs, i, j, true);
+									WorldModify.SquareTileFrame(TileRefs, sandbox,i, j, true);
 									NetMessage.SendTileSquare(-1, x, y, 3);
 								}
 							}
@@ -1021,7 +1021,7 @@ namespace Terraria_Server
 			Main.liquid[id].kill = Main.liquid[Liquid.numLiquid].kill;
 
 			if (Main.tileAlch[(int)TileRefs(x, y).Type])
-				WorldModify.CheckAlch(TileRefs, x, y);
+				WorldModify.CheckAlch(TileRefs, sandbox, x, y);
 		}
 	}
 }

@@ -1727,7 +1727,7 @@ namespace Terraria_Server
 		{
 			if (Main.stopSpawns && !makespawn)
 				return MAX_NPCS;
-			
+
 			NPC hnpc;
 			if (!InvokeNpcCreationHook(x, y, Registries.NPC.GetTemplate(type).Name, out hnpc))
 				return MAX_NPCS;
@@ -2375,7 +2375,7 @@ namespace Terraria_Server
 					NetMessage.SendData(25, -1, -1, str + " has been defeated!", 255, 175f, 75f, 255f, 0);
 
 				if (this.type == NPCType.N113_WALL_OF_FLESH || this.type == NPCType.N114_WALL_OF_FLESH_EYE)
-					WorldModify.StartHardMode(null);
+					WorldModify.StartHardMode();
 
 				NetMessage.SendData(7);
 			}
@@ -2902,7 +2902,7 @@ namespace Terraria_Server
 					npc.oldPosition = npc.Position;
 					npc.Position += npc.Velocity;
 				}
-				if (!npc.noTileCollide && npc.lifeMax > 1 && Collision.SwitchTiles(null, npc.Position, npc.Width, npc.Height, npc.oldPosition, npc) && npc.Type == 46)
+				if (!npc.noTileCollide && npc.lifeMax > 1 && Collision.SwitchTiles(null, null, npc.Position, npc.Width, npc.Height, npc.oldPosition, npc) && npc.Type == 46)
 				{
 					npc.ai[0] = 1f;
 					npc.ai[1] = 400f;
@@ -4150,17 +4150,17 @@ namespace Terraria_Server
 							npc.ai[1] = 10f;
 						}
 
-						WorldModify.KillTile(TileRefs, num32, num33 - 1, true);
+						WorldModify.KillTile(TileRefs, null, num32, num33 - 1, true);
 						if (!flag5 && flag5)
 						{
 							if (npc.type == NPCType.N26_GOBLIN_PEON)
 							{
-								WorldModify.KillTile(TileRefs, num32, num33 - 1);
+								WorldModify.KillTile(TileRefs, null, num32, num33 - 1);
 								NetMessage.SendData(17, -1, -1, String.Empty, 0, (float)num32, (float)(num33 - 1));
 							}
 							else
 							{
-								bool flag6 = WorldModify.OpenDoor(TileRefs, num32, num33, npc.direction, npc);
+								bool flag6 = WorldModify.OpenDoor(TileRefs, null, num32, num33, npc.direction, npc);
 								if (!flag6)
 								{
 									npc.ai[3] = (float)num5;
@@ -5292,7 +5292,7 @@ namespace Terraria_Server
 								flag11 = true;
 								if (Main.rand.Next(100) == 0 && npc.type != NPCType.N117_LEECH_HEAD && Main.tile.At(num111, num112).Active)
 								{
-									WorldModify.KillTile(TileRefs, num111, num112, true, true);
+									WorldModify.KillTile(TileRefs, null, num111, num112, true, true);
 								}
 							}
 						}
@@ -5939,7 +5939,7 @@ namespace Terraria_Server
 					}
 					if (npc.closeDoor && ((npc.Position.X + (float)(npc.Width / 2)) / 16f > (float)(npc.doorX + 2) || (npc.Position.X + (float)(npc.Width / 2)) / 16f < (float)(npc.doorX - 2)))
 					{
-						bool flag17 = WorldModify.CloseDoor(TileRefs, npc.doorX, npc.doorY, false, npc);
+						bool flag17 = WorldModify.CloseDoor(TileRefs, null, npc.doorX, npc.doorY, false, npc);
 						if (flag17)
 						{
 							npc.closeDoor = false;
@@ -5987,7 +5987,7 @@ namespace Terraria_Server
 						if (npc.townNPC && Main.tile.At(num135, num136 - 2).Active && Main.tile.At(num135, num136 - 2).Type == 10 &&
 							(Main.rand.Next(10) == 0 || !Main.dayTime))
 						{
-							bool flag18 = WorldModify.OpenDoor(TileRefs, num135, num136 - 2, npc.direction, npc);
+							bool flag18 = WorldModify.OpenDoor(TileRefs, null, num135, num136 - 2, npc.direction, npc);
 							if (flag18)
 							{
 								npc.closeDoor = true;
@@ -5998,7 +5998,7 @@ namespace Terraria_Server
 								npc.ai[1] += 80f;
 								return;
 							}
-							if (WorldModify.OpenDoor(TileRefs, num135, num136 - 2, -npc.direction, npc))
+							if (WorldModify.OpenDoor(TileRefs, null, num135, num136 - 2, -npc.direction, npc))
 							{
 								npc.closeDoor = true;
 								npc.doorX = num135;
@@ -6276,37 +6276,37 @@ namespace Terraria_Server
 							if (Main.tile.At(num166, num167).Type == 2)
 							{
 								Main.tile.At(num166, num167).SetType(23);
-								WorldModify.SquareTileFrame(TileRefs, num166, num167, true);
+								WorldModify.SquareTileFrame(TileRefs, null, num166, num167, true);
 								NetMessage.SendTileSquare(-1, num166, num167, 1);
 							}
 							else if (Main.tile.At(num166, num167).Type == 1)
 							{
 								Main.tile.At(num166, num167).SetType(25);
-								WorldModify.SquareTileFrame(TileRefs, num166, num167, true);
+								WorldModify.SquareTileFrame(TileRefs, null, num166, num167, true);
 								NetMessage.SendTileSquare(-1, num166, num167, 1);
 							}
 							else if (Main.tile.At(num166, num167).Type == 53)
 							{
 								Main.tile.At(num166, num167).SetType(112);
-								WorldModify.SquareTileFrame(TileRefs, num166, num167, true);
+								WorldModify.SquareTileFrame(TileRefs, null, num166, num167, true);
 								NetMessage.SendTileSquare(-1, num166, num167, 1);
 							}
 							else if (Main.tile.At(num166, num167).Type == 109)
 							{
 								Main.tile.At(num166, num167).SetType(23);
-								WorldModify.SquareTileFrame(TileRefs, num166, num167, true);
+								WorldModify.SquareTileFrame(TileRefs, null, num166, num167, true);
 								NetMessage.SendTileSquare(-1, num166, num167, 1);
 							}
 							else if (Main.tile.At(num166, num167).Type == 117)
 							{
 								Main.tile.At(num166, num167).SetType(25);
-								WorldModify.SquareTileFrame(TileRefs, num166, num167, true);
+								WorldModify.SquareTileFrame(TileRefs, null, num166, num167, true);
 								NetMessage.SendTileSquare(-1, num166, num167, 1);
 							}
 							else if (Main.tile.At(num166, num167).Type == 116)
 							{
 								Main.tile.At(num166, num167).SetType(112);
-								WorldModify.SquareTileFrame(TileRefs, num166, num167, true);
+								WorldModify.SquareTileFrame(TileRefs, null, num166, num167, true);
 								NetMessage.SendTileSquare(-1, num166, num167, 1);
 							}
 						}

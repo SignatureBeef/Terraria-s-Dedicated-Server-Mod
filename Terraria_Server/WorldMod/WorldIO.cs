@@ -262,8 +262,8 @@ namespace Terraria_Server.WorldMod
 									{
 										if (Main.tile.At(x, y).Type == 127 && Main.tile.At(x, y).Active)
 										{
-											WorldModify.KillTile(null, x, y);
-											WorldModify.KillTile(null, x, y);
+											WorldModify.KillTile(null, null, x, y);
+											WorldModify.KillTile(null, null, x, y);
 											if (!Main.tile.At(x, y).Active)
 												NetMessage.SendData(17, -1, -1, String.Empty, 0, (float)x, (float)y);
 										}
@@ -446,7 +446,7 @@ namespace Terraria_Server.WorldMod
 			return success;
 		}
 
-		public static void LoadWorld(Func<Int32, Int32, ITile> TileRefs, string LoadPath)
+		public static void LoadWorld(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, string LoadPath)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -732,8 +732,8 @@ namespace Terraria_Server.WorldMod
 
 								ProgramLog.Log("Preparing liquids...");
 								WorldModify.waterLine = Main.maxTilesY;
-								Liquid.QuickWater(TileRefs, 2, -1, -1);
-								WorldModify.WaterCheck(TileRefs);
+								Liquid.QuickWater(TileRefs, sandbox, 2, -1, -1);
+								WorldModify.WaterCheck(TileRefs, sandbox);
 
 								int num11 = 0;
 								Liquid.quickSettle = true;
@@ -762,14 +762,14 @@ namespace Terraria_Server.WorldMod
 
 										prog.Value = Liquid.numLiquid;
 
-										Liquid.UpdateLiquid(TileRefs);
+										Liquid.UpdateLiquid(TileRefs, sandbox);
 									}
 								}
 
 								Liquid.quickSettle = false;
 
 								ProgramLog.Log("Performing Water Check");
-								WorldModify.WaterCheck(TileRefs);
+								WorldModify.WaterCheck(TileRefs, sandbox);
 								WorldModify.gen = false;
 							}
 						}

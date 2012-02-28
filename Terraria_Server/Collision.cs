@@ -538,7 +538,7 @@ namespace Terraria_Server
             return result;
         }
 
-		public static void HitTiles(Func<Int32, Int32, ITile> TileRefs, Vector2 Position, Vector2 Velocity, int Width, int Height)
+		public static void HitTiles(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, Vector2 Position, Vector2 Velocity, int Width, int Height)
         {
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -575,14 +575,14 @@ namespace Terraria_Server
                         vector2.Y = (float)(j * 16);
                         if (nextPos.X + (float)Width >= vector2.X && nextPos.X <= vector2.X + 16f && nextPos.Y + (float)Height >= vector2.Y && nextPos.Y <= vector2.Y + 16f)
                         {
-							WorldModify.KillTile(TileRefs, i, j, true, true);
+							WorldModify.KillTile(TileRefs, sandbox, i, j, true, true);
                         }
                     }
                 }
             }
         }
 
-        public static Vector2 HurtTiles(Func<Int32, Int32, ITile> TileRefs, Vector2 Position, Vector2 Velocity, int Width, int Height, bool fireImmune = false)
+		public static Vector2 HurtTiles(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, Vector2 Position, Vector2 Velocity, int Width, int Height, bool fireImmune = false)
         {
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -632,7 +632,7 @@ namespace Terraria_Server
 								else if (type == 80)
                                     Y = 6;
 								if (type == 32 || type == 69)
-                                    WorldModify.KillTile(TileRefs, i, j);								
+                                    WorldModify.KillTile(TileRefs, sandbox, i, j);								
 
                                 return new Vector2((float)directionX, (float)Y);
                             }
@@ -741,7 +741,7 @@ namespace Terraria_Server
             return false;
         }
 
-		public static bool SwitchTiles(Func<Int32, Int32, ITile> TileRefs, Vector2 Position, int Width, int Height, Vector2 oldPosition, ISender Sender)
+		public static bool SwitchTiles(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, Vector2 Position, int Width, int Height, Vector2 oldPosition, ISender Sender)
         {
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -777,7 +777,7 @@ namespace Terraria_Server
 							(float)Width <= vector.X || oldPosition.X >= vector.X + 16f || oldPosition.Y + 
 							(float)Height <= vector.Y || (double)oldPosition.Y >= (double)vector.Y + 16.01))
                         {
-                            WorldModify.hitSwitch(TileRefs, x, y, Sender);
+							WorldModify.hitSwitch(TileRefs, sandbox, x, y, Sender);
                             NetMessage.SendData(59, -1, -1, "", x, (float)y, 0f, 0f, 0);
                             return true;
                         }

@@ -472,7 +472,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Runs damage calculation on hostile mobs and players
 		/// </summary>
-		public void Damage(Func<Int32, Int32, ITile> TileRefs)
+		public void Damage(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -555,7 +555,7 @@ namespace Terraria_Server
 									var plr = Creator as Player;
 									if (plr == null || WorldModify.InvokeAlterationHook(this, plr, i, j, 0))
 									{
-										WorldModify.KillTile(TileRefs, i, j);
+										WorldModify.KillTile(TileRefs, sandbox, i, j);
 										NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
 									}
 								}
@@ -818,7 +818,7 @@ namespace Terraria_Server
 		/// </summary>
 		/// <param name="TileRefs">Reference to the ITile method, For usage between Sandbox and Realtime</param>
 		/// <param name="i">Projectile index</param>
-		public void Update(Func<Int32, Int32, ITile> TileRefs, int i)
+		public void Update(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int i)
 		{
 			if (this.Active)
 			{
@@ -842,10 +842,10 @@ namespace Terraria_Server
 						this.playerImmune[j]--;
 					}
 				}
-				this.AI(TileRefs);
+				this.AI(TileRefs, sandbox);
 				if (this.Owner < 255 && !Main.players[this.Owner].Active)
 				{
-					this.Kill(TileRefs); // FIXME!
+					this.Kill(TileRefs, sandbox); // FIXME!
 				}
 				if (!this.ignoreWater)
 				{
@@ -872,7 +872,7 @@ namespace Terraria_Server
 							this.type == ProjectileType.N15_BALL_OF_FIRE ||
 							this.type == ProjectileType.N34_FLAMELASH)
 						{
-							this.Kill(TileRefs);
+							this.Kill(TileRefs, sandbox);
 						}
 						if (this.type == ProjectileType.N2_FIRE_ARROW)
 						{
@@ -886,7 +886,7 @@ namespace Terraria_Server
 						this.wet = false;
 						if (flag && this.ai[0] >= 0f)
 						{
-							this.Kill(TileRefs);
+							this.Kill(TileRefs, sandbox);
 						}
 					}
 					if (flag2)
@@ -994,19 +994,19 @@ namespace Terraria_Server
 						{
 							if (this.Velocity.Y != value2.Y && value2.Y > 5f)
 							{
-								Collision.HitTiles(TileRefs, this.Position, this.Velocity, this.Width, this.Height);
+								Collision.HitTiles(TileRefs, sandbox, this.Position, this.Velocity, this.Width, this.Height);
 								this.Velocity.Y = -value2.Y * 0.2f;
 							}
 							if (this.Velocity.X != value2.X)
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 							}
 						}
 						else if (this.type == ProjectileType.N36_METEOR_SHOT)
 						{
 							if (this.penetrate > 1)
 							{
-								Collision.HitTiles(TileRefs, this.Position, this.Velocity, this.Width, this.Height);
+								Collision.HitTiles(TileRefs, sandbox, this.Position, this.Velocity, this.Width, this.Height);
 								this.penetrate--;
 								if (this.Velocity.X != value2.X)
 								{
@@ -1019,7 +1019,7 @@ namespace Terraria_Server
 							}
 							else
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 							}
 						}
 						else
@@ -1073,12 +1073,12 @@ namespace Terraria_Server
 									if (flag4)
 									{
 										this.netUpdate = true;
-										Collision.HitTiles(TileRefs, this.Position, this.Velocity, this.Width, this.Height);
+										Collision.HitTiles(TileRefs, sandbox, this.Position, this.Velocity, this.Width, this.Height);
 									}
 								}
 								else if (this.aiStyle == 3 || this.aiStyle == 13)
 								{
-									Collision.HitTiles(TileRefs, this.Position, this.Velocity, this.Width, this.Height);
+									Collision.HitTiles(TileRefs, sandbox, this.Position, this.Velocity, this.Width, this.Height);
 									if (this.type == ProjectileType.N33_THORN_CHAKRUM)
 									{
 										if (this.Velocity.X != value2.X)
@@ -1109,7 +1109,7 @@ namespace Terraria_Server
 										if (this.ai[0] >= 5f)
 										{
 											this.Position += this.Velocity;
-											this.Kill(TileRefs);
+											this.Kill(TileRefs, sandbox);
 										}
 										else
 										{
@@ -1181,7 +1181,7 @@ namespace Terraria_Server
 											else if (this.aiStyle != 9 || this.Owner == Main.myPlayer)
 											{
 												this.Position += this.Velocity;
-												this.Kill(TileRefs);
+												this.Kill(TileRefs, sandbox);
 											}
 										}
 									}
@@ -1216,10 +1216,10 @@ namespace Terraria_Server
 				{
 					return;
 				}
-				this.Damage(TileRefs);
+				this.Damage(TileRefs, sandbox);
 				if (this.type == ProjectileType.N99_BOULDER)
 				{
-					Collision.SwitchTiles(TileRefs, this.Position, this.Width, this.Height, this.lastPosition, this.Creator);
+					Collision.SwitchTiles(TileRefs, sandbox, this.Position, this.Width, this.Height, this.lastPosition, this.Creator);
 				}
 				if (this.type == ProjectileType.N94_CRYSTAL_STORM)
 				{
@@ -1232,11 +1232,11 @@ namespace Terraria_Server
 				this.timeLeft--;
 				if (this.timeLeft <= 0)
 				{
-					this.Kill(TileRefs);
+					this.Kill(TileRefs, sandbox);
 				}
 				if (this.penetrate == 0)
 				{
-					this.Kill(TileRefs);
+					this.Kill(TileRefs, sandbox);
 				}
 				if (this.Active && this.Owner == Main.myPlayer)
 				{
@@ -1271,7 +1271,7 @@ namespace Terraria_Server
 					this.numUpdates--;
 					if (this.numUpdates >= 0)
 					{
-						this.Update(TileRefs, i);
+						this.Update(TileRefs, sandbox, i);
 					}
 					else
 					{
@@ -1285,7 +1285,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Moves the projectile according to the projectile's motion parameters, or AI
 		/// </summary>
-		public void AI(Func<Int32, Int32, ITile> TileRefs)
+		public void AI(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -1450,7 +1450,7 @@ namespace Terraria_Server
 							num7 *= num8;
 							if (num8 > 3000f)
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 							}
 							if (this.Velocity.X < num6)
 							{
@@ -1495,7 +1495,7 @@ namespace Terraria_Server
 								Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
 								if (Main.players[Owner].Intersects(rectangle))
 								{
-									this.Kill(TileRefs);
+									this.Kill(TileRefs, sandbox);
 								}
 							}
 						}
@@ -1543,7 +1543,7 @@ namespace Terraria_Server
 							this.alpha += 5;
 							if (this.alpha >= 255)
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 								return;
 							}
 						}
@@ -1602,7 +1602,7 @@ namespace Terraria_Server
 						this.ai[0] += 1f;
 						if (this.ai[0] == 180f)
 						{
-							this.Kill(TileRefs);
+							this.Kill(TileRefs, sandbox);
 						}
 						if (this.ai[1] == 0f)
 						{
@@ -1647,19 +1647,19 @@ namespace Terraria_Server
 											if (TileRefs(l, m).Type == 23)
 											{
 												TileRefs(l, m).SetType(2);
-												WorldModify.SquareTileFrame(TileRefs, l, m, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,l, m, true);
 												NetMessage.SendTileSquare(-1, l, m, 1);
 											}
 											if (TileRefs(l, m).Type == 25)
 											{
 												TileRefs(l, m).SetType(1);
-												WorldModify.SquareTileFrame(TileRefs, l, m, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,l, m, true);
 												NetMessage.SendTileSquare(-1, l, m, 1);
 											}
 											if (TileRefs(l, m).Type == 112)
 											{
 												TileRefs(l, m).SetType(53);
-												WorldModify.SquareTileFrame(TileRefs, l, m, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,l, m, true);
 												NetMessage.SendTileSquare(-1, l, m, 1);
 											}
 										}
@@ -1668,19 +1668,19 @@ namespace Terraria_Server
 											if (TileRefs(l, m).Type == 109)
 											{
 												TileRefs(l, m).SetType(2);
-												WorldModify.SquareTileFrame(TileRefs, l, m, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,l, m, true);
 												NetMessage.SendTileSquare(-1, l, m, 1);
 											}
 											if (TileRefs(l, m).Type == 116)
 											{
 												TileRefs(l, m).SetType(53);
-												WorldModify.SquareTileFrame(TileRefs, l, m, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,l, m, true);
 												NetMessage.SendTileSquare(-1, l, m, 1);
 											}
 											if (TileRefs(l, m).Type == 117)
 											{
 												TileRefs(l, m).SetType(1);
-												WorldModify.SquareTileFrame(TileRefs, l, m, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,l, m, true);
 												NetMessage.SendTileSquare(-1, l, m, 1);
 											}
 										}
@@ -1695,7 +1695,7 @@ namespace Terraria_Server
 					{
 						if (Main.players[this.Owner].dead)
 						{
-							this.Kill(TileRefs);
+							this.Kill(TileRefs, sandbox);
 							return;
 						}
 						Vector2 vector3 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
@@ -1756,7 +1756,7 @@ namespace Terraria_Server
 													if (num31 != this.whoAmI && Main.projectile[num31].Active && Main.projectile[num31].Owner == this.Owner &&
 														Main.projectile[num31].aiStyle == 7 && Main.projectile[num31].ai[0] == 2f)
 													{
-														Main.projectile[num31].Kill(TileRefs);
+														Main.projectile[num31].Kill(TileRefs, sandbox);
 													}
 												}
 											}
@@ -1776,14 +1776,14 @@ namespace Terraria_Server
 												}
 												if (num23 > 3)
 												{
-													Main.projectile[num24].Kill(TileRefs);
+													Main.projectile[num24].Kill(TileRefs, sandbox);
 												}
 											}
 										}
 										var plr = Creator as Player;
 										if (plr == null || WorldModify.InvokeAlterationHook(this, plr, n, num22, 0))
 										{
-											WorldModify.KillTile(TileRefs, n, num22, true, true);
+											WorldModify.KillTile(TileRefs, sandbox, n, num22, true, true);
 										}
 										this.Velocity.X = 0f;
 										this.Velocity.Y = 0f;
@@ -1824,7 +1824,7 @@ namespace Terraria_Server
 							}
 							if (num17 < 24f)
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 							}
 							num17 = num27 / num17;
 							num15 *= num17;
@@ -1912,7 +1912,7 @@ namespace Terraria_Server
 							// client-code, not updated from 1.0.6
 							if (!Main.players[this.Owner].channel)
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 							}
 						}
 						if (this.type == ProjectileType.N34_FLAMELASH)
@@ -2029,7 +2029,7 @@ namespace Terraria_Server
 							}
 							if (Main.players[this.Owner].dead)
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 								return;
 							}
 							float num51 = 2.5f;
@@ -2081,7 +2081,7 @@ namespace Terraria_Server
 						this.scale -= 0.04f;
 						if (this.scale <= 0f)
 						{
-							this.Kill(TileRefs);
+							this.Kill(TileRefs, sandbox);
 						}
 						if (this.ai[0] > 4f)
 						{
@@ -2100,7 +2100,7 @@ namespace Terraria_Server
 					{
 						if (Main.players[this.Owner].dead)
 						{
-							this.Kill(TileRefs);
+							this.Kill(TileRefs, sandbox);
 							return;
 						}
 						Main.players[this.Owner].itemAnimation = 5;
@@ -2145,7 +2145,7 @@ namespace Terraria_Server
 								float num59 = 11f;
 								if (num58 < 50f)
 								{
-									this.Kill(TileRefs);
+									this.Kill(TileRefs, sandbox);
 								}
 								num58 = num59 / num58;
 								num56 *= num58;
@@ -2235,7 +2235,7 @@ namespace Terraria_Server
 					{
 						if (Main.players[this.Owner].dead)
 						{
-							this.Kill(TileRefs);
+							this.Kill(TileRefs, sandbox);
 							return;
 						}
 						Main.players[this.Owner].itemAnimation = 10;
@@ -2311,7 +2311,7 @@ namespace Terraria_Server
 									this.tileCollide = false;
 									if (num75 < 20f)
 									{
-										this.Kill(TileRefs);
+										this.Kill(TileRefs, sandbox);
 									}
 								}
 								if (!this.tileCollide)
@@ -2359,7 +2359,7 @@ namespace Terraria_Server
 							this.ai[0] += 1f;
 							if (this.ai[0] > 3f)
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 							}
 						}
 						if (this.type == ProjectileType.N37_STICKY_BOMB)
@@ -2522,7 +2522,7 @@ namespace Terraria_Server
 							int num79 = (int)((this.Position.Y + (float)this.Height) / 16f);
 							if (TileRefs(num78, num79).Exists && !TileRefs(num78, num79).Active)
 							{
-								WorldModify.PlaceTile(TileRefs, num78, num79, 85, false, false, -1, 0);
+								WorldModify.PlaceTile(TileRefs, sandbox, num78, num79, 85, false, false, -1, 0);
 								if (TileRefs(num78, num79).Active)
 								{
 
@@ -2545,7 +2545,7 @@ namespace Terraria_Server
 
 										Sign.TextSign(num80, this.miscText);
 									}
-									this.Kill(TileRefs);
+									this.Kill(TileRefs, sandbox);
 									return;
 								}
 							}
@@ -2683,7 +2683,7 @@ namespace Terraria_Server
 						this.Position += this.Velocity * this.ai[0];
 						if (Main.players[this.Owner].itemAnimation == 0)
 						{
-							this.Kill(TileRefs);
+							this.Kill(TileRefs, sandbox);
 						}
 						this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 2.355f;
 					}
@@ -2698,7 +2698,7 @@ namespace Terraria_Server
 						{
 							if (!Main.players[this.Owner].channel)
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 							}
 						}
 						if (this.Velocity.X > 0f)
@@ -2796,7 +2796,7 @@ namespace Terraria_Server
 										if ((float)(num129 + 8) > vector15.X && (float)num129 < vector15.X + 16f &&
 											(float)(num130 + 8) > vector15.Y && (float)num130 < vector15.Y + 16f)
 										{
-											this.Kill(TileRefs);
+											this.Kill(TileRefs, sandbox);
 										}
 									}
 								}
@@ -2809,14 +2809,14 @@ namespace Terraria_Server
 							int num138 = (int)this.Position.Y / 16;
 							if (!TileRefs(num137, num138).Exists || !TileRefs(num137, num138).Active)
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 							}
 							this.ai[0] -= 1f;
 							if (this.ai[0] <= -300f && (Main.myPlayer == this.Owner) && TileRefs(num137, num138).Active && TileRefs(num137, num138).Type == 127)
 							{
-								WorldModify.KillTile(TileRefs, num137, num138);
+								WorldModify.KillTile(TileRefs, sandbox, num137, num138);
 								NetMessage.SendData(17, -1, -1, "", 0, (float)num137, (float)num138, 0f, 0);
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 								return;
 							}
 						}
@@ -2857,14 +2857,14 @@ namespace Terraria_Server
 										if ((float)(num143 + 8) > vector16.X && (float)num143 < vector16.X + 16f &&
 											(float)(num144 + 8) > vector16.Y && (float)num144 < vector16.Y + 16f)
 										{
-											this.Kill(TileRefs);
+											this.Kill(TileRefs, sandbox);
 										}
 									}
 								}
 							}
 							if (this.lavaWet)
 							{
-								this.Kill(TileRefs);
+								this.Kill(TileRefs, sandbox);
 							}
 							if (this.Active)
 							{
@@ -2894,7 +2894,7 @@ namespace Terraria_Server
 									}
 									if (flag2)
 									{
-										if (WorldModify.PlaceTile(TileRefs, num148, num149, 127, false, false, this.Owner, 0))
+										if (WorldModify.PlaceTile(TileRefs, sandbox, num148, num149, 127, false, false, this.Owner, 0))
 										{
 											NetMessage.SendData(17, -1, -1, "", 1, (float)((int)this.ai[0]), (float)((int)this.ai[1]), 127f, 0);
 											this.damage = 0;
@@ -2946,7 +2946,7 @@ namespace Terraria_Server
 								if ((double)this.scale <= 0.2)
 								{
 									this.scale = 0.2f;
-									this.Kill(TileRefs);
+									this.Kill(TileRefs, sandbox);
 									return;
 								}
 							}
@@ -2960,7 +2960,7 @@ namespace Terraria_Server
 								if ((double)this.scale <= 0.2)
 								{
 									this.scale = 0.2f;
-									this.Kill(TileRefs);
+									this.Kill(TileRefs, sandbox);
 									return;
 								}
 							}
@@ -3072,7 +3072,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Destroys the projectile
 		/// </summary>
-		public void Kill(Func<Int32, Int32, ITile> TileRefs)
+		public void Kill(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -3091,7 +3091,7 @@ namespace Terraria_Server
 				case ProjectileType.N84_PINK_LASER:
 				case ProjectileType.N100_DEATH_LASER:
 					{
-						Collision.HitTiles(TileRefs, this.Position, this.Velocity, this.Width, this.Height);
+						Collision.HitTiles(TileRefs, sandbox, this.Position, this.Velocity, this.Width, this.Height);
 					}
 					break;
 
@@ -3143,7 +3143,7 @@ namespace Terraria_Server
 							this.Height = 64;
 							this.Position.X = this.Position.X - (float)(this.Width / 2);
 							this.Position.Y = this.Position.Y - (float)(this.Height / 2);
-							this.Damage(TileRefs);
+							this.Damage(TileRefs, sandbox);
 						}
 					}
 					break;
@@ -3158,7 +3158,7 @@ namespace Terraria_Server
 						}
 						if (TileRefs(num16, num17).Type == 127 && TileRefs(num16, num17).Active)
 						{
-							WorldModify.KillTile(TileRefs, num16, num17);
+							WorldModify.KillTile(TileRefs, sandbox, num16, num17);
 						}
 					}
 					break;
@@ -3332,12 +3332,12 @@ namespace Terraria_Server
 									{
 										if (alter == 0 || alter == 100)
 										{
-											WorldModify.KillTile(TileRefs, num89, num90);
+											WorldModify.KillTile(TileRefs, sandbox, num89, num90);
 											NetMessage.SendData(17, -1, -1, "", 0, (float)num89, (float)num90, 0f, 0);
 										}
 										if (alter == 2 || alter == 100)
 										{
-											WorldModify.KillWall(TileRefs, num89, num90);
+											WorldModify.KillWall(TileRefs, sandbox, num89, num90);
 											NetMessage.SendData(17, -1, -1, "", 2, (float)num89, (float)num90, 0f, 0);
 										}
 									}
@@ -3403,7 +3403,7 @@ namespace Terraria_Server
 					}
 					if (!TileRefs(num54, num55).Active)
 					{
-						WorldModify.PlaceTile(TileRefs, num54, num55, num99, false, true, -1, 0);
+						WorldModify.PlaceTile(TileRefs, sandbox, num54, num55, num99, false, true, -1, 0);
 						if (TileRefs(num54, num55).Active && (int)TileRefs(num54, num55).Type == num99)
 						{
 							NetMessage.SendData(17, -1, -1, "", 1, (float)num54, (float)num55, (float)num99);
@@ -3504,42 +3504,42 @@ namespace Terraria_Server
 										case 2:
 											{
 												TileRefs(num103, num104).SetType(109);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
 										case 1:
 											{
 												TileRefs(num103, num104).SetType(117);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
 										case 53:
 											{
 												TileRefs(num103, num104).SetType(116);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
 										case 23:
 											{
 												TileRefs(num103, num104).SetType(109);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
 										case 25:
 											{
 												TileRefs(num103, num104).SetType(117);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
 										case 112:
 											{
 												TileRefs(num103, num104).SetType(116);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
@@ -3555,7 +3555,7 @@ namespace Terraria_Server
 										case 2:
 											{
 												TileRefs(num103, num104).SetType(23);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
@@ -3563,7 +3563,7 @@ namespace Terraria_Server
 										case 1:
 											{
 												TileRefs(num103, num104).SetType(25);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
@@ -3571,7 +3571,7 @@ namespace Terraria_Server
 										case 53:
 											{
 												TileRefs(num103, num104).SetType(112);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
@@ -3579,7 +3579,7 @@ namespace Terraria_Server
 										case 109:
 											{
 												TileRefs(num103, num104).SetType(23);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
@@ -3587,7 +3587,7 @@ namespace Terraria_Server
 										case 117:
 											{
 												TileRefs(num103, num104).SetType(25);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;
@@ -3595,7 +3595,7 @@ namespace Terraria_Server
 										case 116:
 											{
 												TileRefs(num103, num104).SetType(112);
-												WorldModify.SquareTileFrame(TileRefs, num103, num104, true);
+												WorldModify.SquareTileFrame(TileRefs, sandbox,num103, num104, true);
 												NetMessage.SendTileSquare(-1, num103, num104, 1);
 											}
 											break;

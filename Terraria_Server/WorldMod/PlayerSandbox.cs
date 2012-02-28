@@ -67,7 +67,7 @@ namespace Terraria_Server.WorldMod
 				{
 					case SideEffectType.ADD_WATER:
 					{
-						Terraria_Server.Liquid.AddWater (null, eff.X, eff.Y); //Applying => Normal Tile References
+						Terraria_Server.Liquid.AddWater (null, null, eff.X, eff.Y); //Applying => Normal Tile References
 						break;
 					}
 					

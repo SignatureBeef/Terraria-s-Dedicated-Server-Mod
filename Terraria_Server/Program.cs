@@ -317,7 +317,7 @@ namespace Terraria_Server
 				Terraria_Server.Main.maxSectionsX = worldXtiles / 200;
 				Terraria_Server.Main.maxSectionsY = worldYtiles / 150;
 
-				WorldIO.LoadWorld(null, World.SavePath);
+				WorldIO.LoadWorld(null, null, World.SavePath);
 
 				ctx = new HookContext
 				{

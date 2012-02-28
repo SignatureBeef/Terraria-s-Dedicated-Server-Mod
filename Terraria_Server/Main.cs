@@ -648,7 +648,7 @@ namespace Terraria_Server
 				if (time > 16200.0 && WorldModify.spawnMeteor)
 				{
 					WorldModify.spawnMeteor = false;
-					WorldModify.dropMeteor(null);
+					WorldModify.dropMeteor(null, null);
 				}
 			}
 			else
@@ -888,7 +888,7 @@ namespace Terraria_Server
 			{
 				try
 				{
-					player.UpdatePlayer(null, count);
+					player.UpdatePlayer(null, null, count);
 				}
 				catch (Exception e)
 				{
@@ -967,7 +967,7 @@ namespace Terraria_Server
 
 					try
 					{
-						projectile[i].Update(null, i);
+						projectile[i].Update(null, null, i);
 					}
 					catch (Exception e)
 					{
@@ -1032,7 +1032,7 @@ namespace Terraria_Server
 			start = s.Elapsed;
 			try
 			{
-				WorldModify.UpdateWorld(null, World.Sender);
+				WorldModify.UpdateWorld(null, null, World.Sender);
 				worldUpdateErrors = 0;
 			}
 			catch (Exception e)

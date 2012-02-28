@@ -1002,7 +1002,7 @@ namespace Terraria_Server.Commands
 
 			ProgramLog.Log(Languages.StartingServer);
 			Main.Initialize();
-			WorldIO.LoadWorld(null, World.SavePath);
+			WorldIO.LoadWorld(null, null, World.SavePath);
 			Program.updateThread = new ProgramThread("Updt", Program.UpdateLoop);
 			NetPlay.StartServer();
 			//Statics.keepRunning = false;
@@ -1428,7 +1428,7 @@ namespace Terraria_Server.Commands
 				throw new CommandError(Languages.HardModeAlreadyEnabled);
 
 			sender.sendMessage(Languages.StartingHardMode);
-			WorldModify.StartHardMode(null);
+			WorldModify.StartHardMode();
 		}
 
 		/// <summary>

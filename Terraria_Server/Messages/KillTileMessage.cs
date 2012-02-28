@@ -52,8 +52,8 @@ namespace Terraria_Server.Messages
 				NetMessage.SendTileSquare(whoAmI, x, y, 3);
 				return;
 			}
-			
-			WorldModify.KillTile(null, x, y /*, player */); //Seems player isn't needed in the old 1.0.6.1 method...or was removed?
+
+			WorldModify.KillTile(null, null, x, y);
 
 			if (!Main.tile.At(x, y).Active || Main.tile.At(x, y).Type != 21)
 				NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);

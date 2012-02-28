@@ -20,7 +20,7 @@ namespace Terraria_Server.Messages
 			int Y = BitConverter.ToInt32(readBuffer, num);
 			num += 4;
 
-			WorldModify.hitSwitch(null, X, Y, Main.players[whoAmI]);			
+			WorldModify.hitSwitch(null, null, X, Y, Main.players[whoAmI]);			
 			NetMessage.SendData(59, -1, whoAmI, "", X, (float)Y, 0f, 0f, 0);
 		}
 	}

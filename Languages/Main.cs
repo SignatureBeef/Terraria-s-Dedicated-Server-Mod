@@ -92,6 +92,8 @@ namespace Languages
 
 		private void Btn_Generate_Click(object sender, EventArgs e)
 		{
+			MessageBox.Show("Please note that this may take a while, but should not take more than 5 minutes on a decent connection.");
+
 			Btn_Generate.Enabled = false;
 			Cb_Languages.Enabled = false;
 			

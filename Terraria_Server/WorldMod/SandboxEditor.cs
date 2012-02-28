@@ -227,27 +227,27 @@ namespace Terraria_Server.WorldMod
 
 		public bool CloseDoor(int x, int y, bool forced, ISender sender)
 		{
-			return WorldModify.CloseDoor(ITileAt, x, y, forced, sender);
+			return WorldModify.CloseDoor(ITileAt, Sandbox, x, y, forced, sender);
 		}
 
 		public bool OpenDoor(int x, int y, int direction, ISender sender)
 		{
-			return WorldModify.OpenDoor(ITileAt, x, y, direction, sender);
+			return WorldModify.OpenDoor(ITileAt, Sandbox, x, y, direction, sender);
 		}
 
 		public void Check1x2(int x, int j, byte type)
 		{
-			WorldModify.Check1x2(ITileAt, x, j, type);
+			WorldModify.Check1x2(ITileAt, Sandbox, x, j, type);
 		}
 
 		public void CheckOnTable1x1(int x, int y, int type)
 		{
-			WorldModify.CheckOnTable1x1(ITileAt, x, y, type);
+			WorldModify.CheckOnTable1x1(ITileAt, Sandbox, x, y, type);
 		}
 
 		public void CheckSign(int x, int y, int type)
 		{
-			WorldModify.CheckSign(ITileAt, x, y, type);
+			WorldModify.CheckSign(ITileAt, Sandbox, x, y, type);
 		}
 
 		public bool PlaceSign(int x, int y, int type)
@@ -267,7 +267,7 @@ namespace Terraria_Server.WorldMod
 
 		public void GrowAlch(int x, int y) 
 		{
-			WorldModify.GrowAlch(ITileAt, x, y);
+			WorldModify.GrowAlch(ITileAt, Sandbox, x, y);
 		}
 
 		//remove
@@ -278,7 +278,7 @@ namespace Terraria_Server.WorldMod
 
 		public void CheckAlch(int x, int y) 
 		{
-			WorldModify.CheckAlch(ITileAt, x, y);
+			WorldModify.CheckAlch(ITileAt, Sandbox, x, y);
 		}
 
 		public void Place1x2(int x, int y, int type, int style) 
@@ -293,7 +293,7 @@ namespace Terraria_Server.WorldMod
 
 		public void CheckBanner(int x, int j, byte type) 
 		{
-			WorldModify.CheckBanner(ITileAt, x, j, type);
+			WorldModify.CheckBanner(ITileAt, Sandbox, x, j, type);
 		}
 
 		public void Place1x2Top(int x, int y, int type) 
@@ -308,12 +308,12 @@ namespace Terraria_Server.WorldMod
 
 		public void Check1x2Top(int x, int y, byte type)
 		{
-			WorldModify.Check1x2Top(ITileAt, x, y, type);
+			WorldModify.Check1x2Top(ITileAt, Sandbox, x, y, type);
 		} 
 
 		public void Check2x1(int x, int y, byte type) 
 		{
-			WorldModify.Check2x1(ITileAt, x, y, type);
+			WorldModify.Check2x1(ITileAt, Sandbox, x, y, type);
 		}
 
 		public void Place2x1(int x, int y, int type) 
@@ -323,17 +323,17 @@ namespace Terraria_Server.WorldMod
 
 		public void Check4x2(int i, int j, int type) 
 		{
-			WorldModify.Check4x2(ITileAt, i, j, type);
+			WorldModify.Check4x2(ITileAt, Sandbox, i, j, type);
 		}
 
 		public void Check2x2(int i, int j, int type) 
 		{
-			WorldModify.Check2x2(ITileAt, i, j, type);
+			WorldModify.Check2x2(ITileAt, sandbox, i, j, type);
 		}
 
 		public void Check3x2(int i, int j, int type) 
 		{
-			WorldModify.Check3x3(ITileAt, i, j, type);
+			WorldModify.Check3x3(ITileAt, Sandbox, i, j, type);
 		}
 
 		public void Place4x2(int x, int y, int type, int direction = -1) 
@@ -353,7 +353,7 @@ namespace Terraria_Server.WorldMod
 
 		public void Check3x3(int i, int j, int type) 
 		{
-			WorldModify.Check3x3(ITileAt, i, j, type);
+			WorldModify.Check3x3(ITileAt, Sandbox, i, j, type);
 		}
 
 		public void Place3x3(int x, int y, int type) 
@@ -363,17 +363,17 @@ namespace Terraria_Server.WorldMod
 
 		public void Check3x4(int i, int j, int type) 
 		{
-			WorldModify.Check3x4(ITileAt, i, j, type);
+			WorldModify.Check3x4(ITileAt, Sandbox, i, j, type);
 		}
 
 		public void Check1xX(int x, int j, byte type) 
 		{
-			WorldModify.Check1xX(ITileAt, x, j, type);
+			WorldModify.Check1xX(ITileAt, Sandbox, x, j, type);
 		}
 
 		public void Check2xX(int i, int j, byte type) 
 		{
-			WorldModify.Check2xX(ITileAt, i, j, type);
+			WorldModify.Check2xX(ITileAt, Sandbox, i, j, type);
 		}
 
 		public void PlaceSunflower(int x, int y, int type = 27) 
@@ -383,7 +383,7 @@ namespace Terraria_Server.WorldMod
 
 		public void CheckSunflower(int i, int j, int type = 27) 
 		{
-			WorldModify.CheckSunflower(ITileAt, i, j, type);
+			WorldModify.CheckSunflower(ITileAt, Sandbox, i, j, type);
 		}
 
 		public bool PlacePot(int x, int y, int type = 28) 
@@ -393,27 +393,27 @@ namespace Terraria_Server.WorldMod
 
 		public bool CheckCactus(int i, int j) 
 		{
-			return WorldModify.CheckCactus(ITileAt, i, j);
+			return WorldModify.CheckCactus(ITileAt, Sandbox, i, j);
 		}
 
 		public void PlantCactus(int i, int j) 
 		{
-			WorldModify.PlantCactus(ITileAt, i, j);
+			WorldModify.PlantCactus(ITileAt, Sandbox, i, j);
 		}
 
 		public void CactusFrame(int i, int j) 
 		{
-			WorldModify.CactusFrame(ITileAt, i, j);
+			WorldModify.CactusFrame(ITileAt, Sandbox, i, j);
 		}
 
 		public void GrowCactus(int i, int j) 
 		{
-			WorldModify.GrowCactus(ITileAt, i, j);
+			WorldModify.GrowCactus(ITileAt, Sandbox, i, j);
 		}
 
 		public void CheckPot(int i, int j, int type = 28) 
 		{
-			WorldModify.CheckPot(ITileAt, i, j, type);
+			WorldModify.CheckPot(ITileAt, Sandbox, i, j, type);
 		}
 
 		public int PlaceChest(int x, int y, int type = 21, bool notNearOtherChests = false, int style = 0) 
@@ -423,7 +423,7 @@ namespace Terraria_Server.WorldMod
 
 		public void CheckChest(int i, int j, int type) 
 		{
-			WorldModify.CheckChest(ITileAt, i, j, type);
+			WorldModify.CheckChest(ITileAt, Sandbox, i, j, type);
 		}
 
 		public void Place1xX(int x, int y, int type, int style = 0) 
@@ -443,17 +443,17 @@ namespace Terraria_Server.WorldMod
 
 		public bool PlaceTile(int i, int j, int type, bool mute = false, bool forced = false, int plr = -1, int style = 0) 
 		{
-			return WorldModify.PlaceTile(ITileAt, i, j, type, mute, forced, plr, style);
+			return WorldModify.PlaceTile(ITileAt, Sandbox, i, j, type, mute, forced, plr, style);
 		}
 
 		public void KillWall(int i, int j, bool fail = false) 
 		{
-			WorldModify.KillWall(ITileAt, i, j, fail);
+			WorldModify.KillWall(ITileAt, Sandbox, i, j, fail);
 		}
 
 		public void KillTile(int x, int y, bool fail = false, bool effectOnly = false, bool noItem = false) 
 		{
-			WorldModify.KillTile(ITileAt, x, y, fail, effectOnly, noItem, this.Sandbox);
+			WorldModify.KillTile(ITileAt, Sandbox, x, y, fail, effectOnly, noItem);
 		}
 
 		//Remove
@@ -475,29 +475,29 @@ namespace Terraria_Server.WorldMod
 		//remove
 		public void SquareTileFrame(int i, int j, bool resetFrame = true) 
 		{
-			WorldModify.SquareTileFrame(ITileAt, i, j, resetFrame);
+			WorldModify.SquareTileFrame(ITileAt, Sandbox, i, j, resetFrame);
 		}
 
 		//Remove
 		public void SectionTileFrame(int startX, int startY, int endX, int endY) 
 		{
-			WorldModify.SectionTileFrame(ITileAt, startX, startY, endX, endY);
+			WorldModify.SectionTileFrame(ITileAt, Sandbox, startX, startY, endX, endY);
 		}
 
 		//remove
 		public void RangeFrame(int startX, int startY, int endX, int endY) 
 		{
-			WorldModify.RangeFrame(ITileAt, startX, startY, endX, endY);
+			WorldModify.RangeFrame(ITileAt, Sandbox, startX, startY, endX, endY);
 		}
 
 		public void PlantCheck(int i, int j) 
 		{
-			WorldModify.PlantCheck(ITileAt, i, j);
+			WorldModify.PlantCheck(ITileAt, Sandbox, i, j);
 		}
 
 		public void TileFrame(int i, int j, bool resetFrame = false, bool noBreak = false)
 		{
-			WorldModify.TileFrame(ITileAt, i, j, resetFrame, noBreak);
+			WorldModify.TileFrame(ITileAt, Sandbox, i, j, resetFrame, noBreak);
 		}
 
 		public void PlaceWire(int i, int j)
@@ -507,7 +507,7 @@ namespace Terraria_Server.WorldMod
 
 		public void KillWire(int i, int j)
 		{
-			WorldModify.KillWire(ITileAt, i, j);
+			WorldModify.KillWire(ITileAt, Sandbox, i, j);
 		}
 	}
 }

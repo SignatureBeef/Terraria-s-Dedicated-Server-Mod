@@ -19,7 +19,7 @@ namespace Terraria_Server.Misc
     {
         public static BackupIOReturn LoadWorld(string Name)
         {
-            WorldIO.LoadWorld(null, Statics.WorldPath + Path.DirectorySeparatorChar + Name);
+            WorldIO.LoadWorld(null, null, Statics.WorldPath + Path.DirectorySeparatorChar + Name);
 
             if (WorldModify.loadFailed && !WorldModify.loadSuccess)
             {

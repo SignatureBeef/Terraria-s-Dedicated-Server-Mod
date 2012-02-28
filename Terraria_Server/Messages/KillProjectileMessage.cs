@@ -66,7 +66,7 @@ namespace Terraria_Server.Messages
 			
 			if (projectile.Owner == owner && projectile.identity == identity)
 			{
-				projectile.Kill (null);
+				projectile.Kill (null, null);
 				NetMessage.SendData(29, -1, whoAmI, "", (int)identity, (float)owner);
 			}
         }
