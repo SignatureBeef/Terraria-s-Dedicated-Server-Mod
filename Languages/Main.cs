@@ -14,6 +14,7 @@ using Languages.Translation;
 using Terraria_Server.Language;
 using Terraria_Server.Collections;
 using System.Reflection;
+using System.Threading;
 
 namespace Languages
 {
@@ -91,14 +92,49 @@ namespace Languages
 
 		private void Btn_Generate_Click(object sender, EventArgs e)
 		{
+			Btn_Generate.Enabled = false;
+			Cb_Languages.Enabled = false;
+			
+			ThreadPool.QueueUserWorkItem(Translate, Cb_Languages.Text);
+			Thread.Sleep(1000);
+
+			var dotCount = 0;
+			while (IsTranslating)
+			{
+				Btn_Generate.Text = "Generating";
+				Thread.Sleep(1000);
+
+				dotCount++;
+				if (dotCount > 3)
+					dotCount = 0;
+
+				for (var i = 0; i < dotCount; i++)
+					Btn_Generate.Text += '.';
+
+				Btn_Generate.Update();
+			}
+
+			Btn_Generate.Enabled = true;
+			Cb_Languages.Enabled = true;
+			Btn_Generate.Text = "Generate";
+		}
+
+		public static bool IsTranslating { get; set; }
+		public static void Translate(object state)
+		{
+			var Language = state as String;
+
+			IsTranslating = true;
+
 			LanguageData.RestoreXML();
+
 			var nodes = LanguageData.GetNodes();
 			var failed = 0;
 
 			foreach (var keyPair in nodes.FieldwiseClone())
 			{
 				string translated;
-				if (Methods.TryTranslateText(keyPair.Value, Methods.Languages[Cb_Languages.Text], out translated))
+				if (Methods.TryTranslateText(keyPair.Value, Methods.Languages[Language], out translated))
 					nodes.UpdateProperty(keyPair.Key, translated);
 				else
 					failed++;
@@ -108,6 +144,8 @@ namespace Languages
 			MessageBox.Show(
 				String.Format("{0} node(s) converted!", nodes.Count - failed)
 			);
+
+			IsTranslating = false;
 		}
 
 		const String CONFIG = "Languages.exe.config";

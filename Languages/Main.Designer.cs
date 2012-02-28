@@ -29,9 +29,9 @@
 		private void InitializeComponent()
 		{
 			this.GB_Main = new System.Windows.Forms.GroupBox();
-			this.Cb_Languages = new System.Windows.Forms.ComboBox();
-			this.Btn_Generate = new System.Windows.Forms.Button();
 			this.Lbl_Lang = new System.Windows.Forms.Label();
+			this.Btn_Generate = new System.Windows.Forms.Button();
+			this.Cb_Languages = new System.Windows.Forms.ComboBox();
 			this.GB_Main.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -48,24 +48,6 @@
 			this.GB_Main.TabStop = false;
 			this.GB_Main.Paint += new System.Windows.Forms.PaintEventHandler(this.GB_Main_Paint);
 			// 
-			// Cb_Languages
-			// 
-			this.Cb_Languages.FormattingEnabled = true;
-			this.Cb_Languages.Location = new System.Drawing.Point(42, 52);
-			this.Cb_Languages.Name = "Cb_Languages";
-			this.Cb_Languages.Size = new System.Drawing.Size(378, 21);
-			this.Cb_Languages.TabIndex = 0;
-			// 
-			// Btn_Generate
-			// 
-			this.Btn_Generate.Location = new System.Drawing.Point(345, 79);
-			this.Btn_Generate.Name = "Btn_Generate";
-			this.Btn_Generate.Size = new System.Drawing.Size(75, 23);
-			this.Btn_Generate.TabIndex = 1;
-			this.Btn_Generate.Text = "Generate";
-			this.Btn_Generate.UseVisualStyleBackColor = true;
-			this.Btn_Generate.Click += new System.EventHandler(this.Btn_Generate_Click);
-			// 
 			// Lbl_Lang
 			// 
 			this.Lbl_Lang.AutoSize = true;
@@ -75,6 +57,24 @@
 			this.Lbl_Lang.Size = new System.Drawing.Size(175, 18);
 			this.Lbl_Lang.TabIndex = 2;
 			this.Lbl_Lang.Text = "Please select a language:";
+			// 
+			// Btn_Generate
+			// 
+			this.Btn_Generate.Location = new System.Drawing.Point(345, 79);
+			this.Btn_Generate.Name = "Btn_Generate";
+			this.Btn_Generate.Size = new System.Drawing.Size(78, 23);
+			this.Btn_Generate.TabIndex = 1;
+			this.Btn_Generate.Text = "Generate";
+			this.Btn_Generate.UseVisualStyleBackColor = true;
+			this.Btn_Generate.Click += new System.EventHandler(this.Btn_Generate_Click);
+			// 
+			// Cb_Languages
+			// 
+			this.Cb_Languages.FormattingEnabled = true;
+			this.Cb_Languages.Location = new System.Drawing.Point(42, 52);
+			this.Cb_Languages.Name = "Cb_Languages";
+			this.Cb_Languages.Size = new System.Drawing.Size(378, 21);
+			this.Cb_Languages.TabIndex = 0;
 			// 
 			// Main
 			// 

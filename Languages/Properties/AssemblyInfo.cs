@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Languages")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Language Generation Tool for TDSM")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Toshiba")]
+[assembly: AssemblyCompany("TDSM")]
 [assembly: AssemblyProduct("Languages")]
-[assembly: AssemblyCopyright("Copyright © Toshiba 2012")]
+[assembly: AssemblyCopyright("Copyright © TDSM 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
