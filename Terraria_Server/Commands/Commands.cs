@@ -1450,11 +1450,10 @@ namespace Terraria_Server.Commands
 			var purge = args.TryPop("purge");
 
 			if (perform)
-			{
-				//BackupManager.PerformBackup();
-			}
+				BackupManager.PerformBackup();
 			else if (purge)
 			{
+				/* TODO: Add property option to see what times to purge */
 				var backups = BackupManager.GetBackupsBefore(Main.worldName, DateTime.Now);
 			}
 			else
