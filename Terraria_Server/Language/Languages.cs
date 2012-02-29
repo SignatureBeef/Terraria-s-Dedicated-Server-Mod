@@ -143,6 +143,55 @@ namespace Terraria_Server.Language
 		public static String CommandDescription_LanguageReload { get; set; }
 		public static String CommandDescription_Backups { get; set; }
 
+		public static String Generation_Terrain { get; set; }
+		public static String Generation_AddingNPCs { get; set; }
+		public static String Generation_AddingSand { get; set; }
+		public static String Generation_GeneratingHills { get; set; }
+		public static String Generation_AddingSnow { get; set; }
+		public static String Generation_PuttingDirtBehindDirt { get; set; }
+		public static String Generation_PlacingRocks { get; set; }
+		public static String Generation_PlaceDirtWithinRocks { get; set; }
+		public static String Generation_AddingClay { get; set; }
+		public static String Generation_MakingRandomHoles { get; set; }
+		public static String Generation_GeneratingSmallCaves { get; set; }
+		public static String Generation_GeneratingLargeCaves { get; set; }
+		public static String Generation_GeneratingSurfaceCaves { get; set; }
+		public static String Generation_GeneratingJungle { get; set; }
+		public static String Generation_GeneratingFloatingIslands { get; set; }
+		public static String Generation_AddingMushroomPatches { get; set; }
+		public static String Generation_PlacingMudInDirt { get; set; }
+		public static String Generation_AddingShinies { get; set; }
+		public static String Generation_AddingWebs { get; set; }
+		public static String Generation_CreatingTheUnderworld { get; set; }
+		public static String Generation_AddingWaterBodies { get; set; }
+		public static String Generation_MakingTheWorldEvil { get; set; }
+		public static String Generation_GeneratingMoutainCaves { get; set; }
+		public static String Generation_CreatingBeachesOnEitherSide { get; set; }
+		public static String Generation_AddingGems { get; set; }
+		public static String Generation_GravitatingSand { get; set; }
+		public static String Generation_CleaningUpDirtBackgrounds { get; set; }
+		public static String Generation_PlacingAltars { get; set; }
+		public static String Generation_SettlingLiquids { get; set; }
+		public static String Generation_PlacingLifeCrystals { get; set; }
+		public static String Generation_HidingTreasure { get; set; }
+		public static String Generation_HidingMoreTreasure { get; set; }
+		public static String Generation_HidingJungleTreasure { get; set; }
+		public static String Generation_HidingWaterTreasure { get; set; }
+		public static String Generation_AddingIslandHouses { get; set; }
+		public static String Generation_PlacingBreakables { get; set; }
+		public static String Generation_PlacingHellForges { get; set; }
+		public static String Generation_SpreadingGrass { get; set; }
+		public static String Generation_GrowingCacti { get; set; }
+		public static String Generation_PlantingSunflowers { get; set; }
+		public static String Generation_PlantingTrees { get; set; }
+		public static String Generation_PlantingHerbs { get; set; }
+		public static String Generation_PlantingWeeds { get; set; }
+		public static String Generation_GrowingVines { get; set; }
+		public static String Generation_PlantingFlowers { get; set; }
+		public static String Generation_PlantingMushrooms { get; set; }
+		public static String Generation_CreatingDungeons { get; set; }
+		public static String Generation_PlacingTraps { get; set; }
+
 #endregion
 
 		public static bool LoadClass(string filePath, bool restore = false, bool error = true)

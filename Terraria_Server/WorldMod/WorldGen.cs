@@ -9,6 +9,7 @@ using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
 using Terraria_Server.Plugins;
 using System.Text;
+using Terraria_Server.Language;
 
 namespace Terraria_Server.WorldMod
 {
@@ -147,7 +148,7 @@ namespace Terraria_Server.WorldMod
 			else
 				Direction = 1;
 
-			using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Generating world terrain"))
+			using (var prog = new ProgressLogger(Main.maxTilesX - 1, Languages.Generation_Terrain))
 			{
 				for (int TerrainX = 0; TerrainX < Main.maxTilesX; TerrainX++)
 				{
@@ -436,7 +437,7 @@ namespace Terraria_Server.WorldMod
 				num259++;
 			}
 
-			ProgramLog.Log("Adding NPC's...");
+			ProgramLog.Log(Languages.Generation_AddingNPCs);
 			NPC.SpawnGuide();
 			/*NPC.SpawnTDCMQuestGiver(); */
 
@@ -465,7 +466,7 @@ namespace Terraria_Server.WorldMod
 			//var someotherCaveGen = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 8E-06);
 			sandLines += 2;
 			var extra = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 8E-06);
-			using (var sandProg = new ProgressLogger(sandLines + extra, "Adding sand"))
+			using (var sandProg = new ProgressLogger(sandLines + extra, Languages.Generation_AddingSand))
 			{
 				for (int k = 0; k < sandLines; k++)
 				{
@@ -585,7 +586,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var maxHills = (int)((double)Main.maxTilesX * 0.0008);
-			using (var hillProg = new ProgressLogger(maxHills, "Generating hills"))
+			using (var hillProg = new ProgressLogger(maxHills, Languages.Generation_GeneratingHills))
 			{
 				for (int i = 0; i < maxHills; i++)
 				{
@@ -664,7 +665,7 @@ namespace Terraria_Server.WorldMod
 
 			int startX = WorldModify.genRand.Next(50, 100);
 
-			using (var snowProg = new ProgressLogger(snowPosXEnd - snowStartX, "Adding Snow"))
+			using (var snowProg = new ProgressLogger(snowPosXEnd - snowStartX, Languages.Generation_AddingSnow))
 			{
 				for (int posX = snowStartX; posX < snowPosXEnd; posX++)
 				{
@@ -712,7 +713,7 @@ namespace Terraria_Server.WorldMod
 
 			int outlier = 0;
 
-			using (var prog = new ProgressLogger(Main.maxTilesX - 3, "Putting dirt behind dirt"))
+			using (var prog = new ProgressLogger(Main.maxTilesX - 3, Languages.Generation_PuttingDirtBehindDirt))
 			{
 				for (int posX = 1; posX < Main.maxTilesX - 1; posX++)
 				{
@@ -752,7 +753,7 @@ namespace Terraria_Server.WorldMod
 
 			var Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0002);
 			var Max2 = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0045);
-			using (var rockProg = new ProgressLogger((Max * 2) + Max2, "Placing rocks within the dirt"))
+			using (var rockProg = new ProgressLogger((Max * 2) + Max2, Languages.Generation_PlacingRocks))
 			{
 				for (int i = 0; i < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0002); i++)
 				{
@@ -778,7 +779,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.005);
-			using (var dirtProg = new ProgressLogger(Max, "Placing dirt within the rocks"))
+			using (var dirtProg = new ProgressLogger(Max, Languages.Generation_PlaceDirtWithinRocks))
 			{
 				for (int i = 0; i < Max; i++)
 				{
@@ -797,7 +798,7 @@ namespace Terraria_Server.WorldMod
 			var Max2 = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 5E-05);
 			var Max3 = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2E-05);
 			var Max4 = Main.maxTilesX - 5;
-			using (var clayProg = new ProgressLogger(Max + Max2 + Max3 + Max4, "Adding clay"))
+			using (var clayProg = new ProgressLogger(Max + Max2 + Max3 + Max4, Languages.Generation_AddingClay))
 			{
 				for (int i = 0; i < Max; i++)
 				{
@@ -844,7 +845,7 @@ namespace Terraria_Server.WorldMod
 
 			var MaxRandomHoles = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0015);
 
-			using (var prog = new ProgressLogger(MaxRandomHoles - 1, "Making random holes"))
+			using (var prog = new ProgressLogger(MaxRandomHoles - 1, Languages.Generation_MakingRandomHoles))
 			{
 				for (int i = 0; i < MaxRandomHoles; i++)
 				{
@@ -867,7 +868,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var MaxSmallHoles = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 3E-05);
-			using (var prog = new ProgressLogger(MaxSmallHoles - 1, "Generating small caves"))
+			using (var prog = new ProgressLogger(MaxSmallHoles - 1, Languages.Generation_GeneratingSmallCaves))
 			{
 				for (int i = 0; i < MaxSmallHoles; i++)
 				{
@@ -892,7 +893,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var MaxLargeCaves = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.00015);
-			using (var prog = new ProgressLogger(MaxLargeCaves - 1, "Generating large caves"))
+			using (var prog = new ProgressLogger(MaxLargeCaves - 1, Languages.Generation_GeneratingLargeCaves))
 			{
 				for (int i = 0; i < MaxLargeCaves; i++)
 				{
@@ -922,7 +923,7 @@ namespace Terraria_Server.WorldMod
 			var Max3 = (int)((double)Main.maxTilesX * 0.0003);
 			var Max4 = (int)((double)Main.maxTilesX * 0.0004);
 			var Max5 = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.002);
-			using (var surfaceCaveProg = new ProgressLogger(Max + Max2 + Max3 + Max4 + Max5, "Generating surface caves"))
+			using (var surfaceCaveProg = new ProgressLogger(Max + Max2 + Max3 + Max4 + Max5, Languages.Generation_GeneratingSurfaceCaves))
 			{
 				for (int num47 = 0; num47 < Max; num47++)
 				{
@@ -1020,7 +1021,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			using (var jungleprog = new ProgressLogger(100, "Generating jungle"))
+			using (var jungleprog = new ProgressLogger(100, Languages.Generation_GeneratingJungle))
 			{
 				float jungleSize = (float)(Main.maxTilesX / 4200);
 				jungleSize *= 1.5f;
@@ -1280,7 +1281,7 @@ namespace Terraria_Server.WorldMod
 			numIslandHouses = 0;
 			houseCount = 0;
 
-			using (var fiProg = new ProgressLogger(WorldModify.ficount, "Generating floating islands"))
+			using (var fiProg = new ProgressLogger(WorldModify.ficount, Languages.Generation_GeneratingFloatingIslands))
 			{
 				//Might be limited due to us not modifying fihX[] etc
 				for (int islandInt = 0; islandInt < WorldModify.ficount; islandInt++)
@@ -1345,7 +1346,7 @@ namespace Terraria_Server.WorldMod
 
 			var Max = Main.maxTilesX / 300;
 			var Max2 = Main.maxTilesX;
-			using (var mushProg = new ProgressLogger(Max + Max2, "Adding mushroom patches"))
+			using (var mushProg = new ProgressLogger(Max + Max2, Languages.Generation_AddingMushroomPatches))
 			{
 				for (int i = 0; i < Max; i++)
 				{
@@ -1376,7 +1377,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.001);
-			using (var mudProg = new ProgressLogger(Max, "Placing mud in the dirt"))
+			using (var mudProg = new ProgressLogger(Max, Languages.Generation_PlacingMudInDirt))
 			{
 				for (int i = 0; i < Max; i++)
 				{
@@ -1405,7 +1406,7 @@ namespace Terraria_Server.WorldMod
 			var num119max = (int)(tiles * 0.00012);
 			var num120max = (int)(tiles * 2E-05);
 			using (var prog = new ProgressLogger(num109max + num110max + num111max + num112max + num113max
-				+ num114max + num115max + num116max + num117max + num118max + num119max + num120max - 12, "Adding shinies"))
+				+ num114max + num115max + num116max + num117max + num118max + num119max + num120max - 12, Languages.Generation_AddingShinies))
 			{
 				int total = 0;
 
@@ -1478,7 +1479,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.001);
-			using (var webProg = new ProgressLogger(Max, "Adding webs"))
+			using (var webProg = new ProgressLogger(Max, Languages.Generation_AddingWebs))
 			{
 				for (int caveInt = 0; caveInt < Max; caveInt++)
 				{
@@ -1530,7 +1531,7 @@ namespace Terraria_Server.WorldMod
 
 			var Max = (Main.maxTilesX * 5) + (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0008) + (Main.maxTilesX - 20);
 
-			using (var uwprog = new ProgressLogger(Max, "Creating the underworld"))
+			using (var uwprog = new ProgressLogger(Max, Languages.Generation_CreatingTheUnderworld))
 			{
 				int num148 = Main.maxTilesY - WorldModify.genRand.Next(150, 190);
 				for (int num149 = 0; num149 < Main.maxTilesX; num149++)
@@ -1688,7 +1689,7 @@ namespace Terraria_Server.WorldMod
 
 			int waterBodyMax = WorldModify.genRand.Next(2, (int)((double)Main.maxTilesX * 0.005));
 
-			using (var prog = new ProgressLogger(waterBodyMax - 1, "Adding water bodies"))
+			using (var prog = new ProgressLogger(waterBodyMax - 1, Languages.Generation_AddingWaterBodies))
 			{
 				for (int num140 = 0; num140 < waterBodyMax; num140++)
 				{
@@ -1716,7 +1717,7 @@ namespace Terraria_Server.WorldMod
 
 			int evilSegment = 0;
 
-			using (var prog = new ProgressLogger(100, "Making the world evil"))
+			using (var prog = new ProgressLogger(100, Languages.Generation_MakingTheWorldEvil))
 			{
 				while ((double)evilSegment < (double)Main.maxTilesX * 0.00045)
 				{
@@ -1914,7 +1915,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			using (var mountainProg = new ProgressLogger(numMCaves, "Generating mountain caves"))
+			using (var mountainProg = new ProgressLogger(numMCaves, Languages.Generation_GeneratingMoutainCaves))
 			{
 				for (int cave = 0; cave < numMCaves; cave++)
 				{
@@ -1937,7 +1938,7 @@ namespace Terraria_Server.WorldMod
 			int inactiveTX = 20;
 			int inactiveTleX = Main.maxTilesX - 20;
 
-			using (var beachProg = new ProgressLogger(2, "Creating Beaches on either side"))
+			using (var beachProg = new ProgressLogger(2, Languages.Generation_CreatingBeachesOnEitherSide))
 			{
 				for (int beachNumSide = 0; beachNumSide < 2; beachNumSide++)
 				{
@@ -2197,7 +2198,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			using (var genProg = new ProgressLogger(68, "Adding Gems"))
+			using (var genProg = new ProgressLogger(68, Languages.Generation_AddingGems))
 			{
 				for (int Type = 63; Type <= 68; Type++)
 				{
@@ -2251,7 +2252,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Gravitating sand"))
+			using (var prog = new ProgressLogger(Main.maxTilesX - 1, Languages.Generation_GravitatingSand))
 			{
 				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
 				{
@@ -2279,7 +2280,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			using (var prog = new ProgressLogger(Main.maxTilesX - 7, "Cleaning up dirt backgrounds"))
+			using (var prog = new ProgressLogger(Main.maxTilesX - 7, Languages.Generation_CleaningUpDirtBackgrounds))
 			{
 				for (int tileX = 3; tileX < Main.maxTilesX - 3; tileX++)
 				{
@@ -2343,7 +2344,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var MaxAltar = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2E-05);
-			using (var prog = new ProgressLogger(MaxAltar - 1, "Placing altars"))
+			using (var prog = new ProgressLogger(MaxAltar - 1, Languages.Generation_PlacingAltars))
 			{
 				for (int i = 0; i < MaxAltar; i++)
 				{
@@ -2380,12 +2381,11 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			//Ugly but whatever. Fix laters. minor.
 			var Max = Main.maxTilesX - 400;
 			var Max2 = (Main.maxTilesX - 1) * 2;
 			var Max3 = (int)((100 + Main.maxTilesX + Max + Max2 + (int)(Main.maxTilesX * 2.85)) * 1.65);
 			var Max4 = (int)(Max3 * 0.573);
-			using (var prog = new ProgressLogger(Max4 + Max3, "Settling liquids"))
+			using (var prog = new ProgressLogger(Max4 + Max3, Languages.Generation_SettlingLiquids))
 			{
 				for (int tilePosX = 0; tilePosX < Main.maxTilesX; tilePosX++)
 				{
@@ -2486,7 +2486,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var num218max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2.2E-05);
-			using (var prog = new ProgressLogger(num218max - 1, "Placing life crystals"))
+			using (var prog = new ProgressLogger(num218max - 1, Languages.Generation_PlacingLifeCrystals))
 			{
 				for (int num218 = 0; num218 < num218max; num218++)
 				{
@@ -2518,7 +2518,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var num221max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 1.7E-05);
-			using (var prog = new ProgressLogger(num221max - 1, "Hiding treasure"))
+			using (var prog = new ProgressLogger(num221max - 1, Languages.Generation_HidingTreasure))
 			{
 				for (int num221 = 0; num221 < num221max; num221++)
 				{
@@ -2567,7 +2567,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var num226max = (int)((double)Main.maxTilesX * 0.005);
-			using (var prog = new ProgressLogger(num226max - 1, "Hiding more treasure"))
+			using (var prog = new ProgressLogger(num226max - 1, Languages.Generation_HidingMoreTreasure))
 			{
 				for (int num226 = 0; num226 < num226max; num226++)
 				{
@@ -2606,7 +2606,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var num238max = numJChests;
-			using (var prog = new ProgressLogger(num238max - 1, "Hiding jungle treasure"))
+			using (var prog = new ProgressLogger(num238max - 1, Languages.Generation_HidingJungleTreasure))
 			{
 				int num231 = 0;
 				for (int num232 = 0; num232 < num238max; num232++)
@@ -2653,7 +2653,7 @@ namespace Terraria_Server.WorldMod
 			float num235 = (float)(Main.maxTilesX / 4200);
 			int num236 = 0;
 			int num237 = 0;
-			using (var prog = new ProgressLogger(100, "Hiding water treasure"))
+			using (var prog = new ProgressLogger(100, Languages.Generation_HidingWaterTreasure))
 			{
 				while ((float)num237 < 10f * num235)
 				{
@@ -2696,7 +2696,7 @@ namespace Terraria_Server.WorldMod
 
 			if (numIslandHouses > 0)
 			{
-				ProgramLog.Log("Adding island houses");
+				ProgramLog.Log(Languages.Generation_AddingIslandHouses);
 				for (int num240 = 0; num240 < numIslandHouses; num240++)
 				{
 					IslandHouse(TileRefs, null, fihX[num240], fihY[num240]);
@@ -2710,7 +2710,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var num241max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0008);
-			using (var prog = new ProgressLogger(num241max - 1, "Placing breakables"))
+			using (var prog = new ProgressLogger(num241max - 1, Languages.Generation_PlacingBreakables))
 			{
 				for (int num241 = 0; num241 < num241max; num241++)
 				{
@@ -2768,7 +2768,7 @@ namespace Terraria_Server.WorldMod
 				TileRefs = TileCollection.ITileAt;
 
 			var max = Main.maxTilesX / 200;
-			using (var prog = new ProgressLogger(max - 1, "Placing hellforges"))
+			using (var prog = new ProgressLogger(max - 1, Languages.Generation_PlacingHellForges))
 			{
 				for (int num294 = 0; num294 < Main.maxTilesX / 200; num294++)
 				{
@@ -2811,7 +2811,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			ProgramLog.Log("Spreading grass...");
+			ProgramLog.Log(Languages.Generation_SpreadingGrass);
 			for (int num252 = 0; num252 < Main.maxTilesX; num252++)
 			{
 				int num48 = num252;
@@ -2845,7 +2845,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			ProgramLog.Log("Growing cacti...");
+			ProgramLog.Log(Languages.Generation_GrowingCacti);
 			for (int num254 = 5; num254 < Main.maxTilesX - 5; num254++)
 			{
 				if (WorldModify.genRand.Next(8) == 0)
@@ -2878,7 +2878,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			ProgramLog.Log("Planting sunflowers...");
+			ProgramLog.Log(Languages.Generation_PlantingSunflowers);
 			int num263 = 0;
 			while ((double)num263 < (double)Main.maxTilesX * 0.002)
 			{
@@ -2921,7 +2921,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			ProgramLog.Log("Planting trees...");
+			ProgramLog.Log(Languages.Generation_PlantingTrees);
 			int num269 = 0;
 			while ((double)num269 < (double)Main.maxTilesX * 0.003)
 			{
@@ -2947,7 +2947,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			ProgramLog.Log("Planting herbs...");
+			ProgramLog.Log(Languages.Generation_PlantingHerbs);
 			for (int num274 = 0; num274 < Main.maxTilesX * 2; num274++)
 			{
 				WorldModify.PlantAlch(TileRefs);
@@ -2959,7 +2959,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			ProgramLog.Log("Planting weeds...");
+			ProgramLog.Log(Languages.Generation_PlantingWeeds);
 			AddPlants(TileRefs);
 			for (int num275 = 0; num275 < Main.maxTilesX; num275++)
 			{
@@ -2989,7 +2989,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			ProgramLog.Log("Growing vines...");
+			ProgramLog.Log(Languages.Generation_GrowingVines);
 			for (int num277 = 0; num277 < Main.maxTilesX; num277++)
 			{
 				int num278 = 0;
@@ -3038,7 +3038,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			ProgramLog.Log("Planting flowers...");
+			ProgramLog.Log(Languages.Generation_PlantingFlowers);
 			int num281 = 0;
 			while ((double)num281 < (double)Main.maxTilesX * 0.005)
 			{
@@ -3073,7 +3073,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			ProgramLog.Log("Planting mushrooms...");
+			ProgramLog.Log(Languages.Generation_PlantingMushrooms);
 			int num288 = 0;
 			while ((double)num288 < (double)Main.maxTilesX * 0.002)
 			{
@@ -3823,7 +3823,7 @@ namespace Terraria_Server.WorldMod
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
-			using (var prog = new ProgressLogger(100, "Creating dungeon"))
+			using (var prog = new ProgressLogger(100, Languages.Generation_CreatingDungeons))
 			{
 				int num = WorldModify.genRand.Next(3);
 				int num2 = WorldModify.genRand.Next(3);
@@ -7574,7 +7574,7 @@ namespace Terraria_Server.WorldMod
 
 			var maxTraps = (int)((double)Main.maxTilesX * 0.05);
 
-			using (var logger = new ProgressLogger(maxTraps, "Placing traps: "))
+			using (var logger = new ProgressLogger(maxTraps, Languages.Generation_PlacingTraps))
 			{
 				for (int num273 = 0; num273 < maxTraps; num273++)
 				{

@@ -121,4 +121,52 @@
 	<CommandDescription_HardMode>Toggle hardmode for the current world</CommandDescription_HardMode>
 	<CommandDescription_LanguageReload>Reloads the Langauge File</CommandDescription_LanguageReload>
   <CommandDescription_Backups>Allows backups to be performed or removed.</CommandDescription_Backups>
+  <Generation_Terrain>Generating world terrain</Generation_Terrain>
+  <Generation_AddingNPCs>Adding NPC's...</Generation_AddingNPCs>
+  <Generation_AddingSand>Adding sand</Generation_AddingSand>
+  <Generation_GeneratingHills>Generating hills</Generation_GeneratingHills>
+  <Generation_AddingSnow>Adding snow</Generation_AddingSnow>
+  <Generation_PuttingDirtBehindDirt>Putting dirt behind dirt</Generation_PuttingDirtBehindDirt>
+  <Generation_PlacingRocks>Placing rocks within the dirt</Generation_PlacingRocks>
+  <Generation_PlaceDirtWithinRocks>Placing dirt within the rocks</Generation_PlaceDirtWithinRocks>
+  <Generation_AddingClay>Adding clay</Generation_AddingClay>
+  <Generation_MakingRandomHoles>Making random holes</Generation_MakingRandomHoles>
+  <Generation_GeneratingSmallCaves>Generating small caves</Generation_GeneratingSmallCaves>
+  <Generation_GeneratingLargeCaves>Generating large caves</Generation_GeneratingLargeCaves>
+  <Generation_GeneratingSurfaceCaves>Generating surface caves</Generation_GeneratingSurfaceCaves>
+  <Generation_GeneratingJungle>Generating jungle</Generation_GeneratingJungle>
+  <Generation_GeneratingFloatingIslands>Generating floating islands</Generation_GeneratingFloatingIslands>
+  <Generation_AddingMushroomPatches>Adding mushroom patches</Generation_AddingMushroomPatches>
+  <Generation_PlacingMudInDirt>Placing mud in the dirt</Generation_PlacingMudInDirt>
+  <Generation_AddingShinies>Adding shinies</Generation_AddingShinies>
+  <Generation_AddingWebs>Adding webs</Generation_AddingWebs>
+  <Generation_CreatingTheUnderworld>Creating the underworld</Generation_CreatingTheUnderworld>
+  <Generation_AddingWaterBodies>Adding water bodies</Generation_AddingWaterBodies>
+  <Generation_MakingTheWorldEvil>Making the world evil</Generation_MakingTheWorldEvil>
+  <Generation_GeneratingMoutainCaves>Generating moutain caves</Generation_GeneratingMoutainCaves>
+  <Generation_CreatingBeachesOnEitherSide>Creating beaches on either side</Generation_CreatingBeachesOnEitherSide>
+  <Generation_AddingGems>Adding gems</Generation_AddingGems>
+  <Generation_GravitatingSand>Gravitating sand</Generation_GravitatingSand>
+  <Generation_CleaningUpDirtBackgrounds>Cleaning up dirt backgrounds</Generation_CleaningUpDirtBackgrounds>
+  <Generation_PlacingAltars>Placing altars</Generation_PlacingAltars>
+  <Generation_SettlingLiquids>Settling liquids</Generation_SettlingLiquids>
+  <Generation_PlacingLifeCrystals>Placing life crystals</Generation_PlacingLifeCrystals>
+  <Generation_HidingTreasure>Hiding treasure</Generation_HidingTreasure>
+  <Generation_HidingMoreTreasure>Hiding more treasure</Generation_HidingMoreTreasure>
+  <Generation_HidingJungleTreasure>Hiding jungle treasure</Generation_HidingJungleTreasure>
+  <Generation_HidingWaterTreasure>Hiding water treasure</Generation_HidingWaterTreasure>
+  <Generation_AddingIslandHouses>Adding island houses</Generation_AddingIslandHouses>
+  <Generation_PlacingBreakables>Placing breakables</Generation_PlacingBreakables>
+  <Generation_PlacingHellForges>Placing hellforges</Generation_PlacingHellForges>
+  <Generation_SpreadingGrass>Spreading grass...</Generation_SpreadingGrass>
+  <Generation_GrowingCacti>Growing cacti...</Generation_GrowingCacti>
+  <Generation_PlantingSunflowers>Planting sunflowers</Generation_PlantingSunflowers>
+  <Generation_PlantingTrees>Planting trees...</Generation_PlantingTrees>
+  <Generation_PlantingHerbs>Planting herbs...</Generation_PlantingHerbs>
+  <Generation_PlantingWeeds>Planting weeds...</Generation_PlantingWeeds>
+  <Generation_GrowingVines>Growing vines...</Generation_GrowingVines>
+  <Generation_PlantingFlowers>Planting flowers...</Generation_PlantingFlowers>
+  <Generation_PlantingMushrooms>Planting mushrooms...</Generation_PlantingMushrooms>
+  <Generation_CreatingDungeons>Creating dungeons</Generation_CreatingDungeons>
+  <Generation_PlacingTraps>Placing traps</Generation_PlacingTraps>
 </Languages>
