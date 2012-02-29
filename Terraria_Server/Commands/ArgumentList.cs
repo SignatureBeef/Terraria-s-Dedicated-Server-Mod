@@ -347,7 +347,7 @@ namespace Terraria_Server.Commands
 			int arg1 = (literal1 != null ? 1 : 0);
 			int arg2 = arg1 + (literal2 != null ? 1 : 0) + 1;
 			int args = 2 + arg1 + (literal2 != null ? 1 : 0) + (literal3 != null ? 1 : 0);
-			
+
 			if (Count != args) return false;
 			
 			if (literal1 != null && this[0] != literal1)
@@ -361,16 +361,16 @@ namespace Terraria_Server.Commands
 			
 			return TryParseAt (arg1, out t) && TryParseAt (arg2, out u);
 		}
-		
-		public bool TryParseThree<T, U, V> (out T t, out U u, out V v)
+
+		public bool TryParseThree<T, U, V>(out T t, out U u, out V v)
 		{
 			t = default(T);
 			u = default(U);
 			v = default(V);
-			
+
 			if (Count != 3) return false;
-			
-			return TryParseAt (0, out t) && TryParseAt (1, out u) && TryParseAt (2, out v);
+
+			return TryParseAt(0, out t) && TryParseAt(1, out u) && TryParseAt(2, out v);
 		}
 
 		public bool TryParseThree<T, U, V> (string literal1, out T t, string literal2, out U u, string literal3, out V v, string literal4 = null)
@@ -439,10 +439,10 @@ namespace Terraria_Server.Commands
 				throw new CommandError ("Two arguments expected: {0} and {1}.", typeNames[typeof(T)], typeNames[typeof(U)]);
 		}
 
-		public void ParseTwo<T, U> (string literal1, out T t, string literal2, out U u, string literal3 = null)
+		public void ParseTwo<T, U>(string literal1, out T t, string literal2, out U u, string literal3 = null)
 		{
-			if (! TryParseTwo<T, U> (literal1, out t, literal2, out u, literal3))
-				throw new CommandError ("Expected syntax: {0}<{1}>{2} <{3}>{4} .",
+			if (!TryParseTwo<T, U>(literal1, out t, literal2, out u, literal3))
+				throw new CommandError("Expected syntax: {0}<{1}>{2} <{3}>{4} .",
 					(literal1 != null ? literal1 + " " : ""),
 					typeNames[typeof(T)],
 					(literal2 != null ? " " + literal2 : ""),
@@ -483,7 +483,7 @@ namespace Terraria_Server.Commands
 		public void ParseFour<T, U, V, W> (out T t, out U u, out V v, out W w)
 		{
 			if (! TryParseFour<T, U, V, W> (out t, out u, out v, out w))
-				throw new CommandError ("Three arguments expected: {0}, {1}, {2} and {3}.",
+				throw new CommandError ("Four arguments expected: {0}, {1}, {2} and {3}.",
 					typeNames[typeof(T)], typeNames[typeof(U)], typeNames[typeof(V)], typeNames[typeof(W)]);
 		}
 		

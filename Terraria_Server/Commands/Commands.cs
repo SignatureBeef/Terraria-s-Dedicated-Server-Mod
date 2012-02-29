@@ -1444,6 +1444,11 @@ namespace Terraria_Server.Commands
 			sender.sendMessage("Reloading " + (Languages.LoadClass(Collections.Registries.LANGUAGE_FILE) ? "Succeeded" : "Failed"));
 		}
 
+		/// <summary>
+		/// Allows a user to take backups and purge old data
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		public static void Backups(ISender sender, ArgumentList args)
 		{
 			var perform = args.TryPop("now");
@@ -1453,8 +1458,26 @@ namespace Terraria_Server.Commands
 				BackupManager.PerformBackup();
 			else if (purge)
 			{
-				/* TODO: Add property option to see what times to purge */
-				var backups = BackupManager.GetBackupsBefore(Main.worldName, DateTime.Now);
+				int minutes;
+				if (args.TryParseOne<Int32>(out minutes))
+				{
+					var backups = BackupManager.GetBackupsBefore(Main.worldName, DateTime.Now.AddMinutes(-minutes));
+
+					var failCount = 0;
+					foreach (var backup in backups)
+						try
+						{
+							File.Delete(backup);
+						}
+						catch { failCount++; }
+
+					if (failCount > 0)
+						sender.sendMessage(
+							String.Format("Failed to deleted {0} backup(s).", failCount)
+						);
+				}
+				else
+					throw new CommandError("Please specify a time frame.");
 			}
 			else
 				throw new CommandError("Argument expected.");
