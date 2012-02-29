@@ -8,10 +8,12 @@ namespace Terraria_Server
     public class ServerProperties : PropertiesFile
     {
 #region Default Values
+        private const bool      DEFAULT_ALLOW_BACKUPS			= true;
         private const bool      DEFAULT_ALLOW_EXPLOSIONS        = true;
         private const bool      DEFAULT_ALLOW_TDCMRPG           = true;
         private const bool		DEFAULT_ALWAYS_GENERATE_SNOW	= false;
         private const bool      DEFAULT_AUTOMATIC_UPDATES       = false;
+		private const int		DEFAULT_BACKUP_MINUTE_INTERVAL	= 60;
         private const bool      DEFAULT_BUFFER_LIQUID_UPDATES   = false;
         private const bool      DEFAULT_COLLECT_GARBAGE			= true;
         private const int       DEFAULT_EXIT_USERS              = -1;
@@ -46,10 +48,12 @@ namespace Terraria_Server
 #endregion
 
 #region Key Values
+        private const string    ALLOW_BACKUPS					= "allow-backups";
         private const string    ALLOW_EXPLOSIONS                = "explosions";
         private const string    ALLOW_TDCMRPG                   = "allow-tdcmrpg";
         private const string    AUTOMATIC_UPDATES               = "allowupdates";
         private const string    ALWAYS_GENERATE_SNOW			= "always-generate-snow";
+        private const string    BACKUP_MINUTE_INTERVAL			= "backup-minutes-interval";
         private const string    BUFFER_LIQUID_UPDATES           = "buffer-liquid-updates";
         private const string    COLLECT_GARBAGE					= "collect-garbage";
         private const string    EXIT_USERS                      = "exitaccesslevel";
@@ -94,10 +98,12 @@ namespace Terraria_Server
         public void pushData()
         {
             object temp = null;
+			temp = AllowBackups;
             temp = AllowExplosions;
             temp = AllowTDCMRPG;
 			temp = AlwaysGenerateSnow;
 			temp = AutomaticUpdates;
+			temp = BackupInterval;
 			temp = BufferLiquidUpdates;
 			temp = CollectGarbage;
             temp = DungeonAmount;
@@ -592,6 +598,18 @@ namespace Terraria_Server
 		{
 			get { return getValue(NPCSPAWN_OVERRIDE, DEFAULT_NPCSPAWN_OVERRIDE); }
 			set { setValue(NPCSPAWN_OVERRIDE, value); }
+		}
+
+		public int BackupInterval
+		{
+			get { return getValue(BACKUP_MINUTE_INTERVAL, DEFAULT_BACKUP_MINUTE_INTERVAL); }
+			set { setValue(BACKUP_MINUTE_INTERVAL, value); }
+		}
+
+		public bool AllowBackups
+		{
+			get { return getValue(ALLOW_BACKUPS, DEFAULT_ALLOW_BACKUPS); }
+			set { setValue(ALLOW_BACKUPS, value); }
 		}
     }
 }

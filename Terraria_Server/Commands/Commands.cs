@@ -1475,6 +1475,10 @@ namespace Terraria_Server.Commands
 						sender.sendMessage(
 							String.Format("Failed to deleted {0} backup(s).", failCount)
 						);
+					else
+						sender.sendMessage(
+							String.Format("Deleted {0} backup(s).", backups.Length - failCount)
+						);
 				}
 				else
 					throw new CommandError("Please specify a time frame.");

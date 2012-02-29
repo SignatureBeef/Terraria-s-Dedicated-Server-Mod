@@ -669,8 +669,12 @@ namespace Terraria_Server
 			if (Terraria_Server.Main.rand == null)
 				Terraria_Server.Main.rand = new Random((int)DateTime.Now.Ticks);
 
-			bool hibernate = properties.StopUpdatesWhenEmpty;
-			var collect = 0;
+			bool hibernate = properties.StopUpdatesWhenEmpty, backup = false;
+			int collect = 0, backupInterval = properties.BackupInterval;
+			DateTime backupDate = DateTime.Now;
+
+			if (backupInterval > 0)
+				backup = properties.AllowBackups;
 
 			if (properties.SimpleLoop)
 			{
@@ -709,6 +713,14 @@ namespace Terraria_Server
 							GC.Collect();
 
 						collect = 0;
+					}
+
+					if ((DateTime.Now - backupDate).TotalMinutes >= backupInterval && backup)
+					{
+						backupDate = DateTime.Now;
+
+						ProgramLog.Log("Performing backup...");
+						BackupManager.PerformBackup();
 					}
 				}
 
@@ -757,6 +769,14 @@ namespace Terraria_Server
 							GC.Collect();
 
 						collect = 0;
+					}
+
+					if ((DateTime.Now - backupDate).TotalMinutes >= backupInterval && backup)
+					{
+						backupDate = DateTime.Now;
+
+						ProgramLog.Log("Performing backup...");
+						BackupManager.PerformBackup();
 					}
 				}
 				Thread.Sleep(0);
