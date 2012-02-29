@@ -10035,7 +10035,7 @@ namespace Terraria_Server
 						}
 						npc.rotation += npc.ai[2];
 						npc.ai[1] += 1f;
-						Color newColor;
+
 						if (npc.ai[1] == 100f)
 						{
 							npc.ai[0] += 1f;

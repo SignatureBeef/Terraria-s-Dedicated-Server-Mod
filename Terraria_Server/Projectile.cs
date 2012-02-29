@@ -817,6 +817,7 @@ namespace Terraria_Server
 		/// Updates the projectile's position, damage variables, etc.
 		/// </summary>
 		/// <param name="TileRefs">Reference to the ITile method, For usage between Sandbox and Realtime</param>
+		/// <param name="sandbox">Sandbox instance if needed</param>
 		/// <param name="i">Projectile index</param>
 		public void Update(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int i)
 		{

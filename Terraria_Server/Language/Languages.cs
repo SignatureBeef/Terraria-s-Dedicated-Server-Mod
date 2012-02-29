@@ -192,6 +192,41 @@ namespace Terraria_Server.Language
 		public static String Generation_CreatingDungeons { get; set; }
 		public static String Generation_PlacingTraps { get; set; }
 
+		public static String Startup_Initializing { get; set; }
+		public static String Startup_SettingUpPaths { get; set; }
+		public static String Startup_SettingUpProperties { get; set; }
+		public static String Startup_NoPropertiesFileFound { get; set; }
+		public static String Startup_PropertiesCreationComplete { get; set; }
+		public static String Startup_IssueDeletingPID { get; set; }
+		public static String Startup_PressAnyKeyToExit { get; set; }
+		public static String Startup_IssueCreatingPID { get; set; }
+		public static String Startup_PIDCreated { get; set; }
+		public static String Startup_RestartingIntoNewUpdate { get; set; }
+		public static String Startup_ErrorUpdating { get; set; }
+		public static String Startup_StartingRCON { get; set; }
+		public static String Startup_StartingPermissions { get; set; }
+		public static String Startup_PreparingServerData { get; set; }
+		public static String Startup_LoadingItemDefinitions { get; set; }
+		public static String Startup_LoadingNPCDefinitions { get; set; }
+		public static String Startup_LoadingProjectileDefinitions { get; set; }
+		//public static String Startup_LoadingLanguageDefinitions { get; set; }
+		public static String Startup_LanguageFileOOD { get; set; }
+		public static String Startup_LanguageFileUpdate { get; set; }
+		public static String Startup_LoadingPlugins { get; set; }
+		public static String Startup_PluginsLoaded { get; set; }
+		public static String Startup_GeneratingWorld { get; set; }
+		public static String Startup_GeneratedSeed { get; set; }
+		public static String Startup_WorldSizingError { get; set; }
+		public static String Startup_GeneratingWithCustomSize { get; set; }
+		public static String Startup_StartingTheServer { get; set; }
+		public static String Startup_YouCanNowInsertCommands { get; set; }
+		public static String Startup_IssueParsingConsoleCommand { get; set; }
+		public static String Startup_Exiting { get; set; }
+		public static String Startup_CrashlogGeneratedBy { get; set; }
+		public static String Startup_ProgramCrash { get; set; }
+		public static String Startup_PleaseSend { get; set; }
+		public static String Startup_LogEnd { get; set; }
+
 #endregion
 
 		public static bool LoadClass(string filePath, bool restore = false, bool error = true)
