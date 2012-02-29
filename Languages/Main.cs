@@ -114,6 +114,7 @@ namespace Languages
 					Btn_Generate.Text += '.';
 
 				Btn_Generate.Update();
+				Update();
 			}
 
 			Btn_Generate.Enabled = true;

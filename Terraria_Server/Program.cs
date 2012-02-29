@@ -469,7 +469,7 @@ namespace Terraria_Server
 			properties.AddHeaderLine("For other help visit http://wiki.tdsm.org");
 
 			properties.pushData();
-			properties.Save();
+			properties.Save(false);
 		}
 
 		public static void ParseArgs(string[] args)

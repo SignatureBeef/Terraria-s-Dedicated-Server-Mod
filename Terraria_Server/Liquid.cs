@@ -1,6 +1,7 @@
 using System;
 using Terraria_Server.Logging;
 using Terraria_Server.WorldMod;
+using Terraria_Server.Language;
 
 namespace Terraria_Server
 {
@@ -753,11 +754,11 @@ namespace Terraria_Server
 						Liquid.panicY--;
 						if (Liquid.panicY < 3)
 						{
-							ProgramLog.Log("Water has been settled.");
+							ProgramLog.Log(Languages.Water_WaterHasBeenSettled);
 							Liquid.panicCounter = 0;
 							Liquid.panicMode = false;
 
-							using (var prog = new ProgressLogger(Main.maxTilesX - 2, "Performing water check"))
+							using (var prog = new ProgressLogger(Main.maxTilesX - 2, Languages.Water_PerformingWaterCheck))
 								WorldModify.WaterCheck(TileRefs, sandbox, prog);
 
 							for (int i = 0; i < 255; i++)

@@ -11,7 +11,7 @@ namespace Terraria_Server
      
 		public TileCollection (int X, int Y)
 		{
-			ProgramLog.Log ("Creating tile array of {0}x{1}, {2}MB", X, Y, Marshal.SizeOf (typeof(TileData)) * X * Y / 1024 / 1024);
+			ProgramLog.Log("{3} {0}x{1}, {2}MB", X, Y, Marshal.SizeOf(typeof(TileData)) * X * Y / 1024 / 1024, Language.Languages.CreatingTileArrayOf);
 			data = new TileData [X, Y];
 		}
      

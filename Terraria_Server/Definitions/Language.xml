@@ -202,4 +202,17 @@
   <Startup_ProgramCrash>Program crash</Startup_ProgramCrash>
   <Startup_PleaseSend>Please send</Startup_PleaseSend>
   <Startup_LogEnd>Log end.</Startup_LogEnd>
+  <CreatingTileArrayOf>Creating tile array of</CreatingTileArrayOf>
+  <InitializingSlotManagerFor>Initializing slot manager for</InitializingSlotManagerFor>
+  <Players>players</Players>
+  <ServerStartedOn>Server started on</ServerStartedOn>
+  <Water_WaterHasBeenSettled>Water has been settled.</Water_WaterHasBeenSettled>
+  <Water_PerformingWaterCheck>Performing water check</Water_PerformingWaterCheck>
+  <Water_PreparingLiquids>Preparing liquids...</Water_PreparingLiquids>
+  <CheckingTileAlignment>Checking tile alignment</CheckingTileAlignment>
+  <LoadingWorldTiles>Loading world tiles</LoadingWorldTiles>
+  <ResettingGameObjects>Resetting game objects</ResettingGameObjects>
+  <SavedFile>Saved file</SavedFile>
+  <SavedTo>Saved to</SavedTo>
+  <Failed>failed</Failed>
 </Languages>

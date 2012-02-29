@@ -85,7 +85,7 @@ namespace Terraria_Server
 			if (!NetPlay.disconnect)
 			{
 				if (!Program.updateThread.IsAlive) Program.updateThread.Start();
-				ProgramLog.Admin.Log("Server started on " + serverSIP + ":" + serverPort.ToString());
+				ProgramLog.Admin.Log("{0} {1}:{2}", Language.Languages.ServerStartedOn, serverSIP, serverPort);
 				//                ProgramLog.Log("Loading Plugins...");
 				//				PluginManager.LoadAllPlugins();
 				//                ProgramLog.Log("Plugins Loaded: " + PluginManager.Plugins.Count.ToString());

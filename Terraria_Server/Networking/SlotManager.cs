@@ -48,8 +48,8 @@ namespace Terraria_Server.Networking
 			
 			if (overlimitSlots < 0) overlimitSlots = 0;
 			else if (overlimitSlots > maxSlots) overlimitSlots = maxSlots;
-			
-			ProgramLog.Log ("Initializing slot manager for {0}+{1} players.", maxSlots, overlimitSlots);
+
+			ProgramLog.Log("{2} {0}+{1} {3}.", maxSlots, overlimitSlots, Language.Languages.InitializingSlotManagerFor, Language.Languages.Players);
 			
 			lock (syncRoot)
 			{

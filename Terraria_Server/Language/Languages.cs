@@ -227,6 +227,21 @@ namespace Terraria_Server.Language
 		public static String Startup_PleaseSend { get; set; }
 		public static String Startup_LogEnd { get; set; }
 
+		public static String CreatingTileArrayOf { get; set; }
+		public static String Players { get; set; }
+		public static String InitializingSlotManagerFor { get; set; }
+		public static String ServerStartedOn { get; set; }
+
+		public static String Water_WaterHasBeenSettled { get; set; }
+		public static String Water_PerformingWaterCheck { get; set; }
+		public static String Water_PreparingLiquids { get; set; }
+
+		public static String CheckingTileAlignment { get; set; }
+		public static String LoadingWorldTiles { get; set; }
+		public static String ResettingGameObjects { get; set; }
+		public static String SavedFile { get; set; }
+		public static String SavedTo { get; set; }
+		public static String Failed { get; set; }
 #endregion
 
 		public static bool LoadClass(string filePath, bool restore = false, bool error = true)

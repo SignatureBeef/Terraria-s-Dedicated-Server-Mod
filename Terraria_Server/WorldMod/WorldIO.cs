@@ -9,6 +9,7 @@ using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
+using Terraria_Server.Language;
 
 namespace Terraria_Server.WorldMod
 {
@@ -109,7 +110,7 @@ namespace Terraria_Server.WorldMod
 					}
 			}
 
-			using (var prog = new ProgressLogger(12212 + Liquid.resLiquid - 1, "Resetting game objects"))
+			using (var prog = new ProgressLogger(12212 + Liquid.resLiquid - 1, Languages.ResettingGameObjects))
 			{
 				for (int num3 = 0; num3 < 201; num3++)
 				{
@@ -532,7 +533,7 @@ namespace Terraria_Server.WorldMod
 							Main.invasionType = (InvasionType)binaryReader.ReadInt32();
 							Main.invasionX = binaryReader.ReadDouble();
 
-							using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Loading world tiles"))
+							using (var prog = new ProgressLogger(Main.maxTilesX - 1, Languages.LoadingWorldTiles))
 							{
 								for (int j = 0; j < Main.maxTilesX; j++)
 								{
@@ -716,7 +717,7 @@ namespace Terraria_Server.WorldMod
 							if (!WorldModify.loadFailed && WorldModify.loadSuccess)
 							{
 								WorldModify.gen = true;
-								using (var prog = new ProgressLogger(Main.maxTilesX, "Checking tile alignment"))
+								using (var prog = new ProgressLogger(Main.maxTilesX, Languages.CheckingTileAlignment))
 								{
 									for (int num9 = 0; num9 < Main.maxTilesX; num9++)
 									{
@@ -730,7 +731,7 @@ namespace Terraria_Server.WorldMod
 								//ProgramLog.Log("Loading NPC Names...");
 								//NPC.SetNames();
 
-								ProgramLog.Log("Preparing liquids...");
+								ProgramLog.Log(Languages.Water_PreparingLiquids);
 								WorldModify.waterLine = Main.maxTilesY;
 								Liquid.QuickWater(TileRefs, sandbox, 2, -1, -1);
 								WorldModify.WaterCheck(TileRefs, sandbox);
@@ -741,7 +742,7 @@ namespace Terraria_Server.WorldMod
 								float num13 = 0f;
 
 								var pres = Liquid.numLiquid;
-								using (var prog = new ProgressLogger(Liquid.maxLiquid, "Settling liquids"))
+								using (var prog = new ProgressLogger(Liquid.maxLiquid, Languages.Generation_SettlingLiquids))
 								{
 									while (Liquid.numLiquid > 0 && num11 < 100000)
 									{
@@ -768,7 +769,7 @@ namespace Terraria_Server.WorldMod
 
 								Liquid.quickSettle = false;
 
-								ProgramLog.Log("Performing Water Check");
+								ProgramLog.Log(Languages.Water_PerformingWaterCheck);
 								WorldModify.WaterCheck(TileRefs, sandbox);
 								WorldModify.gen = false;
 							}
