@@ -5,6 +5,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Definitions;
 using Terraria_Server.Collections;
 using Terraria_Server.Commands;
+using Terraria_Server.Logging;
 
 //
 // TODO: split this file into one per hook with partial HookPoints and HookArgs classes,
@@ -147,6 +148,7 @@ namespace Terraria_Server.Plugins
         public struct ConsoleMessageReceived
         {
             public string Message { get; set; }
+			public ProgramLog.SendingLogger Logger { get; set; }
         }
 
         public struct ServerStateChange

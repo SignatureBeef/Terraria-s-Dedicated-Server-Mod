@@ -26,6 +26,7 @@ namespace Terraria_Server
 		public static ServerProperties properties = null;
 		public static CommandParser commandParser = null;
 		public static PermissionManager permissionManager = null;
+		public static ConsoleSender ConsoleSender { get; set; }
 
 		public static void Main(string[] args)
 		{
@@ -183,7 +184,7 @@ namespace Terraria_Server
 
 				var ctx = new HookContext()
 				{
-					Sender = new ConsoleSender()
+					Sender = ConsoleSender = new ConsoleSender()
 				};
 
 				var eArgs = new HookArgs.ServerStateChange()

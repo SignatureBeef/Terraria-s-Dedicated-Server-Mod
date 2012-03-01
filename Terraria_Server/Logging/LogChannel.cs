@@ -12,10 +12,15 @@ namespace Terraria_Server.Logging
 			Color = color;
 			Name = name;
 		}
-		
-		public void Log (string text, bool multi = false)
+
+		public void Log(string text, bool multi = false)
 		{
 			ProgramLog.Log(this, text, multi);
+		}
+
+		public void Log(string text, ProgramLog.SendingLogger Logger)
+		{
+			ProgramLog.Log(this, text, Logger);
 		}
 		
 		public void Log (string fmt, params object[] args)

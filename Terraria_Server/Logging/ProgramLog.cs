@@ -53,7 +53,14 @@ namespace Terraria_Server.Logging
 				this.channel = null;
 			}
 		}
-		
+
+		public enum SendingLogger
+		{
+			PLAYER,
+			CONSOLE,
+			RCON
+		}
+
 		static List<LogTarget> logTargets = new List<LogTarget> ();
 		
 		public static void OpenLogFile (string path)
@@ -125,6 +132,11 @@ namespace Terraria_Server.Logging
 		public static void Log(string text)
 		{
 			Write(new LogEntry(text, null));
+		}
+
+		public static void Log(string text, SendingLogger logger)
+		{
+			Write(new LogEntry(text, logger));
 		}
 		
 		public static void Log (string format, params object[] args)

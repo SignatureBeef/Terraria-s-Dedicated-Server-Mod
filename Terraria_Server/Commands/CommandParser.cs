@@ -487,6 +487,8 @@ namespace Terraria_Server.Commands
 			AddCommand("backup")
 				.WithAccessLevel(AccessLevel.OP)
 				.WithDescription(Languages.CommandDescription_Backups)
+				.WithHelpText("Usage:    backup now")
+				.WithHelpText("          backup purge <minutes>")
 				.WithPermissionNode("tdsm.backup")
 				.Calls(Commands.Backups);
 		}

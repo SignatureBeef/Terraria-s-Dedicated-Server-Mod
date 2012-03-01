@@ -14,6 +14,7 @@ namespace Terraria_Server.Logging
 		public object message;
 		public ConsoleColor? color;
 		public int    arg;
+		public ProgramLog.SendingLogger logger;
 		
 		public static bool operator == (OutputEntry left, OutputEntry right)
 		{
@@ -163,7 +164,7 @@ namespace Terraria_Server.Logging
 						{
 							var str = (string) entry.message;
                             writer.WriteLine(str);
-                            HandleConsoleHook(str);
+							HandleConsoleHook(str, entry.logger);
 							backspace -= str.Length;
 						}
 						else if (entry.message is ProgressLogger)
@@ -190,7 +191,7 @@ namespace Terraria_Server.Logging
                             if (backspace <= 0)
                             {
                                 writer.WriteLine(str);
-                                HandleConsoleHook(str);
+                                HandleConsoleHook(str, entry.logger);
                             }
                             else
                             {
@@ -229,15 +230,17 @@ namespace Terraria_Server.Logging
 			}
 		}
 
-        void HandleConsoleHook(string ConsoleText)
-        {
+        void HandleConsoleHook(string ConsoleText, ProgramLog.SendingLogger SendingLogger)
+		{
             var ctx = new HookContext()
             {
+				Sender = Program.ConsoleSender				
             };
 
             var args = new HookArgs.ConsoleMessageReceived()
             {
-                Message = ConsoleText
+                Message = ConsoleText,
+				Logger = SendingLogger
             };
 
             HookPoints.ConsoleMessageReceived.Invoke(ref ctx, ref args);

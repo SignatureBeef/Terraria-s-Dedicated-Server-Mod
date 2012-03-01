@@ -106,7 +106,7 @@ namespace Terraria_Server.Messages
 				return;
 			
 			NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, chat, whoAmI, args.Color.R, args.Color.G, args.Color.B);
-			ProgramLog.Chat.Log ("<" + player.Name + "> " + chat);
+			ProgramLog.Chat.Log ("<" + player.Name + "> " + chat, ProgramLog.SendingLogger.PLAYER);
         }
     }
 }
