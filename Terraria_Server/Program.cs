@@ -348,29 +348,9 @@ namespace Terraria_Server
 
 				while (!NetPlay.ServerUp) { }
 
+				ThreadPool.QueueUserWorkItem(CommandThread);
 				ProgramLog.Console.Print(Languages.Startup_YouCanNowInsertCommands);
-
-				while (!Statics.Exit)
-				{
-					try
-					{
-						string line = Console.ReadLine();
-						if (line.Length > 0)
-						{
-							commandParser.ParseConsoleCommand(line);
-						}
-					}
-					catch (ExitException e)
-					{
-						ProgramLog.Log(e.Message);
-						break;
-					}
-					catch (Exception e)
-					{
-						ProgramLog.Log(e, Languages.Startup_IssueParsingConsoleCommand);
-					}
-				}
-
+								
 				while (WorldModify.saveLock || NetPlay.ServerUp)
 					Thread.Sleep(100);
 
@@ -403,6 +383,30 @@ namespace Terraria_Server
 			ProgramLog.Close();
 
 			RemoteConsole.RConServer.Stop();
+		}
+
+		private static void CommandThread(object result)
+		{
+			while (!Statics.Exit)
+			{
+				try
+				{
+					string line = Console.ReadLine();
+					if (line.Length > 0)
+					{
+						commandParser.ParseConsoleCommand(line);
+					}
+				}
+				catch (ExitException e)
+				{
+					ProgramLog.Log(e.Message);
+					break;
+				}
+				catch (Exception e)
+				{
+					ProgramLog.Log(e, Languages.Startup_IssueParsingConsoleCommand);
+				}
+			}
 		}
 
 		private static bool SetupPaths()
