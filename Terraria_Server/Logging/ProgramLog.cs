@@ -42,8 +42,9 @@ namespace Terraria_Server.Logging
 			public object     args;
 			public LogTarget  target;
 			public LogChannel channel;
+			public SendingLogger logger;
 			
-			public LogEntry (object message, object args)
+			public LogEntry (object message, object args, SendingLogger logger = SendingLogger.CONSOLE)
 			{
 				this.target = null;
 				this.thread = Thread.CurrentThread;
@@ -51,6 +52,7 @@ namespace Terraria_Server.Logging
 				this.message = message;
 				this.args = args;
 				this.channel = null;
+				this.logger = logger;
 			}
 		}
 
@@ -136,7 +138,7 @@ namespace Terraria_Server.Logging
 
 		public static void Log(string text, SendingLogger logger)
 		{
-			Write(new LogEntry(text, logger));
+			Write(new LogEntry(text, null) { logger = logger });
 		}
 		
 		public static void Log (string format, params object[] args)
@@ -156,10 +158,15 @@ namespace Terraria_Server.Logging
 					Write(new LogEntry(line, null) { channel = channel });
 			}
 		}
-		
-		public static void Log (LogChannel channel, string format, params object[] args)
+
+		public static void Log(LogChannel channel, string format, params object[] args)
 		{
-			Write (new LogEntry (format, args) { channel = channel });
+			Write(new LogEntry(format, args) { channel = channel });
+		}
+
+		public static void Log(LogChannel channel, string format, SendingLogger logger, params object[] args)
+		{
+			Write(new LogEntry(format, args) { channel = channel, logger = logger });
 		}
 		
 		public static void Log (Exception e)
@@ -208,6 +215,8 @@ namespace Terraria_Server.Logging
 			
 			if (entry.channel != null)
 				output.color = entry.channel.Color;
+
+			output.logger = entry.logger;
 			
 			try
 			{

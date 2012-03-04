@@ -18,14 +18,24 @@ namespace Terraria_Server.Logging
 			ProgramLog.Log(this, text, multi);
 		}
 
-		public void Log(string text, ProgramLog.SendingLogger Logger)
+		public void Log(string text)
 		{
-			ProgramLog.Log(this, text, Logger);
+			ProgramLog.Log(this, text, ProgramLog.SendingLogger.CONSOLE);
 		}
-		
-		public void Log (string fmt, params object[] args)
+
+		public void Log(string text, ProgramLog.SendingLogger logger)
 		{
-			ProgramLog.Log (this, fmt, args);
+			ProgramLog.Log(this, text, logger);
+		}
+
+		public void Log(string fmt, params object[] args)
+		{
+			ProgramLog.Log(this, fmt, args);
+		}
+
+		public void Log(string fmt, ProgramLog.SendingLogger logger, params object[] args)
+		{
+			ProgramLog.Log(this, fmt, args);
 		}
 	}
 }
