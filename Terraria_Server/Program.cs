@@ -27,6 +27,7 @@ namespace Terraria_Server
 		public static CommandParser commandParser = null;
 		public static PermissionManager permissionManager = null;
 		public static ConsoleSender ConsoleSender { get; set; }
+		public static bool Restarting { get; set; }
 
 		public static void Main(string[] args)
 		{
@@ -179,22 +180,9 @@ namespace Terraria_Server
 				commandParser = new CommandParser();
 				commandParser.ReadPermissionNodes();
 
-				ProgramLog.Log(Languages.Startup_LoadingPlugins);
-				Terraria_Server.Plugins.PluginManager.Initialize(Statics.PluginPath, Statics.LibrariesPath);
-
-				var ctx = new HookContext()
-				{
-					Sender = ConsoleSender = new ConsoleSender()
-				};
-
-				var eArgs = new HookArgs.ServerStateChange()
-				{
-					ServerChangeState = ServerState.INITIALIZING
-				};
-
-				HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
-				PluginManager.LoadPlugins();
-				ProgramLog.Log(Languages.Startup_PluginsLoaded + PluginManager.PluginCount);
+				LoadPlugins();
+				HookContext ctx;
+				HookArgs.ServerStateChange eArgs;
 
 				string worldFile = properties.WorldPath;
 				FileInfo file = new FileInfo(worldFile);
@@ -351,7 +339,7 @@ namespace Terraria_Server
 				ThreadPool.QueueUserWorkItem(CommandThread);
 				ProgramLog.Console.Print(Languages.Startup_YouCanNowInsertCommands);
 								
-				while (WorldModify.saveLock || NetPlay.ServerUp)
+				while (WorldModify.saveLock || NetPlay.ServerUp || Restarting)
 					Thread.Sleep(100);
 
 				ProgramLog.Log(Languages.Startup_Exiting);
@@ -383,6 +371,26 @@ namespace Terraria_Server
 			ProgramLog.Close();
 
 			RemoteConsole.RConServer.Stop();
+		}
+
+		public static void LoadPlugins()
+		{
+			ProgramLog.Log(Languages.Startup_LoadingPlugins);
+			Terraria_Server.Plugins.PluginManager.Initialize(Statics.PluginPath, Statics.LibrariesPath);
+
+			var ctx = new HookContext()
+			{
+				Sender = ConsoleSender = new ConsoleSender()
+			};
+
+			var eArgs = new HookArgs.ServerStateChange()
+			{
+				ServerChangeState = ServerState.INITIALIZING
+			};
+
+			HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
+			PluginManager.LoadPlugins();
+			ProgramLog.Log(Languages.Startup_PluginsLoaded + PluginManager.PluginCount);
 		}
 
 		private static void CommandThread(object result)

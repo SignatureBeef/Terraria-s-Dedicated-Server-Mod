@@ -994,7 +994,8 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Restart(ISender sender, ArgumentList args)
 		{
-			Server.notifyOps(Languages.RestartingServer + " {" + sender.Name + "}", true);
+			Program.Restarting = true;
+			Server.notifyOps(Languages.RestartingServer + " [" + sender.Name + "]", true);
 			//Statics.keepRunning = true;
 
 			NetPlay.StopServer();
@@ -1002,10 +1003,17 @@ namespace Terraria_Server.Commands
 
 			ProgramLog.Log(Languages.StartingServer);
 			Main.Initialize();
+
+			Program.LoadPlugins();
+
 			WorldIO.LoadWorld(null, null, World.SavePath);
 			Program.updateThread = new ProgramThread("Updt", Program.UpdateLoop);
 			NetPlay.StartServer();
-			//Statics.keepRunning = false;
+
+			while (!NetPlay.ServerUp) { Thread.Sleep(100); }
+
+			ProgramLog.Console.Print(Languages.Startup_YouCanNowInsertCommands);
+			Program.Restarting = false;
 		}
 
 		/// <summary>
