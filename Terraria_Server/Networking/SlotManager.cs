@@ -465,7 +465,7 @@ namespace Terraria_Server.Networking
 			if (maxp >= 0 || overl >= 0)
 			{
 				result = ChangeLimits (maxp < 0 ? maxSlots : maxp, overl < 0 ? overlimitSlots : overl);
-                Server.notifyOps(String.Format("Max player slots changed to {0}+{1}. [{2}]", result, overlimitSlots, sender.Name));
+				Server.notifyOps("Max player slots changed to {0}+{1}. [{2}]", true, SendingLogger.CONSOLE, result, overlimitSlots, sender.Name);
 			}
 			
 			sender.Message (255, ChatColor.SteelBlue, "Max player slots: {0}, overlimit slots: {1}", result, overlimitSlots);

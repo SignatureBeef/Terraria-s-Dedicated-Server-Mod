@@ -72,9 +72,7 @@ namespace Terraria_Server
             for (int i = 0; i < rejItem.Length; i++)
             {
                 if (rejItem[i].Trim().Length > 0)
-                {
-                    RejectedItems.Add(rejItem[i].Trim());
-                }
+					RejectedItems.Add(rejItem[i].Trim());
             }
 
             AllowExplosions = Program.properties.AllowExplosions;
@@ -93,74 +91,56 @@ namespace Terraria_Server
             foreach (Player player in Main.players)
             {
                 if (player.Active && player.Name.ToLower().Equals(lowercaseName))
-                {
-                    return player;
-                }
+					return player;
             }
             return null;
         }
-        
-        /// <summary>
-        /// Send a message to all online OPs
-        /// </summary>
-        /// <param name="Message"></param>
-        /// <param name="writeToConsole"></param>
-        public static void notifyOps(string Message, bool writeToConsole = true)
-        {
-            if (Statics.cmdMessages)
-            {
-                foreach (Player player in Main.players)
-                {
-                    if (player.Active && player.Op)
-                    {
-                        NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, Message, 255, 176f, 196, 222f);
-                    }
-                }
-            }
-            if (writeToConsole)
-            {
-                ProgramLog.Admin.Log(Message);
-            }
-        }
+		
+		/// <summary>
+		/// Send a message to all online OPs
+		/// </summary>
+		/// <param name="Message"></param>
+		/// <param name="writeToConsole"></param>
+		/// <param name="Logger"></param>
+		public static void notifyOps(string format, bool writeToConsole = true, SendingLogger Logger = SendingLogger.CONSOLE, params object[] args)
+		{
+			var message = String.Format(format, args);
+			if (Statics.cmdMessages)
+			{
+				foreach (Player player in Main.players)
+				{
+					if (player.Active && player.Op)
+						NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, message, 255, 176f, 196, 222f);
+				}
+			}
 
-        /// <summary>
-        /// Notify all Ops
-        /// </summary>
-        /// <param name="format"></param>
-        /// <param name="writeToConsole"></param>
-        /// <param name="args"></param>
-        public static void notifyOps(string format, bool writeToConsole = true, params object[] args)
-        {
-            notifyOps(String.Format(format, args), writeToConsole);
-        }
+			if (writeToConsole) ProgramLog.Admin.Log(message, Logger);
+		}
+		
+		/// <summary>
+		/// Sends a Message to all Connected Clients
+		/// </summary>
+		/// <param name="Message"></param>
+		/// <param name="writeToConsole"></param>
+		/// <param name="Logger"></param>
+		public static void notifyAll(string Message, bool writeToConsole = true, SendingLogger Logger = SendingLogger.CONSOLE)
+		{
+			NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, 238f, 130f, 238f);
+			if (writeToConsole) ProgramLog.Admin.Log(Message, Logger);
+		}
 
-        /// <summary>
-        /// Sends a Message to all Connected Clients
-        /// </summary>
-        /// <param name="Message"></param>
-        /// <param name="writeToConsole"></param>
-        public static void notifyAll(string Message, bool writeToConsole = true)
-        {
-            NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, 238f, 130f, 238f);
-            if (writeToConsole)
-            {
-                ProgramLog.Admin.Log(Message);
-            }
-        }
-
-        /// <summary>
-        /// Sends a Message to all Connected Clients
-        /// </summary>
-        /// <param name="Message"></param>
-        /// <param name="ChatColour"></param>
-        /// <param name="writeToConsole"></param>
-        public static void notifyAll(string Message, Color ChatColour, bool writeToConsole = true)
-        {
-            NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, ChatColour.R, ChatColour.G, ChatColour.B);
-
-            if (writeToConsole)
-                ProgramLog.Admin.Log(Message);
-        }
+		/// <summary>
+		/// Sends a Message to all Connected Clients
+		/// </summary>
+		/// <param name="Message"></param>
+		/// <param name="ChatColour"></param>
+		/// <param name="writeToConsole"></param>
+		/// <param name="Logger"></param>
+		public static void notifyAll(string Message, Color ChatColour, bool writeToConsole = true, SendingLogger Logger = SendingLogger.CONSOLE)
+		{
+			NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, ChatColour.R, ChatColour.G, ChatColour.B);
+			if (writeToConsole) ProgramLog.Admin.Log(Message, Logger);
+		}
 
         /// <summary>
         /// Gets the total of all active NPCs
@@ -168,15 +148,14 @@ namespace Terraria_Server
         /// <returns></returns>
         public static int ActiveNPCCount()
         {
-            int npcCount = 0;
+            /*int npcCount = 0;
             for (int i = 0; i < Main.npcs.Length - 1; i++)
             {
                 if (Main.npcs[i].Active)
-                {
-                    npcCount++;
-                }
+					npcCount++;
             }
-            return npcCount;
+            return npcCount;*/
+			return (from x in Main.npcs where x.Active select x).Count();
         }
 
         /// <summary>
@@ -223,9 +202,7 @@ namespace Terraria_Server
                 if (point.X <= Main.maxTilesX && point.X >= 0)
                 {
                     if (point.Y <= Main.maxTilesY && point.Y >= 0)
-                    {
-                        return true;
-                    }
+						return true;
                 }
 
             return false;
@@ -242,10 +219,8 @@ namespace Terraria_Server
             {
                 foreach (string rItem in RejectedItems)
                 {
-                    if (rItem.Trim().Replace(" ", "") == item.Trim().Replace(" ", ""))
-                    {
-                        return true;
-                    }
+                    if (rItem.Trim().Replace(" ", String.Empty) == item.Trim().Replace(" ", String.Empty))
+						return true;
                 }
             }
             return false;
@@ -272,9 +247,7 @@ namespace Terraria_Server
                     playerName = playerName.ToLower();
 
                 if (playerName.StartsWith((ignoreCase) ? partName.ToLower() : partName))
-                {
-                    matches.Add(player);
-                }
+					matches.Add(player);
             }
 
             return matches;

@@ -82,16 +82,22 @@ namespace Terraria_Server.Misc
 
 		public static string[] GetBackupsBefore(string WorldName, DateTime date)
 		{
-			var oldBackups = new List<String>();
+			var backups = GetBackups(WorldName);
+			var oldBackups = from x in backups where File.GetCreationTime(x) < date select x;
+			return oldBackups.ToArray();
+		}
+
+		public static string[] GetExpiredBackup(string WorldName, int max)
+		{
 			var backups = GetBackups(WorldName);
 
-			foreach (var backup in backups)
-			{
-				var creation = File.GetCreationTime(backup);
-				if (creation < date)
-					oldBackups.Add(backup);
-			}
+			var oldBackups = (from x in backups orderby File.GetCreationTime(x) select x).ToList();
+			var amount = oldBackups.Count;
 
+			if (amount <= max)
+				return null;
+
+			oldBackups.RemoveRange(0, max);
 			return oldBackups.ToArray();
 		}
 	}

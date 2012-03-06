@@ -14,7 +14,7 @@ namespace Terraria_Server.Logging
 		public object message;
 		public ConsoleColor? color;
 		public int    arg;
-		public ProgramLog.SendingLogger logger;
+		public SendingLogger logger;
 		
 		public static bool operator == (OutputEntry left, OutputEntry right)
 		{
@@ -230,7 +230,7 @@ namespace Terraria_Server.Logging
 			}
 		}
 
-        void HandleConsoleHook(string ConsoleText, ProgramLog.SendingLogger SendingLogger)
+        void HandleConsoleHook(string ConsoleText, SendingLogger SendingLogger)
 		{
             var ctx = new HookContext()
             {

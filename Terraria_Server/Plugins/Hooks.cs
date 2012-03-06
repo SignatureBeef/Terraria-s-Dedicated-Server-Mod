@@ -148,7 +148,7 @@ namespace Terraria_Server.Plugins
         public struct ConsoleMessageReceived
         {
             public string Message { get; set; }
-			public ProgramLog.SendingLogger Logger { get; set; }
+			public SendingLogger Logger { get; set; }
         }
 
         public struct ServerStateChange

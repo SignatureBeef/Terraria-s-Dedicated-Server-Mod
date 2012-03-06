@@ -20,10 +20,10 @@ namespace Terraria_Server.Logging
 
 		public void Log(string text)
 		{
-			ProgramLog.Log(this, text, ProgramLog.SendingLogger.CONSOLE);
+			ProgramLog.Log(this, text, SendingLogger.CONSOLE);
 		}
 
-		public void Log(string text, ProgramLog.SendingLogger logger)
+		public void Log(string text, SendingLogger logger)
 		{
 			ProgramLog.Log(this, text, logger);
 		}
@@ -33,7 +33,7 @@ namespace Terraria_Server.Logging
 			ProgramLog.Log(this, fmt, args);
 		}
 
-		public void Log(string fmt, ProgramLog.SendingLogger logger, params object[] args)
+		public void Log(string fmt, SendingLogger logger, params object[] args)
 		{
 			ProgramLog.Log(this, fmt, args);
 		}

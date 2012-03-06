@@ -395,7 +395,7 @@ namespace Terraria_Server
 
 		private static void CommandThread(object result)
 		{
-			while (!Statics.Exit)
+			while (!Statics.Exit || Restarting)
 			{
 				try
 				{

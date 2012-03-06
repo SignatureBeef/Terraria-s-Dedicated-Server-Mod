@@ -56,13 +56,6 @@ namespace Terraria_Server.Logging
 			}
 		}
 
-		public enum SendingLogger
-		{
-			PLAYER,
-			CONSOLE,
-			RCON
-		}
-
 		static List<LogTarget> logTargets = new List<LogTarget> ();
 		
 		public static void OpenLogFile (string path)

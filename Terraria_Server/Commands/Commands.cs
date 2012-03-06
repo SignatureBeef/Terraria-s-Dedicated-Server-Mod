@@ -877,7 +877,7 @@ namespace Terraria_Server.Commands
 				{
 					if (player.Password.Equals(Password))
 					{
-						Server.notifyOps("{0} " + Languages.SuccessfullyLoggedInOP, true, player.Name);
+						Server.notifyOps("{0} " + Languages.SuccessfullyLoggedInOP, true, SendingLogger.CONSOLE, player.Name);
 						player.Op = true;
 						player.sendMessage(Languages.SuccessfullyLoggedInOP, ChatColor.DarkGreen);
 
@@ -888,7 +888,7 @@ namespace Terraria_Server.Commands
 					}
 					else
 					{
-						Server.notifyOps("{0} " + Languages.FailedLoginWrongPassword, true, player.Name);
+						Server.notifyOps("{0} " + Languages.FailedLoginWrongPassword, true, SendingLogger.CONSOLE, player.Name);
 						player.sendMessage(Languages.IncorrectOPPassword, ChatColor.DarkRed);
 					}
 				}
@@ -914,7 +914,7 @@ namespace Terraria_Server.Commands
 					player.Op = false;
 					player.sendMessage(Languages.SuccessfullyLoggedOutOP, ChatColor.DarkRed);
 
-					Server.notifyOps("{0} " + Languages.SuccessfullyLoggedOutOP, true, player.Name);
+					Server.notifyOps("{0} " + Languages.SuccessfullyLoggedOutOP, true, SendingLogger.CONSOLE, player.Name);
 
 					if (player.HasClientMod)
 					{
