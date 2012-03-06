@@ -362,7 +362,7 @@ namespace Terraria_Server.Commands
 				return;
 			}
 
-			Server.notifyOps(Exception + " was " + Type + " the Whitelist {" + sender.Name + "}", true);
+			Server.notifyOps(Exception + " was " + Type + " the Whitelist [" + sender.Name + "]", true);
 
 			if (!Server.WhiteList.Save())
 			{
@@ -394,7 +394,7 @@ namespace Terraria_Server.Commands
 
 			Server.BanList.addException(playerName);
 
-			Server.notifyOps(playerName + Languages.Ban_Banned + " {" + sender.Name + "}", true);
+			Server.notifyOps(playerName + Languages.Ban_Banned + " [" + sender.Name + "]", true);
 			if (!Server.BanList.Save())
 			{
 				Server.notifyOps(Languages.Ban_FailedToSave + sender.Name + "'s " + Languages.Command, true);
@@ -416,7 +416,7 @@ namespace Terraria_Server.Commands
 
 			Server.BanList.removeException(playerName);
 
-			Server.notifyOps(playerName + Languages.Ban_UnBanned + " {" + sender.Name + "}", true);
+			Server.notifyOps(playerName + Languages.Ban_UnBanned + " [" + sender.Name + "]", true);
 
 			if (!Server.BanList.Save())
 			{
@@ -641,7 +641,7 @@ namespace Terraria_Server.Commands
 				realNPCName = Main.npcs[npcIndex].Name;
 			}
 			Server.notifyOps("Spawned " + NPCAmount.ToString() + " of " +
-					realNPCName + " {" + player.Name + "}", true);
+					realNPCName + " [" + player.Name + "]", true);
 		}
 
 		/// <summary>
@@ -689,7 +689,7 @@ namespace Terraria_Server.Commands
 				{
 
 					Server.notifyOps(string.Concat("Teleported ", subject.Name, " to ",
-						target.Name, ". {", sender.Name, "}"), true);
+						target.Name, ". [", sender.Name, "]"), true);
 				}
 				else
 					sender.sendMessage(Languages.TeleportFailed);
@@ -706,7 +706,7 @@ namespace Terraria_Server.Commands
 					if (subject.Teleport(target))
 					{
 						Server.notifyOps(string.Concat("Teleported ", subject.Name, " to ",
-							target.Name, ". {", sender.Name, "}"), true);
+							target.Name, ". [", sender.Name, "]"), true);
 					}
 					else
 						sender.sendMessage(Languages.TeleportFailed);
@@ -728,7 +728,7 @@ namespace Terraria_Server.Commands
 					if (subject.Teleport(x, y))
 					{
 						Server.notifyOps(string.Concat("Teleported ", subject.Name, " to ",
-							x, ":", y, ". {", sender.Name, "}"), true);
+							x, ":", y, ". [", sender.Name, "]"), true);
 					}
 					else
 						sender.sendMessage(Languages.TeleportFailed);
@@ -764,7 +764,7 @@ namespace Terraria_Server.Commands
 					subject.Teleport(player);
 
 					Server.notifyOps("Teleported " + subject.Name + " to " +
-						player.Name + " {" + sender.Name + "}", true);
+						player.Name + " [" + sender.Name + "]", true);
 				}
 			}
 			else
@@ -814,12 +814,12 @@ namespace Terraria_Server.Commands
 				}
 			}
 
-			Server.notifyOps("Opping " + playerName + " {" + sender.Name + "}", true);
+			Server.notifyOps("Opping " + playerName + " [" + sender.Name + "]", true);
 			Server.OpList.addException(playerName + ":" + password, true, playerName.Length + 1);
 
 			if (!Server.OpList.Save())
 			{
-				Server.notifyOps(Languages.OPlistFailedSave + " {" + sender.Name + "}", true);
+				Server.notifyOps(Languages.OPlistFailedSave + " [" + sender.Name + "]", true);
 				return;
 			}
 		}
@@ -851,13 +851,13 @@ namespace Terraria_Server.Commands
 
 			if (Player.isInOpList(playerName))
 			{
-				Server.notifyOps("De-Opping " + playerName + " {" + sender.Name + "}", true);
+				Server.notifyOps("De-Opping " + playerName + " [" + sender.Name + "]", true);
 				Server.OpList.removeException(playerName + ":" + Player.GetPlayerPassword(playerName));
 			}
 
 			if (!Server.OpList.Save())
 			{
-				Server.notifyOps(Languages.OPlistFailedSave + " {" + sender.Name + "}", true);
+				Server.notifyOps(Languages.OPlistFailedSave + " [" + sender.Name + "]", true);
 				return;
 			}
 		}
@@ -877,7 +877,9 @@ namespace Terraria_Server.Commands
 				{
 					if (player.Password.Equals(Password))
 					{
-						Server.notifyOps("{0} " + Languages.SuccessfullyLoggedInOP, true, SendingLogger.CONSOLE, player.Name);
+						Server.notifyOps(
+							String.Format("{0} " + Languages.SuccessfullyLoggedInOP, player.Name)
+						);
 						player.Op = true;
 						player.sendMessage(Languages.SuccessfullyLoggedInOP, ChatColor.DarkGreen);
 
@@ -888,7 +890,9 @@ namespace Terraria_Server.Commands
 					}
 					else
 					{
-						Server.notifyOps("{0} " + Languages.FailedLoginWrongPassword, true, SendingLogger.CONSOLE, player.Name);
+						Server.notifyOps(
+							String.Format("{0} " + Languages.FailedLoginWrongPassword, player.Name)
+						);
 						player.sendMessage(Languages.IncorrectOPPassword, ChatColor.DarkRed);
 					}
 				}
@@ -914,7 +918,9 @@ namespace Terraria_Server.Commands
 					player.Op = false;
 					player.sendMessage(Languages.SuccessfullyLoggedOutOP, ChatColor.DarkRed);
 
-					Server.notifyOps("{0} " + Languages.SuccessfullyLoggedOutOP, true, SendingLogger.CONSOLE, player.Name);
+					Server.notifyOps(
+						String.Format("{0} " + Languages.SuccessfullyLoggedOutOP, player.Name)
+					);
 
 					if (player.HasClientMod)
 					{
@@ -1398,7 +1404,7 @@ namespace Terraria_Server.Commands
 
 			if (!Server.OpList.Save())
 			{
-				Server.notifyOps(Languages.OPlistFailedSave + " {" + sender.Name + "}", true);
+				Server.notifyOps(Languages.OPlistFailedSave + " [" + sender.Name + "]", true);
 				return;
 			}
 

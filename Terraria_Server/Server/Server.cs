@@ -95,26 +95,25 @@ namespace Terraria_Server
             }
             return null;
         }
-		
+
 		/// <summary>
 		/// Send a message to all online OPs
 		/// </summary>
 		/// <param name="Message"></param>
 		/// <param name="writeToConsole"></param>
 		/// <param name="Logger"></param>
-		public static void notifyOps(string format, bool writeToConsole = true, SendingLogger Logger = SendingLogger.CONSOLE, params object[] args)
+		public static void notifyOps(string Message, bool writeToConsole = true, SendingLogger Logger = SendingLogger.CONSOLE)
 		{
-			var message = String.Format(format, args);
 			if (Statics.cmdMessages)
 			{
 				foreach (Player player in Main.players)
 				{
 					if (player.Active && player.Op)
-						NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, message, 255, 176f, 196, 222f);
+						NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, Message, 255, 176f, 196, 222f);
 				}
 			}
 
-			if (writeToConsole) ProgramLog.Admin.Log(message, Logger);
+			if (writeToConsole) ProgramLog.Admin.Log(Message, Logger);
 		}
 		
 		/// <summary>

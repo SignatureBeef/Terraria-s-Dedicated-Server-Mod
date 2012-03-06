@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
 
 namespace Terraria_Server
 {
@@ -337,7 +336,7 @@ namespace Terraria_Server
 				wall = (byte)((wall & 63) | (value << 6));
 			}
 		}
-		
+
 		private byte frameX_Size;
 		public short FrameX
 		{

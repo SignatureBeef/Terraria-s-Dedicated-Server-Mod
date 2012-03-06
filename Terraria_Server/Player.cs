@@ -1,19 +1,14 @@
 using System;
-using System.Text;
-using System.IO;
-using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.Net;
 
 using Terraria_Server.Plugins;
-using Terraria_Server.Commands;
 using Terraria_Server.Misc;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
-using Terraria_Server.TDCM;
 using Terraria_Server.Language;
 
 namespace Terraria_Server
@@ -5124,7 +5119,7 @@ namespace Terraria_Server
 			var index = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, ItemId, Stack, false, 0, NetID);
 
 			if (NotifyOps)
-				Server.notifyOps("Giving " + this.Name + " some " + ItemId.ToString() + " {" + sender.Name + "}", true);
+				Server.notifyOps("Giving " + this.Name + " some " + ItemId.ToString() + " [" + sender.Name + "]", true);
 
 			return index;
 		}

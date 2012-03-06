@@ -64,7 +64,7 @@ namespace Terraria_Server.Misc
 
         public override string ToString()
         {
-            return "{R:" + R + " G:" + G + " B:" + B + "}";
+            return "{R:" + R + " G:" + G + " B:" + B + "]";
         }
 
         public static bool operator !=(Color color1, Color color2)

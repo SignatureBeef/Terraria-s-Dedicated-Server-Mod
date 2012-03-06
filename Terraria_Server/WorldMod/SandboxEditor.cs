@@ -1,14 +1,6 @@
 #define USE_SANDBOX
 
 using System;
-using System.IO;
-using System.Diagnostics;
-using Terraria_Server.Commands;
-using Terraria_Server.Misc;
-using Terraria_Server.Collections;
-using Terraria_Server.Definitions;
-using Terraria_Server.Logging;
-using Terraria_Server.Networking;
 
 namespace Terraria_Server.WorldMod
 {

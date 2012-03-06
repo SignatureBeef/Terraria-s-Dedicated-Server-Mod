@@ -468,7 +468,7 @@ namespace Terraria_Server.Networking
 
 			try
 			{
-				//ProgramLog.Debug.Log ("SendCompleted {");
+				//ProgramLog.Debug.Log ("SendCompleted [");
 				if (argz.SocketError != SocketError.Success)
 				{
 					HandleError (argz.SocketError);

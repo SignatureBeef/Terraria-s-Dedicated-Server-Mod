@@ -1,10 +1,6 @@
 using System;
-using System.IO;
-using System.Diagnostics;
-using Terraria_Server.Commands;
 using Terraria_Server.Plugins;
 using Terraria_Server.Misc;
-using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
@@ -8536,27 +8532,11 @@ namespace Terraria_Server.WorldMod
 			{
 				return;
 			}
-			if ((int)TileRefs(i, j).Wall != type)
+
+			if (TileRefs(i, j).Wall == 0)
 			{
-				for (int k = i - 1; k < i + 2; k++)
-				{
-					for (int l = j - 1; l < j + 2; l++)
-					{
-						if (TileRefs(k, l).Wall > 0 && (int)TileRefs(k, l).Wall != type)
-						{
-							bool flag = false;
-							if (TileRefs(i, j).Wall == 0 && (type == 2 || type == 16) && (TileRefs(k, l).Wall == 2 || TileRefs(k, l).Wall == 16))
-							{
-								flag = true;
-							}
-							if (!flag)
-							{
-								return;
-							}
-						}
-					}
-				}
-				TileRefs(i, j).SetWall((byte)type);
+				TileRefs(i, j).SetWall ((byte)type);
+				SquareWallFrame(TileRefs, i, j, true);
 			}
 		}
 
@@ -13836,7 +13816,7 @@ namespace Terraria_Server.WorldMod
 				KillTile(TileRefs, sandbox, i, j);
 			}
 		}
-
+		
 		public static void WallFrame(Func<Int32, Int32, ITile> TileRefs, int i, int j, bool resetFrame = false)
 		{
 			if (TileRefs == null)
@@ -13853,7 +13833,6 @@ namespace Terraria_Server.WorldMod
 				int num7 = -1;
 				int num8 = -1;
 				int wall = (int)TileRefs(i, j).Wall;
-
 				if (wall == 0)
 				{
 					return;
@@ -13926,16 +13905,19 @@ namespace Terraria_Server.WorldMod
 						num6 = wall;
 						num8 = wall;
 					}
-					else if (j >= (int)Main.worldSurface)
+					else
 					{
-						num7 = wall;
-						num6 = wall;
-						num8 = wall;
-						num2 = wall;
-						num = wall;
-						num3 = wall;
-						num4 = wall;
-						num5 = wall;
+						if (j >= (int)Main.worldSurface)
+						{
+							num7 = wall;
+							num6 = wall;
+							num8 = wall;
+							num2 = wall;
+							num = wall;
+							num3 = wall;
+							num4 = wall;
+							num5 = wall;
+						}
 					}
 				}
 				if (num7 > 0)
@@ -13974,13 +13956,12 @@ namespace Terraria_Server.WorldMod
 				if (resetFrame)
 				{
 					num9 = genRand.Next(0, 3);
-					//TileRefs(i, j).SetWallFrameNumber((byte)num9);
+					//TileRefs(i, j).SetWallFrameNumber ( (byte)num9);
 				}
-				//else
-				//{
-				//    //num9 = (int)TileRefs(i, j).WallFrameNumber;
-				//}
-
+				else
+				{
+					//num9 = (int)TileRefs(i, j).WallFrameNumber;
+				}
 				if (rectangle.X < 0 || rectangle.Y < 0)
 				{
 					if (num2 == wall && num7 == wall && (num4 == wall & num5 == wall))
@@ -14003,351 +13984,404 @@ namespace Terraria_Server.WorldMod
 								rectangle.Y = 18;
 							}
 						}
-						else if (num6 != wall && num8 != wall)
-						{
-							if (num9 == 0)
-							{
-								rectangle.X = 108;
-								rectangle.Y = 36;
-							}
-							if (num9 == 1)
-							{
-								rectangle.X = 126;
-								rectangle.Y = 36;
-							}
-							if (num9 == 2)
-							{
-								rectangle.X = 144;
-								rectangle.Y = 36;
-							}
-						}
-						else if (num != wall && num6 != wall)
-						{
-							if (num9 == 0)
-							{
-								rectangle.X = 180;
-								rectangle.Y = 0;
-							}
-							if (num9 == 1)
-							{
-								rectangle.X = 180;
-								rectangle.Y = 18;
-							}
-							if (num9 == 2)
-							{
-								rectangle.X = 180;
-								rectangle.Y = 36;
-							}
-						}
-						else if (num3 != wall && num8 != wall)
-						{
-							if (num9 == 0)
-							{
-								rectangle.X = 198;
-								rectangle.Y = 0;
-							}
-							if (num9 == 1)
-							{
-								rectangle.X = 198;
-								rectangle.Y = 18;
-							}
-							if (num9 == 2)
-							{
-								rectangle.X = 198;
-								rectangle.Y = 36;
-							}
-						}
 						else
+						{
+							if (num6 != wall && num8 != wall)
+							{
+								if (num9 == 0)
+								{
+									rectangle.X = 108;
+									rectangle.Y = 36;
+								}
+								if (num9 == 1)
+								{
+									rectangle.X = 126;
+									rectangle.Y = 36;
+								}
+								if (num9 == 2)
+								{
+									rectangle.X = 144;
+									rectangle.Y = 36;
+								}
+							}
+							else
+							{
+								if (num != wall && num6 != wall)
+								{
+									if (num9 == 0)
+									{
+										rectangle.X = 180;
+										rectangle.Y = 0;
+									}
+									if (num9 == 1)
+									{
+										rectangle.X = 180;
+										rectangle.Y = 18;
+									}
+									if (num9 == 2)
+									{
+										rectangle.X = 180;
+										rectangle.Y = 36;
+									}
+								}
+								else
+								{
+									if (num3 != wall && num8 != wall)
+									{
+										if (num9 == 0)
+										{
+											rectangle.X = 198;
+											rectangle.Y = 0;
+										}
+										if (num9 == 1)
+										{
+											rectangle.X = 198;
+											rectangle.Y = 18;
+										}
+										if (num9 == 2)
+										{
+											rectangle.X = 198;
+											rectangle.Y = 36;
+										}
+									}
+									else
+									{
+										if (num9 == 0)
+										{
+											rectangle.X = 18;
+											rectangle.Y = 18;
+										}
+										if (num9 == 1)
+										{
+											rectangle.X = 36;
+											rectangle.Y = 18;
+										}
+										if (num9 == 2)
+										{
+											rectangle.X = 54;
+											rectangle.Y = 18;
+										}
+									}
+								}
+							}
+						}
+					}
+					else
+					{
+						if (num2 != wall && num7 == wall && (num4 == wall & num5 == wall))
 						{
 							if (num9 == 0)
 							{
 								rectangle.X = 18;
-								rectangle.Y = 18;
+								rectangle.Y = 0;
 							}
 							if (num9 == 1)
 							{
 								rectangle.X = 36;
-								rectangle.Y = 18;
+								rectangle.Y = 0;
 							}
 							if (num9 == 2)
 							{
 								rectangle.X = 54;
-								rectangle.Y = 18;
+								rectangle.Y = 0;
+							}
+						}
+						else
+						{
+							if (num2 == wall && num7 != wall && (num4 == wall & num5 == wall))
+							{
+								if (num9 == 0)
+								{
+									rectangle.X = 18;
+									rectangle.Y = 36;
+								}
+								if (num9 == 1)
+								{
+									rectangle.X = 36;
+									rectangle.Y = 36;
+								}
+								if (num9 == 2)
+								{
+									rectangle.X = 54;
+									rectangle.Y = 36;
+								}
+							}
+							else
+							{
+								if (num2 == wall && num7 == wall && (num4 != wall & num5 == wall))
+								{
+									if (num9 == 0)
+									{
+										rectangle.X = 0;
+										rectangle.Y = 0;
+									}
+									if (num9 == 1)
+									{
+										rectangle.X = 0;
+										rectangle.Y = 18;
+									}
+									if (num9 == 2)
+									{
+										rectangle.X = 0;
+										rectangle.Y = 36;
+									}
+								}
+								else
+								{
+									if (num2 == wall && num7 == wall && (num4 == wall & num5 != wall))
+									{
+										if (num9 == 0)
+										{
+											rectangle.X = 72;
+											rectangle.Y = 0;
+										}
+										if (num9 == 1)
+										{
+											rectangle.X = 72;
+											rectangle.Y = 18;
+										}
+										if (num9 == 2)
+										{
+											rectangle.X = 72;
+											rectangle.Y = 36;
+										}
+									}
+									else
+									{
+										if (num2 != wall && num7 == wall && (num4 != wall & num5 == wall))
+										{
+											if (num9 == 0)
+											{
+												rectangle.X = 0;
+												rectangle.Y = 54;
+											}
+											if (num9 == 1)
+											{
+												rectangle.X = 36;
+												rectangle.Y = 54;
+											}
+											if (num9 == 2)
+											{
+												rectangle.X = 72;
+												rectangle.Y = 54;
+											}
+										}
+										else
+										{
+											if (num2 != wall && num7 == wall && (num4 == wall & num5 != wall))
+											{
+												if (num9 == 0)
+												{
+													rectangle.X = 18;
+													rectangle.Y = 54;
+												}
+												if (num9 == 1)
+												{
+													rectangle.X = 54;
+													rectangle.Y = 54;
+												}
+												if (num9 == 2)
+												{
+													rectangle.X = 90;
+													rectangle.Y = 54;
+												}
+											}
+											else
+											{
+												if (num2 == wall && num7 != wall && (num4 != wall & num5 == wall))
+												{
+													if (num9 == 0)
+													{
+														rectangle.X = 0;
+														rectangle.Y = 72;
+													}
+													if (num9 == 1)
+													{
+														rectangle.X = 36;
+														rectangle.Y = 72;
+													}
+													if (num9 == 2)
+													{
+														rectangle.X = 72;
+														rectangle.Y = 72;
+													}
+												}
+												else
+												{
+													if (num2 == wall && num7 != wall && (num4 == wall & num5 != wall))
+													{
+														if (num9 == 0)
+														{
+															rectangle.X = 18;
+															rectangle.Y = 72;
+														}
+														if (num9 == 1)
+														{
+															rectangle.X = 54;
+															rectangle.Y = 72;
+														}
+														if (num9 == 2)
+														{
+															rectangle.X = 90;
+															rectangle.Y = 72;
+														}
+													}
+													else
+													{
+														if (num2 == wall && num7 == wall && (num4 != wall & num5 != wall))
+														{
+															if (num9 == 0)
+															{
+																rectangle.X = 90;
+																rectangle.Y = 0;
+															}
+															if (num9 == 1)
+															{
+																rectangle.X = 90;
+																rectangle.Y = 18;
+															}
+															if (num9 == 2)
+															{
+																rectangle.X = 90;
+																rectangle.Y = 36;
+															}
+														}
+														else
+														{
+															if (num2 != wall && num7 != wall && (num4 == wall & num5 == wall))
+															{
+																if (num9 == 0)
+																{
+																	rectangle.X = 108;
+																	rectangle.Y = 72;
+																}
+																if (num9 == 1)
+																{
+																	rectangle.X = 126;
+																	rectangle.Y = 72;
+																}
+																if (num9 == 2)
+																{
+																	rectangle.X = 144;
+																	rectangle.Y = 72;
+																}
+															}
+															else
+															{
+																if (num2 != wall && num7 == wall && (num4 != wall & num5 != wall))
+																{
+																	if (num9 == 0)
+																	{
+																		rectangle.X = 108;
+																		rectangle.Y = 0;
+																	}
+																	if (num9 == 1)
+																	{
+																		rectangle.X = 126;
+																		rectangle.Y = 0;
+																	}
+																	if (num9 == 2)
+																	{
+																		rectangle.X = 144;
+																		rectangle.Y = 0;
+																	}
+																}
+																else
+																{
+																	if (num2 == wall && num7 != wall && (num4 != wall & num5 != wall))
+																	{
+																		if (num9 == 0)
+																		{
+																			rectangle.X = 108;
+																			rectangle.Y = 54;
+																		}
+																		if (num9 == 1)
+																		{
+																			rectangle.X = 126;
+																			rectangle.Y = 54;
+																		}
+																		if (num9 == 2)
+																		{
+																			rectangle.X = 144;
+																			rectangle.Y = 54;
+																		}
+																	}
+																	else
+																	{
+																		if (num2 != wall && num7 != wall && (num4 != wall & num5 == wall))
+																		{
+																			if (num9 == 0)
+																			{
+																				rectangle.X = 162;
+																				rectangle.Y = 0;
+																			}
+																			if (num9 == 1)
+																			{
+																				rectangle.X = 162;
+																				rectangle.Y = 18;
+																			}
+																			if (num9 == 2)
+																			{
+																				rectangle.X = 162;
+																				rectangle.Y = 36;
+																			}
+																		}
+																		else
+																		{
+																			if (num2 != wall && num7 != wall && (num4 == wall & num5 != wall))
+																			{
+																				if (num9 == 0)
+																				{
+																					rectangle.X = 216;
+																					rectangle.Y = 0;
+																				}
+																				if (num9 == 1)
+																				{
+																					rectangle.X = 216;
+																					rectangle.Y = 18;
+																				}
+																				if (num9 == 2)
+																				{
+																					rectangle.X = 216;
+																					rectangle.Y = 36;
+																				}
+																			}
+																			else
+																			{
+																				if (num2 != wall && num7 != wall && (num4 != wall & num5 != wall))
+																				{
+																					if (num9 == 0)
+																					{
+																						rectangle.X = 162;
+																						rectangle.Y = 54;
+																					}
+																					if (num9 == 1)
+																					{
+																						rectangle.X = 180;
+																						rectangle.Y = 54;
+																					}
+																					if (num9 == 2)
+																					{
+																						rectangle.X = 198;
+																						rectangle.Y = 54;
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
 							}
 						}
 					}
-					else if (num2 != wall && num7 == wall && (num4 == wall & num5 == wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 18;
-							rectangle.Y = 0;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 36;
-							rectangle.Y = 0;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 54;
-							rectangle.Y = 0;
-						}
-					}
-					else if (num2 == wall && num7 != wall && (num4 == wall & num5 == wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 18;
-							rectangle.Y = 36;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 36;
-							rectangle.Y = 36;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 54;
-							rectangle.Y = 36;
-						}
-					}
-					else if (num2 == wall && num7 == wall && (num4 != wall & num5 == wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 0;
-							rectangle.Y = 0;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 0;
-							rectangle.Y = 18;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 0;
-							rectangle.Y = 36;
-						}
-					}
-					else if (num2 == wall && num7 == wall && (num4 == wall & num5 != wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 72;
-							rectangle.Y = 0;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 72;
-							rectangle.Y = 18;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 72;
-							rectangle.Y = 36;
-						}
-					}
-					else if (num2 != wall && num7 == wall && (num4 != wall & num5 == wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 0;
-							rectangle.Y = 54;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 36;
-							rectangle.Y = 54;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 72;
-							rectangle.Y = 54;
-						}
-					}
-					else if (num2 != wall && num7 == wall && (num4 == wall & num5 != wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 18;
-							rectangle.Y = 54;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 54;
-							rectangle.Y = 54;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 90;
-							rectangle.Y = 54;
-						}
-					}
-					else if (num2 == wall && num7 != wall && (num4 != wall & num5 == wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 0;
-							rectangle.Y = 72;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 36;
-							rectangle.Y = 72;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 72;
-							rectangle.Y = 72;
-						}
-					}
-					else if (num2 == wall && num7 != wall && (num4 == wall & num5 != wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 18;
-							rectangle.Y = 72;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 54;
-							rectangle.Y = 72;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 90;
-							rectangle.Y = 72;
-						}
-					}
-					else if (num2 == wall && num7 == wall && (num4 != wall & num5 != wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 90;
-							rectangle.Y = 0;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 90;
-							rectangle.Y = 18;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 90;
-							rectangle.Y = 36;
-						}
-					}
-					else if (num2 != wall && num7 != wall && (num4 == wall & num5 == wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 108;
-							rectangle.Y = 72;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 126;
-							rectangle.Y = 72;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 144;
-							rectangle.Y = 72;
-						}
-					}
-					else if (num2 != wall && num7 == wall && (num4 != wall & num5 != wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 108;
-							rectangle.Y = 0;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 126;
-							rectangle.Y = 0;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 144;
-							rectangle.Y = 0;
-						}
-					}
-					else if (num2 == wall && num7 != wall && (num4 != wall & num5 != wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 108;
-							rectangle.Y = 54;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 126;
-							rectangle.Y = 54;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 144;
-							rectangle.Y = 54;
-						}
-					}
-					else if (num2 != wall && num7 != wall && (num4 != wall & num5 == wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 162;
-							rectangle.Y = 0;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 162;
-							rectangle.Y = 18;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 162;
-							rectangle.Y = 36;
-						}
-					}
-					else if (num2 != wall && num7 != wall && (num4 == wall & num5 != wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 216;
-							rectangle.Y = 0;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 216;
-							rectangle.Y = 18;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 216;
-							rectangle.Y = 36;
-						}
-					}
-					else if (num2 != wall && num7 != wall && (num4 != wall & num5 != wall))
-					{
-						if (num9 == 0)
-						{
-							rectangle.X = 162;
-							rectangle.Y = 54;
-						}
-						if (num9 == 1)
-						{
-							rectangle.X = 180;
-							rectangle.Y = 54;
-						}
-						if (num9 == 2)
-						{
-							rectangle.X = 198;
-							rectangle.Y = 54;
-						}
-					}
 				}
-
 				if (rectangle.X <= -1 || rectangle.Y <= -1)
 				{
 					if (num9 <= 0)
@@ -14366,11 +14400,11 @@ namespace Terraria_Server.WorldMod
 						rectangle.Y = 18;
 					}
 				}
-
 				TileRefs(i, j).SetWallFrameX((byte)rectangle.X);
 				TileRefs(i, j).SetWallFrameY((byte)rectangle.Y);
 			}
 		}
+		
 
 		public static void StartHardMode()
 		{

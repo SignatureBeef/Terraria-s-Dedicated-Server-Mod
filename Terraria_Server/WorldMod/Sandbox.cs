@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Terraria_Server.Plugins;
-using Terraria_Server.Logging;
-
 namespace Terraria_Server.WorldMod
 {
 	public struct NullSandbox : ISandbox
