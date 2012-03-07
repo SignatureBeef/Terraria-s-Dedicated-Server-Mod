@@ -1218,6 +1218,7 @@ namespace Terraria_Server.Commands
 			bool Skeletron = args.TryPop("skeletron");
 			bool KingSlime = args.TryPop("kingslime");
 			bool Twins = args.TryPop("-twins");
+			bool Wof = args.TryPop("-wof");
 			bool All = args.TryPop("-all");
 			bool NightOverride = args.TryPop("-night");
 
@@ -1241,7 +1242,7 @@ namespace Terraria_Server.Commands
 			else
 				throw new CommandError(Languages.NoOnlinePlayersToSpawnNear);
 
-			List<Int32> Bosses = new List<Int32>();
+			List<Int32> bosses = new List<Int32>();
 
 			if (EyeOC || Twins || All)
 			{
@@ -1249,21 +1250,26 @@ namespace Terraria_Server.Commands
 					throw new CommandError(Languages.NeedsToBeNightTime);
 			}
 
-			if (EyeOC || All) Bosses.Add((int)NPCType.N04_EYE_OF_CTHULHU);
-			if (Skeletron || All) Bosses.Add((int)NPCType.N35_SKELETRON_HEAD);
-			if (KingSlime || All) Bosses.Add((int)NPCType.N50_KING_SLIME);
-			if (EoW || All) Bosses.Add((int)NPCType.N13_EATER_OF_WORLDS_HEAD);
-			if (Twins || All) { Bosses.Add((int)NPCType.N125_RETINAZER); Bosses.Add((int)NPCType.N126_SPAZMATISM); }
+			var wofSummoned = NPC.IsNPCSummoned((int)NPCType.N113_WALL_OF_FLESH);
+			if (Wof && wofSummoned)
+				sender.sendMessage("Wall of Flesh already summoned, Ignoring.");
 
-			if (Bosses.Count > 0)
+			if (EyeOC || All) bosses.Add((int)NPCType.N04_EYE_OF_CTHULHU);
+			if (Skeletron || All) bosses.Add((int)NPCType.N35_SKELETRON_HEAD);
+			if (KingSlime || All) bosses.Add((int)NPCType.N50_KING_SLIME);
+			if (EoW || All) bosses.Add((int)NPCType.N13_EATER_OF_WORLDS_HEAD);
+			if (Twins || All) { bosses.Add((int)NPCType.N125_RETINAZER); bosses.Add((int)NPCType.N126_SPAZMATISM); }
+			if ((Wof || All) && !wofSummoned) bosses.Add((int)NPCType.N113_WALL_OF_FLESH);
+
+			if (bosses.Count > 0)
 			{
-				if (NightOverride) //Mainly for eye
+				if (NightOverride)
 				{
 					World.SetTime(16200.0, false, false);
 					NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
 				}
 
-				foreach (int BossId in Bosses)
+				foreach (int bossId in bosses)
 				{
 					//Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
 					//int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
@@ -1281,7 +1287,7 @@ namespace Terraria_Server.Commands
 					//if (!(sender is ConsoleSender))
 					//    ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, name, BossSlot);
 
-					NPC.SpawnOnPlayer(player.whoAmi, BossId, Main.SpawnsOverride);
+					NPC.SpawnOnPlayer(player.whoAmi, bossId, Main.SpawnsOverride);
 				}
 			}
 			else
