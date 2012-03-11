@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Terraria_Server
+namespace Terraria_Server.Misc
 {
 	public struct Rectangle : IEquatable<Rectangle>
 	{
@@ -52,6 +52,7 @@ namespace Terraria_Server
 				return this.Width == 0 && this.Height == 0 && this.X == 0 && this.Y == 0;
 			}
 		}
+
 		public Rectangle(int x, int y, int width, int height)
 		{
 			this.X = x;
@@ -59,11 +60,13 @@ namespace Terraria_Server
 			this.Width = width;
 			this.Height = height;
 		}
+
 		public void Offset(int offsetX, int offsetY)
 		{
 			this.X += offsetX;
 			this.Y += offsetY;
 		}
+
 		public void Inflate(int horizontalAmount, int verticalAmount)
 		{
 			this.X -= horizontalAmount;
@@ -71,27 +74,32 @@ namespace Terraria_Server
 			this.Width += horizontalAmount * 2;
 			this.Height += verticalAmount * 2;
 		}
+
 		public bool Contains(int x, int y)
 		{
 			return this.X <= x && x < this.X + this.Width && this.Y <= y && y < this.Y + this.Height;
 		}
-		
+
 		public bool Contains(Rectangle value)
 		{
 			return this.X <= value.X && value.X + value.Width <= this.X + this.Width && this.Y <= value.Y && value.Y + value.Height <= this.Y + this.Height;
 		}
+
 		public void Contains(ref Rectangle value, out bool result)
 		{
 			result = (this.X <= value.X && value.X + value.Width <= this.X + this.Width && this.Y <= value.Y && value.Y + value.Height <= this.Y + this.Height);
 		}
+
 		public bool Intersects(Rectangle value)
 		{
 			return value.X < this.X + this.Width && this.X < value.X + value.Width && value.Y < this.Y + this.Height && this.Y < value.Y + value.Height;
 		}
+
 		public void Intersects(ref Rectangle value, out bool result)
 		{
 			result = (value.X < this.X + this.Width && this.X < value.X + value.Width && value.Y < this.Y + this.Height && this.Y < value.Y + value.Height);
 		}
+
 		public static Rectangle Intersect(Rectangle value1, Rectangle value2)
 		{
 			int num = value1.X + value1.Width;
@@ -119,6 +127,7 @@ namespace Terraria_Server
 			}
 			return result;
 		}
+
 		public static void Intersect(ref Rectangle value1, ref Rectangle value2, out Rectangle result)
 		{
 			int num = value1.X + value1.Width;
@@ -142,6 +151,7 @@ namespace Terraria_Server
 			result.Width = 0;
 			result.Height = 0;
 		}
+
 		public static Rectangle Union(Rectangle value1, Rectangle value2)
 		{
 			int num = value1.X + value1.Width;
@@ -159,6 +169,7 @@ namespace Terraria_Server
 			result.Height = num8 - num6;
 			return result;
 		}
+
 		public static void Union(ref Rectangle value1, ref Rectangle value2, out Rectangle result)
 		{
 			int num = value1.X + value1.Width;
@@ -174,10 +185,12 @@ namespace Terraria_Server
 			result.Width = num7 - num5;
 			result.Height = num8 - num6;
 		}
+
 		public bool Equals(Rectangle other)
 		{
 			return this.X == other.X && this.Y == other.Y && this.Width == other.Width && this.Height == other.Height;
 		}
+
 		public override bool Equals(object obj)
 		{
 			bool result = false;
@@ -187,7 +200,8 @@ namespace Terraria_Server
 			}
 			return result;
 		}
-        public override string ToString()
+
+		public override string ToString()
 		{
 			CultureInfo currentCulture = CultureInfo.CurrentCulture;
 			return String.Format(currentCulture, "{{X:{0} Y:{1} Width:{2} Height:{3}}}", new object[]
@@ -198,14 +212,17 @@ namespace Terraria_Server
 				this.Height.ToString(currentCulture)
 			});
 		}
+
 		public override int GetHashCode()
 		{
 			return this.X.GetHashCode() + this.Y.GetHashCode() + this.Width.GetHashCode() + this.Height.GetHashCode();
 		}
+
 		public static bool operator ==(Rectangle a, Rectangle b)
 		{
 			return a.X == b.X && a.Y == b.Y && a.Width == b.Width && a.Height == b.Height;
 		}
+
 		public static bool operator !=(Rectangle a, Rectangle b)
 		{
 			return a.X != b.X || a.Y != b.Y || a.Width != b.Width || a.Height != b.Height;

@@ -45,6 +45,8 @@ namespace Terraria_Server.Misc
 		{
 			try
 			{
+				ProgramLog.Log("Performing backup...");
+
 				var file = GetStamptedFilePath(WorldName);
 				while (File.Exists(file))
 					file = GetStamptedFilePath(WorldName);
@@ -99,6 +101,33 @@ namespace Terraria_Server.Misc
 
 			oldBackups.RemoveRange(0, max);
 			return oldBackups.ToArray();
+		}
+
+		public static void AutoPurge(string WorldName)
+		{
+			var maxTime = Program.properties.PurgeBackupsMinutes;
+			if (maxTime == 0)
+				return;
+
+			ProgramLog.Log("Performing backup purge...");
+			var backups = GetBackups(WorldName);
+
+			var expired = (from x in backups where (DateTime.Now - File.GetCreationTime(x)).TotalMinutes >= maxTime select x).ToArray();
+			//var deleted = 0;
+			foreach (var file in expired)
+			{
+				try
+				{
+					File.Delete(file);
+					//deleted++;
+				}
+				catch { }
+			}
+		}
+
+		public static void AutoPurge()
+		{
+			AutoPurge(Main.worldName);
 		}
 	}
 }

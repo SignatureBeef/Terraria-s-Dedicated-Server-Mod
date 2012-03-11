@@ -30,6 +30,7 @@ namespace Terraria_Server
         private const bool      DEFAULT_NPCSPAWN_OVERRIDE		= true;
         private const int       DEFAULT_OVERLIMIT_SLOTS         = 1;
         private const string    DEFAULT_PID_FILE                = "";
+        private const int		DEFAULT_PURGE_BACKUPS_AFTER     = 120;
         private const int       DEFAULT_PORT                    = 7777;
         private const string    DEFAULT_REJECT_ITEMS            = "";
         private const string    DEFAULT_RCON_BIND_ADDRESS       = "127.0.0.1:7023";
@@ -75,6 +76,7 @@ namespace Terraria_Server
         private const string    OVERLIMIT_SLOTS                 = "overlimit-slots";
         private const string    PASSWORD                        = "server-password";
         private const string    PID_FILE                        = "pid-file";
+        private const string    PURGE_BACKUPS_AFTER             = "purge-backups-after-xmins";
         private const string    PORT                            = "port";
         private const string    REJECT_ITEMS                    = "rejectplayeritems";
         private const string    RCON_BIND_ADDRESS               = "rcon-bind-address";
@@ -125,6 +127,7 @@ namespace Terraria_Server
             temp = OverlimitSlots;
             temp = Password;
             temp = PIDFile;
+			temp = PurgeBackupsMinutes;
             temp = Port;
             temp = RejectedItems;
             temp = RConBindAddress;
@@ -610,6 +613,12 @@ namespace Terraria_Server
 		{
 			get { return getValue(ALLOW_BACKUPS, DEFAULT_ALLOW_BACKUPS); }
 			set { setValue(ALLOW_BACKUPS, value); }
+		}
+
+		public int PurgeBackupsMinutes
+		{
+			get { return getValue(PURGE_BACKUPS_AFTER, DEFAULT_PURGE_BACKUPS_AFTER); }
+			set { setValue(PURGE_BACKUPS_AFTER, value); }
 		}
     }
 }

@@ -732,8 +732,17 @@ namespace Terraria_Server
 					{
 						backupDate = DateTime.Now;
 
-						ProgramLog.Log("Performing backup...");
-						BackupManager.PerformBackup();
+						try
+						{
+							BackupManager.AutoPurge();
+							BackupManager.PerformBackup();
+						}
+						catch (Exception e)
+						{
+							ProgramLog.Error.Log(
+								String.Format("Error during the backup process.\n{0}", e
+							);
+						}
 					}
 				}
 

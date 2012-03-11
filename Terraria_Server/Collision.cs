@@ -4,7 +4,7 @@ using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
-    public class Collision
+    public static class Collision
     {
         [ThreadStatic]
         public static bool up;
