@@ -282,11 +282,7 @@ namespace Terraria_Server.Commands
 				.WithAccessLevel(AccessLevel.OP)
 				.WithHelpText("Usage:   time -set <time>")
 				.WithHelpText("         time -now")
-				.WithHelpText("         time day")
-				.WithHelpText("         time dawn")
-				.WithHelpText("         time dusk")
-				.WithHelpText("         time noon")
-				.WithHelpText("         time night")
+				.WithHelpText("         time day|dawn|dusk|noon|night")
 				.WithPermissionNode("tdsm.time")
 				.Calls(Commands.Time);
 
@@ -494,7 +490,11 @@ namespace Terraria_Server.Commands
 
 			AddCommand("timelock")
 				.WithAccessLevel(AccessLevel.OP)
-				.WithDescription("Forces the time to dtay at a certain point.")
+				.WithDescription("Forces the time to stay at a certain point.")
+				.WithHelpText("Usage:    timelock now")
+				.WithHelpText("          timelock set day|dawn|dusk|noon|night")
+				.WithHelpText("          timelock setat <time>")
+				.WithHelpText("          timelock disable")
 				.WithPermissionNode("tdsm.timelock")
 				.Calls(Commands.Timelock);
 		}
