@@ -16,6 +16,7 @@ namespace Regions.RegionWork
         public RegionManager(string saveFolder)
         {
             SaveFolder = saveFolder;
+			Regions = new List<Region>();
 
             if (!Directory.Exists(saveFolder))
                 Directory.CreateDirectory(saveFolder);

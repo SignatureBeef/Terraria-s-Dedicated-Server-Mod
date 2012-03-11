@@ -25,6 +25,6 @@ Build: 37
 Build 38
 ===================
 	- The Destroyer not correct when forced to spawn via the command
-	- Wall tiles now blend
+	- Wall tiles now blend correctly
 	- Time locking
 	- Backup manager - Automatic or command

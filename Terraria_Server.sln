@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDSM_PermissionsX", "TDSM_PermissionsX\TDSM_PermissionsX.csproj", "{B39158F0-230E-4CA6-8197-0A4904FB80EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,20 @@ Global
 		{121BF910-B79F-4D91-9FA8-AEFAE2BE650E}.Release|x64.ActiveCfg = Release|x86
 		{121BF910-B79F-4D91-9FA8-AEFAE2BE650E}.Release|x86.ActiveCfg = Release|x86
 		{121BF910-B79F-4D91-9FA8-AEFAE2BE650E}.Release|x86.Build.0 = Release|x86
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Debug|Server Only.ActiveCfg = Debug|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Release|Server Only.ActiveCfg = Release|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Release|x64.ActiveCfg = Release|Any CPU
+		{B39158F0-230E-4CA6-8197-0A4904FB80EE}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

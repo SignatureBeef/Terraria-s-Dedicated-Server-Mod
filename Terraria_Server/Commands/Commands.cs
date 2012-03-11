@@ -941,13 +941,14 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void NPCSpawns(ISender sender, ArgumentList args)
 		{
-			if (args.TryPop("-clear"))
-				Purge(sender, new ArgumentList() { "all" });
-
 			Main.stopSpawns = !Main.stopSpawns;
 			sender.sendMessage(Languages.NPCSpawningIsNow + ((Main.stopSpawns) ? "off" : "on") + "!");
 
 			Program.properties.StopNPCSpawning = Main.stopSpawns;
+			Program.properties.Save(false);
+
+			if (args.TryPop("-clear"))
+				Purge(sender, new ArgumentList() { "all" });
 		}
 
 		/// <summary>
