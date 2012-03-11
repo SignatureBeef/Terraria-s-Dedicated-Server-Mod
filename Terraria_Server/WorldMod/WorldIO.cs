@@ -20,7 +20,7 @@ namespace Terraria_Server.WorldMod
 		private static int tempMoonPhase = Main.moonPhase;
 		private static bool tempDayTime = Main.dayTime;
 		private static bool tempBloodMoon = Main.bloodMoon;
-		private static double tempTime = Main.time;
+		private static double tempTime = Main.Time;
 
 		public static void SetWorldSize()
 		{
@@ -196,7 +196,7 @@ namespace Terraria_Server.WorldMod
 				lock (padlock)
 				{
 					bool value = Main.dayTime;
-					tempTime = Main.time;
+					tempTime = Main.Time;
 					tempMoonPhase = Main.moonPhase;
 					tempBloodMoon = Main.bloodMoon;
 

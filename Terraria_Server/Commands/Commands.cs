@@ -469,7 +469,7 @@ namespace Terraria_Server.Commands
 					case "-now":
 						{
 							string AP = "AM";
-							double time = Main.time;
+							double time = Main.Time;
 							if (!Main.dayTime)
 							{
 								time += 54000.0;
@@ -515,7 +515,7 @@ namespace Terraria_Server.Commands
 				}
 			}
 			NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
-			Server.notifyAll(Languages.TimeSet + Main.time.ToString() + " by " + sender.Name);
+			Server.notifyAll(Languages.TimeSet + Main.Time.ToString() + " by " + sender.Name);
 		}
 
 		/// <summary>
@@ -1505,6 +1505,88 @@ namespace Terraria_Server.Commands
 			}
 			else
 				throw new CommandError("Argument expected.");
+		}
+
+		/// <summary>
+		/// Allows an OP to force the time to dtay at a certain point.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		public static void Timelock(ISender sender, ArgumentList args)
+		{
+			var disable = args.TryPop("disable");
+			var setNow = args.TryPop("now");
+			var setMode = args.TryPop("set");
+			var setAt = args.TryPop("setat");
+
+			if (disable)
+			{
+				if (!Main.UseTimeLock) { sender.sendMessage("Time lock is already disabled", 255, 255, 0, 0); return; }
+
+				Main.UseTimeLock = false;
+				sender.sendMessage("Time lock has been disabled.", 255, 0, 255, 0);
+				return;
+			}
+			else if (setNow) Main.UseTimeLock = true;
+			else if (setMode)
+			{
+				string caseType = args.GetString(0);
+				switch (caseType)
+				{
+					case "day":
+						{
+							World.SetTime(13500.0);
+							break;
+						}
+					case "dawn":
+						{
+							World.SetTime(0);
+							break;
+						}
+					case "dusk":
+						{
+							World.SetTime(0, false, false);
+							break;
+						}
+					case "noon":
+						{
+							World.SetTime(27000.0);
+							break;
+						}
+					case "night":
+						{
+							World.SetTime(16200.0, false, false);
+							break;
+						}
+					default:
+						{
+							sender.sendMessage(Languages.PleaseReview, 255, 255, 0, 0);
+							return;
+						}
+				}
+				Main.UseTimeLock = true;
+			}
+			else if (setAt)
+			{
+				double time;
+				if (args.TryParseOne<Double>(out time))
+				{
+					Main.Time = time;
+					Main.UseTimeLock = true;
+				}
+				else throw new CommandError("Double expected.");
+			}
+			else throw new CommandError("Certain arguments expected.");
+
+			if (Main.UseTimeLock)
+			{
+				if (!setNow) NetMessage.SendData(Packet.WORLD_DATA);
+
+				sender.sendMessage(
+					String.Format("Time lock has set at {0}.", Main.Time),
+					255, 0, 255, 0
+				);
+			}
 		}
 	}
 }

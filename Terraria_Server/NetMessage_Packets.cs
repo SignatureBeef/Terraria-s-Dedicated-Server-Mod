@@ -112,7 +112,7 @@ namespace Terraria_Server
 		{
 			Begin (Packet.WORLD_DATA);
 			
-			Int (Main.time);
+			Int (Main.Time);
 			Byte (Main.dayTime);
 			Byte (Main.moonPhase);
 			Byte (Main.bloodMoon);

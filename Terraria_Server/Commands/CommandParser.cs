@@ -491,6 +491,12 @@ namespace Terraria_Server.Commands
 				.WithHelpText("          backup purge <minutes>")
 				.WithPermissionNode("tdsm.backup")
 				.Calls(Commands.Backups);
+
+			AddCommand("timelock")
+				.WithAccessLevel(AccessLevel.OP)
+				.WithDescription("Forces the time to dtay at a certain point.")
+				.WithPermissionNode("tdsm.timelock")
+				.Calls(Commands.Timelock);
 		}
 
 		public readonly Dictionary<String, CommandInfo> serverCommands;

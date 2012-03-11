@@ -21,11 +21,11 @@ namespace Terraria_Server
 		
         public static void SetTime(double Time, bool baseDay = false, bool dayTime = true)
         {
-            Main.time = Time;
+            Main.Time = Time;
             Main.dayTime = dayTime;
 
             if (baseDay)
-				Main.dayTime = Main.time > Main.dayLength;
+				Main.dayTime = Main.Time > Main.dayLength;
 
             if(Main.dayTime)
                 Main.bloodMoon = false;

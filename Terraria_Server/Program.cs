@@ -83,8 +83,9 @@ namespace Terraria_Server
 					ProgramLog.Console.Print(Languages.Startup_NoPropertiesFileFound);
 					if (Console.ReadLine().ToLower() == "y")
 					{
-						ProgramLog.Console.Print(Languages.Startup_PropertiesCreationComplete);
-						Console.ReadKey(true);
+						//ProgramLog.Console.Print(Languages.Startup_PropertiesCreationComplete);
+						ProgramLog.Log(Languages.ExitRequestCommand);
+						//Console.ReadKey(true);
 						return;
 					}
 				}
@@ -740,7 +741,7 @@ namespace Terraria_Server
 						catch (Exception e)
 						{
 							ProgramLog.Error.Log(
-								String.Format("Error during the backup process.\n{0}", e
+								String.Format("Error during the backup process.\n{0}", e)
 							);
 						}
 					}

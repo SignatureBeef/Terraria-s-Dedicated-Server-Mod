@@ -68,7 +68,22 @@ namespace Terraria_Server
 		public static Color[] teamColor = new Color[5];
 		public static Color tileColor;
 		public static bool dayTime = true;
-		public static double time = 13500.0;
+
+		public static bool UseTimeLock { get; set; }
+
+		private static double _time = 13500.0;
+		public static double Time
+		{
+			get { return _time; }
+			set
+			{
+				if (UseTimeLock)
+					return;
+
+				_time = value;
+			}
+		}
+
 		public static int moonPhase = 0;
 		public static bool bloodMoon = false;
 		public static int checkForSpawns = 0;
@@ -606,12 +621,12 @@ namespace Terraria_Server
 
 		private static void UpdateTime()
 		{
-			time += 1.0;
+			Time += 1.0;
 
 			if (!dayTime)
 			{
 				if (WorldModify.spawnEye)
-					if (time > 4860.0)
+					if (Time > 4860.0)
 					{
 						int count = 0;
 						foreach (Player player in players)
@@ -626,13 +641,13 @@ namespace Terraria_Server
 						}
 					}
 
-				if (time > 32400.0)
+				if (Time > 32400.0)
 				{
 					if (invasionDelay > 0)
 						invasionDelay--;
 					WorldModify.spawnNPC = 0;
 					checkForSpawns = 0;
-					time = 0.0;
+					Time = 0.0;
 					bloodMoon = false;
 					dayTime = true;
 					moonPhase++;
@@ -645,7 +660,7 @@ namespace Terraria_Server
 					if (rand.Next(15) == 0)
 						StartInvasion();
 				}
-				if (time > 16200.0 && WorldModify.spawnMeteor)
+				if (Time > 16200.0 && WorldModify.spawnMeteor)
 				{
 					WorldModify.spawnMeteor = false;
 					WorldModify.dropMeteor(null, null);
@@ -653,7 +668,7 @@ namespace Terraria_Server
 			}
 			else
 			{
-				if (time > 54000.0)
+				if (Time > 54000.0)
 				{
 					WorldModify.spawnNPC = 0;
 					checkForSpawns = 0;
@@ -696,7 +711,7 @@ namespace Terraria_Server
 						if (bloodMoon)
 							NetMessage.SendData(25, -1, -1, "The Blood Moon is rising...", 255, 50f, 255f, 130f);
 					}
-					time = 0.0;
+					Time = 0.0;
 					dayTime = false;
 
 					NetMessage.SendData(7);
