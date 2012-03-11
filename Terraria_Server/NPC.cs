@@ -11491,7 +11491,7 @@ namespace Terraria_Server
 					{
 						num450 = 136;
 					}
-					int num451 = NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height), num450, npc.whoAmI);
+					int num451 = NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height), num450, npc.whoAmI, Main.stopSpawns);
 					Main.npcs[num451].ai[3] = (float)npc.whoAmI;
 					Main.npcs[num451].realLife = npc.whoAmI;
 					Main.npcs[num451].ai[1] = (float)num447;
