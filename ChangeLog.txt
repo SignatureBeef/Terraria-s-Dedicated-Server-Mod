@@ -21,3 +21,10 @@ Build: 37
 	- Standard tile compression
 	- WorldGen/Modify function semi-overhaul
 	- Player Sandbox! (Logs tile modifications)
+
+Build 38
+===================
+	- The Destroyer not correct when forced to spawn via the command
+	- Wall tiles now blend
+	- Time locking
+	- Backup manager - Automatic or command
