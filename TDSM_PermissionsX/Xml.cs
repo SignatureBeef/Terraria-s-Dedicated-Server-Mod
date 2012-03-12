@@ -12,8 +12,8 @@ namespace TDSM_PermissionsX
 	{
 		private string _fileLocation { get; set; }
 
-		public List<Group> Groups { get; set; }
-		public List<User> Users { get; set; }
+		private List<Group> Groups { get; set; }
+		private List<User> Users { get; set; }
 
 		public Xml(string fileLocation, bool load = true)
 		{
@@ -66,20 +66,22 @@ namespace TDSM_PermissionsX
 		{
 			try
 			{
+				if (File.Exists(_fileLocation)) File.Delete(_fileLocation);
+
 				using (var writer = new XmlTextWriter(_fileLocation, Encoding.ASCII))
 				{
 					writer.WriteStartDocument();
-					writer.WriteStartElement("XPermissions");
+						writer.WriteStartElement("XPermissions");
 
-					writer.WriteStartElement("Groups");
-					foreach (var group in Groups) group.WriteElement(writer);
-					writer.WriteEndElement();
+						writer.WriteStartElement("Groups");
+							foreach (var group in Groups) group.WriteElement(writer);
+						writer.WriteEndElement();
 
-					writer.WriteStartElement("Users");
-					foreach (var user in Users) user.WriteElement(writer);
-					writer.WriteEndElement();
+						writer.WriteStartElement("Users");
+							foreach (var user in Users) user.WriteElement(writer);
+						writer.WriteEndElement();
 
-					writer.WriteEndElement();
+						writer.WriteEndElement();
 					writer.WriteEndDocument();
 
 					return true;
@@ -95,12 +97,14 @@ namespace TDSM_PermissionsX
 
 		public void ParseKnownElement(XmlTextReader reader, bool User = true)
 		{
+			if (reader.IsEmptyElement) return;
+
 			var doc = new XmlDocument();
 			doc.Load(reader);
 
 			var users = doc.ChildNodes[0];
 
-			if (users.HasChildNodes)
+			if (users != null && users.HasChildNodes)
 			{
 				foreach (XmlNode node in users.ChildNodes)
 				{
@@ -112,10 +116,13 @@ namespace TDSM_PermissionsX
 							var username = attribute.Value;
 
 							if (User)
+							{
 								Users.Add(new User()
 								{
 									Name = username
 								});
+								ParseUsers(doc);
+							}
 							else
 								Groups.Add(new Group()
 								{
@@ -125,6 +132,26 @@ namespace TDSM_PermissionsX
 					}
 				}
 			}
+		}
+
+		public void ParseUsers(XmlDocument document)
+		{
+
+		}
+
+		public void AddUser(string name)
+		{
+			var user = new User()
+			{
+				Name = name
+			};
+			user.Initialize();
+			Users.Add(user);
+		}
+
+		public bool HasUser(string name)
+		{
+			return (from x in Users where x.Name == name select x).Count() > 0;
 		}
 	}
 }

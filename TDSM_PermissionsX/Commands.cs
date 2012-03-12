@@ -26,10 +26,10 @@ namespace TDSM_PermissionsX
 
 				var trueUser = user == null ? username : (user.Name ?? username);
 
-				XmlParser.Users.Add(new User()
-				{
-					Name = trueUser
-				});
+				if (XmlParser.HasUser(trueUser))
+					throw new CommandError("Permissions already exist for that user.");
+
+				XmlParser.AddUser(trueUser);
 
 				if (save) XmlParser.Save();
 
