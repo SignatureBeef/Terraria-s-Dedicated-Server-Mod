@@ -28,3 +28,4 @@ Build 38
 	- Wall tiles now blend correctly
 	- Time locking
 	- Backup manager - Automatic or command
+	- TDSM Permissions (Both) - Chat hook is now early for chat plugins to take over.

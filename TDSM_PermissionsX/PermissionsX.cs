@@ -7,6 +7,7 @@ using Terraria_Server.Logging;
 using System.IO;
 using Terraria_Server;
 using Terraria_Server.Commands;
+using Terraria_Server.Misc;
 
 namespace TDSM_PermissionsX
 {
@@ -91,7 +92,7 @@ namespace TDSM_PermissionsX
 			ProgramLog.Plugin.Log("[XPermission] " + format, args);
 		}
 
-		[Hook(HookOrder.NORMAL)]
+		[Hook(HookOrder.FIRST)]
 		void OnChat(ref HookContext ctx, ref HookArgs.PlayerChat args)
 		{
 			if (!IsEnabled) return;
@@ -103,9 +104,19 @@ namespace TDSM_PermissionsX
 				{
 					var user = XmlParser.GetUser(name);
 
+					string chatSeperator, prefix, suffix;
+					Color chatColour;
+
+					GetChatSeperator(user, out chatSeperator);
+					GetColor(user, out chatColour);
+					GetPrefix(user, out prefix);
+					GetSuffix(user, out suffix);
+
+					args.Color = chatColour; //Might set this for next plugins.
+
 					ctx.SetResult(HookResult.IGNORE);
 					Server.notifyAll(
-						String.Concat(user.Prefix, ctx.Player.Name, user.ChatSeperator, args.Message, user.Suffix)
+						String.Concat(prefix, ctx.Player.Name, chatSeperator, args.Message, suffix)
 						, args.Color
 					);
 				}
@@ -120,7 +131,7 @@ namespace TDSM_PermissionsX
 					Server.notifyAll(
 						String.Concat
 							(
-								defaultGroup.Prefix, 
+								defaultGroup.Prefix,
 								ctx.Player.Name,
 								defaultGroup.ChatSeperator, args.Message,
 								defaultGroup.Suffix
@@ -130,5 +141,128 @@ namespace TDSM_PermissionsX
 				}
 			}
 		}
+
+#region Permissions
+
+		public bool GetParentGroup(User user, out Group group)
+		{
+			group = default(Group);
+
+			if (XmlParser.HasDefaultGroup())
+			{
+				group = XmlParser.GetDefaultGroup();
+
+				int rank = -1;
+				foreach (var userGroup in user.Groups)
+				{
+					if (userGroup.Rank > rank)
+					{
+						group = userGroup;
+						rank = userGroup.Rank;
+					}
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public bool GetPrefix(User user, out string prefix)
+		{
+			prefix = String.Empty;
+
+			if (XmlParser.HasDefaultGroup())
+			{
+				prefix = XmlParser.GetDefaultGroup().Prefix;
+
+				int rank = -1;
+				foreach (var userGroup in user.Groups)
+				{
+					if (userGroup.Rank > rank)
+					{
+						prefix = userGroup.Prefix;
+						rank = userGroup.Rank;
+					}
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public bool GetSuffix(User user, out string suffix)
+		{
+			suffix = String.Empty;
+
+			if (XmlParser.HasDefaultGroup())
+			{
+				suffix = XmlParser.GetDefaultGroup().Suffix;
+
+				int rank = -1;
+				foreach (var userGroup in user.Groups)
+				{
+					if (userGroup.Rank > rank)
+					{
+						suffix = userGroup.Suffix;
+						rank = userGroup.Rank;
+					}
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public bool GetColor(User user, out Color color)
+		{
+			color = ChatColor.White;
+
+			if (XmlParser.HasDefaultGroup())
+			{
+				color = XmlParser.GetDefaultGroup().Color;
+
+				int rank = -1;
+				foreach (var userGroup in user.Groups)
+				{
+					if (userGroup.Rank > rank)
+					{
+						color = userGroup.Color;
+						rank = userGroup.Rank;
+					}
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public bool GetChatSeperator(User user, out string chatSeperator)
+		{
+			chatSeperator = " ";
+
+			if (XmlParser.HasDefaultGroup())
+			{
+				chatSeperator = XmlParser.GetDefaultGroup().ChatSeperator;
+
+				int rank = -1;
+				foreach (var userGroup in user.Groups)
+				{
+					if (userGroup.Rank > rank)
+					{
+						chatSeperator = userGroup.ChatSeperator;
+						rank = userGroup.Rank;
+					}
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+#endregion
 	}
 }
