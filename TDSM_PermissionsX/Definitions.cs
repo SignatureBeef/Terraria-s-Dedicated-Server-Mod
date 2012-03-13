@@ -44,16 +44,16 @@ namespace TDSM_PermissionsX
 			writer.WriteStartElement("Group");
 
 				writer.WriteAttributeString("Name", Name);
-				writer.WriteAttributeString("Color", Color.ToString());
+				writer.WriteAttributeString("Color", Color.ToParsableString());
 				writer.WriteAttributeString("Default", Default.ToString());
 				writer.WriteAttributeString("CanBuild", CanBuild.ToString());
-				writer.WriteAttributeString("Prefix", Prefix);
-				writer.WriteAttributeString("Suffix", Suffix);
+				writer.WriteAttributeString("Prefix", Prefix ?? String.Empty);
+				writer.WriteAttributeString("Suffix", Suffix ?? String.Empty);
 				writer.WriteAttributeString("Rank", Rank.ToString());
 
 				writer.WriteStartElement("Permissions");
 					foreach (var permission in Permissions)
-						writer.WriteAttributeString("Permission", permission);
+						writer.WriteElementAndValue("Permission", permission);
 				writer.WriteEndElement();
 
 			writer.WriteEndElement();
@@ -85,21 +85,36 @@ namespace TDSM_PermissionsX
 			writer.WriteStartElement("User");
 
 				writer.WriteAttributeString("Name", Name);
-				writer.WriteAttributeString("Color", Color.ToString());
+				writer.WriteAttributeString("Color", Color.ToParsableString());
 				writer.WriteAttributeString("CanBuild", CanBuild.ToString());
-				writer.WriteAttributeString("Prefix", Prefix);
-				writer.WriteAttributeString("Suffix", Suffix);
+				writer.WriteAttributeString("Prefix", Prefix ?? String.Empty);
+				writer.WriteAttributeString("Suffix", Suffix ?? String.Empty);
 
 				writer.WriteStartElement("UserGroups");
 					foreach (var group in Groups)
-						writer.WriteAttributeString("Name", Name);
+						writer.WriteElementAndValue("Name", Name);
 				writer.WriteEndElement();
 
 				writer.WriteStartElement("Permissions");
 					foreach (var permission in Permissions)
-						writer.WriteAttributeString("Permission", permission);
+						writer.WriteElementAndValue("Permission", permission);
 				writer.WriteEndElement();
 
+			writer.WriteEndElement();
+		}
+
+		public bool HasGroup(string name)
+		{
+			return (from x in Groups where x.Name == name select x).Count() > 0;
+		}
+	}
+
+	public static class XmlTextWriterExtensions
+	{
+		public static void WriteElementAndValue(this XmlTextWriter writer, string element, string value)
+		{
+			writer.WriteStartElement(element);
+			writer.WriteString(value);
 			writer.WriteEndElement();
 		}
 	}

@@ -58,7 +58,17 @@ namespace TDSM_PermissionsX
 			AddCommand("xuser")
 				.WithAccessLevel(AccessLevel.OP)
 				.WithPermissionNode("xperms.xuser")
-				.Calls(User);
+				.Calls(Users);
+
+			AddCommand("xuserperms")
+				.WithAccessLevel(AccessLevel.OP)
+				.WithPermissionNode("xperms.xuserperms")
+				.Calls(UserPermissions);
+
+			AddCommand("xgroup")
+				.WithAccessLevel(AccessLevel.OP)
+				.WithPermissionNode("xperms.xgroup")
+				.Calls(Groups);
 		}
 
 		public void Touch()
