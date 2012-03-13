@@ -14,5 +14,11 @@ namespace TDSM_PermissionsX
 		{
 
 		}
+
+		public bool AllowRestrictAutoDownload
+		{
+			get { return getValue("allow-restrict-autodl", true); }
+			set { setValue("allow-restrict-autodl", value); }
+		}
 	}
 }

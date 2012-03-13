@@ -79,6 +79,9 @@ namespace TDSM_PermissionsX
 
 		protected override void Enabled()
 		{
+			Program.permissionManager.IsPermittedImpl = IsPermitted;
+			Statics.PermissionsEnabled = true;
+
 			XLog("Enabled");
 		}
 
@@ -142,7 +145,24 @@ namespace TDSM_PermissionsX
 			}
 		}
 
-#region Permissions
+		[Hook(HookOrder.LATE)]
+		void OnPluginsLoaded(ref HookContext ctx, ref HookArgs.PluginsLoaded args)
+		{
+			if (Properties.AllowRestrictAutoDownload)
+			{
+				var authSystem = new Auth();
+				if (!Server.UsingLoginSystem)
+					authSystem.InitSystem();
+
+				if (authSystem.IsRestrictRunning())
+					ProgramLog.Plugin.Log("Your Server is now protected!");
+				else
+					ProgramLog.Plugin.Log("Your Server is vulnerable, Get an Authentication system!");
+			}
+			else ProgramLog.Plugin.Log("Your Server is vulnerable, Get an Authentication system!");
+		}
+
+		#region Permissions
 
 		public bool GetParentGroup(User user, out Group group)
 		{
@@ -263,6 +283,31 @@ namespace TDSM_PermissionsX
 
 			return false;
 		}
-#endregion
+
+		public bool HasPermission(User user, string node)
+		{
+			var cleanNode = node.Trim().ToLower();
+			foreach (var _group in user.Groups)
+			{
+				var groupHas = (from x in _group.Permissions where x.Trim().ToLower() == cleanNode || x.Trim().ToLower() == "*" select x).Count() > 0;
+				if (groupHas) return true;
+			}
+
+			return (from x in user.Permissions where x.Trim().ToLower() == cleanNode || x.Trim().ToLower() == "*" select x).Count() > 0;
+		}
+
+		//This is what TDSM will check.
+		public bool IsPermitted(string node, Player player)
+		{
+			var name = player.Name;
+			if (XmlParser.HasUser(name))
+			{
+				var user = XmlParser.GetUser(name);
+				return ((player.AuthenticatedAs != null && HasPermission(user, node)) || player.Op);
+			}
+
+			return player.Op;
+		}
+		#endregion
 	}
 }
