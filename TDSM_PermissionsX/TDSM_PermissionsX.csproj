@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Commands.cs" />
     <Compile Include="Definitions.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="PermissionsX.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Xml.cs" />

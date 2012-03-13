@@ -6,6 +6,7 @@ using System.Xml;
 using System.IO;
 using System.Xml.Linq;
 using Terraria_Server.Misc;
+using Terraria_Server.Logging;
 
 namespace TDSM_PermissionsX
 {
@@ -138,6 +139,12 @@ namespace TDSM_PermissionsX
 							if (Boolean.TryParse(attribute.Value, out canBuild)) group.CanBuild = canBuild;
 							break;
 						case "Default":
+							if (HasDefaultGroup())
+							{
+								ProgramLog.Admin.Log("[Warning] Multiple default groups");
+								continue;
+							}
+
 							bool _default;
 							if (Boolean.TryParse(attribute.Value, out _default)) group.Default = _default;
 							break;
@@ -146,6 +153,9 @@ namespace TDSM_PermissionsX
 							break;
 						case "Suffix":
 							group.Suffix = attribute.Value;
+							break;
+						case "ChatSeperator":
+							group.ChatSeperator = attribute.Value;
 							break;
 						case "Rank":
 							int rank;
@@ -206,6 +216,9 @@ namespace TDSM_PermissionsX
 							break;
 						case "Suffix":
 							user.Suffix = attribute.Value;
+							break;
+						case "ChatSeperator":
+							user.ChatSeperator = attribute.Value;
 							break;
 					}
 				}
@@ -280,6 +293,27 @@ namespace TDSM_PermissionsX
 		public Group GetGroup(string name)
 		{
 			var groups = from x in Groups where x.Name == name select x;
+			if (groups.Count() == 0) return default(Group);
+
+			return groups.ElementAt(0);
+		}
+
+		public User GetUser(string name)
+		{
+			var users = from x in Users where x.Name == name select x;
+			if (users.Count() == 0) return default(User);
+
+			return users.ElementAt(0);
+		}
+
+		public bool HasDefaultGroup()
+		{
+			return (from x in Groups where x.Default select x).Count() > 0;
+		}
+
+		public Group GetDefaultGroup()
+		{
+			var groups = from x in Groups where x.Default select x;
 			if (groups.Count() == 0) return default(Group);
 
 			return groups.ElementAt(0);

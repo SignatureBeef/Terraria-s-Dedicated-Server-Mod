@@ -14,10 +14,10 @@ namespace TDSM_PermissionsX
 	{
 		public XProperties Properties { get; set; }
 		public Xml XmlParser { get; set; }
-		
+
 		public string GetPath
 		{
-			get 
+			get
 			{ return Path.Combine(Statics.PluginPath, "XPermissions"); }
 		}
 
@@ -89,6 +89,46 @@ namespace TDSM_PermissionsX
 		public static void XLog(string format, params object[] args)
 		{
 			ProgramLog.Plugin.Log("[XPermission] " + format, args);
+		}
+
+		[Hook(HookOrder.NORMAL)]
+		void OnChat(ref HookContext ctx, ref HookArgs.PlayerChat args)
+		{
+			if (!IsEnabled) return;
+
+			if (ctx.Player.AuthenticatedAs != null)
+			{
+				var name = ctx.Player.Name;
+				if (XmlParser.HasUser(name))
+				{
+					var user = XmlParser.GetUser(name);
+
+					ctx.SetResult(HookResult.IGNORE);
+					Server.notifyAll(
+						String.Concat(user.Prefix, ctx.Player.Name, user.ChatSeperator, args.Message, user.Suffix)
+						, args.Color
+					);
+				}
+			}
+			else if (ctx.Player.AuthenticatedAs == null)
+			{
+				if (XmlParser.HasDefaultGroup())
+				{
+					var defaultGroup = XmlParser.GetDefaultGroup();
+
+					ctx.SetResult(HookResult.IGNORE);
+					Server.notifyAll(
+						String.Concat
+							(
+								defaultGroup.Prefix, 
+								ctx.Player.Name,
+								defaultGroup.ChatSeperator, args.Message,
+								defaultGroup.Suffix
+							)
+						, defaultGroup.Color
+					);
+				}
+			}
 		}
 	}
 }

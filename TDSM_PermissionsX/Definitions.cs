@@ -12,6 +12,7 @@ namespace TDSM_PermissionsX
 		string Name { get; set; }
 		string Suffix { get; set; }
 		string Prefix { get; set; }
+		string ChatSeperator { get; set; }
 		bool CanBuild { get; set; }
 		Color Color { get; set; }
 
@@ -29,6 +30,7 @@ namespace TDSM_PermissionsX
 		public bool Default { get; set; }
 		public string Prefix { get; set; }
 		public string Suffix { get; set; }
+		public string ChatSeperator { get; set; }
 		public int Rank { get; set; }
 
 		public void Initialize()
@@ -37,6 +39,7 @@ namespace TDSM_PermissionsX
 			Color = ChatColor.White;
 			Suffix = String.Empty;
 			Prefix = String.Empty;
+			ChatSeperator = " ";
 		}
 
 		public void WriteElement(XmlTextWriter writer)
@@ -49,6 +52,7 @@ namespace TDSM_PermissionsX
 				writer.WriteAttributeString("CanBuild", CanBuild.ToString());
 				writer.WriteAttributeString("Prefix", Prefix ?? String.Empty);
 				writer.WriteAttributeString("Suffix", Suffix ?? String.Empty);
+				writer.WriteAttributeString("ChatSeperator", ChatSeperator ?? " ");
 				writer.WriteAttributeString("Rank", Rank.ToString());
 
 				writer.WriteStartElement("Permissions");
@@ -70,6 +74,7 @@ namespace TDSM_PermissionsX
 		public bool CanBuild { get; set; }
 		public string Prefix { get; set; }
 		public string Suffix { get; set; }
+		public string ChatSeperator { get; set; }
 
 		public void Initialize()
 		{
@@ -78,6 +83,7 @@ namespace TDSM_PermissionsX
 			Color = ChatColor.White;
 			Suffix = String.Empty;
 			Prefix = String.Empty;
+			ChatSeperator = String.Empty;
 		}
 
 		public void WriteElement(XmlTextWriter writer)
@@ -89,6 +95,7 @@ namespace TDSM_PermissionsX
 				writer.WriteAttributeString("CanBuild", CanBuild.ToString());
 				writer.WriteAttributeString("Prefix", Prefix ?? String.Empty);
 				writer.WriteAttributeString("Suffix", Suffix ?? String.Empty);
+				writer.WriteAttributeString("ChatSeperator", ChatSeperator ?? String.Empty);
 
 				writer.WriteStartElement("UserGroups");
 					foreach (var group in Groups)
