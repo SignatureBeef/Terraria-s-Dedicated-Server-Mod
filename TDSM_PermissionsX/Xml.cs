@@ -178,6 +178,14 @@ namespace TDSM_PermissionsX
 										if (permission != null && permission.Length > 0) group.Permissions.Add(permission);
 									}
 								break;
+							case "DenyPermissions":
+								if (cNode.HasChildNodes)
+									foreach (XmlNode gNode in cNode.ChildNodes)
+									{
+										var permission = gNode.InnerText.Trim();
+										if (permission != null && permission.Length > 0) group.DenyPermissions.Add(permission);
+									}
+								break;
 							default:
 								PermissionsX.XLog("Uknown element `{0}`", cNode.Name);
 								break;
@@ -247,6 +255,14 @@ namespace TDSM_PermissionsX
 									{
 										var permission = gNode.InnerText.Trim();
 										if (permission != null && permission.Length > 0) user.Permissions.Add(permission);
+									}
+								break;
+							case "DenyPermissions":
+								if (cNode.HasChildNodes)
+									foreach (XmlNode gNode in cNode.ChildNodes)
+									{
+										var permission = gNode.InnerText.Trim();
+										if (permission != null && permission.Length > 0) user.DenyPermissions.Add(permission);
 									}
 								break;
 							default:

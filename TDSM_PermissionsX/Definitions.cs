@@ -25,6 +25,7 @@ namespace TDSM_PermissionsX
 		public string Name { get; set; }
 
 		public List<String> Permissions { get; set; }
+		public List<String> DenyPermissions { get; set; }
 		public Color Color { get; set; }
 		public bool CanBuild { get; set; }
 		public bool Default { get; set; }
@@ -36,6 +37,7 @@ namespace TDSM_PermissionsX
 		public void Initialize()
 		{
 			Permissions = new List<String>();
+			DenyPermissions = new List<String>();
 			Color = ChatColor.White;
 			Suffix = String.Empty;
 			Prefix = String.Empty;
@@ -60,6 +62,11 @@ namespace TDSM_PermissionsX
 						writer.WriteElementAndValue("Permission", permission);
 				writer.WriteEndElement();
 
+				writer.WriteStartElement("DenyPermissions");
+					foreach (var permission in DenyPermissions)
+						writer.WriteElementAndValue("Permission", permission);
+				writer.WriteEndElement();
+
 			writer.WriteEndElement();
 		}
 	}
@@ -70,6 +77,7 @@ namespace TDSM_PermissionsX
 
 		public List<Group> Groups { get; set; }
 		public List<String> Permissions { get; set; }
+		public List<String> DenyPermissions { get; set; }
 		public Color Color { get; set; }
 		public bool CanBuild { get; set; }
 		public string Prefix { get; set; }
@@ -80,6 +88,7 @@ namespace TDSM_PermissionsX
 		{
 			Groups = new List<Group>();
 			Permissions = new List<String>();
+			DenyPermissions = new List<String>();
 			Color = ChatColor.White;
 			Suffix = String.Empty;
 			Prefix = String.Empty;
@@ -104,6 +113,11 @@ namespace TDSM_PermissionsX
 
 				writer.WriteStartElement("Permissions");
 					foreach (var permission in Permissions)
+						writer.WriteElementAndValue("Permission", permission);
+				writer.WriteEndElement();
+
+				writer.WriteStartElement("DenyPermissions");
+					foreach (var permission in DenyPermissions)
 						writer.WriteElementAndValue("Permission", permission);
 				writer.WriteEndElement();
 

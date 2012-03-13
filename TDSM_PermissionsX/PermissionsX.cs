@@ -289,9 +289,13 @@ namespace TDSM_PermissionsX
 			var cleanNode = node.Trim().ToLower();
 			foreach (var _group in user.Groups)
 			{
+				var groupHasDeny = (from x in _group.DenyPermissions where x.Trim().ToLower() == cleanNode || x.Trim().ToLower() == "*" select x).Count() > 0;
 				var groupHas = (from x in _group.Permissions where x.Trim().ToLower() == cleanNode || x.Trim().ToLower() == "*" select x).Count() > 0;
+				if (groupHasDeny) return false;
 				if (groupHas) return true;
 			}
+
+			if ((from x in user.DenyPermissions where x.Trim().ToLower() == cleanNode || x.Trim().ToLower() == "*" select x).Count() > 0) return false;
 
 			return (from x in user.Permissions where x.Trim().ToLower() == cleanNode || x.Trim().ToLower() == "*" select x).Count() > 0;
 		}
