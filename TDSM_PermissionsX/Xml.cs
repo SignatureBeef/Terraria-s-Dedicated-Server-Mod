@@ -351,6 +351,22 @@ namespace TDSM_PermissionsX
 			return false;
 		}
 
+		public bool AddNodeToGroup(string name, string permission)
+		{
+			var cleanPerm = permission.Trim();
+			for (var i = 0; i < Groups.Count; i++)
+			{
+				var group = Groups[i];
+				if (group.Name == name && !group.Permissions.Contains(cleanPerm))
+				{
+					Groups[i].Permissions.Add(cleanPerm);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		public bool AddGroupToUser(string name, string group)
 		{
 			var cleanGroup = group.Trim();
@@ -369,6 +385,99 @@ namespace TDSM_PermissionsX
 				}
 			}
 
+			return false;
+		}
+
+		public bool AddDeniedNodeToUser(string name, string permission)
+		{
+			var cleanPerm = permission.Trim();
+			for (var i = 0; i < Users.Count; i++)
+			{
+				var user = Users[i];
+				if (user.Name == name && !user.DenyPermissions.Contains(cleanPerm))
+				{
+					Users[i].DenyPermissions.Add(cleanPerm);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public bool AddDeniedNodeToGroup(string name, string permission)
+		{
+			var cleanPerm = permission.Trim();
+			for (var i = 0; i < Groups.Count; i++)
+			{
+				var group = Groups[i];
+				if (group.Name == name && !group.DenyPermissions.Contains(cleanPerm))
+				{
+					Groups[i].DenyPermissions.Add(cleanPerm);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public bool RemoveGroupFromUser(string name, string group)
+		{
+			var cleanGroup = group.Trim();
+			var instance = GetGroup(cleanGroup);
+			for (var i = 0; i < Users.Count; i++)
+			{
+				var user = Users[i];
+				if (user.Name == name && user.Groups.Contains(instance))
+					return Users[i].Groups.RemoveAll(x => x.Name == instance.Name) > 0;
+			}
+			return false;
+		}
+
+		public bool RemovePermissionFromUser(string name, string permission)
+		{
+			var cleanPermission = permission.Trim();
+			for (var i = 0; i < Users.Count; i++)
+			{
+				var user = Users[i];
+				if (user.Name == name && user.Permissions.Contains(cleanPermission))
+					return Users[i].Permissions.RemoveAll(x => x == cleanPermission) > 0;
+			}
+			return false;
+		}
+
+		public bool RemovePermissionFromGroup(string name, string permission)
+		{
+			var cleanPermission = permission.Trim();
+			for (var i = 0; i < Groups.Count; i++)
+			{
+				var group = Groups[i];
+				if (group.Name == name && group.Permissions.Contains(cleanPermission))
+					return Groups[i].Permissions.RemoveAll(x => x == cleanPermission) > 0;
+			}
+			return false;
+		}
+
+		public bool RemoveDeniedPermissionFromUser(string name, string permission)
+		{
+			var cleanPermission = permission.Trim();
+			for (var i = 0; i < Users.Count; i++)
+			{
+				var user = Users[i];
+				if (user.Name == name && user.DenyPermissions.Contains(cleanPermission))
+					return Users[i].DenyPermissions.RemoveAll(x => x == cleanPermission) > 0;
+			}
+			return false;
+		}
+
+		public bool RemoveDeniedPermissionFromGroup(string name, string permission)
+		{
+			var cleanPermission = permission.Trim();
+			for (var i = 0; i < Groups.Count; i++)
+			{
+				var group = Groups[i];
+				if (group.Name == name && group.DenyPermissions.Contains(cleanPermission))
+					return Groups[i].DenyPermissions.RemoveAll(x => x == cleanPermission) > 0;
+			}
 			return false;
 		}
 	}

@@ -42,24 +42,39 @@ namespace TDSM_PermissionsX
 
 		public void UserPermissions(ISender sender, ArgumentList args)
 		{
-			var addPerms = args.TryPop("addperms");
-			var addGroup = args.TryPop("addgroup");
-			var save = args.TryPop("-save");
+			var addPerms			= args.TryPop("addperms");
+			var addGroup			= args.TryPop("addgroup");
+			var denyPerms			= args.TryPop("denyperms");
+			var removeGroup			= args.TryPop("removegroup");
+			var removePerms			= args.TryPop("removeperms");
+			var removeDeniedPerms	= args.TryPop("removedenied");
+			var save				= args.TryPop("-save");
 
-			if (addPerms)
+			if (addPerms || denyPerms || removePerms || removeDeniedPerms)
 			{
 				string user, permission;
 				if (args.TryParseTwo<String, String>(out user, out permission))
 				{
-					var permissions = permission.Split(',');
+					if (!XmlParser.HasUser(user)) throw new CommandError("No user `{0}`", user);
 
-					if (!XmlParser.HasUser(user))
-						throw new CommandError("No user `{0}`", user);
+					var permissions = permission.Split(',');
+					var add = addPerms || denyPerms;
 
 					int added = 0, failed = 0;
 					foreach (var node in permissions)
 					{
-						var res = XmlParser.AddNodeToUser(user, node);
+						var res = false;
+
+						if (add)
+						{
+							if (addPerms) res = XmlParser.AddNodeToUser(user, node);
+							else res = XmlParser.AddDeniedNodeToUser(user, node);
+						}
+						else
+						{
+							if (removePerms) res = XmlParser.RemovePermissionFromUser(user, node);
+							else res = XmlParser.RemoveDeniedPermissionFromUser(user, node);
+						}
 
 						if (res) added++;
 						else failed++;
@@ -68,14 +83,14 @@ namespace TDSM_PermissionsX
 					if (save) XmlParser.Save();
 
 					sender.sendMessage(
-						String.Format("Added {0} node(s) where {1} failed.",
-							added, failed
+						String.Format("{2} {0} node(s) where {1} failed.",
+						added, failed, add ? "Added" : "Removed"
 						)
 					);
 				}
 				else throw new CommandError("User & permission node(s) expected.");
 			}
-			else if (addGroup)
+			else if (addGroup || removeGroup)
 			{
 				string user, group;
 				if (args.TryParseTwo<String, String>(out user, out group))
@@ -93,7 +108,9 @@ namespace TDSM_PermissionsX
 							continue;
 						}
 
-						var res = XmlParser.AddGroupToUser(user, node);
+						var res = false;
+						if (addGroup) res = XmlParser.AddGroupToUser(user, node);
+						else res = XmlParser.RemoveGroupFromUser(user, node);
 
 						if (res) added++;
 						else failed++;
@@ -102,8 +119,8 @@ namespace TDSM_PermissionsX
 					if (save) XmlParser.Save();
 
 					sender.sendMessage(
-						String.Format("Added {0} node(s) where {1} failed.",
-							added, failed
+						String.Format("{2} {0} node(s) where {1} failed.",
+						added, failed, addGroup ? "Added" : "Removed"
 						)
 					);
 				}
@@ -131,6 +148,57 @@ namespace TDSM_PermissionsX
 				sender.sendMessage(
 					String.Format("Definitions for `{0}` have been created.", groupName)
 				);
+			}
+			else throw new CommandError("Arguments expected.");
+		}
+
+		public void GroupPermissions(ISender sender, ArgumentList args)
+		{
+			var addPerms			= args.TryPop("addperms");
+			var denyPerms			= args.TryPop("denyperms");
+			var removePerms			= args.TryPop("removeperms");
+			var removeDeniedPerms	= args.TryPop("removedenied");
+			var save				= args.TryPop("-save");
+
+			if (addPerms || denyPerms || removePerms || removeDeniedPerms)
+			{
+				string group, permission;
+				if (args.TryParseTwo<String, String>(out group, out permission))
+				{
+					if (!XmlParser.HasGroup(group)) throw new CommandError("No group `{0}`", group);
+
+					var permissions = permission.Split(',');
+					var add = addPerms || denyPerms;
+
+					int added = 0, failed = 0;
+					foreach (var node in permissions)
+					{
+						var res = false;
+
+						if (add)
+						{
+							if (addPerms) res = XmlParser.AddNodeToGroup(group, node);
+							else res = XmlParser.AddDeniedNodeToGroup(group, node);
+						}
+						else
+						{
+							if (removePerms) res = XmlParser.RemovePermissionFromGroup(group, node);
+							else res = XmlParser.RemoveDeniedPermissionFromGroup(group, node);
+						}
+
+						if (res) added++;
+						else failed++;
+					}
+
+					if (save) XmlParser.Save();
+
+					sender.sendMessage(
+						String.Format("{2} {0} node(s) where {1} failed.",
+						added, failed, add ? "Added" : "Removed"
+						)
+					);
+				}
+				else throw new CommandError("Group & permission node(s) expected.");
 			}
 			else throw new CommandError("Arguments expected.");
 		}
