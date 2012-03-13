@@ -65,7 +65,7 @@ namespace TDSMPermissions
 			ProgramLog.Plugin.Log(base.Name + " disabled.");
         }
         
-        [Hook(HookOrder.LATE)]
+        [Hook(HookOrder.FIRST)]
         void OnChat(ref HookContext ctx, ref HookArgs.PlayerChat args)
         {
             if (ctx.Player.AuthenticatedAs != null)
