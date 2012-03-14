@@ -5,6 +5,7 @@ using System.Text;
 using Terraria_Server.Plugins;
 using Terraria_Server;
 using Terraria_Server.Commands;
+using Terraria_Server.Misc;
 
 namespace TDSM_PermissionsX
 {
@@ -42,13 +43,13 @@ namespace TDSM_PermissionsX
 
 		public void UserPermissions(ISender sender, ArgumentList args)
 		{
-			var addPerms			= args.TryPop("addperms");
-			var addGroup			= args.TryPop("addgroup");
-			var denyPerms			= args.TryPop("denyperms");
-			var removeGroup			= args.TryPop("removegroup");
-			var removePerms			= args.TryPop("removeperms");
-			var removeDeniedPerms	= args.TryPop("removedenied");
-			var save				= args.TryPop("-save");
+			var addPerms = args.TryPop("addperms");
+			var addGroup = args.TryPop("addgroup");
+			var denyPerms = args.TryPop("denyperms");
+			var removeGroup = args.TryPop("removegroup");
+			var removePerms = args.TryPop("removeperms");
+			var removeDeniedPerms = args.TryPop("removedenied");
+			var save = args.TryPop("-save");
 
 			if (addPerms || denyPerms || removePerms || removeDeniedPerms)
 			{
@@ -154,11 +155,11 @@ namespace TDSM_PermissionsX
 
 		public void GroupPermissions(ISender sender, ArgumentList args)
 		{
-			var addPerms			= args.TryPop("addperms");
-			var denyPerms			= args.TryPop("denyperms");
-			var removePerms			= args.TryPop("removeperms");
-			var removeDeniedPerms	= args.TryPop("removedenied");
-			var save				= args.TryPop("-save");
+			var addPerms = args.TryPop("addperms");
+			var denyPerms = args.TryPop("denyperms");
+			var removePerms = args.TryPop("removeperms");
+			var removeDeniedPerms = args.TryPop("removedenied");
+			var save = args.TryPop("-save");
 
 			if (addPerms || denyPerms || removePerms || removeDeniedPerms)
 			{
@@ -201,6 +202,44 @@ namespace TDSM_PermissionsX
 				else throw new CommandError("Group & permission node(s) expected.");
 			}
 			else throw new CommandError("Arguments expected.");
+		}
+
+		public void UserAttributes(ISender sender, ArgumentList args)
+		{
+			var save = args.TryPop("-save");
+			var requestedUser = args.GetString(0);
+			var attribute = args.GetString(1);
+			var value = args.GetString(2);
+
+			if (!XmlParser.HasUser(requestedUser))
+				throw new CommandError("No user `{0}`", requestedUser);
+
+			var user = XmlParser.GetUser(requestedUser);
+
+			switch (attribute.ToLower())
+			{
+				case "prefix":
+					user.Prefix = value;
+					break;
+				case "suffix":
+					user.Suffix = value;
+					break;
+				case "color":
+					Color colour;
+					if (Color.TryParseRGB(value, out colour)) user.Color = colour;
+					else throw new CommandError("Invalid color value, try `R,G,B`.");
+					break;
+				case "chatseperator":
+					user.ChatSeperator = value;
+					break;
+				case "canbuild":
+					bool canBuild;
+					if (Boolean.TryParse(value, out canBuild)) user.CanBuild = canBuild;
+					else throw new CommandError("Invalid boolean value.");
+					break;
+				default:
+					throw new CommandError("Attribute expected: prefix, suffix, color, chatseperator, canbuild.");
+			}
 		}
 	}
 }

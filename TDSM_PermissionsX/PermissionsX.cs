@@ -70,6 +70,11 @@ namespace TDSM_PermissionsX
 				.WithAccessLevel(AccessLevel.OP)
 				.WithPermissionNode("xperms.xgroup")
 				.Calls(Groups);
+
+			AddCommand("xuserattribute")
+				.WithAccessLevel(AccessLevel.OP)
+				.WithPermissionNode("xperms.xuserattribute")
+				.Calls(UserAttributes);
 		}
 
 		public void Touch()
@@ -163,7 +168,6 @@ namespace TDSM_PermissionsX
 		}
 
 		#region Permissions
-
 		public bool GetParentGroup(User user, out Group group)
 		{
 			group = default(Group);
@@ -192,6 +196,12 @@ namespace TDSM_PermissionsX
 		{
 			prefix = String.Empty;
 
+			if (user.Prefix.Length > 0)
+			{
+				prefix = user.Prefix;
+				return true;
+			}
+
 			if (XmlParser.HasDefaultGroup())
 			{
 				prefix = XmlParser.GetDefaultGroup().Prefix;
@@ -215,6 +225,12 @@ namespace TDSM_PermissionsX
 		public bool GetSuffix(User user, out string suffix)
 		{
 			suffix = String.Empty;
+
+			if (user.Suffix.Length > 0)
+			{
+				suffix = user.Suffix;
+				return true;
+			}
 
 			if (XmlParser.HasDefaultGroup())
 			{
@@ -240,6 +256,12 @@ namespace TDSM_PermissionsX
 		{
 			color = ChatColor.White;
 
+			if (user.Color != ChatColor.White)
+			{
+				color = user.Color;
+				return true;
+			}
+
 			if (XmlParser.HasDefaultGroup())
 			{
 				color = XmlParser.GetDefaultGroup().Color;
@@ -263,6 +285,12 @@ namespace TDSM_PermissionsX
 		public bool GetChatSeperator(User user, out string chatSeperator)
 		{
 			chatSeperator = " ";
+
+			if (user.ChatSeperator != chatSeperator && user.ChatSeperator != String.Empty)
+			{
+				chatSeperator = user.ChatSeperator;
+				return true;
+			}
 
 			if (XmlParser.HasDefaultGroup())
 			{
@@ -298,6 +326,15 @@ namespace TDSM_PermissionsX
 			if ((from x in user.DenyPermissions where x.Trim().ToLower() == cleanNode || x.Trim().ToLower() == "*" select x).Count() > 0) return false;
 
 			return (from x in user.Permissions where x.Trim().ToLower() == cleanNode || x.Trim().ToLower() == "*" select x).Count() > 0;
+		}
+
+		public bool CanBuild(User user)
+		{
+			if (!user.CanBuild) return false;
+
+			if ((from x in user.Groups where !x.CanBuild select x).Count() > 0) return false;
+
+			return true;
 		}
 
 		//This is what TDSM will check.

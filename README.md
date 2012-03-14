@@ -48,7 +48,7 @@ The server also allows command line arguments, We will be adding documentation t
 
 Contact
 -------------
-We have IRC channels on esper, #TDSM, #TDSMDev, #TDSMGit, #TDSMBeta.
+We have IRC channels on esper, #TDSM, #TDSMDev, #TDSMGit or you can get us over at http://tdsm.org.
 
 Developers
 =============

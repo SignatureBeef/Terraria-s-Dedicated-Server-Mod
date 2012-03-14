@@ -12,7 +12,8 @@ namespace TDSM_PermissionsX
 
 		public void pushData()
 		{
-
+			object temp = null;
+			temp = AllowRestrictAutoDownload;
 		}
 
 		public bool AllowRestrictAutoDownload
