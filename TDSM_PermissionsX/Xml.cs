@@ -322,6 +322,30 @@ namespace TDSM_PermissionsX
 			return users.ElementAt(0);
 		}
 
+		public bool UpdateDefiniton(IPermission def)
+		{
+			if (def is User)
+				for (var i = 0; i < Users.Count; i++)
+				{
+					if (Users[i].Name == def.Name)
+					{
+						Users[i] = Users[i].Merge(def);
+						return true;
+					}
+				}
+			else if (def is User)
+				for (var i = 0; i < Users.Count; i++)
+				{
+					if (Groups[i].Name == def.Name)
+					{
+						Groups[i] = Groups[i].Merge(def);
+						return true;
+					}
+				}
+
+			return false;
+		}
+
 		public bool HasDefaultGroup()
 		{
 			return (from x in Groups where x.Default select x).Count() > 0;

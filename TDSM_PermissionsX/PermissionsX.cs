@@ -75,6 +75,11 @@ namespace TDSM_PermissionsX
 				.WithAccessLevel(AccessLevel.OP)
 				.WithPermissionNode("xperms.xuserattribute")
 				.Calls(UserAttributes);
+
+			AddCommand("xgroupattribute")
+				.WithAccessLevel(AccessLevel.OP)
+				.WithPermissionNode("xperms.xgroupattribute")
+				.Calls(GroupAttributes);
 		}
 
 		public void Touch()

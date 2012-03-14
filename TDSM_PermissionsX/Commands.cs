@@ -214,27 +214,59 @@ namespace TDSM_PermissionsX
 			if (!XmlParser.HasUser(requestedUser))
 				throw new CommandError("No user `{0}`", requestedUser);
 
-			var user = XmlParser.GetUser(requestedUser);
+			IPermission user = XmlParser.GetUser(requestedUser);
 
+			SetAttribute(ref user, attribute, value);
+
+			var res = XmlParser.UpdateDefiniton(user);
+
+			sender.sendMessage(
+				String.Format("{0} updating user attribute.", res ? "Success" : "Failed")
+			);
+		}
+
+		public void GroupAttributes(ISender sender, ArgumentList args)
+		{
+			var save = args.TryPop("-save");
+			var requestedGroup = args.GetString(0);
+			var attribute = args.GetString(1);
+			var value = args.GetString(2);
+
+			if (!XmlParser.HasGroup(requestedGroup))
+				throw new CommandError("No group `{0}`", requestedGroup);
+
+			IPermission group = XmlParser.GetGroup(requestedGroup);
+
+			SetAttribute(ref group, attribute, value);
+
+			var res = XmlParser.UpdateDefiniton(group);
+
+			sender.sendMessage(
+				String.Format("{0} updating group attribute.", res ? "Success" : "Failed")
+			);
+		}
+
+		private void SetAttribute(ref IPermission def, string attribute, string value)
+		{
 			switch (attribute.ToLower())
 			{
 				case "prefix":
-					user.Prefix = value;
+					def.SetPrefix(value);
 					break;
 				case "suffix":
-					user.Suffix = value;
+					def.SetSuffix(value);
 					break;
 				case "color":
 					Color colour;
-					if (Color.TryParseRGB(value, out colour)) user.Color = colour;
+					if (Color.TryParseRGB(value, out colour)) def.SetColor(colour);
 					else throw new CommandError("Invalid color value, try `R,G,B`.");
 					break;
 				case "chatseperator":
-					user.ChatSeperator = value;
+					def.SetChatSeperator(value);
 					break;
 				case "canbuild":
 					bool canBuild;
-					if (Boolean.TryParse(value, out canBuild)) user.CanBuild = canBuild;
+					if (Boolean.TryParse(value, out canBuild)) def.SetCanBuild(canBuild);
 					else throw new CommandError("Invalid boolean value.");
 					break;
 				default:

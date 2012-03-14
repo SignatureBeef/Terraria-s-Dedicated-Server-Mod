@@ -18,6 +18,12 @@ namespace TDSM_PermissionsX
 
 		void Initialize();
 		void WriteElement(XmlTextWriter writer);
+
+		void SetSuffix(string suffix);
+		void SetPrefix(string prefix);
+		void SetChatSeperator(string chatSeperator);
+		void SetColor(Color color);
+		void SetCanBuild(bool canBuild);
 	}
 
 	public struct Group : IPermission
@@ -48,26 +54,61 @@ namespace TDSM_PermissionsX
 		{
 			writer.WriteStartElement("Group");
 
-				writer.WriteAttributeString("Name", Name);
-				writer.WriteAttributeString("Color", Color.ToParsableString());
-				writer.WriteAttributeString("Default", Default.ToString());
-				writer.WriteAttributeString("CanBuild", CanBuild.ToString());
-				writer.WriteAttributeString("Prefix", Prefix ?? String.Empty);
-				writer.WriteAttributeString("Suffix", Suffix ?? String.Empty);
-				writer.WriteAttributeString("ChatSeperator", ChatSeperator ?? " ");
-				writer.WriteAttributeString("Rank", Rank.ToString());
+			writer.WriteAttributeString("Name", Name);
+			writer.WriteAttributeString("Color", Color.ToParsableString());
+			writer.WriteAttributeString("Default", Default.ToString());
+			writer.WriteAttributeString("CanBuild", CanBuild.ToString());
+			writer.WriteAttributeString("Prefix", Prefix ?? String.Empty);
+			writer.WriteAttributeString("Suffix", Suffix ?? String.Empty);
+			writer.WriteAttributeString("ChatSeperator", ChatSeperator ?? " ");
+			writer.WriteAttributeString("Rank", Rank.ToString());
 
-				writer.WriteStartElement("Permissions");
-					foreach (var permission in Permissions)
-						writer.WriteElementAndValue("Permission", permission);
-				writer.WriteEndElement();
+			writer.WriteStartElement("Permissions");
+			foreach (var permission in Permissions)
+				writer.WriteElementAndValue("Permission", permission);
+			writer.WriteEndElement();
 
-				writer.WriteStartElement("DenyPermissions");
-					foreach (var permission in DenyPermissions)
-						writer.WriteElementAndValue("Permission", permission);
-				writer.WriteEndElement();
+			writer.WriteStartElement("DenyPermissions");
+			foreach (var permission in DenyPermissions)
+				writer.WriteElementAndValue("Permission", permission);
+			writer.WriteEndElement();
 
 			writer.WriteEndElement();
+		}
+
+		public void SetSuffix(string suffix)
+		{
+			Suffix = suffix;
+		}
+
+		public void SetPrefix(string prefix)
+		{
+			Prefix = prefix;
+		}
+
+		public void SetChatSeperator(string chatSeperator)
+		{
+			ChatSeperator = chatSeperator;
+		}
+
+		public void SetColor(Color color)
+		{
+			Color = color;
+		}
+
+		public void SetCanBuild(bool canBuild)
+		{
+			CanBuild = canBuild;
+		}
+
+		public Group Merge(IPermission def)
+		{
+			SetCanBuild(def.CanBuild);
+			SetChatSeperator(def.ChatSeperator);
+			SetColor(def.Color);
+			SetPrefix(def.Prefix);
+			SetSuffix(def.Suffix);
+			return this;
 		}
 	}
 
@@ -99,27 +140,27 @@ namespace TDSM_PermissionsX
 		{
 			writer.WriteStartElement("User");
 
-				writer.WriteAttributeString("Name", Name);
-				writer.WriteAttributeString("Color", Color.ToParsableString());
-				writer.WriteAttributeString("CanBuild", CanBuild.ToString());
-				writer.WriteAttributeString("Prefix", Prefix ?? String.Empty);
-				writer.WriteAttributeString("Suffix", Suffix ?? String.Empty);
-				writer.WriteAttributeString("ChatSeperator", ChatSeperator ?? String.Empty);
+			writer.WriteAttributeString("Name", Name);
+			writer.WriteAttributeString("Color", Color.ToParsableString());
+			writer.WriteAttributeString("CanBuild", CanBuild.ToString());
+			writer.WriteAttributeString("Prefix", Prefix ?? String.Empty);
+			writer.WriteAttributeString("Suffix", Suffix ?? String.Empty);
+			writer.WriteAttributeString("ChatSeperator", ChatSeperator ?? String.Empty);
 
-				writer.WriteStartElement("UserGroups");
-					foreach (var group in Groups)
-						writer.WriteElementAndValue("Name", Name);
-				writer.WriteEndElement();
+			writer.WriteStartElement("UserGroups");
+			foreach (var group in Groups)
+				writer.WriteElementAndValue("Name", Name);
+			writer.WriteEndElement();
 
-				writer.WriteStartElement("Permissions");
-					foreach (var permission in Permissions)
-						writer.WriteElementAndValue("Permission", permission);
-				writer.WriteEndElement();
+			writer.WriteStartElement("Permissions");
+			foreach (var permission in Permissions)
+				writer.WriteElementAndValue("Permission", permission);
+			writer.WriteEndElement();
 
-				writer.WriteStartElement("DenyPermissions");
-					foreach (var permission in DenyPermissions)
-						writer.WriteElementAndValue("Permission", permission);
-				writer.WriteEndElement();
+			writer.WriteStartElement("DenyPermissions");
+			foreach (var permission in DenyPermissions)
+				writer.WriteElementAndValue("Permission", permission);
+			writer.WriteEndElement();
 
 			writer.WriteEndElement();
 		}
@@ -127,6 +168,41 @@ namespace TDSM_PermissionsX
 		public bool HasGroup(string name)
 		{
 			return (from x in Groups where x.Name == name select x).Count() > 0;
+		}
+
+		public void SetSuffix(string suffix)
+		{
+			Suffix = suffix;
+		}
+
+		public void SetPrefix(string prefix)
+		{
+			Prefix = prefix;
+		}
+
+		public void SetChatSeperator(string chatSeperator)
+		{
+			ChatSeperator = chatSeperator;
+		}
+
+		public void SetColor(Color color)
+		{
+			Color = color;
+		}
+
+		public void SetCanBuild(bool canBuild)
+		{
+			CanBuild = canBuild;
+		}
+
+		public User Merge(IPermission def)
+		{
+			SetCanBuild(def.CanBuild);
+			SetChatSeperator(def.ChatSeperator);
+			SetColor(def.Color);
+			SetPrefix(def.Prefix);
+			SetSuffix(def.Suffix);
+			return this;
 		}
 	}
 
