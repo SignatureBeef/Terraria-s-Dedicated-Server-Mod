@@ -170,6 +170,14 @@ namespace TDSM_PermissionsX
 			return (from x in Groups where x.Name == name select x).Count() > 0;
 		}
 
+		public void UpdateGroup(Group group)
+		{
+			for (var i = 0; i < Groups.Count; i++)
+			{
+				if (Groups[i].Name == group.Name) Groups[i] = group;
+			}
+		}
+
 		public void SetSuffix(string suffix)
 		{
 			Suffix = suffix;

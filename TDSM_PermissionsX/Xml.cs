@@ -65,6 +65,7 @@ namespace TDSM_PermissionsX
 						}
 					}
 				}
+				return true;
 			}
 			catch (Exception e)
 			{
@@ -342,6 +343,8 @@ namespace TDSM_PermissionsX
 					if (Groups[i].Name == def.Name)
 					{
 						Groups[i] = Groups[i].Merge(def);
+
+						foreach (var user in Users) user.UpdateGroup(Groups[i]);
 						return true;
 					}
 				}
