@@ -59,8 +59,9 @@ namespace RestrictPlugin
 
         public Node ChestBreak;
         public Node ChestOpen;
-        public Node DoorChange;
-        public Node LiquidFlow;
+		public Node DoorChange;
+		public Node LiquidFlow;
+		public Node NpcHurt;
         public Node ProjectileUse;
         public Node SignEdit;
         public Node WorldAlter;
@@ -164,6 +165,7 @@ namespace RestrictPlugin
             ChestOpen       = AddAndCreateNode("restrict.chestopen");
             DoorChange      = AddAndCreateNode("restrict.doorchange");
             LiquidFlow      = AddAndCreateNode("restrict.liquidflow");
+            NpcHurt			= AddAndCreateNode("restrict.npchurt");
             ProjectileUse   = AddAndCreateNode("restrict.projectileuse");
             SignEdit        = AddAndCreateNode("restrict.signedit");
             WorldAlter      = AddAndCreateNode("restrict.worldalter");
@@ -567,7 +569,7 @@ namespace RestrictPlugin
 				player.sendMessage("<Restrict> You are not allowed to hurt NPCs as a guest.");
 				player.sendMessage("<Restrict> Type \"/reg password\" to request registration.");
 			}
-			else if (IsRestrictedForUser(ctx.Player, DoorChange))
+			else if (IsRestrictedForUser(ctx.Player, NpcHurt))
 			{
 				ctx.SetResult(HookResult.IGNORE);
 				player.sendMessage("<Restrict> You are not allowed to hurt NPCs without permissions.");

@@ -13,6 +13,10 @@ DEL "Release\TDSMPermissions.dll"
 DEL "Release\TDSMPermissions.pdb"
 DEL "Release\TDSMPermissions.mdb"
 
+DEL "Release\TDSM_PermissionsX.dll"
+DEL "Release\TDSM_PermissionsX.pdb"
+DEL "Release\TDSM_PermissionsX.mdb"
+
 DEL "Release\Regions.dll"
 DEL "Release\Regions.pdb"
 DEL "Release\Regions.mdb"
@@ -26,6 +30,9 @@ copy "..\Restrict\bin\Release\RestrictPlugin.pdb" "Release\RestrictPlugin.pdb"
 
 copy "..\TDSMPermissions\TDSMPermissions\bin\Release\TDSMPermissions.dll" "Release\TDSMPermissions.dll"
 copy "..\TDSMPermissions\TDSMPermissions\bin\Release\TDSMPermissions.pdb" "Release\TDSMPermissions.pdb"
+
+copy "..\TDSM_PermissionsX\bin\Release\TDSM_PermissionsX.dll" "Release\TDSM_PermissionsX.dll"
+copy "..\TDSM_PermissionsX\bin\Release\TDSM_PermissionsX.pdb" "Release\TDSM_PermissionsX.pdb"
 
 copy "..\Regions\bin\Release\Regions.dll" "Release\Regions.dll"
 copy "..\Regions\bin\Release\Regions.pdb" "Release\Regions.pdb"
@@ -43,6 +50,8 @@ C:/PROGRA~1/MONO-2~1.8/bin/mono C:/PROGRA~1/MONO-2~1.8/lib/mono/4.0/pdb2mdb.exe 
 C:/PROGRA~1/MONO-2~1.8/bin/mono C:/PROGRA~1/MONO-2~1.8/lib/mono/4.0/pdb2mdb.exe "RestrictPlugin.dll"
 
 C:/PROGRA~1/MONO-2~1.8/bin/mono C:/PROGRA~1/MONO-2~1.8/lib/mono/4.0/pdb2mdb.exe "TDSMPermissions.dll"
+
+C:/PROGRA~1/MONO-2~1.8/bin/mono C:/PROGRA~1/MONO-2~1.8/lib/mono/4.0/pdb2mdb.exe "TDSM_PermissionsX.dll"
 
 cd ..
 :PAUSE

@@ -20,7 +20,10 @@ namespace TDSM_PermissionsX
 			if (add)
 			{
 				var username = args.GetString(0);
-				var user = Server.GetPlayerByName(username);
+				Player user = null;
+				var matches = Server.FindPlayerByPart(username);
+				if (matches.Count == 1)
+					user = matches.ToArray()[0];
 
 				if (user == null && !forced)
 					throw new CommandError("No online player found, Use -f if you know for certain that the name is correct.");
@@ -38,7 +41,7 @@ namespace TDSM_PermissionsX
 					String.Format("Definitions for `{0}` have been created.", trueUser)
 				);
 			}
-			else throw new CommandError("Arguments expected.");
+			else throw new CommandError("Arguments expected - xuser adduser [-f -save] username");
 		}
 
 		public void UserPermissions(ISender sender, ArgumentList args)
@@ -243,6 +246,21 @@ namespace TDSM_PermissionsX
 
 			sender.sendMessage(
 				String.Format("{0} updating group attribute.", res ? "Success" : "Failed")
+			);
+		}
+
+		public void Management(ISender sender, ArgumentList args)
+		{
+			var save = args.TryPop("save");
+			var reload = args.TryPop("reload");
+			var res = false;
+
+			if (save) res = XmlParser.Save();
+			else if (reload) res = XmlParser.Load();
+			else throw new CommandError("Arguments expected.");
+
+			sender.sendMessage(
+				String.Format("{0} {1}.", res ? "Success" : "Failure", save ? "saving" : "loading")
 			);
 		}
 

@@ -71,6 +71,11 @@ namespace TDSM_PermissionsX
 				.WithPermissionNode("xperms.xgroup")
 				.Calls(Groups);
 
+			AddCommand("xgroupperms")
+				.WithAccessLevel(AccessLevel.OP)
+				.WithPermissionNode("xperms.xgroupperms")
+				.Calls(GroupPermissions);
+
 			AddCommand("xuserattribute")
 				.WithAccessLevel(AccessLevel.OP)
 				.WithPermissionNode("xperms.xuserattribute")
@@ -80,6 +85,11 @@ namespace TDSM_PermissionsX
 				.WithAccessLevel(AccessLevel.OP)
 				.WithPermissionNode("xperms.xgroupattribute")
 				.Calls(GroupAttributes);
+
+			AddCommand("xmanagement")
+				.WithAccessLevel(AccessLevel.OP)
+				.WithPermissionNode("xperms.xmanagement")
+				.Calls(Management);
 		}
 
 		public void Touch()
@@ -131,6 +141,22 @@ namespace TDSM_PermissionsX
 					Server.notifyAll(
 						String.Concat(prefix, ctx.Player.Name, chatSeperator, args.Message, suffix)
 						, args.Color
+					);
+				}
+				else if (XmlParser.HasDefaultGroup())
+				{
+					var defaultGroup = XmlParser.GetDefaultGroup();
+
+					ctx.SetResult(HookResult.IGNORE);
+					Server.notifyAll(
+						String.Concat
+							(
+								defaultGroup.Prefix,
+								ctx.Player.Name,
+								defaultGroup.ChatSeperator, args.Message,
+								defaultGroup.Suffix
+							)
+						, defaultGroup.Color
 					);
 				}
 			}
@@ -289,7 +315,7 @@ namespace TDSM_PermissionsX
 
 		public bool GetChatSeperator(User user, out string chatSeperator)
 		{
-			chatSeperator = " ";
+			chatSeperator = ": ";
 
 			if (user.ChatSeperator != chatSeperator && user.ChatSeperator != String.Empty)
 			{
@@ -338,6 +364,23 @@ namespace TDSM_PermissionsX
 			if (!user.CanBuild) return false;
 
 			if ((from x in user.Groups where !x.CanBuild select x).Count() > 0) return false;
+
+			return true;
+		}
+
+		public bool CanBuild(string username)
+		{
+			if (XmlParser.HasUser(username))
+			{
+				var user = XmlParser.GetUser(username);
+				return CanBuild(user);
+			}
+
+			if (XmlParser.HasDefaultGroup())
+			{
+				var group = XmlParser.GetDefaultGroup();
+				return group.CanBuild;
+			}
 
 			return true;
 		}

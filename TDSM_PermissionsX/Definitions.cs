@@ -47,7 +47,7 @@ namespace TDSM_PermissionsX
 			Color = ChatColor.White;
 			Suffix = String.Empty;
 			Prefix = String.Empty;
-			ChatSeperator = " ";
+			ChatSeperator = ": ";
 		}
 
 		public void WriteElement(XmlTextWriter writer)
@@ -133,7 +133,7 @@ namespace TDSM_PermissionsX
 			Color = ChatColor.White;
 			Suffix = String.Empty;
 			Prefix = String.Empty;
-			ChatSeperator = String.Empty;
+			ChatSeperator = ": ";
 		}
 
 		public void WriteElement(XmlTextWriter writer)
