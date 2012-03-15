@@ -33,6 +33,9 @@ namespace TDSM_PermissionsX
 			{
 				if (!File.Exists(_fileLocation)) return false; // File.Create(_fileLocation).Close();
 
+				Groups.Clear();
+				Users.Clear();
+
 				using (var reader = new XmlTextReader(_fileLocation))
 				{
 					var doc = new XmlDocument();
@@ -333,8 +336,8 @@ namespace TDSM_PermissionsX
 						return true;
 					}
 				}
-			else if (def is User)
-				for (var i = 0; i < Users.Count; i++)
+			else if (def is Group)
+				for (var i = 0; i < Groups.Count; i++)
 				{
 					if (Groups[i].Name == def.Name)
 					{

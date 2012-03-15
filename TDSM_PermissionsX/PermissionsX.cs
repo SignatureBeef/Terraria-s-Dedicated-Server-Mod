@@ -203,20 +203,20 @@ namespace TDSM_PermissionsX
 		{
 			group = default(Group);
 
+			int rank = -1;
+			foreach (var userGroup in user.Groups)
+			{
+				if (userGroup.Rank > rank)
+				{
+					group = userGroup;
+					rank = userGroup.Rank;
+				}
+			}
+			if (rank != -1) return true;
+
 			if (XmlParser.HasDefaultGroup())
 			{
 				group = XmlParser.GetDefaultGroup();
-
-				int rank = -1;
-				foreach (var userGroup in user.Groups)
-				{
-					if (userGroup.Rank > rank)
-					{
-						group = userGroup;
-						rank = userGroup.Rank;
-					}
-				}
-
 				return true;
 			}
 
@@ -233,20 +233,20 @@ namespace TDSM_PermissionsX
 				return true;
 			}
 
+			int rank = -1;
+			foreach (var userGroup in user.Groups)
+			{
+				if (userGroup.Rank > rank)
+				{
+					prefix = userGroup.Prefix;
+					rank = userGroup.Rank;
+				}
+			}
+			if (rank != -1) return true;
+
 			if (XmlParser.HasDefaultGroup())
 			{
 				prefix = XmlParser.GetDefaultGroup().Prefix;
-
-				int rank = -1;
-				foreach (var userGroup in user.Groups)
-				{
-					if (userGroup.Rank > rank)
-					{
-						prefix = userGroup.Prefix;
-						rank = userGroup.Rank;
-					}
-				}
-
 				return true;
 			}
 
@@ -263,20 +263,20 @@ namespace TDSM_PermissionsX
 				return true;
 			}
 
+			int rank = -1;
+			foreach (var userGroup in user.Groups)
+			{
+				if (userGroup.Rank > rank)
+				{
+					suffix = userGroup.Suffix;
+					rank = userGroup.Rank;
+				}
+			}
+			if (rank != -1) return true;
+
 			if (XmlParser.HasDefaultGroup())
 			{
 				suffix = XmlParser.GetDefaultGroup().Suffix;
-
-				int rank = -1;
-				foreach (var userGroup in user.Groups)
-				{
-					if (userGroup.Rank > rank)
-					{
-						suffix = userGroup.Suffix;
-						rank = userGroup.Rank;
-					}
-				}
-
 				return true;
 			}
 
@@ -293,19 +293,20 @@ namespace TDSM_PermissionsX
 				return true;
 			}
 
+			int rank = -1;
+			foreach (var userGroup in user.Groups)
+			{
+				if (userGroup.Rank > rank)
+				{
+					color = userGroup.Color;
+					rank = userGroup.Rank;
+				}
+			}
+			if (rank != -1) return true;
+
 			if (XmlParser.HasDefaultGroup())
 			{
 				color = XmlParser.GetDefaultGroup().Color;
-
-				int rank = -1;
-				foreach (var userGroup in user.Groups)
-				{
-					if (userGroup.Rank > rank)
-					{
-						color = userGroup.Color;
-						rank = userGroup.Rank;
-					}
-				}
 
 				return true;
 			}
@@ -323,20 +324,20 @@ namespace TDSM_PermissionsX
 				return true;
 			}
 
+			int rank = -1;
+			foreach (var userGroup in user.Groups)
+			{
+				if (userGroup.Rank > rank)
+				{
+					chatSeperator = userGroup.ChatSeperator;
+					rank = userGroup.Rank;
+				}
+			}
+			if (rank != -1) return true;
+
 			if (XmlParser.HasDefaultGroup())
 			{
 				chatSeperator = XmlParser.GetDefaultGroup().ChatSeperator;
-
-				int rank = -1;
-				foreach (var userGroup in user.Groups)
-				{
-					if (userGroup.Rank > rank)
-					{
-						chatSeperator = userGroup.ChatSeperator;
-						rank = userGroup.Rank;
-					}
-				}
-
 				return true;
 			}
 

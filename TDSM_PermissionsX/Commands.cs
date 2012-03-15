@@ -223,6 +223,8 @@ namespace TDSM_PermissionsX
 
 			var res = XmlParser.UpdateDefiniton(user);
 
+			if (save) XmlParser.Save();
+
 			sender.sendMessage(
 				String.Format("{0} updating user attribute.", res ? "Success" : "Failed")
 			);
@@ -243,6 +245,8 @@ namespace TDSM_PermissionsX
 			SetAttribute(ref group, attribute, value);
 
 			var res = XmlParser.UpdateDefiniton(group);
+
+			if (save) XmlParser.Save();
 
 			sender.sendMessage(
 				String.Format("{0} updating group attribute.", res ? "Success" : "Failed")

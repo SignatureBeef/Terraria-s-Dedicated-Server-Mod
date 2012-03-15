@@ -149,7 +149,7 @@ namespace TDSM_PermissionsX
 
 			writer.WriteStartElement("UserGroups");
 			foreach (var group in Groups)
-				writer.WriteElementAndValue("Name", Name);
+				writer.WriteElementAndValue("Name", group.Name);
 			writer.WriteEndElement();
 
 			writer.WriteStartElement("Permissions");
