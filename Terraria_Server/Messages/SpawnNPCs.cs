@@ -52,7 +52,7 @@ namespace Terraria_Server.Messages
 					{
 						/* Checks if out of time, While also, if npc's are purged, check if are summoned, or is a Invasion. */
 
-						if ((DateTime.Now - record.Time).TotalSeconds >= MIN_WAIT && (NPC.IsNPCSummoned(typeOrInvasion) ||
+						if ((DateTime.Now - record.Time).TotalSeconds <= MIN_WAIT && (NPC.IsNPCSummoned(typeOrInvasion) ||
 							(typeOrInvasion == -1 || typeOrInvasion == -2 && Main.IsInvasionOccurring(typeOrInvasion, true))))
 						{
 							player.Kick("SpawnNPC packet abuse!");
