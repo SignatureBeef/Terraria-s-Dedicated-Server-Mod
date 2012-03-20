@@ -983,7 +983,7 @@ namespace Terraria_Server
 
 					try
 					{
-						projectile[i].Update(null, null, i);
+						projectile[i].Update(Terraria_Server.Messages.TileBreakMessage.staticEditor.ITileAt, Terraria_Server.Messages.TileBreakMessage.staticEditor.Sandbox, i);
 					}
 					catch (Exception e)
 					{

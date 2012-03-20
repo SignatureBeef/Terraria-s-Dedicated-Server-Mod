@@ -3616,7 +3616,7 @@ namespace Terraria_Server
 				// }
 			}
 			this.Active = false;
-			Reset(whoAmI);
+			//Reset(whoAmI);
 		}
 
 		static Dictionary<int, int> identityMap = new Dictionary<int, int>();
@@ -3657,6 +3657,11 @@ namespace Terraria_Server
 						ProgramLog.Error.Log("Mismatch in projectile slot assignment.");
 				}
 			}
+		}
+
+		public void Reset()
+		{
+			Reset(whoAmI);
 		}
 
 		public static void Register(int identity, int owner, int whoAmI)

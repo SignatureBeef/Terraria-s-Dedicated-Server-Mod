@@ -31,3 +31,4 @@ Build 38
 	- TDSM Permissions (Both) - Chat hook is now early for chat plugins to take over.
 	- Restrics Npc Permission node will now work.
 	- NPC Housing
+	- Item animations (Projectiles) not being reset on occasions.
