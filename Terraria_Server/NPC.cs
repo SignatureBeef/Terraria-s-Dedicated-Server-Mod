@@ -338,6 +338,9 @@ namespace Terraria_Server
 		[DontClone]
 		public int whoAmI;
 
+		[DontClone]
+		public bool MadeSpawn;
+
 		/// <summary>
 		/// NPC Constructor.  Sets many defaults
 		/// </summary>
@@ -346,7 +349,7 @@ namespace Terraria_Server
 			homeTileX = -1;
 			homeTileY = -1;
 			knockBackResist = 1f;
-			Name = "";
+			Name = String.Empty;
 			oldTarget = target;
 			scale = 1f;
 			slots = 1f;
@@ -1799,6 +1802,8 @@ namespace Terraria_Server
 			npc.Active = true;
 			npc.timeLeft = (int)((double)NPC.ACTIVE_TIME * 1.25);
 			npc.wet = Collision.WetCollision(npc.Position, npc.Width, npc.Height);
+
+			npc.MadeSpawn = makespawn;
 
 			Main.npcs[npcIndex] = npc;
 
@@ -5079,7 +5084,8 @@ namespace Terraria_Server
 					{
 						num98 = 92;
 					}
-					int num99 = NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height), num98, npc.whoAmI);
+					int num99 = NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), 
+						(int)(npc.Position.Y + (float)npc.Height), num98, npc.whoAmI, true);
 					Main.npcs[num99].ai[3] = (float)npc.whoAmI;
 					Main.npcs[num99].realLife = npc.whoAmI;
 					Main.npcs[num99].ai[1] = (float)num96;
@@ -5128,7 +5134,8 @@ namespace Terraria_Server
 					{
 						npc.ai[2] = (float)Main.rand.Next(3, 6);
 					}
-					npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height), (int)npc.type + 1, npc.whoAmI);
+					npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height),
+						(int)npc.type + 1, npc.whoAmI, true);
 				}
 				else
 				{
@@ -5136,11 +5143,13 @@ namespace Terraria_Server
 						npc.type == NPCType.N40_BONE_SERPENT_BODY || npc.type == NPCType.N96_DIGGER_BODY || npc.type == NPCType.N99_SEEKER_BODY ||
 						npc.type == NPCType.N118_LEECH_BODY) && npc.ai[2] > 0f)
 					{
-						npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height), (int)npc.type, npc.whoAmI);
+						npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height),
+							(int)npc.type, npc.whoAmI, true);
 					}
 					else
 					{
-						npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height), (int)npc.type + 1, npc.whoAmI);
+						npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height),
+							(int)npc.type + 1, npc.whoAmI, true);
 					}
 				}
 				if (npc.type < NPCType.N13_EATER_OF_WORLDS_HEAD || npc.type > NPCType.N15_EATER_OF_WORLDS_TAIL)
@@ -5495,7 +5504,7 @@ namespace Terraria_Server
 							flag13 = false;
 						}
 					}
-					if (flag13)
+					if (flag13 & !npc.MadeSpawn)
 					{
 						if ((double)(npc.Position.Y / 16f) > (Main.rockLayer + (double)Main.maxTilesY) / 2.0)
 						{
