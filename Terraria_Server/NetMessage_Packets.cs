@@ -494,17 +494,18 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		public void SynchBegin (int foo, int bar)
+		public void SynchBegin (int playerId, int active)
 		{
 			Header (Packet.SYNCH_BEGIN, 2);
-			
-			Byte (foo);
-			Byte (bar);
+
+			Byte(playerId);
+			Byte(active);
 		}
 		
 		public void UpdatePlayers ()
 		{
-			Header (Packet.UPDATE_PLAYERS, 0);
+			//Header (Packet.UPDATE_PLAYERS, 0);
+			throw new NotImplementedException("NetMessage.UpdatePlayers()");
 		}
 		
 		public void PlayerHealthUpdate (int playerId)
@@ -518,7 +519,7 @@ namespace Terraria_Server
 			Short (player.statLifeMax);
 		}
 		
-		public void TileBreak (int tileAction, int x, int y, int tileType = 0, int number5 = 0)
+		public void TileBreak (int tileAction, int x, int y, int tileType = 0, int style = 0)
 		{
 			Header (Packet.TILE_BREAK, 11);
 			
@@ -526,7 +527,7 @@ namespace Terraria_Server
 			Int (x);
 			Int (y);
 			Byte (tileType);
-			Byte (number5);
+			Byte (style);
 		}
 		
 		public void TimeSunMoonUpdate ()

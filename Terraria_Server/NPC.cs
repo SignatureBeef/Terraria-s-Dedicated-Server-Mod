@@ -12026,7 +12026,7 @@ namespace Terraria_Server
 			for (int i = 0; i < Main.npcs.Length; i++)
 			{
 				NPC npc = Main.npcs[i];
-				if (npc != null && npc.Active && npc.whoAmI == Id)
+				if (npc != null && npc.Active && npc.Type == Id)
 					return true;
 			}
 			return false;

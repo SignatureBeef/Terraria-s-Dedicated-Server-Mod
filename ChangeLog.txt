@@ -32,3 +32,4 @@ Build 38
 	- Restrics Npc Permission node will now work.
 	- NPC Housing
 	- Item animations (Projectiles) not being reset on occasions.
+	- Work on the Wiki Protocol Documentation
