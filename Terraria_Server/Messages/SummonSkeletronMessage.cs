@@ -45,9 +45,9 @@ namespace Terraria_Server.Messages
 				if (ctx.CheckForKick () || ctx.Result == HookResult.IGNORE)
 					return;
 				
-				ProgramLog.Users.Log ("{0} @ {1}: Skeletron summoned by {2}.", player.IPAddress, whoAmI, player.Name);
-				NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (player.Name, " has summoned Skeletron!"), 255, 255, 128, 150);
-                NPC.SpawnSkeletron();
+				//ProgramLog.Users.Log ("{0} @ {1}: Skeletron summoned by {2}.", player.IPAddress, whoAmI, player.Name);
+				//NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (player.Name, " has summoned Skeletron!"), 255, 255, 128, 150);
+                NPC.SpawnSkeletron(player);
             }
             else if (action == 2)
             {

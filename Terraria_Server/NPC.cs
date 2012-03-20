@@ -1665,27 +1665,67 @@ namespace Terraria_Server
 			}
 			if (flag)
 			{
-				int npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, Type, 1, makespawn);
-				if (npcIndex == 200)
-					return;
-
-				Main.npcs[npcIndex].target = playerIndex;
-				Main.npcs[npcIndex].timeLeft *= 20;
-
-				string npcName = Main.npcs[npcIndex].Name;
-				if (!String.IsNullOrEmpty(Main.npcs[npcIndex].DisplayName))
-					npcName = Main.npcs[npcIndex].DisplayName;
-
-				if (npcIndex < 200)
-					NetMessage.SendData(23, -1, -1, "", npcIndex);
-
-				if (Type == (int)NPCType.N125_RETINAZER)
+				var player = Main.players[playerIndex];
+				var ctx = new HookContext
 				{
-					NetMessage.SendData(25, -1, -1, "The Twins have awoken!", 255, 175f, 75f, 255f);
+					Connection = player.Connection,
+					Sender = player,
+					Player = player,
+				};
+
+				var args = new HookArgs.PlayerTriggeredEvent
+				{
+					X = x,
+					Y = y,
+					Type = WorldEventType.BOSS,
+					Name = ((NPCType)Type).ToString()
+				};
+
+				HookPoints.PlayerTriggeredEvent.Invoke(ref ctx, ref args);
+
+				if (ctx.CheckForKick())
 					return;
+				else if (ctx.Result != HookResult.IGNORE)
+				{
+					int npcIndex = NPC.NewNPC(x * 16 + 8, y * 16, Type, 1, makespawn);
+					if (npcIndex == 200)
+						return;
+
+					Main.npcs[npcIndex].target = playerIndex;
+					Main.npcs[npcIndex].timeLeft *= 20;
+
+					string npcName = Main.npcs[npcIndex].Name;
+					if (!String.IsNullOrEmpty(Main.npcs[npcIndex].DisplayName))
+						npcName = Main.npcs[npcIndex].DisplayName;
+
+					if (npcIndex < 200)
+						NetMessage.SendData(23, -1, -1, String.Empty, npcIndex);
+
+					/*if (Type == (int)NPCType.N125_RETINAZER)
+					{
+						NetMessage.SendData(25, -1, -1, "The Twins have awoken!", 255, 175f, 75f, 255f);
+						return;
+					}
+					else if (Type != (int)NPCType.N82_WRAITH && Type != (int)NPCType.N126_SPAZMATISM && Type != (int)NPCType.N50_KING_SLIME)
+						NetMessage.SendData(25, -1, -1, npcName + " has awoken!", 255, 175f, 75f, 255f);*/
+
+					if (Type != (int)NPCType.N82_WRAITH && Type != (int)NPCType.N126_SPAZMATISM && Type != (int)NPCType.N50_KING_SLIME)
+					{
+						if (Type == (int)NPCType.N125_RETINAZER)
+						{
+							npcName = "The Twins";
+							ProgramLog.Users.Log("{0} @ {1}: {3} summoned by {2}.", player.IPAddress, player.whoAmi, player.Name, npcName);
+
+							var twinsMessage = String.Format("{0} have been awoken by {1}", npcName, player.Name);
+							NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, twinsMessage, 255, 255, 128, 150);
+						}
+
+						ProgramLog.Users.Log("{0} @ {1}: {3} summoned by {2}.", player.IPAddress, player.whoAmi, player.Name, npcName);
+
+						var bossMessage = String.Format("{0} has summoned the {1}!", player.Name, npcName);
+						NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, bossMessage, 255, 255, 128, 150);
+					}
 				}
-				else if (Type != (int)NPCType.N82_WRAITH && Type != (int)NPCType.N126_SPAZMATISM && Type != (int)NPCType.N50_KING_SLIME)
-					NetMessage.SendData(25, -1, -1, npcName + " has awoken!", 255, 175f, 75f, 255f);
 			}
 		}
 
@@ -2525,7 +2565,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Method used to spawn Skeletron
 		/// </summary>
-		public static void SpawnSkeletron()
+		public static void SpawnSkeletron(Player player)
 		{
 			if (Main.stopSpawns)
 				return;
@@ -2560,7 +2600,10 @@ namespace Terraria_Server
 			{
 				int npcIndex = NPC.NewNPC((int)vector.X + width / 2, (int)vector.Y + height / 2, 35, 0);
 				Main.npcs[npcIndex].netUpdate = true;
-				NetMessage.SendData(25, -1, -1, "Skeletron has awoken!", 255, 175f, 75f, 255f);
+				//NetMessage.SendData(25, -1, -1, "Skeletron has awoken!", 255, 175f, 75f, 255f);
+				ProgramLog.Users.Log("{0} @ {1}: Skeletron summoned by {2}.", player.IPAddress, player.whoAmi, player.Name);
+				NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, String.Concat(player.Name, " has awoken Skeletron!"), 255, 255, 128, 150);
+							
 			}
 		}
 
@@ -5084,7 +5127,7 @@ namespace Terraria_Server
 					{
 						num98 = 92;
 					}
-					int num99 = NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), 
+					int num99 = NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)),
 						(int)(npc.Position.Y + (float)npc.Height), num98, npc.whoAmI, true);
 					Main.npcs[num99].ai[3] = (float)npc.whoAmI;
 					Main.npcs[num99].realLife = npc.whoAmI;

@@ -629,16 +629,16 @@ namespace Terraria_Server
 				if (WorldModify.spawnEye)
 					if (Time > 4860.0)
 					{
-						int count = 0;
+						//int count = 0;
 						foreach (Player player in players)
 						{
 							if (player.Active && !player.dead && (double)player.Position.Y < worldSurface * 16.0)
 							{
-								NPC.SpawnOnPlayer(count, 4);
+								NPC.SpawnOnPlayer(player.whoAmi, 4);
 								WorldModify.spawnEye = false;
 								break;
 							}
-							count++;
+							//count++;
 						}
 					}
 

@@ -499,18 +499,19 @@ namespace Terraria_Server.WorldMod
 								float num4 = (float)(num * 16);
 								float num5 = (float)(num2 * 16);
 								float num6 = -1f;
-								int num7 = 0;
+								int playerId = 0;
 								for (int k = 0; k < 255; k++)
 								{
 									float num8 = Math.Abs(Main.players[k].Position.X - num4) + Math.Abs(Main.players[k].Position.Y - num5);
 									if (num8 < num6 || num6 == -1f)
 									{
-										num7 = 0;
+										playerId = 0;
 										num6 = num8;
 									}
 								}
-								if (Main.players[num7].zoneEvil)
-									NPC.SpawnOnPlayer(num7, 13);
+								var player = Main.players[playerId];
+								if (player.zoneEvil)
+									NPC.SpawnOnPlayer(playerId, (int)NPCType.N13_EATER_OF_WORLDS_HEAD);
 							}
 							else
 							{
@@ -14764,7 +14765,9 @@ namespace Terraria_Server.WorldMod
 			int num10 = Main.rand.Next(2) + 1;
 			for (int k = 0; k < num10; k++)
 			{
-				NPC.SpawnOnPlayer((int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16), 82);
+				var playerId = (int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16);
+				var player = Main.players[playerId];
+				NPC.SpawnOnPlayer(playerId, (int)NPCType.N82_WRAITH);
 			}
 
 			altarCount++;

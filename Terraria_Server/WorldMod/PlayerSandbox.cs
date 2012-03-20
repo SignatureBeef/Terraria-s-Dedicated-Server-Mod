@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Terraria_Server.Plugins;
 using Terraria_Server.Logging;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Server.WorldMod
 {
@@ -99,9 +100,9 @@ namespace Terraria_Server.WorldMod
 							
 							if (!ctx.CheckForKick () && ctx.Result != HookResult.IGNORE)
 							{
-								ProgramLog.Users.Log ("{0} @ {1}: Eater of Worlds summoned by {2}.", player.IPAddress, player.whoAmi, player.Name);
-								NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (player.Name, " has summoned the Eater of Worlds!"), 255, 255, 128, 150);
-								NPC.SpawnOnPlayer(player.whoAmi, 13);
+								//ProgramLog.Users.Log ("{0} @ {1}: Eater of Worlds summoned by {2}.", player.IPAddress, player.whoAmi, player.Name);
+								//NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (player.Name, " has summoned the Eater of Worlds!"), 255, 255, 128, 150);
+								NPC.SpawnOnPlayer(player.whoAmi, (int)NPCType.N13_EATER_OF_WORLDS_HEAD);
 							}
 						}
 						else
