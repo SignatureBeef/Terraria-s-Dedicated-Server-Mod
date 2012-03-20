@@ -709,7 +709,7 @@ namespace Terraria_Server
 
 		public void SyncAllNPCHomes()
 		{
-			for (int npcIndex = 0; npcIndex < 200; npcIndex++)
+			for (int npcIndex = 0; npcIndex < Main.npcs.Length; npcIndex++)
 			{
 				var npc = Main.npcs[npcIndex];
 				if (npc.Active && npc.townNPC && NPC.TypeToNum(npc.Type) != -1)

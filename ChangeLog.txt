@@ -30,3 +30,4 @@ Build 38
 	- Backup manager - Automatic or command
 	- TDSM Permissions (Both) - Chat hook is now early for chat plugins to take over.
 	- Restrics Npc Permission node will now work.
+	- NPC Housing

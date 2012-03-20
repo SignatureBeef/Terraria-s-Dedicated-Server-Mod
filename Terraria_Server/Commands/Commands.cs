@@ -1218,8 +1218,10 @@ namespace Terraria_Server.Commands
 			bool EyeOC = args.TryPop("eye");
 			bool Skeletron = args.TryPop("skeletron");
 			bool KingSlime = args.TryPop("kingslime");
-			bool Twins = args.TryPop("-twins");
-			bool Wof = args.TryPop("-wof");
+			bool Twins = args.TryPop("twins");
+			bool Wof = args.TryPop("wof");
+			bool Destroyer = args.TryPop("destroyer");
+			bool Prime = args.TryPop("prime");
 			bool All = args.TryPop("-all");
 			bool NightOverride = args.TryPop("-night");
 
@@ -1245,7 +1247,7 @@ namespace Terraria_Server.Commands
 
 			List<Int32> bosses = new List<Int32>();
 
-			if (EyeOC || Twins || All)
+			if (EyeOC || Twins || All || Prime || Skeletron | Destroyer)
 			{
 				if (Main.dayTime && !NightOverride)
 					throw new CommandError(Languages.NeedsToBeNightTime);
@@ -1261,6 +1263,8 @@ namespace Terraria_Server.Commands
 			if (EoW || All) bosses.Add((int)NPCType.N13_EATER_OF_WORLDS_HEAD);
 			if (Twins || All) { bosses.Add((int)NPCType.N125_RETINAZER); bosses.Add((int)NPCType.N126_SPAZMATISM); }
 			if ((Wof || All) && !wofSummoned) bosses.Add((int)NPCType.N113_WALL_OF_FLESH);
+			if (Destroyer || All) bosses.Add((int)NPCType.N134_THE_DESTROYER);
+			if (Prime || All) bosses.Add((int)NPCType.N127_SKELETRON_PRIME);
 
 			if (bosses.Count > 0)
 			{
