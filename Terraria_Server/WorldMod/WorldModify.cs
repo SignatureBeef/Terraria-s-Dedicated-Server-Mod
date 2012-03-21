@@ -135,9 +135,7 @@ namespace Terraria_Server.WorldMod
 			if (sandbox != null)
 				sandbox.NewItem(X, Y, Width, Height, type, stack, noBroadcast, pfix, NetID);
 			else
-			{
 				return Item.NewItem(X, Y, Width, Height, type, stack, noBroadcast, pfix, NetID);
-			}
 
 			return 0;
 		}
@@ -8609,7 +8607,7 @@ namespace Terraria_Server.WorldMod
 										{
 											if (repeat && grassSpread < 1000)
 											{
-												WorldModify.grassSpread++;
+												grassSpread++;
 												SpreadGrass(TileRefs, m, n, dirt, grass, true);
 												grassSpread--;
 											}

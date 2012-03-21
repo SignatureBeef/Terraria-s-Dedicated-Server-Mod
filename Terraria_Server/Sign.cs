@@ -65,6 +65,7 @@ namespace Terraria_Server
             }
             return num4;
         }
+
         public static void TextSign(int i, string text)
         {
             if (!Main.tile.At(Main.sign[i].x, Main.sign[i].y).Active || (Main.tile.At(Main.sign[i].x, Main.sign[i].y).Type != 55 && Main.tile.At(Main.sign[i].x, Main.sign[i].y).Type != 85))

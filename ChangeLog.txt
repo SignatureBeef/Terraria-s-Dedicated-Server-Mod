@@ -34,3 +34,5 @@ Build 38
 	- Item animations (Projectiles) not being reset on occasions.
 	- Work on the Wiki Protocol Documentation
 	- Added a hook for plugins to change where players spawn upon connection
+	- Fixed a few boss messages being repeated
+	- Fixed an issue where new town npcs (1.1.1/1.1.2) try to continuously move in

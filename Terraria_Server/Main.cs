@@ -399,13 +399,13 @@ namespace Terraria_Server
 			var info = String.Empty;
 			var type = (invasionType == InvasionType.FROST_LEGION) ? "The Frost Legion" : "A goblin army";
 
-			if (Main.invasionSize <= 0)
+			if (invasionSize <= 0)
 				info = type + " has been defeated!";
-			else if (Main.invasionX < (double)Main.spawnTileX)
+			else if (invasionX < (double)spawnTileX)
 				info = type + " is approaching from the west!";
-			else if (Main.invasionX > (double)Main.spawnTileX)
+			else if (invasionX > (double)spawnTileX)
 				info = type + " is approaching from the east!";
-			else if (Main.invasionType == InvasionType.FROST_LEGION)
+			else if (invasionType == InvasionType.FROST_LEGION)
 				info = type + " has arrived!";
 
 			if (info != String.Empty)
@@ -418,28 +418,28 @@ namespace Terraria_Server
 		/// <param name="type"></param>
 		public static void StartInvasion(InvasionType type = InvasionType.GOBLIN_ARMY)
 		{
-			if (Main.invasionType == 0 && Main.invasionDelay == 0)
+			if (invasionType == 0 && invasionDelay == 0)
 			{
-				int players = 0;
+				int healthy = 0;
 				for (int i = 0; i < MAX_PLAYERS; i++)
 				{
-					if (Main.players[i].Active && Main.players[i].statLifeMax >= 200)
-						players++;
+					if (players[i].Active && players[i].statLifeMax >= 200)
+						healthy++;
 				}
 
-				if (players > 0)
+				if (healthy > 0)
 				{
-					Main.invasionType = type;
-					Main.invasionSize = 80 + 40 * players;
-					Main.invasionWarn = 0;
+					invasionType = type;
+					invasionSize = 80 + 40 * healthy;
+					invasionWarn = 0;
 
-					if (Main.rand.Next(2) == 0)
+					if (rand.Next(2) == 0)
 					{
-						Main.invasionX = 0.0;
+						invasionX = 0.0;
 						return;
 					}
 
-					Main.invasionX = (double)Main.maxTilesX;
+					invasionX = (double)maxTilesX;
 				}
 			}
 		}
@@ -658,7 +658,7 @@ namespace Terraria_Server
 
 					if (WorldModify.shadowOrbSmashed)
 					{
-						var startInvasion = !NPC.downedGoblins ? Main.rand.Next(3) == 0 : Main.rand.Next(15) == 0;
+						var startInvasion = !NPC.downedGoblins ? rand.Next(3) == 0 : rand.Next(15) == 0;
 						if (startInvasion)
 							StartInvasion();
 					}

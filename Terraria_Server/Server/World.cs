@@ -59,8 +59,8 @@ namespace Terraria_Server
 				{
 					tileLocation.X = TileX + ((Main.rand.Next(RangeX * -1, RangeX)) / 2);
 					tileLocation.Y = TileY + ((Main.rand.Next(RangeY * -1, RangeY)) / 2);
-					if ((World.IsTileValid((int)tileLocation.X, (int)tileLocation.Y) &&
-						World.IsTileClear((int)tileLocation.X, (int)tileLocation.Y)))
+					if ((IsTileValid((int)tileLocation.X, (int)tileLocation.Y) &&
+						IsTileClear((int)tileLocation.X, (int)tileLocation.Y)))
 					{
 						break;
 					}
