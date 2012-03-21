@@ -2412,15 +2412,23 @@ namespace Terraria_Server.WorldMod
 						}
 					}
 					int townNPCIndex = NPC.NewNPC(posX * 16, posY * 16, spawnNPC, 1);
-					Main.npcs[townNPCIndex].homeTileX = bestX;
-					Main.npcs[townNPCIndex].homeTileY = bestY;
-					if (posX < bestX)
-						Main.npcs[townNPCIndex].direction = 1;
-					else if (posX > bestX)
-						Main.npcs[townNPCIndex].direction = -1;
+					if (townNPCIndex < NPC.MAX_NPCS)
+					{
+						Main.npcs[townNPCIndex].homeTileX = bestX;
+						Main.npcs[townNPCIndex].homeTileY = bestY;
+						if (posX < bestX)
+							Main.npcs[townNPCIndex].direction = 1;
+						else if (posX > bestX)
+							Main.npcs[townNPCIndex].direction = -1;
 
-					Main.npcs[townNPCIndex].netUpdate = true;
-					NetMessage.SendData(25, -1, -1, Main.npcs[townNPCIndex].Name + " has arrived!", 255, 50f, 125f, 255f);
+						Main.npcs[townNPCIndex].netUpdate = true;
+						
+						var text = String.Format("{0} has arrived!", Main.npcs[townNPCIndex].Name);
+						if(!String.IsNullOrEmpty(Main.npcs[townNPCIndex].DisplayName))
+							text = String.Format("{0} the {1} has arrived!", Main.npcs[townNPCIndex].DisplayName, Main.npcs[townNPCIndex].Name);
+
+						NetMessage.SendData(25, -1, -1, text, 255, 50f, 125f, 255f);
+					}
 				}
 				else
 				{

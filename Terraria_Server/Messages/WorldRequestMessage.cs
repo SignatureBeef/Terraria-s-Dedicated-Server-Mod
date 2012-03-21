@@ -36,7 +36,7 @@ namespace Terraria_Server.Messages
                 NetPlay.slots[whoAmI].state = SlotState.SENDING_WORLD;
             }
 
-			var ctx = new HookContext() { };
+			var ctx = new HookContext() { Connection = conn, Player = conn.Player };
 			var args = new HookArgs.WorldRequestMessage()
 			{
 				SpawnX = Main.spawnTileX,

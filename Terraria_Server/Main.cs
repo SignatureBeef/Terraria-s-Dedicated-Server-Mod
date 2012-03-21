@@ -211,8 +211,8 @@ namespace Terraria_Server
 		{
 			if (Program.properties != null)
 			{
-				stopSpawns		= Program.properties.StopNPCSpawning;
-				SpawnsOverride	= Program.properties.NPCSpawnsOverride;
+				stopSpawns = Program.properties.StopNPCSpawning;
+				SpawnsOverride = Program.properties.NPCSpawnsOverride;
 			}
 
 			NPC.ClearNames();
@@ -408,7 +408,7 @@ namespace Terraria_Server
 			else if (Main.invasionType == InvasionType.FROST_LEGION)
 				info = type + " has arrived!";
 
-			if(info != String.Empty)
+			if (info != String.Empty)
 				NetMessage.SendData(25, -1, -1, info, 255, 175f, 75f, 255f);
 		}
 
@@ -626,26 +626,24 @@ namespace Terraria_Server
 
 			if (!dayTime)
 			{
-				if (WorldModify.spawnEye)
-					if (Time > 4860.0)
+				if (WorldModify.spawnEye && Time > 4860.0)
+					foreach (Player player in players)
 					{
-						//int count = 0;
-						foreach (Player player in players)
+						if (player.Active && !player.dead && (double)player.Position.Y < worldSurface * 16.0)
 						{
-							if (player.Active && !player.dead && (double)player.Position.Y < worldSurface * 16.0)
-							{
-								NPC.SpawnOnPlayer(player.whoAmi, 4);
-								WorldModify.spawnEye = false;
-								break;
-							}
-							//count++;
+							NPC.SpawnOnPlayer(player.whoAmi, 4);
+							WorldModify.spawnEye = false;
+							break;
 						}
 					}
 
 				if (Time > 32400.0)
 				{
+					checkXmas();
+
 					if (invasionDelay > 0)
 						invasionDelay--;
+
 					WorldModify.spawnNPC = 0;
 					checkForSpawns = 0;
 					Time = 0.0;
@@ -658,29 +656,36 @@ namespace Terraria_Server
 					NetMessage.SendData(7);
 					WorldIO.SaveWorldThreaded();
 
-					if (rand.Next(15) == 0)
-						StartInvasion();
+					if (WorldModify.shadowOrbSmashed)
+					{
+						var startInvasion = !NPC.downedGoblins ? Main.rand.Next(3) == 0 : Main.rand.Next(15) == 0;
+						if (startInvasion)
+							StartInvasion();
+					}
 				}
 				if (Time > 16200.0 && WorldModify.spawnMeteor)
 				{
 					WorldModify.spawnMeteor = false;
 					WorldModify.dropMeteor(null, null);
+					return;
 				}
 			}
 			else
 			{
+				bloodMoon = false;
 				if (Time > 54000.0)
 				{
 					WorldModify.spawnNPC = 0;
 					checkForSpawns = 0;
 					if (rand.Next(50) == 0 && WorldModify.shadowOrbSmashed)
 						WorldModify.spawnMeteor = true;
+
 					if (!NPC.downedBoss1)
 					{
 						bool flag = false;
 						foreach (Player player in players)
 						{
-							if (player.Active && player.statLifeMax >= 200)
+							if (player.Active && player.statLifeMax >= 200 && player.statDefense > 10)
 							{
 								flag = true;
 								break;
@@ -690,9 +695,11 @@ namespace Terraria_Server
 						{
 							int num = 0;
 							for (int i = 0; i < NPC.MAX_NPCS; i++)
-								if (npcs[i].Active)
-									if (npcs[i].townNPC)
-										num++;
+							{
+								if (npcs[i].Active && npcs[i].townNPC)
+									num++;
+							}
+
 							if (num >= 4)
 							{
 								WorldModify.spawnEye = true;
@@ -701,7 +708,7 @@ namespace Terraria_Server
 							}
 						}
 					}
-					if (!WorldModify.spawnEye && moonPhase != 4 && rand.Next(7) == 0)
+					if (!WorldModify.spawnEye && moonPhase != 4 && rand.Next(9) == 0)
 					{
 						for (int i = 0; i < 255; i++)
 							if (players[i].Active && players[i].statLifeMax > 100)
@@ -709,6 +716,7 @@ namespace Terraria_Server
 								bloodMoon = true;
 								break;
 							}
+
 						if (bloodMoon)
 							NetMessage.SendData(25, -1, -1, "The Blood Moon is rising...", 255, 50f, 255f, 130f);
 					}
@@ -717,13 +725,15 @@ namespace Terraria_Server
 
 					NetMessage.SendData(7);
 				}
-				checkForSpawns++;
-				if (checkForSpawns >= 7200)
+
+				//checkForSpawns++;
+				if (++checkForSpawns >= 7200)
 				{
 					int num2 = 0;
 					for (int i = 0; i < 255; i++)
 						if (players[i].Active)
 							num2++;
+
 					checkForSpawns = 0;
 					WorldModify.spawnNPC = 0;
 					int num3 = 0;
@@ -735,15 +745,20 @@ namespace Terraria_Server
 					int num9 = 0;
 					int num10 = 0;
 					int num11 = 0;
+
+					int goblin = 0, wizard = 0, mechanic = 0, santa = 0;
+
 					for (int i = 0; i < NPC.MAX_NPCS; i++)
 						if (npcs[i].Active && npcs[i].townNPC)
 						{
 							if (npcs[i].type != NPCType.N37_OLD_MAN && !npcs[i].homeless)
 								WorldModify.QuickFindHome(null, i);
-							else
-								num8++;
+
 							switch (npcs[i].type)
 							{
+								case NPCType.N37_OLD_MAN:
+									num8++;
+									break;
 								case NPCType.N17_MERCHANT:
 									num3++;
 									break;
@@ -764,6 +779,18 @@ namespace Terraria_Server
 									break;
 								case NPCType.N54_CLOTHIER:
 									num10++;
+									break;
+								case NPCType.N107_GOBLIN_TINKERER:
+									goblin++;
+									break;
+								case NPCType.N108_WIZARD:
+									wizard++;
+									break;
+								case NPCType.N124_MECHANIC:
+									mechanic++;
+									break;
+								case NPCType.N142_SANTA_CLAUS:
+									santa++;
 									break;
 							}
 							num11++;
@@ -799,26 +826,7 @@ namespace Terraria_Server
 									flag2 = true;
 								num13 += num14;
 							}
-						if (num7 < 1)
-							WorldModify.spawnNPC = 22;
-						if ((double)num12 > 5000.0 && num3 < 1)
-							WorldModify.spawnNPC = 17;
-						if (flag2 && num4 < 1)
-							WorldModify.spawnNPC = 18;
-						if (flag3 && num6 < 1)
-							WorldModify.spawnNPC = 19;
-						if ((NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3) && num5 < 1)
-							WorldModify.spawnNPC = 20;
-						if (flag4 && num3 > 0 && num9 < 1)
-							WorldModify.spawnNPC = 38;
-						if (NPC.downedBoss3 && num10 < 1)
-							WorldModify.spawnNPC = 54;
-						if (num12 > 100000 && num3 < 2 && num2 > 2)
-							WorldModify.spawnNPC = 17;
-						if (num13 >= 20 && num4 < 2 && num2 > 2)
-							WorldModify.spawnNPC = 18;
-						if (num12 > 5000000 && num3 < 3 && num2 > 4)
-							WorldModify.spawnNPC = 17;
+
 						if (!NPC.downedBoss3 && num8 == 0)
 						{
 							int num15 = NPC.NewNPC(dungeonX * 16 + 8, dungeonY * 16, 37, 0);
@@ -826,6 +834,7 @@ namespace Terraria_Server
 							npcs[num15].homeTileX = dungeonX;
 							npcs[num15].homeTileY = dungeonY;
 						}
+
 						if (WorldModify.spawnNPC == 0 && num7 < 1)
 							WorldModify.spawnNPC = 22;
 						if (WorldModify.spawnNPC == 0 && (double)num12 > 5000.0 && num3 < 1)
@@ -840,13 +849,13 @@ namespace Terraria_Server
 							WorldModify.spawnNPC = 38;
 						if (WorldModify.spawnNPC == 0 && NPC.downedBoss3 && num10 < 1)
 							WorldModify.spawnNPC = 54;
-						if (WorldModify.spawnNPC == 0 && NPC.savedGoblin && num12 < 1)
+						if (WorldModify.spawnNPC == 0 && NPC.savedGoblin && goblin < 1)
 							WorldModify.spawnNPC = 107;
-						if (WorldModify.spawnNPC == 0 && NPC.savedWizard && num11 < 1)
+						if (WorldModify.spawnNPC == 0 && NPC.savedWizard && wizard < 1)
 							WorldModify.spawnNPC = 108;
-						if (WorldModify.spawnNPC == 0 && NPC.savedMech && num13 < 1)
+						if (WorldModify.spawnNPC == 0 && NPC.savedMech && mechanic < 1)
 							WorldModify.spawnNPC = 124;
-						if (WorldModify.spawnNPC == 0 && NPC.downedFrost && num13 < 1 && Xmas)
+						if (WorldModify.spawnNPC == 0 && NPC.downedFrost && santa < 1 && Xmas)
 							WorldModify.spawnNPC = 142;
 					}
 				}
