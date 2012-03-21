@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using Terraria_Server.Networking;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages
 {
@@ -34,7 +35,19 @@ namespace Terraria_Server.Messages
             {
                 NetPlay.slots[whoAmI].state = SlotState.SENDING_WORLD;
             }
-            NetMessage.SendData(7, whoAmI);
+
+			var ctx = new HookContext() { };
+			var args = new HookArgs.WorldRequestMessage()
+			{
+				SpawnX = Main.spawnTileX,
+				SpawnY = Main.spawnTileY
+			};
+			HookPoints.WorldRequestMessage.Invoke(ref ctx, ref args);
+
+            //NetMessage.SendData(7, whoAmI);
+			var msg = NetMessage.PrepareThreadInstance();
+			msg.WorldData(args.SpawnX, args.SpawnY);
+			msg.Send(whoAmI);
         }
     }
 }

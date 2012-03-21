@@ -33,3 +33,4 @@ Build 38
 	- NPC Housing
 	- Item animations (Projectiles) not being reset on occasions.
 	- Work on the Wiki Protocol Documentation
+	- Added a hook for plugins to change where players spawn upon connection

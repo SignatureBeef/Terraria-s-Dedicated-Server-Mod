@@ -142,7 +142,7 @@ namespace Terraria_Server.WorldMod
 			return 0;
 		}
 
-		public static void hardUpdateWorld(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int i, int j)
+		public static void UpdateWorld_Hardmode(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int i, int j)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
@@ -7847,7 +7847,7 @@ namespace Terraria_Server.WorldMod
 					}
 					else if (Tile.Active)
 					{
-						hardUpdateWorld(TileRefs, sandbox, TileX, TileY);
+						UpdateWorld_Hardmode(TileRefs, sandbox, TileX, TileY);
 						if (Tile.Type == 80)
 						{
 							if (genRand.Next(15) == 0)
@@ -8206,7 +8206,7 @@ namespace Terraria_Server.WorldMod
 					{
 						if (TileRefs(num28, num29).Active)
 						{
-							hardUpdateWorld(TileRefs, sandbox, num31, num32);
+							UpdateWorld_Hardmode(TileRefs, sandbox, num31, num32);
 							if (TileRefs(num28, num29).Type == 23 && !TileRefs(num28, num29).Active && genRand.Next(1) == 0)
 							{
 								PlaceTile(TileRefs, sandbox, num28, num32, 24, true, false, -1, 0);
