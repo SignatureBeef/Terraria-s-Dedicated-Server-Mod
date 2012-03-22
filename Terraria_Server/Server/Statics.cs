@@ -11,8 +11,8 @@ namespace Terraria_Server
 		public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
 
 		/* TDSM */
-		public const Int32 BUILD = 37;
-		public const String CODENAME = "Hello World!";
+		public const Int32 BUILD = 38;
+		public const String CODENAME = "Classified";
 
 		private const String WORLDS = "Worlds";
 		private const String PLUGINS = "Plugins";
