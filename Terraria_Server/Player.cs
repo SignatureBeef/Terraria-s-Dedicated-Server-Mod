@@ -5114,9 +5114,9 @@ namespace Terraria_Server
 			return false;
 		}
 
-		public int GiveItem(int ItemId, int Stack, ISender sender, int NetID, bool NotifyOps = true)
+		public int GiveItem(int ItemId, int Stack, ISender sender, int NetID, bool NotifyOps = true, int prefix = 0)
 		{
-			var index = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, ItemId, Stack, false, 1, NetID);
+			var index = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, ItemId, Stack, false, prefix, NetID);
 
 			if (NotifyOps)
 				Server.notifyOps("Giving " + this.Name + " some " + ItemId.ToString() + " [" + sender.Name + "]", true);

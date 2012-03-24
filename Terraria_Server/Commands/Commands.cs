@@ -531,6 +531,9 @@ namespace Terraria_Server.Commands
 			int stack = args.GetInt(1);
 			string NameOrId = args.GetString(2);
 
+			int prefix;
+			args.TryParseOne("-prefix", out prefix);
+
 			List<ItemInfo> itemlist;
 			if (Server.TryFindItemByName(NameOrId, out itemlist) && itemlist.Count > 0)
 			{
@@ -539,7 +542,7 @@ namespace Terraria_Server.Commands
 
 				var item = itemlist[0];
 
-				var index = receiver.GiveItem(item.Type, stack, sender, item.NetID);
+				var index = receiver.GiveItem(item.Type, stack, sender, item.NetID, true, prefix);
 
 				if (item.NetID < 0)
 					Main.item[index] = Item.netDefaults(item.NetID);
@@ -564,7 +567,7 @@ namespace Terraria_Server.Commands
 					//receiver.GiveItem(itemlist[0].Type, stack, sender);
 					var item = itemlist[0];
 
-					var index = receiver.GiveItem(item.Type, stack, sender, item.NetID);
+					var index = receiver.GiveItem(item.Type, stack, sender, item.NetID, true, prefix);
 
 					if (item.NetID < 0)
 						Main.item[index] = Item.netDefaults(item.NetID);
