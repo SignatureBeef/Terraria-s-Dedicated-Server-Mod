@@ -5116,7 +5116,7 @@ namespace Terraria_Server
 
 		public int GiveItem(int ItemId, int Stack, ISender sender, int NetID, bool NotifyOps = true)
 		{
-			var index = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, ItemId, Stack, false, 0, NetID);
+			var index = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, ItemId, Stack, false, 1, NetID);
 
 			if (NotifyOps)
 				Server.notifyOps("Giving " + this.Name + " some " + ItemId.ToString() + " [" + sender.Name + "]", true);
