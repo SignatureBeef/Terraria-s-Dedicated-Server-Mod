@@ -7,6 +7,7 @@ using System.Linq;
 using Terraria_Server.Commands;
 using Terraria_Server.Logging;
 using Terraria_Server.Permissions;
+using Terraria_Server.Language;
 
 namespace Terraria_Server.Plugins
 {
@@ -168,6 +169,27 @@ namespace Terraria_Server.Plugins
 					}
 				}
 			}
+		}
+
+		public string SetLanguageVariable(string key, string value)
+		{
+			var name = Name + '_' + key;
+			name = name.Replace(" ", String.Empty);
+			//lock (Languages.ExtendedLanguages)
+			{
+				if (!Languages.ExtendedLanguages.ContainsKey(name))
+					Languages.ExtendedLanguages[name] = value;
+			}
+
+			return Languages.ExtendedLanguages[name];
+		}
+
+		public string GetLanguageVariable(string key)
+		{
+			var name = Name + '_' + key;
+			name = name.Replace(" ", String.Empty);
+			//lock (Languages.ExtendedLanguages)
+				return Languages.ExtendedLanguages[name];
 		}
 
         public void AddNode(string Node)

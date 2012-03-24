@@ -26,22 +26,22 @@ namespace TDSM_PermissionsX
 					user = matches.ToArray()[0];
 
 				if (user == null && !forced)
-					throw new CommandError("No online player found, Use -f if you know for certain that the name is correct.");
+					throw new CommandError(Languages.NoPlayersAndForce);
 
 				var trueUser = user == null ? username : (user.Name ?? username);
 
 				if (XmlParser.HasUser(trueUser))
-					throw new CommandError("Definitions already exist for that user.");
+					throw new CommandError(Languages.DefinitionsExist + Languages.User);
 
 				XmlParser.AddUser(trueUser);
 
 				if (save) XmlParser.Save();
 
 				sender.sendMessage(
-					String.Format("Definitions for `{0}` have been created.", trueUser)
+					String.Format("`{0}` {1}", trueUser, Languages.HasBeenCreated)
 				);
 			}
-			else throw new CommandError("Arguments expected - xuser adduser [-f -save] username");
+			else throw new CommandError("{0} - xuser adduser [-f -save] username", Languages.ArgumentsExpected);
 		}
 
 		public void UserPermissions(ISender sender, ArgumentList args)
@@ -59,7 +59,7 @@ namespace TDSM_PermissionsX
 				string user, permission;
 				if (args.TryParseTwo<String, String>(out user, out permission))
 				{
-					if (!XmlParser.HasUser(user)) throw new CommandError("No user `{0}`", user);
+					if (!XmlParser.HasUser(user)) throw new CommandError("{1} `{0}`", user, Languages.NoUser);
 
 					var permissions = permission.Split(',');
 					var add = addPerms || denyPerms;
@@ -87,12 +87,12 @@ namespace TDSM_PermissionsX
 					if (save) XmlParser.Save();
 
 					sender.sendMessage(
-						String.Format("{2} {0} node(s) where {1} failed.",
-						added, failed, add ? "Added" : "Removed"
+						String.Format("{2} {0} {3} {1} {4}",
+						added, failed, add ? Languages.Added : Languages.Removed, Languages.NodesWhere, Languages.Failed
 						)
 					);
 				}
-				else throw new CommandError("User & permission node(s) expected.");
+				else throw new CommandError(Languages.UserAndNodeExpected);
 			}
 			else if (addGroup || removeGroup)
 			{
@@ -101,14 +101,14 @@ namespace TDSM_PermissionsX
 				{
 					var groups = group.Split(',');
 
-					if (!XmlParser.HasUser(user)) throw new CommandError("No user `{0}`", user);
+					if (!XmlParser.HasUser(user)) throw new CommandError("{1} `{0}`", user, Languages.NoUser);
 
 					int added = 0, failed = 0;
 					foreach (var node in groups)
 					{
 						if (!XmlParser.HasGroup(node))
 						{
-							sender.sendMessage(String.Format("No group `{0}`", node));
+							sender.sendMessage(String.Format("{1} `{0}`", node, Languages.NoGroup));
 							continue;
 						}
 
@@ -123,14 +123,14 @@ namespace TDSM_PermissionsX
 					if (save) XmlParser.Save();
 
 					sender.sendMessage(
-						String.Format("{2} {0} node(s) where {1} failed.",
-						added, failed, addGroup ? "Added" : "Removed"
+						String.Format("{2} {0} {3} {1} {4}",
+						added, failed, addGroup ? Languages.Added : Languages.Removed, Languages.NodesWhere, Languages.Failed
 						)
 					);
 				}
-				else throw new CommandError("User & group(s) expected.");
+				else throw new CommandError(Languages.UserAndGrpExpected);
 			}
-			else throw new CommandError("Arguments expected.");
+			else throw new CommandError(Languages.ArgumentsExpected);
 		}
 
 		public void Groups(ISender sender, ArgumentList args)
@@ -143,17 +143,17 @@ namespace TDSM_PermissionsX
 				var groupName = args.GetString(0);
 
 				if (XmlParser.HasGroup(groupName))
-					throw new CommandError("Definitions already exist for that group.");
+					throw new CommandError(Languages.DefinitionsExist + Languages.Group);
 
 				XmlParser.AddGroup(groupName);
 
 				if (save) XmlParser.Save();
 
 				sender.sendMessage(
-					String.Format("Definitions for `{0}` have been created.", groupName)
+					String.Format("`{0}` {1}", groupName, Languages.HasBeenCreated)
 				);
 			}
-			else throw new CommandError("Arguments expected.");
+			else throw new CommandError(Languages.ArgumentsExpected);
 		}
 
 		public void GroupPermissions(ISender sender, ArgumentList args)
@@ -169,7 +169,7 @@ namespace TDSM_PermissionsX
 				string group, permission;
 				if (args.TryParseTwo<String, String>(out group, out permission))
 				{
-					if (!XmlParser.HasGroup(group)) throw new CommandError("No group `{0}`", group);
+					if (!XmlParser.HasGroup(group)) throw new CommandError("{1} `{0}`", group,Languages.NoGroup);
 
 					var permissions = permission.Split(',');
 					var add = addPerms || denyPerms;
@@ -197,14 +197,14 @@ namespace TDSM_PermissionsX
 					if (save) XmlParser.Save();
 
 					sender.sendMessage(
-						String.Format("{2} {0} node(s) where {1} failed.",
-						added, failed, add ? "Added" : "Removed"
+						String.Format("{2} {0} {3} {1} {4}",
+						added, failed, add ? Languages.Added : Languages.Removed, Languages.NodesWhere, Languages.Failed
 						)
 					);
 				}
-				else throw new CommandError("Group & permission node(s) expected.");
+				else throw new CommandError(Languages.GrpAndNodeExpected);
 			}
-			else throw new CommandError("Arguments expected.");
+				else throw new CommandError(Languages.ArgumentsExpected);
 		}
 
 		public void UserAttributes(ISender sender, ArgumentList args)
@@ -215,7 +215,7 @@ namespace TDSM_PermissionsX
 			var value = args.GetString(2);
 
 			if (!XmlParser.HasUser(requestedUser))
-				throw new CommandError("No user `{0}`", requestedUser);
+				throw new CommandError("{1} `{0}`", requestedUser, Languages.NoUser);
 
 			IPermission user = XmlParser.GetUser(requestedUser);
 
@@ -226,7 +226,7 @@ namespace TDSM_PermissionsX
 			if (save) XmlParser.Save();
 
 			sender.sendMessage(
-				String.Format("{0} updating user attribute.", res ? "Success" : "Failed")
+				String.Format("{0} {1}", res ? Languages.Success : Languages.Failure, Languages.UpdatingAttribute)
 			);
 		}
 
@@ -238,7 +238,7 @@ namespace TDSM_PermissionsX
 			var value = args.GetString(2);
 
 			if (!XmlParser.HasGroup(requestedGroup))
-				throw new CommandError("No group `{0}`", requestedGroup);
+				throw new CommandError("{1} `{0}`", requestedGroup, Languages.NoGroup);
 
 			IPermission group = XmlParser.GetGroup(requestedGroup);
 
@@ -249,7 +249,7 @@ namespace TDSM_PermissionsX
 			if (save) XmlParser.Save();
 
 			sender.sendMessage(
-				String.Format("{0} updating group attribute.", res ? "Success" : "Failed")
+				String.Format("{0} {1}", res ? Languages.Success : Languages.Failure, Languages.UpdatingAttribute)
 			);
 		}
 
@@ -261,10 +261,10 @@ namespace TDSM_PermissionsX
 
 			if (save) res = XmlParser.Save();
 			else if (reload) res = XmlParser.Load();
-			else throw new CommandError("Arguments expected.");
+			else throw new CommandError(Languages.ArgumentsExpected);
 
 			sender.sendMessage(
-				String.Format("{0} {1}.", res ? "Success" : "Failure", save ? "saving" : "loading")
+				String.Format("{0} {1}.", res ? Languages.Success : Languages.Failure, save ? Languages.Saving : Languages.Loading)
 			);
 		}
 
@@ -281,7 +281,7 @@ namespace TDSM_PermissionsX
 				case "color":
 					Color colour;
 					if (Color.TryParseRGB(value, out colour)) def.SetColor(colour);
-					else throw new CommandError("Invalid color value, try `R,G,B`.");
+					else throw new CommandError("{0} `R,G,B`.", Languages.InvalidColorMsg);
 					break;
 				case "chatseperator":
 					def.SetChatSeperator(value);
@@ -289,10 +289,10 @@ namespace TDSM_PermissionsX
 				case "canbuild":
 					bool canBuild;
 					if (Boolean.TryParse(value, out canBuild)) def.SetCanBuild(canBuild);
-					else throw new CommandError("Invalid boolean value.");
+					else throw new CommandError(Languages.InvalidBooleanValue);
 					break;
 				default:
-					throw new CommandError("Attribute expected: prefix, suffix, color, chatseperator, canbuild.");
+					throw new CommandError("{0}: prefix, suffix, color, chatseperator, canbuild.", Languages.AttributeExpected);
 			}
 		}
 	}

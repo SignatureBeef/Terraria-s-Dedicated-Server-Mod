@@ -14,30 +14,32 @@ namespace TDSM_PermissionsX
 		public const String RestrictLink = "http://update.tdsm.org/RestrictPlugin.dll";
 		public const String Author = "UndeadMiner";
 
-		public void InitSystem()
+		public void InitSystem(Languages languages)
 		{
 			if (!IsRestrictRunning())
 			{
-				ProgramLog.Plugin.Log("No login system found! Restrict will be downloaded.");
+				ProgramLog.Plugin.Log(languages.NoAuth);
 
 				string restrict = Statics.PluginPath + Path.DirectorySeparatorChar + "RestrictPlugin";
 				string dll = restrict + ".dll";
 
 				if (!UpdateManager.performUpdate(RestrictLink, restrict + ".upt", restrict + ".bak", dll, 1, 1, "Restrict"))
 				{
-					ProgramLog.Error.Log("Restrict failed to download!");
+					ProgramLog.Error.Log(languages.RestrictDlFailed);
 					return;
 				}
 
 				PluginLoadStatus loadStatus = PluginManager.LoadAndInitPlugin(dll);
 				if (loadStatus != PluginLoadStatus.SUCCESS)
-					ProgramLog.Error.Log("Restrict failed to install!\nLoad result: {0}", loadStatus);
+					ProgramLog.Error.Log(
+						"{0}\n{1} {2}", languages.RestrictLoadFail, languages.RestrictLoadResult, loadStatus);
 			}
 		}
 
 		public bool IsRestrictRunning()
 		{
-			return (from x in PluginManager.plugins.Values where x != null && x.Author == Author select x).Count() > 0;
+			//return (from x in PluginManager.plugins.Values where x != null && x.Author == Author select x).Count() > 0;
+			return PluginManager.plugins.Where(x => x.Value.Author == Author).Count() > 0;
 		}
 	}
 }

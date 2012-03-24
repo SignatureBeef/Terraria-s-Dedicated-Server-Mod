@@ -14,6 +14,7 @@ namespace TDSM_PermissionsX
 	public partial class PermissionsX : BasePlugin
 	{
 		public XProperties Properties { get; set; }
+		public Languages Languages { get; set; }
 		public Xml XmlParser { get; set; }
 
 		public string GetPath
@@ -45,7 +46,10 @@ namespace TDSM_PermissionsX
 
 		protected override void Initialized(object state)
 		{
-			XLog("Initializing...");
+			Languages = new Languages();
+			Languages.LoadLanguages(this);
+
+			XLog(Languages.Initializing);
 
 			Touch();
 
@@ -102,12 +106,12 @@ namespace TDSM_PermissionsX
 			Program.permissionManager.IsPermittedImpl = IsPermitted;
 			Statics.PermissionsEnabled = true;
 
-			XLog("Enabled");
+			XLog(Languages.Enabled);
 		}
 
 		protected override void Disabled()
 		{
-			XLog("Disabled");
+			XLog(Languages.DisabledMessaged);
 		}
 
 		public static void XLog(string format, params object[] args)
@@ -188,14 +192,14 @@ namespace TDSM_PermissionsX
 			{
 				var authSystem = new Auth();
 				if (!Server.UsingLoginSystem)
-					authSystem.InitSystem();
+					authSystem.InitSystem(Languages);
 
 				if (authSystem.IsRestrictRunning())
-					ProgramLog.Plugin.Log("Your Server is now protected!");
+					ProgramLog.Plugin.Log(Languages.Protected);
 				else
-					ProgramLog.Plugin.Log("Your Server is vulnerable, Get an Authentication system!");
+					ProgramLog.Plugin.Log(Languages.GetAuth);
 			}
-			else ProgramLog.Plugin.Log("Your Server is vulnerable, Get an Authentication system!");
+			else ProgramLog.Plugin.Log(Languages.GetAuth);
 		}
 
 		#region Permissions

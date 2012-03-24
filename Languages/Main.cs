@@ -15,6 +15,7 @@ using Terraria_Server.Language;
 using Terraria_Server.Collections;
 using System.Reflection;
 using System.Threading;
+using System.Xml;
 
 namespace Languages
 {
@@ -131,7 +132,7 @@ namespace Languages
 
 			LanguageData.RestoreXML();
 
-			var nodes = LanguageData.GetNodes();
+			var nodes = LanguageData.GetNodes("Languages.xml");
 			var failed = 0;
 
 			foreach (var keyPair in nodes.FieldwiseClone())
@@ -180,12 +181,43 @@ namespace Languages
 	{
 		public static void RestoreXML()
 		{
-			Terraria_Server.Language.Languages.LoadClass(Registries.LANGUAGE_FILE, true);
+			Terraria_Server.Language.Languages.LoadClass(Registries.LANGUAGE_FILE);
 		}
 
 		public static void SaveXML(Dictionary<String, String> data)
 		{
-			var filePath = Registries.LANGUAGE_FILE;
+			var loc = "Languages.xml";
+			try
+			{
+				if (File.Exists(loc)) File.Delete(loc);
+
+				using (var writer = new XmlTextWriter(loc, Encoding.ASCII))
+				{
+					writer.WriteStartDocument();
+					writer.WriteStartElement("Languages");
+
+					foreach (var node in data)
+					{
+						if (!String.IsNullOrEmpty(node.Key) && !String.IsNullOrEmpty(node.Value))
+						{
+							writer.WriteStartElement(node.Key);
+							writer.WriteString(node.Value);
+							writer.WriteEndElement();
+						}
+					}
+
+					writer.WriteEndElement();
+					writer.WriteEndDocument();
+				}
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show(
+					String.Format("Error saving language file\n{0}", e)
+				);
+			}
+
+			/*var filePath = Registries.LANGUAGE_FILE;
 			if (File.Exists(filePath))
 				File.Delete(filePath);
 
@@ -195,26 +227,37 @@ namespace Languages
 			xml[index++] = "<Languages>";
 
 			foreach (var keyPair in data)
-				xml[index++] = String.Format("\t<{0}>{1}</{2}>", keyPair.Key, keyPair.Value, keyPair.Key);
+			{
+				var name = keyPair.Key;
+				var value = keyPair.Value;
+
+				xml[index++] = String.Format("\t<{0}>{1}</{2}>", name, value, name);
+			}
 
 			xml[index++] = "</Languages>";
 
-			File.WriteAllLines(filePath, xml);
+			File.WriteAllLines(filePath, xml);*/
 		}
 
-		public static Dictionary<String, String> GetNodes()
+		public static Dictionary<String, String> GetNodes(string filePath)
 		{
 			var type = typeof(Terraria_Server.Language.Languages);
 			var list = new Dictionary<String, String>();
+
+			Terraria_Server.Language.Languages.LoadClass(filePath);
 
 			var properties = type.GetProperties();
 
 			foreach (var prop in properties)
 			{
-				var val = prop.GetValue(null, null);
+				var val = prop.GetValue(null, null) as String;
+				var name = prop.Name;
 
-				list.Add(prop.Name, val as String);
+				list.Add(name, val);
 			}
+
+			foreach (var pair in Terraria_Server.Language.Languages.ExtendedLanguages)
+				list[pair.Key] = pair.Value;
 
 			return list;
 		}

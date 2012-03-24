@@ -24,15 +24,15 @@ Build: 37
 
 Build 38
 ===================
-	- The Destroyer not correct when forced to spawn via the command
-	- Wall tiles now blend correctly
+	- The Destroyer not correct when forced to spawn via the command.
+	- Wall tiles now blend correctly.
 	- Time locking
 	- Backup manager - Automatic or command
-	- TDSM Permissions (Both) - Chat hook is now early for chat plugins to take over.
+	- TDSM Permissions (Both YAML & XML) - Chat hook is now early for chat plugins to take over.
 	- Restrics Npc Permission node will now work.
 	- NPC Housing
 	- Item animations (Projectiles) not being reset on occasions.
-	- Work on the Wiki Protocol Documentation
-	- Added a hook for plugins to change where players spawn upon connection
-	- Fixed a few boss messages being repeated
-	- Fixed an issue where new town npcs (1.1.1/1.1.2) try to continuously move in
+	- Work on the Wiki Protocol Documentation.
+	- Added a hook for plugins to change where players spawn upon connection.
+	- Fixed a few boss messages being repeated and fixed up the SpawnNPC packet.
+	- Fixed an issue where new town npcs (1.1.1/1.1.2) try to continuously move in.

@@ -182,6 +182,10 @@ namespace Terraria_Server
 				commandParser.ReadPermissionNodes();
 
 				LoadPlugins();
+
+				/* Save access languages - once only */
+				Languages.Save(Collections.Registries.LANGUAGE_FILE);
+
 				HookContext ctx;
 				HookArgs.ServerStateChange eArgs;
 
@@ -364,7 +368,7 @@ namespace Terraria_Server
 				catch { }
 			}
 
-			if (File.Exists(properties.PIDFile.Trim()))
+			if (properties != null && File.Exists(properties.PIDFile.Trim()))
 				File.Delete(properties.PIDFile.Trim());
 
 			Thread.Sleep(500);
@@ -391,7 +395,7 @@ namespace Terraria_Server
 
 			HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
 			PluginManager.LoadPlugins();
-			ProgramLog.Log(Languages.Startup_PluginsLoaded + PluginManager.PluginCount);
+			ProgramLog.Log(Languages.Startup_PluginsLoaded + ' ' + PluginManager.PluginCount);
 		}
 
 		private static void CommandThread(object result)
