@@ -39,7 +39,7 @@ namespace TDSM_PermissionsX
 		{
 			Name = "Permissions X";
 			Description = "XML based permissions system.";
-			TDSMBuild = 37;
+			TDSMBuild = 38;
 			Author = "TDSM Dev Team";
 			Version = "1.0.0.0";
 		}

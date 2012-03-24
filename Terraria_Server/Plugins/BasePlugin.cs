@@ -171,6 +171,15 @@ namespace Terraria_Server.Plugins
 			}
 		}
 
+		/// <summary>
+		///		Allows the instance to add variables for translation.
+		/// </summary>
+		/// <param name="key">
+		///		This key will be used to store the translatable value. 
+		///		The key will then be transformed to "plugin name + '_' + key" in order for it to be dedicated for each plugin.
+		/// </param>
+		/// <param name="value">The value to be translated.</param>
+		/// <returns></returns>
 		public string SetLanguageVariable(string key, string value)
 		{
 			var name = Name + '_' + key;

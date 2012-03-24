@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\PluginCommands.cs" />
+    <Compile Include="Languages.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="TDSM_Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

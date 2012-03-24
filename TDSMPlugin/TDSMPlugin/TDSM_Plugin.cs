@@ -1,12 +1,12 @@
 ﻿using System.IO;
 
 using Terraria_Server;
-using TDSMPlugin.Commands;
 using Terraria_Server.Plugins;
 using Terraria_Server.Logging;
 using Terraria_Server.Commands;
 using Terraria_Server.Definitions;
 using Terraria_Server.Permissions;
+using TDSMExamplePlugin.Commands;
 
 namespace TDSMExamplePlugin
 {
@@ -25,6 +25,8 @@ namespace TDSMExamplePlugin
 		 * Plugins are passed in command args as an object, See PluginCommands.cs. However, as better practice use partial classes.
 		 */
 		public Properties properties;
+		public Languages Languages;
+
 		public bool spawningAllowed = false;
 		public bool tileBreakageAllowed = false;
 		public bool explosivesAllowed = false;
@@ -44,6 +46,9 @@ namespace TDSMExamplePlugin
 
 		protected override void Initialized(object state)
 		{
+			Languages = new Languages();
+			Languages.LoadLanguages(this);
+
 			string pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "TDSM";
 			//Create folder if it doesn't exist
 			CreateDirectory(pluginFolder);

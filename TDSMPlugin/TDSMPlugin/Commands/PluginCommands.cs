@@ -5,9 +5,8 @@ using System.Text;
 using Terraria_Server;
 using Terraria_Server.Commands;
 using Terraria_Server.Misc;
-using TDSMExamplePlugin;
 
-namespace TDSMPlugin.Commands
+namespace TDSMExamplePlugin.Commands
 {
     public class PluginCommands
     {
