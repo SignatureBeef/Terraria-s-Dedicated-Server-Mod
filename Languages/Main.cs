@@ -132,7 +132,7 @@ namespace Languages
 
 			LanguageData.RestoreXML();
 
-			var nodes = LanguageData.GetNodes("Languages.xml");
+			var nodes = LanguageData.GetNodes(Registries.LANGUAGE_FILE);
 			var failed = 0;
 
 			foreach (var keyPair in nodes.FieldwiseClone())
@@ -186,7 +186,7 @@ namespace Languages
 
 		public static void SaveXML(Dictionary<String, String> data)
 		{
-			var loc = "Languages.xml";
+			var loc = Registries.LANGUAGE_FILE;
 			try
 			{
 				if (File.Exists(loc)) File.Delete(loc);
