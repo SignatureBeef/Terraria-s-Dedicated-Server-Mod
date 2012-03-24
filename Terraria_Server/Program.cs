@@ -172,11 +172,11 @@ namespace Terraria_Server
 				using (var prog = new ProgressLogger(1, Languages.Startup_LoadingProjectileDefinitions))
 					Collections.Registries.Projectile.Load(Collections.Registries.PROJECTILE_FILE);
 
-				if (Languages.IsOutOfDate())
-					ProgramLog.Error.Log(
-						String.Format("{0}\n{1}",
-						Languages.Startup_LanguageFileOOD, Languages.Startup_LanguageFileUpdate)
-						, true);
+				//if (Languages.IsOutOfDate())
+				//    ProgramLog.Error.Log(
+				//        String.Format("{0}\n{1}",
+				//        Languages.Startup_LanguageFileOOD, Languages.Startup_LanguageFileUpdate)
+				//        , true);
 
 				commandParser = new CommandParser();
 				commandParser.ReadPermissionNodes();

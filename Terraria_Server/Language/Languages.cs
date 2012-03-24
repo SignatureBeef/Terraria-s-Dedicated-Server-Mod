@@ -567,12 +567,14 @@ namespace Terraria_Server.Language
 			return false;
 		}
 
+		/*
+		 * Not needed now with the new system as it automatically replaces out of date.
 		public static bool IsOutOfDate()
 		{
 			var type = typeof(Languages);
 			var properties = from x in type.GetProperties() where x.GetValue(null, null) == null select x;
 
 			return properties.Count() > 0;
-		}
+		}*/
 	}
 }

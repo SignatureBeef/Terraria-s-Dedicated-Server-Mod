@@ -297,7 +297,7 @@ namespace Terraria_Server.Commands
 			AddCommand("give")
 				.WithAccessLevel(AccessLevel.OP)
 				.WithDescription(Languages.CommandDescription_Give)
-				.WithHelpText("Usage:   give <player> <amount> <itemname:itemid>")
+				.WithHelpText("Usage:   give <player> <amount> <itemname:itemid> [-prefix]")
 				.WithPermissionNode("tdsm.give")
 				.Calls(Commands.Give);
 

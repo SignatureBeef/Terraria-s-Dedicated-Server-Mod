@@ -527,12 +527,12 @@ namespace Terraria_Server.Commands
 		{
 			// /give <player> <stack> <name> 
 
+			int prefix;
+			args.TryPopAny<Int32>("-prefix", out prefix);
+
 			Player receiver = args.GetOnlinePlayer(0);
 			int stack = args.GetInt(1);
 			string NameOrId = args.GetString(2);
-
-			int prefix;
-			args.TryParseOne("-prefix", out prefix);
 
 			List<ItemInfo> itemlist;
 			if (Server.TryFindItemByName(NameOrId, out itemlist) && itemlist.Count > 0)
