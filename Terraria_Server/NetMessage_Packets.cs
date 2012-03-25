@@ -107,44 +107,54 @@ namespace Terraria_Server
 		{
 			Header (Packet.WORLD_REQUEST, 0);
 		}
-		
-		public void WorldData (int spawnX, int spawnY)
+
+		public void WorldData(int spawnX, int spawnY, bool hardMode)
 		{
-			Begin (Packet.WORLD_DATA);
-			
-			Int (Main.Time);
-			Byte (Main.dayTime);
-			Byte (Main.moonPhase);
-			Byte (Main.bloodMoon);
-			
-			Int (Main.maxTilesX);
-			Int (Main.maxTilesY);
-			Int (spawnX);
-			Int (spawnY);
-			
-			Int (Main.worldSurface);
-			Int (Main.rockLayer);
-			Int (Main.worldID);
-			
+			Begin(Packet.WORLD_DATA);
+
+			Int(Main.Time);
+			Byte(Main.dayTime);
+			Byte(Main.moonPhase);
+			Byte(Main.bloodMoon);
+
+			Int(Main.maxTilesX);
+			Int(Main.maxTilesY);
+			Int(spawnX);
+			Int(spawnY);
+
+			Int(Main.worldSurface);
+			Int(Main.rockLayer);
+			Int(Main.worldID);
+
 			byte flags = 0;
-			
+
 			if (WorldModify.shadowOrbSmashed) flags += 1;
 			if (NPC.downedBoss1) flags += 2;
 			if (NPC.downedBoss2) flags += 4;
 			if (NPC.downedBoss3) flags += 8;
-			if (Main.hardMode) flags += 16;
+			if (hardMode) flags += 16;
 			if (NPC.downedClown) flags += 32;
-			
-			Byte (flags);
-			
-			String (Main.worldName);
-			
-			End ();
+
+			Byte(flags);
+
+			String(Main.worldName);
+
+			End();
 		}
-		
-		public void WorldData ()
+
+		public void WorldData(int spawnX, int spawnY)
 		{
-			WorldData (Main.spawnTileX, Main.spawnTileY);
+			WorldData(spawnX, spawnY, Main.hardMode);
+		}
+
+		public void WorldData()
+		{
+			WorldData(Main.spawnTileX, Main.spawnTileY);
+		}
+
+		public void WorldData(bool hardMode)
+		{
+			WorldData(Main.spawnTileX, Main.spawnTileY, hardMode);
 		}
 		
 		public void RequestTileBlock ()

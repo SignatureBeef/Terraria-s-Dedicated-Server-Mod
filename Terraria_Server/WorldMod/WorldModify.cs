@@ -2420,11 +2420,12 @@ namespace Terraria_Server.WorldMod
 							Main.npcs[townNPCIndex].direction = -1;
 
 						Main.npcs[townNPCIndex].netUpdate = true;
-						
-						var text = String.Format("{0} has arrived!", Main.npcs[townNPCIndex].Name);
-						if(!String.IsNullOrEmpty(Main.npcs[townNPCIndex].DisplayName))
-							text = String.Format("{0} the {1} has arrived!", Main.npcs[townNPCIndex].DisplayName, Main.npcs[townNPCIndex].Name);
 
+						var name = Main.npcs[townNPCIndex].Name;
+						if (Main.chrName[Main.npcs[townNPCIndex].Type] != String.Empty)
+							name = Main.chrName[Main.npcs[townNPCIndex].Type] + " the " + Main.npcs[townNPCIndex].Name;
+
+						var text = name + " has arrived!"; //String.Format("{0} has arrived!", name);
 						NetMessage.SendData(25, -1, -1, text, 255, 50f, 125f, 255f);
 					}
 				}
