@@ -7750,12 +7750,25 @@ namespace Terraria_Server.WorldMod
 			return false;
 		}
 
+		public static int totalD, totalX;
 		public static void UpdateWorld(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, ISender Sender)
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 
 			UpdateMech(TileRefs, sandbox, Sender);
+			totalD++;
+			if (totalD >= 10)
+			{
+				totalD = 0;
+				CountTiles(TileRefs, totalX);
+				totalX++;
+				if (totalX >= Main.maxTilesX)
+				{
+					totalX = 0;
+				}
+			}
+
 			Liquid.skipCount++;
 			if (Liquid.skipCount > 1)
 			{
