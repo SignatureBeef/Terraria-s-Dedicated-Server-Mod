@@ -58,7 +58,7 @@
     <Reference Include="TerrariaServer, Version=1.0.4.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <ExecutableExtension>.exe</ExecutableExtension>
-      <HintPath>C:\TerrariaServer.exe</HintPath>
+      <HintPath>..\..\..\Program Files\Steam\steamapps\common\terraria\TerrariaServer.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

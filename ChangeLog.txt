@@ -36,5 +36,5 @@ Build 38
 	- Added a hook for plugins to change where players spawn upon connection.
 	- Fixed a few boss messages being repeated and fixed up the SpawnNPC packet.
 	- Fixed an issue where new town npcs (1.1.1/1.1.2) try to continuously move in.
-	- Added prefixes to the Give command.
+	- Added prefixes to the Give command, Via Int32 or their names.
 	- Plugins can now tap into the language system. There now is also no check for out of date files as it's not needed anymore.

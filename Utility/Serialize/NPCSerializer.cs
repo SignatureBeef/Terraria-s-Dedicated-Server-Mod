@@ -57,7 +57,7 @@ namespace Terraria_Utilities.Serialize
 				var npc = Activator.CreateInstance(type) as Terraria.NPC;
 				npc.SetDefaults(npcId);
 
-				if (npc.Name == String.Empty)
+				if (npc.name == String.Empty)
 					continue;
 
 				SerializeNPC(npc, writer);
@@ -98,13 +98,13 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.buffImmune[39], feild);
 						break;
 					case "Name":
-						writer.WriteCustomObject(npc.Name, feild);
+						writer.WriteCustomObject(npc.name, feild);
 						break;
 					case "Type":
 						if (SetDefaults_Int32)
-							writer.WriteCustomObject(npc.Type, feild);
+							writer.WriteCustomObject(npc.type, feild);
 						else
-							writer.WriteCustomObject(npc.Type, "Inherits");
+							writer.WriteCustomObject(npc.type, "Inherits");
 						break;
 					case "aiStyle":
 						writer.WriteCustomObject(npc.aiStyle, feild);
@@ -128,10 +128,10 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.knockBackResist, feild);
 						break;
 					case "Width":
-						writer.WriteCustomObject(npc.Width, feild);
+						writer.WriteCustomObject(npc.width, feild);
 						break;
 					case "Height":
-						writer.WriteCustomObject(npc.Height, feild);
+						writer.WriteCustomObject(npc.height, feild);
 						break;
 					case "slots":
 						writer.WriteCustomObject(npc.npcSlots, feild);
@@ -146,7 +146,7 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.behindTiles, feild);
 						break;
 					case "DisplayName":
-						if(npc.displayName != npc.Name)
+						if(npc.displayName != npc.name)
 							writer.WriteCustomObject(npc.displayName, feild);
 						break;
 					case "NetAlways":
@@ -156,7 +156,7 @@ namespace Terraria_Utilities.Serialize
 						writer.WriteCustomObject(npc.netSkip, feild);
 						break;
 					case "NetID":
-						writer.WriteCustomObject(npc.NetID, feild);
+						writer.WriteCustomObject(npc.netID, feild);
 						break;
 					default:
 						throw new Exception("This class is feild specific! Please add the relative feild above [" + feild + "]");

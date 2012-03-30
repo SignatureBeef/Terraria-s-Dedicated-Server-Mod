@@ -527,8 +527,16 @@ namespace Terraria_Server.Commands
 		{
 			// /give <player> <stack> <name> 
 
-			int prefix;
-			args.TryPopAny<Int32>("-prefix", out prefix);
+			string _prefix;
+			args.TryPopAny("-prefix", out _prefix);
+
+			byte prefix;
+			if (!Byte.TryParse(_prefix, out prefix))
+			{
+				Affix affix;
+				if (!AffixExtensions.Parse(_prefix ?? String.Empty, out affix, true)) prefix = 0;
+				else prefix = (byte)affix;
+			}
 
 			Player receiver = args.GetOnlinePlayer(0);
 			int stack = args.GetInt(1);
@@ -546,6 +554,8 @@ namespace Terraria_Server.Commands
 
 				if (item.NetID < 0)
 					Main.item[index] = Item.netDefaults(item.NetID);
+
+				Main.item[index].Prefix = prefix;
 			}
 			else
 			{
@@ -571,6 +581,8 @@ namespace Terraria_Server.Commands
 
 					if (item.NetID < 0)
 						Main.item[index] = Item.netDefaults(item.NetID);
+
+					Main.item[index].Prefix = prefix;
 				}
 				else
 				{

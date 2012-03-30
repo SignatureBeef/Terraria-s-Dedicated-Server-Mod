@@ -26,19 +26,21 @@ namespace Terraria_Utilities
         {
             Console.WriteLine(WELCOME_MESSAGE);
 
-			var err = 0;
-			var res = ConsistencyCheck.CheckTileSets(out err);
-			if (!res)
-			{
-				Console.WriteLine("TDSM tile set incorrect");
-			}
-			else { return; }
+#region tests
+			//var err = 0;
+			//var res = ConsistencyCheck.CheckTileSets(out err);
+			//if (!res)
+			//{
+			//    Console.WriteLine("TDSM tile set incorrect");
+			//}
+			//else { return; }
 
 			// [START] Test NPC Serializer
 			/*NPCSerializer.Serialize();
 			Console.ReadKey(true);
 			return;*/
 			//[END] Test NPC Serializer */
+#endregion
 
 			//var location = "C:\\TerrariaServer.exe";
             var typeSet = GetSet();
@@ -63,6 +65,9 @@ namespace Terraria_Utilities
                 }
                 Serializer.UpdateAssembly(location, name_space, upperCase[name_space]);
             }*/
+
+			Console.Write("Ok\nDumping Affix's...");
+			DumpAffixes();
 
             Console.Write("Ok\nSerializing...");
             Terraria.Main.dedServ = true; //Set this to true, We don't need the GUI shit.
@@ -231,5 +236,38 @@ namespace Terraria_Utilities
             public String[]     EntityObjNames  { get; set; }
             public InvokeType   InvokeType      { get; set; }
         }
+
+		public static void DumpAffixes()
+		{
+			var ClassName = "Affix";
+			var writer = new StreamWriter(ClassName + ".cs");
+
+			Console.Write("Saving {0}...", ClassName);
+			var l = String.Format("public enum {0} : int", ClassName);
+			writer.WriteLine(l);
+			writer.WriteLine("{");
+
+			var item = new Terraria.Item();
+			for (byte i = 1; i < Terraria_Server.Item.MAX_AFFIXS + 1; i++)
+			{
+				item.prefix = i;
+				var affix = item.AffixName().Trim();
+
+				var line = "\t{0} = {1}";
+				if (i != Terraria_Server.Item.MAX_AFFIXS)
+					line += ',';
+
+				var toWrite = String.Format(line, affix, i);
+				writer.WriteLine(toWrite);
+			}
+
+			writer.WriteLine("}");
+
+			writer.Flush();
+			writer.Close();
+			writer.Dispose();
+
+			Console.WriteLine("Ok");
+		}
     }
 }

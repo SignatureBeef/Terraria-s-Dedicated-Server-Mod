@@ -135,6 +135,7 @@
     <Compile Include="Logging\SendingLogger.cs" />
     <Compile Include="Messages\SpammableMessage.cs" />
     <Compile Include="Misc\InvasionType.cs" />
+    <Compile Include="Misc\Affix.cs" />
     <Compile Include="Misc\Time.cs" />
     <Compile Include="Language\Languages.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
