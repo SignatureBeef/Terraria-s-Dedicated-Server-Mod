@@ -18,13 +18,14 @@ namespace Terraria_Server
 	/// </summary>
 	public class Player : BaseEntity, ISender
 	{
-		public const int MAX_INVENTORY = 49;
-		public const int MAX_HEALTH = 400;
-		public const int MAX_MANA = 360;
-		public const int MAX_ITEMS = 255;
-		public const int NUM_ARMOR_HEAD = 44;
-		public const int NUM_ARMOR_BODY = 25;
-		public const int NUM_ARMOR_LEGS = 24;
+		public const Int32 MAX_BUFF_TIME = 1200;
+		public const Int32 MAX_INVENTORY = 49;
+		public const Int32 MAX_HEALTH = 400;
+		public const Int32 MAX_MANA = 360;
+		public const Int32 MAX_ITEMS = 255;
+		public const Int32 NUM_ARMOR_HEAD = 44;
+		public const Int32 NUM_ARMOR_BODY = 25;
+		public const Int32 NUM_ARMOR_LEGS = 24;
 
 		public bool tongued { get; set; }
 
@@ -555,6 +556,7 @@ namespace Terraria_Server
 		/// <param name="quiet">Whether to announce</param>
 		public void AddBuff(int type, int time, bool quiet = true)
 		{
+			ProgramLog.Death.Log("Adding buff {0} to {1}.", type, Name);
 			int num = -1;
 			for (int i = 0; i < 10; i++)
 			{
