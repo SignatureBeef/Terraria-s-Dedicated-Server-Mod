@@ -3566,7 +3566,7 @@ namespace Terraria_Server
 				{
 					this.statLifeMax = 100;
 					this.statManaMax = 0;
-					this.DropItems();
+					//this.DropItems(); //Client code?
 				}
 			}
 			this.headVelocity.Y = (float)Main.rand.Next(-40, -10) * 0.1f;
@@ -4031,7 +4031,7 @@ namespace Terraria_Server
 							shootSpeed += item.ShootSpeed;
 							if (item.Ranged)
 							{
-								damage += (int)((float)item.Damage * this.rangedDamage);
+								damage += (int)((float)item.damage * this.rangedDamage);
 							}
 							else
 							{
@@ -4118,14 +4118,14 @@ namespace Terraria_Server
 					}
 				}
 			}
-			if (selectedItem.Damage >= 0 && selectedItem.Type > 0 && !selectedItem.NoMelee)
+			if (selectedItem.damage >= 0 && selectedItem.Type > 0 && !selectedItem.NoMelee)
 			{
 				if (this.itemAnimation > 0)
 				{
 					//bool flag5 = false;
 					Rectangle rectangle = new Rectangle((int)this.itemLocation.X, (int)this.itemLocation.Y, 32, 32);
-					rectangle.Width = (int)((float)rectangle.Width * selectedItem.Scale);
-					rectangle.Height = (int)((float)rectangle.Height * selectedItem.Scale);
+					rectangle.Width = (int)((float)rectangle.Width * selectedItem.scale);
+					rectangle.Height = (int)((float)rectangle.Height * selectedItem.scale);
 					if (this.direction == -1)
 					{
 						rectangle.X -= rectangle.Width;
@@ -4299,31 +4299,6 @@ namespace Terraria_Server
 						}
 					}
 					this.Spawn(TileRefs, sandbox);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Death drop.  Probably outdated.  Client-side
-		/// </summary>
-		public void DropItems()
-		{
-			for (int i = 0; i < MAX_INVENTORY; i++)
-			{
-				if (this.inventory[i].Type >= 71 && this.inventory[i].Type <= 74)
-				{
-					int num = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, this.inventory[i].Type, 1, false);
-					int num2 = this.inventory[i].Stack / 2;
-					num2 = this.inventory[i].Stack - num2;
-					this.inventory[i].Stack -= num2;
-					if (this.inventory[i].Stack <= 0)
-					{
-						this.inventory[i] = new Item();
-					}
-					Main.item[num].Stack = num2;
-					Main.item[num].Velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
-					Main.item[num].Velocity.X = (float)Main.rand.Next(-20, 21) * 0.2f;
-					Main.item[num].NoGrabDelay = 100;
 				}
 			}
 		}

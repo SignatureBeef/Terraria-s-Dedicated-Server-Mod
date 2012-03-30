@@ -54,7 +54,8 @@ namespace Terraria_Server.Messages
 
                 Main.item[(int)itemIndex] = Item.netDefaults(itemId);
                 item = Main.item[(int)itemIndex];
-                item.Prefix = Prefix;
+                //item.Prefix = Prefix;
+				item.SetPrefix(Prefix);
                 item.Stack = (int)stackSize;
                 item.Position.X = num39;
                 item.Position.Y = num40;

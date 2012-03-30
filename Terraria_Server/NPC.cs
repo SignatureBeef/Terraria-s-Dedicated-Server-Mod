@@ -1687,6 +1687,14 @@ namespace Terraria_Server
 					return;
 				else if (ctx.Result != HookResult.IGNORE)
 				{
+					if (Type == (int)NPCType.N113_WALL_OF_FLESH && Main.hardMode)
+					{
+						Main.hardMode = false;
+						var msg = NetMessage.PrepareThreadInstance();
+						msg.WorldData(false);
+						msg.Broadcast();
+					}
+
 					int npcIndex = NewNPC(x * 16 + 8, y * 16, Type, 1, makespawn);
 					if (npcIndex == 200)
 						return;
@@ -3077,6 +3085,7 @@ namespace Terraria_Server
 			return cloned;
 		}
 
+#region AI
 		//AI Stuff
 		private delegate void AIFunction(NPC npc, bool flag, Func<Int32, Int32, ITile> TileRefs);
 
@@ -8901,7 +8910,8 @@ namespace Terraria_Server
 				if (npc.ai[2] > (float)num285)
 					npc.ai[2] = 0f;
 
-				int num286 = NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)(npc.Height / 2) + 20f), 117, 1);
+				int num286 = NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)(npc.Height / 2) + 20f),
+					(int)NPCType.N117_LEECH_HEAD, 1, npc.MadeSpawn);
 				Main.npcs[num286].Velocity.X = (float)(npc.direction * 8);
 			}
 			npc.localAI[3] += 1f;
@@ -9063,7 +9073,7 @@ namespace Terraria_Server
 				num294 = (num294 + (float)Main.WallOfFlesh_B) / 2f;
 				for (int num300 = 0; num300 < 11; num300++)
 				{
-					num299 = NewNPC((int)npc.Position.X, (int)num294, 115, npc.whoAmI);
+					num299 = NewNPC((int)npc.Position.X, (int)num294, (int)NPCType.N115_THE_HUNGRY, npc.whoAmI, npc.MadeSpawn);
 					Main.npcs[num299].ai[0] = (float)num300 * 0.1f - 0.05f;
 				}
 				return;
@@ -12048,7 +12058,7 @@ namespace Terraria_Server
 				npc.Velocity.X = -4f;
 			}
 		}
-
+#endregion
 		/// <summary>
 		/// Checks if there are any active NPCs of specified type
 		/// </summary>
@@ -13126,11 +13136,10 @@ namespace Terraria_Server
 
 		public static bool MechSpawn(float x, float y, int type)
 		{
-
 			int found = 0;
 			int num2 = 0;
 			int num3 = 0;
-			for (int i = 0; i < 200; i++)
+			for (int i = 0; i < Main.npcs.Length; i++)
 			{
 				if (Main.npcs[i].Active && Main.npcs[i].Type == type)
 				{

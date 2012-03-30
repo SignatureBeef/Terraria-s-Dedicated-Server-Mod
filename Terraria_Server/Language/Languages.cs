@@ -456,6 +456,7 @@ namespace Terraria_Server.Language
 			ExtendedLanguages = new Dictionary<String, String>();
 		}
 #endregion
+
 		public static bool LoadClass(string filePath, bool restore = false, bool error = true, bool autoSave = true)
 		{
 			if (!File.Exists(filePath) || restore)

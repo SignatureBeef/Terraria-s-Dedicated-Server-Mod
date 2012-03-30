@@ -16,7 +16,7 @@ namespace Terraria_Server.Misc
 
         private string propertiesPath = String.Empty;
 
-        private List<String> header = new List<String>();
+		private List<String> header;
 		
 		public int Count
 		{
@@ -26,6 +26,7 @@ namespace Terraria_Server.Misc
         public PropertiesFile(string propertiesPath)
         {
             propertiesMap = new Dictionary<String, String>();
+			header = new List<String>();
             this.propertiesPath = propertiesPath;
         }
 

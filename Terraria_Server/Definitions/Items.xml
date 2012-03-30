@@ -9,7 +9,7 @@
 		<UseTime>13</UseTime>
 		<MaxStack>1</MaxStack>
 		<Pick>40</Pick>
-		<Damage>5</Damage>
+		<damage>5</damage>
 		<KnockBack>2</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -29,7 +29,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>0</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -47,7 +47,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>1</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -64,7 +64,7 @@
 		<UseAnimation>21</UseAnimation>
 		<UseTime>21</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>10</Damage>
+		<damage>10</damage>
 		<KnockBack>5</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -81,7 +81,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealLife>15</HealLife>
 		<Potion>true</Potion>
 		<Consumable>true</Consumable>
@@ -99,7 +99,7 @@
 		<UseAnimation>12</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>8</Damage>
+		<damage>8</damage>
 		<KnockBack>4</KnockBack>
 		<UseTurn>true</UseTurn>
 		<Scale>0.9</Scale>
@@ -119,7 +119,7 @@
 		<UseTime>20</UseTime>
 		<MaxStack>1</MaxStack>
 		<Hammer>45</Hammer>
-		<Damage>7</Damage>
+		<damage>7</damage>
 		<KnockBack>5.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -141,7 +141,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>4</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -161,7 +161,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>30</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -179,7 +179,7 @@
 		<UseTime>19</UseTime>
 		<MaxStack>1</MaxStack>
 		<Axe>9</Axe>
-		<Damage>5</Damage>
+		<damage>5</damage>
 		<KnockBack>4.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -200,7 +200,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>6</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -219,7 +219,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>7</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -238,7 +238,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>8</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -257,7 +257,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>9</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -274,7 +274,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Tells the time</ToolTip>
 		<ToolTip2/>
 		<Value>1000</Value>
@@ -288,7 +288,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Tells the time</ToolTip>
 		<ToolTip2/>
 		<Value>5000</Value>
@@ -302,7 +302,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Tells the time</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -317,7 +317,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Shows depth</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -332,7 +332,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>6000</Value>
@@ -346,7 +346,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>750</Value>
@@ -360,7 +360,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>3000</Value>
@@ -374,7 +374,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>1500</Value>
@@ -388,7 +388,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Both tasty and flammable'</ToolTip>
 		<ToolTip2/>
 		<Ammo>23</Ammo>
@@ -404,7 +404,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>7</Damage>
+		<damage>7</damage>
 		<KnockBack>4</KnockBack>
 		<Scale>0.95</Scale>
 		<ToolTip/>
@@ -423,7 +423,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>10</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -441,7 +441,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>1</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -459,7 +459,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>20</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -476,7 +476,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealLife>50</HealLife>
 		<Potion>true</Potion>
 		<Consumable>true</Consumable>
@@ -495,7 +495,7 @@
 		<UseAnimation>30</UseAnimation>
 		<UseTime>30</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Permanently increases maximum life by 20</ToolTip>
 		<ToolTip2/>
@@ -513,7 +513,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>16</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -531,7 +531,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>13</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -550,7 +550,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>14</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -569,7 +569,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>17</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -588,7 +588,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>15</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -607,7 +607,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>16</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -626,7 +626,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>18</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -643,8 +643,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>1</Defense>
+		<damage>-1</damage>
+		<defense>1</defense>
 		<HeadSlot>10</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -660,7 +660,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>500</Value>
@@ -675,7 +675,7 @@
 		<UseAnimation>30</UseAnimation>
 		<UseTime>30</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>4</Damage>
+		<damage>4</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Shoot>1</Shoot>
@@ -694,7 +694,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>4</Damage>
+		<damage>4</damage>
 		<KnockBack>2</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -714,7 +714,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>6</Damage>
+		<damage>6</damage>
 		<KnockBack>2</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -735,7 +735,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>10</Damage>
+		<damage>10</damage>
 		<Consumable>true</Consumable>
 		<ToolTip/>
 		<ToolTip2/>
@@ -755,7 +755,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>20</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Summons the Eye of Cthulhu</ToolTip>
 		<ToolTip2/>
@@ -770,7 +770,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>25</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>14</Damage>
+		<damage>14</damage>
 		<KnockBack>1</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -793,7 +793,7 @@
 		<UseTime>15</UseTime>
 		<MaxStack>1</MaxStack>
 		<Axe>15</Axe>
-		<Damage>20</Damage>
+		<damage>20</damage>
 		<KnockBack>6</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<Scale>1.2</Scale>
@@ -813,7 +813,7 @@
 		<UseAnimation>20</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>17</Damage>
+		<damage>17</damage>
 		<KnockBack>5</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip/>
@@ -831,7 +831,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>8</Damage>
+		<damage>8</damage>
 		<KnockBack>3</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -854,7 +854,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>21</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -871,7 +871,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Slowly regenerates life</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -888,7 +888,7 @@
 		<UseAnimation>90</UseAnimation>
 		<UseTime>90</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Gaze in the mirror to return home</ToolTip>
 		<ToolTip2/>
@@ -905,7 +905,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>9</Damage>
+		<damage>9</damage>
 		<KnockBack>4</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -929,7 +929,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>1</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -946,7 +946,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Allows the holder to double jump</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -961,7 +961,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>The wearer can run super fast</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -977,7 +977,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>13</Damage>
+		<damage>13</damage>
 		<KnockBack>8</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -999,7 +999,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>22</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -1017,7 +1017,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Pulsing with dark energy'</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -1032,7 +1032,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<NetID>58</NetID>
@@ -1047,7 +1047,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>23</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -1063,7 +1063,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>50</Value>
@@ -1079,7 +1079,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>25</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -1097,7 +1097,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>2</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -1115,7 +1115,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>27</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -1132,7 +1132,7 @@
 		<UseAnimation>30</UseAnimation>
 		<UseTime>30</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>8</Damage>
+		<damage>8</damage>
 		<KnockBack>1</KnockBack>
 		<ToolTip>Summons a vile thorn</ToolTip>
 		<ToolTip2/>
@@ -1154,7 +1154,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>10</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>16</Damage>
+		<damage>16</damage>
 		<KnockBack>5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<Scale>1.15</Scale>
@@ -1177,7 +1177,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Cleanses the corruption</ToolTip>
 		<ToolTip2/>
@@ -1213,7 +1213,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Looks tasty!'</ToolTip>
 		<ToolTip2/>
 		<Value>10</Value>
@@ -1227,7 +1227,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>100</Value>
@@ -1242,7 +1242,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>20</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Summons the Eater of Worlds</ToolTip>
 		<ToolTip2/>
@@ -1256,7 +1256,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>100</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>5</Value>
@@ -1270,7 +1270,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>100</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>500</Value>
@@ -1284,7 +1284,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>100</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>50000</Value>
@@ -1298,7 +1298,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>100</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>5000000</Value>
@@ -1313,7 +1313,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>100</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Disappears after the sunrise</ToolTip>
 		<ToolTip2/>
@@ -1330,8 +1330,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>1</Defense>
+		<damage>-1</damage>
+		<defense>1</defense>
 		<LegSlot>1</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1346,8 +1346,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>2</Defense>
+		<damage>-1</damage>
+		<defense>2</defense>
 		<LegSlot>2</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1362,8 +1362,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>3</Defense>
+		<damage>-1</damage>
+		<defense>3</defense>
 		<LegSlot>3</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1378,8 +1378,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>4</Defense>
+		<damage>-1</damage>
+		<defense>4</defense>
 		<LegSlot>4</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1394,8 +1394,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>2</Defense>
+		<damage>-1</damage>
+		<defense>2</defense>
 		<BodySlot>1</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1410,8 +1410,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>3</Defense>
+		<damage>-1</damage>
+		<defense>3</defense>
 		<BodySlot>2</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1426,8 +1426,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>4</Defense>
+		<damage>-1</damage>
+		<defense>4</defense>
 		<BodySlot>3</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1442,8 +1442,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>5</Defense>
+		<damage>-1</damage>
+		<defense>5</defense>
 		<BodySlot>4</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1477,7 +1477,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>1000</Value>
@@ -1491,7 +1491,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -1508,7 +1508,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>29</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -1525,8 +1525,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>1</Defense>
+		<damage>-1</damage>
+		<defense>1</defense>
 		<HeadSlot>11</HeadSlot>
 		<ToolTip>Provides light when worn</ToolTip>
 		<ToolTip2/>
@@ -1542,8 +1542,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>1</Defense>
+		<damage>-1</damage>
+		<defense>1</defense>
 		<HeadSlot>1</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1558,8 +1558,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>2</Defense>
+		<damage>-1</damage>
+		<defense>2</defense>
 		<HeadSlot>2</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1574,8 +1574,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>3</Defense>
+		<damage>-1</damage>
+		<defense>3</defense>
 		<HeadSlot>3</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1590,8 +1590,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>4</Defense>
+		<damage>-1</damage>
+		<defense>4</defense>
 		<HeadSlot>4</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1608,7 +1608,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>4</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -1626,7 +1626,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>19</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -1643,7 +1643,7 @@
 		<UseAnimation>16</UseAnimation>
 		<UseTime>16</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>10</Damage>
+		<damage>10</damage>
 		<Scale>0.9</Scale>
 		<ToolTip/>
 		<ToolTip2/>
@@ -1665,7 +1665,7 @@
 		<UseAnimation>43</UseAnimation>
 		<UseTime>43</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>23</Damage>
+		<damage>23</damage>
 		<KnockBack>4</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip/>
@@ -1687,7 +1687,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>7</Damage>
+		<damage>7</damage>
 		<KnockBack>2</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -1708,7 +1708,7 @@
 		<UseAnimation>8</UseAnimation>
 		<UseTime>8</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>6</Damage>
+		<damage>6</damage>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip>33% chance to not consume ammo</ToolTip>
 		<ToolTip2>'Half shark, half gun, completely awesome.'</ToolTip2>
@@ -1730,7 +1730,7 @@
 		<UseAnimation>28</UseAnimation>
 		<UseTime>28</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>8</Damage>
+		<damage>8</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Shoot>1</Shoot>
@@ -1749,8 +1749,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>6</Defense>
+		<damage>-1</damage>
+		<defense>6</defense>
 		<LegSlot>5</LegSlot>
 		<ToolTip>7% increased melee speed</ToolTip>
 		<ToolTip2/>
@@ -1766,8 +1766,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>7</Defense>
+		<damage>-1</damage>
+		<defense>7</defense>
 		<BodySlot>5</BodySlot>
 		<ToolTip>7% increased melee speed</ToolTip>
 		<ToolTip2/>
@@ -1783,8 +1783,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>6</Defense>
+		<damage>-1</damage>
+		<defense>6</defense>
 		<HeadSlot>5</HeadSlot>
 		<ToolTip>7% increased melee speed</ToolTip>
 		<ToolTip2/>
@@ -1802,7 +1802,7 @@
 		<UseTime>15</UseTime>
 		<MaxStack>1</MaxStack>
 		<Pick>65</Pick>
-		<Damage>9</Damage>
+		<damage>9</damage>
 		<KnockBack>3</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -1824,7 +1824,7 @@
 		<UseTime>19</UseTime>
 		<MaxStack>1</MaxStack>
 		<Hammer>55</Hammer>
-		<Damage>24</Damage>
+		<damage>24</damage>
 		<KnockBack>6</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<Scale>1.3</Scale>
@@ -1846,7 +1846,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>33</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -1865,7 +1865,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>34</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -1883,7 +1883,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>35</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -1901,7 +1901,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>36</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -1918,7 +1918,7 @@
 		<UseAnimation>30</UseAnimation>
 		<UseTime>30</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Permanently increases maximum mana by 20</ToolTip>
 		<ToolTip2/>
@@ -1934,7 +1934,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>20</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealMana>50</HealMana>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
@@ -1951,7 +1951,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Increases maximum mana by 20</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -1967,7 +1967,7 @@
 		<UseAnimation>20</UseAnimation>
 		<UseTime>20</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>44</Damage>
+		<damage>44</damage>
 		<KnockBack>5.5</KnockBack>
 		<ToolTip>Throws balls of fire</ToolTip>
 		<ToolTip2/>
@@ -1990,7 +1990,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>22</Damage>
+		<damage>22</damage>
 		<KnockBack>5</KnockBack>
 		<ToolTip>Casts a controllable missile</ToolTip>
 		<ToolTip2/>
@@ -2054,7 +2054,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>37</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2071,7 +2071,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Warm to the touch'</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -2086,7 +2086,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Sometimes dropped by Skeletons and Piranha</ToolTip>
 		<ToolTip2/>
 		<Value>1000</Value>
@@ -2101,7 +2101,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>32</Damage>
+		<damage>32</damage>
 		<KnockBack>8</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -2122,7 +2122,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>25</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>29</Damage>
+		<damage>29</damage>
 		<KnockBack>2</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip>Lights wooden arrows ablaze</ToolTip>
@@ -2145,7 +2145,7 @@
 		<UseAnimation>34</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>36</Damage>
+		<damage>36</damage>
 		<KnockBack>6.5</KnockBack>
 		<Scale>1.3</Scale>
 		<ToolTip>'It's made out of fire!'</ToolTip>
@@ -2165,7 +2165,7 @@
 		<UseTime>25</UseTime>
 		<MaxStack>1</MaxStack>
 		<Pick>100</Pick>
-		<Damage>12</Damage>
+		<damage>12</damage>
 		<KnockBack>2</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2185,8 +2185,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>3</Defense>
+		<damage>-1</damage>
+		<defense>3</defense>
 		<HeadSlot>6</HeadSlot>
 		<ToolTip>5% increased magic damage</ToolTip>
 		<ToolTip2/>
@@ -2202,8 +2202,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>4</Defense>
+		<damage>-1</damage>
+		<defense>4</defense>
 		<BodySlot>6</BodySlot>
 		<ToolTip>5% increased magic damage</ToolTip>
 		<ToolTip2/>
@@ -2219,8 +2219,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>3</Defense>
+		<damage>-1</damage>
+		<defense>3</defense>
 		<LegSlot>6</LegSlot>
 		<ToolTip>5% increased magic damage</ToolTip>
 		<ToolTip2/>
@@ -2237,7 +2237,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealLife>20</HealLife>
 		<Potion>true</Potion>
 		<Consumable>true</Consumable>
@@ -2256,7 +2256,7 @@
 		<UseAnimation>19</UseAnimation>
 		<UseTime>19</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>17</Damage>
+		<damage>17</damage>
 		<KnockBack>0.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<Scale>0.8</Scale>
@@ -2279,7 +2279,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Allows flight</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -2296,7 +2296,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>38</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2314,7 +2314,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>5</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2332,7 +2332,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>39</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2350,7 +2350,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>6</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2368,7 +2368,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>40</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2386,7 +2386,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>41</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2404,7 +2404,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>17</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2422,7 +2422,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>42</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2440,7 +2440,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>43</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2458,7 +2458,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>18</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2476,7 +2476,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>44</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2494,7 +2494,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>19</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2512,7 +2512,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>45</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2530,7 +2530,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>10</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2548,7 +2548,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>46</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2566,7 +2566,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>11</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2584,7 +2584,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>47</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2602,7 +2602,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>12</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2620,7 +2620,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>48</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2639,7 +2639,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>49</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2658,7 +2658,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>50</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2676,7 +2676,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>51</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2692,8 +2692,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>5</Defense>
+		<damage>-1</damage>
+		<defense>5</defense>
 		<HeadSlot>7</HeadSlot>
 		<ToolTip>4% increased ranged damage.</ToolTip>
 		<ToolTip2/>
@@ -2709,8 +2709,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>6</Defense>
+		<damage>-1</damage>
+		<defense>6</defense>
 		<BodySlot>7</BodySlot>
 		<ToolTip>4% increased ranged damage.</ToolTip>
 		<ToolTip2/>
@@ -2726,8 +2726,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>5</Defense>
+		<damage>-1</damage>
+		<defense>5</defense>
 		<LegSlot>7</LegSlot>
 		<ToolTip>4% increased ranged damage.</ToolTip>
 		<ToolTip2/>
@@ -2744,7 +2744,7 @@
 		<UseAnimation>12</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>22</Damage>
+		<damage>22</damage>
 		<KnockBack>4</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -2764,7 +2764,7 @@
 		<UseAnimation>20</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>18</Damage>
+		<damage>18</damage>
 		<KnockBack>1</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -2784,8 +2784,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>1</Defense>
+		<damage>-1</damage>
+		<defense>1</defense>
 		<ToolTip>Grants immunity to knockback</ToolTip>
 		<ToolTip2/>
 		<Rare>2</Rare>
@@ -2801,7 +2801,7 @@
 		<UseAnimation>16</UseAnimation>
 		<UseTime>8</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>14</Damage>
+		<damage>14</damage>
 		<KnockBack>5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip>Sprays out a shower of water</ToolTip>
@@ -2822,7 +2822,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Negates fall damage</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -2837,7 +2837,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Increases jump height</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -2853,7 +2853,7 @@
 		<UseAnimation>30</UseAnimation>
 		<UseTime>30</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>25</Damage>
+		<damage>25</damage>
 		<KnockBack>6</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<Scale>1.1</Scale>
@@ -2875,7 +2875,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>15</Damage>
+		<damage>15</damage>
 		<KnockBack>1</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -2897,7 +2897,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>15</Damage>
+		<damage>15</damage>
 		<KnockBack>6.5</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip/>
@@ -2920,7 +2920,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>23</Damage>
+		<damage>23</damage>
 		<KnockBack>7</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip/>
@@ -2941,7 +2941,7 @@
 		<UseAnimation>12</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>14</Damage>
+		<damage>14</damage>
 		<KnockBack>3</KnockBack>
 		<Scale>0.75</Scale>
 		<ToolTip/>
@@ -2964,7 +2964,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>17</Damage>
+		<damage>17</damage>
 		<KnockBack>5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<Scale>0.9</Scale>
@@ -3005,7 +3005,7 @@
 		<UseAnimation>40</UseAnimation>
 		<UseTime>40</UseTime>
 		<MaxStack>5</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>A large explosion that will destroy most tiles</ToolTip>
 		<ToolTip2/>
@@ -3025,7 +3025,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>60</Damage>
+		<damage>60</damage>
 		<KnockBack>8</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip>A small explosion that will not destroy tiles</ToolTip>
@@ -3047,7 +3047,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>53</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3066,7 +3066,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>54</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3084,7 +3084,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>55</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3102,7 +3102,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>57</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3120,7 +3120,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>56</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3138,7 +3138,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>58</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3155,7 +3155,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Hot to the touch'</ToolTip>
 		<ToolTip2/>
 		<Rare>2</Rare>
@@ -3172,7 +3172,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>59</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3188,7 +3188,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>5625</Value>
@@ -3202,7 +3202,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>11250</Value>
@@ -3216,7 +3216,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>7500</Value>
@@ -3230,7 +3230,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>3750</Value>
@@ -3244,7 +3244,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>1875</Value>
@@ -3258,7 +3258,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>15000</Value>
@@ -3273,7 +3273,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealLife>25</HealLife>
 		<Potion>true</Potion>
 		<Consumable>true</Consumable>
@@ -3290,7 +3290,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<NetID>184</NetID>
@@ -3323,7 +3323,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Because not drowning is kinda nice'</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -3338,7 +3338,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Grants the ability to swim</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -3354,7 +3354,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealLife>100</HealLife>
 		<Potion>true</Potion>
 		<Consumable>true</Consumable>
@@ -3374,7 +3374,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>50</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealMana>100</HealMana>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
@@ -3393,7 +3393,7 @@
 		<UseAnimation>30</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>28</Damage>
+		<damage>28</damage>
 		<KnockBack>3</KnockBack>
 		<Scale>1.4</Scale>
 		<ToolTip/>
@@ -3412,7 +3412,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>25</Damage>
+		<damage>25</damage>
 		<KnockBack>8</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -3434,7 +3434,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>75</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3450,8 +3450,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>1</Defense>
+		<damage>-1</damage>
+		<defense>1</defense>
 		<ToolTip>Grants immunity to fire blocks</ToolTip>
 		<ToolTip2/>
 		<Rare>2</Rare>
@@ -3468,7 +3468,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>70</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -3486,7 +3486,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>60</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -3505,7 +3505,7 @@
 		<MaxStack>1</MaxStack>
 		<Hammer>25</Hammer>
 		<TileBoost>-1</TileBoost>
-		<Damage>2</Damage>
+		<damage>2</damage>
 		<KnockBack>5.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3525,7 +3525,7 @@
 		<UseAnimation>12</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>55</Damage>
+		<damage>55</damage>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip>Shoots fallen stars</ToolTip>
 		<ToolTip2/>
@@ -3547,7 +3547,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>21</Damage>
+		<damage>21</damage>
 		<KnockBack>3</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -3565,7 +3565,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>21</Damage>
+		<damage>21</damage>
 		<KnockBack>3</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -3583,7 +3583,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>21</Damage>
+		<damage>21</damage>
 		<KnockBack>3</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -3601,7 +3601,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>21</Damage>
+		<damage>21</damage>
 		<KnockBack>3</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -3619,7 +3619,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>21</Damage>
+		<damage>21</damage>
 		<KnockBack>3</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -3637,7 +3637,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>21</Damage>
+		<damage>21</damage>
 		<KnockBack>3</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -3657,7 +3657,7 @@
 		<MaxStack>1</MaxStack>
 		<Axe>20</Axe>
 		<Hammer>60</Hammer>
-		<Damage>20</Damage>
+		<damage>20</damage>
 		<KnockBack>7</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3678,9 +3678,9 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>10</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<UseTurn>true</UseTurn>
-		<Defense>1</Defense>
+		<defense>1</defense>
 		<HeadSlot>13</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -3695,7 +3695,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>10</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
 		<ToolTip2/>
@@ -3710,7 +3710,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>10</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
 		<ToolTip2/>
@@ -3724,7 +3724,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>23</HeadSlot>
 		<ToolTip>'It's pretty, oh so pretty'</ToolTip>
 		<ToolTip2/>
@@ -3739,7 +3739,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>200</Value>
@@ -3753,7 +3753,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>1000</Value>
@@ -3767,7 +3767,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>12% increased melee speed</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -3782,7 +3782,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>10% increased movement speed</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -3799,7 +3799,7 @@
 		<UseTime>13</UseTime>
 		<MaxStack>1</MaxStack>
 		<CreateTile>2</CreateTile>
-		<Damage>7</Damage>
+		<damage>7</damage>
 		<KnockBack>3</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3821,7 +3821,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>76</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3838,7 +3838,7 @@
 		<UseAnimation>30</UseAnimation>
 		<UseTime>30</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<UseTurn>true</UseTurn>
 		<ToolTip>'May annoy others'</ToolTip>
 		<ToolTip2/>
@@ -3854,8 +3854,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>1</Defense>
+		<damage>-1</damage>
+		<defense>1</defense>
 		<ToolTip/>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -3873,7 +3873,7 @@
 		<MaxStack>1</MaxStack>
 		<Axe>30</Axe>
 		<Hammer>70</Hammer>
-		<Damage>20</Damage>
+		<damage>20</damage>
 		<KnockBack>7</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3895,7 +3895,7 @@
 		<UseAnimation>20</UseAnimation>
 		<UseTime>20</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>34</Damage>
+		<damage>34</damage>
 		<KnockBack>6.5</KnockBack>
 		<ToolTip>Summons a controllable ball of fire</ToolTip>
 		<ToolTip2/>
@@ -3917,7 +3917,7 @@
 		<UseAnimation>11</UseAnimation>
 		<UseTime>11</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>23</Damage>
+		<damage>23</damage>
 		<KnockBack>2</KnockBack>
 		<Scale>0.75</Scale>
 		<ToolTip/>
@@ -3941,7 +3941,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>33</Damage>
+		<damage>33</damage>
 		<KnockBack>7</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip/>
@@ -3964,7 +3964,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>77</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -3983,7 +3983,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>78</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -4000,7 +4000,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>6% reduced mana usage</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -4017,7 +4017,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>79</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -4033,7 +4033,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>1000</Value>
@@ -4048,7 +4048,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>20</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealLife>50</HealLife>
 		<HealMana>50</HealMana>
 		<Potion>true</Potion>
@@ -4068,7 +4068,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>20</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealLife>100</HealLife>
 		<HealMana>100</HealMana>
 		<Potion>true</Potion>
@@ -4087,8 +4087,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>4</Defense>
+		<damage>-1</damage>
+		<defense>4</defense>
 		<HeadSlot>8</HeadSlot>
 		<ToolTip>Increases maximum mana by 20</ToolTip>
 		<ToolTip2>3% increased magic critical strike chance</ToolTip2>
@@ -4104,8 +4104,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>5</Defense>
+		<damage>-1</damage>
+		<defense>5</defense>
 		<BodySlot>8</BodySlot>
 		<ToolTip>Increases maximum mana by 20</ToolTip>
 		<ToolTip2>3% increased magic critical strike chance</ToolTip2>
@@ -4121,8 +4121,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>4</Defense>
+		<damage>-1</damage>
+		<defense>4</defense>
 		<LegSlot>8</LegSlot>
 		<ToolTip>Increases maximum mana by 20</ToolTip>
 		<ToolTip2>3% increased magic critical strike chance</ToolTip2>
@@ -4138,8 +4138,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>8</Defense>
+		<damage>-1</damage>
+		<defense>8</defense>
 		<HeadSlot>9</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4155,8 +4155,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>9</Defense>
+		<damage>-1</damage>
+		<defense>9</defense>
 		<BodySlot>9</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4172,8 +4172,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>8</Defense>
+		<damage>-1</damage>
+		<defense>8</defense>
 		<LegSlot>9</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4189,7 +4189,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>9</Damage>
+		<damage>9</damage>
 		<KnockBack>1</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -4228,7 +4228,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>5000</Value>
@@ -4242,7 +4242,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>12</HeadSlot>
 		<ToolTip>'Makes you look cool!'</ToolTip>
 		<ToolTip2/>
@@ -4258,8 +4258,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>2</Defense>
+		<damage>-1</damage>
+		<defense>2</defense>
 		<HeadSlot>14</HeadSlot>
 		<ToolTip>15% increased magic damage</ToolTip>
 		<ToolTip2/>
@@ -4275,7 +4275,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>15</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4290,7 +4290,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<BodySlot>10</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4305,7 +4305,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<LegSlot>10</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4320,7 +4320,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>16</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4335,7 +4335,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>17</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4350,7 +4350,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>18</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4365,7 +4365,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<BodySlot>11</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4380,7 +4380,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<LegSlot>11</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4395,7 +4395,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>19</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4410,7 +4410,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<BodySlot>12</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4425,7 +4425,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<LegSlot>12</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4440,7 +4440,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>20</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4455,7 +4455,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>21</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4470,7 +4470,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<BodySlot>13</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4485,7 +4485,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<LegSlot>13</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4500,7 +4500,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>10000</Value>
@@ -4514,7 +4514,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>2000</Value>
@@ -4528,7 +4528,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>22</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4543,7 +4543,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<BodySlot>14</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4558,7 +4558,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<LegSlot>14</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4573,7 +4573,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>50</Value>
@@ -4587,7 +4587,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>24</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4603,7 +4603,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealLife>20</HealLife>
 		<Potion>true</Potion>
 		<Consumable>true</Consumable>
@@ -4620,7 +4620,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<BodySlot>15</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4635,7 +4635,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>25</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4650,7 +4650,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>26</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4665,7 +4665,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>10</Damage>
+		<damage>10</damage>
 		<KnockBack>8</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -4687,7 +4687,7 @@
 		<UseAnimation>16</UseAnimation>
 		<UseTime>16</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>30</Damage>
+		<damage>30</damage>
 		<KnockBack>5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip>'This is a good idea!'</ToolTip>
@@ -4709,7 +4709,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'You are a terrible person.'</ToolTip>
 		<ToolTip2/>
 		<Value>1000</Value>
@@ -4723,8 +4723,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>2</Defense>
+		<damage>-1</damage>
+		<defense>2</defense>
 		<HeadSlot>27</HeadSlot>
 		<ToolTip>Greatly extends underwater breathing</ToolTip>
 		<ToolTip2/>
@@ -4740,7 +4740,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<BodySlot>0</BodySlot>
 		<Value>10000</Value>
 	</Item>
@@ -4752,7 +4752,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<LegSlot>0</LegSlot>
 		<Value>10000</Value>
 	</Item>
@@ -4764,7 +4764,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>0</HeadSlot>
 		<Value>10000</Value>
 	</Item>
@@ -4777,7 +4777,7 @@
 		<UseAnimation>20</UseAnimation>
 		<UseTime>20</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>35</Damage>
+		<damage>35</damage>
 		<KnockBack>5</KnockBack>
 		<Scale>0.9</Scale>
 		<ToolTip>Casts a demon scythe</ToolTip>
@@ -4800,7 +4800,7 @@
 		<UseAnimation>27</UseAnimation>
 		<UseTime>27</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>42</Damage>
+		<damage>42</damage>
 		<KnockBack>4.5</KnockBack>
 		<Scale>1.15</Scale>
 		<ToolTip/>
@@ -4819,7 +4819,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>25</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>27</Damage>
+		<damage>27</damage>
 		<KnockBack>4</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip/>
@@ -4842,7 +4842,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>81</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -4859,7 +4859,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>10</Value>
@@ -4874,7 +4874,7 @@
 		<UseAnimation>31</UseAnimation>
 		<UseTime>31</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>10</Damage>
+		<damage>10</damage>
 		<KnockBack>5</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip/>
@@ -4895,7 +4895,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>9</Damage>
+		<damage>9</damage>
 		<KnockBack>3</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -4916,7 +4916,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>12</Damage>
+		<damage>12</damage>
 		<KnockBack>2</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -4937,7 +4937,7 @@
 		<UseAnimation>31</UseAnimation>
 		<UseTime>31</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>8</Damage>
+		<damage>8</damage>
 		<KnockBack>6.5</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -4957,7 +4957,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>9</Damage>
+		<damage>9</damage>
 		<KnockBack>4</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip>Allows the collection of seeds for ammo</ToolTip>
@@ -4980,7 +4980,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Works when wet</ToolTip>
 		<ToolTip2/>
@@ -4998,7 +4998,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>For use with Blowpipe</ToolTip>
 		<ToolTip2/>
 		<Shoot>51</Shoot>
@@ -5014,7 +5014,7 @@
 		<UseAnimation>16</UseAnimation>
 		<UseTime>16</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>7</Damage>
+		<damage>7</damage>
 		<KnockBack>5</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -5033,7 +5033,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>5% increased movement speed</ToolTip>
 		<ToolTip2/>
 		<Value>5000</Value>
@@ -5049,7 +5049,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip/>
 		<ToolTip2/>
@@ -5068,7 +5068,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>13</Damage>
+		<damage>13</damage>
 		<KnockBack>2</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -5089,7 +5089,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Provides immunity to lava</ToolTip>
@@ -5109,7 +5109,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Provides life regeneration</ToolTip>
@@ -5129,7 +5129,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>25% increased movement speed</ToolTip>
@@ -5149,7 +5149,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Breathe water instead of air</ToolTip>
@@ -5169,7 +5169,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Increase defense by 8</ToolTip>
@@ -5189,7 +5189,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Increased mana regeneration</ToolTip>
@@ -5209,7 +5209,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>20% increased magic damage</ToolTip>
@@ -5229,7 +5229,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Slows falling speed</ToolTip>
@@ -5249,7 +5249,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Shows the location of treasure and ore</ToolTip>
@@ -5269,7 +5269,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Grants invisibility</ToolTip>
@@ -5289,7 +5289,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Emits an aura of light</ToolTip>
@@ -5309,7 +5309,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Increases night vision</ToolTip>
@@ -5329,7 +5329,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Increases enemy spawn rate</ToolTip>
@@ -5349,7 +5349,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Attackers also take damage</ToolTip>
@@ -5369,7 +5369,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Allows the ability to walk on water</ToolTip>
@@ -5389,7 +5389,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>20% increased arrow speed and damage</ToolTip>
@@ -5409,7 +5409,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Shows the location of enemies</ToolTip>
@@ -5429,7 +5429,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Allows the control of gravity</ToolTip>
@@ -5451,7 +5451,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>21</CreateTile>
 		<PlaceStyle>1</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -5470,7 +5470,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>82</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -5489,7 +5489,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>82</CreateTile>
 		<PlaceStyle>1</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -5508,7 +5508,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>82</CreateTile>
 		<PlaceStyle>2</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -5527,7 +5527,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>82</CreateTile>
 		<PlaceStyle>3</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -5546,7 +5546,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>82</CreateTile>
 		<PlaceStyle>4</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -5565,7 +5565,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>82</CreateTile>
 		<PlaceStyle>5</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -5581,7 +5581,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>100</Value>
@@ -5595,7 +5595,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>100</Value>
@@ -5609,7 +5609,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>100</Value>
@@ -5623,7 +5623,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>100</Value>
@@ -5637,7 +5637,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>100</Value>
@@ -5651,7 +5651,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>100</Value>
@@ -5665,7 +5665,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>200</Value>
@@ -5679,7 +5679,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>50</Value>
@@ -5695,7 +5695,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>85</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -5710,7 +5710,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>28</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -5725,7 +5725,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>50</Value>
@@ -5739,7 +5739,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Banned in most places'</ToolTip>
 		<ToolTip2/>
 		<Value>750000</Value>
@@ -5753,7 +5753,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<BodySlot>16</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -5768,7 +5768,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<LegSlot>15</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -5783,7 +5783,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Opens one Gold Chest</ToolTip>
 		<ToolTip2/>
 		<NetID>327</NetID>
@@ -5799,7 +5799,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>21</CreateTile>
 		<PlaceStyle>3</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -5816,7 +5816,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Opens all Shadow Chests</ToolTip>
 		<ToolTip2/>
 		<Value>75000</Value>
@@ -5832,7 +5832,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>20</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -5848,7 +5848,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>100</Value>
@@ -5864,7 +5864,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>86</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -5883,7 +5883,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>87</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -5902,7 +5902,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>88</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -5921,7 +5921,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>89</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -5940,7 +5940,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>90</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -5959,7 +5959,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>91</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -5979,7 +5979,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>91</CreateTile>
 		<PlaceStyle>1</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -5999,7 +5999,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>91</CreateTile>
 		<PlaceStyle>2</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6019,7 +6019,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>91</CreateTile>
 		<PlaceStyle>3</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6038,7 +6038,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>92</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6057,7 +6057,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>93</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6077,7 +6077,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>21</CreateTile>
 		<PlaceStyle>5</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6096,7 +6096,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>95</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6115,7 +6115,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>96</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6134,7 +6134,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>97</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6153,7 +6153,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>98</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6173,7 +6173,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>21</CreateTile>
 		<PlaceStyle>6</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6192,7 +6192,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>100</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6212,7 +6212,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>13</CreateTile>
 		<PlaceStyle>3</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6232,7 +6232,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>13</CreateTile>
 		<PlaceStyle>4</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6251,7 +6251,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>94</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6269,7 +6269,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -6289,7 +6289,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>101</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6308,7 +6308,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>102</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6327,7 +6327,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>103</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6345,7 +6345,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Minor improvements to all stats</ToolTip>
@@ -6367,7 +6367,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>15</CreateTile>
 		<PlaceStyle>1</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6386,7 +6386,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>104</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6405,7 +6405,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6423,7 +6423,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Summons a Goblin Army</ToolTip>
 		<ToolTip2/>
@@ -6437,7 +6437,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>30</Value>
@@ -6453,7 +6453,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>106</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6472,7 +6472,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>107</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6492,7 +6492,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>108</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6512,7 +6512,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>111</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6532,7 +6532,7 @@
 		<UseTime>14</UseTime>
 		<MaxStack>1</MaxStack>
 		<Hammer>80</Hammer>
-		<Damage>26</Damage>
+		<damage>26</damage>
 		<KnockBack>7.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6553,7 +6553,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>25</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>47</Damage>
+		<damage>47</damage>
 		<KnockBack>4.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<Scale>1.15</Scale>
@@ -6574,7 +6574,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>109</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
 		<ToolTip/>
@@ -6593,7 +6593,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>112</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -6610,8 +6610,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>2</Defense>
+		<damage>-1</damage>
+		<defense>2</defense>
 		<HeadSlot>29</HeadSlot>
 		<ToolTip>Increases maximum mana by 40</ToolTip>
 		<ToolTip2>9% increased magic critical strike chance</ToolTip2>
@@ -6627,8 +6627,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>11</Defense>
+		<damage>-1</damage>
+		<defense>11</defense>
 		<HeadSlot>30</HeadSlot>
 		<ToolTip>7% increased movement speed</ToolTip>
 		<ToolTip2>12% increased melee speed</ToolTip2>
@@ -6644,8 +6644,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>4</Defense>
+		<damage>-1</damage>
+		<defense>4</defense>
 		<HeadSlot>31</HeadSlot>
 		<ToolTip>10% increased ranged damage</ToolTip>
 		<ToolTip2>6% increased ranged critical strike chance</ToolTip2>
@@ -6661,8 +6661,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>8</Defense>
+		<damage>-1</damage>
+		<defense>8</defense>
 		<BodySlot>17</BodySlot>
 		<ToolTip/>
 		<ToolTip2>3% increased critical strike chance</ToolTip2>
@@ -6678,8 +6678,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>7</Defense>
+		<damage>-1</damage>
+		<defense>7</defense>
 		<LegSlot>16</LegSlot>
 		<ToolTip/>
 		<ToolTip2>10% increased movement speed</ToolTip2>
@@ -6695,8 +6695,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>3</Defense>
+		<damage>-1</damage>
+		<defense>3</defense>
 		<HeadSlot>32</HeadSlot>
 		<ToolTip>Increases maximum mana by 60</ToolTip>
 		<ToolTip2>15% increased magic damage</ToolTip2>
@@ -6712,8 +6712,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>16</Defense>
+		<damage>-1</damage>
+		<defense>16</defense>
 		<HeadSlot>33</HeadSlot>
 		<ToolTip>5% increased melee critical strike chance</ToolTip>
 		<ToolTip2>10% increased melee damage</ToolTip2>
@@ -6729,8 +6729,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>6</Defense>
+		<damage>-1</damage>
+		<defense>6</defense>
 		<HeadSlot>34</HeadSlot>
 		<ToolTip>12% increased ranged damage</ToolTip>
 		<ToolTip2>7% increased ranged critical strike chance</ToolTip2>
@@ -6746,8 +6746,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>12</Defense>
+		<damage>-1</damage>
+		<defense>12</defense>
 		<BodySlot>18</BodySlot>
 		<ToolTip/>
 		<ToolTip2>5% increased damage</ToolTip2>
@@ -6763,8 +6763,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>9</Defense>
+		<damage>-1</damage>
+		<defense>9</defense>
 		<LegSlot>17</LegSlot>
 		<ToolTip/>
 		<ToolTip2>3% increased critical strike chance</ToolTip2>
@@ -6780,7 +6780,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -6795,7 +6795,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -6813,7 +6813,7 @@
 		<UseTime>8</UseTime>
 		<MaxStack>1</MaxStack>
 		<Axe>14</Axe>
-		<Damage>23</Damage>
+		<damage>23</damage>
 		<KnockBack>2.75</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -6836,7 +6836,7 @@
 		<UseTime>8</UseTime>
 		<MaxStack>1</MaxStack>
 		<Axe>17</Axe>
-		<Damage>29</Damage>
+		<damage>29</damage>
 		<KnockBack>3</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -6859,7 +6859,7 @@
 		<UseTime>13</UseTime>
 		<MaxStack>1</MaxStack>
 		<Pick>110</Pick>
-		<Damage>10</Damage>
+		<damage>10</damage>
 		<ToolTip>Can mine Mythril</ToolTip>
 		<ToolTip2/>
 		<Rare>4</Rare>
@@ -6881,7 +6881,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>1</MaxStack>
 		<Pick>150</Pick>
-		<Damage>15</Damage>
+		<damage>15</damage>
 		<ToolTip>Can mine Adamantite</ToolTip>
 		<ToolTip2/>
 		<Rare>4</Rare>
@@ -6903,7 +6903,7 @@
 		<UseTime>6</UseTime>
 		<MaxStack>1</MaxStack>
 		<Axe>20</Axe>
-		<Damage>33</Damage>
+		<damage>33</damage>
 		<KnockBack>4.5</KnockBack>
 		<ToolTip/>
 		<ToolTip2/>
@@ -6926,7 +6926,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>1</MaxStack>
 		<Pick>180</Pick>
-		<Damage>20</Damage>
+		<damage>20</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Rare>4</Rare>
@@ -6947,7 +6947,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>49</Damage>
+		<damage>49</damage>
 		<KnockBack>7</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip>Has a chance to confuse</ToolTip>
@@ -6969,7 +6969,7 @@
 		<UseAnimation>26</UseAnimation>
 		<UseTime>26</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>35</Damage>
+		<damage>35</damage>
 		<KnockBack>5</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip/>
@@ -6990,7 +6990,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -7007,7 +7007,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>21</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7023,7 +7023,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Shows horizontal position</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -7038,7 +7038,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Grants the ability to swim</ToolTip>
 		<ToolTip2>Greatly extends underwater breathing</ToolTip2>
 		<Rare>4</Rare>
@@ -7053,7 +7053,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Shows position</ToolTip>
 		<ToolTip2>Tells the time</ToolTip2>
 		<Rare>4</Rare>
@@ -7068,7 +7068,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Negates fall damage</ToolTip>
 		<ToolTip2>Grants immunity to fire blocks</ToolTip2>
 		<Rare>4</Rare>
@@ -7083,8 +7083,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>2</Defense>
+		<damage>-1</damage>
+		<defense>2</defense>
 		<ToolTip>Grants immunity to knockback</ToolTip>
 		<ToolTip2>Grants immunity to fire blocks</ToolTip2>
 		<Rare>4</Rare>
@@ -7101,7 +7101,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>114</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7118,7 +7118,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Allows the holder to double jump</ToolTip>
 		<ToolTip2>Increases jump height</ToolTip2>
 		<Rare>4</Rare>
@@ -7133,8 +7133,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>4</Defense>
+		<damage>-1</damage>
+		<defense>4</defense>
 		<HeadSlot>35</HeadSlot>
 		<ToolTip>Increases maximum mana by 80</ToolTip>
 		<ToolTip2>11% increased magic damage and critical strike chance</ToolTip2>
@@ -7150,8 +7150,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>22</Defense>
+		<damage>-1</damage>
+		<defense>22</defense>
 		<HeadSlot>36</HeadSlot>
 		<ToolTip>7% increased melee critical strike chance</ToolTip>
 		<ToolTip2>14% increased melee damage</ToolTip2>
@@ -7167,8 +7167,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>8</Defense>
+		<damage>-1</damage>
+		<defense>8</defense>
 		<HeadSlot>37</HeadSlot>
 		<ToolTip>14% increased ranged damage</ToolTip>
 		<ToolTip2>8% increased ranged critical strike chance</ToolTip2>
@@ -7184,8 +7184,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>14</Defense>
+		<damage>-1</damage>
+		<defense>14</defense>
 		<BodySlot>19</BodySlot>
 		<ToolTip>6% increased damage</ToolTip>
 		<ToolTip2/>
@@ -7201,8 +7201,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>10</Defense>
+		<damage>-1</damage>
+		<defense>10</defense>
 		<LegSlot>18</LegSlot>
 		<ToolTip>4% increased critical strike chance</ToolTip>
 		<ToolTip2>5% increased movement speed</ToolTip2>
@@ -7218,7 +7218,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Allows flight</ToolTip>
 		<ToolTip2>The wearer can run super fast</ToolTip2>
 		<Rare>4</Rare>
@@ -7234,7 +7234,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>25</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>38</Damage>
+		<damage>38</damage>
 		<KnockBack>6</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip/>
@@ -7255,7 +7255,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Increases block placement range</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -7272,7 +7272,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>116</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7291,7 +7291,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>117</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7307,8 +7307,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>1</Defense>
+		<damage>-1</damage>
+		<defense>1</defense>
 		<BodySlot>20</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -7324,8 +7324,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>1</Defense>
+		<damage>-1</damage>
+		<defense>1</defense>
 		<LegSlot>19</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -7343,7 +7343,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>118</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7361,7 +7361,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>119</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7379,7 +7379,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>120</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7397,7 +7397,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>121</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7415,7 +7415,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>122</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7433,7 +7433,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>22</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7451,7 +7451,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>23</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7469,7 +7469,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>24</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7487,7 +7487,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>25</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7505,7 +7505,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>26</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7522,7 +7522,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>20</Damage>
+		<damage>20</damage>
 		<KnockBack>3</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip>Spreads the Hallow to some blocks</ToolTip>
@@ -7543,7 +7543,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>20</Damage>
+		<damage>20</damage>
 		<KnockBack>3</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip>Spreads the corruption to some blocks</ToolTip>
@@ -7565,7 +7565,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>123</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7603,7 +7603,7 @@
 		<UseAnimation>30</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>39</Damage>
+		<damage>39</damage>
 		<KnockBack>8</KnockBack>
 		<Scale>1.05</Scale>
 		<ToolTip/>
@@ -7625,7 +7625,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>4</CreateTile>
 		<PlaceStyle>1</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7647,7 +7647,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>4</CreateTile>
 		<PlaceStyle>2</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7669,7 +7669,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>4</CreateTile>
 		<PlaceStyle>3</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7691,7 +7691,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>4</CreateTile>
 		<PlaceStyle>4</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7713,7 +7713,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>4</CreateTile>
 		<PlaceStyle>5</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7735,7 +7735,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>4</CreateTile>
 		<PlaceStyle>6</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7757,7 +7757,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>4</CreateTile>
 		<PlaceStyle>7</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7776,7 +7776,7 @@
 		<UseAnimation>12</UseAnimation>
 		<UseTime>4</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>19</Damage>
+		<damage>19</damage>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip>Three round burst</ToolTip>
 		<ToolTip2>Only the first shot consumes ammo</ToolTip2>
@@ -7799,7 +7799,7 @@
 		<UseAnimation>25</UseAnimation>
 		<UseTime>25</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>30</Damage>
+		<damage>30</damage>
 		<KnockBack>1.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip/>
@@ -7822,7 +7822,7 @@
 		<UseAnimation>23</UseAnimation>
 		<UseTime>23</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>34</Damage>
+		<damage>34</damage>
 		<KnockBack>2</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip/>
@@ -7866,7 +7866,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>2</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7886,7 +7886,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>3</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7906,7 +7906,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>4</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7926,7 +7926,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>5</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7946,7 +7946,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>6</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7966,7 +7966,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>7</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -7986,7 +7986,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>8</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8006,7 +8006,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>9</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8026,7 +8026,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>10</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8046,7 +8046,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>11</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8066,7 +8066,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>12</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8086,7 +8086,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>13</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8106,7 +8106,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>14</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8126,7 +8126,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>15</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8146,7 +8146,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>16</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8166,7 +8166,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>17</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8186,7 +8186,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>18</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8206,7 +8206,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>19</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8226,7 +8226,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>20</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8246,7 +8246,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>21</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8266,7 +8266,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>22</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8286,7 +8286,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>23</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8306,7 +8306,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>24</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8326,7 +8326,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>25</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8346,7 +8346,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>26</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8366,7 +8366,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>27</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8386,7 +8386,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>28</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8406,7 +8406,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>29</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8426,7 +8426,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>30</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8446,7 +8446,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>31</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8466,7 +8466,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>32</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8486,7 +8486,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>33</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8506,7 +8506,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>34</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8526,7 +8526,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>35</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8546,7 +8546,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>36</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8566,7 +8566,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>37</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8586,7 +8586,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>38</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8606,7 +8606,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>39</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8626,7 +8626,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>40</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8646,7 +8646,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>41</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8666,7 +8666,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>105</CreateTile>
 		<PlaceStyle>42</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8685,7 +8685,7 @@
 		<UseTime>7</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>27</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8703,7 +8703,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>124</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8720,7 +8720,7 @@
 		<UseAnimation>20</UseAnimation>
 		<UseTime>20</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>37</Damage>
+		<damage>37</damage>
 		<KnockBack>2.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip/>
@@ -8743,7 +8743,7 @@
 		<UseAnimation>27</UseAnimation>
 		<UseTime>27</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>44</Damage>
+		<damage>44</damage>
 		<KnockBack>6</KnockBack>
 		<Scale>1.2</Scale>
 		<ToolTip/>
@@ -8762,7 +8762,7 @@
 		<UseAnimation>23</UseAnimation>
 		<UseTime>23</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>34</Damage>
+		<damage>34</damage>
 		<KnockBack>3.85</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8783,7 +8783,7 @@
 		<UseAnimation>26</UseAnimation>
 		<UseTime>26</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>39</Damage>
+		<damage>39</damage>
 		<KnockBack>6</KnockBack>
 		<Scale>1.15</Scale>
 		<ToolTip/>
@@ -8801,7 +8801,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Turns the holder into a werewolf on full moons</ToolTip>
 		<ToolTip2/>
 		<Rare>4</Rare>
@@ -8816,7 +8816,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Creates a grid on screen for block placement</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -8833,7 +8833,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>125</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8853,7 +8853,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>126</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -8870,7 +8870,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>15% increased magic damage</ToolTip>
 		<ToolTip2/>
 		<Rare>4</Rare>
@@ -8885,7 +8885,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>15% increased melee damage</ToolTip>
 		<ToolTip2/>
 		<Rare>4</Rare>
@@ -8900,7 +8900,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>15% increased ranged damage</ToolTip>
 		<ToolTip2/>
 		<Value>100000</Value>
@@ -8914,7 +8914,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Allows flight and slow fall</ToolTip>
 		<ToolTip2/>
 		<Rare>5</Rare>
@@ -8929,7 +8929,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Allows flight and slow fall</ToolTip>
 		<ToolTip2/>
 		<Rare>5</Rare>
@@ -8946,7 +8946,7 @@
 		<UseAnimation>12</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>30</Damage>
+		<damage>30</damage>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip/>
 		<ToolTip2/>
@@ -8969,7 +8969,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>53</Damage>
+		<damage>53</damage>
 		<KnockBack>5</KnockBack>
 		<ToolTip>Casts a controllable rainbow</ToolTip>
 		<ToolTip2/>
@@ -8991,7 +8991,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>26</Damage>
+		<damage>26</damage>
 		<KnockBack>2</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip>Summons a block of ice</ToolTip>
@@ -9013,7 +9013,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Transforms the holder into merfolk when entering water</ToolTip>
 		<ToolTip2/>
 		<Rare>5</Rare>
@@ -9030,7 +9030,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>128</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9047,7 +9047,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>30</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealLife>150</HealLife>
 		<Potion>true</Potion>
 		<Consumable>true</Consumable>
@@ -9067,7 +9067,7 @@
 		<UseAnimation>17</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HealMana>200</HealMana>
 		<Consumable>true</Consumable>
 		<UseTurn>true</UseTurn>
@@ -9085,7 +9085,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -9102,7 +9102,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>129</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9120,7 +9120,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>40</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -9136,7 +9136,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<BodySlot>23</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -9152,7 +9152,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<LegSlot>22</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -9169,7 +9169,7 @@
 		<UseAnimation>30</UseAnimation>
 		<UseTime>6</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>27</Damage>
+		<damage>27</damage>
 		<KnockBack>0.3</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip>Uses gel for ammo</ToolTip>
@@ -9192,7 +9192,7 @@
 		<UseAnimation>12</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip/>
 		<ToolTip2/>
@@ -9210,7 +9210,7 @@
 		<UseAnimation>12</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip/>
 		<ToolTip2/>
@@ -9229,7 +9229,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>10</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Places wire</ToolTip>
@@ -9248,7 +9248,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>10</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
 		<ToolTip>Removes wire</ToolTip>
@@ -9268,7 +9268,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>130</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9288,7 +9288,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>131</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9308,7 +9308,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>132</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9326,7 +9326,7 @@
 		<UseAnimation>12</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>29</Damage>
+		<damage>29</damage>
 		<KnockBack>2.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip/>
@@ -9348,7 +9348,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>9</Damage>
+		<damage>9</damage>
 		<KnockBack>1</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip>Creates several crystal shards on impact</ToolTip>
@@ -9369,7 +9369,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>6</Damage>
+		<damage>6</damage>
 		<KnockBack>2</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip>Summons falling stars on impact</ToolTip>
@@ -9391,7 +9391,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>28</Damage>
+		<damage>28</damage>
 		<KnockBack>2</KnockBack>
 		<ToolTip>A magical returning dagger</ToolTip>
 		<ToolTip2/>
@@ -9413,7 +9413,7 @@
 		<UseAnimation>7</UseAnimation>
 		<UseTime>7</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>26</Damage>
+		<damage>26</damage>
 		<KnockBack>5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<Scale>0.9</Scale>
@@ -9436,7 +9436,7 @@
 		<UseAnimation>20</UseAnimation>
 		<UseTime>20</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>35</Damage>
+		<damage>35</damage>
 		<KnockBack>6.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<Scale>0.9</Scale>
@@ -9458,7 +9458,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'The essence of light creatures'</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -9473,7 +9473,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'The essence of dark creatures'</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -9488,7 +9488,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Not even water can put the flame out'</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -9507,7 +9507,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>4</CreateTile>
 		<PlaceStyle>8</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9527,7 +9527,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>133</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9547,7 +9547,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>134</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9565,7 +9565,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Sharp and magical!'</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -9580,7 +9580,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Sometimes carried by creatures in corrupt deserts'</ToolTip>
 		<ToolTip2/>
 		<Rare>2</Rare>
@@ -9595,7 +9595,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'Sometimes carried by creatures in light deserts'</ToolTip>
 		<ToolTip2/>
 		<Rare>2</Rare>
@@ -9613,7 +9613,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>135</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9631,7 +9631,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip/>
 		<ToolTip2/>
 		<Value>500</Value>
@@ -9645,7 +9645,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>99</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Can be enchanted</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -9660,7 +9660,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Causes stars to fall when injured</ToolTip>
 		<ToolTip2/>
 		<Rare>4</Rare>
@@ -9676,7 +9676,7 @@
 		<UseAnimation>7</UseAnimation>
 		<UseTime>7</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>23</Damage>
+		<damage>23</damage>
 		<KnockBack>1</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip>50% chance to not consume ammo</ToolTip>
@@ -9699,7 +9699,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>18</Damage>
+		<damage>18</damage>
 		<KnockBack>6.5</KnockBack>
 		<ToolTip>Fires a spread of bullets</ToolTip>
 		<ToolTip2/>
@@ -9720,7 +9720,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Reduces the cooldown of healing potions</ToolTip>
 		<ToolTip2/>
 		<Rare>4</Rare>
@@ -9735,7 +9735,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Increases melee knockback</ToolTip>
 		<ToolTip2/>
 		<Rare>4</Rare>
@@ -9751,7 +9751,7 @@
 		<UseAnimation>28</UseAnimation>
 		<UseTime>28</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>29</Damage>
+		<damage>29</damage>
 		<KnockBack>4</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip/>
@@ -9775,7 +9775,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>136</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9795,7 +9795,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>137</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9815,7 +9815,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>138</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9835,7 +9835,7 @@
 		<MaxStack>250</MaxStack>
 		<CreateTile>135</CreateTile>
 		<PlaceStyle>1</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9856,7 +9856,7 @@
 		<MaxStack>250</MaxStack>
 		<CreateTile>135</CreateTile>
 		<PlaceStyle>2</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9877,7 +9877,7 @@
 		<MaxStack>250</MaxStack>
 		<CreateTile>135</CreateTile>
 		<PlaceStyle>3</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -9895,7 +9895,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>20</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Summons The Twins</ToolTip>
 		<ToolTip2/>
@@ -9910,7 +9910,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>14</Damage>
+		<damage>14</damage>
 		<KnockBack>3</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -9931,7 +9931,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>12</Damage>
+		<damage>12</damage>
 		<KnockBack>4</KnockBack>
 		<Consumable>true</Consumable>
 		<ToolTip/>
@@ -9952,7 +9952,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'The essence of pure terror'</ToolTip>
 		<ToolTip2/>
 		<Rare>5</Rare>
@@ -9967,7 +9967,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'The essence of the destroyer'</ToolTip>
 		<ToolTip2/>
 		<Rare>5</Rare>
@@ -9982,7 +9982,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'The essence of omniscient watchers'</ToolTip>
 		<ToolTip2/>
 		<Rare>5</Rare>
@@ -9998,7 +9998,7 @@
 		<UseAnimation>22</UseAnimation>
 		<UseTime>22</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>42</Damage>
+		<damage>42</damage>
 		<KnockBack>6.4</KnockBack>
 		<Scale>1.1</Scale>
 		<ToolTip/>
@@ -10019,8 +10019,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>15</Defense>
+		<damage>-1</damage>
+		<defense>15</defense>
 		<BodySlot>24</BodySlot>
 		<ToolTip>7% increased critical strike chance</ToolTip>
 		<ToolTip2/>
@@ -10036,8 +10036,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>11</Defense>
+		<damage>-1</damage>
+		<defense>11</defense>
 		<LegSlot>23</LegSlot>
 		<ToolTip>7% increased damage</ToolTip>
 		<ToolTip2>8% increased movement speed</ToolTip2>
@@ -10053,8 +10053,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>9</Defense>
+		<damage>-1</damage>
+		<defense>9</defense>
 		<HeadSlot>41</HeadSlot>
 		<ToolTip>15% increased ranged damage</ToolTip>
 		<ToolTip2>8% increased ranged critical strike chance</ToolTip2>
@@ -10070,7 +10070,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Increases length of invincibility after taking damage</ToolTip>
 		<ToolTip2/>
 		<Rare>4</Rare>
@@ -10085,7 +10085,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>8% reduced mana usage</ToolTip>
 		<ToolTip2>Automatically use mana potions when needed</ToolTip2>
 		<Rare>4</Rare>
@@ -10101,7 +10101,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>20</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Summons Destroyer</ToolTip>
 		<ToolTip2/>
@@ -10117,7 +10117,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>20</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Summons Skeletron Prime</ToolTip>
 		<ToolTip2/>
@@ -10132,8 +10132,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>5</Defense>
+		<damage>-1</damage>
+		<defense>5</defense>
 		<HeadSlot>42</HeadSlot>
 		<ToolTip>Increases maximum mana by 100</ToolTip>
 		<ToolTip2>12% increased magic damage and critical strike chance</ToolTip2>
@@ -10149,8 +10149,8 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
-		<Defense>24</Defense>
+		<damage>-1</damage>
+		<defense>24</defense>
 		<HeadSlot>43</HeadSlot>
 		<ToolTip>10% increased melee damage and critical strike chance</ToolTip>
 		<ToolTip2>10% increased melee haste</ToolTip2>
@@ -10167,7 +10167,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>20</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Summons King Slime</ToolTip>
 		<ToolTip2/>
@@ -10183,7 +10183,7 @@
 		<UseAnimation>15</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>5</MaxStack>
-		<Damage>35</Damage>
+		<damage>35</damage>
 		<KnockBack>8</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip>Stacks up to 5</ToolTip>
@@ -10206,7 +10206,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10227,7 +10227,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>1</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10248,7 +10248,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>2</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10269,7 +10269,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>3</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10290,7 +10290,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>4</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10311,7 +10311,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>5</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10332,7 +10332,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>6</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10353,7 +10353,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>7</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10374,7 +10374,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>8</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10395,7 +10395,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>9</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10416,7 +10416,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>10</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10437,7 +10437,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>11</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10458,7 +10458,7 @@
 		<MaxStack>1</MaxStack>
 		<CreateTile>139</CreateTile>
 		<PlaceStyle>12</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10476,7 +10476,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>250</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>'The essence of powerful flying creatures'</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -10491,7 +10491,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Has a chance to record songs</ToolTip>
 		<ToolTip2/>
 		<Rare>3</Rare>
@@ -10508,7 +10508,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>140</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10525,7 +10525,7 @@
 		<UseAnimation>19</UseAnimation>
 		<UseTime>19</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>39</Damage>
+		<damage>39</damage>
 		<KnockBack>2.5</KnockBack>
 		<AutoReuse>true</AutoReuse>
 		<ToolTip/>
@@ -10552,7 +10552,7 @@
 		<Pick>200</Pick>
 		<Axe>22</Axe>
 		<Hammer>85</Hammer>
-		<Damage>35</Damage>
+		<damage>35</damage>
 		<KnockBack>4.75</KnockBack>
 		<ToolTip>'Not to be confused with a hamsaw'</ToolTip>
 		<ToolTip2/>
@@ -10575,7 +10575,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>141</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10594,7 +10594,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>142</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10613,7 +10613,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>143</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10632,7 +10632,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>99</MaxStack>
 		<CreateTile>144</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10654,7 +10654,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>144</CreateTile>
 		<PlaceStyle>1</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10676,7 +10676,7 @@
 		<MaxStack>99</MaxStack>
 		<CreateTile>144</CreateTile>
 		<PlaceStyle>2</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10696,7 +10696,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>145</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10714,7 +10714,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>29</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10730,7 +10730,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<HeadSlot>44</HeadSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -10745,7 +10745,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<BodySlot>25</BodySlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -10760,7 +10760,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<LegSlot>24</LegSlot>
 		<ToolTip/>
 		<ToolTip2/>
@@ -10777,7 +10777,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>146</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10795,7 +10795,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>30</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10813,7 +10813,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>147</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10831,7 +10831,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>148</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10849,7 +10849,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateWall>31</CreateWall>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10867,7 +10867,7 @@
 		<UseTime>10</UseTime>
 		<MaxStack>250</MaxStack>
 		<CreateTile>149</CreateTile>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10887,7 +10887,7 @@
 		<MaxStack>250</MaxStack>
 		<CreateTile>149</CreateTile>
 		<PlaceStyle>1</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10907,7 +10907,7 @@
 		<MaxStack>250</MaxStack>
 		<CreateTile>149</CreateTile>
 		<PlaceStyle>2</PlaceStyle>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<AutoReuse>true</AutoReuse>
 		<UseTurn>true</UseTurn>
@@ -10924,7 +10924,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Right click to open</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -10938,7 +10938,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Right click to open</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -10952,7 +10952,7 @@
 		<UseAnimation>100</UseAnimation>
 		<UseTime>100</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<ToolTip>Right click to open</ToolTip>
 		<ToolTip2/>
 		<Rare>1</Rare>
@@ -10967,7 +10967,7 @@
 		<UseAnimation>45</UseAnimation>
 		<UseTime>45</UseTime>
 		<MaxStack>1</MaxStack>
-		<Damage>-1</Damage>
+		<damage>-1</damage>
 		<Consumable>true</Consumable>
 		<ToolTip>Summons the Frost Legion</ToolTip>
 		<ToolTip2/>

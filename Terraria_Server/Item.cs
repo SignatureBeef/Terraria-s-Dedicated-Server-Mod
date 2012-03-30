@@ -67,14 +67,6 @@ namespace Terraria_Server
 		/// </summary>
 		public int CreateWall;
 		/// <summary>
-		/// Damage done by this item
-		/// </summary>
-		public int Damage;
-		/// <summary>
-		/// Defense added by this item
-		/// </summary>
-		public int Defense;
-		/// <summary>
 		/// Type of hammer.  0 means not a hammer
 		/// </summary>
 		public int Hammer;
@@ -159,11 +151,6 @@ namespace Terraria_Server
 		public int Rare;
 		public int Release;
 		/// <summary>
-		/// Scale this item is to be created at.  
-		/// Affects everything from drawing size to health to damage dealt
-		/// </summary>
-		public float Scale;
-		/// <summary>
 		/// Projectile this item shoots
 		/// </summary>
 		public ProjectileType Shoot;
@@ -223,19 +210,19 @@ namespace Terraria_Server
 			BodySlot = -1;
 			CreateTile = -1;
 			CreateWall = -1;
-			Damage = -1;
+			damage = -1;
 			LegSlot = -1;
 			HeadSlot = -1;
 			MaxStack = 1;
 			Owner = 255;
-			Scale = 1f;
+			scale = 1f;
 			ToolTip = null;
 			UseTime = 100;
 			UseAnimation = 100;
 		}
 
 		//[ToDo] Implement the ReuseDelay and w/e else I added.
-		public bool SetPrefix(int prefix)
+		/*public bool SetPrefix(int prefix)
 		{
 			Prefix = (byte)prefix;
 
@@ -797,6 +784,1261 @@ namespace Terraria_Server
 			_curMod *= _curMod;
 			Value = (int)((float)Value * _curMod);
 			Prefix = (byte)_pre;
+			return true;
+		}*/
+
+
+		public bool SetPrefix(int pre)
+		{
+			if (pre == 0 || Type == 0)
+				return false;
+
+			int num = pre;
+			float num2 = 1f;
+			float num3 = 1f;
+			float num4 = 1f;
+			float num5 = 1f;
+			float num6 = 1f;
+			float num7 = 1f;
+			int num8 = 0;
+			bool flag = true;
+			while (flag)
+			{
+				num2 = 1f;
+				num3 = 1f;
+				num4 = 1f;
+				num5 = 1f;
+				num6 = 1f;
+				num7 = 1f;
+				num8 = 0;
+				flag = false;
+				if (num == -1 && Main.rand.Next(4) == 0)
+				{
+					num = 0;
+				}
+				if (pre < -1)
+				{
+					num = -1;
+				}
+				if (num == -1 || num == -2 || num == -3)
+				{
+					if (Type == 1 || Type == 4 || Type == 6 || Type == 7 || Type == 10 || Type == 24 || Type == 45 || Type == 46 || Type == 103 || Type == 104 || Type == 121 || Type == 122 || Type == 155 || Type == 190 || Type == 196 || Type == 198 || Type == 199 || Type == 200 || Type == 201 || Type == 202 || Type == 203 || Type == 204 || Type == 213 || Type == 217 || Type == 273 || Type == 367 || Type == 368 || Type == 426 || Type == 482 || Type == 483 || Type == 484)
+					{
+						int num9 = Main.rand.Next(40);
+						if (num9 == 0)
+						{
+							num = 1;
+						}
+						if (num9 == 1)
+						{
+							num = 2;
+						}
+						if (num9 == 2)
+						{
+							num = 3;
+						}
+						if (num9 == 3)
+						{
+							num = 4;
+						}
+						if (num9 == 4)
+						{
+							num = 5;
+						}
+						if (num9 == 5)
+						{
+							num = 6;
+						}
+						if (num9 == 6)
+						{
+							num = 7;
+						}
+						if (num9 == 7)
+						{
+							num = 8;
+						}
+						if (num9 == 8)
+						{
+							num = 9;
+						}
+						if (num9 == 9)
+						{
+							num = 10;
+						}
+						if (num9 == 10)
+						{
+							num = 11;
+						}
+						if (num9 == 11)
+						{
+							num = 12;
+						}
+						if (num9 == 12)
+						{
+							num = 13;
+						}
+						if (num9 == 13)
+						{
+							num = 14;
+						}
+						if (num9 == 14)
+						{
+							num = 15;
+						}
+						if (num9 == 15)
+						{
+							num = 36;
+						}
+						if (num9 == 16)
+						{
+							num = 37;
+						}
+						if (num9 == 17)
+						{
+							num = 38;
+						}
+						if (num9 == 18)
+						{
+							num = 53;
+						}
+						if (num9 == 19)
+						{
+							num = 54;
+						}
+						if (num9 == 20)
+						{
+							num = 55;
+						}
+						if (num9 == 21)
+						{
+							num = 39;
+						}
+						if (num9 == 22)
+						{
+							num = 40;
+						}
+						if (num9 == 23)
+						{
+							num = 56;
+						}
+						if (num9 == 24)
+						{
+							num = 41;
+						}
+						if (num9 == 25)
+						{
+							num = 57;
+						}
+						if (num9 == 26)
+						{
+							num = 42;
+						}
+						if (num9 == 27)
+						{
+							num = 43;
+						}
+						if (num9 == 28)
+						{
+							num = 44;
+						}
+						if (num9 == 29)
+						{
+							num = 45;
+						}
+						if (num9 == 30)
+						{
+							num = 46;
+						}
+						if (num9 == 31)
+						{
+							num = 47;
+						}
+						if (num9 == 32)
+						{
+							num = 48;
+						}
+						if (num9 == 33)
+						{
+							num = 49;
+						}
+						if (num9 == 34)
+						{
+							num = 50;
+						}
+						if (num9 == 35)
+						{
+							num = 51;
+						}
+						if (num9 == 36)
+						{
+							num = 59;
+						}
+						if (num9 == 37)
+						{
+							num = 60;
+						}
+						if (num9 == 38)
+						{
+							num = 61;
+						}
+						if (num9 == 39)
+						{
+							num = 81;
+						}
+					}
+					else
+					{
+						if (Type == 162 || Type == 160 || Type == 163 || Type == 220 || Type == 274 || Type == 277 || Type == 280 || Type == 383 || Type == 384 || Type == 385 || Type == 386 || Type == 387 || Type == 388 || Type == 389 || Type == 390 || Type == 406 || Type == 537 || Type == 550 || Type == 579)
+						{
+							int num10 = Main.rand.Next(14);
+							if (num10 == 0)
+							{
+								num = 36;
+							}
+							if (num10 == 1)
+							{
+								num = 37;
+							}
+							if (num10 == 2)
+							{
+								num = 38;
+							}
+							if (num10 == 3)
+							{
+								num = 53;
+							}
+							if (num10 == 4)
+							{
+								num = 54;
+							}
+							if (num10 == 5)
+							{
+								num = 55;
+							}
+							if (num10 == 6)
+							{
+								num = 39;
+							}
+							if (num10 == 7)
+							{
+								num = 40;
+							}
+							if (num10 == 8)
+							{
+								num = 56;
+							}
+							if (num10 == 9)
+							{
+								num = 41;
+							}
+							if (num10 == 10)
+							{
+								num = 57;
+							}
+							if (num10 == 11)
+							{
+								num = 59;
+							}
+							if (num10 == 12)
+							{
+								num = 60;
+							}
+							if (num10 == 13)
+							{
+								num = 61;
+							}
+						}
+						else
+						{
+							if (Type == 39 || Type == 44 || Type == 95 || Type == 96 || Type == 98 || Type == 99 || Type == 120 || Type == 164 || Type == 197 || Type == 219 || Type == 266 || Type == 281 || Type == 434 || Type == 435 || Type == 436 || Type == 481 || Type == 506 || Type == 533 || Type == 534 || Type == 578)
+							{
+								int num11 = Main.rand.Next(36);
+								if (num11 == 0)
+								{
+									num = 16;
+								}
+								if (num11 == 1)
+								{
+									num = 17;
+								}
+								if (num11 == 2)
+								{
+									num = 18;
+								}
+								if (num11 == 3)
+								{
+									num = 19;
+								}
+								if (num11 == 4)
+								{
+									num = 20;
+								}
+								if (num11 == 5)
+								{
+									num = 21;
+								}
+								if (num11 == 6)
+								{
+									num = 22;
+								}
+								if (num11 == 7)
+								{
+									num = 23;
+								}
+								if (num11 == 8)
+								{
+									num = 24;
+								}
+								if (num11 == 9)
+								{
+									num = 25;
+								}
+								if (num11 == 10)
+								{
+									num = 58;
+								}
+								if (num11 == 11)
+								{
+									num = 36;
+								}
+								if (num11 == 12)
+								{
+									num = 37;
+								}
+								if (num11 == 13)
+								{
+									num = 38;
+								}
+								if (num11 == 14)
+								{
+									num = 53;
+								}
+								if (num11 == 15)
+								{
+									num = 54;
+								}
+								if (num11 == 16)
+								{
+									num = 55;
+								}
+								if (num11 == 17)
+								{
+									num = 39;
+								}
+								if (num11 == 18)
+								{
+									num = 40;
+								}
+								if (num11 == 19)
+								{
+									num = 56;
+								}
+								if (num11 == 20)
+								{
+									num = 41;
+								}
+								if (num11 == 21)
+								{
+									num = 57;
+								}
+								if (num11 == 22)
+								{
+									num = 42;
+								}
+								if (num11 == 23)
+								{
+									num = 43;
+								}
+								if (num11 == 24)
+								{
+									num = 44;
+								}
+								if (num11 == 25)
+								{
+									num = 45;
+								}
+								if (num11 == 26)
+								{
+									num = 46;
+								}
+								if (num11 == 27)
+								{
+									num = 47;
+								}
+								if (num11 == 28)
+								{
+									num = 48;
+								}
+								if (num11 == 29)
+								{
+									num = 49;
+								}
+								if (num11 == 30)
+								{
+									num = 50;
+								}
+								if (num11 == 31)
+								{
+									num = 51;
+								}
+								if (num11 == 32)
+								{
+									num = 59;
+								}
+								if (num11 == 33)
+								{
+									num = 60;
+								}
+								if (num11 == 34)
+								{
+									num = 61;
+								}
+								if (num11 == 35)
+								{
+									num = 82;
+								}
+							}
+							else
+							{
+								if (Type == 64 || Type == 65 || Type == 112 || Type == 113 || Type == 127 || Type == 157 || Type == 165 || Type == 218 || Type == 272 || Type == 494 || Type == 495 || Type == 496 || Type == 514 || Type == 517 || Type == 518 || Type == 519)
+								{
+									int num12 = Main.rand.Next(36);
+									if (num12 == 0)
+									{
+										num = 26;
+									}
+									if (num12 == 1)
+									{
+										num = 27;
+									}
+									if (num12 == 2)
+									{
+										num = 28;
+									}
+									if (num12 == 3)
+									{
+										num = 29;
+									}
+									if (num12 == 4)
+									{
+										num = 30;
+									}
+									if (num12 == 5)
+									{
+										num = 31;
+									}
+									if (num12 == 6)
+									{
+										num = 32;
+									}
+									if (num12 == 7)
+									{
+										num = 33;
+									}
+									if (num12 == 8)
+									{
+										num = 34;
+									}
+									if (num12 == 9)
+									{
+										num = 35;
+									}
+									if (num12 == 10)
+									{
+										num = 52;
+									}
+									if (num12 == 11)
+									{
+										num = 36;
+									}
+									if (num12 == 12)
+									{
+										num = 37;
+									}
+									if (num12 == 13)
+									{
+										num = 38;
+									}
+									if (num12 == 14)
+									{
+										num = 53;
+									}
+									if (num12 == 15)
+									{
+										num = 54;
+									}
+									if (num12 == 16)
+									{
+										num = 55;
+									}
+									if (num12 == 17)
+									{
+										num = 39;
+									}
+									if (num12 == 18)
+									{
+										num = 40;
+									}
+									if (num12 == 19)
+									{
+										num = 56;
+									}
+									if (num12 == 20)
+									{
+										num = 41;
+									}
+									if (num12 == 21)
+									{
+										num = 57;
+									}
+									if (num12 == 22)
+									{
+										num = 42;
+									}
+									if (num12 == 23)
+									{
+										num = 43;
+									}
+									if (num12 == 24)
+									{
+										num = 44;
+									}
+									if (num12 == 25)
+									{
+										num = 45;
+									}
+									if (num12 == 26)
+									{
+										num = 46;
+									}
+									if (num12 == 27)
+									{
+										num = 47;
+									}
+									if (num12 == 28)
+									{
+										num = 48;
+									}
+									if (num12 == 29)
+									{
+										num = 49;
+									}
+									if (num12 == 30)
+									{
+										num = 50;
+									}
+									if (num12 == 31)
+									{
+										num = 51;
+									}
+									if (num12 == 32)
+									{
+										num = 59;
+									}
+									if (num12 == 33)
+									{
+										num = 60;
+									}
+									if (num12 == 34)
+									{
+										num = 61;
+									}
+									if (num12 == 35)
+									{
+										num = 83;
+									}
+								}
+								else
+								{
+									if (Type == 55 || Type == 119 || Type == 191 || Type == 284)
+									{
+										int num13 = Main.rand.Next(14);
+										if (num13 == 0)
+										{
+											num = 36;
+										}
+										if (num13 == 1)
+										{
+											num = 37;
+										}
+										if (num13 == 2)
+										{
+											num = 38;
+										}
+										if (num13 == 3)
+										{
+											num = 53;
+										}
+										if (num13 == 4)
+										{
+											num = 54;
+										}
+										if (num13 == 5)
+										{
+											num = 55;
+										}
+										if (num13 == 6)
+										{
+											num = 39;
+										}
+										if (num13 == 7)
+										{
+											num = 40;
+										}
+										if (num13 == 8)
+										{
+											num = 56;
+										}
+										if (num13 == 9)
+										{
+											num = 41;
+										}
+										if (num13 == 10)
+										{
+											num = 57;
+										}
+										if (num13 == 11)
+										{
+											num = 59;
+										}
+										if (num13 == 12)
+										{
+											num = 60;
+										}
+										if (num13 == 13)
+										{
+											num = 61;
+										}
+									}
+									else
+									{
+										if (!this.Accessory || Type == 267 || Type == 562 || Type == 563 || Type == 564 || Type == 565 || Type == 566 || Type == 567 || Type == 568 || Type == 569 || Type == 570 || Type == 571 || Type == 572 || Type == 573 || Type == 574 || Type == 576)
+										{
+											return false;
+										}
+										num = Main.rand.Next(62, 81);
+									}
+								}
+							}
+						}
+					}
+				}
+				if (pre == -3)
+				{
+					return true;
+				}
+				if (pre == -1 && (num == 7 || num == 8 || num == 9 || num == 10 || num == 11 || num == 22 || num == 23 || num == 24 || num == 29 || num == 30 || num == 31 || num == 39 || num == 40 || num == 56 || num == 41 || num == 47 || num == 48 || num == 49) && Main.rand.Next(3) != 0)
+				{
+					num = 0;
+				}
+				if (num == 1)
+				{
+					num5 = 1.12f;
+				}
+				else
+				{
+					if (num == 2)
+					{
+						num5 = 1.18f;
+					}
+					else
+					{
+						if (num == 3)
+						{
+							num2 = 1.05f;
+							num8 = 2;
+							num5 = 1.05f;
+						}
+						else
+						{
+							if (num == 4)
+							{
+								num2 = 1.1f;
+								num5 = 1.1f;
+								num3 = 1.1f;
+							}
+							else
+							{
+								if (num == 5)
+								{
+									num2 = 1.15f;
+								}
+								else
+								{
+									if (num == 6)
+									{
+										num2 = 1.1f;
+									}
+									else
+									{
+										if (num == 81)
+										{
+											num3 = 1.15f;
+											num2 = 1.15f;
+											num8 = 5;
+											num4 = 0.9f;
+											num5 = 1.1f;
+										}
+										else
+										{
+											if (num == 7)
+											{
+												num5 = 0.82f;
+											}
+											else
+											{
+												if (num == 8)
+												{
+													num3 = 0.85f;
+													num2 = 0.85f;
+													num5 = 0.87f;
+												}
+												else
+												{
+													if (num == 9)
+													{
+														num5 = 0.9f;
+													}
+													else
+													{
+														if (num == 10)
+														{
+															num2 = 0.85f;
+														}
+														else
+														{
+															if (num == 11)
+															{
+																num4 = 1.1f;
+																num3 = 0.9f;
+																num5 = 0.9f;
+															}
+															else
+															{
+																if (num == 12)
+																{
+																	num3 = 1.1f;
+																	num2 = 1.05f;
+																	num5 = 1.1f;
+																	num4 = 1.15f;
+																}
+																else
+																{
+																	if (num == 13)
+																	{
+																		num3 = 0.8f;
+																		num2 = 0.9f;
+																		num5 = 1.1f;
+																	}
+																	else
+																	{
+																		if (num == 14)
+																		{
+																			num3 = 1.15f;
+																			num4 = 1.1f;
+																		}
+																		else
+																		{
+																			if (num == 15)
+																			{
+																				num3 = 0.9f;
+																				num4 = 0.85f;
+																			}
+																			else
+																			{
+																				if (num == 16)
+																				{
+																					num2 = 1.1f;
+																					num8 = 3;
+																				}
+																				else
+																				{
+																					if (num == 17)
+																					{
+																						num4 = 0.85f;
+																						num6 = 1.1f;
+																					}
+																					else
+																					{
+																						if (num == 18)
+																						{
+																							num4 = 0.9f;
+																							num6 = 1.15f;
+																						}
+																						else
+																						{
+																							if (num == 19)
+																							{
+																								num3 = 1.15f;
+																								num6 = 1.05f;
+																							}
+																							else
+																							{
+																								if (num == 20)
+																								{
+																									num3 = 1.05f;
+																									num6 = 1.05f;
+																									num2 = 1.1f;
+																									num4 = 0.95f;
+																									num8 = 2;
+																								}
+																								else
+																								{
+																									if (num == 21)
+																									{
+																										num3 = 1.15f;
+																										num2 = 1.1f;
+																									}
+																									else
+																									{
+																										if (num == 82)
+																										{
+																											num3 = 1.15f;
+																											num2 = 1.15f;
+																											num8 = 5;
+																											num4 = 0.9f;
+																											num6 = 1.1f;
+																										}
+																										else
+																										{
+																											if (num == 22)
+																											{
+																												num3 = 0.9f;
+																												num6 = 0.9f;
+																												num2 = 0.85f;
+																											}
+																											else
+																											{
+																												if (num == 23)
+																												{
+																													num4 = 1.15f;
+																													num6 = 0.9f;
+																												}
+																												else
+																												{
+																													if (num == 24)
+																													{
+																														num4 = 1.1f;
+																														num3 = 0.8f;
+																													}
+																													else
+																													{
+																														if (num == 25)
+																														{
+																															num4 = 1.1f;
+																															num2 = 1.15f;
+																															num8 = 1;
+																														}
+																														else
+																														{
+																															if (num == 58)
+																															{
+																																num4 = 0.85f;
+																																num2 = 0.85f;
+																															}
+																															else
+																															{
+																																if (num == 26)
+																																{
+																																	num7 = 0.85f;
+																																	num2 = 1.1f;
+																																}
+																																else
+																																{
+																																	if (num == 27)
+																																	{
+																																		num7 = 0.85f;
+																																	}
+																																	else
+																																	{
+																																		if (num == 28)
+																																		{
+																																			num7 = 0.85f;
+																																			num2 = 1.15f;
+																																			num3 = 1.05f;
+																																		}
+																																		else
+																																		{
+																																			if (num == 83)
+																																			{
+																																				num3 = 1.15f;
+																																				num2 = 1.15f;
+																																				num8 = 5;
+																																				num4 = 0.9f;
+																																				num7 = 0.9f;
+																																			}
+																																			else
+																																			{
+																																				if (num == 29)
+																																				{
+																																					num7 = 1.1f;
+																																				}
+																																				else
+																																				{
+																																					if (num == 30)
+																																					{
+																																						num7 = 1.2f;
+																																						num2 = 0.9f;
+																																					}
+																																					else
+																																					{
+																																						if (num == 31)
+																																						{
+																																							num3 = 0.9f;
+																																							num2 = 0.9f;
+																																						}
+																																						else
+																																						{
+																																							if (num == 32)
+																																							{
+																																								num7 = 1.15f;
+																																								num2 = 1.1f;
+																																							}
+																																							else
+																																							{
+																																								if (num == 33)
+																																								{
+																																									num7 = 1.1f;
+																																									num3 = 1.1f;
+																																									num4 = 0.9f;
+																																								}
+																																								else
+																																								{
+																																									if (num == 34)
+																																									{
+																																										num7 = 0.9f;
+																																										num3 = 1.1f;
+																																										num4 = 1.1f;
+																																										num2 = 1.1f;
+																																									}
+																																									else
+																																									{
+																																										if (num == 35)
+																																										{
+																																											num7 = 1.2f;
+																																											num2 = 1.15f;
+																																											num3 = 1.15f;
+																																										}
+																																										else
+																																										{
+																																											if (num == 52)
+																																											{
+																																												num7 = 0.9f;
+																																												num2 = 0.9f;
+																																												num4 = 0.9f;
+																																											}
+																																											else
+																																											{
+																																												if (num == 36)
+																																												{
+																																													num8 = 3;
+																																												}
+																																												else
+																																												{
+																																													if (num == 37)
+																																													{
+																																														num2 = 1.1f;
+																																														num8 = 3;
+																																														num3 = 1.1f;
+																																													}
+																																													else
+																																													{
+																																														if (num == 38)
+																																														{
+																																															num3 = 1.15f;
+																																														}
+																																														else
+																																														{
+																																															if (num == 53)
+																																															{
+																																																num2 = 1.1f;
+																																															}
+																																															else
+																																															{
+																																																if (num == 54)
+																																																{
+																																																	num3 = 1.15f;
+																																																}
+																																																else
+																																																{
+																																																	if (num == 55)
+																																																	{
+																																																		num3 = 1.15f;
+																																																		num2 = 1.05f;
+																																																	}
+																																																	else
+																																																	{
+																																																		if (num == 59)
+																																																		{
+																																																			num3 = 1.15f;
+																																																			num2 = 1.15f;
+																																																			num8 = 5;
+																																																		}
+																																																		else
+																																																		{
+																																																			if (num == 60)
+																																																			{
+																																																				num2 = 1.15f;
+																																																				num8 = 5;
+																																																			}
+																																																			else
+																																																			{
+																																																				if (num == 61)
+																																																				{
+																																																					num8 = 5;
+																																																				}
+																																																				else
+																																																				{
+																																																					if (num == 39)
+																																																					{
+																																																						num2 = 0.7f;
+																																																						num3 = 0.8f;
+																																																					}
+																																																					else
+																																																					{
+																																																						if (num == 40)
+																																																						{
+																																																							num2 = 0.85f;
+																																																						}
+																																																						else
+																																																						{
+																																																							if (num == 56)
+																																																							{
+																																																								num3 = 0.8f;
+																																																							}
+																																																							else
+																																																							{
+																																																								if (num == 41)
+																																																								{
+																																																									num3 = 0.85f;
+																																																									num2 = 0.9f;
+																																																								}
+																																																								else
+																																																								{
+																																																									if (num == 57)
+																																																									{
+																																																										num3 = 0.9f;
+																																																										num2 = 1.18f;
+																																																									}
+																																																									else
+																																																									{
+																																																										if (num == 42)
+																																																										{
+																																																											num4 = 0.9f;
+																																																										}
+																																																										else
+																																																										{
+																																																											if (num == 43)
+																																																											{
+																																																												num2 = 1.1f;
+																																																												num4 = 0.9f;
+																																																											}
+																																																											else
+																																																											{
+																																																												if (num == 44)
+																																																												{
+																																																													num4 = 0.9f;
+																																																													num8 = 3;
+																																																												}
+																																																												else
+																																																												{
+																																																													if (num == 45)
+																																																													{
+																																																														num4 = 0.95f;
+																																																													}
+																																																													else
+																																																													{
+																																																														if (num == 46)
+																																																														{
+																																																															num8 = 3;
+																																																															num4 = 0.94f;
+																																																															num2 = 1.07f;
+																																																														}
+																																																														else
+																																																														{
+																																																															if (num == 47)
+																																																															{
+																																																																num4 = 1.15f;
+																																																															}
+																																																															else
+																																																															{
+																																																																if (num == 48)
+																																																																{
+																																																																	num4 = 1.2f;
+																																																																}
+																																																																else
+																																																																{
+																																																																	if (num == 49)
+																																																																	{
+																																																																		num4 = 1.08f;
+																																																																	}
+																																																																	else
+																																																																	{
+																																																																		if (num == 50)
+																																																																		{
+																																																																			num2 = 0.8f;
+																																																																			num4 = 1.15f;
+																																																																		}
+																																																																		else
+																																																																		{
+																																																																			if (num == 51)
+																																																																			{
+																																																																				num3 = 0.9f;
+																																																																				num4 = 0.9f;
+																																																																				num2 = 1.05f;
+																																																																				num8 = 2;
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				if (num2 != 1f && Math.Round((double)((float)this.damage * num2)) == (double)this.damage)
+				{
+					flag = true;
+					num = -1;
+				}
+				if (num4 != 1f && Math.Round((double)((float)this.UseAnimation * num4)) == (double)this.UseAnimation)
+				{
+					flag = true;
+					num = -1;
+				}
+				if (num7 != 1f && Math.Round((double)((float)this.Mana * num7)) == (double)this.Mana)
+				{
+					flag = true;
+					num = -1;
+				}
+				if (num3 != 1f && this.KnockBack == 0f)
+				{
+					flag = true;
+					num = -1;
+				}
+				if (pre == -2 && num == 0)
+				{
+					num = -1;
+					flag = true;
+				}
+			}
+			this.damage = (int)Math.Round((double)((float)this.damage * num2));
+			this.UseAnimation = (int)Math.Round((double)((float)this.UseAnimation * num4));
+			this.UseTime = (int)Math.Round((double)((float)this.UseTime * num4));
+			this.ReUseDelay = (int)Math.Round((double)((float)this.ReUseDelay * num4));
+			this.Mana = (int)Math.Round((double)((float)this.Mana * num7));
+			this.KnockBack *= num3;
+			this.scale *= num5;
+			this.ShootSpeed *= num6;
+			this.Critical += num8;
+			float num14 = 1f * num2 * (2f - num4) * (2f - num7) * num5 * num3 * num6 * (1f + (float)this.Critical * 0.02f);
+			if (num == 62 || num == 69 || num == 73 || num == 77)
+			{
+				num14 *= 1.05f;
+			}
+			if (num == 63 || num == 70 || num == 74 || num == 78 || num == 67)
+			{
+				num14 *= 1.1f;
+			}
+			if (num == 64 || num == 71 || num == 75 || num == 79 || num == 66)
+			{
+				num14 *= 1.15f;
+			}
+			if (num == 65 || num == 72 || num == 76 || num == 80 || num == 68)
+			{
+				num14 *= 1.2f;
+			}
+			if ((double)num14 >= 1.2)
+			{
+				Rare += 2;
+			}
+			else
+			{
+				if ((double)num14 >= 1.05)
+				{
+					Rare++;
+				}
+				else
+				{
+					if ((double)num14 <= 0.8)
+					{
+						Rare -= 2;
+					}
+					else
+					{
+						if ((double)num14 <= 0.95)
+						{
+							Rare--;
+						}
+					}
+				}
+			}
+			if (Rare < -1)
+			{
+				Rare = -1;
+			}
+			if (Rare > 6)
+			{
+				Rare = 6;
+			}
+			num14 *= num14;
+			this.Value = (int)((float)this.Value * num14);
+			this.Prefix = (byte)num;
 			return true;
 		}
 

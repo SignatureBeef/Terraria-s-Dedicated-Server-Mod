@@ -58,7 +58,7 @@ namespace Terraria_Server.Collections
 					t.Name = String.Intern (t.Name);
 					if (t.NetID == 0) t.NetID = (short)t.Type;
 					//Networking.StringCache.Add (System.Text.Encoding.ASCII.GetBytes (t.Name), t.Name);
-					Networking.StringCache.Add (t.Name);
+					Networking.StringCache.Add(t.Name);
 
 					if (typeLookup.ContainsKey(t.Type))
 					{
