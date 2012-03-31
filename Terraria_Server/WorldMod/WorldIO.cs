@@ -304,10 +304,10 @@ namespace Terraria_Server.WorldMod
 										}
 										binaryWriter.Write(tile.Wire);
 										int num2 = 1;
-										while (y + num2 < Main.maxTilesY && tile.Equals(Main.tile.At(x, y + num2)))
-										{
+
+										while (y + num2 < Main.maxTilesY && World.IsTileTheSame(tile, Main.tile.At(x, y + num2))) 
 											num2++;
-										}
+
 										num2--;
 										binaryWriter.Write((short)num2);
 										y += num2;
