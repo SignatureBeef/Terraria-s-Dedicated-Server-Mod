@@ -59,6 +59,10 @@ namespace TDSM_PermissionsX
 				string user, permission;
 				if (args.TryParseTwo<String, String>(out user, out permission))
 				{
+					var matches = Server.FindPlayerByPart(user);
+					if (matches.Count == 1)
+						user = matches.ToArray()[0].Name;
+
 					if (!XmlParser.HasUser(user)) throw new CommandError("{1} `{0}`", user, Languages.NoUser);
 
 					var permissions = permission.Split(',');
@@ -213,6 +217,10 @@ namespace TDSM_PermissionsX
 			var requestedUser = args.GetString(0);
 			var attribute = args.GetString(1);
 			var value = args.GetString(2);
+
+			var matches = Server.FindPlayerByPart(requestedUser);
+			if (matches.Count == 1)
+				requestedUser = matches.ToArray()[0].Name;
 
 			if (!XmlParser.HasUser(requestedUser))
 				throw new CommandError("{1} `{0}`", requestedUser, Languages.NoUser);
