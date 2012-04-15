@@ -39,3 +39,4 @@ Build 38
 	- Added affix's to the Give command, Via Int32 or their names.
 	- Plugins can now tap into the language system. There now is also no check for out of date files as it's not needed anymore.
 	- Fixed world sizes - Large maps are now ~20mb
+	- Old API -> Better naming conventions.

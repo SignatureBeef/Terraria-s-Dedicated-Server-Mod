@@ -56,12 +56,15 @@ namespace TDSM_PermissionsX
 
 			if (addPerms || denyPerms || removePerms || removeDeniedPerms)
 			{
-				string user, permission;
-				if (args.TryParseTwo<String, String>(out user, out permission))
+				string username, permission;
+				if (args.TryParseTwo<String, String>(out username, out permission))
 				{
-					var matches = Server.FindPlayerByPart(user);
+					Player trueUser = null;
+					var matches = Server.FindPlayerByPart(username);
 					if (matches.Count == 1)
-						user = matches.ToArray()[0].Name;
+						trueUser = matches.ToArray()[0];
+
+					var user = trueUser == null ? username : (trueUser.Name ?? username);
 
 					if (!XmlParser.HasUser(user)) throw new CommandError("{1} `{0}`", user, Languages.NoUser);
 
@@ -100,10 +103,17 @@ namespace TDSM_PermissionsX
 			}
 			else if (addGroup || removeGroup)
 			{
-				string user, group;
-				if (args.TryParseTwo<String, String>(out user, out group))
+				string username, group;
+				if (args.TryParseTwo<String, String>(out username, out group))
 				{
 					var groups = group.Split(',');
+
+					Player trueUser = null;
+					var matches = Server.FindPlayerByPart(username);
+					if (matches.Count == 1)
+						trueUser = matches.ToArray()[0];
+
+					var user = trueUser == null ? username : (trueUser.Name ?? username);
 
 					if (!XmlParser.HasUser(user)) throw new CommandError("{1} `{0}`", user, Languages.NoUser);
 
@@ -218,14 +228,17 @@ namespace TDSM_PermissionsX
 			var attribute = args.GetString(1);
 			var value = args.GetString(2);
 
+			Player trueUser = null;
 			var matches = Server.FindPlayerByPart(requestedUser);
 			if (matches.Count == 1)
-				requestedUser = matches.ToArray()[0].Name;
+				trueUser = matches.ToArray()[0];
 
-			if (!XmlParser.HasUser(requestedUser))
-				throw new CommandError("{1} `{0}`", requestedUser, Languages.NoUser);
+			var username = trueUser == null ? requestedUser : (trueUser.Name ?? requestedUser);
 
-			IPermission user = XmlParser.GetUser(requestedUser);
+			if (!XmlParser.HasUser(username))
+				throw new CommandError("{1} `{0}`", username, Languages.NoUser);
+
+			IPermission user = XmlParser.GetUser(username);
 
 			SetAttribute(ref user, attribute, value);
 

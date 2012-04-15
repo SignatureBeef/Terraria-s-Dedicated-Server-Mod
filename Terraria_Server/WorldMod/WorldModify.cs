@@ -3224,7 +3224,7 @@ namespace Terraria_Server.WorldMod
 			{
 				if (TileRefs(num4, k).Active)
 				{
-					if (TileRefs(num4, k).Type != 3 && TileRefs(num4, k).Type != 24 && TileRefs(num4, k).Type != 52 && TileRefs(num4, k).Type != 61 && TileRefs(num4, k).Type != 62 && TileRefs(num4, k).Type != 69 && TileRefs(num4, k).Type != 71 && TileRefs(num4, k).Type != 73 && TileRefs(num4, k).Type != 74)
+					if (!Main.tileCut[(int)TileRefs(num4, k).Type] && TileRefs(num4, k).Type != 3 && TileRefs(num4, k).Type != 24 && TileRefs(num4, k).Type != 52 && TileRefs(num4, k).Type != 61 && TileRefs(num4, k).Type != 62 && TileRefs(num4, k).Type != 69 && TileRefs(num4, k).Type != 71 && TileRefs(num4, k).Type != 73 && TileRefs(num4, k).Type != 74)
 					{
 						flag = false;
 						break;
@@ -3234,6 +3234,15 @@ namespace Terraria_Server.WorldMod
 			}
 			if (flag)
 			{
+				for (int l = num2; l <= num2 + 1; l++)
+					for (int m = num; m <= num + 2; m++)
+						if (numNoWire < MAX_WIRE - 1)
+						{
+							noWireX[numNoWire] = l;
+							noWireY[numNoWire] = m;
+							numNoWire++;
+						}
+
 				TileRefs(num2, num).SetActive(true);
 				TileRefs(num2, num).SetType(11);
 				TileRefs(num2, num).SetFrameY(0);
