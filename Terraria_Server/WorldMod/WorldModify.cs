@@ -159,7 +159,7 @@ namespace Terraria_Server.WorldMod
 					else if (num == 1)
 						num2 = 1;
 					else
-						num3 = (num == 0) ? -1 : 1;
+						num3 = 1;
 
 					if (!TileRefs(i + num2, j + num3).Active)
 					{
@@ -173,7 +173,7 @@ namespace Terraria_Server.WorldMod
 									num4++;
 							}
 						}
-						if (num4 < 2)
+						if (num4 < 4)
 						{
 							PlaceTile(TileRefs, sandbox, i + num2, j + num3, 129, true, false, -1, 0);
 							NetMessage.SendTileSquare(-1, i + num2, j + num3, 1);
