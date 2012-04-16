@@ -159,7 +159,7 @@ namespace Terraria_Server.WorldMod
 					else if (num == 1)
 						num2 = 1;
 					else
-						num3 = 1;
+						num3 = (num == 0) ? -1 : 1;
 
 					if (!TileRefs(i + num2, j + num3).Active)
 					{
@@ -173,7 +173,7 @@ namespace Terraria_Server.WorldMod
 									num4++;
 							}
 						}
-						if (num4 < 4)
+						if (num4 < 2)
 						{
 							PlaceTile(TileRefs, sandbox, i + num2, j + num3, 129, true, false, -1, 0);
 							NetMessage.SendTileSquare(-1, i + num2, j + num3, 1);
@@ -3224,7 +3224,7 @@ namespace Terraria_Server.WorldMod
 			{
 				if (TileRefs(num4, k).Active)
 				{
-					if (TileRefs(num4, k).Type != 3 && TileRefs(num4, k).Type != 24 && TileRefs(num4, k).Type != 52 && TileRefs(num4, k).Type != 61 && TileRefs(num4, k).Type != 62 && TileRefs(num4, k).Type != 69 && TileRefs(num4, k).Type != 71 && TileRefs(num4, k).Type != 73 && TileRefs(num4, k).Type != 74)
+					if (!Main.tileCut[(int)TileRefs(num4, k).Type] && TileRefs(num4, k).Type != 3 && TileRefs(num4, k).Type != 24 && TileRefs(num4, k).Type != 52 && TileRefs(num4, k).Type != 61 && TileRefs(num4, k).Type != 62 && TileRefs(num4, k).Type != 69 && TileRefs(num4, k).Type != 71 && TileRefs(num4, k).Type != 73 && TileRefs(num4, k).Type != 74)
 					{
 						flag = false;
 						break;
@@ -3234,6 +3234,15 @@ namespace Terraria_Server.WorldMod
 			}
 			if (flag)
 			{
+				for (int l = num2; l <= num2 + 1; l++)
+					for (int m = num; m <= num + 2; m++)
+						if (numNoWire < MAX_WIRE - 1)
+						{
+							noWireX[numNoWire] = l;
+							noWireY[numNoWire] = m;
+							numNoWire++;
+						}
+
 				TileRefs(num2, num).SetActive(true);
 				TileRefs(num2, num).SetType(11);
 				TileRefs(num2, num).SetFrameY(0);
