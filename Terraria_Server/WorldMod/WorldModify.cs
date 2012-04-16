@@ -1515,22 +1515,24 @@ namespace Terraria_Server.WorldMod
 		{
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
+			
+			var type = TileRefs(i, j).Type;
 
-			if (TileRefs(i, j).Type == 135)
+			if (type == 135)
 			{
 				TripWire(TileRefs, sandbox, i, j, Sender);
 				return;
 			}
-			if (TileRefs(i, j).Type == 136)
+			if (type == 136)
 			{
 				if (TileRefs(i, j).FrameY == 0)
-					TileRefs(i, j).SetFrameY(8);
+					TileRefs(i, j).SetFrameY(18);
 				else
 					TileRefs(i, j).SetFrameY(0);
 				TripWire(TileRefs, sandbox, i, j, Sender);
 				return;
 			}
-			if (TileRefs(i, j).Type == 144)
+			if (type == 144)
 			{
 				if (TileRefs(i, j).FrameY == 0)
 				{
@@ -1542,45 +1544,43 @@ namespace Terraria_Server.WorldMod
 
 				return;
 			}
-			if (TileRefs(i, j).Type == 132)
-			{
-				int num = i;
-				short num2 = 36;
-				num = (int)(TileRefs(i, j).FrameX / 18 * -1);
-				int num3 = (int)(TileRefs(i, j).FrameY / 18 * -1);
-				if (num < -1)
-				{
-					num += 2;
-					num2 = -36;
-				}
-				num += i;
-				num3 += j;
-				for (int k = num; k < num + 2; k++)
-				{
-					for (int l = num3; l < num3 + 2; l++)
-					{
-						if (TileRefs(k, l).Type == 132)
-						{
-							short frameX = (short)(TileRefs(k, l).FrameX + num2);
-							TileRefs(k, l).SetFrameX(frameX);
-						}
-					}
-				}
-				TileFrame(TileRefs, sandbox, num, num3, false, false);
-				for (int m = num; m < num + 2; m++)
-				{
-					for (int n = num3; n < num3 + 2; n++)
-					{
-						var tile = TileRefs(m, n);
-						if (tile.Type == 132 && tile.Active && tile.Wire)
-						{
-							TripWire(TileRefs, sandbox, m, n, Sender);
-							return;
-						}
-					}
-				}
-			}
-		}
+			if (type == 132)
+            {
+                short num = 36;
+                int num2 = (int)(Main.tile.At (i, j).FrameX / 18 * -1);
+                int num3 = (int)(Main.tile.At (i, j).FrameY / 18 * -1);
+                if (num2 < -1)
+                {
+                    num2 += 2;
+                    num = -36;
+                }
+                num2 += i;
+                num3 += j;
+                for (int k = num2; k < num2 + 2; k++)
+                {
+                    for (int l = num3; l < num3 + 2; l++)
+                    {
+                        if (Main.tile.At (k, l).Type == 132)
+                        {
+							Main.tile.At(k, l).AddFrameX (num);
+                        }
+                    }
+                }
+                TileFrame(TileRefs, sandbox, num2, num3);
+                for (int m = num2; m < num2 + 2; m++)
+                {
+                    for (int n = num3; n < num3 + 2; n++)
+                    {
+						var tile = Main.tile.At (m, n);
+                        if (tile.Type == 132 && tile.Active && tile.Wire)
+                        {
+                            TripWire(TileRefs, sandbox, m, n, Sender);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
 
 		public static void TripWire(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int i, int j, ISender Sender)
 		{
@@ -1909,7 +1909,7 @@ namespace Terraria_Server.WorldMod
 				{
 					KillTile(TileRefs, sandbox, i, j, false, false, true);
 					NetMessage.SendTileSquare(-1, i, j, 1);
-					Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0f, 108, 250, 10f, Main.myPlayer);
+					Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0f, ProjectileType.N108_EXPLOSIVES, 250, 10f, Main.myPlayer);
 				}
 				else if (type == 142 || type == 143)
 				{
@@ -6102,7 +6102,7 @@ namespace Terraria_Server.WorldMod
 
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
-
+			
 			bool result = false;
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
 			{

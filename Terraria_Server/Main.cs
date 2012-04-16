@@ -12,6 +12,7 @@ using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
 using Terraria_Server.Plugins;
+using Terraria_Server.Messages;
 
 namespace Terraria_Server
 {
@@ -992,7 +993,22 @@ namespace Terraria_Server
 
 					try
 					{
-						projectile[i].Update(Terraria_Server.Messages.TileBreakMessage.staticEditor.ITileAt, Terraria_Server.Messages.TileBreakMessage.staticEditor.Sandbox, i);
+                        lock (WorldModify.playerEditLock)
+                        {           
+                            var editor = TileBreakMessage.staticEditor;
+                            var sandbox = editor.Sandbox;
+                            
+                            editor.Sandbox.Initialize ();
+                            projectile[i].Update(editor.ITileAt, sandbox, i);
+                            
+                            Player player = null;
+                            if(projectile != null && projectile[i].Owner != myPlayer)
+                            {
+                                player = players[projectile[i].Owner];
+                            }
+                            
+                            editor.Sandbox.Apply(player);
+                        }
 					}
 					catch (Exception e)
 					{

@@ -501,5 +501,10 @@ namespace Terraria_Server.WorldMod
 		{
 			WorldModify.KillWire(ITileAt, Sandbox, i, j);
 		}
+		
+		public void hitSwitch(int x, int y, ISender sender)
+		{
+			WorldModify.hitSwitch (ITileAt, Sandbox, x, y, sender);	
+		}
 	}
 }

@@ -156,7 +156,7 @@ namespace Terraria_Server.Messages
 					
 					NetMessage.SendData(17, -1, whoAmI, "", (int)tileAction, (float)x, (float)y, (float)tileType, style);
 					
-					sandbox.Apply ();
+					sandbox.Apply (Main.players[whoAmI]);
 					
 					return;
 				}

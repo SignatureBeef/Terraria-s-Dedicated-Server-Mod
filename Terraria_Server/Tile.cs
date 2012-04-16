@@ -353,7 +353,7 @@ namespace Terraria_Server
 				}
 			}
 			set
-			{
+			{				
 				frameX_Size = 0;
 				if (value == -1)
 					frameX = 255;
@@ -464,10 +464,18 @@ namespace Terraria_Server
 		{
 			get
 			{
+				if(type == 141)
+				{
+					var i = 0;	
+				}
 				return (flags & TileFlags.Wire) != 0;
 			}
 			set
 			{
+				if(type == 141)
+				{
+					var i = 0;	
+				}
 				SetFlag(TileFlags.Wire, value);
 			}
 		}

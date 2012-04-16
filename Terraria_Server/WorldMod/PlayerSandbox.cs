@@ -45,6 +45,12 @@ namespace Terraria_Server.WorldMod
 			sideEffects.Clear ();
 		}
 		
+		
+		/*public PlayerSandbox()
+		{
+			Initialize ();	
+		}*/
+		
 		public int ChangedTileCount { get { return changedTiles.Count; } }
 		
 		internal void Apply (Player player = null)
