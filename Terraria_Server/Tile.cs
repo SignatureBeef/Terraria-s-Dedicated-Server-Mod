@@ -464,18 +464,10 @@ namespace Terraria_Server
 		{
 			get
 			{
-				if(type == 141)
-				{
-					var i = 0;	
-				}
 				return (flags & TileFlags.Wire) != 0;
 			}
 			set
 			{
-				if(type == 141)
-				{
-					var i = 0;	
-				}
 				SetFlag(TileFlags.Wire, value);
 			}
 		}
