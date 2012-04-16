@@ -477,11 +477,6 @@ namespace Terraria_Server
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 			
-			if(type == ProjectileType.N108_EXPLOSIVES)
-			{
-				var i = 0;	
-			}
-
 			if (this.type == ProjectileType.N18_ORB_OF_LIGHT || this.type == ProjectileType.N72_BLUE_FAIRY ||
 				this.type == ProjectileType.N86_PINK_FAIRY || this.type == ProjectileType.N87_PINK_FAIRY ||
 				this.type == ProjectileType.N111_BUNNY)
@@ -827,12 +822,7 @@ namespace Terraria_Server
 		public void Update(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int i)
 		{
 			if (this.Active)
-			{
-				if(type == ProjectileType.N108_EXPLOSIVES)
-				{
-					var ik = 0;	
-				}
-				
+			{				
 				Vector2 value = this.Velocity;
 				if (this.Position.X <= Main.leftWorld || this.Position.X + (float)this.Width >= Main.rightWorld || this.Position.Y <= Main.topWorld || this.Position.Y + (float)this.Height >= Main.bottomWorld)
 				{
@@ -1301,12 +1291,6 @@ namespace Terraria_Server
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
 			
-			
-				if(type == ProjectileType.N108_EXPLOSIVES)
-				{
-					var i = 0;	
-				}
-
 			switch (this.aiStyle)
 			{
 				case 1:

@@ -173,7 +173,8 @@ namespace Terraria_Server.WorldMod
 									num4++;
 							}
 						}
-						if (num4 < 2)
+                     
+						if (num4 < 4)
 						{
 							PlaceTile(TileRefs, sandbox, i + num2, j + num3, 129, true, false, -1, 0);
 							NetMessage.SendTileSquare(-1, i + num2, j + num3, 1);
@@ -1581,7 +1582,7 @@ namespace Terraria_Server.WorldMod
                 }
             }
         }
-
+        
 		public static void TripWire(Func<Int32, Int32, ITile> TileRefs, ISandbox sandbox, int i, int j, ISender Sender)
 		{
 			if (TileRefs == null)
@@ -6102,7 +6103,7 @@ namespace Terraria_Server.WorldMod
 
 			if (TileRefs == null)
 				TileRefs = TileCollection.ITileAt;
-			
+            
 			bool result = false;
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
 			{
