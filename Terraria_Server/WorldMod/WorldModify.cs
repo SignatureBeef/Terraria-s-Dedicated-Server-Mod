@@ -148,7 +148,7 @@ namespace Terraria_Server.WorldMod
 			if (Main.hardMode)
 			{
 				int type = (int)TileRefs(i, j).Type;
-				if (type == 117 && (double)j > Main.rockLayer && Main.rand.Next(110) == 0)
+				if (type == 117 && (double)j > Main.rockLayer && Main.rand.Next(55) == 0)
 				{
 					int num = genRand.Next(4);
 					int num2 = 0;
@@ -159,7 +159,7 @@ namespace Terraria_Server.WorldMod
 					else if (num == 1)
 						num2 = 1;
 					else
-						num3 = (num == 0) ? -1 : 1;
+						num3 =  1;
 
 					if (!TileRefs(i + num2, j + num3).Active)
 					{
