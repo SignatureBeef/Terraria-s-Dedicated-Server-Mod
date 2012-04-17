@@ -46,6 +46,7 @@ namespace Terraria_Server
         private const bool      DEFAULT_USE_CUSTOM_GEN_OPTS     = false;
         private const bool      DEFAULT_WHITE_LIST              = false;
         private const string    DEFAULT_WORLD                   = "world1.wld";
+        private const int       DEFAULT_CRYSTAL_SPAWN           = 110;
 #endregion
 
 #region Key Values
@@ -93,6 +94,13 @@ namespace Terraria_Server
         private const string    USE_CUSTOM_GEN_OPTS             = "opt-custom-worldgen";
         private const string    WHITE_LIST                      = "whitelist";
         private const string    WORLD_PATH                      = "worldpath";
+        private const string    CRYSTAL_SPAWN                   = "crystal_spawn_value";
+#endregion
+
+#region Default Comments
+
+        private const string COMMENT_CRYSTALSPAWN = "The chance that a crystal will spawn. Lower values means higher chance to spawn.";
+
 #endregion
 
         public ServerProperties(string propertiesPath) : base(propertiesPath) { }
@@ -143,6 +151,8 @@ namespace Terraria_Server
             temp = UseCustomTiles;
             temp = UseCustomGenOpts;
             temp = WorldPath;
+            temp = Comment_CrystalSpawn;
+            temp = CrystalSpawn;
         }
 
         public int MaxPlayers
@@ -620,5 +630,29 @@ namespace Terraria_Server
 			get { return getValue(PURGE_BACKUPS_AFTER, DEFAULT_PURGE_BACKUPS_AFTER); }
 			set { setValue(PURGE_BACKUPS_AFTER, value); }
 		}
+
+        public int CrystalSpawn
+        {
+            get
+            {
+                return getValue(CRYSTAL_SPAWN, DEFAULT_CRYSTAL_SPAWN);
+            }
+            set
+            {
+                setValue(CRYSTAL_SPAWN, value);
+            }
+        }
+
+        public string Comment_CrystalSpawn
+        {
+            get
+            {
+                return GetComment(CRYSTAL_SPAWN, COMMENT_CRYSTALSPAWN);
+            }
+            set
+            {
+                SetComment(CRYSTAL_SPAWN, value);
+            }
+        }
     }
 }
