@@ -1764,6 +1764,11 @@ namespace Terraria_Server
 
 			return true;
 		}
+        
+        public static int NewNPC(int x, int y, NPCType type, int start = 0, bool makespawn = false)
+        {
+            return NewNPC (x, y, (int)type, start, makespawn);   
+        }
 
 		/// <summary>
 		/// Creates new instance of specified NPC at specified
@@ -12112,15 +12117,6 @@ namespace Terraria_Server
 			return false;
 		}
 
-		public static void SpawnGuide()
-		{
-			int GuideIndex = NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, 22, 0);
-			Main.npcs[GuideIndex].homeTileX = Main.spawnTileX;
-			Main.npcs[GuideIndex].homeTileY = Main.spawnTileY;
-			Main.npcs[GuideIndex].direction = 1;
-			Main.npcs[GuideIndex].homeless = true;
-		}
-
 		public static void SpawnTDCMQuestGiver()
 		{
 			if (IsNPCSummoned(Statics.TDCM_QUEST_GIVER) || !Program.properties.AllowTDCMRPG)
@@ -12136,9 +12132,9 @@ namespace Terraria_Server
 			Main.npcs[npcIndex].homeless = true;
 			//Main.npcs[npcIndex].dontTakeDamage = true;
 
-			ProgramLog.Debug.Log(
+			/*ProgramLog.Debug.Log(
 				String.Format("{0} spawned at {1},{2}.", Statics.TDCM_QUEST_GIVER, Spawn.X, Spawn.Y)
-			);
+			);*/
 		}
 
 		public static SpawnFlags SpawnWallOfFlesh(Func<Int32, Int32, ITile> TileRefs, Vector2 pos)

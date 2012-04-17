@@ -10,7 +10,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Terraria_Utilities</RootNamespace>
     <AssemblyName>Terraria_Utilities</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -57,12 +56,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Mono.Cecil, Version=0.6.9.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Mono.Cecil">
       <HintPath>Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="Terraria, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Terraria">
       <HintPath>..\..\..\..\..\home\ray\Desktop\Terraria\bin\Debug\Terraria.exe</HintPath>
     </Reference>
   </ItemGroup>

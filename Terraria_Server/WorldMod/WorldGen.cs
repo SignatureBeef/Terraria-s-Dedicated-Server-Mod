@@ -141,12 +141,7 @@ namespace Terraria_Server.WorldMod
 			worldSurface = TerrainY;
 			double num7 = num4;
 			rockLayer = num4;
-			int Direction = 0;
-
-			if (WorldModify.genRand.Next(2) == 0)
-				Direction = -1;
-			else
-				Direction = 1;
+			int Direction = WorldModify.genRand.Next(2) == 0 ? -1 : 1;
 
 			using (var prog = new ProgressLogger(Main.maxTilesX - 1, Languages.Generation_Terrain))
 			{
@@ -438,7 +433,7 @@ namespace Terraria_Server.WorldMod
 			}
 
 			ProgramLog.Log(Languages.Generation_AddingNPCs);
-			NPC.SpawnGuide();
+			SpawnGuide();
 			/*NPC.SpawnTDCMQuestGiver(); */
 
 			PlantSunflowers(TileRefs);
@@ -5624,10 +5619,9 @@ namespace Terraria_Server.WorldMod
 			}
 			Main.dungeonX = (int)vector.X;
 			Main.dungeonY = num7;
-			int num42 = NPC.NewNPC(dungeonX * 16 + 8, dungeonY * 16, 37, 0);
-			Main.npcs[num42].homeless = false;
-			Main.npcs[num42].homeTileX = Main.dungeonX;
-			Main.npcs[num42].homeTileY = Main.dungeonY;
+            
+            SpawnOldMan(dungeonX, dungeonY);
+            
 			if (num3 == 1)
 			{
 				int num43 = 0;
@@ -8976,5 +8970,25 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
+        
+        public static void SpawnGuide()
+        {
+            SpawnNpc(NPCType.N22_GUIDE, Main.spawnTileX, Main.spawnTileY, true);
+        }
+        
+        public static void SpawnOldMan(int dungeonX, int dungeonY)
+        {
+            SpawnNpc(NPCType.N37_OLD_MAN, dungeonX, dungeonY, false);
+        }
+        
+        private static void SpawnNpc(NPCType type, int spawnX, int spawnY, bool homeless)
+        {
+            int index = NPC.NewNPC(spawnX * 16, spawnY * 16, type, 0, true);            
+            Main.npcs[index].homeless = homeless;
+            
+            Main.npcs[index].homeTileX = Main.spawnTileX;
+            Main.npcs[index].homeTileY = Main.spawnTileY;
+            Main.npcs[index].direction = 1;
+        }
 	}
 }
