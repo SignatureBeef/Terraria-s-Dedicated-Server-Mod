@@ -13,7 +13,7 @@ namespace TDSM_PermissionsX
 	{
 		public void Users(ISender sender, ArgumentList args)
 		{
-			var add = args.TryPop("add"); //xuser adduser username
+			var add = args.TryPop("add"); //xuser add username
 			var forced = args.TryPop("-f");
 			var save = args.TryPop("-save");
 
@@ -41,7 +41,7 @@ namespace TDSM_PermissionsX
 					String.Format("`{0}` {1}", trueUser, Languages.HasBeenCreated)
 				);
 			}
-			else throw new CommandError("{0} - xuser adduser [-f -save] username", Languages.ArgumentsExpected);
+			else throw new CommandError("{0} - xuser add [-f -save] username", Languages.ArgumentsExpected);
 		}
 
 		public void UserPermissions(ISender sender, ArgumentList args)
