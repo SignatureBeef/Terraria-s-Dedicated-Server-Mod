@@ -27,17 +27,27 @@ namespace Terraria_Server
             var task = new Task()
             {
                 Method = CheckForUpdates,
-                Trigger = 10 * 60 //10 minutes
+                Trigger = 30 * 60 //30 minutes
                 
-            }.Init();
+            };
             Tasks.Schedule (task);
         }
         
+        static bool IsChecking;
         static void CheckForUpdates()
         {
-            int build;
-            if(!TrySeeIfIsUpToDate (out build))
-                ProgramLog.Admin("A TDSM update is available: b{0}", build);
+            try 
+            {
+                if(IsChecking) return;
+                IsChecking = true;
+                
+                int build;
+                if(!TrySeeIfIsUpToDate (out build))
+                    ProgramLog.Admin.Log("A TDSM update is available: b{0}", build);
+                
+                IsChecking = false;
+            }
+            catch { }
         }
 
         public static void PrintUpdateInfo()
@@ -75,6 +85,7 @@ namespace Terraria_Server
         
         private static bool TrySeeIfIsUpToDate(out int build)
         {
+            build = -1;
             string updateList = GetUpdateList();
             //b-r
             if (updateList.Contains("b"))
@@ -181,7 +192,7 @@ namespace Terraria_Server
                 string myFile = System.AppDomain.CurrentDomain.FriendlyName;
 
                 PerformUpdate(UpdateLink, "Terraria_Server.upd", "Terraria_Server.bak", myFile, 1, MAX_UPDATES);
-                performUpdate(UpdateMDBLink, "Terraria_Server.upd.mdb", "Terraria_Server.bak.mdb", myFile + ".mdb", 2, MAX_UPDATES);
+                PerformUpdate(UpdateMDBLink, "Terraria_Server.upd.mdb", "Terraria_Server.bak.mdb", myFile + ".mdb", 2, MAX_UPDATES);
 
                 Platform.PlatformType oldPlatform = Platform.Type; //Preserve old data if command args were used
                 Platform.InitPlatform(); //Reset Data of Platform for determinine exit/enter method.

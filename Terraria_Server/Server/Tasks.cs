@@ -32,15 +32,14 @@ namespace Terraria_Server
         /// </value>
         public Func<Void> Method    { get; set; }
         
-        public void Reset(bool includeTrigger = true)
+        public void Reset()
         {
-            if(includeTrigger) Trigger = 0;
             _insertedAt = DateTime.Now;
         }
         
         public Task Init()
         {
-            Reset (false);
+            Reset ();
             return this;
         }
     }
@@ -54,9 +53,10 @@ namespace Terraria_Server
             _tasks = new Stack<Task>();
         }
         
-        public static void Schedule(Task task)
+        public static void Schedule(Task task, bool init = true)
         {
-               lock(_tasks) _tasks.Push(task);
+            if(init) task.Init ();
+            lock(_tasks) _tasks.Push(task);
         }
         
         public static void CheckTasks()

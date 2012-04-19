@@ -141,7 +141,7 @@ namespace Terraria_Server
 
 				try
 				{
-					if (UpdateManager.performProcess())
+					if (UpdateManager.PerformProcess())
 					{
 						ProgramLog.Log(Languages.Startup_RestartingIntoNewUpdate);
 						return;

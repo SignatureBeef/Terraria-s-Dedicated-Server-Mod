@@ -11,7 +11,7 @@ namespace Terraria_Server
 		public static readonly string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
 
 		/* TDSM */
-		public const Int32 BUILD = 39;
+		public const Int32 BUILD = 37;
 		public const String CODENAME = ""; //Disabled, I don't think we should bother.
 
 		private const String WORLDS = "Worlds";
