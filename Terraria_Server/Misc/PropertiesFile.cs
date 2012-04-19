@@ -11,8 +11,10 @@ namespace Terraria_Server.Misc
     {
         private const char EQUALS = '=';
         private const char HEADER = '#';
-
+        private const string COMMENT = "//";
+        
         private Dictionary<String, String> propertiesMap;
+        private Dictionary<String, String> commentsMap;
 
         private string propertiesPath = String.Empty;
 
@@ -26,6 +28,7 @@ namespace Terraria_Server.Misc
         public PropertiesFile(string propertiesPath)
         {
             propertiesMap = new Dictionary<String, String>();
+            commentsMap = new Dictionary<String, String>();
 			header = new List<String>();
             this.propertiesPath = propertiesPath;
         }
@@ -41,6 +44,7 @@ namespace Terraria_Server.Misc
             StreamReader reader = new StreamReader(propertiesPath);
             try
             {
+                string comment = "";
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
@@ -48,11 +52,20 @@ namespace Terraria_Server.Misc
                     int setterIndex = line.IndexOf(EQUALS);
                     if (setterIndex > 0 && setterIndex < line.Length && !line.StartsWith(HEADER.ToString()))
                     {
+                        if (comment != "")
+                        {
+                            commentsMap.Add(line.Substring(0, setterIndex), comment);
+                            comment = "";
+                        }
                         propertiesMap.Add(line.Substring(0, setterIndex), line.Substring(setterIndex + 1));
                     }
                     else if (line.StartsWith(HEADER.ToString()))
                     {
                         header.Add(line.Substring(1, line.Length - 1));
+                    }
+                    else if (line.StartsWith(COMMENT))
+                    {
+                        comment = line.Substring(2);
                     }
                 }
             }
@@ -77,7 +90,11 @@ namespace Terraria_Server.Misc
                 foreach (KeyValuePair<String, String> pair in propertiesMap)
                 {
                     if (pair.Value != null)
+                    {
+                        if(commentsMap.ContainsKey(pair.Key))
+                            writer.WriteLine(COMMENT + commentsMap[pair.Key]);
                         writer.WriteLine(pair.Key + EQUALS + pair.Value);
+                    }
                 }
             }
             finally
@@ -107,9 +124,7 @@ namespace Terraria_Server.Misc
         public string getValue(string key)
         {
             if (propertiesMap.ContainsKey(key))
-            {
                 return propertiesMap[key];
-            }
             return null;
         }
 
@@ -177,6 +192,29 @@ namespace Terraria_Server.Misc
         public bool RemoveHeaderLine(string Line)
         {
             return header.Remove(Line);
+        }
+
+        public string GetComment(string key)
+        {
+            if (commentsMap.ContainsKey(key))
+                return commentsMap[key];
+            return null;
+        }
+
+        public string GetComment(string key, string default_comment)
+        {
+            string value = GetComment(key);
+            if (value == null || value.Trim().Length < 0)
+            {
+                SetComment(key, default_comment);
+                return default_comment;
+            }
+            return value;
+        }
+
+        public void SetComment(string key, string comment)
+        {
+            commentsMap[key] = comment;
         }
     }
 }

@@ -148,7 +148,7 @@ namespace Terraria_Server.WorldMod
 			if (Main.hardMode)
 			{
 				int type = (int)TileRefs(i, j).Type;
-				if (type == 117 && (double)j > Main.rockLayer && Main.rand.Next(55) == 0)
+				if (type == 117 && (double)j > Main.rockLayer && Main.rand.Next(Program.properties.CrystalSpawn) == 0)
 				{
 					int num = genRand.Next(4);
 					int num2 = 0;
@@ -174,7 +174,7 @@ namespace Terraria_Server.WorldMod
 							}
 						}
                      
-						if (num4 < 4)
+						if (num4 < 2)
 						{
 							PlaceTile(TileRefs, sandbox, i + num2, j + num3, 129, true, false, -1, 0);
 							NetMessage.SendTileSquare(-1, i + num2, j + num3, 1);
