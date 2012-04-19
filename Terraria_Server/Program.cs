@@ -725,7 +725,7 @@ namespace Terraria_Server
 						Terraria_Server.Main.Update(s);
 						LastUpdateTime = s.Elapsed - start;
 					}
-
+                        
 					if (collect++ >= 1000) //Every 1000 loops should be less intensive.
 					{
 						if (properties.CollectGarbage)
@@ -733,6 +733,9 @@ namespace Terraria_Server
 
 						collect = 0;
 					}
+
+                    /* Check tolled tasks */
+                    Tasks.CheckTasks ();
 
 					if ((DateTime.Now - backupDate).TotalMinutes >= backupInterval && backup)
 					{
@@ -790,6 +793,9 @@ namespace Terraria_Server
 							}
 						}
 					}
+
+                    /* Check tolled tasks */
+                    Tasks.CheckTasks ();
 
 					if (collect++ >= 1000) //Every 1000 loops should be less intensive.
 					{

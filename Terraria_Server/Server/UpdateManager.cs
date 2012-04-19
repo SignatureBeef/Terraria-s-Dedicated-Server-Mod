@@ -11,7 +11,7 @@ namespace Terraria_Server
     {
     }
     
-    public class UpdateManager
+    public static class UpdateManager
     {
         public static string UpdateList = "http://update.tdsm.org/updatelist.txt";
         public static string UpdateLink = "http://update.tdsm.org/Terraria_Server.exe";
@@ -19,6 +19,22 @@ namespace Terraria_Server
         public static string UpdateMDBLink = "http://update.tdsm.org/Terraria_Server.exe.mdb";
 
         public static int MAX_UPDATES = 2;
+        
+        static UpdateManager()
+        {
+            var task = new Task()
+            {
+                Method = CheckForUpdates,
+                Trigger = 10 * 60 //10 minutes
+                
+            }.Init();
+            Tasks.Schedule (task);
+        }
+        
+        static void CheckForUpdates()
+        {
+            
+        }
 
         public static void printUpdateInfo()
         {
