@@ -27,7 +27,7 @@ Build 38
 	- The Destroyer not correct when forced to spawn via the command.
 	- Wall tiles now blend correctly.
 	- Time locking
-	- Backup manager - Automatic or command
+	- Backup manager: Automatic or command
 	- TDSM Permissions (Both YAML & XML) - Chat hook is now early for chat plugins to take over.
 	- Restrics Npc Permission node will now work.
 	- NPC Housing
@@ -38,8 +38,8 @@ Build 38
 	- Fixed an issue where new town npcs (1.1.1/1.1.2) try to continuously move in.
 	- Added affix's to the Give command, Via Int32 or their names.
 	- Plugins can now tap into the language system. There now is also no check for out of date files as it's not needed anymore.
-	- Fixed world sizes - Large maps are now ~20mb
-	- Old API -> Better naming conventions.
-    - Fixed explosions.
-    - More WorldGen configurable options.
+	- Fixed world sizes: Large maps are now ~20mb
+	- Old API: Better naming conventions.
+	- Fixed explosions.
+	- More WorldGen configurable options.
 	- Comments for property files.
