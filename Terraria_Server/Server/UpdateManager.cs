@@ -20,6 +20,8 @@ namespace Terraria_Server
 
         public static int MAX_UPDATES = 2;
         
+        private static string uList = "";
+        
         static UpdateManager()
         {
             var task = new Task()
@@ -33,10 +35,12 @@ namespace Terraria_Server
         
         static void CheckForUpdates()
         {
-            
+            int build;
+            if(!TrySeeIfIsUpToDate (out build))
+                ProgramLog.Admin("A TDSM update is available: b{0}", build);
         }
 
-        public static void printUpdateInfo()
+        public static void PrintUpdateInfo()
         {
             try
             {
@@ -58,38 +62,43 @@ namespace Terraria_Server
             }
         }
 
-        public static string getUpdateList()
+        public static string GetUpdateList()
         {
             return new System.Net.WebClient().DownloadString(UpdateList).Trim();
         }
-
-        private static string uList = "";
-        public static bool isUptoDate()
+  
+        public static bool IsUpToDate()
         {
-            string updateList = getUpdateList();
+            int build;
+            return TrySeeIfIsUpToDate(out build);
+        }
+        
+        private static bool TrySeeIfIsUpToDate(out int build)
+        {
+            string updateList = GetUpdateList();
             //b-r
             if (updateList.Contains("b"))
 			{
 				try
 				{
-                    string updateBuild = "";
+                    string updateBuild = String.Empty;
+                    
 					for (int i = 1; i < updateList.Length; i++)
-					{
-						updateBuild += updateList[i];
-					}
-					int updateBuildNum = Int32.Parse(updateBuild);
-                    string myBuild = "b" + Statics.BUILD.ToString();
-					uList = updateList;
-					return Statics.BUILD >= updateBuildNum;
+                        updateBuild += updateList[i];
+                    
+                    if(Int32.TryParse(updateBuild, out build))
+                    {
+                        string myBuild = "b" + Statics.BUILD.ToString();
+    					uList = updateList;
+    					return Statics.BUILD >= build;
+                    }
 				}
-				catch
-				{
-				}
+				catch { }
             }
             return false;
         }
 
-        public static bool performUpdate(string DownloadLink, string savePath, string backupPath, string myFile, int Update, int MaxUpdates, string header = "update ")
+        public static bool PerformUpdate(string DownloadLink, string savePath, string backupPath, string myFile, int Update, int MaxUpdates, string header = "update ")
         {
             if (File.Exists(savePath)) //No download conflict, Please :3 (Looks at Mono)
             {
@@ -156,22 +165,22 @@ namespace Terraria_Server
             return true;
         }
 
-        public static bool performProcess()
+        public static bool PerformProcess()
         {
             if (!Program.properties.AutomaticUpdates)
             {
                 return false;
             }
             ProgramLog.Log ("Checking for updates...");
-            if (!isUptoDate())
+            if (!IsUpToDate())
             {
                 ProgramLog.Log ("Update found, performing b{0} -> {1}", Statics.BUILD, uList);
 
-                printUpdateInfo();
+                PrintUpdateInfo();
 
                 string myFile = System.AppDomain.CurrentDomain.FriendlyName;
 
-                performUpdate(UpdateLink, "Terraria_Server.upd", "Terraria_Server.bak", myFile, 1, MAX_UPDATES);
+                PerformUpdate(UpdateLink, "Terraria_Server.upd", "Terraria_Server.bak", myFile, 1, MAX_UPDATES);
                 performUpdate(UpdateMDBLink, "Terraria_Server.upd.mdb", "Terraria_Server.bak.mdb", myFile + ".mdb", 2, MAX_UPDATES);
 
                 Platform.PlatformType oldPlatform = Platform.Type; //Preserve old data if command args were used

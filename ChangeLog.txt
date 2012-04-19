@@ -43,3 +43,10 @@ Build 38
 	- Fixed explosions.
 	- More WorldGen configurable options.
 	- Comments for property files.
+ 
+Build 39
+===================
+ - Added a Task Scheduler.
+ - Updated the Update Manager.
+ - Added a Task to check for updates.
+ 

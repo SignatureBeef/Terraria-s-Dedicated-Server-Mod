@@ -23,7 +23,7 @@ namespace TDSMPermissions.Auth
                 string restrict = Statics.PluginPath + Path.DirectorySeparatorChar + "RestrictPlugin";
                 string dll = restrict + ".dll";
 
-                if (!UpdateManager.performUpdate(LINK_RESTRICT, restrict + ".upt", restrict + ".bak", dll, 1, 1, "Restrict")) {
+                if (!UpdateManager.PerformUpdate(LINK_RESTRICT, restrict + ".upt", restrict + ".bak", dll, 1, 1, "Restrict")) {
                     ProgramLog.Error.Log("Restrict failed to download!"); 
                     return;
                 }

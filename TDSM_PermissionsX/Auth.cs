@@ -23,7 +23,7 @@ namespace TDSM_PermissionsX
 				string restrict = Statics.PluginPath + Path.DirectorySeparatorChar + "RestrictPlugin";
 				string dll = restrict + ".dll";
 
-				if (!UpdateManager.performUpdate(RestrictLink, restrict + ".upt", restrict + ".bak", dll, 1, 1, "Restrict"))
+				if (!UpdateManager.PerformUpdate(RestrictLink, restrict + ".upt", restrict + ".bak", dll, 1, 1, "Restrict"))
 				{
 					ProgramLog.Error.Log(languages.RestrictDlFailed);
 					return;
