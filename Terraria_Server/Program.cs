@@ -34,12 +34,13 @@ namespace Terraria_Server
 			Thread.CurrentThread.Name = "Main";
 
 			//header: Terraria's Dedicated Server Mod. (1.1.2 #36) ~ Build: 37 [CodeName]
+			string codeName = Statics.CODENAME.Length > 0 ? String.Format(" [{0}]", Statics.CODENAME) : String.Empty;
 			string MODInfo = String.Format(
-				"Terraria's Dedicated Server Mod. ({0} #{1}) ~ Build: {2} [{3}]",
+				"Terraria's Dedicated Server Mod. ({0} #{1}) ~ Build: {2}{3}",
 				Statics.VERSION_NUMBER,
 				Statics.CURRENT_TERRARIA_RELEASE,
 				Statics.BUILD,
-				Statics.CODENAME
+				codeName
 			);
 
 			try

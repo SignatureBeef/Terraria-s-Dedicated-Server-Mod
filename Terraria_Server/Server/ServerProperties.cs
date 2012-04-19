@@ -41,7 +41,7 @@ namespace Terraria_Server
         private const int       DEFAULT_SPAWN_NPC_MAX           = 100;
         private const bool      DEFAULT_STOP_NPC_SPAWNING       = false;
         private const bool      DEFAULT_STOP_UPDATES_WHEN_EMPTY = true;
-        private const string    DEFAULT_TILESQUARE_MESSAGES     = "ignore";
+        private const string    DEFAULT_TILESQUARE_MESSAGES     = "acceptall";
         private const bool      DEFAULT_USE_CUSTOM_TILES        = false;
         private const bool      DEFAULT_USE_CUSTOM_GEN_OPTS     = false;
         private const bool      DEFAULT_WHITE_LIST              = false;

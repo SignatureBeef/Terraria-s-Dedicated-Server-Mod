@@ -8,11 +8,11 @@ namespace Terraria_Server
 		/* Terraria */
 		public const String VERSION_NUMBER = "v1.1.2";
 		public const Int32 CURRENT_TERRARIA_RELEASE = 39;
-		public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
+		public static readonly string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
 
 		/* TDSM */
 		public const Int32 BUILD = 38;
-		public const String CODENAME = "Classified";
+		public const String CODENAME = ""; //Disabled, I don't think we should bother.
 
 		private const String WORLDS = "Worlds";
 		private const String PLUGINS = "Plugins";

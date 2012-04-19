@@ -70,7 +70,7 @@ namespace Terraria_Utilities
 			DumpAffixes();
 
             Console.Write("Ok\nSerializing...");
-            Terraria.Main.dedServ = true; //Set this to true, We don't need the GUI shit.
+            //Terraria.Main.dedServ = true; //Set this to true, We don't need the GUI shit.
 
             /* Serialize */
             foreach (var set in typeSet)

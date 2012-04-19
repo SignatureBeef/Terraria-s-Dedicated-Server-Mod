@@ -16,9 +16,10 @@ namespace Terraria_Utilities
 		/// <returns></returns>
 		public static bool CheckTileSets(out int err)
 		{
-			Terraria_Server.Main.Initialize();
-			using (var main = new Terraria.Main())
-				main.DedServ();
+			err = -1;
+			/*Terraria_Server.Main.Initialize();
+			//using (var main = new Terraria.Main())
+			//    main.DedServ();
 
 			var merge = Terraria_Server.Main.tileMergeDirt.IsEqualTo(Terraria.Main.tileMergeDirt, out err);
 			var tCut = Terraria_Server.Main.tileCut.IsEqualTo(Terraria.Main.tileCut, out err);
@@ -38,7 +39,8 @@ namespace Terraria_Utilities
 			var frameImp = Terraria_Server.Main.tileFrameImportant.IsEqualTo(Terraria.Main.tileFrameImportant, out err);
 
 			return merge && tCut && tAlch && tShine && wHouse && tStone && tWater && tLava && table &&
-				bLight && dung && solTop && tSolid && noAtt && noFail && frameImp;
+				bLight && dung && solTop && tSolid && noAtt && noFail && frameImp;*/
+			return false;
 		}
 
 		public static bool IsEqualTo(this Array arr1, Array arr2, out int err)
