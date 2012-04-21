@@ -409,12 +409,12 @@ namespace Terraria_Server.Commands
 			AddCommand("spawnboss")
 				.WithAccessLevel(AccessLevel.OP)
 				.WithDescription(Languages.CommandDescription_SpawnBoss)
-				.WithDescription("  (No if no player is entered it will be a random online player)")
-				.WithDescription("  (-night is mainly for Eye of Cthulu, but will set time to night for any Boss.)")
 				.WithHelpText("Usage:    spawnboss <eye, skeletron, eater, kingslime, prime, twins, destroyer, wof>")
 				.WithHelpText("          spawnboss eye night")
 				.WithHelpText("          spawnboss eater eye...")
 				.WithHelpText("          spawnboss <boss> -player <name>")
+                .WithHelpText("(If no player is entered it will be a random online player)")
+                .WithHelpText("(-night is mainly for Eye of Cthulu, but will set time to night for any Boss.)")
 				.WithPermissionNode("tdsm.spawnboss")
 				.Calls(Commands.SummonBoss);
 

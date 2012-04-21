@@ -253,21 +253,29 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void ShowHelp(ISender sender, ArgumentList args)
 		{
+            var commands = Program.commandParser.serverCommands;
+            foreach (var plugin in PluginManager.plugins.Values)
+            {
+                if(plugin.commands.Count > 0)
+                {
+                    commands =
+                        commands.Concat(
+                            plugin.commands.Where(
+                                kvp => !commands.ContainsKey(kvp.Key)
+                                && 
+                                !kvp.Key.StartsWith (plugin.Name.ToLower () + '.'))
+                            )
+//                            .AsEnumerable ()
+                            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                }
+            }
+            
 			if (args == null || args.Count < 1)
 			{
-				var commands = Program.commandParser.serverCommands;
-
-				foreach (var plugin in PluginManager.plugins.Values)
+				for (int i = 0; i < commands.Values.Count; i++)
 				{
-					commands = (from kvp1 in commands
-							   join kvp2 in plugin.commands on kvp1.Key equals kvp2.Key
-							   select new { key = kvp1.Key, value1 = kvp1.Value, value2 = kvp2.Value }) as Dictionary<String, CommandInfo>;
-				}
-
-				for (int i = 0; i < Program.commandParser.serverCommands.Values.Count; i++)
-				{
-					string Key = Program.commandParser.serverCommands.Keys.ToArray()[i];
-					CommandInfo cmdInfo = Program.commandParser.serverCommands.Values.ToArray()[i];
+					string Key = commands.Keys.ToArray()[i];
+					CommandInfo cmdInfo = commands.Values.ToArray()[i];
 					if (CommandParser.CheckAccessLevel(cmdInfo, sender) && !Key.StartsWith("."))
 					{
 						string tab = "\t";
@@ -286,7 +294,7 @@ namespace Terraria_Server.Commands
 			}
 			else
 			{
-				int maxPages = (Program.commandParser.serverCommands.Values.Count / 5) + 1;
+				int maxPages = (commands.Values.Count / 5) + 1;
 				if (maxPages > 0 && args.Count > 1 && args[0] != null)
 				{
 					try
@@ -299,12 +307,12 @@ namespace Terraria_Server.Commands
 							{
 								if ((selectingPage <= i))
 								{
-									selectingPage = i * ((Program.commandParser.serverCommands.Values.Count / 5) + 1);
+									selectingPage = i * ((commands.Values.Count / 5) + 1);
 									break;
 								}
 							}
-
-							int toPage = Program.commandParser.serverCommands.Values.Count;
+                            
+							int toPage = commands.Values.Count;
 							if (selectingPage + 5 < toPage)
 							{
 								toPage = selectingPage + 5;
@@ -312,8 +320,8 @@ namespace Terraria_Server.Commands
 
 							for (int i = selectingPage; i < toPage; i++)
 							{
-								string Key = Program.commandParser.serverCommands.Keys.ToArray()[i];
-								CommandInfo cmdInfo = Program.commandParser.serverCommands.Values.ToArray()[i];
+								string Key = commands.Keys.ToArray()[i];
+								CommandInfo cmdInfo = commands.Values.ToArray()[i];
 								if (CommandParser.CheckAccessLevel(cmdInfo, sender) && !Key.StartsWith("."))
 								{
 									string tab = "\t";
