@@ -172,9 +172,9 @@ namespace Terraria_Server.Commands
 				.Calls(Commands.SaveAll);
 
 			AddCommand("reload")
-				.WithDescription(Languages.CommandDescription_ReloadPlugins)
+				.WithDescription(Languages.CommandDescription_ReloadConfig)
 				.WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
-				.WithPermissionNode("tdsm.plugin")
+				.WithPermissionNode("tdsm.admin")
 				.Calls(Commands.Reload);
 
 			AddCommand("list")

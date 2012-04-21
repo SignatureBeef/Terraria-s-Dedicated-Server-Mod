@@ -23,6 +23,7 @@ namespace Terraria_Server.Language
 		public static String ExpiredCommandMessage { get; set; }
 		public static String XRequestedShutdown { get; set; }
 		public static String PropertiesReload { get; set; }
+        public static String PropertiesReloadComplete { get; set; }
 		public static String CurrentPlayers { get; set; }
 		public static String NoPlayers { get; set; }
 		public static String SavingWorld { get; set; }
@@ -103,7 +104,7 @@ namespace Terraria_Server.Language
 		public static String Ban_UnBanned { get; set; }
 		public static String CommandDescription_Exit { get; set; }
 		public static String CommandDescription_SaveAll { get; set; }
-		public static String CommandDescription_ReloadPlugins { get; set; }
+		public static String CommandDescription_ReloadConfig { get; set; }
 		public static String CommandDescription_OnlinePlayers { get; set; }
 		public static String CommandDescription_Me { get; set; }
 		public static String CommandDescription_Say { get; set; }
@@ -242,6 +243,7 @@ namespace Terraria_Server.Language
 			ExpiredCommandMessage = "This command is no longer available";
 			XRequestedShutdown = " requested that TDSM is to shutdown.";
 			PropertiesReload = "Reloading server.properties.";
+            PropertiesReloadComplete = "Reload complete.";
 			CurrentPlayers = "Current players: ";
 			NoPlayers = "No players online.";
 			SavingWorld = "Saving world.....";
@@ -322,7 +324,7 @@ namespace Terraria_Server.Language
 			Ban_UnBanned = " has been unbanned";
 			CommandDescription_Exit = "Stop the save the world then exit program.";
 			CommandDescription_SaveAll = "Save all world data and backup.";
-			CommandDescription_ReloadPlugins = "Reload plugins.";
+			CommandDescription_ReloadConfig = "Reloads configuration.";
 			CommandDescription_OnlinePlayers = "List active players (also: who, players, playing, online).";
 			CommandDescription_Me = "Broadcast a message in third person.";
 			CommandDescription_Say = "Broadcast a message as the Server.";

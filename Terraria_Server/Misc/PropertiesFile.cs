@@ -41,6 +41,8 @@ namespace Terraria_Server.Misc
             }
 
             propertiesMap.Clear();
+            commentsMap.Clear ();
+            
             StreamReader reader = new StreamReader(propertiesPath);
             try
             {

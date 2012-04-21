@@ -30,8 +30,8 @@ namespace Terraria_Server
         /// <value>
         /// The method.
         /// </value>
-        public Func<Void> Method    { get; set; }
-        
+		public Action Method { get; set; }
+	        
         public void Reset()
         {
             _insertedAt = DateTime.Now;
@@ -59,7 +59,7 @@ namespace Terraria_Server
             lock(_tasks) _tasks.Push(task);
         }
         
-        public static void CheckTasks()
+        internal static void CheckTasks()
         {
             lock(_tasks)
             {

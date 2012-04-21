@@ -27,8 +27,7 @@ namespace Terraria_Server
             var task = new Task()
             {
                 Method = CheckForUpdates,
-                Trigger = 30 * 60 //30 minutes
-                
+                Trigger = 30 * 60 //30 minutes                
             };
             Tasks.Schedule (task);
         }

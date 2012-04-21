@@ -139,6 +139,7 @@ namespace Terraria_Server.Commands
 		{
 			Server.notifyOps(Languages.PropertiesReload, true);
 			Program.properties.Load();
+            Server.notifyOps (Languages.PropertiesReloadComplete);
 		}
 
 		/// <summary>
@@ -254,6 +255,15 @@ namespace Terraria_Server.Commands
 		{
 			if (args == null || args.Count < 1)
 			{
+				var commands = Program.commandParser.serverCommands;
+
+				foreach (var plugin in PluginManager.plugins.Values)
+				{
+					commands = (from kvp1 in commands
+							   join kvp2 in plugin.commands on kvp1.Key equals kvp2.Key
+							   select new { key = kvp1.Key, value1 = kvp1.Value, value2 = kvp2.Value }) as Dictionary<String, CommandInfo>;
+				}
+
 				for (int i = 0; i < Program.commandParser.serverCommands.Values.Count; i++)
 				{
 					string Key = Program.commandParser.serverCommands.Keys.ToArray()[i];

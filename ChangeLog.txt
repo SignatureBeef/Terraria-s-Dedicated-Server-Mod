@@ -46,7 +46,7 @@ Build 38
  
 Build 39
 ===================
- - Added a Task Scheduler.
- - Updated the Update Manager.
- - Added a Task to check for updates.
- 
+     - Added a Task Scheduler.
+     - Updated the Update Manager.
+     - Added a Task to check for updates.
+     - Corrected the reload command.
