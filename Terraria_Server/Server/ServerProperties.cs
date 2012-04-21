@@ -16,6 +16,7 @@ namespace Terraria_Server
 		private const int		DEFAULT_BACKUP_MINUTE_INTERVAL	= 60;
         private const bool      DEFAULT_BUFFER_LIQUID_UPDATES   = false;
         private const bool      DEFAULT_COLLECT_GARBAGE			= true;
+        private const bool      DEFAULT_DISABLE_UPDATE_NOTICE   = false;
         private const int       DEFAULT_EXIT_USERS              = -1;
         private const string    DEFAULT_GREETING                = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
         private const bool		DEFAULT_GENERATE_JUNGLE			= true;
@@ -58,6 +59,7 @@ namespace Terraria_Server
         private const string    BACKUP_MINUTE_INTERVAL			= "backup-minutes-interval";
         private const string    BUFFER_LIQUID_UPDATES           = "buffer-liquid-updates";
         private const string    COLLECT_GARBAGE					= "collect-garbage";
+        private const string    DISABLE_UPDATE_NOTICE           = "disable-newupdate-notice";
         private const string    EXIT_USERS                      = "exitaccesslevel";
         private const string    DUNGEON_AMOUNT                  = "opt-numdungeons";
         private const string    FLOATING_ISLAND_AMOUNT          = "opt-num-floating-islands";
@@ -116,6 +118,8 @@ namespace Terraria_Server
 			temp = BackupInterval;
 			temp = BufferLiquidUpdates;
 			temp = CollectGarbage;
+            temp = Comment_CrystalSpawn;
+            temp = CrystalSpawn;
             temp = DungeonAmount;
             temp = ExitAccessLevel;
             temp = FloatingIslandAmount;
@@ -151,140 +155,77 @@ namespace Terraria_Server
             temp = UseCustomTiles;
             temp = UseCustomGenOpts;
             temp = WorldPath;
-            temp = Comment_CrystalSpawn;
-            temp = CrystalSpawn;
         }
 
         public int MaxPlayers
         {
-            get
-            {
-                return getValue(MAX_PLAYERS, DEFAULT_MAX_PLAYERS);
-            }
-            set
-            {
-                setValue(MAX_PLAYERS, value);
-            }
+            get { return getValue(MAX_PLAYERS, DEFAULT_MAX_PLAYERS); }
+            set { setValue(MAX_PLAYERS, value); }
         }
 
         public int Port
         {
-            get
-            {
-                return getValue(PORT, DEFAULT_PORT);
-            }
-            set
-            {
-                setValue(PORT, value);
-            }
+            get { return getValue(PORT, DEFAULT_PORT); }
+            set { setValue(PORT, value); }
         }
 
         public string Greeting
         {
-            get
-            {
-                return getValue(GREETING, DEFAULT_GREETING);
-            }
-            set
-            {
-                setValue(GREETING, value);
-            }
+            get { return getValue(GREETING, DEFAULT_GREETING); }
+            set { setValue(GREETING, value); }
         }
 
         public string ServerIP
         {
-            get
-            {
-                return getValue(SERVER_IP, DEFAULT_SERVER_IP);
-            }
-            set
-            {
-                setValue(SERVER_IP, value);
-            }
+            get { return getValue(SERVER_IP, DEFAULT_SERVER_IP); }
+            set { setValue(SERVER_IP, value); }
         }
 
         public string WorldPath
         {
-            get
-            {
-                return getValue(WORLD_PATH, Statics.WorldPath + Path.DirectorySeparatorChar + DEFAULT_WORLD);
-            }
-            set
-            {
-                setValue(WORLD_PATH, value);
-            }
+            get { return getValue(WORLD_PATH, 
+                                      Statics.WorldPath + Path.DirectorySeparatorChar + DEFAULT_WORLD); }
+            set { setValue(WORLD_PATH, value); }
         }
 
         public string Password
         {
-            get
-            {
-                return getValue(PASSWORD, string.Empty);
-            }
-            set
-            {
-                setValue(PASSWORD, value);
-            }
+            get { return getValue(PASSWORD, string.Empty); }
+            set { setValue(PASSWORD, value); }
         }
 
         public string Seed
         {
-            get
-            {
-                return getValue(SEED, DEFAULT_SEED);
-            }
-            set
-            {
-                setValue(SEED, value);
-            }
+            get { return getValue(SEED, DEFAULT_SEED); }
+            set { setValue(SEED, value); }
         }
 
         public int MaxTilesX
         {
-            get
-            {
-                return getValue(MAX_TILES_X, World.MAP_SIZE.SMALL_X);
-            }
-            set
-            {
-
-                setValue(MAX_TILES_X, value);
-            }
+            get { return getValue(MAX_TILES_X, World.MAP_SIZE.SMALL_X); }
+            set { setValue(MAX_TILES_X, value); }
         }
 
         public int MaxTilesY
         {
-            get
-            {
-                return getValue(MAX_TILES_Y, World.MAP_SIZE.SMALL_Y);
-            }
-            set
-            {
-                setValue(MAX_TILES_Y, value);
-            }
+            get { return getValue(MAX_TILES_Y, World.MAP_SIZE.SMALL_Y); }
+            set { setValue(MAX_TILES_Y, value); }
         }
 
         public bool UseCustomTiles
         {
-            get
-            {
-                return getValue(USE_CUSTOM_TILES, DEFAULT_USE_CUSTOM_TILES);
-            }
-            set
-            {
-                setValue(USE_CUSTOM_TILES, value);
-            }
+            get { return getValue(USE_CUSTOM_TILES, DEFAULT_USE_CUSTOM_TILES); }
+            set { setValue(USE_CUSTOM_TILES, value); }
         }
 
         public int[] GetMapSizes()
         {
-            string CustomTiles = base.getValue(MAP_SIZE);
+            string customTiles = base.getValue(MAP_SIZE);
 
-            if (CustomTiles == null)
-            {
+            if (customTiles == null)
                 return null;
-            }
-            switch (CustomTiles.Trim().ToLower())
+                
+            switch (customTiles.Trim().ToLower())
             {
                 case "small":
                     {
@@ -309,12 +250,12 @@ namespace Terraria_Server
         {
             get
             {
-                string CustomTiles = getValue(MAP_SIZE, DEFAULT_MAP_SIZE);
-                if (CustomTiles == null)
-                {
+                string customTiles = getValue(MAP_SIZE, DEFAULT_MAP_SIZE);
+                
+                if (customTiles == null)
                     return "small";
-                }
-                switch (CustomTiles.Trim().ToLower())
+                    
+                switch (customTiles.Trim().ToLower())
                 {
                     case "small":
                         {
@@ -335,33 +276,19 @@ namespace Terraria_Server
                 }
             }
             set
-            {
-                setValue(MAP_SIZE, value);
-            }
+            { setValue(MAP_SIZE, value); }
         }
 
         public bool UseWhiteList
         {
-            get
-            {
-                return getValue(WHITE_LIST, DEFAULT_WHITE_LIST);
-            }
-            set
-            {
-                setValue(WHITE_LIST, value);
-            }
+            get { return getValue(WHITE_LIST, DEFAULT_WHITE_LIST); }
+            set { setValue(WHITE_LIST, value); }
         }
 
         public bool NPCDoorOpenCancel
         {
-            get
-            {
-                return getValue(NPC_DOOR_OPEN_CANCEL, DEFAULT_NPC_DOOR_OPEN_CANCEL);
-            }
-            set
-            {
-                setValue(NPC_DOOR_OPEN_CANCEL, value);
-            }
+            get { return getValue(NPC_DOOR_OPEN_CANCEL, DEFAULT_NPC_DOOR_OPEN_CANCEL); }
+            set { setValue(NPC_DOOR_OPEN_CANCEL, value); }
         }
 
         public int DungeonAmount
@@ -382,21 +309,13 @@ namespace Terraria_Server
                 return amount;
             }
             set
-            {
-                setValue(DUNGEON_AMOUNT, value);
-            }
+            { setValue(DUNGEON_AMOUNT, value); }
         }
 
         public bool UseCustomGenOpts
         {
-            get
-            {
-                return getValue(USE_CUSTOM_GEN_OPTS, DEFAULT_USE_CUSTOM_GEN_OPTS);
-            }
-            set
-            {
-                setValue(USE_CUSTOM_GEN_OPTS, value);
-            }
+            get { return getValue(USE_CUSTOM_GEN_OPTS, DEFAULT_USE_CUSTOM_GEN_OPTS); }
+            set { setValue(USE_CUSTOM_GEN_OPTS, value); }
         }
 
         public int FloatingIslandAmount
@@ -417,57 +336,31 @@ namespace Terraria_Server
                 return amount;
             }
             set
-            {
-                setValue(FLOATING_ISLAND_AMOUNT, value);
-            }
+            { setValue(FLOATING_ISLAND_AMOUNT, value); }
         }
 
         public bool AutomaticUpdates
         {
-            get
-            {
-                return getValue(AUTOMATIC_UPDATES, DEFAULT_AUTOMATIC_UPDATES);
-            }
-            set
-            {
-                setValue(AUTOMATIC_UPDATES, value);
-            }
+            get { return getValue(AUTOMATIC_UPDATES, DEFAULT_AUTOMATIC_UPDATES); }
+            set { setValue(AUTOMATIC_UPDATES, value); }
         }
 
         public string PIDFile
         {
-            get
-            {
-                return getValue(PID_FILE, DEFAULT_PID_FILE);
-            }
-            set
-            {
-                setValue(PID_FILE, value);
-            }
+            get { return getValue(PID_FILE, DEFAULT_PID_FILE); }
+            set { setValue(PID_FILE, value); }
         }
 
         public bool SimpleLoop
         {
-            get
-            {
-                return getValue(SIMPLE_LOOP, DEFAULT_SIMPLE_LOOP);
-            }
-            set
-            {
-                setValue(SIMPLE_LOOP, value);
-            }
+            get { return getValue(SIMPLE_LOOP, DEFAULT_SIMPLE_LOOP); }
+            set { setValue(SIMPLE_LOOP, value); }
         }
 
         public bool HackedData
         {
-            get
-            {
-                return getValue(HACKED_DATA, DEFAULT_HACKED_DATA);
-            }
-            set
-            {
-                setValue(HACKED_DATA, value);
-            }
+            get { return getValue(HACKED_DATA, DEFAULT_HACKED_DATA); }
+            set { setValue(HACKED_DATA, value); }
         }
         
 		public string RConBindAddress
@@ -478,7 +371,8 @@ namespace Terraria_Server
 		
 		public string RConHashNonce
 		{
-			get {
+			get 
+            {
                 var val = getValue(RCON_HASH_ONCE);
 				if (val != null)
 					return val;
@@ -491,9 +385,7 @@ namespace Terraria_Server
 				return val;
 			}
 			set
-			{
-                Program.properties.setValue(RCON_HASH_ONCE, value);
-			}
+			{ Program.properties.setValue(RCON_HASH_ONCE, value); }
 		}
 		
 		public bool LogRotation
@@ -633,26 +525,20 @@ namespace Terraria_Server
 
         public int CrystalSpawn
         {
-            get
-            {
-                return getValue(CRYSTAL_SPAWN, DEFAULT_CRYSTAL_SPAWN);
-            }
-            set
-            {
-                setValue(CRYSTAL_SPAWN, value);
-            }
+            get {  return getValue(CRYSTAL_SPAWN, DEFAULT_CRYSTAL_SPAWN); }
+            set { setValue(CRYSTAL_SPAWN, value); }
         }
 
         public string Comment_CrystalSpawn
         {
-            get
-            {
-                return GetComment(CRYSTAL_SPAWN, COMMENT_CRYSTALSPAWN);
-            }
-            set
-            {
-                SetComment(CRYSTAL_SPAWN, value);
-            }
+            get { return GetComment(CRYSTAL_SPAWN, COMMENT_CRYSTALSPAWN); }
+            set { SetComment(CRYSTAL_SPAWN, value); }
+        }
+
+        public string UpdateNotice
+        {
+            get { return GetComment(DISABLE_UPDATE_NOTICE, DEFAULT_DISABLE_UPDATE_NOTICE); }
+            set { SetComment(DISABLE_UPDATE_NOTICE, value); }
         }
     }
 }

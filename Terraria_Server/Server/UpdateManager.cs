@@ -24,6 +24,7 @@ namespace Terraria_Server
         
         static UpdateManager()
         {
+            if(!Program.properties.UpdateNotice) return;
             var task = new Task()
             {
                 Method = CheckForUpdates,

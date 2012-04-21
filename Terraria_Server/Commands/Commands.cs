@@ -265,7 +265,6 @@ namespace Terraria_Server.Commands
                                 && 
                                 !kvp.Key.StartsWith (plugin.Name.ToLower () + '.'))
                             )
-//                            .AsEnumerable ()
                             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
                 }
             }
