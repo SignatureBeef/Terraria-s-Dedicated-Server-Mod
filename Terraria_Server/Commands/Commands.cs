@@ -18,7 +18,7 @@ using Terraria_Server.Language;
 
 namespace Terraria_Server.Commands
 {
-	public class Commands
+	public static class Commands
 	{
 		/// <summary>
 		/// Closes the Server all connections.
@@ -1245,7 +1245,6 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void SummonBoss(ISender sender, ArgumentList args)
 		{
-			//Come to think of it now, It may be 1 boss at a time -_-
 			bool EoW = args.TryPop("eater");
 			bool EyeOC = args.TryPop("eye");
 			bool Skeletron = args.TryPop("skeletron");

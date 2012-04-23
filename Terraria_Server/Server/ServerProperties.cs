@@ -529,16 +529,18 @@ namespace Terraria_Server
             set { setValue(CRYSTAL_SPAWN, value); }
         }
 
+        public bool UpdateNotice
+        {
+            get { return getValue(DISABLE_UPDATE_NOTICE, DEFAULT_DISABLE_UPDATE_NOTICE); }
+            set { setValue(DISABLE_UPDATE_NOTICE, value); }
+        }
+        
+        /* ---- Comments below ---- */
+
         public string Comment_CrystalSpawn
         {
             get { return GetComment(CRYSTAL_SPAWN, COMMENT_CRYSTALSPAWN); }
             set { SetComment(CRYSTAL_SPAWN, value); }
-        }
-
-        public string UpdateNotice
-        {
-            get { return GetComment(DISABLE_UPDATE_NOTICE, DEFAULT_DISABLE_UPDATE_NOTICE); }
-            set { SetComment(DISABLE_UPDATE_NOTICE, value); }
         }
     }
 }
