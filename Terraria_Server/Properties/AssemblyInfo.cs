@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TDSM")]
 [assembly: AssemblyProduct("Terraria's Dedicated Server Mod")]
-[assembly: AssemblyCopyright("Copyright © DeathCradle 2011")]
+[assembly: AssemblyCopyright("Copyright © DeathCradle 2012")]
 [assembly: AssemblyTrademark("TDSM")]
 [assembly: AssemblyCulture("")]
 

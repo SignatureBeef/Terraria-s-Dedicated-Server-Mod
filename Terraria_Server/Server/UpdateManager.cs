@@ -4,6 +4,8 @@ using System.IO;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
 using Terraria_Server.Misc;
+using System.Net;
+using System.Collections.Generic;
 
 namespace Terraria_Server
 {
@@ -18,9 +20,18 @@ namespace Terraria_Server
         public static string UpdateInfo = "http://update.tdsm.org/buildinfo.txt";
         public static string UpdateMDBLink = "http://update.tdsm.org/Terraria_Server.exe.mdb";
 
-        public static int MAX_UPDATES = 2;
+        public const Int32 MaxUpdates = 2;
+        public static readonly Dictionary<String, String> BuildInfoReplacements = new Dictionary<String, String>()
+        {
+            { "<i>", String.Empty },
+            { "</i>", String.Empty },
+            { "<br>", "\n" },
+            { "<br/>", "\n" },
+            { "-", String.Empty },
+            { "\r", String.Empty }
+        };
         
-        private static string uList = "";
+//        private static string uList = "";
         
         static UpdateManager()
         {
@@ -54,27 +65,59 @@ namespace Terraria_Server
         {
             try
             {
-                ProgramLog.Log ("Attempting to retreive Build Info...");
-                string buildInfo = new System.Net.WebClient().DownloadString(UpdateInfo).Trim();
-                string toString = "comments: ";
-                if (buildInfo.ToLower().Contains(toString))
+//                ProgramLog.Log ("Attempting to retreive Build Info...");
+                
+                var buildInfo = String.Empty;
+                using(var ctx = new WebClient())
                 {
-                    buildInfo = buildInfo.Remove(0, buildInfo.ToLower().IndexOf(toString.ToLower()) + toString.Length).Trim().Replace("<br/>", "\n"); //This is also used for the forums, so easy use here ;D
-                    if (buildInfo.Length > 0)
+                    using (var prog = new ProgressLogger(100, "Downloading build information..."))
                     {
-                        ProgramLog.Log ("Build Comments: " + buildInfo);
+                        var signal = new System.Threading.AutoResetEvent (false);
+                        
+                        ctx.DownloadProgressChanged += (sender, args) =>
+                        {
+                            prog.Value = args.ProgressPercentage;
+                        };
+                        
+                        ctx.DownloadStringCompleted += (sender, args) =>
+                        {
+                            var arg = args as DownloadStringCompletedEventArgs;
+                            buildInfo = arg.Result;
+                            
+                            signal.Set ();
+                        };
+                        
+                        ctx.DownloadStringAsync (new Uri(UpdateInfo));
+                        
+                        signal.WaitOne ();
                     }
                 }
+                
+                if(String.IsNullOrEmpty (buildInfo))
+                {
+                    ProgramLog.Log ("Failed to download build information.");
+                    return;
+                }
+                
+                var toString = "comments: ";
+                //if (buildInfo.ToLower().Contains(toString))
+                var index = buildInfo.ToLower ().IndexOf (toString);
+                if(index != -1)
+                {
+                    buildInfo = buildInfo.Remove (0, index + toString.Length).Trim ();                    
+                    foreach(var pair in BuildInfoReplacements)
+                        buildInfo = buildInfo.Replace (pair.Key, pair.Value);
+                    
+                    ProgramLog.Log ("Build Comments: \n\t " + buildInfo);
+                }
             }
-            catch (Exception)
-            {
-
-            }
+            catch (Exception) { }
         }
 
         public static string GetUpdateList()
         {
-            return new System.Net.WebClient().DownloadString(UpdateList).Trim();
+            using(var ctx = new WebClient())
+                return ctx.DownloadString(UpdateList).Trim();
         }
   
         public static bool IsUpToDate()
@@ -86,21 +129,22 @@ namespace Terraria_Server
         private static bool TrySeeIfIsUpToDate(out int build)
         {
             build = -1;
-            string updateList = GetUpdateList();
-            //b-r
-            if (updateList.Contains("b"))
+            var updateList = GetUpdateList();
+            //b<number>
+            if (updateList.StartsWith("b"))
 			{
 				try
 				{
-                    string updateBuild = String.Empty;
+//                    string updateBuild = String.Empty;
                     
-					for (int i = 1; i < updateList.Length; i++)
-                        updateBuild += updateList[i];
+//                    for (int i = 1; i < updateList.Length; i++)
+//                        updateBuild += updateList[i];
+                    var updateBuild = updateList.Remove (0, 1);
                     
                     if(Int32.TryParse(updateBuild, out build))
                     {
-                        string myBuild = "b" + Statics.BUILD.ToString();
-    					uList = updateList;
+//                        string myBuild = "b" + Statics.BUILD.ToString();
+//                        uList = updateList;
     					return Statics.BUILD >= build;
                     }
 				}
@@ -111,7 +155,7 @@ namespace Terraria_Server
 
         public static bool PerformUpdate(string DownloadLink, string savePath, string backupPath, string myFile, int Update, int MaxUpdates, string header = "update ")
         {
-            if (File.Exists(savePath)) //No download conflict, Please :3 (Looks at Mono)
+            if (File.Exists(savePath))
             {
                 try
                 {
@@ -183,16 +227,18 @@ namespace Terraria_Server
                 return false;
             }
             ProgramLog.Log ("Checking for updates...");
-            if (!IsUpToDate())
+            
+            int build;
+            if (!TrySeeIfIsUpToDate(out build))
             {
-                ProgramLog.Log ("Update found, performing b{0} -> {1}", Statics.BUILD, uList);
+                ProgramLog.Log ("Update found, performing b{0} -> b{1}", Statics.BUILD, build);
 
                 PrintUpdateInfo();
 
                 string myFile = System.AppDomain.CurrentDomain.FriendlyName;
 
-                PerformUpdate(UpdateLink, "Terraria_Server.upd", "Terraria_Server.bak", myFile, 1, MAX_UPDATES);
-                PerformUpdate(UpdateMDBLink, "Terraria_Server.upd.mdb", "Terraria_Server.bak.mdb", myFile + ".mdb", 2, MAX_UPDATES);
+                PerformUpdate(UpdateLink, "Terraria_Server.upd", "Terraria_Server.bak", myFile, 1, MaxUpdates);
+                PerformUpdate(UpdateMDBLink, "Terraria_Server.upd.mdb", "Terraria_Server.bak.mdb", myFile + ".mdb", 2, MaxUpdates);
 
                 Platform.PlatformType oldPlatform = Platform.Type; //Preserve old data if command args were used
                 Platform.InitPlatform(); //Reset Data of Platform for determinine exit/enter method.
@@ -201,7 +247,7 @@ namespace Terraria_Server
                 {
                     try
                     {
-                        Process.Start(myFile); //Windows only?
+                        Process.Start(myFile);
                     }
                     catch (Exception e)
                     {
@@ -221,7 +267,7 @@ namespace Terraria_Server
             }
             else
             {
-                ProgramLog.Log ("TDSM Upto Date.");
+                ProgramLog.Log ("TDSM is up to date.");
             }
             return false;
         }
