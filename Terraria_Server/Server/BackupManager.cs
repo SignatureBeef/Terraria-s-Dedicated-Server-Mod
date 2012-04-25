@@ -5,6 +5,8 @@ using System.Text;
 using Terraria_Server.WorldMod;
 using System.IO;
 using Terraria_Server.Logging;
+using System.IO.Compression;
+using System.Diagnostics;
 
 namespace Terraria_Server.Misc
 {
@@ -30,15 +32,115 @@ namespace Terraria_Server.Misc
 			return BackupResult.SUCCESS;
 		}*/
 
+        public static BackupResult Compress(string worldPath)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            ProgramLog.Log("Compressing backup...");
+
+            String archivePath = worldPath + ".zip";
+
+            if (!File.Exists(worldPath))
+            {
+                ProgramLog.Error.Log("File not Found: " + worldPath);
+                return BackupResult.LOAD_FAIL;
+            }
+
+            using(FileStream target = new FileStream(archivePath, FileMode.Create, FileAccess.Write))
+            {
+                using(GZipStream alg = new GZipStream(target, CompressionMode.Compress))
+                {
+                    byte[] data = File.ReadAllBytes(worldPath);
+                    alg.Write(data, 0, data.Length);
+                    alg.Flush();
+                }
+            }
+
+            if (File.Exists(archivePath))
+            {
+                if (File.Exists(worldPath))
+                    File.Delete(worldPath);
+                stopwatch.Stop();
+                ProgramLog.Log("Compression duration: " + stopwatch.Elapsed.Seconds + " Second(s)");
+                return BackupResult.SUCCESS;
+            }
+            else
+            {
+                stopwatch.Stop();
+                ProgramLog.Error.Log("Compression Failed!");
+                return BackupResult.SAVE_FAIL;
+            }
+        }
+
+        public static BackupResult Decompress(string worldPath)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            ProgramLog.Log("Decompressing backup...");
+
+            String archivePath = worldPath + ".zip";
+
+            if (!File.Exists(archivePath))
+            {
+                ProgramLog.Error.Log("File not Found: " + archivePath);
+                return BackupResult.LOAD_FAIL;
+            }
+
+            using(FileStream zipFile = new FileStream(archivePath, FileMode.Open, FileAccess.Read))
+            {
+                using (FileStream originalFile = new FileStream(worldPath, FileMode.Create, FileAccess.Write))
+                {
+                    using(GZipStream alg = new GZipStream(zipFile, CompressionMode.Decompress))
+                    {
+
+                        while (true)
+                        {
+                            // Reading 100bytes by 100bytes
+                            byte[] buffer = new byte[100];
+                            // The Read() method returns the number of bytes read
+                            int bytesRead = alg.Read(buffer, 0, buffer.Length);
+
+                            originalFile.Write(buffer, 0, bytesRead);
+
+                            if (bytesRead != buffer.Length)
+                                break;
+                        }
+                    }
+                }
+            }
+
+            if (File.Exists(worldPath))
+            {
+                if (File.Exists(archivePath))
+                    File.Delete(archivePath);
+                stopwatch.Stop();
+                ProgramLog.Log("Decompression duration: " + stopwatch.Elapsed.Seconds + " Second(s)");
+                return BackupResult.SUCCESS;
+            }
+            else
+            {
+                stopwatch.Stop();
+                ProgramLog.Error.Log("Decompression Failed!");
+                return BackupResult.SAVE_FAIL;
+            }
+        }
+
 		public static BackupResult SaveWorld(string Path)
 		{
 			if (WorldModify.saveLock) return BackupResult.SAVE_LOCK;
 			//Please wait for the current operation to finish.
 
-			if (WorldIO.SaveWorld(Path))
-				return BackupResult.SUCCESS;
-			else
-				return BackupResult.SAVE_FAIL;
+            if (WorldIO.SaveWorld(Path))
+            {
+                if(Program.properties.CompressBackups)
+                    Compress(Path); // it just adds ".zip" to the timestamp+".wld"
+
+                return BackupResult.SUCCESS;
+            }
+            else
+                return BackupResult.SAVE_FAIL;
 		}
 
 		public static BackupResult PerformBackup(string WorldName)

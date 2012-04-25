@@ -16,6 +16,7 @@ namespace Terraria_Server
 		private const int		DEFAULT_BACKUP_MINUTE_INTERVAL	= 60;
         private const bool      DEFAULT_BUFFER_LIQUID_UPDATES   = false;
         private const bool      DEFAULT_COLLECT_GARBAGE			= true;
+        private const bool      DEFAULT_COMPRESS_BACKUPS        = true;
         private const bool      DEFAULT_DISABLE_UPDATE_NOTICE   = false;
         private const int       DEFAULT_EXIT_USERS              = -1;
         private const string    DEFAULT_GREETING                = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
@@ -59,6 +60,7 @@ namespace Terraria_Server
         private const string    BACKUP_MINUTE_INTERVAL			= "backup-minutes-interval";
         private const string    BUFFER_LIQUID_UPDATES           = "buffer-liquid-updates";
         private const string    COLLECT_GARBAGE					= "collect-garbage";
+        private const string    COMPRESS_BACKUPS                = "compress-backups";
         private const string    DISABLE_UPDATE_NOTICE           = "disable-newupdate-notice";
         private const string    EXIT_USERS                      = "exitaccesslevel";
         private const string    DUNGEON_AMOUNT                  = "opt-numdungeons";
@@ -119,6 +121,7 @@ namespace Terraria_Server
 			temp = BufferLiquidUpdates;
 			temp = CollectGarbage;
             temp = Comment_CrystalSpawn;
+            temp = CompressBackups;
             temp = CrystalSpawn;
             temp = DungeonAmount;
             temp = ExitAccessLevel;
@@ -516,6 +519,12 @@ namespace Terraria_Server
 			get { return getValue(ALLOW_BACKUPS, DEFAULT_ALLOW_BACKUPS); }
 			set { setValue(ALLOW_BACKUPS, value); }
 		}
+
+        public bool CompressBackups
+        {
+            get { return getValue(COMPRESS_BACKUPS, DEFAULT_COMPRESS_BACKUPS); }
+            set { setValue(COMPRESS_BACKUPS, value); }
+        }
 
 		public int PurgeBackupsMinutes
 		{
