@@ -39,21 +39,25 @@ namespace Terraria_Server.Misc
 
             ProgramLog.Log("Compressing backup...");
 
-            String archivePath = worldPath + ".zip";
-
             if (!File.Exists(worldPath))
             {
                 ProgramLog.Error.Log("File not Found: " + worldPath);
                 return BackupResult.LOAD_FAIL;
             }
 
-            using(FileStream target = new FileStream(archivePath, FileMode.Create, FileAccess.Write))
+            FileInfo world = new FileInfo(worldPath);
+            String archivePath = String.Concat(worldPath, ".zip");
+
+            using (FileStream inStream = world.OpenRead())
             {
-                using(GZipStream alg = new GZipStream(target, CompressionMode.Compress))
+                using (FileStream outStream = File.Create(archivePath))
                 {
-                    byte[] data = File.ReadAllBytes(worldPath);
-                    alg.Write(data, 0, data.Length);
-                    alg.Flush();
+                    using (GZipStream alg = new GZipStream(outStream, CompressionMode.Compress))
+                    {
+                        // copy the input file
+                        // into the compression stream
+                        inStream.CopyTo(alg);
+                    }
                 }
             }
 
@@ -73,14 +77,12 @@ namespace Terraria_Server.Misc
             }
         }
 
-        public static BackupResult Decompress(string worldPath)
+        public static BackupResult Decompress(string archivePath)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             ProgramLog.Log("Decompressing backup...");
-
-            String archivePath = worldPath + ".zip";
 
             if (!File.Exists(archivePath))
             {
@@ -88,30 +90,23 @@ namespace Terraria_Server.Misc
                 return BackupResult.LOAD_FAIL;
             }
 
-            using(FileStream zipFile = new FileStream(archivePath, FileMode.Open, FileAccess.Read))
+            FileInfo archive = new FileInfo(archivePath);
+            string worldPath = archivePath.Remove(archivePath.Length - archive.Extension.Length);
+
+            using(FileStream inStream = archive.OpenRead())
             {
-                using (FileStream originalFile = new FileStream(worldPath, FileMode.Create, FileAccess.Write))
+                using (FileStream outStream = File.Create(worldPath))
                 {
-                    using(GZipStream alg = new GZipStream(zipFile, CompressionMode.Decompress))
+                    using(GZipStream alg = new GZipStream(inStream, CompressionMode.Decompress))
                     {
-
-                        while (true)
-                        {
-                            // Reading 100bytes by 100bytes
-                            byte[] buffer = new byte[100];
-                            // The Read() method returns the number of bytes read
-                            int bytesRead = alg.Read(buffer, 0, buffer.Length);
-
-                            originalFile.Write(buffer, 0, bytesRead);
-
-                            if (bytesRead != buffer.Length)
-                                break;
-                        }
+                        // copy the decompressions stream
+                        // into the output file
+                        alg.CopyTo(outStream);
                     }
                 }
             }
 
-            if (File.Exists(worldPath))
+            if (File.Exists(archivePath))
             {
                 if (File.Exists(archivePath))
                     File.Delete(archivePath);
