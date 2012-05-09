@@ -158,6 +158,11 @@ namespace Regions
 
                         RegionHere(sender, args);
                     }
+                    else if (args.TryPop("reload"))
+                    {
+                        regionManager.LoadRegions();
+                        sender.sendMessage("Regions reloaded.", 255);
+                    }
                 }
                 catch (CommandError e)
                 {
@@ -191,7 +196,7 @@ namespace Regions
                 }
             }
             else
-                sender.sendMessage("Region Commands: select, create, user, list.", 255);
+                sender.sendMessage("Region Commands: select, create, user, list, reload.", 255);
             /* Meh [END] */
         }
 
@@ -276,6 +281,11 @@ namespace Regions
                 sender.Message(255, "Slot {0} : {1} [ {2} ] ({3},{4})", i, regionManager.Regions[i].Name,
                     regionManager.Regions[i].Description,
                         regionManager.Regions[i].Point1.X, regionManager.Regions[i].Point1.Y);
+            }
+
+            if (regionManager.Regions.Count == 0)
+            {
+                sender.Message(255, "No regions.");
             }
         }
 
@@ -399,7 +409,7 @@ namespace Regions
                         {
                             if (region.UserList.Contains(inflatee))
                             {
-                                region.UserList.Add(inflatee);
+                                region.UserList.Remove(inflatee);
                                 usersRemoved++;
                             }
                         }
@@ -409,7 +419,7 @@ namespace Regions
                 {
                     if (regionManager.SaveRegion(region))
                     {
-                        sender.sendMessage(String.Format("{0} users were added to {1}", usersRemoved, region.Name),
+                        sender.sendMessage(String.Format("{0} users were removed from {1}", usersRemoved, region.Name),
                         255, 0, 255);
                     }
                     else
