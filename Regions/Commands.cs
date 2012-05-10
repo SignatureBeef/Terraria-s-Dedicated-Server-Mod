@@ -229,7 +229,7 @@ namespace Regions
                 bool RestrictNPC = args.TryPop("-npcres");
 
                 string tempDesc = String.Empty;
-                if (TryFindArg(args, "-desc", out Desc))
+                if (!TryFindArg(args, "-desc", out Desc))
                 {
                     Desc = tempDesc;
                 }
