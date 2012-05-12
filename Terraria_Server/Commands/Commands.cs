@@ -1040,12 +1040,15 @@ namespace Terraria_Server.Commands
 			NetPlay.StopServer();
 			while (NetPlay.ServerUp) { Thread.Sleep(10); }
 
+            Statics.WorldLoaded = false;
+
 			ProgramLog.Log(Languages.StartingServer);
 			Main.Initialize();
 
 			Program.LoadPlugins();
 
 			WorldIO.LoadWorld(null, null, World.SavePath);
+
 			Program.updateThread = new ProgramThread("Updt", Program.UpdateLoop);
 			NetPlay.StartServer();
 
@@ -1053,7 +1056,7 @@ namespace Terraria_Server.Commands
 
             HookContext ctx = new HookContext
             {
-                Sender = World.Sender,
+                Sender = new ConsoleSender(),
             };
 
             HookArgs.ServerStateChange eArgs = new HookArgs.ServerStateChange
