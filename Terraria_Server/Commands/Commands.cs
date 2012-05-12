@@ -1040,16 +1040,31 @@ namespace Terraria_Server.Commands
 			NetPlay.StopServer();
 			while (NetPlay.ServerUp) { Thread.Sleep(10); }
 
+            Statics.WorldLoaded = false;
+
 			ProgramLog.Log(Languages.StartingServer);
 			Main.Initialize();
 
 			Program.LoadPlugins();
 
 			WorldIO.LoadWorld(null, null, World.SavePath);
+
 			Program.updateThread = new ProgramThread("Updt", Program.UpdateLoop);
 			NetPlay.StartServer();
 
 			while (!NetPlay.ServerUp) { Thread.Sleep(100); }
+
+            HookContext ctx = new HookContext
+            {
+                Sender = new ConsoleSender(),
+            };
+
+            HookArgs.ServerStateChange eArgs = new HookArgs.ServerStateChange
+            {
+                ServerChangeState = ServerState.LOADED
+            };
+
+            HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
 
 			ProgramLog.Console.Print(Languages.Startup_YouCanNowInsertCommands);
 			Program.Restarting = false;
