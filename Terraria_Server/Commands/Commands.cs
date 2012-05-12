@@ -1051,6 +1051,18 @@ namespace Terraria_Server.Commands
 
 			while (!NetPlay.ServerUp) { Thread.Sleep(100); }
 
+            HookContext ctx = new HookContext
+            {
+                Sender = World.Sender,
+            };
+
+            HookArgs.ServerStateChange eArgs = new HookArgs.ServerStateChange
+            {
+                ServerChangeState = ServerState.LOADED
+            };
+
+            HookPoints.ServerStateChange.Invoke(ref ctx, ref eArgs);
+
 			ProgramLog.Console.Print(Languages.Startup_YouCanNowInsertCommands);
 			Program.Restarting = false;
 		}
