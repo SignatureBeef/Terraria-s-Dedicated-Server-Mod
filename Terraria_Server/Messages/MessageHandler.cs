@@ -13,11 +13,17 @@ namespace Terraria_Server.Messages
 		public MessageHandler ()
 		{
 			ValidStates = SlotState.PLAYING;
+            if (utf8Encoding == null)
+            {
+                utf8Encoding = Encoding.GetEncoding("utf-8", new EncoderExceptionFallback(), new DecoderExceptionFallback());
+            }
 		}
 		
 		public SlotState ValidStates { get; protected set; }
 		public SlotState IgnoredStates { get; protected set; }
-	
+
+        public static Encoding utf8Encoding;
+
 		public abstract Packet GetPacket();
 		
 		public abstract void Process (ClientConnection conn, byte[] readBuffer, int length, int pos);

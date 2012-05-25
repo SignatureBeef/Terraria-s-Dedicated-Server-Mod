@@ -672,7 +672,7 @@ namespace Terraria_Server
 			Byte (g);
 			Byte (b);
 
-			String (text ?? System.String.Empty);
+			String (text ?? System.String.Empty, false, true);
 			
 			End ();
 		}

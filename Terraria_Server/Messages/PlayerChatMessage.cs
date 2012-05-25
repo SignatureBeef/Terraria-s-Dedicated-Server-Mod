@@ -22,15 +22,15 @@ namespace Terraria_Server.Messages
 
         public override void Process (ClientConnection conn, byte[] readBuffer, int length, int num)
         {
-            string chat = Encoding.ASCII.GetString(readBuffer, num + 4, length - 5).Trim();
-            
-            foreach (var c in chat)
+            string chat;
+            try
             {
-                if (c < 32 || c > 126)
-                {
-                    conn.Kick ("Invalid characters in chat message.");
-                    return;
-                }
+                chat = utf8Encoding.GetString(readBuffer, num + 4, length - 5).Trim();
+            }
+            catch(DecoderFallbackException e)
+            {
+                conn.Kick("Invalid characters in chat message.");
+                return;
             }
             
             if (conn.State < SlotState.PLAYING)
