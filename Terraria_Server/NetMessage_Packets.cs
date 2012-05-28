@@ -909,7 +909,7 @@ namespace Terraria_Server
 			Short (damage);
 			Byte (pvpFlag);
 			
-			String (deathText);
+			String (deathText, useUTF: true);
 			
 			End ();
 		}

@@ -23,11 +23,7 @@ namespace Terraria_Server.Messages
         public override void Process (ClientConnection conn, byte[] readBuffer, int length, int num)
         {
             string chat;
-            try
-            {
-                chat = utf8Encoding.GetString(readBuffer, num + 4, length - 5).Trim();
-            }
-            catch(DecoderFallbackException e)
+            if(!ParseString(readBuffer, num + 4, length - 5, out chat))
             {
                 conn.Kick("Invalid characters in chat message.");
                 return;
