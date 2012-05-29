@@ -672,7 +672,7 @@ namespace Terraria_Server
 			Byte (g);
 			Byte (b);
 
-			String (text ?? System.String.Empty, false, true);
+			String ((text ?? System.String.Empty), useUTF: true);
 			
 			End ();
 		}
@@ -942,7 +942,7 @@ namespace Terraria_Server
 			Int (sign.x);
 			Int (sign.y);
 			
-			String (sign.text, true);
+			String (sign.text, useUTF: true);
 			
 			End ();
 		}
@@ -955,7 +955,7 @@ namespace Terraria_Server
 			Int (x);
 			Int (y);
 			
-			String (text, true);
+			String (text, useUTF: true);
 			
 			End ();
 		}
