@@ -36,9 +36,15 @@ namespace Terraria_Server.Messages
 			{
 				Direction = (int)readBuffer[num++] - 1,
 				Damage = BitConverter.ToInt16 (readBuffer, num++),
-				PvpFlag = readBuffer[++num],
-				Obituary = Encoding.ASCII.GetString (readBuffer, num + 1, length - num - 1 + start),
+				PvpFlag = readBuffer[++num]
 			};
+			string obituary;
+			if (!ParseString(readBuffer, num + 1, length - num - 1 + start, out obituary))
+			{
+				NetPlay.slots[whoAmI].Kick("Invalid characters in obituary message.");
+				return;
+			}
+			args.Obituary = obituary;
 			
 			HookPoints.ObituaryReceived.Invoke (ref ctx, ref args);
 			

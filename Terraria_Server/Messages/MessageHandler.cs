@@ -22,7 +22,21 @@ namespace Terraria_Server.Messages
 		public SlotState ValidStates { get; protected set; }
 		public SlotState IgnoredStates { get; protected set; }
 
-        public static Encoding utf8Encoding;
+		private static Encoding utf8Encoding;
+
+		protected bool ParseString(byte[] strBuffer, int offset, int count, out string str)
+		{
+			try
+			{
+				str = utf8Encoding.GetString(strBuffer, offset, count).Trim();
+			}
+			catch (DecoderFallbackException)
+			{
+				str = null;
+				return false;
+			}
+			return true;
+		}
 
 		public abstract Packet GetPacket();
 		
