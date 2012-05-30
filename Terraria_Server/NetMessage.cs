@@ -893,15 +893,23 @@ namespace Terraria_Server
 		}
 #endif
 
-		public void String(string data, bool newLineOverride = false)
+		public void String(string data, bool newLineOverride = false, bool useUTF = false)
 		{
-			foreach (char c in data)
-			{
-				if ((c < 32 || c > 126) && !newLineOverride)
-					sink.WriteByte((byte)'?');
-				else
-					sink.WriteByte((byte)c);
-			}
+            if (!useUTF)
+            {
+                foreach (char c in data)
+                {
+                    if ((c < 32 || c > 126) && !newLineOverride)
+                        sink.WriteByte((byte)'?');
+                    else
+                        sink.WriteByte((byte)c);
+                }
+            }
+            else
+            {
+                byte[] utf = System.Text.Encoding.UTF8.GetBytes(data);
+                sink.Write(utf, 0, utf.Length);
+            }
 		}
 
 	}
