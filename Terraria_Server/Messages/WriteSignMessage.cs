@@ -24,8 +24,10 @@ namespace Terraria_Server.Messages
 			short existing = (short)Sign.ReadSign (x, y);
 			if (existing >= 0)
 				signIndex = existing;
-			
-			string SignText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+
+            string SignText;
+            if (!ParseString(readBuffer, num, length - num + start, out SignText))
+                return; // invalid characters
 			
 			var player = Main.players[whoAmI];
 			
