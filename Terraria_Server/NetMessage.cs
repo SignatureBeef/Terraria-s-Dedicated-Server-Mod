@@ -574,7 +574,7 @@ namespace Terraria_Server
 				Slot = plr,
 			};
 
-			ctx.SetResult(HookResult.DEFAULT);
+			ctx.SetResult(HookResult.DEFAULT, false);
 			HookPoints.PlayerEnteredGame.Invoke(ref ctx, ref args2);
 
 			if (ctx.CheckForKick())
