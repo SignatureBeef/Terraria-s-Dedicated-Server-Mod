@@ -994,7 +994,7 @@ namespace Terraria_Server
 					try
 					{
                         lock (WorldModify.playerEditLock)
-                        {           
+                        {
                             var editor = TileBreakMessage.staticEditor;
                             var sandbox = editor.Sandbox;
                             

@@ -488,15 +488,15 @@ namespace Terraria_Server.Commands
 				.WithPermissionNode("tdsm.backup")
 				.Calls(Commands.Backups);
 
-			AddCommand("timelock")
-				.WithAccessLevel(AccessLevel.OP)
-				.WithDescription("Forces the time to stay at a certain point.")
-				.WithHelpText("Usage:    timelock now")
-				.WithHelpText("          timelock set day|dawn|dusk|noon|night")
-				.WithHelpText("          timelock setat <time>")
-				.WithHelpText("          timelock disable")
-				.WithPermissionNode("tdsm.timelock")
-				.Calls(Commands.Timelock);
+            AddCommand("timelock")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Forces the time to stay at a certain point.")
+                .WithHelpText("Usage:    timelock now")
+                .WithHelpText("          timelock set day|dawn|dusk|noon|night")
+                .WithHelpText("          timelock setat <time>")
+                .WithHelpText("          timelock disable")
+                .WithPermissionNode("tdsm.timelock")
+                .Calls(Commands.Timelock);
 		}
 
 		public readonly Dictionary<String, CommandInfo> serverCommands;

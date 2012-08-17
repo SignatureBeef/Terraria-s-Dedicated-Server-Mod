@@ -13757,8 +13757,10 @@ namespace Terraria_Server.WorldMod
 											Main.projectile[num39].netUpdate = true;
 											NetMessage.SendTileSquare(-1, i, j, 1);*/
 
-											lock(WorldModify.playerEditLock)
-												Terraria_Server.Messages.TileBreakMessage.staticEditor.Sandbox.FallingBlockProjectile(i, j, type2);
+											/*lock(WorldModify.playerEditLock)
+												Terraria_Server.Messages.TileBreakMessage.staticEditor.Sandbox.FallingBlockProjectile(i, j, type2);*/
+                                            lock (WorldModify.playerEditLock)
+                                                sandbox.FallingBlockProjectile(i, j, type2);
 
 											SquareTileFrame(TileRefs, sandbox, i, j, true);
 										}

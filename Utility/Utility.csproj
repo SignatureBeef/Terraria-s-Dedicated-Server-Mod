@@ -67,11 +67,6 @@
     <Reference Include="Mono.Cecil">
       <HintPath>Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="Terraria, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <ExecutableExtension>.exe</ExecutableExtension>
-      <HintPath>..\..\..\Program Files\Steam\steamapps\common\terraria\Terraria.exe</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsistencyCheck.cs" />
