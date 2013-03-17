@@ -7,11 +7,9 @@ Aims to provide a stable Server + API which is compatible with Mono while also b
 
 If you like TDSM or want to help support us, we simply ask you to tell your friends about it, and help spread the word!.
 
-* Jump on over to the Forums at: http://www.tdsm.org/
+~~* Jump on over to the Forums at: http://www.tdsm.org/~~
 * Dev's are more than welcome to post their commits to my page, I'm all for it. 
 
-
-TDSM IS NOT tMod nor is it TShock. TDSM was actually under development before tMod was released.
 
 Status
 -------------
@@ -34,7 +32,7 @@ Oh god. There is too many to tell, Such things as
 	- [WIP] Language System
 	
 	
-These are just only a few, But there is a larger list located at http://tdsm.org
+~~These are just only a few, But there is a larger list located at http://tdsm.org~~
 
 
 How To Use
@@ -48,11 +46,11 @@ The server also allows command line arguments, We will be adding documentation t
 
 Contact
 -------------
-We have IRC channels on esper, #TDSM, #TDSMDev, #TDSMGit or you can get us over at http://tdsm.org.
+We have IRC channels on esper, #TDSM, #TDSMDev, #TDSMGit ~~or you can get us over at http://tdsm.org~~.
 
 Developers
 =============
-TDSM is developed in C# so you will find it reasonably easy to manipulate.
+TDSM is developed in C# so you will find it reasonably easy.
 Plugins HAVE to be developed on the .Net 4.0 framework (In Visual Studio you have multiple choices, Choose 4.0) otherwise TDSM will not be able to load your plugin!.
 
 Usually when the TDSM Team has an upcoming release which changes a lot of code, We will post a prerelease for Developers to update prior to release; Located in the PreRelease directory on this GitHub page.
