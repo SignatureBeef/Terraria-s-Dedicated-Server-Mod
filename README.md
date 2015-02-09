@@ -4,9 +4,7 @@ Running TDSM Rebind:
 Linux (Ubuntu):
 -------------
 	Install prerequisites
-	#apt-get install mono-runtime libmono-corlib4.0-cil
 	apt-get install mono-complete
-	#apt-get install mono-utils
 
 
 	Running
