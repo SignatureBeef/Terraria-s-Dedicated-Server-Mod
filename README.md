@@ -34,15 +34,10 @@ The wiki and API documentation will be created very soon, and as a priority.
 
 ##Core Development
 There are three core components of a TDSM server.
-1. The API surrounding the official server code
-2. The TDSM patcher that hooks the API into the official code
-3. The TDSM core plugin that consumes the API and provides the additional features
 <br/>
-<br/>
-File names are in accordance to the above:
-* tdsm.api.dll
-* tdsm.patcher.exe
-* tdsm.core.dll
+ 1. The API surrounding the official server code (tdsm.api.dll)
+ 2. The TDSM patcher that hooks the API into the official code (tdsm.patcher.exe)
+ 3. The TDSM core plugin that consumes the API and provides the additional features (tdsm.core.dll)
 
 ######Why do we not use our existing code base?
 For the core developers updating our previous codebase to match the official code each update takes by far too long and to be brutally honest, it is mind numbing.
