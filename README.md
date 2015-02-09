@@ -64,8 +64,11 @@ Currently essential hooks are being implemented. However should you need a missi
 
 ##Development Status
 Extreme beta - handle with care.
+<br/>
+<br/>
 Until Terraria is compatible on mono the TDSM Core is essential for Linux compatability.
 <br/>
 If you do not require mono you can actually run the server without the core DLL and it will function as a vanilla server with plugin support.
 <br/>
-We do plan for the core to be disabled and still run a mono compatible server.
+<br/>
+We do plan for the core to be disabled and still run a mono compatible vanilla server.
