@@ -10,9 +10,9 @@ Linux (Ubuntu):
 
 
 	Running
-	sudo mono --runtime=v4.0 outfile.patched.exe
+	sudo mono --runtime=v4.0 tdsm.exe
 
-	NOTE: You need a 4.0 compatible run time. If you get mscorlib errors then this is a sure sign.
+	NOTE: You need a 4.0 compatible run time. If you get mscorlib errors then this is a sure sign. Otherwise, "--runtime=4.0" is optional
 
 	
 Plugin Development
