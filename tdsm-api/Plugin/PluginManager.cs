@@ -525,6 +525,26 @@ namespace tdsm.api
         }
 
         /// <summary>
+        /// Enables a plugin.
+        /// </summary>
+        /// <param name="name">Plugin name</param>
+        /// <returns>Returns true on plugin successfully Enabling</returns>
+        public static bool EnablePlugin(BasePlugin plugin)
+        {
+            return plugin.Enable();
+        }
+
+        /// <summary>
+        /// Enables a plugin.
+        /// </summary>
+        /// <param name="name">Plugin name</param>
+        /// <returns>Returns true on plugin successfully Enabling</returns>
+        public static bool DisablePlugin(BasePlugin plugin)
+        {
+            return plugin.Disable();
+        }
+
+        /// <summary>
         /// Disables a plugin by name.  Currently unused in core
         /// </summary>
         /// <param name="name">Name of plugin</param>

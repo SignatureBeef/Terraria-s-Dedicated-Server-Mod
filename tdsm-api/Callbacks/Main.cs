@@ -7,6 +7,7 @@ namespace tdsm.api.Callbacks
     {
         public static void ProgramStart()
         {
+            System.Threading.Thread.CurrentThread.Name = "Run";
             Tools.WriteLine("TDSM Rebind API build {0}", Globals.Build);
             Globals.Touch();
 

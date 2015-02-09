@@ -58,4 +58,9 @@
 priority=1
 
 #Additional TDSM configuration
+
+#true to enable the whitelist
 usewhitelist=false
+
+#true to enforce the core to only run as a vanilla server under linux
+vanilla-linux=false

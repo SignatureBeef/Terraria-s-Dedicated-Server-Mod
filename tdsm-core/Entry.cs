@@ -9,7 +9,6 @@ using tdsm.api.Callbacks;
 using tdsm.api.Command;
 using tdsm.api.Misc;
 using tdsm.api.Plugin;
-using tdsm.core.Command;
 using tdsm.core.Definitions;
 using tdsm.core.Logging;
 using tdsm.core.Messages.Out;
@@ -18,10 +17,10 @@ using tdsm.core.ServerCore;
 
 namespace tdsm.core
 {
-    public class Entry : BasePlugin
+    public partial class Entry : BasePlugin
     {
-        private static bool _useTimeLock;
-        public static bool UseTimeLock
+        private bool _useTimeLock;
+        public bool UseTimeLock
         {
             get
             { return _useTimeLock; }
@@ -31,7 +30,26 @@ namespace tdsm.core
                 TimelockTime = Terraria.Main.time;
             }
         }
-        public static double TimelockTime { get; set; }
+        public double TimelockTime { get; set; }
+
+        private bool VanillaOnly
+        {
+            get
+            {
+                return !IsEnabled;
+            }
+            set
+            {
+                if (value)
+                {
+                    if (IsEnabled) PluginManager.DisablePlugin(this);
+                }
+                else
+                {
+                    if (!IsEnabled) PluginManager.EnablePlugin(this);
+                }
+            }
+        }
 
         public Entry()
         {
@@ -49,7 +67,7 @@ namespace tdsm.core
                 var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
                 ProgramLog.OpenLogFile(logFile);
 
-                ProgramLog.Log(base.Name + " enabled.");
+                ProgramLog.Log("TDSM Rebind core build {0}", this.Version);
 
                 Tools.SetWriteLineMethod(ProgramLog.Log);
             }
@@ -58,24 +76,24 @@ namespace tdsm.core
             Hook(HookPoints.PlayerWorldAlteration, OnPlayerWorldAlteration);
             Hook(HookPoints.ProjectileReceived, HookOrder.FIRST, OnReceiveProjectile);
 
-            //Add Commands
+            //Add this
             AddCommand("platform")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Show what type of server is running TDSM")
                 .WithHelpText("Usage:   /platform") //TODO replace with .SetDefaultUsage()
-                .Calls(Command_OS);
+                .Calls(this.OperatingSystem);
 
             AddCommand("exit")
                 .WithDescription("Stops the server")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .WithPermissionNode("tdsm.admin")
-                .Calls(Commands.Exit);
+                .Calls(this.Exit);
 
             AddCommand("stop")
                 .WithDescription("Stops the server")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .WithPermissionNode("tdsm.admin")
-                .Calls(Commands.Exit);
+                .Calls(this.Exit);
 
             AddCommand("time")
                 .WithDescription("Change the time of day")
@@ -84,21 +102,21 @@ namespace tdsm.core
                 .WithHelpText("         time -now")
                 .WithHelpText("         time day|dawn|dusk|noon|night")
                 .WithPermissionNode("tdsm.time")
-                .Calls(Commands.Time);
+                .Calls(this.Time);
 
             AddCommand("give")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Give a player items")
                 .WithHelpText("Usage:   give <player> <amount> <itemname:itemid> [-prefix]")
                 .WithPermissionNode("tdsm.give")
-                .Calls(Commands.Give);
+                .Calls(this.Give);
 
             AddCommand("spawnnpc")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Spawns NPCs")
                 .WithHelpText("Usage:   spawnnpc <amount> \"<name:id>\" \"<player>\"")
                 .WithPermissionNode("tdsm.spawnnpc")
-                .Calls(Commands.SpawnNPC);
+                .Calls(this.SpawnNPC);
 
             AddCommand("tp")
                 .WithAccessLevel(AccessLevel.OP)
@@ -109,109 +127,109 @@ namespace tdsm.core
                 .WithHelpText("         tp <x> <y>")
                 .WithHelpText("         tp                     - yourself to spawn")
                 .WithPermissionNode("tdsm.tp")
-                .Calls(Commands.Teleport);
+                .Calls(this.Teleport);
 
             AddCommand("tphere")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Teleport a player to yourself")
                 .WithHelpText("Usage:   tphere <player>")
                 .WithPermissionNode("tdsm.tphere")
-                .Calls(Commands.TeleportHere);
+                .Calls(this.TeleportHere);
 
             AddCommand("save-all")
                 .WithDescription("Save world and configuration data")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.admin")
-                .Calls(Commands.SaveAll);
+                .Calls(this.SaveAll);
 
             //AddCommand("reload")
             //    .WithDescription(Languages.CommandDescription_ReloadConfig)
             //    .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
             //    .WithPermissionNode("tdsm.admin")
-            //    .Calls(Commands.Reload);
+            //    .Calls(this.Reload);
 
             AddCommand("list")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .WithPermissionNode("tdsm.who")
-                .Calls(Commands.List);
+                .Calls(this.List);
 
             AddCommand("who")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .WithPermissionNode("tdsm.who")
-                .Calls(Commands.List);
+                .Calls(this.List);
 
             AddCommand("players")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .WithPermissionNode("tdsm.who")
-                .Calls(Commands.OldList);
+                .Calls(this.OldList);
 
             // this is what the server crawler expects
             AddCommand("playing")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .WithPermissionNode("tdsm.who")
-                .Calls(Commands.OldList);
+                .Calls(this.OldList);
 
             AddCommand("online")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .WithPermissionNode("tdsm.who")
-                .Calls(Commands.List);
+                .Calls(this.List);
 
             AddCommand("me")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("3rd person talk")
                 .WithPermissionNode("tdsm.me")
-                .Calls(Commands.Action);
+                .Calls(this.Action);
 
             AddCommand("say")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Say a message from the server")
                 .WithPermissionNode("tdsm.say")
-                .Calls(Commands.Say);
+                .Calls(this.Say);
 
             AddCommand("status")
                 .WithDescription("Server status")
                 .WithHelpText("Usage:   status")
                 .WithPermissionNode("tdsm.status")
-                .Calls(Commands.Status);
+                .Calls(this.Status);
 
             AddCommand("kick")
                 .WithDescription("Kicks a player from the server")
                 .WithHelpText("Usage:   kick <player>")
                 .WithPermissionNode("tdsm.kick")
-                .Calls(Commands.Kick);
+                .Calls(this.Kick);
 
             AddCommand("op")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Allows a player server operator status")
                 .WithHelpText("Usage:   op <player> <password>")
                 .WithPermissionNode("tdsm.op")
-                .Calls(Commands.OpPlayer);
+                .Calls(this.OpPlayer);
 
             AddCommand("deop")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Removes server operator status from a player")
                 .WithHelpText("Usage:   deop <player>")
                 .WithPermissionNode("tdsm.deop")
-                .Calls(Commands.DeopPlayer);
+                .Calls(this.DeopPlayer);
 
             AddCommand("oplogin")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Allows an operator to log in")
                 .WithHelpText("Usage:   oplogin <password>")
                 .WithPermissionNode("tdsm.oplogin")
-                .Calls(Commands.OpLogin);
+                .Calls(this.OpLogin);
 
             AddCommand("oplogout")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Logs out a signed in operator.")
                 .WithHelpText("Usage:   oplogout")
                 .WithPermissionNode("tdsm.oplogout")
-                .Calls(Commands.OpLogout);
+                .Calls(this.OpLogout);
 
             AddCommand("spawnboss")
                 .WithAccessLevel(AccessLevel.OP)
@@ -222,7 +240,7 @@ namespace tdsm.core
                 .WithHelpText("          spawnboss <boss> -player <name>")
                 .WithHelpText("(If no player is entered it will be a random online player)")
                 .WithPermissionNode("tdsm.spawnboss")
-                .Calls(Commands.SummonBoss);
+                .Calls(this.SummonBoss);
 
             AddCommand("timelock")
                 .WithAccessLevel(AccessLevel.OP)
@@ -232,7 +250,7 @@ namespace tdsm.core
                 .WithHelpText("          timelock setat <time>")
                 .WithHelpText("          timelock disable")
                 .WithPermissionNode("tdsm.timelock")
-                .Calls(Commands.Timelock);
+                .Calls(this.Timelock);
 
             AddCommand("heal")
                 .WithAccessLevel(AccessLevel.OP)
@@ -240,14 +258,10 @@ namespace tdsm.core
                 .WithHelpText("Usage:    heal <player>")
                 .WithHelpText("          heal -all")
                 .WithPermissionNode("tdsm.heal")
-                .Calls(Commands.Heal);
+                .Calls(this.Heal);
 
             //Heartbeat.Begin(this.TDSMBuild);
             if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
-        }
-
-        protected override void Enabled()
-        {
         }
 
         void ProcessPIDFile(string pidPath)
@@ -324,27 +338,6 @@ namespace tdsm.core
                     ProgramLog.Log(e);
                 }
             }
-        }
-
-        static void Command_OS(ISender sender, ArgumentList args)
-        {
-            var MyPlugin = (Entry)args.Plugin;
-            var platform = Platform.Type.ToString();
-
-            switch (Platform.Type)
-            {
-                case Platform.PlatformType.LINUX:
-                    platform = "Linux";
-                    break;
-                case Platform.PlatformType.MAC:
-                    platform = "Mac";
-                    break;
-                case Platform.PlatformType.WINDOWS:
-                    platform = "Windows";
-                    break;
-            }
-
-            sender.Message("TDSM is running on OS: " + platform, Color.DarkGreen);
         }
 
         protected override void Disabled()
@@ -495,6 +488,13 @@ namespace tdsm.core
                     if (Boolean.TryParse(args.Value, out usewhitelist))
                     {
                         Server.WhitelistEnabled = usewhitelist;
+                    }
+                    break;
+                case "vanilla-linux":
+                    bool vanillaOnly;
+                    if (Boolean.TryParse(args.Value, out vanillaOnly))
+                    {
+                        VanillaOnly = vanillaOnly;
                     }
                     break;
             }

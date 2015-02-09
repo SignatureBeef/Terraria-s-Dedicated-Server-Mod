@@ -5,22 +5,43 @@ using System.Linq;
 using System.Threading;
 using tdsm.api;
 using tdsm.api.Command;
+using tdsm.api.Misc;
 using tdsm.core.Definitions;
 using tdsm.core.Logging;
 using tdsm.core.Messages.Out;
 using tdsm.core.ServerCore;
 using Terraria;
 
-namespace tdsm.core.Command
+namespace tdsm.core
 {
-    public static class Commands
+    public partial class Entry
     {
+        public void OperatingSystem(ISender sender, ArgumentList args)
+        {
+            var platform = Platform.Type.ToString();
+
+            switch (Platform.Type)
+            {
+                case Platform.PlatformType.LINUX:
+                    platform = "Linux";
+                    break;
+                case Platform.PlatformType.MAC:
+                    platform = "Mac";
+                    break;
+                case Platform.PlatformType.WINDOWS:
+                    platform = "Windows";
+                    break;
+            }
+
+            sender.Message("TDSM is running on OS: " + platform, Color.DarkGreen);
+        }
+
         /// <summary>
         /// Closes the Server all connections.
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void Exit(ISender sender, ArgumentList args)
+        public void Exit(ISender sender, ArgumentList args)
         {
             var accessLevel = AccessLevel.OP; //Program.properties.ExitAccessLevel;
             if ((int)accessLevel == -1 && sender is Player)
@@ -47,7 +68,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void Status(ISender sender, ArgumentList args)
+        public void Status(ISender sender, ArgumentList args)
         {
             args.ParseNone();
 
@@ -139,7 +160,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void OldList(ISender sender, ArgumentList args)
+        public void OldList(ISender sender, ArgumentList args)
         {
             args.ParseNone();
 
@@ -154,7 +175,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void List(ISender sender, ArgumentList args)
+        public void List(ISender sender, ArgumentList args)
         {
             args.ParseNone();
 
@@ -187,7 +208,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="message">Message to send</param>
-        public static void Action(ISender sender, string message)
+        public void Action(ISender sender, string message)
         {
             ProgramLog.Log("* " + sender.SenderName + " " + message);
             if (sender is Player)
@@ -201,7 +222,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="message">Message to send</param>
-        public static void Say(ISender sender, string message)
+        public void Say(ISender sender, string message)
         {
             /*ProgramLog.Log("<" + sender.SenderName + "> " + message);
             if (sender is Player)
@@ -220,7 +241,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="message">Message to send</param>
-        public static void Heal(ISender sender, ArgumentList args)
+        public void Heal(ISender sender, ArgumentList args)
         {
             Player subject;
 
@@ -254,7 +275,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void SaveAll(ISender sender, ArgumentList args)
+        public void SaveAll(ISender sender, ArgumentList args)
         {
             Tools.NotifyAllOps("Saving world.....");
 
@@ -472,7 +493,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void Time(ISender sender, ArgumentList args)
+        public void Time(ISender sender, ArgumentList args)
         {
             double Time;
             if (args.TryParseOne<Double>("-set", out Time))
@@ -566,7 +587,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void Give(ISender sender, ArgumentList args)
+        public void Give(ISender sender, ArgumentList args)
         {
             // /give <player> <stack> <name> 
             Player receiver = args.GetOnlinePlayer(0);
@@ -601,7 +622,7 @@ namespace tdsm.core.Command
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
         /// <remarks>This function also allows NPC custom health.</remarks>
-        public static void SpawnNPC(ISender sender, ArgumentList args)
+        public void SpawnNPC(ISender sender, ArgumentList args)
         {
             //if (Main.stopSpawns && !Program.properties.NPCSpawnsOverride)
             //    throw new CommandError("NPC Spawing is disabled.");
@@ -671,7 +692,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void Teleport(ISender sender, ArgumentList args)
+        public void Teleport(ISender sender, ArgumentList args)
         {
             Player subject;
             Player target;
@@ -772,7 +793,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void TeleportHere(ISender sender, ArgumentList args)
+        public void TeleportHere(ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
@@ -946,7 +967,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void NPCSpawns(ISender sender, ArgumentList args)
+        public void NPCSpawns(ISender sender, ArgumentList args)
         {
             //Terraria.Main.stopSpawns = !Terraria.Main.stopSpawns;
             //sender.Message(Languages.NPCSpawningIsNow + ((Terraria.Main.stopSpawns) ? "off" : "on") + "!");
@@ -963,7 +984,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void Kick(ISender sender, ArgumentList args)
+        public void Kick(ISender sender, ArgumentList args)
         {
             if (args.TryPop("-s"))
             {
@@ -1203,7 +1224,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void SummonBoss(ISender sender, ArgumentList args)
+        public void SummonBoss(ISender sender, ArgumentList args)
         {
             bool EoW = args.TryPop("eater");
             bool EyeOC = args.TryPop("eye");
@@ -1538,7 +1559,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        public static void Timelock(ISender sender, ArgumentList args)
+        public void Timelock(ISender sender, ArgumentList args)
         {
             var disable = args.TryPop("disable");
             var setNow = args.TryPop("now");
@@ -1547,13 +1568,13 @@ namespace tdsm.core.Command
 
             if (disable)
             {
-                if (!Entry.UseTimeLock) { sender.Message("Time lock is already disabled", 255, 255, 0, 0); return; }
+                if (!(args.Plugin as Entry).UseTimeLock) { sender.Message("Time lock is already disabled", 255, 255, 0, 0); return; }
 
-                Entry.UseTimeLock = false;
+                (args.Plugin as Entry).UseTimeLock = false;
                 sender.Message("Time lock has been disabled.", 255, 0, 255, 0);
                 return;
             }
-            else if (setNow) Entry.UseTimeLock = true;
+            else if (setNow) (args.Plugin as Entry).UseTimeLock = true;
             else if (setMode)
             {
                 string caseType = args.GetString(0);
@@ -1590,26 +1611,26 @@ namespace tdsm.core.Command
                             return;
                         }
                 }
-                Entry.UseTimeLock = true;
+                (args.Plugin as Entry).UseTimeLock = true;
             }
             else if (setAt)
             {
                 double time;
                 if (args.TryParseOne<Double>(out time))
                 {
-                    Entry.TimelockTime = time;
-                    Entry.UseTimeLock = true;
+                    (args.Plugin as Entry).TimelockTime = time;
+                    (args.Plugin as Entry).UseTimeLock = true;
                 }
                 else throw new CommandError("Double expected.");
             }
             else throw new CommandError("Certain arguments expected.");
 
-            if (Entry.UseTimeLock)
+            if ((args.Plugin as Entry).UseTimeLock)
             {
                 if (!setNow) NewNetMessage.SendData(Packet.WORLD_DATA);
 
                 sender.Message(
-                    String.Format("Time lock has set at {0}.", Entry.TimelockTime),
+                    String.Format("Time lock has set at {0}.", (args.Plugin as Entry).TimelockTime),
                     255, 0, 255, 0
                 );
             }
@@ -1620,7 +1641,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void OpPlayer(ISender sender, ArgumentList args)
+        public void OpPlayer(ISender sender, ArgumentList args)
         {
             var playerName = args.GetString(0);
             var password = args.GetString(1);
@@ -1656,7 +1677,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void DeopPlayer(ISender sender, ArgumentList args)
+        public void DeopPlayer(ISender sender, ArgumentList args)
         {
             var playerName = args.GetString(0);
             //Player player;
@@ -1697,7 +1718,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="password">Password for verification</param>
-        public static void OpLogin(ISender sender, string password)
+        public void OpLogin(ISender sender, string password)
         {
             if (sender is Player)
             {
@@ -1722,7 +1743,7 @@ namespace tdsm.core.Command
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void OpLogout(ISender sender, ArgumentList args)
+        public void OpLogout(ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
