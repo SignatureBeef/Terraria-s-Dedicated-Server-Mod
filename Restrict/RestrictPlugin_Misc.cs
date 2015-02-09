@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 
-using Terraria_Server;
-using Terraria_Server.Misc;
 using System.IO;
+using Terraria;
 
 namespace RestrictPlugin
 {
@@ -34,7 +33,7 @@ namespace RestrictPlugin
 		{
 			name = name.ToLower();
 			
-			foreach (var p in Main.players)
+			foreach (var p in Main.player)
 			{
 				if (p != null && p.Name != null && p.Name.ToLower() == name)
 					return p;
