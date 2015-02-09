@@ -1,6 +1,11 @@
-#Running TDSM Rebind:
+##Summary
+TDSM Rebind for Terraira 1.2.4.1 replaces the old TDSM that we stopped supporting a long time ago. It is a completely new approach which does not require us to update all of our code base to match the latest Terraria; rather we patch into the official code.
 
-##Linux (Ubuntu):
+##Getting the new TDSM Rebind:
+You can either compile from source or grab the latest release located [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases).
+
+##Running TDSM Rebind:
+###Linux (Ubuntu):
 Install prerequisites
 ```Batchfile
 apt-get install mono-complete
@@ -16,7 +21,6 @@ You need a 4.0 compatible run time.
 If you get mscorlib errors then this is a sure sign, so you may need to add "--runtime=4.0" just after mono.
 <br/>
 If that still does not work you may need to update mono.
-
 	
 ##Plugin Development
 Plugins are supported via the tdsm.api.dll. This DLL will allow you to hook directly into official server code.
