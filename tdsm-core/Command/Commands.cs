@@ -591,7 +591,12 @@ namespace tdsm.core
         {
             // /give <player> <stack> <name> 
             Player receiver = args.GetOnlinePlayer(0);
-            int stack = args.GetInt(1);
+            string strStack = args.GetString(1);
+            if ( strStack.ToLower() = "max" ) {
+                int stack = Tools.AvailableItemSlots;
+            } else {
+                int stack = args.GetInt(1);
+            }
             string name = args.GetString(2);
 
             var max = Tools.AvailableItemSlots; //Perhaps remove a few incase of new drops
