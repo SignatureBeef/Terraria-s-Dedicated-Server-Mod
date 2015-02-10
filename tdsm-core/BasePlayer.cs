@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria;
 
-namespace tdsm.api
+namespace tdsm.core
 {
     public static class PlayerExtensions
     {

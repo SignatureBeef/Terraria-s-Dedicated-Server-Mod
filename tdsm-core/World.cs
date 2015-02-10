@@ -1,7 +1,7 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+
 namespace tdsm.core
 {
     public static class World
