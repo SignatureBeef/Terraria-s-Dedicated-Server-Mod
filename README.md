@@ -53,9 +53,10 @@ The new patching approach is mostly dynamic and where it's not will only need ad
 Note: The API is not for new functionality, rather it is for exposing the official server events to be processed by a plugin whom provides functionality.
 
 ##Compiling the solution
-Build the tdsm-api without the API reference (see defined symbol Full_API in the project properties) then reference and run it beside the official TerrariaServer.exe. 
-It will output tdsm.exe, you now will need to replace the TerrariaServer.exe reference with the newly generated tdsm.exe.
-You must then redefine Full_API and rebuild the solution/project in order to expose all of the (Cecil altered) API to the rest of the projects. You are then ready to run the patcher.
+Build the tdsm-api without the API reference (see defined symbol Full_API in the project properties) then build and run tdsm-patcher. 
+It will output tdsm.exe, you now will need to reference the newly generated tdsm.exe in each project where the Terraria namespace is used. You must then redefine Full_API and rebuild the solution/project in order to expose all of the (Cecil altered) API to the rest of the projects.
+
+You are then ready to run the patcher for one last time, this will output the tdsm.exe that you can run a server with.
 <br/>
 <br/>
 Please note you will also require the latest Mono.Cecil and NLua libraries.
