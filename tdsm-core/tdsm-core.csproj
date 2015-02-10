@@ -49,11 +49,11 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="TerrariaServer">
-      <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.exe</HintPath>
-    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\Binaries\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="tdsm.exe">
+      <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

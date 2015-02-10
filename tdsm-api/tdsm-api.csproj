@@ -66,7 +66,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TerrariaServer">
+    <Reference Include="tdsm.exe">
       <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
