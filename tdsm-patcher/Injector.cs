@@ -744,7 +744,7 @@ namespace tdsm.patcher
         public void Save(string filePath)
         {
 			//Ensure the name is updated to the new one
-			_asm.Name = new AssemblyNameDefinition ("tdsm.exe", new Version ("1.0.0.0"));
+			_asm.Name = new AssemblyNameDefinition ("tdsm", new Version ("1.0.0.0"));
 			_asm.Write(filePath);
         }
 
