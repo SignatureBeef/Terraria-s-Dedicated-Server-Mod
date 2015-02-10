@@ -195,7 +195,7 @@ namespace tdsm.core
                 .WithDescription("Server status")
                 .WithHelpText("Usage:   status")
                 .WithPermissionNode("tdsm.status")
-                .Calls(this.Status);
+				.Calls(this.ServerStatus);
 
             AddCommand("kick")
                 .WithDescription("Kicks a player from the server")

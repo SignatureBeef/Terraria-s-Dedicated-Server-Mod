@@ -68,7 +68,7 @@ namespace tdsm.core
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public void Status(ISender sender, ArgumentList args)
+        public void ServerStatus(ISender sender, ArgumentList args)
         {
             args.ParseNone();
 
