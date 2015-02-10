@@ -3,7 +3,9 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using tdsm.api.Plugin;
+#if Full_API
 using Terraria;
+#endif
 
 namespace tdsm.api.Callbacks
 {

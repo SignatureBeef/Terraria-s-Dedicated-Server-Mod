@@ -1,4 +1,5 @@
 ﻿using System;
+#if Full_API
 using Terraria;
 
 namespace tdsm.api.Command
@@ -457,3 +458,4 @@ namespace tdsm.api.Command
         }
     }
 }
+#endif

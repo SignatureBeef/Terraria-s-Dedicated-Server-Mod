@@ -47,9 +47,11 @@ namespace tdsm.api.Command
             switch (type)
             {
                 case SenderType.CONSOLE:
-                    return sender is ConsoleSender;// && !(sender is RemoteConsole.RConSender);
+					return sender is ConsoleSender;// && !(sender is RemoteConsole.RConSender);
+#if Full_API
                 case SenderType.PLAYER:
                     return sender is Terraria.Player;
+#endif
                 //case SenderType.RCON:
                 //    return sender is RemoteConsole.RConSender;
                 default:

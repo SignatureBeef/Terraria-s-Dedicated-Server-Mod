@@ -743,8 +743,9 @@ namespace tdsm.patcher
 
         public void Save(string filePath)
         {
-            //if (File.Exists(filePath)) File.Delete(filePath);
-            _asm.Write(filePath);
+			//Ensure the name is updated to the new one
+			_asm.Name = new AssemblyNameDefinition ("tdsm.exe", new Version ("1.0.0.0"));
+			_asm.Write(filePath);
         }
 
         public void Dispose()

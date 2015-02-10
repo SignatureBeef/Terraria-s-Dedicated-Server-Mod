@@ -40,6 +40,8 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ConsolePause>false</ConsolePause>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -62,6 +64,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\Binaries\Mono.Cecil.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Injector.cs" />
@@ -82,10 +87,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cecil\Mono.Cecil.csproj">
-      <Project>{d68133bd-1e63-496e-9ede-4fbdbf77b486}</Project>
-      <Name>Mono.Cecil</Name>
-    </ProjectReference>
     <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
       <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
       <Name>tdsm-api</Name>
@@ -105,11 +106,12 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>rm $(ProjectDir)$(OutDir)Plugins
-tdsm.core*
-xcopy /y /d "$(ProjectDir)..\tdsm-core\bin\x86\Debug\tdsm.core.*" "$(ProjectDir)$(OutDir)Plugins"</PostBuildEvent>
-  </PropertyGroup>
+  <!---<PropertyGroup>
+    <PostBuildEvent>
+    rm $(ProjectDir)$(OutDir)Plugins\tdsm.core*
+    xcopy /y /d "$(ProjectDir)..\tdsm-core\bin\x86\Debug\tdsm.core.*" "$(ProjectDir)$(OutDir)Plugins"
+    </PostBuildEvent>
+  </PropertyGroup>-->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

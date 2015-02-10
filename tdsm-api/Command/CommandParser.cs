@@ -165,6 +165,7 @@ namespace tdsm.api.Command
         {
             serverCommands = new Dictionary<String, CommandInfo>();
 
+#if Full_API
             AddCommand("exit")
                 .WithDescription("Shutdown the server and save.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
@@ -262,6 +263,7 @@ namespace tdsm.api.Command
                 .WithHelpText("          plugin load [-replace] <file>")
                 .WithPermissionNode("tdsm.plugin")
                 .Calls(PluginManager.PluginCommand);
+#endif
         }
 
         public readonly Dictionary<String, CommandInfo> serverCommands;
@@ -350,8 +352,10 @@ namespace tdsm.api.Command
         /// <param name="sender">Sender to check</param>
         /// <returns>True if sender has access level equal to or greater than acc</returns>
         public static bool CheckAccessLevel(AccessLevel acc, ISender sender)
-        {
+		{
+#if Full_API
             if (sender is Player) return acc == AccessLevel.PLAYER || (acc == AccessLevel.OP && sender.Op);
+#endif
             //            if (sender is RConSender) return acc <= AccessLevel.REMOTE_CONSOLE;
             if (sender is ConsoleSender) return true;
             throw new NotImplementedException("Unexpected ISender implementation");

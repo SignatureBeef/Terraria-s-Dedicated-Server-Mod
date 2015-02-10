@@ -64,7 +64,8 @@ namespace tdsm.api.Callbacks
         {
             System.Threading.Thread.CurrentThread.Name = "APC";
 
-            Tools.WriteLine("Ready for commands.");
+			Tools.WriteLine("Ready for commands.");
+#if Full_API
             while (!Terraria.Netplay.disconnect)
             {
                 try
@@ -80,6 +81,7 @@ namespace tdsm.api.Callbacks
                     Tools.WriteLine(e);
                 }
             }
+#endif
         }
 
         //public static readonly Tile DefaultTile = default(Tile);

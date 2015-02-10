@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿#if Full_API
+using Terraria;
 
 namespace tdsm.api
 {
@@ -20,3 +21,4 @@ namespace tdsm.api
         }
     }
 }
+#endif

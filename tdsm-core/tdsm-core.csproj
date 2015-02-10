@@ -48,10 +48,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.XML" />
-    <Reference Include="tdsm, Version=1.2.4.1, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Xml" />
+    <Reference Include="TerrariaServer">
       <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.exe</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\Binaries\Mono.Cecil.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -151,16 +153,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\cecil\Mono.Cecil.csproj">
-      <Project>{d68133bd-1e63-496e-9ede-4fbdbf77b486}</Project>
-      <Name>Mono.Cecil</Name>
-    </ProjectReference>
     <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
-      <Project>{a1f792b2-5d80-4de4-b5db-7a05dbeabd60}</Project>
+      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
       <Name>tdsm-api</Name>
     </ProjectReference>
     <ProjectReference Include="..\tdsm-patcher\tdsm-patcher.csproj">
-      <Project>{0ed8c37c-355a-4271-92b8-f9ed66881c46}</Project>
+      <Project>{0ED8C37C-355A-4271-92B8-F9ED66881C46}</Project>
       <Name>tdsm-patcher</Name>
     </ProjectReference>
   </ItemGroup>

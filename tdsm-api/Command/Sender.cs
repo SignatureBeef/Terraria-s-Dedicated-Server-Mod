@@ -38,9 +38,11 @@ namespace tdsm.api.Command
         //    return this.GetType().IsAssignableFrom(type);
         //}
 
+#if Full_API
         public bool IsPlayer()
         {
             return this is Terraria.Player;
         }
+#endif
     }
 }

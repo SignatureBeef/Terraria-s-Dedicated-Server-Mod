@@ -31,31 +31,31 @@ namespace tdsm.api
         }
 
         public static void NotifyAllPlayers(string message, Color color, bool writeToConsole = true) //, SendingLogger Logger = SendingLogger.CONSOLE)
-        {
+		{
 #if Full_API
             foreach (var player in Main.player)
             {
                 if (player.active)
                     NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, message, color.A, color.R, color.G, color.B);
             }
-#endif
 
-            if (writeToConsole) Tools.WriteLine(message);
+			if (writeToConsole) Tools.WriteLine(message);
+#endif
         }
 
         public static void NotifyAllOps(string message, bool writeToConsole = true) //, SendingLogger Logger = SendingLogger.CONSOLE)
-        {
+		{
 #if Full_API
             foreach (var player in Main.player)
             {
                 if (player.active && player.Op)
                     NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, message, 255, 176f, 196, 222f);
             }
-#endif
 
             if (writeToConsole) Tools.WriteLine(message);
+#endif
         }
-
+#if Full_API
         /// <summary>
         /// Gets a specified Online Player
         /// Input name must already be cleaned of spaces
@@ -381,7 +381,7 @@ namespace tdsm.api
                   .Count();
             }
         }
-
+#endif
         public static RuntimePlatform RuntimePlatform
         {
             get

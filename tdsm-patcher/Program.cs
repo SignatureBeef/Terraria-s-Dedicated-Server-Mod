@@ -3,6 +3,7 @@
 using System;
 using tdsm.api;
 using tdsm.api.Plugin;
+using System.IO;
 
 namespace tdsm.patcher
 {
@@ -135,12 +136,37 @@ namespace tdsm.patcher
 
             Console.Write("Saving to {0}...", outFile);
             patcher.Save(outFile);
-            Console.WriteLine("Ok\nYou may now run {0} as you would normally.", outFile);
 
 #if Release || true
-            Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", outFile);
-            if (Console.ReadKey(true).Key == ConsoleKey.Y)
-                System.Diagnostics.Process.Start(outFile, "-config serverconfig.txt");
+			Console.WriteLine("Ok\nYou may now run {0} as you would normally.", outFile);
+			Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", outFile);
+			if(Console.ReadKey(true).Key == ConsoleKey.Y)
+			{
+				Console.Clear();
+				using (var ms = new MemoryStream())
+				{
+					using (var fs = File.OpenRead(outFile))
+					{
+						var buff = new byte[256];
+						while (fs.Position < fs.Length)
+						{
+							var task = fs.Read(buff, 0, buff.Length);
+							ms.Write(buff, 0, task);
+						}
+					}
+
+					ms.Seek(0L, SeekOrigin.Begin);
+					var asm = System.Reflection.Assembly.Load(ms.ToArray());
+					if(File.Exists("serverconfig.txt"))
+						asm.EntryPoint.Invoke(null, new object[]
+							//						asm.GetType("Terraria.ProgramServer").GetMethod("Main").Invoke(null, new object[]
+						{
+							new string[] {"-config serverconfig.txt"}
+						});
+					else
+						asm.EntryPoint.Invoke(null, null);
+				}
+			}
 #endif
         }
     }

@@ -21,7 +21,8 @@ namespace tdsm.api.Callbacks
                             if (ix > -1)
                             {
                                 var key = line.Substring(0, ix);
-                                var value = line.Substring(ix + 1, line.Length - (ix + 1));
+								var value = line.Substring(ix + 1, line.Length - (ix + 1));
+#if Full_API
                                 switch (key.ToLower())
                                 {
                                     case "world":
@@ -122,6 +123,7 @@ namespace tdsm.api.Callbacks
                                         HookPoints.ConfigurationLine.Invoke(ref ctx, ref args);
                                         break;
                                 }
+#endif
                             }
                         }
                         else break;
