@@ -104,23 +104,6 @@ namespace tdsm.patcher
             {
                 il.Remove(toBeReplaced[x].Previous.Previous.Previous.Previous);
             }
-
-            //var selfType = _self.MainModule.Types.Where(x => x.Name == "Main").First();
-            //var callback = selfType.Methods.Where(x => x.Name == "ParseConfigLine").First();
-
-            //var instruction = mthd.Body.Instructions
-            //    .Where(x => x.OpCode == OpCodes.Callvirt
-            //        && x.Operand is MethodReference
-            //        && (x.Operand as MethodReference).Name == "ReadLine"
-            //    )
-            //    .First()
-            //    .Previous.Previous.Previous;
-
-            //var il = mthd.Body.GetILProcessor();
-            //var insCallback = il.Create(OpCodes.Call, _asm.MainModule.Import(callback));
-            ////var nop = il.Create(OpCodes.Nop);
-            ////il.InsertBefore(instruction, nop);
-            //il.InsertBefore(instruction, insCallback);
         }
 
         public void HookStatusText()
@@ -199,9 +182,6 @@ namespace tdsm.patcher
             var callback = userInputClass.Methods.First(m => m.Name == "OnProgramStarted");
 
             var il = method.Body.GetILProcessor();
-            //il.InsertBefore(method.Body.Instructions.First(), il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
-
-
 
             var ret = il.Create(OpCodes.Ret);
             var call = il.Create(OpCodes.Call, _asm.MainModule.Import(callback));
@@ -338,18 +318,6 @@ namespace tdsm.patcher
             netplay.Fields.Remove(
                 netplay.Fields.Where(x => x.Name == "mappings").First()
             );
-
-            //var entryType = _asm.MainModule.Import(_self.MainModule.Types
-            //     .Where(x => x.Name == "ServerEntry")
-            //     .First()
-            //).Resolve();
-
-            //var entry = _asm.MainModule.Import(entryType.Methods
-            //     .Where(x => x.Name == ".ctor")
-            //     .First()
-            //);
-
-            //_asm.EntryPoint = entry.Resolve();
         }
 
         public void FixEntryPoint()
@@ -419,14 +387,6 @@ namespace tdsm.patcher
         public void SkipMenu()
         {
             var main = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            //var staticConstructor = main.Methods.Where(x => x.Name == ".cctor").First();
-
-            //var loc = staticConstructor.Body.Instructions
-            //    .Where(x => x.OpCode == OpCodes.Stsfld && x.Operand is FieldDefinition)
-            //    //.Select(x => x.Operand as FieldDefinition)
-            //    .Where(x => (x.Operand as FieldDefinition).Name == "skipMenu")
-            //    .First();
-            //loc.Previous.OpCode = OpCodes.Ldc_I4_1;
 
             var initialise = main.Methods.Where(x => x.Name == "Initialize").First();
             var loc = initialise.Body.Instructions
@@ -445,50 +405,6 @@ namespace tdsm.patcher
         public void PatchCommandLine()
         {
             var t_mainClass = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            //var t_block = t_mainClass.Methods.Where(x => x.Name == "startDedInputCallBack").First();
-
-            //var userInputClass = _self.MainModule.Types.Where(x => x.Name == "UserInput").First();
-            //var callback = userInputClass.Methods.First(m => m.Name == "ProcessInput");
-
-            ////var ctorReference = _asm.MainModule.Import(callback);
-            ////foreach (var type in _asm.MainModule.Types)
-            ////    type.CustomAttributes.Add(new CustomAttribute(ctorReference));
-
-            //var proc = t_block.Body.GetILProcessor();
-
-            //var ui = _asm.MainModule.Import(callback);
-            ////var insertionPoint = proc.Body.Instructions.Where(x => x.ToString().Contains("IL_001e: ldloc.0")).First();
-
-            //var insertionPoint = proc.Body.Instructions.Where(x => x.ToString().Contains("IL_001e: ldloc.0")).First();
-
-            ///* text = ProcessInput(text) */
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Ldloc_0));
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Call, ui));
-
-            ///* if(text != null) { [Official Code] }; */
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Stloc_0));
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Ldloc_0));
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Ldnull));
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Ceq));
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Ldc_I4_0));
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Ceq));
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Stloc_2));
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Ldloc_2));
-
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Brtrue_S, insertionPoint.Next.Previous));
-            //var falsePart = proc.Body.Instructions.Where(x => x.ToString().Contains(": ldsfld")).Last();
-            //proc.InsertBefore(insertionPoint, proc.Create(OpCodes.Br, falsePart));
-
-            //Just replace the whole of [startDedInputCallBack] with one of ours
-            //var t_block = t_mainClass.Methods.Where(x => x.Name == "startDedInput").First();
-
-            //var userInputClass = _self.MainModule.Types.Where(x => x.Name == "UserInput").First();
-            //var callback = userInputClass.Methods.First(m => m.Name == "startDedInputCallBack");
-
-            //var ins = t_block.Body.Instructions
-            //    .Where(x => x.OpCode == OpCodes.Ldftn)
-            //    .First();
-            //ins.Operand = _asm.MainModule.Import(callback);
 
             //Simply switch to ours
             var serv = t_mainClass.Methods.Where(x => x.Name == "DedServ").First();
@@ -502,6 +418,10 @@ namespace tdsm.patcher
             ins.Operand = _asm.MainModule.Import(callback);
         }
 
+		/// <summary>
+		/// Makes the types public.
+		/// </summary>
+		/// <param name="server">If set to <c>true</c> server.</param>
         public void MakeTypesPublic(bool server)
         {
             var types = _asm.MainModule.Types
@@ -555,32 +475,12 @@ namespace tdsm.patcher
 
             //Update nulls to defaults
             var mainClass = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            //var worldClass = _asm.MainModule.Types.Where(x => x.Name == "WorldGen").First();
-            //var t_block = worldClass.Methods.Where(x => x.Name == "clearWorld").First();
-            //var proc = t_block.Body.GetILProcessor();
-            ////var insertionPoint = proc.Body.Instructions.Where(x => x.ToString().Contains("IL_031e: ldnull")).First();
-
-            //var setToNull = proc.Body.Instructions.Where(x => x.ToString().Contains("IL_031e: ldnull")).First();
-            //var nullReplacement = proc.Body.Instructions.Where(x => x.ToString().Contains("IL_03f5: call")).First();
-
 
             var defaultTile = _asm.MainModule.Import(DefaultTile);
-
-            //////Replace [ == null]
-            ////proc.InsertBefore(setToNull, proc.Create(OpCodes.Ldsfld, defaultTile));
-            ////proc.Remove(setToNull);
 
             //////Change to struct
             tileClass.BaseType = refClass.BaseType;
             tileClass.IsSequentialLayout = true;
-
-            //////proc.InsertAfter(nullReplacement, proc.Create(OpCodes.Ceq));
-            //////proc.InsertAfter(nullReplacement, proc.Create(OpCodes.Ldsfld, defaultTile));
-
-            //List<String> Mapping = new List<string>()
-            //{
-
-            //};
 
             //Replace != null
             var mth = _asm.MainModule.Types
@@ -653,10 +553,10 @@ namespace tdsm.patcher
             if (server)
                 for (var x = 0; x < xnaFramework.Length; x++)
                 {
-                    xnaFramework[x].Name = "tdsm.api";
-                    xnaFramework[x].PublicKey = null;
-                    xnaFramework[x].PublicKeyToken = null;
-                    xnaFramework[x].Version = new Version("1.0.0.0");
+					xnaFramework[x].Name = _self.Name.Name;
+					xnaFramework[x].PublicKey = _self.Name.PublicKey;
+					xnaFramework[x].PublicKeyToken = _self.Name.PublicKeyToken;
+					xnaFramework[x].Version = _self.Name.Version;
                 }
             else
             {
@@ -744,12 +644,13 @@ namespace tdsm.patcher
         public void Save(string filePath)
         {
 			//Ensure the name is updated to the new one
-			_asm.Name = new AssemblyNameDefinition ("tdsm", new Version ("1.0.0.0"));
+			_asm.Name = new AssemblyNameDefinition ("tdsm", new Version(0, 0, tdsm.api.Globals.Build, 0));
 			_asm.Write(filePath);
         }
 
         public void Dispose()
         {
+			_self = null;
             _asm = null;
         }
     }

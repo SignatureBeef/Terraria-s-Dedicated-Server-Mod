@@ -5,7 +5,7 @@ namespace tdsm.api
 {
     public static class Globals
     {
-        public const Double Build = 1.0;
+		public const Int32 Build = 1;
 
         public const Int32 TerrariaRelease = 102;
         public const String TerrariaVersion = "1.2.4.1";

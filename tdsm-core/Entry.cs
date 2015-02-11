@@ -519,10 +519,11 @@ namespace tdsm.core
                 args.Number2, args.Number3, args.Number4, args.Number5);
         }
 
-        private static int lastWritten = 0;
+        private int lastWritten = 0;
         [Hook(HookOrder.NORMAL)]
         void OnStatusTextChanged(ref HookContext ctx, ref HookArgs.StatusTextChanged args)
-        {
+		{
+			ctx.SetResult(HookResult.IGNORE);
             //There's no locking and two seperate threads, so we must use local variables incase of changes
             var statusText = Terraria.Main.statusText;
             var oldStatusText = Terraria.Main.oldStatusText;
@@ -589,7 +590,6 @@ namespace tdsm.core
                 }
             }
             Terraria.Main.oldStatusText = statusText;
-            ctx.SetResult(HookResult.IGNORE);
         }
     }
 }
