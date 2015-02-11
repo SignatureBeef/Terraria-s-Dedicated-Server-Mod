@@ -16,6 +16,11 @@ namespace tdsm.core
 {
     public partial class Entry
     {
+		/// <summary>
+		/// Informs the sender of what system TDSM is running on
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="args">Arguments.</param>
         public void OperatingSystem(ISender sender, ArgumentList args)
         {
             var platform = Platform.Type.ToString();
@@ -209,12 +214,19 @@ namespace tdsm.core
         /// <param name="sender">Sending player</param>
         /// <param name="message">Message to send</param>
         public void Action(ISender sender, string message)
-        {
-            ProgramLog.Log("* " + sender.SenderName + " " + message);
-            if (sender is Player)
-                NewNetMessage.SendData(25, -1, -1, "* " + sender.SenderName + " " + message, 255, 200, 100, 0);
-            else
-                NewNetMessage.SendData(25, -1, -1, "* " + sender.SenderName + " " + message, 255, 238, 130, 238);
+		{
+			if (!String.IsNullOrEmpty (message))
+			{
+	            ProgramLog.Log("* " + sender.SenderName + " " + message);
+	            if (sender is Player)
+	                NewNetMessage.SendData(25, -1, -1, "* " + sender.SenderName + " " + message, 255, 200, 100, 0);
+	            else
+					NewNetMessage.SendData(25, -1, -1, "* " + sender.SenderName + " " + message, 255, 238, 130, 238);
+			}
+			else
+			{
+				sender.SendMessage ("Expected message");
+			}
         }
 
         /// <summary>
@@ -232,8 +244,16 @@ namespace tdsm.core
 
             // 'Say' should be used for Server Messages, OP's only. This is used on many large servers to notify
             // Users for a quick restart (example), So the OP will most likely be in game, unless it's major.
-            ProgramLog.Log("<" + sender.SenderName + "> " + ((sender is ConsoleSender) ? String.Empty : "SERVER: ") + message);
-            NewNetMessage.SendData(25, -1, -1, "SERVER: " + message, 255, 238, 130, 238);
+
+			if (!String.IsNullOrEmpty (message))
+			{
+				ProgramLog.Log ("<" + sender.SenderName + "> " + ((sender is ConsoleSender) ? String.Empty : "SERVER: ") + message);
+				NewNetMessage.SendData (25, -1, -1, "SERVER: " + message, 255, 238, 130, 238);
+			}
+			else
+			{
+				sender.SendMessage ("Expected message");
+			}
         }
 
         /// <summary>
@@ -250,7 +270,7 @@ namespace tdsm.core
                 subject = sender as Player;
                 if (subject == null)
                 {
-                    sender.Message("Need a teleport target");
+                    sender.Message("Need a heal target");
                     return;
                 }
 
@@ -1736,32 +1756,42 @@ namespace tdsm.core
                     player.SendMessage("Login failed", Color.DarkRed);
                 }
             }
-        }
+		}
 
-        /// <summary>
-        /// Allows Operators to logout.
-        /// </summary>
-        /// <param name="sender">Sending player</param>
-        /// <param name="args">Arguments sent with command</param>
-        public void OpLogout(ISender sender, ArgumentList args)
-        {
-            if (sender is Player)
-            {
-                var player = sender as Player;
-                if (sender.Op)
-                {
-                    player.Op = false;
-                    player.SendMessage("Ssccessfully logged out", Color.DarkRed);
+		/// <summary>
+		/// Allows Operators to logout.
+		/// </summary>
+		/// <param name="sender">Sending player</param>
+		/// <param name="args">Arguments sent with command</param>
+		public void OpLogout(ISender sender, ArgumentList args)
+		{
+			if (sender is Player)
+			{
+				var player = sender as Player;
+				if (sender.Op)
+				{
+					player.Op = false;
+					player.SendMessage("Ssccessfully logged out", Color.DarkRed);
 
-                    Tools.NotifyAllOps(
-                        String.Format("{0} successfully logged out.", player.Name)
-                    );
-                }
-                else
-                {
-                    player.SendMessage("You are not logged in.", Color.DarkRed);
-                }
-            }
-        }
+					Tools.NotifyAllOps(
+						String.Format("{0} successfully logged out.", player.Name)
+					);
+				}
+				else
+				{
+					player.SendMessage("You are not logged in.", Color.DarkRed);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Shows the help.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="args">Arguments.</param>
+		public void ShowHelp(ISender sender, ArgumentList args)
+		{
+
+		}
     }
 }

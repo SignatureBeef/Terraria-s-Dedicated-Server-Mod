@@ -27,7 +27,15 @@ namespace tdsm.api.Command
         internal event Action<CommandInfo> BeforeEvent;
         internal event Action<CommandInfo> AfterEvent;
 
+		internal string _prefix;
+		internal bool _defaultHelp;
+
         internal NLua.LuaFunction LuaCallback;
+
+		internal CommandInfo(string prefix)
+		{
+			_prefix = prefix;
+		}
 
         internal void InitFrom(CommandInfo other)
         {
@@ -53,11 +61,17 @@ namespace tdsm.api.Command
             return this;
         }
 
-        public CommandInfo WithHelpText(string help)
-        {
-            helpText.Add(help);
-            return this;
-        }
+		public CommandInfo WithHelpText(string help)
+		{
+			helpText.Add(help);
+			return this;
+		}
+
+		public CommandInfo SetDefaultUsage()
+		{
+			_defaultHelp = true;
+			return this;
+		}
 
         public CommandInfo WithAccessLevel(AccessLevel accessLevel)
         {
@@ -90,9 +104,22 @@ namespace tdsm.api.Command
         }
 
         public void ShowHelp(ISender sender)
-        {
-            foreach (var line in helpText)
-                sender.SendMessage(line);
+		{
+			const String Push = "       ";
+			string command = (sender is Player ? "/" : String.Empty) + _prefix;
+			if (_defaultHelp)
+				sender.SendMessage ("Usage: " + command);
+
+			bool first = !_defaultHelp;
+			foreach (var line in helpText)
+			{
+				if (first)
+				{
+					first = false;
+					sender.SendMessage ("Usage: " + command + " " + line);
+				}
+				else sender.SendMessage (Push + command + " " + line);
+			}
         }
 
         internal void Run(ISender sender, string args)
@@ -246,21 +273,21 @@ namespace tdsm.api.Command
             AddCommand("plugins")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists plugins running")
-                .WithHelpText("Usage:    plugins")
+				.SetDefaultUsage()
                 .WithPermissionNode("tdsm.plugins")
                 .Calls(DefaultCommands.ListPlugins);
 
             AddCommand("plugin")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Manage and view plugins")
-                .WithHelpText("Usage:    plugin list")
-                .WithHelpText("          plugin stat")
-                .WithHelpText("          plugin info <plugin>")
-                .WithHelpText("          plugin enable <plugin>")
-                .WithHelpText("          plugin disable <plugin>")
-                .WithHelpText("          plugin reload [-clean] all|<plugin>")
-                .WithHelpText("          plugin unload all|<plugin>")
-                .WithHelpText("          plugin load [-replace] <file>")
+                .WithHelpText("list")
+                .WithHelpText("stat")
+                .WithHelpText("info <plugin>")
+                .WithHelpText("enable <plugin>")
+                .WithHelpText("disable <plugin>")
+                .WithHelpText("reload [-clean] all|<plugin>")
+                .WithHelpText("unload all|<plugin>")
+                .WithHelpText("load [-replace] <file>")
                 .WithPermissionNode("tdsm.plugin")
                 .Calls(PluginManager.PluginCommand);
 #endif
@@ -292,7 +319,7 @@ namespace tdsm.api.Command
         {
             if (serverCommands.ContainsKey(prefix)) throw new ApplicationException("AddCommand: duplicate command: " + prefix);
 
-            var cmd = new CommandInfo();
+			var cmd = new CommandInfo(prefix);
             serverCommands[prefix] = cmd;
             serverCommands["." + prefix] = cmd;
 

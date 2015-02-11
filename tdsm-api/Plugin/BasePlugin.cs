@@ -223,7 +223,7 @@ namespace tdsm.api
             System.Diagnostics.Debug.Print("Adding command: " + prefix);
             if (commands.ContainsKey(prefix)) throw new ApplicationException("AddCommand: duplicate command: " + prefix);
 
-            var cmd = new CommandInfo();
+			var cmd = new CommandInfo(prefix);
             cmd.BeforeEvent += NotifyBeforeCommand;
             cmd.AfterEvent += NotifyAfterCommand;
 

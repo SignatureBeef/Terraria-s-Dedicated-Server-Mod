@@ -21,8 +21,8 @@ namespace BareBones
 			AddCommand("commandname")
 				.WithAccessLevel(AccessLevel.PLAYER)
 				.WithDescription("My command description")
-				.WithHelpText("Usage:    commandname <name>")
-				.WithHelpText("          commandname <something else> <maybe more>")
+				.WithHelpText("<name>")
+				.WithHelpText("<something else> <maybe more>")
 				.WithPermissionNode("BareBones.commandname")
 				.Calls(MyCustomCommandCallback);
 		}
