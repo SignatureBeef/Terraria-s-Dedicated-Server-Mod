@@ -485,11 +485,6 @@ namespace tdsm.api.Command
 						.OrderBy (x => x.Key.ToLower())
 						.Select (x => x.Value)
 						.ToArray ();
-					var sortedw = commands
-						.OrderBy (x => x.Key.ToLower())
-						.Select (x => x.Key.ToLower())
-						.ToArray ();
-
 					for(var i = lineOffset; i < lineOffset + maxLines; i++)
 					{
 						if(i < sorted.Length)

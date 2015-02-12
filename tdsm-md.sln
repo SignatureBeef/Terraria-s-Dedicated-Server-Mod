@@ -10,6 +10,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LUA Examples", "LUA Examples", "{CCA1D6DB-1AF7-4483-9791-C1EFB9EC744D}"
+	ProjectSection(SolutionItems) = preProject
+		PluginExamples\LUA\bare-bones.lua = PluginExamples\LUA\bare-bones.lua
+		PluginExamples\LUA\welcome.lua = PluginExamples\LUA\welcome.lua
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdsm-core", "tdsm-core\tdsm-core.csproj", "{48477B14-CEAA-47AA-98F1-EF935734DBC5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdsm-utility", "tdsm-utility\tdsm-utility.csproj", "{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}"
@@ -548,6 +554,7 @@ Global
 		{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}.winphone_Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{CCA1D6DB-1AF7-4483-9791-C1EFB9EC744D} = {EED99527-E456-4B5C-8079-D4DC60410DFE}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = tdsm-patcher\tdsm-patcher.csproj
