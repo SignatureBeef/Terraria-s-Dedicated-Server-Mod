@@ -220,7 +220,6 @@ namespace tdsm.api
         /// <returns>New Command</returns>
         protected CommandInfo AddCommand(string prefix)
         {
-            System.Diagnostics.Debug.Print("Adding command: " + prefix);
             if (commands.ContainsKey(prefix)) throw new ApplicationException("AddCommand: duplicate command: " + prefix);
 
 			var cmd = new CommandInfo(prefix);

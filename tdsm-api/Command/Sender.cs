@@ -1,4 +1,7 @@
-﻿
+﻿using System.Collections.Generic;
+using tdsm.api.Callbacks;
+using System.Linq;
+
 namespace tdsm.api.Command
 {
     /// <summary>
@@ -44,5 +47,35 @@ namespace tdsm.api.Command
             return this is Terraria.Player;
         }
 #endif
+
+		public Dictionary<string, CommandInfo> GetAvailableCommands()
+		{
+			var available = UserInput.CommandParser.serverCommands.GetAvailableCommands (this);
+
+			foreach (var plg in PluginManager.EnumeratePlugins)
+			{
+				var additional = plg.commands.GetAvailableCommands (this)
+					.Where(x => !x.Key.StartsWith(plg.Name.ToLower()));
+				foreach (var pair in additional)
+				{
+					//Override defaults
+					if (available.ContainsKey (pair.Key))
+						available [pair.Key] = pair.Value;
+					else available.Add (pair.Key, pair.Value);
+				}
+			}
+
+			return available;
+		}
     }
+
+	public static class CommandMapExtensions
+	{
+		public static Dictionary<string, CommandInfo> GetAvailableCommands(this Dictionary<string, CommandInfo> map, ISender sender)
+		{
+			return map
+				.Where (x => CommandParser.CheckAccessLevel (x.Value, sender) && !x.Key.StartsWith("."))
+				.ToDictionary (x => x.Key, y => y.Value);
+		}
+	}
 }

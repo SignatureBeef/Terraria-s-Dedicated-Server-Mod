@@ -32,6 +32,18 @@ namespace tdsm.api.Command
 
         internal NLua.LuaFunction LuaCallback;
 
+//		public int HelpTextCount
+//		{
+//			get
+//			{ return _defaultHelp ? 1 + helpText.Count : helpText.Count; }
+//		}
+
+		public string Prefix
+		{
+			get
+			{ return _prefix; }
+		}
+
 		internal CommandInfo(string prefix)
 		{
 			_prefix = prefix;
@@ -101,9 +113,9 @@ namespace tdsm.api.Command
         {
             LuaCallback = callback;
             return this;
-        }
+		}
 
-        public void ShowHelp(ISender sender)
+		public void ShowHelp(ISender sender)
 		{
 			const String Push = "       ";
 			string command = (sender is Player ? "/" : String.Empty) + _prefix;
@@ -120,7 +132,16 @@ namespace tdsm.api.Command
 				}
 				else sender.SendMessage (Push + command + " " + line);
 			}
-        }
+		}
+
+		public void ShowDescription(ISender sender, int padd)
+		{
+			var space = String.Empty;
+			for(var x = 0; x < padd - this._prefix.Length; x++) space += ' ';
+			sender.SendMessage((sender is Player ? "/" : String.Empty) + _prefix + 
+				space + " - " + (this.description ?? "No description specified")
+			);
+		}
 
         internal void Run(ISender sender, string args)
         {
@@ -209,7 +230,7 @@ namespace tdsm.api.Command
                 .WithDescription("Print or change the message of the day.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.MOTD);
-            AddCommand("Save")
+            AddCommand("save")
                 .WithDescription("Save the game world.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Save);
@@ -270,13 +291,18 @@ namespace tdsm.api.Command
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.FPS);
 
+			AddCommand("help")
+				.WithAccessLevel(AccessLevel.PLAYER)
+				.WithDescription("Displays the commands available to the user.")
+				.SetDefaultUsage()
+				.WithPermissionNode("tdsm.help")
+				.Calls(DefaultCommands.ShowHelp);
             AddCommand("plugins")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists plugins running")
 				.SetDefaultUsage()
                 .WithPermissionNode("tdsm.plugins")
                 .Calls(DefaultCommands.ListPlugins);
-
             AddCommand("plugin")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Manage and view plugins")
@@ -498,8 +524,19 @@ namespace tdsm.api.Command
                         info.Run(sender, hargs.ArgumentString);
                     }
                     catch (NLua.Exceptions.LuaScriptException e)
-                    {
-
+					{
+						if (e.IsNetException)
+						{
+							var ex = e.GetBaseException();
+							if (ex != null)
+							{
+								if (ex is CommandError)
+								{
+									sender.SendMessage(prefix + ": " + ex.Message);
+									info.ShowHelp(sender);
+								}
+							}
+						}
                     }
                     catch (ExitException e)
                     {

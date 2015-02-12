@@ -76,15 +76,6 @@ namespace tdsm.core
             Hook(HookPoints.PlayerWorldAlteration, OnPlayerWorldAlteration);
             Hook(HookPoints.ProjectileReceived, HookOrder.FIRST, OnReceiveProjectile);
 
-			//Add this
-			AddCommand("help")
-				.WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("Displays the commands available to the user.")
-				.SetDefaultUsage()
-				.WithPermissionNode("tdsm.help")
-				.Calls(this.OperatingSystem);
-
-			//Add this
 			AddCommand("platform")
 				.WithAccessLevel(AccessLevel.PLAYER)
 				.WithDescription("Show what type of server is running TDSM")

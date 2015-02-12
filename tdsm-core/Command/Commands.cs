@@ -1783,15 +1783,5 @@ namespace tdsm.core
 				}
 			}
 		}
-
-		/// <summary>
-		/// Shows the help.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="args">Arguments.</param>
-		public void ShowHelp(ISender sender, ArgumentList args)
-		{
-
-		}
     }
 }

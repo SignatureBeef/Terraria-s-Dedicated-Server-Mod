@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 #if Full_API
 using Terraria;
 
@@ -455,7 +457,58 @@ namespace tdsm.api.Command
             {
                 WorldFile.saveWorld(false);
             }
-        }
+		}
+
+		/// <summary>
+		/// Shows the help.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="args">Arguments.</param>
+		public static void ShowHelp(ISender sender, ArgumentList args)
+		{
+			var commands = sender.GetAvailableCommands ();
+			if (commands != null && commands.Count > 0)
+			{
+				int page = 0;
+				if (!args.TryGetInt (0, out page)) page = 0;
+				else page--;
+
+//				const Int32 MaxLines = 5;
+				var maxLines = sender is Player ? 5 : 15;
+				var lineOffset = page * maxLines;
+				var maxPages = (int)Math.Ceiling (commands.Count / (double)maxLines);
+
+				if (page >= 0 && page < maxPages)
+				{
+					var cmds = new List<CommandInfo> ();
+					var sorted = commands
+						.OrderBy (x => x.Key.ToLower())
+						.Select (x => x.Value)
+						.ToArray ();
+					var sortedw = commands
+						.OrderBy (x => x.Key.ToLower())
+						.Select (x => x.Key.ToLower())
+						.ToArray ();
+
+					for(var i = lineOffset; i < lineOffset + maxLines; i++)
+					{
+						if(i < sorted.Length)
+							cmds.Add (sorted [i]); 
+					}
+
+					var prefixMax = cmds
+						.Select (x => x.Prefix.Length)
+						.OrderByDescending (x => x)
+						.First ();
+					foreach (var cmd in cmds)
+						cmd.ShowDescription (sender, prefixMax);
+
+					sender.SendMessage (String.Format("[Page {0} / {1}]", page + 1, maxPages));
+				}
+				else sender.SendMessage ("Invalid page, 1 -> " + maxPages);
+			}
+			else sender.SendMessage ("You have no available commands.");
+		}
     }
 }
 #endif
