@@ -25,8 +25,9 @@ If you get mscorlib errors then this is a sure sign, so you may need to add "--r
 If that still does not work you may need to update mono.
 	
 ##Plugin Development
-Plugins are supported via the tdsm.api.dll. This DLL will allow you to hook directly into official server code.
-The API is essentially the same as the old TDSM, so you can go about creating your plugin as you normally would.
+Plugins are supported via the tdsm-api project. This DLL is hooked into the vanilla server using the tdsm-patcher project. However you must reference both the tdsm.api.dll as well as the patched tdsm.exe.
+
+The Plugin API is essentially the same as the old TDSM, so you can go about creating your plugin as you normally would.
 In addition to the old .NET plugins we now also support LUA. They function in the same manner as if it was a standard .NET plugin. I do suggest that if you need a high performance plugin/event that you use .NET.
 <br/>
 <br/>
