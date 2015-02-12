@@ -117,6 +117,7 @@ namespace tdsm.api.Command
 
 		public void ShowHelp(ISender sender)
 		{
+#if Full_API
 			const String Push = "       ";
 			string command = (sender is Player ? "/" : String.Empty) + _prefix;
 			if (_defaultHelp)
@@ -132,15 +133,18 @@ namespace tdsm.api.Command
 				}
 				else sender.SendMessage (Push + command + " " + line);
 			}
+#endif
 		}
 
 		public void ShowDescription(ISender sender, int padd)
 		{
+#if Full_API
 			var space = String.Empty;
 			for(var x = 0; x < padd - this._prefix.Length; x++) space += ' ';
 			sender.SendMessage((sender is Player ? "/" : String.Empty) + _prefix + 
 				space + " - " + (this.description ?? "No description specified")
 			);
+#endif
 		}
 
         internal void Run(ISender sender, string args)
