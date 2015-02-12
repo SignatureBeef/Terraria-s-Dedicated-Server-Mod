@@ -1,5 +1,4 @@
-﻿
-namespace Microsoft.Xna.Framework.Content
+﻿namespace Microsoft.Xna.Framework.Content
 {
     public class ContentManager
     {

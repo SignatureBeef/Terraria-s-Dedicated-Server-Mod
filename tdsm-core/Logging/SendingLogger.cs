@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace tdsm.core.Logging
+﻿namespace tdsm.core.Logging
 {
 	public enum SendingLogger : int
 	{

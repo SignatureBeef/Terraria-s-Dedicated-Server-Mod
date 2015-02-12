@@ -84,7 +84,8 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="tdsm">
+    <Reference Include="tdsm, Version=1.2.4.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
@@ -98,6 +99,16 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
+      <Project>{a1f792b2-5d80-4de4-b5db-7a05dbeabd60}</Project>
+      <Name>tdsm-api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\tdsm-core\tdsm-core.csproj">
+      <Project>{48477b14-ceaa-47aa-98f1-ef935734dbc5}</Project>
+      <Name>tdsm-core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -106,14 +117,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
-      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
-      <Name>tdsm-api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\tdsm-core\tdsm-core.csproj">
-      <Project>{48477B14-CEAA-47AA-98F1-EF935734DBC5}</Project>
-      <Name>tdsm-core</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

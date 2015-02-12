@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Mono.Cecil;
+﻿using Mono.Cecil;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -7,7 +6,6 @@ using System.Linq;
 using tdsm.api;
 using tdsm.api.Callbacks;
 using tdsm.api.Command;
-using tdsm.api.Misc;
 using tdsm.api.Plugin;
 using tdsm.core.Definitions;
 using tdsm.core.Logging;

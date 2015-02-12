@@ -1,5 +1,4 @@
-﻿
-namespace tdsm.api.Callbacks
+﻿namespace tdsm.api.Callbacks
 {
     public static class MessageBuffer
     {

@@ -1,18 +1,15 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Security.Cryptography;
 using System.IO;
-using NDesk.Options;
 using tdsm.api;
-using tdsm.api.Misc;
 using tdsm.api.Command;
-using tdsm.api.Plugin;
-using Microsoft.Xna.Framework;
-using Terraria;
+using tdsm.api.Misc;
 using tdsm.api.Permissions;
+using tdsm.api.Plugin;
+using tdsm.core;
 using tdsm.core.ServerCore;
+using Terraria;
 
 namespace RestrictPlugin
 {

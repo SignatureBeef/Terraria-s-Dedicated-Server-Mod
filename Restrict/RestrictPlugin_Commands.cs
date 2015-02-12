@@ -1,16 +1,12 @@
+using NDesk.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Security.Cryptography;
-
-using System.IO;
-
-using NDesk.Options;
-using tdsm.api.Command;
 using tdsm.api;
-using Terraria;
+using tdsm.api.Command;
+using tdsm.core;
 using tdsm.core.ServerCore;
+using Terraria;
 
 namespace RestrictPlugin
 {

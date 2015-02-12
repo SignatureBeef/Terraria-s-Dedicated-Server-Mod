@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.IO;
-using tdsm.core.Misc;
 using tdsm.api.Plugin;
+using tdsm.core.Misc;
 
 namespace tdsm.core.Logging
 {

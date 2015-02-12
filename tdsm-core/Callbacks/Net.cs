@@ -1,8 +1,8 @@
-﻿
-using tdsm.core.Logging;
+﻿using tdsm.core.Logging;
 using tdsm.core.Messages.Out;
 using tdsm.core.ServerCore;
 using Terraria;
+
 namespace tdsm.core.Callbacks
 {
     public static class Net

@@ -1,7 +1,6 @@
 using System;
-using System.Text;
 using System.Diagnostics;
-using System.Threading;
+using System.Text;
 
 namespace tdsm.core.Logging
 {

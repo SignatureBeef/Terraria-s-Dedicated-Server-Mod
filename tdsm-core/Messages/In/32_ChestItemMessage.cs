@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using Terraria;
+﻿using Terraria;
 
 namespace tdsm.core.Messages.In
 {

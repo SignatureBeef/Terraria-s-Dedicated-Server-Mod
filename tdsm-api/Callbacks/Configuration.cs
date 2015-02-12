@@ -1,7 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using tdsm.api.Plugin;
+
 namespace tdsm.api.Callbacks
 {
     public static class Configuration

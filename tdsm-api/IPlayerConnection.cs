@@ -1,5 +1,4 @@
-﻿
-namespace tdsm.api
+﻿namespace tdsm.api
 {
     public interface IPlayerConnection
     {

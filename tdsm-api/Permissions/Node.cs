@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace tdsm.api.Permissions
+﻿namespace tdsm.api.Permissions
 {
     /// <summary>
     /// Permission node class.

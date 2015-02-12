@@ -1,5 +1,5 @@
-
 using Terraria;
+
 namespace tdsm.core.Messages.In
 {
     public class AnglerQuest : SlotMessageHandler

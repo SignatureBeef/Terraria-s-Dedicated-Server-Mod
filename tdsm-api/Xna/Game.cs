@@ -1,8 +1,8 @@
-﻿
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Globalization;
+
 namespace Microsoft.Xna.Framework
 {
     public class Game

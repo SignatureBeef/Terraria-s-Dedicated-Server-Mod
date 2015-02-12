@@ -1,5 +1,5 @@
-﻿
-using tdsm.api.Plugin;
+﻿using tdsm.api.Plugin;
+
 namespace tdsm.api.Callbacks
 {
     public static class NetMessage

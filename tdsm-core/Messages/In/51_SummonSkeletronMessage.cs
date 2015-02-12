@@ -4,7 +4,6 @@ using tdsm.core.Messages.Out;
 using tdsm.core.ServerCore;
 using Terraria;
 
-
 namespace tdsm.core.Messages.In
 {
     public class SummonSkeletronMessage : SlotMessageHandler

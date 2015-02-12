@@ -1,6 +1,6 @@
 using System;
-using System.ComponentModel;
 using System.Globalization;
+
 namespace Microsoft.Xna.Framework
 {
 	/// <summary>Represents a four-component color using red, green, blue, and alpha data.</summary>

@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using tdsm.api.Plugin;
 using tdsm.core.Messages.Out;
 using tdsm.core.ServerCore;

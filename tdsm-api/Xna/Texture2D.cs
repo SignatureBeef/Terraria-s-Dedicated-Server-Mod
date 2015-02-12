@@ -1,8 +1,7 @@
-﻿
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+
 namespace Microsoft.Xna.Framework.Graphics
 {
     public class Texture2D

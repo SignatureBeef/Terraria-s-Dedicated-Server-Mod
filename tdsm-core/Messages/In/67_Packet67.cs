@@ -1,5 +1,4 @@
-﻿
-namespace tdsm.core.Messages.In
+﻿namespace tdsm.core.Messages.In
 {
     public class Packet67 : SlotMessageHandler
     {
@@ -8,9 +7,6 @@ namespace tdsm.core.Messages.In
             return Packet.PACKET_67;
         }
 
-        public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
-        {
-
-        }
+        public override void Process(int whoAmI, byte[] readBuffer, int length, int num) { }
     }
 }

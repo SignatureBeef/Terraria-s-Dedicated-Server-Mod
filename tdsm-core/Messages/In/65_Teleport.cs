@@ -1,6 +1,6 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
+
 namespace tdsm.core.Messages.In
 {
     public class Teleport : SlotMessageHandler

@@ -1,9 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using tdsm.api;
 using tdsm.core.Logging;
+
 namespace tdsm.core.Definitions
 {
     public static class DefinitionManager

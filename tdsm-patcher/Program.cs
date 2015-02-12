@@ -1,9 +1,9 @@
 ﻿#define SERVER
 //#define CLIENT
 using System;
+using System.IO;
 using tdsm.api;
 using tdsm.api.Plugin;
-using System.IO;
 
 namespace tdsm.patcher
 {
