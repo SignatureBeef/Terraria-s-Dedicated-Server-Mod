@@ -44,21 +44,22 @@ namespace tdsm.api.Plugin
                 IsValid = true;
 
                 var hooks = plg["Hooks"] as NLua.LuaTable;
-                foreach (KeyValuePair<Object, Object> hookTarget in hooks)
-                {
-                    var hook = hookTarget.Key as String;
-                    var hookPoint = PluginManager.GetHookPoint(hook);
+				if(hooks != null)
+	                foreach (KeyValuePair<Object, Object> hookTarget in hooks)
+	                {
+	                    var hook = hookTarget.Key as String;
+	                    var hookPoint = PluginManager.GetHookPoint(hook);
 
-                    if (hookPoint != null)
-                    {
-                        var details = hookTarget.Value as NLua.LuaTable;
-                        var priority = (HookOrder)(details["Priority"] ?? HookOrder.NORMAL);
-                        //var priority = FindOrder(details["Priority"] as String);
+	                    if (hookPoint != null)
+	                    {
+	                        var details = hookTarget.Value as NLua.LuaTable;
+	                        var priority = (HookOrder)(details["Priority"] ?? HookOrder.NORMAL);
+	                        //var priority = FindOrder(details["Priority"] as String);
 
-                        var del = _ctx.GetFunction(hookPoint.DelegateType, "export.Hooks." + hook + ".Call");
-                        HookBase(hookPoint, priority, del); //TODO maybe fake an actual delegate as this is only used for registering or make a TDSM event info class 
-                    }
-                }
+	                        var del = _ctx.GetFunction(hookPoint.DelegateType, "export.Hooks." + hook + ".Call");
+	                        HookBase(hookPoint, priority, del); //TODO maybe fake an actual delegate as this is only used for registering or make a TDSM event info class 
+	                    }
+	                }
             }
         }
 
