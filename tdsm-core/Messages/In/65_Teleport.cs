@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using tdsm.core.Messages.Out;
 using Terraria;
 
 namespace tdsm.core.Messages.In
@@ -50,7 +51,7 @@ namespace tdsm.core.Messages.In
             }
             if (Main.netMode == 2 && num149 == 0)
             {
-                NetMessage.SendData(65, -1, whoAmI, "", 0, (float)num148, newPos.X, newPos.Y, num150);
+                NewNetMessage.SendData(65, -1, whoAmI, "", 0, (float)num148, newPos.X, newPos.Y, num150);
                 return;
             }
             return;

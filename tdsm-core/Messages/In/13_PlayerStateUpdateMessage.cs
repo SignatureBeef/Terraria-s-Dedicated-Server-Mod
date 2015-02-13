@@ -75,7 +75,7 @@ namespace tdsm.core.Messages.In
 
             if (Server.slots[whoAmI].state == SlotState.PLAYING)
             {
-                NetMessage.SendData(13, -1, whoAmI, String.Empty, whoAmI);
+                NewNetMessage.SendData(13, -1, whoAmI, String.Empty, whoAmI);
             }
         }
     }

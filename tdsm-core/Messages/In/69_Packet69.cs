@@ -1,3 +1,4 @@
+using tdsm.core.Messages.Out;
 using Terraria;
 
 namespace tdsm.core.Messages.In
@@ -58,7 +59,7 @@ namespace tdsm.core.Messages.In
                 {
                     return;
                 }
-                NetMessage.SendData(69, whoAmI, -1, chest4.name, num153, (float)num154, (float)num155, 0f, 0);
+                NewNetMessage.SendData(69, whoAmI, -1, chest4.name, num153, (float)num154, (float)num155, 0f, 0);
                 return;
             }
         }

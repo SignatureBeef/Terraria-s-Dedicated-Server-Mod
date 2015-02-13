@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using tdsm.core.Messages.Out;
+using Terraria;
 
 namespace tdsm.core.Messages.In
 {
@@ -26,7 +27,7 @@ namespace tdsm.core.Messages.In
             player14.HealEffect(num152, false);
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(66, -1, whoAmI, "", num151, (float)num152, 0f, 0f, 0);
+                NewNetMessage.SendData(66, -1, whoAmI, "", num151, (float)num152, 0f, 0f, 0);
                 return;
             }
             return;

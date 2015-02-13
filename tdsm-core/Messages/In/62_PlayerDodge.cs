@@ -1,3 +1,4 @@
+using tdsm.core.Messages.Out;
 using Terraria;
 
 namespace tdsm.core.Messages.In
@@ -27,7 +28,7 @@ namespace tdsm.core.Messages.In
             }
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(62, -1, whoAmI, "", num142, (float)num143, 0f, 0f, 0);
+                NewNetMessage.SendData(62, -1, whoAmI, "", num142, (float)num143, 0f, 0f, 0);
                 return;
             }
             return;

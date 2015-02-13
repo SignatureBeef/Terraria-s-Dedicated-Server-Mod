@@ -1,3 +1,4 @@
+using tdsm.core.Messages.Out;
 using Terraria;
 
 namespace tdsm.core.Messages.In
@@ -24,7 +25,7 @@ namespace tdsm.core.Messages.In
             player15.anglerQuestsFinished = ReadInt32(readBuffer);
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(76, -1, whoAmI, "", num157, 0f, 0f, 0f, 0);
+                NewNetMessage.SendData(76, -1, whoAmI, "", num157, 0f, 0f, 0f, 0);
                 return;
             }
             return;

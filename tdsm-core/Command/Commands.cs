@@ -275,7 +275,7 @@ namespace tdsm.core
                 }
 
                 //subject.HealEffect(subject.statLifeMax, true);
-                NetMessage.SendData(35, -1, -1, String.Empty, subject.whoAmi, (float)subject.statLifeMax, 0f, 0f, 0);
+                NewNetMessage.SendData(35, -1, -1, String.Empty, subject.whoAmi, (float)subject.statLifeMax, 0f, 0f, 0);
             }
             else if (args.TryPop("-all"))
             {
@@ -283,7 +283,7 @@ namespace tdsm.core
                 {
                     if (plr.active)
                     {
-                        NetMessage.SendData(35, -1, -1, String.Empty, plr.whoAmi, (float)plr.statLifeMax, 0f, 0f, 0);
+                        NewNetMessage.SendData(35, -1, -1, String.Empty, plr.whoAmi, (float)plr.statLifeMax, 0f, 0f, 0);
                     }
                 }
             }

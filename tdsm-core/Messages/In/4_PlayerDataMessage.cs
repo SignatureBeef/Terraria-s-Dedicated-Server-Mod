@@ -255,7 +255,7 @@ namespace tdsm.core.Messages.In
             //}
             //Server.slots[this.whoAmI].oldName = player2.name;
             //Server.slots[this.whoAmI].name = player2.name;
-            //NetMessage.SendData(4, -1, this.whoAmI, player2.name, num3, 0f, 0f, 0f, 0);
+            //NewNetMessage.SendData(4, -1, this.whoAmI, player2.name, num3, 0f, 0f, 0f, 0);
             //return;
         }
 

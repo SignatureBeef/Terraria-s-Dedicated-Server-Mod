@@ -6,6 +6,7 @@ using System.Threading;
 using tdsm.api;
 using tdsm.api.Plugin;
 using tdsm.core.Logging;
+using tdsm.core.Messages.Out;
 using tdsm.core.Misc;
 using Terraria;
 
@@ -331,7 +332,7 @@ namespace tdsm.core.ServerCore
             if (num > 0)
             {
                 int num2 = num;
-                NetMessage.SendData(9, who, -1, Lang.inter[44], num2, 0f, 0f, 0f, 0);
+                NewNetMessage.SendData(9, who, -1, Lang.inter[44], num2, 0f, 0f, 0f, 0);
                 Server.slots[who].statusText2 = "is receiving tile data";
                 Server.slots[who].statusMax += num2;
                 for (int k = sectionX - 1; k < sectionX + 2; k++)
@@ -340,8 +341,8 @@ namespace tdsm.core.ServerCore
                     {
                         if (k >= 0 && k < Main.maxSectionsX && l >= 0 && l < Main.maxSectionsY && !Server.slots[who].tileSection[k, l])
                         {
-                            NetMessage.SendSection(who, k, l, false);
-                            NetMessage.SendData(11, who, -1, String.Empty, k, (float)l, (float)k, (float)l, 0);
+                            NewNetMessage.SendSection(who, k, l, false);
+                            NewNetMessage.SendData(11, who, -1, String.Empty, k, (float)l, (float)k, (float)l, 0);
                         }
                     }
                 }

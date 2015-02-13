@@ -22,7 +22,6 @@ namespace tdsm.core.Messages.In
 
         public override void Process(ClientConnection conn, byte[] readBuffer, int length, int num)
         {
-            //TODO [PlayerChat]
             //TODO string validation
 
             ReadByte(readBuffer);

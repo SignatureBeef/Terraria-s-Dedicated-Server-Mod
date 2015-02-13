@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using tdsm.core.Messages.Out;
+using Terraria;
 
 namespace tdsm.core.Messages.In
 {
@@ -17,7 +18,7 @@ namespace tdsm.core.Messages.In
             WorldGen.paintTile(num144, num145, b11, false);
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(63, -1, whoAmI, "", num144, (float)num145, (float)b11, 0f, 0);
+                NewNetMessage.SendData(63, -1, whoAmI, "", num144, (float)num145, (float)b11, 0f, 0);
                 return;
             }
             return;
