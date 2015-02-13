@@ -1,3 +1,4 @@
+using System;
 using tdsm.core.Messages.Out;
 using Terraria;
 
@@ -12,12 +13,13 @@ namespace tdsm.core.Messages.In
 
         public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
         {
-            //TODO implement user in tange
+            var player = Main.player[whoAmI];
 
-            int num87 = (int)ReadInt16(readBuffer);
+            int id = (int)ReadInt16(readBuffer);
             int chestX = (int)ReadInt16(readBuffer);
             int chestY = (int)ReadInt16(readBuffer);
             int num88 = (int)ReadByte(readBuffer);
+
             string text5 = string.Empty;
             if (num88 != 0)
             {
@@ -33,14 +35,19 @@ namespace tdsm.core.Messages.In
                     }
                 }
             }
-            if (num88 != 0)
+
+            if (Math.Abs(player.position.X / 16 - chestX) < 7 && Math.Abs(player.position.Y / 16 - chestY) < 7)
             {
-                int chest = Main.player[whoAmI].chest;
-                Chest chest2 = Main.chest[chest];
-                chest2.name = text5;
-                NewNetMessage.SendData(69, -1, whoAmI, text5, chest, (float)chest2.x, (float)chest2.y, 0f, 0);
+                if (num88 != 0)
+                {
+                    int chest = Main.player[whoAmI].chest;
+                    Chest chest2 = Main.chest[chest];
+                    chest2.name = text5;
+                    NewNetMessage.SendData(69, -1, whoAmI, text5, chest, (float)chest2.x, (float)chest2.y, 0f, 0);
+                }
+                Main.player[whoAmI].chest = id;
             }
-            Main.player[whoAmI].chest = num87;
+            else Main.player[whoAmI].chest = -1;
             return;
         }
     }

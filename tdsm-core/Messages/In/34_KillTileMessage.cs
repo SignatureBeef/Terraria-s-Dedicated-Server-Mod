@@ -14,9 +14,7 @@ namespace tdsm.core.Messages.In
 
         public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
         {
-            //TODO [ChestBreakReceived]
-
-            byte b6 = ReadByte(readBuffer);
+            byte method = ReadByte(readBuffer);
             int x = (int)ReadInt16(readBuffer);
             int y = (int)ReadInt16(readBuffer);
             int type = (int)ReadInt16(readBuffer);
@@ -33,7 +31,7 @@ namespace tdsm.core.Messages.In
             var args = new HookArgs.ChestBreakReceived
             {
                 X = x,
-                Y = y,
+                Y = y
             };
 
             HookPoints.ChestBreakReceived.Invoke(ref ctx, ref args);
@@ -55,16 +53,16 @@ namespace tdsm.core.Messages.In
             }
 
             {
-                if (b6 == 0)
+                if (method == 0)
                 {
                     int num92 = WorldGen.PlaceChest(x, y, 21, false, type);
                     if (num92 == -1)
                     {
-                        NewNetMessage.SendData(34, whoAmI, -1, String.Empty, (int)b6, (float)x, (float)y, (float)type, num92);
+                        NewNetMessage.SendData(34, whoAmI, -1, String.Empty, (int)method, (float)x, (float)y, (float)type, num92);
                         Item.NewItem(x * 16, y * 16, 32, 32, Chest.itemSpawn[type], 1, true, 0, false);
                         return;
                     }
-                    NewNetMessage.SendData(34, -1, -1, String.Empty, (int)b6, (float)x, (float)y, (float)type, num92);
+                    NewNetMessage.SendData(34, -1, -1, String.Empty, (int)method, (float)x, (float)y, (float)type, num92);
                     return;
                 }
                 else
@@ -86,7 +84,7 @@ namespace tdsm.core.Messages.In
                     WorldGen.KillTile(x, y, false, false, false);
                     if (!tile2.active())
                     {
-                        NewNetMessage.SendData(34, -1, -1, String.Empty, (int)b6, (float)x, (float)y, 0f, number);
+                        NewNetMessage.SendData(34, -1, -1, String.Empty, (int)method, (float)x, (float)y, 0f, number);
                         return;
                     }
                     return;
