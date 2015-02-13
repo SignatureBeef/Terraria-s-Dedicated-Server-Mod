@@ -76,7 +76,7 @@ namespace tdsm.patcher
             patcher.HookProgramStart();
             Console.Write("Ok\nHooking initialise...");
             patcher.HookInitialise();
-            Console.Write("Ok\nHooking into world events");
+            Console.Write("Ok\nHooking into world events...");
             patcher.HookWorldEvents();
             Console.Write("Ok\nHooking statusText...");
             patcher.HookStatusText();
@@ -138,35 +138,45 @@ namespace tdsm.patcher
             patcher.Save(outFile);
 
 #if Release || true
-			Console.WriteLine("Ok\nYou may now run {0} as you would normally.", outFile);
-			Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", outFile);
-			if(Console.ReadKey(true).Key == ConsoleKey.Y)
-			{
-				Console.Clear();
-				using (var ms = new MemoryStream())
-				{
-					using (var fs = File.OpenRead(outFile))
-					{
-						var buff = new byte[256];
-						while (fs.Position < fs.Length)
-						{
-							var task = fs.Read(buff, 0, buff.Length);
-							ms.Write(buff, 0, task);
-						}
-					}
+            Console.WriteLine("Ok\nYou may now run {0} as you would normally.", outFile);
+            Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", outFile);
+            if (Console.ReadKey(true).Key == ConsoleKey.Y)
+            {
+                if (Tools.RuntimePlatform == RuntimePlatform.Microsoft)
+                {
+                    if (File.Exists("serverconfig.txt"))
+                        System.Diagnostics.Process.Start(outFile, "-config serverconfig.txt");
+                    else
+                        System.Diagnostics.Process.Start(outFile);
+                }
+                else
+                {
+                    Console.Clear();
 
-					ms.Seek(0L, SeekOrigin.Begin);
-					var asm = System.Reflection.Assembly.Load(ms.ToArray());
-					if(File.Exists("serverconfig.txt"))
-						asm.EntryPoint.Invoke(null, new object[]
-							//						asm.GetType("Terraria.ProgramServer").GetMethod("Main").Invoke(null, new object[]
-						{
-							new string[] {"-config serverconfig.txt"}
-						});
-					else
-						asm.EntryPoint.Invoke(null, null);
-				}
-			}
+                    using (var ms = new MemoryStream())
+                    {
+                        using (var fs = File.OpenRead(outFile))
+                        {
+                            var buff = new byte[256];
+                            while (fs.Position < fs.Length)
+                            {
+                                var task = fs.Read(buff, 0, buff.Length);
+                                ms.Write(buff, 0, task);
+                            }
+                        }
+
+                        ms.Seek(0L, SeekOrigin.Begin);
+                        var asm = System.Reflection.Assembly.Load(ms.ToArray());
+                        if (File.Exists("serverconfig.txt"))
+                            asm.EntryPoint.Invoke(null, new object[]
+                            {
+                                new string[] {"-config serverconfig.txt"}
+                            });
+                        else
+                            asm.EntryPoint.Invoke(null, null);
+                    }
+                }
+            }
 #endif
         }
     }

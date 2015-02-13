@@ -7,6 +7,12 @@ namespace tdsm.api.Callbacks
     {
         public static void ProgramStart()
         {
+            AppDomain.CurrentDomain.AssemblyResolve += (s, a) =>
+            {
+                System.Diagnostics.Debug.Print("Wanting: " + a.Name);
+                return null;
+            };
+
             Tools.WriteLine("TDSM Rebind API build {0}", Globals.Build);
             Globals.Touch();
 

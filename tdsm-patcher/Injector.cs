@@ -57,6 +57,7 @@ namespace tdsm.patcher
                         var task = fs.Read(buff, 0, buff.Length);
                         ms.Write(buff, 0, task);
                     }
+                    fs.Close();
                 }
 
                 ms.Seek(0L, SeekOrigin.Begin);
@@ -418,10 +419,10 @@ namespace tdsm.patcher
             ins.Operand = _asm.MainModule.Import(callback);
         }
 
-		/// <summary>
-		/// Makes the types public.
-		/// </summary>
-		/// <param name="server">If set to <c>true</c> server.</param>
+        /// <summary>
+        /// Makes the types public.
+        /// </summary>
+        /// <param name="server">If set to <c>true</c> server.</param>
         public void MakeTypesPublic(bool server)
         {
             var types = _asm.MainModule.Types
@@ -553,10 +554,10 @@ namespace tdsm.patcher
             if (server)
                 for (var x = 0; x < xnaFramework.Length; x++)
                 {
-					xnaFramework[x].Name = _self.Name.Name;
-					xnaFramework[x].PublicKey = _self.Name.PublicKey;
-					xnaFramework[x].PublicKeyToken = _self.Name.PublicKeyToken;
-					xnaFramework[x].Version = _self.Name.Version;
+                    xnaFramework[x].Name = _self.Name.Name;
+                    xnaFramework[x].PublicKey = _self.Name.PublicKey;
+                    xnaFramework[x].PublicKeyToken = _self.Name.PublicKeyToken;
+                    xnaFramework[x].Version = _self.Name.Version;
                 }
             else
             {
@@ -643,14 +644,14 @@ namespace tdsm.patcher
 
         public void Save(string filePath)
         {
-			//Ensure the name is updated to the new one
-			_asm.Name = new AssemblyNameDefinition ("tdsm", new Version(0, 0, tdsm.api.Globals.Build, 0));
-			_asm.Write(filePath);
+            //Ensure the name is updated to the new one
+            _asm.Name = new AssemblyNameDefinition("tdsm-main" /* Must not be the same as the .exe, as it will cause referencing issues */, new Version(0, 0, tdsm.api.Globals.Build, 0));
+            _asm.Write(filePath);
         }
 
         public void Dispose()
         {
-			_self = null;
+            _self = null;
             _asm = null;
         }
     }

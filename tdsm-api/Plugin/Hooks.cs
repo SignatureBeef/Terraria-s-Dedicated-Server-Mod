@@ -359,7 +359,8 @@ namespace tdsm.api.Plugin
 
         public struct StateUpdateReceived
         {
-            public byte Flags { get; set; }
+            public byte FlagsA { get; set; }
+            public byte FlagsB { get; set; }
 
             public byte SelectedItemIndex { get; set; }
 
@@ -371,52 +372,78 @@ namespace tdsm.api.Plugin
 
             public bool ControlUp
             {
-                get { return (Flags & 1) != 0; }
-                set { SetFlag(1, value); }
+                get { return (FlagsA & 1) != 0; }
+                set { SetFlagA(1, value); }
             }
 
             public bool ControlDown
             {
-                get { return (Flags & 2) != 0; }
-                set { SetFlag(2, value); }
+                get { return (FlagsA & 2) != 0; }
+                set { SetFlagA(2, value); }
             }
 
             public bool ControlLeft
             {
-                get { return (Flags & 4) != 0; }
-                set { SetFlag(4, value); }
+                get { return (FlagsA & 4) != 0; }
+                set { SetFlagA(4, value); }
             }
 
             public bool ControlRight
             {
-                get { return (Flags & 8) != 0; }
-                set { SetFlag(8, value); }
+                get { return (FlagsA & 8) != 0; }
+                set { SetFlagA(8, value); }
             }
 
             public bool ControlJump
             {
-                get { return (Flags & 16) != 0; }
-                set { SetFlag(16, value); }
+                get { return (FlagsA & 16) != 0; }
+                set { SetFlagA(16, value); }
             }
 
             public bool ControlUseItem
             {
-                get { return (Flags & 32) != 0; }
-                set { SetFlag(32, value); }
+                get { return (FlagsA & 32) != 0; }
+                set { SetFlagA(32, value); }
             }
 
             public int Direction
             {
-                get { return ((Flags & 64) != 0) ? 1 : -1; }
-                set { SetFlag(64, value == 1); }
+                get { return ((FlagsA & 64) != 0) ? 1 : -1; }
+                set { SetFlagA(64, value == 1); }
             }
 
-            internal void SetFlag(byte f, bool value)
+            public bool Pulley
+            {
+                get { return (FlagsB & 1) != 0; }
+                set { SetFlagB(1, value); }
+            }
+
+            public byte PulleyDirection
+            {
+                get { return (byte)(((FlagsB & 2) != 0) ? 2 : 1); }
+                set { SetFlagB(2, value == 2); }
+            }
+
+            public bool HasVelocity
+            {
+                get { return (FlagsB & 4) != 0; }
+                set { SetFlagB(4, value); }
+            }
+
+            internal void SetFlagA(byte f, bool value)
             {
                 if (value)
-                    Flags |= f;
+                    FlagsA |= f;
                 else
-                    Flags &= (byte)~f;
+                    FlagsA &= (byte)~f;
+            }
+
+            internal void SetFlagB(byte f, bool value)
+            {
+                if (value)
+                    FlagsB |= f;
+                else
+                    FlagsB &= (byte)~f;
             }
 
 #if Full_API
@@ -434,14 +461,22 @@ namespace tdsm.api.Plugin
             {
                 player.selectedItem = SelectedItemIndex;
                 player.direction = Direction;
-                //                player.position = new Vector2(X, Y);
-                //                player.velocity = new Vector2(VX, VY);
+                player.position = new Vector2(X, Y);
+                if (HasVelocity)
+                {
+                    player.velocity = new Vector2(VX, VY); ;
+                }
+
+                player.pulley = Pulley;
+                player.pulleyDir = PulleyDirection;
             }
 #endif
 
             public void Parse(byte[] buf, int at)
             {
-                Flags = buf[at++];
+                FlagsA = buf[at++];
+                FlagsB = buf[at++];
+
                 SelectedItemIndex = buf[at++];
 
                 X = BitConverter.ToSingle(buf, at); at += 4;

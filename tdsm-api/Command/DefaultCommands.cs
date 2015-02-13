@@ -12,7 +12,8 @@ namespace tdsm.api.Command
     /// </summary>
     public static class DefaultCommands
     {
-        //TODO sort in the order in which they are in the vanilla. Just cos.
+        //TODO sort commands in alphabetical order.
+
         /// <summary>
         /// Shuts down an exists.
         /// </summary>
