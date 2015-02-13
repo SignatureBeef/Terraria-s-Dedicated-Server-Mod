@@ -38,7 +38,7 @@ namespace tdsm.api.Plugin
 
         public static readonly HookPoint<HookArgs.LiquidFlowReceived> LiquidFlowReceived;
         public static readonly HookPoint<HookArgs.ProjectileReceived> ProjectileReceived;
-        //public static readonly HookPoint<HookArgs.KillProjectileReceived> KillProjectileReceived;
+        public static readonly HookPoint<HookArgs.KillProjectileReceived> KillProjectileReceived;
         //public static readonly HookPoint<HookArgs.TileSquareReceived> TileSquareReceived;
 
         //public static readonly HookPoint<HookArgs.Explosion> Explosion;
@@ -92,7 +92,7 @@ namespace tdsm.api.Plugin
             //DoorStateChanged = new HookPoint<HookArgs.DoorStateChanged>("door-state-changed");
             LiquidFlowReceived = new HookPoint<HookArgs.LiquidFlowReceived>("liquid-flow-received");
             ProjectileReceived = new HookPoint<HookArgs.ProjectileReceived>("projectile-received");
-            //KillProjectileReceived = new HookPoint<HookArgs.KillProjectileReceived>("kill-projectile-received");
+            KillProjectileReceived = new HookPoint<HookArgs.KillProjectileReceived>("kill-projectile-received");
             //TileSquareReceived = new HookPoint<HookArgs.TileSquareReceived>("tile-square-received");
             ChestBreakReceived = new HookPoint<HookArgs.ChestBreakReceived>("chest-break-received");
             ChestOpenReceived = new HookPoint<HookArgs.ChestOpenReceived>("chest-open-received");
@@ -670,9 +670,9 @@ namespace tdsm.api.Plugin
 
         public struct KillProjectileReceived
         {
-            public short Index { get; set; }
-            public short Id { get; set; }
-            public byte Owner { get; set; }
+            public int Index { get; set; }
+            public int Id { get; set; }
+            public int Owner { get; set; }
         }
 
         public struct Explosion

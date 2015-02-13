@@ -342,6 +342,16 @@ namespace tdsm.api
             return false;
         }
 
+        public static int FindExistingProjectileForUser(int playerId, int identity)
+        {
+            for (int x = 0; x < 1000; x++)
+            {
+                if (Main.projectile[x].owner == playerId && Main.projectile[x].identity == identity && Main.projectile[x].active)
+                    return x;
+            }
+            return -1;
+        }
+
         public static int AvailableNPCSlots
         {
             get
