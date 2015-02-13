@@ -36,7 +36,7 @@ namespace tdsm.api.Plugin
 
         //public static readonly HookPoint<HookArgs.DoorStateChanged> DoorStateChanged;
 
-        //public static readonly HookPoint<HookArgs.LiquidFlowReceived> LiquidFlowReceived;
+        public static readonly HookPoint<HookArgs.LiquidFlowReceived> LiquidFlowReceived;
         public static readonly HookPoint<HookArgs.ProjectileReceived> ProjectileReceived;
         //public static readonly HookPoint<HookArgs.KillProjectileReceived> KillProjectileReceived;
         //public static readonly HookPoint<HookArgs.TileSquareReceived> TileSquareReceived;
@@ -90,7 +90,7 @@ namespace tdsm.api.Plugin
             ObituaryReceived = new HookPoint<HookArgs.ObituaryReceived>("obituary-received");
             PlayerWorldAlteration = new HookPoint<HookArgs.PlayerWorldAlteration>("player-world-alteration");
             //DoorStateChanged = new HookPoint<HookArgs.DoorStateChanged>("door-state-changed");
-            //LiquidFlowReceived = new HookPoint<HookArgs.LiquidFlowReceived>("liquid-flow-received");
+            LiquidFlowReceived = new HookPoint<HookArgs.LiquidFlowReceived>("liquid-flow-received");
             ProjectileReceived = new HookPoint<HookArgs.ProjectileReceived>("projectile-received");
             //KillProjectileReceived = new HookPoint<HookArgs.KillProjectileReceived>("kill-projectile-received");
             //TileSquareReceived = new HookPoint<HookArgs.TileSquareReceived>("tile-square-received");

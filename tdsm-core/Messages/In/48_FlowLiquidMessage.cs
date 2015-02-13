@@ -1,3 +1,4 @@
+using tdsm.api.Plugin;
 using tdsm.core.Messages.Out;
 using Terraria;
 
@@ -12,12 +13,12 @@ namespace tdsm.core.Messages.In
 
         public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
         {
-            //TODO add [LiquidFlowReceived] back in
-
             int x = (int)ReadInt16(readBuffer);
             int y = (int)ReadInt16(readBuffer);
             byte liquid = ReadByte(readBuffer);
             byte liquidType = ReadByte(readBuffer);
+
+            var player = Main.player[whoAmI];
 
             if (Main.netMode == 2 && Netplay.spamCheck)
             {
@@ -31,10 +32,42 @@ namespace tdsm.core.Messages.In
                 int num120 = num115 + num116;
                 if (x < num117 || x > num118 || y < num119 || y > num120)
                 {
-                    NewNetMessage.BootPlayer(whoAmI, "Cheating attempt detected: Liquid spam");
+                    //NewNetMessage.BootPlayer(whoAmI, "Cheating attempt detected: Liquid spam");
+                    Main.player[num113].Kick("Cheating attempt detected: Liquid spam");
                     return;
                 }
             }
+            var ctx = new HookContext
+            {
+                Connection = player.Connection,
+                Player = player,
+                Sender = player,
+            };
+
+            var args = new HookArgs.LiquidFlowReceived
+            {
+                X = x,
+                Y = y,
+                Amount = liquid,
+                Lava = liquidType == 1,
+            };
+
+            HookPoints.LiquidFlowReceived.Invoke(ref ctx, ref args);
+
+            if (ctx.CheckForKick())
+                return;
+
+            if (ctx.Result == HookResult.IGNORE)
+                return;
+
+            if (ctx.Result == HookResult.RECTIFY)
+            {
+                var msg = NewNetMessage.PrepareThreadInstance();
+                msg.FlowLiquid(x, y);
+                msg.Send(whoAmI);
+                return;
+            }
+
             if (Main.tile[x, y] == null)
             {
                 Main.tile[x, y] = new Tile();
