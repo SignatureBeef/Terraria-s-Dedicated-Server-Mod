@@ -29,6 +29,7 @@ namespace tdsm.api.Command
 
 		internal string _prefix;
 		internal bool _defaultHelp;
+		internal bool _oldHelpStyle;
 
         internal NLua.LuaFunction LuaCallback;
 
@@ -85,6 +86,12 @@ namespace tdsm.api.Command
 			return this;
 		}
 
+		public CommandInfo SetOldHelpStyle()
+		{
+			_oldHelpStyle = true;
+			return this;
+		}
+
         public CommandInfo WithAccessLevel(AccessLevel accessLevel)
         {
             this.accessLevel = accessLevel;
@@ -118,20 +125,28 @@ namespace tdsm.api.Command
 		public void ShowHelp(ISender sender)
 		{
 #if Full_API
-			const String Push = "       ";
-			string command = (sender is Player ? "/" : String.Empty) + _prefix;
-			if (_defaultHelp)
-				sender.SendMessage ("Usage: " + command);
-
-			bool first = !_defaultHelp;
-			foreach (var line in helpText)
+			if(!_oldHelpStyle)
 			{
-				if (first)
+				const String Push = "       ";
+				string command = (sender is Player ? "/" : String.Empty) + _prefix;
+				if (_defaultHelp)
+					sender.SendMessage ("Usage: " + command);
+
+				bool first = !_defaultHelp;
+				foreach (var line in helpText)
 				{
-					first = false;
-					sender.SendMessage ("Usage: " + command + " " + line);
+					if (first)
+					{
+						first = false;
+						sender.SendMessage ("Usage: " + command + " " + line);
+					}
+					else sender.SendMessage (Push + command + " " + line);
 				}
-				else sender.SendMessage (Push + command + " " + line);
+			}
+			else
+			{
+				foreach (var line in helpText)
+					sender.SendMessage(line);
 			}
 #endif
 		}

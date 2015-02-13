@@ -34,8 +34,38 @@ namespace RestrictPlugin
             {
                 var item = base.Find(key);
                 if (item != null)
-                {
-
+				{
+					Type t = typeof(T);
+					if (t.Name == "Int16")
+					{
+						short v = 0;
+						if (Int16.TryParse (item, out v)) return (T)(object)v;
+					}
+					else if (t.Name == "Int32")
+					{
+						int v = 0;
+						if (Int32.TryParse (item, out v)) return (T)(object)v;
+					}
+					else if (t.Name == "Int64")
+					{
+						long v = 0;
+						if (Int64.TryParse (item, out v)) return (T)(object)v;
+					}
+					else if (t.Name == "Double")
+					{
+						double v = 0;
+						if (Double.TryParse (item, out v)) return (T)(object)v;
+					}
+					else if (t.Name == "Single")
+					{
+						float v = 0;
+						if (Single.TryParse (item, out v)) return (T)(object)v;
+					}
+					else if (t.Name == "Boolean")
+					{
+						bool v = false;
+						if (Boolean.TryParse (item, out v)) return (T)(object)v;
+					}
                 }
                 return defaultValue;
             }
@@ -87,7 +117,7 @@ namespace RestrictPlugin
             Description = "Restrict access to the server or character names.";
             Author = "UndeadMiner";
             Version = "0.38.0";
-            TDSMBuild = 38;
+            TDSMBuild = 1;
         }
 
         protected override void Initialized(object state)
@@ -97,7 +127,7 @@ namespace RestrictPlugin
 
             requests = new Dictionary<int, RegistrationRequest>();
 
-            string pluginFolder = Globals.PluginPath + Path.DirectorySeparatorChar + "Restrict";
+            string pluginFolder = Globals.DataPath + Path.DirectorySeparatorChar + "Restrict";
 
             CreateDirectory(pluginFolder);
 
@@ -116,6 +146,7 @@ namespace RestrictPlugin
 
             AddCommand("ru")
                 .WithDescription("Register users or change their accounts")
+				.SetOldHelpStyle()
                 .WithHelpText("Adding users or changing passwords:")
                 .WithHelpText("    ru [-o] [-f] <name> <hash>")
                 .WithHelpText("    ru [-o] [-f] <name> -p <password>")
@@ -129,7 +160,8 @@ namespace RestrictPlugin
                 .Calls(LockUsers<ISender, ArgumentList>(this.RegisterCommand));
 
             AddCommand("ur")
-                .WithDescription("Unregister users")
+				.WithDescription("Unregister users")
+				.SetOldHelpStyle()
                 .WithHelpText("Deleting users:")
                 .WithHelpText("    ur [-f] <name>")
                 .WithHelpText("Options:")
@@ -138,7 +170,8 @@ namespace RestrictPlugin
                 .Calls(LockUsers<ISender, ArgumentList>(this.UnregisterCommand));
 
             AddCommand("ro")
-                .WithDescription("Configure Restrict")
+				.WithDescription("Configure Restrict")
+				.SetOldHelpStyle()
                 .WithHelpText("Displaying options:")
                 .WithHelpText("    ro")
                 .WithHelpText("Setting options:")
@@ -154,25 +187,25 @@ namespace RestrictPlugin
 
             AddCommand("rr")
                 .WithDescription("Manage registration requests")
-                .WithHelpText("Usage: rr          list registration requests")
-                .WithHelpText("       rr -g #     grant a registration request")
-                .WithHelpText("       rr grant #")
-                .WithHelpText("       rr -d #     deny a registration request")
-                .WithHelpText("       rr deny #")
+                .WithHelpText("         list registration requests")
+                .WithHelpText("-g #     grant a registration request")
+                .WithHelpText("grant #")
+                .WithHelpText("-d #     deny a registration request")
+                .WithHelpText("deny #")
                 .WithPermissionNode("restrict.rr")
                 .Calls(LockUsers<ISender, ArgumentList>(this.RequestsCommand));
 
             AddCommand("pass")
                 .WithDescription("Change your password")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithHelpText("Usage: /pass yourpassword")
+                .WithHelpText("yourpassword")
                 .WithPermissionNode("restrict.pass")
                 .Calls(LockUsers<ISender, string>(this.PlayerPassCommand));
 
             AddCommand("reg")
                 .WithDescription("Submit a registration request")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithHelpText("Usage: /reg yourpassword")
+                .WithHelpText("yourpassword")
                 .WithPermissionNode("restrict.reg")
                 .Calls(LockUsers<ISender, string>(this.PlayerRegCommand));
 
@@ -318,11 +351,11 @@ namespace RestrictPlugin
             if (split.Length > 1 && split[1] == "op")
             {
                 player.Op = true;
-                //TOD ctx.Connection.DesiredQueue = 3;
+				(ctx.Connection as ClientConnection).DesiredQueue = 3;
             }
             else
             {
-                //TOD ctx.Connection.DesiredQueue = 1;
+				(ctx.Connection as ClientConnection).DesiredQueue = 1;
             }
 
             player.SetAuthenticatedAs(name);
@@ -514,10 +547,9 @@ namespace RestrictPlugin
 
             //if (player.GetAuthenticatedAs() == null)
             {
-                /* TODO
-				switch (args.Type)
+				switch (args.TypeByte)
 				{
-					case ProjectileType.N10_PURIFICATION_POWDER:
+					/*case ProjectileType.N10_PURIFICATION_POWDER:
 					case ProjectileType.N11_VILE_POWDER:
 					case ProjectileType.N28_BOMB:
 					case ProjectileType.N37_STICKY_BOMB:
@@ -529,7 +561,20 @@ namespace RestrictPlugin
 					case ProjectileType.N42_SAND_BALL:
 					case ProjectileType.N43_TOMBSTONE:
 					case ProjectileType.N50_GLOWSTICK:
-					case ProjectileType.N53_STICKY_GLOWSTICK:
+					case ProjectileType.N53_STICKY_GLOWSTICK:*/
+					case 10:
+					case 11:
+					case 28:
+					case 37:
+					case 29:
+					case 30:
+					case 31:
+					case 39:
+					case 40:
+					case 42:
+					case 43:
+					case 50:
+					case 53:
 						ctx.SetResult (HookResult.ERASE);
                         if (player.GetAuthenticatedAs() == null)
                         {
@@ -542,7 +587,7 @@ namespace RestrictPlugin
 						return;
 					default:
 						break;
-				}*/
+				}
             }
 
             return;
