@@ -28,7 +28,7 @@ namespace tdsm.api.Plugin
         public static readonly HookPoint<HookArgs.PlayerPassReceived> PlayerPassReceived;
         public static readonly HookPoint<HookArgs.PlayerDataReceived> PlayerDataReceived;
         public static readonly HookPoint<HookArgs.StateUpdateReceived> StateUpdateReceived;
-        //public static readonly HookPoint<HookArgs.InventoryItemReceived> InventoryItemReceived;
+        public static readonly HookPoint<HookArgs.InventoryItemReceived> InventoryItemReceived;
         public static readonly HookPoint<HookArgs.ObituaryReceived> ObituaryReceived;
         //public static readonly HookPoint<HookArgs.PlayerTeleport> PlayerTeleport;
 
@@ -86,7 +86,7 @@ namespace tdsm.api.Plugin
             PlayerPassReceived = new HookPoint<HookArgs.PlayerPassReceived>("player-pass-received");
             PlayerDataReceived = new HookPoint<HookArgs.PlayerDataReceived>("player-data-received");
             StateUpdateReceived = new HookPoint<HookArgs.StateUpdateReceived>("state-update-received");
-            //InventoryItemReceived = new HookPoint<HookArgs.InventoryItemReceived>("inventory-item-received");
+            InventoryItemReceived = new HookPoint<HookArgs.InventoryItemReceived>("inventory-item-received");
             ObituaryReceived = new HookPoint<HookArgs.ObituaryReceived>("obituary-received");
             PlayerWorldAlteration = new HookPoint<HookArgs.PlayerWorldAlteration>("player-world-alteration");
             //DoorStateChanged = new HookPoint<HookArgs.DoorStateChanged>("door-state-changed");

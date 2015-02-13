@@ -1,4 +1,5 @@
 using System;
+using tdsm.api.Plugin;
 using tdsm.core.Messages.Out;
 using tdsm.core.ServerCore;
 using Terraria;
@@ -28,55 +29,73 @@ namespace tdsm.core.Messages.In
                 return;
             }
 
-            //TODO [InventoryItemReceived]
             //TODO Implement the item banning
 
-
             if (playerIndex == Main.myPlayer && !Main.ServerSideCharacter)
-            {
                 return;
-            }
-            Player player3 = Main.player[playerIndex];
-            lock (player3)
+
+            var player = Main.player[whoAmI];
+
+            var ctx = new HookContext
             {
-                int num5 = (int)ReadByte(readBuffer);
-                int stack = (int)ReadInt16(readBuffer);
-                int num6 = (int)ReadByte(readBuffer);
-                int type = (int)ReadInt16(readBuffer);
-                if (num5 < 59)
+                Connection = Server.slots[whoAmI].conn,
+                Sender = player,
+                Player = player,
+            };
+
+            var args = new HookArgs.InventoryItemReceived
+            {
+                InventorySlot = (int)ReadByte(readBuffer),
+                Amount = (int)ReadInt16(readBuffer),
+                Prefix = (int)ReadByte(readBuffer),
+                NetID = (int)ReadInt16(readBuffer),
+                //Name = Networking.StringCache.FindOrMake (new ArraySegment<Byte> (readBuffer, num, length - 4)),
+            };
+
+            HookPoints.InventoryItemReceived.Invoke(ref ctx, ref args);
+
+            if (ctx.CheckForKick())
+                return;
+
+            if (ctx.Result == HookResult.IGNORE)
+                return;
+
+            lock (player)
+            {
+                if (args.InventorySlot < 59)
                 {
-                    player3.inventory[num5] = new Item();
-                    player3.inventory[num5].netDefaults(type);
-                    player3.inventory[num5].stack = stack;
-                    player3.inventory[num5].Prefix(num6);
-                    if (playerIndex == Main.myPlayer && num5 == 58)
+                    player.inventory[args.InventorySlot] = new Item();
+                    player.inventory[args.InventorySlot].netDefaults(args.NetID);
+                    player.inventory[args.InventorySlot].stack = args.Amount;
+                    player.inventory[args.InventorySlot].Prefix(args.Prefix);
+                    if (playerIndex == Main.myPlayer && args.InventorySlot == 58)
                     {
-                        Main.mouseItem = player3.inventory[num5].Clone();
+                        Main.mouseItem = player.inventory[args.InventorySlot].Clone();
                     }
                 }
                 else
                 {
-                    if (num5 >= 75 && num5 <= 82)
+                    if (args.InventorySlot >= 75 && args.InventorySlot <= 82)
                     {
-                        int num7 = num5 - 58 - 17;
-                        player3.dye[num7] = new Item();
-                        player3.dye[num7].netDefaults(type);
-                        player3.dye[num7].stack = stack;
-                        player3.dye[num7].Prefix(num6);
+                        int num7 = args.InventorySlot - 58 - 17;
+                        player.dye[num7] = new Item();
+                        player.dye[num7].netDefaults(args.NetID);
+                        player.dye[num7].stack = args.Amount;
+                        player.dye[num7].Prefix(args.Prefix);
                     }
                     else
                     {
-                        int num8 = num5 - 58 - 1;
-                        player3.armor[num8] = new Item();
-                        player3.armor[num8].netDefaults(type);
-                        player3.armor[num8].stack = stack;
-                        player3.armor[num8].Prefix(num6);
+                        int num8 = args.InventorySlot - 58 - 1;
+                        player.armor[num8] = new Item();
+                        player.armor[num8].netDefaults(args.NetID);
+                        player.armor[num8].stack = args.Amount;
+                        player.armor[num8].Prefix(args.Prefix);
                     }
                 }
 
                 if (playerIndex == whoAmI)
                 {
-                    NewNetMessage.SendData((int)Packet.INVENTORY_DATA, -1, whoAmI, String.Empty, playerIndex, (float)num5, (float)num6, 0f, 0);
+                    NewNetMessage.SendData((int)Packet.INVENTORY_DATA, -1, whoAmI, String.Empty, playerIndex, (float)args.InventorySlot, (float)args.Prefix, 0f, 0);
                 }
                 return;
             }
