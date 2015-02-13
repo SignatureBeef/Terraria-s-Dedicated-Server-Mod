@@ -2,6 +2,8 @@ using System;
 using tdsm.core.Messages.Out;
 using tdsm.core.ServerCore;
 using Terraria;
+using tdsm.api;
+using tdsm.api.Plugin;
 
 namespace tdsm.core.Messages.In
 {
@@ -16,107 +18,152 @@ namespace tdsm.core.Messages.In
         {
             //TODO [PlayerWorldAlteration]
 
-            byte b2 = ReadByte(readBuffer);
-            int num36 = (int)ReadInt16(readBuffer);
-            int num37 = (int)ReadInt16(readBuffer);
-            short num38 = ReadInt16(readBuffer);
-            int num39 = (int)ReadByte(readBuffer);
-            bool flag4 = num38 == 1;
-            if (Main.tile[num36, num37] == null)
+			byte action = ReadByte(readBuffer);
+            int x = (int)ReadInt16(readBuffer);
+            int y = (int)ReadInt16(readBuffer);
+			short type = ReadInt16(readBuffer);
+			int style = (int)ReadByte(readBuffer);
+			bool fail = type == 1;
+
+			var player = Main.player [whoAmI];
+
+			if (x < 0 || y < 0 || x >= Main.maxTilesX || y >= Main.maxTilesY)
+			{
+				player.Kick ("Out of range tile received from client.");
+				return;
+			}
+
+			if (! Server.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
+			{
+				Tools.WriteLine ("{0} @ {1}: {2} attempted to alter world in unloaded tile.");
+				return;
+			}
+
+
+			var ctx = new HookContext
+			{
+				Connection = Server.slots[whoAmI].conn,
+				Sender = player,
+				Player = player,
+			};
+
+			var args = new HookArgs.PlayerWorldAlteration
+			{
+				X = x, Y = y,
+				Action = action,
+				Type = type,
+				Style = style
+			};
+
+			HookPoints.PlayerWorldAlteration.Invoke (ref ctx, ref args);
+
+			if (ctx.CheckForKick ())
+				return;
+
+			if (ctx.Result == HookResult.IGNORE)
+				return;
+
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				Terraria.WorldGen.SquareTileFrame (x, y, true);
+				return;
+			}
+
+            if (Main.tile[x, y] == null)
             {
-                Main.tile[num36, num37] = new Tile();
+                Main.tile[x, y] = new Tile();
             }
             if (Main.netMode == 2)
             {
-                if (!flag4)
+                if (!fail)
                 {
-                    if (b2 == 0 || b2 == 2 || b2 == 4)
+                    if (action == 0 || action == 2 || action == 4)
                     {
                         Server.slots[whoAmI].spamDelBlock += 1f;
                     }
-                    if (b2 == 1 || b2 == 3)
+                    if (action == 1 || action == 3)
                     {
                         Server.slots[whoAmI].spamAddBlock += 1f;
                     }
                 }
-                if (!Server.slots[whoAmI].tileSection[Netplay.GetSectionX(num36), Netplay.GetSectionY(num37)])
+                if (!Server.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
                 {
-                    flag4 = true;
+                    fail = true;
                 }
             }
 
-            if (b2 == 0)
+            if (action == 0)
             {
-                WorldGen.KillTile(num36, num37, flag4, false, false);
+                WorldGen.KillTile(x, y, fail, false, false);
             }
-            if (b2 == 1)
+            if (action == 1)
             {
-                WorldGen.PlaceTile(num36, num37, (int)num38, false, true, -1, num39);
+                WorldGen.PlaceTile(x, y, (int)type, false, true, -1, style);
             }
-            if (b2 == 2)
+            if (action == 2)
             {
-                WorldGen.KillWall(num36, num37, flag4);
+                WorldGen.KillWall(x, y, fail);
             }
-            if (b2 == 3)
+            if (action == 3)
             {
-                WorldGen.PlaceWall(num36, num37, (int)num38, false);
+                WorldGen.PlaceWall(x, y, (int)type, false);
             }
-            if (b2 == 4)
+            if (action == 4)
             {
-                WorldGen.KillTile(num36, num37, flag4, false, true);
+                WorldGen.KillTile(x, y, fail, false, true);
             }
-            if (b2 == 5)
+            if (action == 5)
             {
-                WorldGen.PlaceWire(num36, num37);
+                WorldGen.PlaceWire(x, y);
             }
-            if (b2 == 6)
+            if (action == 6)
             {
-                WorldGen.KillWire(num36, num37);
+                WorldGen.KillWire(x, y);
             }
-            if (b2 == 7)
+            if (action == 7)
             {
-                WorldGen.PoundTile(num36, num37);
+                WorldGen.PoundTile(x, y);
             }
-            if (b2 == 8)
+            if (action == 8)
             {
-                WorldGen.PlaceActuator(num36, num37);
+                WorldGen.PlaceActuator(x, y);
             }
-            if (b2 == 9)
+            if (action == 9)
             {
-                WorldGen.KillActuator(num36, num37);
+                WorldGen.KillActuator(x, y);
             }
-            if (b2 == 10)
+            if (action == 10)
             {
-                WorldGen.PlaceWire2(num36, num37);
+                WorldGen.PlaceWire2(x, y);
             }
-            if (b2 == 11)
+            if (action == 11)
             {
-                WorldGen.KillWire2(num36, num37);
+                WorldGen.KillWire2(x, y);
             }
-            if (b2 == 12)
+            if (action == 12)
             {
-                WorldGen.PlaceWire3(num36, num37);
+                WorldGen.PlaceWire3(x, y);
             }
-            if (b2 == 13)
+            if (action == 13)
             {
-                WorldGen.KillWire3(num36, num37);
+                WorldGen.KillWire3(x, y);
             }
-            if (b2 == 14)
+            if (action == 14)
             {
-                WorldGen.SlopeTile(num36, num37, (int)num38);
+                WorldGen.SlopeTile(x, y, (int)type);
             }
-            if (b2 == 15)
+            if (action == 15)
             {
-                Minecart.FrameTrack(num36, num37, true, false);
+                Minecart.FrameTrack(x, y, true, false);
             }
             if (Main.netMode != 2)
             {
                 return;
             }
-            NewNetMessage.SendData(17, -1, whoAmI, String.Empty, (int)b2, (float)num36, (float)num37, (float)num38, num39);
-            if (b2 == 1 && num38 == 53)
+            NewNetMessage.SendData(17, -1, whoAmI, String.Empty, (int)action, (float)x, (float)y, (float)type, style);
+            if (action == 1 && type == 53)
             {
-                NewNetMessage.SendTileSquare(-1, num36, num37, 1);
+                NewNetMessage.SendTileSquare(-1, x, y, 1);
                 return;
             }
         }

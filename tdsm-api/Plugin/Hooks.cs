@@ -39,7 +39,7 @@ namespace tdsm.api.Plugin
         public static readonly HookPoint<HookArgs.LiquidFlowReceived> LiquidFlowReceived;
         public static readonly HookPoint<HookArgs.ProjectileReceived> ProjectileReceived;
         public static readonly HookPoint<HookArgs.KillProjectileReceived> KillProjectileReceived;
-        //public static readonly HookPoint<HookArgs.TileSquareReceived> TileSquareReceived;
+        public static readonly HookPoint<HookArgs.TileSquareReceived> TileSquareReceived;
 
         //public static readonly HookPoint<HookArgs.Explosion> Explosion;
 
@@ -93,7 +93,7 @@ namespace tdsm.api.Plugin
             LiquidFlowReceived = new HookPoint<HookArgs.LiquidFlowReceived>("liquid-flow-received");
             ProjectileReceived = new HookPoint<HookArgs.ProjectileReceived>("projectile-received");
             KillProjectileReceived = new HookPoint<HookArgs.KillProjectileReceived>("kill-projectile-received");
-            //TileSquareReceived = new HookPoint<HookArgs.TileSquareReceived>("tile-square-received");
+            TileSquareReceived = new HookPoint<HookArgs.TileSquareReceived>("tile-square-received");
             ChestBreakReceived = new HookPoint<HookArgs.ChestBreakReceived>("chest-break-received");
             ChestOpenReceived = new HookPoint<HookArgs.ChestOpenReceived>("chest-open-received");
             PvpSettingReceived = new HookPoint<HookArgs.PvpSettingReceived>("pvp-setting-received");
@@ -517,8 +517,8 @@ namespace tdsm.api.Plugin
             public int X { get; set; }
             public int Y { get; set; }
             public byte Action { get; set; }
-            public byte Type { get; set; }
-            public byte Style { get; set; }
+            public short Type { get; set; }
+            public int Style { get; set; }
 
             public bool TypeChecked { get; set; }
 
@@ -798,13 +798,13 @@ namespace tdsm.api.Plugin
 
         public struct TileSquareReceived
         {
-            public int X { get; internal set; }
-            public int Y { get; internal set; }
-            public int Size { get; internal set; }
+            public int X { get; set; }
+            public int Y { get; set; }
+            public int Size { get; set; }
 
-            //internal byte[] readBuffer;
-            //internal int start;
-            //internal int applied;
+            public byte[] readBuffer;
+			public int start;
+			public int applied;
 
             //            public void ForEach(object state, TileSquareForEachFunc func)
             //            {
