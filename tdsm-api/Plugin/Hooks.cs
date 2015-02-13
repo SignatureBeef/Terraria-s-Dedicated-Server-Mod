@@ -43,7 +43,7 @@ namespace tdsm.api.Plugin
 
         //public static readonly HookPoint<HookArgs.Explosion> Explosion;
 
-        //public static readonly HookPoint<HookArgs.ChestBreakReceived> ChestBreakReceived;
+        public static readonly HookPoint<HookArgs.ChestBreakReceived> ChestBreakReceived;
         public static readonly HookPoint<HookArgs.ChestOpenReceived> ChestOpenReceived;
 
         public static readonly HookPoint<HookArgs.PvpSettingReceived> PvpSettingReceived;
@@ -94,7 +94,7 @@ namespace tdsm.api.Plugin
             ProjectileReceived = new HookPoint<HookArgs.ProjectileReceived>("projectile-received");
             //KillProjectileReceived = new HookPoint<HookArgs.KillProjectileReceived>("kill-projectile-received");
             //TileSquareReceived = new HookPoint<HookArgs.TileSquareReceived>("tile-square-received");
-            //ChestBreakReceived = new HookPoint<HookArgs.ChestBreakReceived>("chest-break-received");
+            ChestBreakReceived = new HookPoint<HookArgs.ChestBreakReceived>("chest-break-received");
             ChestOpenReceived = new HookPoint<HookArgs.ChestOpenReceived>("chest-open-received");
             PvpSettingReceived = new HookPoint<HookArgs.PvpSettingReceived>("pvp-setting-received");
             PartySettingReceived = new HookPoint<HookArgs.PartySettingReceived>("party-setting-received");
