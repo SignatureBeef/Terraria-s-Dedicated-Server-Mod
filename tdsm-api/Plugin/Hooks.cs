@@ -462,10 +462,9 @@ namespace tdsm.api.Plugin
                 player.selectedItem = SelectedItemIndex;
                 player.direction = Direction;
                 player.position = new Vector2(X, Y);
+
                 if (HasVelocity)
-                {
-                    player.velocity = new Vector2(VX, VY); ;
-                }
+                    player.velocity = new Vector2(VX, VY);
 
                 player.pulley = Pulley;
                 player.pulleyDir = PulleyDirection;

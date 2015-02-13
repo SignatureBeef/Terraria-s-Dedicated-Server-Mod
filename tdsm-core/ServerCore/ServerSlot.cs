@@ -221,6 +221,5 @@ namespace tdsm.core.ServerCore
 
             conn.CopyAndSend(new ArraySegment<byte>(data, offset, length));
         }
-
     }
 }

@@ -57,6 +57,7 @@ namespace tdsm.core.Messages.In
                 {
                     NewNetMessage.SendData(12, -1, whoAmI, String.Empty, whoAmI, 0f, 0f, 0f, 0);
                 }
+                NewNetMessage.SendData(74, whoAmI, -1, Main.player[whoAmI].name, Main.anglerQuest, 0f, 0f, 0f, 0);
             }
         }
     }

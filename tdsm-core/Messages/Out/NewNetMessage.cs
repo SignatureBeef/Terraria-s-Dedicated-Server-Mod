@@ -767,14 +767,14 @@ namespace tdsm.core.Messages.Out
             PlayerBuffs(i);
             PlayerData(i);
 
-            for (int k = 0; k < 49 /*bar only*/; k++)
+            for (int k = 0; k < 59 /*bar only*/; k++)
             {
                 InventoryData(i, k, player.inventory[k].prefix);
             }
 
             for (int k = 0; k < 11; k++)
             {
-                InventoryData(i, k + 49, player.armor[k].prefix);
+                InventoryData(i, k + 59, player.armor[k].prefix);
             }
         }
 
