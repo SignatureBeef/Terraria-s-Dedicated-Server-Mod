@@ -16,8 +16,6 @@ namespace tdsm.core.Messages.In
 
         public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
         {
-            //TODO [PlayerWorldAlteration]
-
 			byte action = ReadByte(readBuffer);
             int x = (int)ReadInt16(readBuffer);
             int y = (int)ReadInt16(readBuffer);
@@ -39,7 +37,7 @@ namespace tdsm.core.Messages.In
 				return;
 			}
 
-
+			//TODO implement the old methods
 			var ctx = new HookContext
 			{
 				Connection = Server.slots[whoAmI].conn,

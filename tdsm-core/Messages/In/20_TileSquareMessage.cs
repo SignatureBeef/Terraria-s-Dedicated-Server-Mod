@@ -21,7 +21,7 @@ namespace tdsm.core.Messages.In
             int startX = (int)ReadInt16(readBuffer);
             int startY = (int)ReadInt16(readBuffer);
 
-
+			//TODO implement the old methods
 			var player = Main.player[whoAmI];
 
 			var ctx = new HookContext

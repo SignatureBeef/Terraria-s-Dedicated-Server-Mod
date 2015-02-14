@@ -60,7 +60,7 @@ namespace tdsm.core
 
         protected override void Initialized(object state)
         {
-            if (!patcher.Program.IsPatching && !ProgramLog.IsOpen)
+            if (!Globals.IsPatching && !ProgramLog.IsOpen)
             {
                 var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
                 ProgramLog.OpenLogFile(logFile);
@@ -416,7 +416,7 @@ namespace tdsm.core
         ///The idea is to be able to add/remove a plugin from the installation without issues.
         ///You'll find that generally your implementation should end up in the API
         [Hook(HookOrder.NORMAL)]
-        void OnServerPatching(ref HookContext ctx, ref tdsm.patcher.HookArgs.PatchServer args)
+		void OnServerPatching(ref HookContext ctx, ref HookArgs.PatchServer args)
         {
             if (args.IsServer)
             {
@@ -428,8 +428,10 @@ namespace tdsm.core
                 var targetArray = serverClass.Fields.Where(x => x.Name == "slots").First();
                 var targetField = sockClass.Fields.Where(x => x.Name == "tileSection").First();
 
+				var terraria = args.Terraria as AssemblyDefinition;
+
                 //Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
-                var instructions = args.Default.Terraria.MainModule.Types
+				var instructions = terraria.MainModule.Types
                     .SelectMany(x => x.Methods
                         .Where(y => y.HasBody)
                     )
@@ -445,8 +447,8 @@ namespace tdsm.core
 
                 for (var x = 0; x < instructions.Length; x++)
                 {
-                    instructions[x].Operand = args.Default.Terraria.MainModule.Import(targetArray);
-                    instructions[x].Next.Next.Next.Operand = args.Default.Terraria.MainModule.Import(targetField);
+					instructions[x].Operand = terraria.MainModule.Import(targetArray);
+					instructions[x].Next.Next.Next.Operand = terraria.MainModule.Import(targetField);
                 }
 
                 //Replace SendAnglerQuest()
@@ -456,7 +458,7 @@ namespace tdsm.core
                 var ourClass = _self.MainModule.Types.Where(x => x.Name == "Net").First();
                 foreach (var rep in new string[] { "SendAnglerQuest", "sendWater", "syncPlayers", "AddBan" })
                 {
-                    var toBeReplaced = args.Default.Terraria.MainModule.Types
+					var toBeReplaced = terraria.MainModule.Types
                         .SelectMany(x => x.Methods
                             .Where(y => y.HasBody)
                         )
@@ -470,7 +472,7 @@ namespace tdsm.core
                     var replacement = ourClass.Methods.Where(x => x.Name == rep).First();
                     for (var x = 0; x < toBeReplaced.Length; x++)
                     {
-                        toBeReplaced[x].Operand = args.Default.Terraria.MainModule.Import(replacement);
+						toBeReplaced[x].Operand = terraria.MainModule.Import(replacement);
                     }
                 }
             }

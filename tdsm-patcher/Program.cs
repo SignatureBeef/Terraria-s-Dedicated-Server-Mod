@@ -8,22 +8,22 @@ namespace tdsm.patcher
     public class Program
     {
         public const Double Build = 1;
-        public static bool IsPatching { get; private set; }
+//        public static bool IsPatching { get; private set; }
 
-        static Program()
-        {
-            //Resolves external plugin hook assemblies. So there is no need to place the DLL beside tdsm.exe
-            AppDomain.CurrentDomain.AssemblyResolve += (s, a) =>
-            {
-                Console.WriteLine("Looking for: {0}", a.Name);
-
-                return null;
-            };
-        }
+//        static Program()
+//        {
+//            //Resolves external plugin hook assemblies. So there is no need to place the DLL beside tdsm.exe
+//            AppDomain.CurrentDomain.AssemblyResolve += (s, a) =>
+//            {
+//                Console.WriteLine("Looking for: {0}", a.Name);
+//
+//                return null;
+//            };
+//        }
 
         static void Main(string[] args)
         {
-            IsPatching = true;
+//            IsPatching = true;
             Console.WriteLine("TDSM patcher build {0}", Build);
             //var isMono = Type.GetType("Mono.Runtime") != null;
 
@@ -51,10 +51,10 @@ namespace tdsm.patcher
             var patcher = new Injector(inFile, patchFile);
 
             var vers = patcher.GetAssemblyVersion();
-            if (vers != tdsm.api.Globals.TerrariaVersion)
+            if (vers != APIWrapper.TerrariaVersion)
             {
                 Console.Write("This patcher only supports Terraria {0}, but we have detected something else {1}. Continue? (y/n)",
-                    tdsm.api.Globals.TerrariaVersion,
+					APIWrapper.TerrariaVersion,
                     vers);
                 if (Console.ReadKey(true).Key != ConsoleKey.Y) return;
                 Console.WriteLine();
@@ -64,7 +64,7 @@ namespace tdsm.patcher
             patcher.MakeTypesPublic(true);
             Console.Write("Ok\nHooking command line...");
             patcher.PatchCommandLine();
-            if (tdsm.api.Tools.RuntimePlatform == tdsm.api.RuntimePlatform.Mono)
+			if (!APIWrapper.IsDotNet())
             {
                 Console.Write("Ok\nRemoving port forwarding functionality...");
                 patcher.FixNetplay();
@@ -116,29 +116,31 @@ namespace tdsm.patcher
             try
             {
 #endif
-            tdsm.api.Globals.Touch();
-
-            tdsm.api.PluginManager.SetHookSource(typeof(HookPoints));
-            tdsm.api.PluginManager.Initialize(tdsm.api.Globals.PluginPath, tdsm.api.Globals.LibrariesPath);
-            tdsm.api.PluginManager.LoadPlugins();
-
-            var ctx = new tdsm.api.Plugin.HookContext
-            {
-                Sender = tdsm.api.Plugin.HookContext.ConsoleSender
-            };
-
-            var hookArgs = new HookArgs.PatchServer
-            {
-                Default = patcher,
-#if SERVER
-                IsClient = false,
-                IsServer = true
-#elif CLIENT
-                IsClient = true,
-                IsServer = false
-#endif
-            };
-            HookPoints.PatchServer.Invoke(ref ctx, ref hookArgs);
+			APIWrapper.Initialise();
+			APIWrapper.InvokeEvent(patcher.Terraria, true);
+//            tdsm.api.Globals.Touch();
+//
+//            tdsm.api.PluginManager.SetHookSource(typeof(HookPoints));
+//            tdsm.api.PluginManager.Initialize(tdsm.api.Globals.PluginPath, tdsm.api.Globals.LibrariesPath);
+//            tdsm.api.PluginManager.LoadPlugins();
+//
+//            var ctx = new tdsm.api.Plugin.HookContext
+//            {
+//                Sender = tdsm.api.Plugin.HookContext.ConsoleSender
+//            };
+//
+//            var hookArgs = new HookArgs.PatchServer
+//            {
+//                Default = patcher,
+//#if SERVER
+//                IsClient = false,
+//                IsServer = true
+//#elif CLIENT
+//                IsClient = true,
+//                IsServer = false
+//#endif
+//            };
+//            HookPoints.PatchServer.Invoke(ref ctx, ref hookArgs);
 #if Release
             }
             catch (Exception e)
@@ -155,7 +157,7 @@ namespace tdsm.patcher
             Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", outFile);
             if (Console.ReadKey(true).Key == ConsoleKey.Y)
             {
-                if (tdsm.api.Tools.RuntimePlatform == tdsm.api.RuntimePlatform.Microsoft)
+				/*if (APIWrapper.IsDotNet())
                 {
                     if (File.Exists("serverconfig.txt"))
                         System.Diagnostics.Process.Start(outFile, "-config serverconfig.txt");
@@ -163,7 +165,7 @@ namespace tdsm.patcher
                         System.Diagnostics.Process.Start(outFile);
                 }
                 else
-                {
+                {*/
                     Console.Clear();
 
                     using (var ms = new MemoryStream())
@@ -188,7 +190,7 @@ namespace tdsm.patcher
                         else
                             asm.EntryPoint.Invoke(null, null);
                     }
-                }
+//                }
             }
 #endif
         }

@@ -16,9 +16,11 @@ namespace tdsm.api
         private const String LibrariesDirectory = "Libraries";
         private const String BackupDirectory = "BackupDirectory";
 
-        public static volatile bool Exit = false;
+		public static volatile bool Exit = false;
 
-        public static string SavePath = Environment.CurrentDirectory;
+		public static string SavePath = Environment.CurrentDirectory;
+
+		public static bool IsPatching { get; set; }
 
         public static string WorldPath
         {

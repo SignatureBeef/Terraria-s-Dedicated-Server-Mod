@@ -73,6 +73,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HookPoints.cs" />
+    <Compile Include="APIWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Official\serverconfig.txt">
@@ -94,12 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="tdsm.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
-      <Project>{a1f792b2-5d80-4de4-b5db-7a05dbeabd60}</Project>
-      <Name>tdsm-api</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

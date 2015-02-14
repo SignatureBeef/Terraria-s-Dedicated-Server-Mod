@@ -3,7 +3,6 @@ using Mono.Cecil.Cil;
 using System;
 using System.IO;
 using System.Linq;
-using tdsm.api;
 
 namespace tdsm.patcher
 {
@@ -668,10 +667,10 @@ namespace tdsm.patcher
         public void Save(string filePath)
         {
             //Ensure the name is updated to the new one
-			if(Tools.RuntimePlatform == RuntimePlatform.Microsoft)
-				_asm.Name = new AssemblyNameDefinition("tdsm" /* Must not be the same as the .exe, as it will cause referencing issues */, new Version(0, 0, tdsm.api.Globals.Build, 0));
-			else 
-				_asm.Name = new AssemblyNameDefinition("tdsm", new Version(0, 0, tdsm.api.Globals.Build, 0));
+//			if(APIWrapper.IsDotNet())
+//				_asm.Name = new AssemblyNameDefinition("tdsm" /* Must not be the same as the .exe, as it will cause referencing issues */, new Version(0, 0, tdsm.api.Globals.Build, 0));
+//			else 
+			_asm.Name = new AssemblyNameDefinition("tdsm", new Version(0, 0, APIWrapper.Build, 0));
 
             _asm.MainModule.Name = "tdsm.exe";
 			//TODO fix the above, i hate it.
