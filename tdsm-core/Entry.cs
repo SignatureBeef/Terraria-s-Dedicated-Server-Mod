@@ -268,7 +268,6 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.heal")
                 .Calls(this.Heal);
 
-            //Heartbeat.Begin(this.TDSMBuild);
             if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
         }
 
@@ -504,6 +503,26 @@ namespace tdsm.core
                     {
                         VanillaOnly = vanillaOnly;
                     }
+                    break;
+                case "heartbeat":
+                    bool hb;
+                    if (Boolean.TryParse(args.Value, out hb) && hb)
+                    {
+                        Heartbeat.Begin(this.TDSMBuild);
+                    }
+                    break;
+                case "server-list":
+                    bool serverList;
+                    if (Boolean.TryParse(args.Value, out serverList))
+                    {
+                        Heartbeat.PublishToList = serverList;
+                    }
+                    break;
+                case "server-list-name":
+                    Heartbeat.ServerName = args.Value;
+                    break;
+                case "server-list-desc":
+                    Heartbeat.ServerDescription = args.Value;
                     break;
             }
         }

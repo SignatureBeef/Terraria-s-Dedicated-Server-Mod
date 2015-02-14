@@ -23,8 +23,9 @@ namespace tdsm.api
             //Resolves external plugin hook assemblies. So there is no need to place the DLL beside tdsm.exe
             AppDomain.CurrentDomain.AssemblyResolve += (s, a) =>
             {
+                Console.WriteLine("Looking for: {0}", a.Name);
                 var items = _plugins.Values
-                    .Where(x => x.Assembly.FullName == a.Name)
+                    .Where(x => x != null && x.Assembly != null && x.Assembly.FullName == a.Name)
                     .Select(x => x.Assembly)
                     .FirstOrDefault();
                 //if (items == null)

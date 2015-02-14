@@ -17,7 +17,7 @@ namespace tdsm.core
     /// </summary>
     public static class Heartbeat
     {
-        internal const String EndPoint = "http://heartbeat.tdsm.org/";
+        internal const String EndPoint = "http://localhost/tdsm/"; //"http://heartbeat.tdsm.org/";
         internal const Int32 MinuteInterval = 1;
 
         private static System.Timers.Timer _timer;
@@ -25,6 +25,8 @@ namespace tdsm.core
 
         public static bool Enabled { get; private set; }
         public static bool PublishToList { get; set; }
+        public static string ServerName { get; set; }
+        public static string ServerDescription { get; set; }
 
         [Flags]
         enum UpdateReady : byte
@@ -60,8 +62,11 @@ namespace tdsm.core
 
                     if (PublishToList)
                     {
-                        wc.Headers.Add("Port=" + Terraria.Netplay.serverPort);
-                        wc.Headers.Add("MaxPlayers=" + Terraria.Main.maxPlayers);
+                        req.Add("Port", Terraria.Netplay.serverPort.ToString());
+                        req.Add("MaxPlayers", Terraria.Main.maxPlayers.ToString());
+
+                        if (!String.IsNullOrEmpty(ServerName)) req.Add("Name", ServerName);
+                        if (!String.IsNullOrEmpty(ServerDescription)) req.Add("Desc", ServerDescription);
                     }
 
                     //TODO; Maybe plugin versions
@@ -96,6 +101,16 @@ namespace tdsm.core
                                 break;
                             default:
                                 ProgramLog.Log("Invalid heartbeat response.");
+
+                                try
+                                {
+                                    var str = Encoding.UTF8.GetString(data);
+                                    if (str != null)
+                                    {
+                                        ProgramLog.Log("Response: " + str);
+                                    }
+                                }
+                                catch { }
                                 break;
                         }
                     }
@@ -130,7 +145,7 @@ namespace tdsm.core
             if (_timer == null)
             {
                 _coreBuild = coreBuild;
-                _timer = new System.Timers.Timer(1000 * 60 * MinuteInterval);
+                _timer = new System.Timers.Timer(10 * 1000); //1000 * 60 * MinuteInterval);
                 _timer.Elapsed += (e, a) =>
                 {
                     if (Enabled) Beat();

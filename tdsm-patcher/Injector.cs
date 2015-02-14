@@ -108,6 +108,28 @@ namespace tdsm.patcher
             }
         }
 
+        public void HookWorldFile_DEBUG()
+        {
+            var serv = _asm.MainModule.Types.Where(x => x.Name == "WorldGen").First();
+            var main = serv.Methods.Where(x => x.Name == "serverLoadWorldCallBack" && x.IsStatic).First();
+
+            var ourClass = _self.MainModule.Types.Where(x => x.Name == "WorldFile").First();
+            var replacement = ourClass.Methods.Where(x => x.Name == "loadWorld" && x.IsStatic).First();
+
+            //Grab all occurances of "LoadDedConfig" and route it to ours
+            var toBeReplaced = main.Body.Instructions
+                .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Call
+                    && x.Operand is MethodReference
+                    && (x.Operand as MethodReference).Name == "loadWorld"
+                )
+                .ToArray();
+
+            for (var x = 0; x < toBeReplaced.Length; x++)
+            {
+                toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
+            }
+        }
+
         public void HookStatusText()
         {
             var main = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
@@ -647,12 +669,23 @@ namespace tdsm.patcher
         {
             //Ensure the name is updated to the new one
 			if(Tools.RuntimePlatform == RuntimePlatform.Microsoft)
-				_asm.Name = new AssemblyNameDefinition("tdsm-main" /* Must not be the same as the .exe, as it will cause referencing issues */, new Version(0, 0, tdsm.api.Globals.Build, 0));
+				_asm.Name = new AssemblyNameDefinition("tdsm" /* Must not be the same as the .exe, as it will cause referencing issues */, new Version(0, 0, tdsm.api.Globals.Build, 0));
 			else 
 				_asm.Name = new AssemblyNameDefinition("tdsm", new Version(0, 0, tdsm.api.Globals.Build, 0));
 
+            _asm.MainModule.Name = "tdsm.exe";
 			//TODO fix the above, i hate it.
-		
+
+            var g = _asm.CustomAttributes.Where(x => x.AttributeType.Name == "GuidAttribute").First();
+
+            for (var x = 0; x < _asm.CustomAttributes.Count; x++)
+            {
+                if (_asm.CustomAttributes[x].AttributeType.Name == "GuidAttribute")
+                {
+                    _asm.CustomAttributes[x].ConstructorArguments[0] = new CustomAttributeArgument(_asm.CustomAttributes[x].ConstructorArguments[0].Type, Guid.NewGuid().ToString());
+                }
+            }
+
 			_asm.Write(filePath);
         }
 

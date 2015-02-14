@@ -66,13 +66,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="tdsm">
+    <Reference Include="tdsm, Version=0.0.1.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Callbacks\Configuration.cs" />
     <Compile Include="Callbacks\NetMessage.cs" />
+    <Compile Include="Callbacks\WorldFile.cs" />
     <Compile Include="Command\ArgumentList.cs" />
     <Compile Include="Command\CommandParser.cs" />
     <Compile Include="Command\DefaultCommands.cs" />

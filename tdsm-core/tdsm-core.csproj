@@ -52,8 +52,7 @@
     <Reference Include="Mono.Cecil">
       <HintPath>..\Binaries\Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="tdsm, Version=0.0.1.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="tdsm">
       <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>

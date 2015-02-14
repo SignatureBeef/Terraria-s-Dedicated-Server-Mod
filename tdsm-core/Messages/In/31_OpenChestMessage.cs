@@ -37,7 +37,7 @@ namespace tdsm.core.Messages.In
             {
                 X = x,
                 Y = y,
-                ChestIndex = (short)chestIndex,
+                ChestIndex = chestIndex,
             };
 
             HookPoints.ChestOpenReceived.Invoke(ref ctx, ref args);

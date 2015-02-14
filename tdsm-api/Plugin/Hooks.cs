@@ -692,7 +692,7 @@ namespace tdsm.api.Plugin
         {
             public int X { get; set; }
             public int Y { get; set; }
-            public short ChestIndex { get; set; }
+            public int ChestIndex { get; set; }
         }
 
         public struct PlayerEnteringGame

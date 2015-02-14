@@ -2,8 +2,6 @@
 //#define CLIENT
 using System;
 using System.IO;
-using tdsm.api;
-using tdsm.api.Plugin;
 
 namespace tdsm.patcher
 {
@@ -11,6 +9,17 @@ namespace tdsm.patcher
     {
         public const Double Build = 1;
         public static bool IsPatching { get; private set; }
+
+        static Program()
+        {
+            //Resolves external plugin hook assemblies. So there is no need to place the DLL beside tdsm.exe
+            AppDomain.CurrentDomain.AssemblyResolve += (s, a) =>
+            {
+                Console.WriteLine("Looking for: {0}", a.Name);
+
+                return null;
+            };
+        }
 
         static void Main(string[] args)
         {
@@ -22,6 +31,8 @@ namespace tdsm.patcher
             var inFile = "TerrariaServer.exe";
             var outFile = "tdsm.exe";
             var patchFile = "tdsm.api.dll";
+
+            //if (File.Exists(outFile)) File.Delete(outFile);
 
 #elif CLIENT
             var inFile = "Terraria.exe";
@@ -40,10 +51,10 @@ namespace tdsm.patcher
             var patcher = new Injector(inFile, patchFile);
 
             var vers = patcher.GetAssemblyVersion();
-            if (vers != Globals.TerrariaVersion)
+            if (vers != tdsm.api.Globals.TerrariaVersion)
             {
                 Console.Write("This patcher only supports Terraria {0}, but we have detected something else {1}. Continue? (y/n)",
-                    Globals.TerrariaVersion,
+                    tdsm.api.Globals.TerrariaVersion,
                     vers);
                 if (Console.ReadKey(true).Key != ConsoleKey.Y) return;
                 Console.WriteLine();
@@ -53,7 +64,7 @@ namespace tdsm.patcher
             patcher.MakeTypesPublic(true);
             Console.Write("Ok\nHooking command line...");
             patcher.PatchCommandLine();
-            if (Tools.RuntimePlatform == RuntimePlatform.Mono)
+            if (tdsm.api.Tools.RuntimePlatform == tdsm.api.RuntimePlatform.Mono)
             {
                 Console.Write("Ok\nRemoving port forwarding functionality...");
                 patcher.FixNetplay();
@@ -88,6 +99,8 @@ namespace tdsm.patcher
             patcher.HookUpdateServer();
             Console.Write("Ok\nHooking config...");
             patcher.HookConfig();
+            //Console.Write("Ok\nHooking DEBUG...");
+            //patcher.HookWorldFile_DEBUG();
             Console.Write("Ok\n");
 
             //TODO repace Terraria's Console.SetTitles
@@ -103,15 +116,15 @@ namespace tdsm.patcher
             try
             {
 #endif
-            Globals.Touch();
+            tdsm.api.Globals.Touch();
 
-            PluginManager.SetHookSource(typeof(HookPoints));
-            PluginManager.Initialize(Globals.PluginPath, Globals.LibrariesPath);
-            PluginManager.LoadPlugins();
+            tdsm.api.PluginManager.SetHookSource(typeof(HookPoints));
+            tdsm.api.PluginManager.Initialize(tdsm.api.Globals.PluginPath, tdsm.api.Globals.LibrariesPath);
+            tdsm.api.PluginManager.LoadPlugins();
 
-            var ctx = new HookContext
+            var ctx = new tdsm.api.Plugin.HookContext
             {
-                Sender = HookContext.ConsoleSender
+                Sender = tdsm.api.Plugin.HookContext.ConsoleSender
             };
 
             var hookArgs = new HookArgs.PatchServer
@@ -142,7 +155,7 @@ namespace tdsm.patcher
             Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", outFile);
             if (Console.ReadKey(true).Key == ConsoleKey.Y)
             {
-                if (Tools.RuntimePlatform == RuntimePlatform.Microsoft)
+                if (tdsm.api.Tools.RuntimePlatform == tdsm.api.RuntimePlatform.Microsoft)
                 {
                     if (File.Exists("serverconfig.txt"))
                         System.Diagnostics.Process.Start(outFile, "-config serverconfig.txt");

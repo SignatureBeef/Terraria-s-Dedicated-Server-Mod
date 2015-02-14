@@ -64,3 +64,15 @@ usewhitelist=false
 
 #true to enforce the core to only run as a vanilla server under linux
 vanilla-linux=false
+
+#Allows communication to the TDSM server
+heartbeat=true
+
+#true to show on the server list
+server-list=true
+
+#Name on server list
+server-list-name=TDSM Server
+
+#Description to use on the server list
+server-list-desc=This is an example of the description for use in the TDSM Server List.\n\nHello World!
