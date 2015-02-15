@@ -23,7 +23,7 @@ namespace tdsm.patcher
 //            };
 //        }
 
-		#if DEV
+#if DEV
 		static void Copy(DirectoryInfo root, string project, string to)
 		{
 			var projectBinary = project.Replace ("-", ".");
@@ -41,12 +41,14 @@ namespace tdsm.patcher
 			if (File.Exists (mdbT)) File.Delete (mdbT);
 			if (File.Exists (pdbT)) File.Delete (pdbT);
 
+			if (!Directory.Exists (to)) Directory.CreateDirectory (to);
+
 			if (File.Exists (dllF)) File.Copy (dllF, dllT);
 			if (File.Exists (mdbF)) File.Copy (mdbF, mdbT);
 			if (File.Exists (pdbF)) File.Copy (pdbF, pdbT);
 
 		}
-		#endif
+#endif
 
         static void Main(string[] args)
         {
@@ -59,10 +61,9 @@ namespace tdsm.patcher
             var outFile = "tdsm.exe";
             var patchFile = "tdsm.api.dll";
 
-			#if DEV
+#if DEV
             if (File.Exists(outFile)) File.Delete(outFile);
 
-//			var root = new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.Parent.Parent;
 			var root = new DirectoryInfo(Environment.CurrentDirectory);
 			while(root.GetDirectories().Where(x => x.Name == "tdsm-patcher").Count() == 0)
 			{
@@ -72,7 +73,7 @@ namespace tdsm.patcher
 			Copy(root, "tdsm-api", Environment.CurrentDirectory);
 			Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
 
-			#endif
+#endif
 #elif CLIENT
             var inFile = "Terraria.exe";
             var outFile = "tdcm.exe";
@@ -200,7 +201,7 @@ namespace tdsm.patcher
 #endif
 
             Console.Write("Saving to {0}...", outFile);
-            patcher.Save(outFile, 1);
+			patcher.Save(outFile, Build);
 
 #if Release || true
             Console.WriteLine("Ok\nYou may now run {0} as you would normally.", outFile);
