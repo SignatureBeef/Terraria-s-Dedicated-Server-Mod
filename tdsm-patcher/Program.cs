@@ -62,7 +62,13 @@ namespace tdsm.patcher
 			#if DEV
             if (File.Exists(outFile)) File.Delete(outFile);
 
-			var root = new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.Parent.Parent;
+//			var root = new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.Parent.Parent;
+			var root = new DirectoryInfo(Environment.CurrentDirectory);
+			while(root.GetDirectories().Where(x => x.Name == "tdsm-patcher").Count() == 0)
+			{
+				root = root.Parent;
+			}
+
 			Copy(root, "tdsm-api", Environment.CurrentDirectory);
 			Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
 
