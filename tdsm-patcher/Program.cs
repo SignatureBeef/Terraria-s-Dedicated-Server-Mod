@@ -1,4 +1,5 @@
 ﻿#define SERVER
+#define DEV 
 //#define CLIENT
 using System;
 using System.IO;
@@ -22,19 +23,50 @@ namespace tdsm.patcher
 //            };
 //        }
 
+		#if DEV
+		static void Copy(DirectoryInfo root, string project, string to)
+		{
+			var projectBinary = project.Replace ("-", ".");
+			var p = Path.Combine (root.FullName, project, "bin", "x86", "Debug");
+
+			var dllF = Path.Combine (p, projectBinary + ".dll");
+			var mdbF = Path.Combine (p, projectBinary + ".mdb");
+			var pdbF = Path.Combine (p, projectBinary + ".pdb");
+
+			var dllT = Path.Combine (to, projectBinary + ".dll");
+			var mdbT = Path.Combine (to, projectBinary + ".mdb");
+			var pdbT = Path.Combine (to, projectBinary + ".pdb");
+
+			if (File.Exists (dllT)) File.Delete (dllT);
+			if (File.Exists (mdbT)) File.Delete (mdbT);
+			if (File.Exists (pdbT)) File.Delete (pdbT);
+
+			if (File.Exists (dllF)) File.Copy (dllF, dllT);
+			if (File.Exists (mdbF)) File.Copy (mdbF, mdbT);
+			if (File.Exists (pdbF)) File.Copy (pdbF, pdbT);
+
+		}
+		#endif
+
         static void Main(string[] args)
         {
 //            IsPatching = true;
             Console.WriteLine("TDSM patcher build {0}", Build);
-            //var isMono = Type.GetType("Mono.Runtime") != null;
+            var isMono = Type.GetType("Mono.Runtime") != null;
 
 #if SERVER
             var inFile = "TerrariaServer.exe";
             var outFile = "tdsm.exe";
             var patchFile = "tdsm.api.dll";
 
-            //if (File.Exists(outFile)) File.Delete(outFile);
+			#if DEV
+            if (File.Exists(outFile)) File.Delete(outFile);
 
+			var root = new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.Parent.Parent;
+			Copy(root, "tdsm-api", Environment.CurrentDirectory);
+			Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
+
+			#endif
 #elif CLIENT
             var inFile = "Terraria.exe";
             var outFile = "tdcm.exe";
@@ -65,7 +97,7 @@ namespace tdsm.patcher
             patcher.MakeTypesPublic(true);
             Console.Write("Ok\nHooking command line...");
             patcher.PatchCommandLine();
-			if (!APIWrapper.IsDotNet())
+			if (isMono)
             {
                 Console.Write("Ok\nRemoving port forwarding functionality...");
                 patcher.FixNetplay();
