@@ -69,8 +69,10 @@ namespace tdsm.api.Plugin
         //public static readonly HookPoint<HookArgs.WorldGeneration> WorldGeneration;
         public static readonly HookPoint<HookArgs.WorldRequestMessage> WorldRequestMessage;
 
-        public static readonly HookPoint<HookArgs.ProgramStart> ProgramStart;
-        public static readonly HookPoint<HookArgs.StartCommandProcessing> StartCommandProcessing;
+		public static readonly HookPoint<HookArgs.ProgramStart> ProgramStart;
+		public static readonly HookPoint<HookArgs.StartCommandProcessing> StartCommandProcessing;
+
+		public static readonly HookPoint<HookArgs.AddBan> AddBan;
 
         //public static readonly HookPoint<HookArgs.PatchServer> PatchServer;
 
@@ -121,8 +123,9 @@ namespace tdsm.api.Plugin
             SendNetData = new HookPoint<HookArgs.SendNetData>("netmessage-senddata");
             UpdateServer = new HookPoint<HookArgs.UpdateServer>("update-server");
             ProgramStart = new HookPoint<HookArgs.ProgramStart>("program-start");
-            StartCommandProcessing = new HookPoint<HookArgs.StartCommandProcessing>("start-command-processing");
-            ConfigurationLine = new HookPoint<HookArgs.ConfigurationLine>("config-line");
+			StartCommandProcessing = new HookPoint<HookArgs.StartCommandProcessing>("start-command-processing");
+			ConfigurationLine = new HookPoint<HookArgs.ConfigurationLine>("config-line");
+			AddBan = new HookPoint<HookArgs.AddBan>("add-ban");
 
             ////Non API - but to seperate from the patcher
             //PatchServer = new HookPoint<HookArgs.PatchServer>("patch-server");
@@ -139,11 +142,16 @@ namespace tdsm.api.Plugin
 //            public bool IsClient { get; set; }
 //        }
 
-        public struct ConfigurationLine
-        {
-            public string Key { get; set; }
-            public string Value { get; set; }
-        }
+		public struct AddBan
+		{
+			public string RemoteAddress { get; set; }
+		}
+
+		public struct ConfigurationLine
+		{
+			public string Key { get; set; }
+			public string Value { get; set; }
+		}
 
         public struct SendNetData
         {

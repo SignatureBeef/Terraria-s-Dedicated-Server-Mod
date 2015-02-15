@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Threading;
 using tdsm.api.Plugin;
+using System.IO;
+
+
 #if Full_API
 
 #endif
@@ -211,22 +214,34 @@ namespace tdsm.api.Callbacks
         public static void AddBan(int plr)
 		{
 #if Full_API
-			//[TODO] hook
-            //Server.Bans.Add(Server.slots[plr].conn.RemoteAddress);
-            //string text = Server.slots[plr].conn.RemoteAddress;
-            //string value = text;
-            //for (int i = 0; i < text.Length; i++)
-            //{
-            //    if (text.Substring(i, 1) == ":")
-            //    {
-            //        value = text.Substring(0, i);
-            //    }
-            //}
-            //using (StreamWriter streamWriter = new StreamWriter(Netplay.banFile, true))
-            //{
-            //    streamWriter.WriteLine("//" + Terraria.Main.player[plr].name);
-            //    streamWriter.WriteLine(value);
-            //}
+			var ctx = new HookContext()
+			{
+				Sender = HookContext.ConsoleSender
+			};
+			var args = new HookArgs.AddBan()
+			{
+				RemoteAddress = slots[plr].RemoteAddress()
+			};
+
+			HookPoints.AddBan.Invoke(ref ctx, ref args);
+
+			if(ctx.Result == HookResult.DEFAULT)
+			{
+				string remote = slots[plr].RemoteAddress();
+	            string ip = remote;
+	            for (int i = 0; i < remote.Length; i++)
+	            {
+	                if (remote.Substring(i, 1) == ":")
+	                {
+	                    ip = remote.Substring(0, i);
+	                }
+	            }
+	            using (StreamWriter streamWriter = new StreamWriter(Terraria.Netplay.banFile, true))
+	            {
+	                streamWriter.WriteLine("//" + Terraria.Main.player[plr].name);
+	                streamWriter.WriteLine(ip);
+	            }
+			}
 #endif
         }
     }

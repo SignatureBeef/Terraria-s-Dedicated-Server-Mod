@@ -317,15 +317,23 @@ namespace tdsm.core
                     ProgramLog.Log("PID file successfully created with: " + ProcessUID);
                 }
             }
-        }
+		}
 
-        [Hook(HookOrder.NORMAL)]
-        void OnStartCommandProcessing(ref HookContext ctx, ref HookArgs.StartCommandProcessing args)
-        {
-            ctx.SetResult(HookResult.IGNORE);
+		[Hook(HookOrder.NORMAL)]
+		void OnStartCommandProcessing(ref HookContext ctx, ref HookArgs.StartCommandProcessing args)
+		{
+			ctx.SetResult(HookResult.IGNORE);
 
-            (new ProgramThread("Command", ListenForCommands)).Start();
-        }
+			(new ProgramThread("Command", ListenForCommands)).Start();
+		}
+
+		[Hook(HookOrder.NORMAL)]
+		void OnBanAddRequired(ref HookContext ctx, ref HookArgs.AddBan args)
+		{
+			ctx.SetResult(HookResult.IGNORE);
+
+			Server.Bans.Add(args.RemoteAddress); //TODO see if port needs removing
+		}
 
         static void ListenForCommands()
         {
