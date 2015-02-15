@@ -3,6 +3,8 @@ using Mono.Cecil.Cil;
 using System;
 using System.IO;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace tdsm.patcher
 {
@@ -439,7 +441,45 @@ namespace tdsm.patcher
                 .Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "startDedInput")
                 .First();
             ins.Operand = _asm.MainModule.Import(callback);
+
+			var ignore = new string[] {
+				"Terraria.Main.DedServ"
+			};
+
+			//Patch Console.WriteLines
+			var cwi = _asm.MainModule.Types
+				.SelectMany(x => x.Methods)
+				.Where(x => x.HasBody && x.Body.Instructions.Count > 0 && !ignore.Contains(x.DeclaringType.FullName + "." + x.Name))
+				.SelectMany(x => x.Body.Instructions)
+				.Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference
+					&& (x.Operand as MethodReference).Name == "WriteLine"
+					&& (x.Operand as MethodReference).DeclaringType.FullName == "System.Console")
+				.ToArray();
+
+			var tools = _self.MainModule.Types.Where(x => x.Name == "Tools").First();
+			foreach (var oci in cwi)
+			{
+				var mr = oci.Operand as MethodReference;
+				var writeline = tools.Methods.First(m => m.Name == "WriteLine"
+					&& CompareParameters(m.Parameters, mr.Parameters));
+				oci.Operand = _asm.MainModule.Import(writeline);
+			}
         }
+
+		static bool CompareParameters(Mono.Collections.Generic.Collection<ParameterDefinition> a, Mono.Collections.Generic.Collection<ParameterDefinition> b)
+		{
+			if (a.Count == b.Count)
+			{
+
+				for (var x = 0; x < a.Count; x++)
+				{
+					if (a [x].ParameterType.FullName != b [x].ParameterType.FullName) return false;
+				}
+				return true;
+			}
+
+			return false;
+		}
 
         /// <summary>
         /// Makes the types public.
@@ -714,24 +754,20 @@ namespace tdsm.patcher
             }
         }
 
-        public void Save(string filePath, int apiBuild)
+		public void Save(string filePath, int apiBuild, string tdsmUID, string name)
         {
             //Ensure the name is updated to the new one
-//			if(APIWrapper.IsDotNet())
-//				Terraria.Name = new AssemblyNameDefinition("tdsm" /* Must not be the same as the .exe, as it will cause referencing issues */, new Version(0, 0, tdsm.api.Globals.Build, 0));
-//			else 
-			_asm.Name = new AssemblyNameDefinition("tdsm", new Version(0, 0, apiBuild, 0));
+			_asm.Name = new AssemblyNameDefinition(name, new Version(0, 0, apiBuild, 0));
+			_asm.MainModule.Name = name + ".exe";
 
-            _asm.MainModule.Name = "tdsm.exe";
-			//TODO fix the above, i hate it.
-
+			//Change the uniqueness from what Terraria has, to something different (that way vanilla isn't picked up by assembly resolutions)
             var g = _asm.CustomAttributes.Where(x => x.AttributeType.Name == "GuidAttribute").First();
 
             for (var x = 0; x < _asm.CustomAttributes.Count; x++)
             {
                 if (_asm.CustomAttributes[x].AttributeType.Name == "GuidAttribute")
                 {
-                    _asm.CustomAttributes[x].ConstructorArguments[0] = new CustomAttributeArgument(_asm.CustomAttributes[x].ConstructorArguments[0].Type, Guid.NewGuid().ToString());
+					_asm.CustomAttributes[x].ConstructorArguments[0] = new CustomAttributeArgument(_asm.CustomAttributes[x].ConstructorArguments[0].Type, tdsmUID);
                 }
             }
 

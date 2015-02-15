@@ -16,13 +16,19 @@ namespace tdsm.api
         {
             lock (_WriteLineMethod)
                 _WriteLineMethod(fmt, args);
-        }
+		}
 
-        public static void WriteLine(Exception e)
-        {
-            lock (_WriteLineMethod)
-                _WriteLineMethod(String.Format("{0}", e), null);
-        }
+		public static void WriteLine(string fmt)
+		{
+			lock (_WriteLineMethod)
+				_WriteLineMethod(fmt, null);
+		}
+
+		public static void WriteLine(Exception e)
+		{
+			lock (_WriteLineMethod)
+				_WriteLineMethod(String.Format("{0}", e), null);
+		}
 
         public static void SetWriteLineMethod(Action<String, Object[]> method)
         {

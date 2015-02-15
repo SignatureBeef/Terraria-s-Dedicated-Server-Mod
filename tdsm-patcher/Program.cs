@@ -9,6 +9,7 @@ namespace tdsm.patcher
 {
     public class Program
     {
+		public const String TDSMGuid = "9f7bca2e-4d2e-4244-aaae-fa56ca7797ec";
         public const Int32 Build = 1;
 //        public static bool IsPatching { get; private set; }
 
@@ -24,27 +25,31 @@ namespace tdsm.patcher
 //        }
 
 #if DEV
-		static void Copy(DirectoryInfo root, string project, string to)
+		static void Copy(DirectoryInfo root, string project, string to, string pluginName = null)
 		{
-			var projectBinary = project.Replace ("-", ".");
+			var projectBinary = pluginName ?? project.Replace ("-", ".");
 			var p = Path.Combine (root.FullName, project, "bin", "x86", "Debug");
 
 			var dllF = Path.Combine (p, projectBinary + ".dll");
-			var mdbF = Path.Combine (p, projectBinary + ".mdb");
+//			var mdbF = Path.Combine (p, projectBinary + ".mdb");
+			var ddbF = Path.Combine (p, projectBinary + ".dll.mdb");
 			var pdbF = Path.Combine (p, projectBinary + ".pdb");
 
 			var dllT = Path.Combine (to, projectBinary + ".dll");
-			var mdbT = Path.Combine (to, projectBinary + ".mdb");
+//			var mdbT = Path.Combine (to, projectBinary + ".mdb");
+			var ddbT = Path.Combine (to, projectBinary + ".dll.mdb");
 			var pdbT = Path.Combine (to, projectBinary + ".pdb");
 
 			if (File.Exists (dllT)) File.Delete (dllT);
-			if (File.Exists (mdbT)) File.Delete (mdbT);
+//			if (File.Exists (mdbT)) File.Delete (mdbT);
+			if (File.Exists (ddbT)) File.Delete (ddbT);
 			if (File.Exists (pdbT)) File.Delete (pdbT);
 
 			if (!Directory.Exists (to)) Directory.CreateDirectory (to);
 
 			if (File.Exists (dllF)) File.Copy (dllF, dllT);
-			if (File.Exists (mdbF)) File.Copy (mdbF, mdbT);
+//			if (File.Exists (mdbF)) File.Copy (mdbF, mdbT);
+			if (File.Exists (ddbF)) File.Copy (ddbF, ddbT);
 			if (File.Exists (pdbF)) File.Copy (pdbF, pdbT);
 
 		}
@@ -58,7 +63,8 @@ namespace tdsm.patcher
 
 #if SERVER
             var inFile = "TerrariaServer.exe";
-            var outFile = "tdsm.exe";
+			var fileName = "tdsm";
+			var outFile = fileName + ".exe";
             var patchFile = "tdsm.api.dll";
 
 #if DEV
@@ -67,11 +73,17 @@ namespace tdsm.patcher
 			var root = new DirectoryInfo(Environment.CurrentDirectory);
 			while(root.GetDirectories().Where(x => x.Name == "tdsm-patcher").Count() == 0)
 			{
+				if(root.Parent == null)
+				{
+					Console.WriteLine("Failed to find root TDSM project directory");
+					break;
+				}
 				root = root.Parent;
 			}
 
 			Copy(root, "tdsm-api", Environment.CurrentDirectory);
 			Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
+			Copy(root, "Restrict", Path.Combine(Environment.CurrentDirectory, "Plugins"), "RestrictPlugin");
 
 #endif
 #elif CLIENT
@@ -201,7 +213,7 @@ namespace tdsm.patcher
 #endif
 
             Console.Write("Saving to {0}...", outFile);
-			patcher.Save(outFile, Build);
+			patcher.Save(outFile, Build, TDSMGuid, fileName);
 
 #if Release || true
             Console.WriteLine("Ok\nYou may now run {0} as you would normally.", outFile);

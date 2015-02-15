@@ -356,6 +356,8 @@ namespace tdsm.api.Command
                 Main.dayTime = true;
                 Main.time = 0.0;
                 NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+
+				Tools.WriteLine("Time set to dawn");
             }
         }
 
@@ -370,7 +372,9 @@ namespace tdsm.api.Command
             {
                 Main.dayTime = true;
                 Main.time = 27000.0;
-                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+				NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+
+				Tools.WriteLine("Time set to noon");
             }
         }
 
@@ -385,7 +389,9 @@ namespace tdsm.api.Command
             {
                 Main.dayTime = false;
                 Main.time = 0.0;
-                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+				NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+
+				Tools.WriteLine("Time set to dusk");
             }
         }
 
@@ -400,7 +406,9 @@ namespace tdsm.api.Command
             {
                 Main.dayTime = false;
                 Main.time = 16200.0;
-                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+				NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+
+				Tools.WriteLine("Time set to midnight");
             }
         }
 
