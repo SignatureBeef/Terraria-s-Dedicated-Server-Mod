@@ -116,7 +116,7 @@ namespace tdsm.patcher
             patcher.MakeTypesPublic(true);
             Console.Write("Ok\nHooking command line...");
             patcher.PatchCommandLine();
-			if (isMono)
+			if (isMono || (args != null && args.Where(x => x.ToLower() == "-removeupnp")))
             {
                 Console.Write("Ok\nRemoving port forwarding functionality...");
                 patcher.FixNetplay();

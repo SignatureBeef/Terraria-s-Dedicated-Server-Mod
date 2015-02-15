@@ -20,7 +20,7 @@ namespace tdsm.api.Plugin
         public static readonly HookPoint<HookArgs.PluginLoadRequest> PluginLoadRequest;
         //public static readonly HookPoint<HookArgs.UnkownSendPacket> UnkownSendPacket;
         //public static readonly HookPoint<HookArgs.UnkownReceivedPacket> UnkownReceivedPacket;
-        public static readonly HookPoint<HookArgs.SendNetData> SendNetData;
+        public static readonly HookPoint<HookArgs.SendNetData> SendNetData; //[TODO] determine if this should be a Action<...>
 
         public static readonly HookPoint<HookArgs.ConnectionRequestReceived> ConnectionRequestReceived;
         public static readonly HookPoint<HookArgs.DisconnectReceived> DisconnectReceived;
