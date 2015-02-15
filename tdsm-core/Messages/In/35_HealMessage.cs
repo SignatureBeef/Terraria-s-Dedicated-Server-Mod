@@ -18,7 +18,7 @@ namespace tdsm.core.Messages.In
 
             if (playerIndex != whoAmI)
             {
-                Server.slots[whoAmI].Kick("Cheating detected (HEAL_PLAYER forgery).");
+                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (HEAL_PLAYER forgery).");
                 return;
             }
 

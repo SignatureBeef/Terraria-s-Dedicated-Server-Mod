@@ -25,7 +25,7 @@ namespace tdsm.core.Messages.In
             //    || time > Player.MAX_BUFF_TIME)))
             //{
             //    ProgramLog.Log("PLAYER_ADD_BUFF: from={0}, for={1}, type={2}, time={3}", whoAmI, playerId, type, time);
-            //    Server.slots[whoAmI].Kick("Cheating detected (PLAYER_ADD_BUFF forgery).");
+            //    tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (PLAYER_ADD_BUFF forgery).");
             //    return;
             //}
 

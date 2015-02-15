@@ -33,7 +33,8 @@ namespace tdsm.api.Callbacks
             {
                 WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
             }
-            using (FileStream fileStream = new FileStream(Terraria.Main.worldPathName, FileMode.Open))
+            var p = Terraria.Main.worldPathName;
+            using (FileStream fileStream = new FileStream(p, FileMode.Open))
             {
                 using (BinaryReader binaryReader = new BinaryReader(fileStream))
                 {

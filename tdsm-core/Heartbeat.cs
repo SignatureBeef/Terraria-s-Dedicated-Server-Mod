@@ -41,9 +41,10 @@ namespace tdsm.core
         enum ResponseCode : byte
         {
             UpToDate = 0,
-            UpdateReady = 1
+            UpdateReady = 1,
 
             //Maybe a notice (flag for server/console and players - must be allowed in config)
+            StringResponse = 255
         }
 
         static void Beat()
@@ -99,18 +100,19 @@ namespace tdsm.core
                                 Tools.NotifyAllOps("New updates have been found for: " + updates);
                                 //Tools.NotifyAllOps("Updates are ready for: " + updates + ", 2 plugins(s)"); Future use
                                 break;
-                            default:
-                                ProgramLog.Log("Invalid heartbeat response.");
-
+                            case ResponseCode.StringResponse:
                                 try
                                 {
                                     var str = Encoding.UTF8.GetString(data);
                                     if (str != null)
                                     {
-                                        ProgramLog.Log("Response: " + str);
+                                        ProgramLog.Log("Heartbeat Sent: " + str);
                                     }
                                 }
                                 catch { }
+                                break;
+                            default:
+                                ProgramLog.Log("Invalid heartbeat response.");
                                 break;
                         }
                     }

@@ -664,13 +664,63 @@ namespace tdsm.patcher
             }
         }
 
-        public void Save(string filePath)
+        public void HookSockets()
+        {
+            var serverClass = _self.MainModule.Types.Where(x => x.Name == "Netplay").First();
+            var sockClass = _self.MainModule.Types.Where(x => x.Name == "IAPISocket").First();
+            var targetArray = serverClass.Fields.Where(x => x.Name == "slots").First();
+            var targetField = sockClass.Fields.Where(x => x.Name == "tileSection").First();
+            
+            //Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
+            var instructions = _asm.MainModule.Types
+                .SelectMany(x => x.Methods
+                    .Where(y => y.HasBody && y.Body.Instructions != null)
+                )
+                .SelectMany(x => x.Body.Instructions)
+                .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Ldsfld
+                    && x.Operand is FieldReference
+                    && (x.Operand as FieldReference).FieldType.FullName == "Terraria.ServerSock[]"
+                    && x.Next.Next.Next.OpCode == Mono.Cecil.Cil.OpCodes.Ldfld
+                    && x.Next.Next.Next.Operand is FieldReference
+                    && (x.Next.Next.Next.Operand as FieldReference).Name == "tileSection"
+                )
+                .ToArray();
+
+            for (var x = 0; x < instructions.Length; x++)
+            {
+                instructions[x].Operand = _asm.MainModule.Import(targetArray);
+                instructions[x].Next.Next.Next.Operand = _asm.MainModule.Import(targetField);
+            }
+
+            var ourClass = _self.MainModule.Types.Where(x => x.Name == "Netplay").First();
+            foreach (var rep in new string[] { "SendAnglerQuest", "sendWater", "syncPlayers", "AddBan" })
+            {
+                var toBeReplaced = _asm.MainModule.Types
+                    .SelectMany(x => x.Methods
+                        .Where(y => y.HasBody)
+                    )
+                    .SelectMany(x => x.Body.Instructions)
+                    .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Call
+                        && x.Operand is MethodReference
+                        && (x.Operand as MethodReference).Name == rep
+                    )
+                    .ToArray();
+
+                var replacement = ourClass.Methods.Where(x => x.Name == rep).First();
+                for (var x = 0; x < toBeReplaced.Length; x++)
+                {
+                    toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
+                }
+            }
+        }
+
+        public void Save(string filePath, int apiBuild)
         {
             //Ensure the name is updated to the new one
 //			if(APIWrapper.IsDotNet())
-//				_asm.Name = new AssemblyNameDefinition("tdsm" /* Must not be the same as the .exe, as it will cause referencing issues */, new Version(0, 0, tdsm.api.Globals.Build, 0));
+//				Terraria.Name = new AssemblyNameDefinition("tdsm" /* Must not be the same as the .exe, as it will cause referencing issues */, new Version(0, 0, tdsm.api.Globals.Build, 0));
 //			else 
-			_asm.Name = new AssemblyNameDefinition("tdsm", new Version(0, 0, APIWrapper.Build, 0));
+			_asm.Name = new AssemblyNameDefinition("tdsm", new Version(0, 0, apiBuild, 0));
 
             _asm.MainModule.Name = "tdsm.exe";
 			//TODO fix the above, i hate it.

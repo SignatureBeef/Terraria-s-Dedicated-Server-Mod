@@ -19,7 +19,7 @@ namespace tdsm.core.Messages.In
 
             if (playerIndex != whoAmI)
             {
-                Server.slots[whoAmI].Kick("Cheating detected (PLAYER_JOIN_PARTY forgery).");
+                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (PLAYER_JOIN_PARTY forgery).");
                 return;
             }
 

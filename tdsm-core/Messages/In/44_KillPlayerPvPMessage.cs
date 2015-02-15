@@ -20,7 +20,7 @@ namespace tdsm.core.Messages.In
 
             if (playerIndex != whoAmI)
             {
-                Server.slots[whoAmI].Kick("Cheating detected (KILL_PLAYER forgery).");
+                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (KILL_PLAYER forgery).");
                 return;
             }
 
@@ -28,7 +28,7 @@ namespace tdsm.core.Messages.In
 
             var ctx = new HookContext
             {
-                Connection = Server.slots[whoAmI].conn,
+                Connection = (tdsm.api.Callbacks.Netplay.slots[whoAmI] as ServerSlot).conn,
                 Sender = player,
                 Player = player,
             };
@@ -42,7 +42,7 @@ namespace tdsm.core.Messages.In
             //string obituary;
             //if (!ParseString(readBuffer, num + 1, length - num - 1 + start, out obituary))
             //{
-            //    Server.slots[whoAmI].Kick("Invalid characters in obituary message.");
+            //    tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Invalid characters in obituary message.");
             //    return;
             //}
             args.Obituary = " " + ReadString(readBuffer);

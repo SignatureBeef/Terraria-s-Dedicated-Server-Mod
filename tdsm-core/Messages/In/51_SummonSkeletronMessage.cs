@@ -20,7 +20,7 @@ namespace tdsm.core.Messages.In
 
             if (playerId != whoAmI)
             {
-                Server.slots[whoAmI].Kick("SummonSkeletron Player Forgery.");
+                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("SummonSkeletron Player Forgery.");
                 return;
             }
 

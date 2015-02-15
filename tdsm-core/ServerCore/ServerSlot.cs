@@ -40,7 +40,25 @@ namespace tdsm.core.ServerCore
         }
     }
 
-    public class ServerSlot
+    public static class IAPISocketExtensions
+    {
+        public static void Kick(this tdsm.api.Callbacks.IAPISocket sock, string reason)
+        {
+            (sock as ServerSlot).Kick(reason);
+        }
+
+        public static SlotState State(this tdsm.api.Callbacks.IAPISocket sock)
+        {
+            return (sock as ServerSlot).state;
+        }
+
+        public static void SetState(this tdsm.api.Callbacks.IAPISocket sock, SlotState state)
+        {
+            (sock as ServerSlot).state = state;
+        }
+    }
+
+    public class ServerSlot : tdsm.api.Callbacks.IAPISocket
     {
         public volatile ClientConnection conn;
 
@@ -56,24 +74,24 @@ namespace tdsm.core.ServerCore
             }
         }
 
-        public int whoAmI;
-        public string statusText2;
-        public int statusCount;
-        public int statusMax;
-        public volatile string remoteAddress;
-        public bool[,] tileSection;
-        public string statusText = String.Empty;
-        public bool announced;
-        public string name = "Anonymous";
-        public string oldName = String.Empty;
-        public float spamProjectile;
-        public float spamAddBlock;
-        public float spamDelBlock;
-        public float spamWater;
-        public float spamProjectileMax = 100f;
-        public float spamAddBlockMax = 100f;
-        public float spamDelBlockMax = 500f;
-        public float spamWaterMax = 50f;
+        //public int whoAmI;
+        //public string statusText2;
+        //public int statusCount;
+        //public int statusMax;
+        //public volatile string remoteAddress;
+        //public bool[,] tileSection;
+        //public string statusText = String.Empty;
+        //public bool announced;
+        //public string name = "Anonymous";
+        //public string oldName = String.Empty;
+        //public float spamProjectile;
+        //public float spamAddBlock;
+        //public float spamDelBlock;
+        //public float spamWater;
+        //public float spamProjectileMax = 100f;
+        //public float spamAddBlockMax = 100f;
+        //public float spamDelBlockMax = 500f;
+        //public float spamWaterMax = 50f;
 
         public bool Connected
         {
@@ -220,6 +238,21 @@ namespace tdsm.core.ServerCore
             if (conn == null) return;
 
             conn.CopyAndSend(new ArraySegment<byte>(data, offset, length));
+        }
+
+        public override bool IsPlaying()
+        {
+            return state == SlotState.PLAYING;
+        }
+
+        public override bool CanSendWater()
+        {
+            return state >= SlotState.SENDING_TILES && Connected;
+        }
+
+        public override string RemoteAddress()
+        {
+            return conn.RemoteAddress;
         }
     }
 }

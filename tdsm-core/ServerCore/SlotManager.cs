@@ -264,7 +264,7 @@ namespace tdsm.core.ServerCore
             conn.State = SlotState.ASSIGNING_SLOT;
             conn.ResetTimeout();
 
-            var slot = Server.slots[id];
+            var slot = tdsm.api.Callbacks.Netplay.slots[id] as ServerSlot;
             slot.remoteAddress = conn.RemoteAddress;
             slot.conn = conn;
 
@@ -326,7 +326,7 @@ namespace tdsm.core.ServerCore
         {
             ClientConnection assignedTo = null;
 
-            var slot = Server.slots[id];
+            var slot = tdsm.api.Callbacks.Netplay.slots[id] as ServerSlot;
             slot.Reset();
 
             lock (syncRoot)

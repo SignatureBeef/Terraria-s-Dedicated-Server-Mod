@@ -17,7 +17,7 @@ namespace tdsm.core.Messages.In
         {
             if (ReadByte(readBuffer) != whoAmI)
             {
-                Server.slots[whoAmI].Kick("Cheating detected (PLAYER_STATE_UPDATE forgery).");
+                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (PLAYER_STATE_UPDATE forgery).");
                 return;
             }
             var player = Main.player[whoAmI];
@@ -63,7 +63,7 @@ namespace tdsm.core.Messages.In
             //{
             //    player5.velocity = ReadVector2(readBuffer);
             //}
-            //if (Main.netMode == 2 && Server.slots[whoAmI].state == SlotState.PLAYING)
+            //if (Main.netMode == 2 && tdsm.api.Callbacks.Netplay.slots[whoAmI].state == SlotState.PLAYING)
             //{
             //    NewNetMessage.SendData(13, -1, whoAmI, String.Empty, whoAmI, 0f, 0f, 0f, 0);
             //    return;
@@ -73,7 +73,7 @@ namespace tdsm.core.Messages.In
             args.ApplyParams(player);
             args.ApplyKeys(player);
 
-            if (Server.slots[whoAmI].state == SlotState.PLAYING)
+            if (tdsm.api.Callbacks.Netplay.slots[whoAmI].IsPlaying())
             {
                 NewNetMessage.SendData(13, -1, whoAmI, String.Empty, whoAmI);
             }

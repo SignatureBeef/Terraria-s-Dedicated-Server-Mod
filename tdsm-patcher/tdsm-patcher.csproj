@@ -42,6 +42,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ConsolePause>false</ConsolePause>
     <Externalconsole>true</Externalconsole>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>

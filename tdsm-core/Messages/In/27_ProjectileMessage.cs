@@ -70,7 +70,7 @@ namespace tdsm.core.Messages.In
                 projectile.SetDefaults(num69);
                 if (Main.netMode == 2)
                 {
-                    Server.slots[whoAmI].spamProjectile += 1f;
+                    tdsm.api.Callbacks.Netplay.slots[whoAmI].spamProjectile += 1f;
                 }
             }
             projectile.identity = num67;

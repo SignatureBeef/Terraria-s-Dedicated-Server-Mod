@@ -1011,9 +1011,9 @@ namespace tdsm.core
                 int s;
                 args.ParseOne(out s);
 
-                var slot = Server.slots[s];
+                var slot = tdsm.api.Callbacks.Netplay.slots[s];
 
-                if (slot.state != SlotState.VACANT)
+                if (slot.State() != SlotState.VACANT)
                 {
                     slot.Kick("You have been kicked by " + sender.SenderName + ".");
 

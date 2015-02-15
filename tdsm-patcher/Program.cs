@@ -2,6 +2,7 @@
 //#define CLIENT
 using System;
 using System.IO;
+using System.Linq;
 
 namespace tdsm.patcher
 {
@@ -99,8 +100,10 @@ namespace tdsm.patcher
             patcher.HookUpdateServer();
             Console.Write("Ok\nHooking config...");
             patcher.HookConfig();
-            //Console.Write("Ok\nHooking DEBUG...");
-            //patcher.HookWorldFile_DEBUG();
+            Console.Write("Ok\nRouting socket implementations...");
+            patcher.HookSockets();
+            Console.Write("Ok\nHooking DEBUG...");
+            patcher.HookWorldFile_DEBUG();
             Console.Write("Ok\n");
 
             //TODO repace Terraria's Console.SetTitles
@@ -116,31 +119,40 @@ namespace tdsm.patcher
             try
             {
 #endif
-			APIWrapper.Initialise();
-			APIWrapper.InvokeEvent(patcher.Terraria, true);
-//            tdsm.api.Globals.Touch();
-//
-//            tdsm.api.PluginManager.SetHookSource(typeof(HookPoints));
-//            tdsm.api.PluginManager.Initialize(tdsm.api.Globals.PluginPath, tdsm.api.Globals.LibrariesPath);
-//            tdsm.api.PluginManager.LoadPlugins();
-//
-//            var ctx = new tdsm.api.Plugin.HookContext
+//            APIWrapper.Initialise();
+//            byte[] data;
+//            using (var ms = new MemoryStream())
 //            {
-//                Sender = tdsm.api.Plugin.HookContext.ConsoleSender
-//            };
-//
-//            var hookArgs = new HookArgs.PatchServer
-//            {
-//                Default = patcher,
-//#if SERVER
-//                IsClient = false,
-//                IsServer = true
-//#elif CLIENT
-//                IsClient = true,
-//                IsServer = false
-//#endif
-//            };
-//            HookPoints.PatchServer.Invoke(ref ctx, ref hookArgs);
+//                patcher.Terraria.Write(ms);
+//                ms.Seek(0, SeekOrigin.Begin);
+//                data = ms.ToArray();
+//            }
+//            data = APIWrapper.InvokeEvent(data, true);
+////            tdsm.api.Globals.Touch();
+////
+////            tdsm.api.PluginManager.SetHookSource(typeof(HookPoints));
+////            tdsm.api.PluginManager.Initialize(tdsm.api.Globals.PluginPath, tdsm.api.Globals.LibrariesPath);
+////            tdsm.api.PluginManager.LoadPlugins();
+////
+////            var ctx = new tdsm.api.Plugin.HookContext
+////            {
+////                Sender = tdsm.api.Plugin.HookContext.ConsoleSender
+////            };
+////
+////            var hookArgs = new HookArgs.PatchServer
+////            {
+////                Default = patcher,
+////#if SERVER
+////                IsClient = false,
+////                IsServer = true
+////#elif CLIENT
+////                IsClient = true,
+////                IsServer = false
+////#endif
+////            };
+////            HookPoints.PatchServer.Invoke(ref ctx, ref hookArgs);
+//            //var apiBuild = APIWrapper.Build;
+//            APIWrapper.Finish();
 #if Release
             }
             catch (Exception e)
@@ -150,7 +162,7 @@ namespace tdsm.patcher
 #endif
 
             Console.Write("Saving to {0}...", outFile);
-            patcher.Save(outFile);
+            patcher.Save(outFile, 1);
 
 #if Release || true
             Console.WriteLine("Ok\nYou may now run {0} as you would normally.", outFile);

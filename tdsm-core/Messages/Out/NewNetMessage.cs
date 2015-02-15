@@ -71,7 +71,7 @@ namespace tdsm.core.Messages.Out
 
         public static void BootPlayer(int plr, string msg)
         {
-            Server.slots[plr].Kick(msg);
+            tdsm.api.Callbacks.Netplay.slots[plr].Kick(msg);
         }
 
         public static int SendData(Packet packet, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
@@ -431,7 +431,7 @@ namespace tdsm.core.Messages.Out
                     //					}
 
                 }
-                else if (Server.slots[remoteClient].Connected)
+                else if ((tdsm.api.Callbacks.Netplay.slots[remoteClient] as ServerSlot).Connected)
                 {
                     msg.Send(remoteClient);
                     //NewNetMessage.buffer[remoteClient].spamCount++;
@@ -466,10 +466,10 @@ namespace tdsm.core.Messages.Out
         {
             if (sectionX >= 0 && sectionY >= 0 && sectionX < Main.maxSectionsX && sectionY < Main.maxSectionsY)
             {
-                Server.slots[whoAmi].tileSection[sectionX, sectionY] = true;
+                tdsm.api.Callbacks.Netplay.slots[whoAmi].tileSection[sectionX, sectionY] = true;
                 try
                 {
-                    Server.slots[whoAmi].conn.SendSection(sectionX, sectionY);
+                    (tdsm.api.Callbacks.Netplay.slots[whoAmi] as ServerSlot).conn.SendSection(sectionX, sectionY);
                 }
                 catch (NullReferenceException) { }
             }
@@ -479,9 +479,9 @@ namespace tdsm.core.Messages.Out
         {
             if (sectionX >= 0 && sectionY >= 0 && sectionX < Main.maxSectionsX && sectionY < Main.maxSectionsY)
             {
-                if (!skipSent || !Server.slots[whoAmi].tileSection[sectionX, sectionY])
+                if (!skipSent || !tdsm.api.Callbacks.Netplay.slots[whoAmi].tileSection[sectionX, sectionY])
                 {
-                    Server.slots[whoAmi].tileSection[sectionX, sectionY] = true;
+                    tdsm.api.Callbacks.Netplay.slots[whoAmi].tileSection[sectionX, sectionY] = true;
                     int number = sectionX * 200;
                     int num = sectionY * 150;
                     int num2 = 150;
@@ -510,9 +510,10 @@ namespace tdsm.core.Messages.Out
             //ProgramLog.Log ("Broadcast, {0} {1}", Netplay.slots[0].state, Netplay.slots[0].Connected);
             for (int k = 0; k < 255; k++)
             {
-                if (Server.slots[k].state >= SlotState.PLAYING && Server.slots[k].Connected)
+                var slot = tdsm.api.Callbacks.Netplay.slots[k] as ServerSlot;
+                if (slot.state >= SlotState.PLAYING && slot.Connected)
                 {
-                    Server.slots[k].Send(bytes);
+                    slot.Send(bytes);
                 }
             }
         }
@@ -522,9 +523,10 @@ namespace tdsm.core.Messages.Out
             //ProgramLog.Log ("BroadcastExcept({2}), {0} {1}", Netplay.slots[0].state, Netplay.slots[0].Connected, i);
             for (int k = 0; k < 255; k++)
             {
-                if (Server.slots[k].state >= SlotState.PLAYING && Server.slots[k].Connected && k != i)
+                var slot = tdsm.api.Callbacks.Netplay.slots[k] as ServerSlot;
+                if (slot.state >= SlotState.PLAYING && slot.Connected && k != i)
                 {
-                    Server.slots[k].Send(bytes);
+                    slot.Send(bytes);
                 }
             }
         }
@@ -561,7 +563,7 @@ namespace tdsm.core.Messages.Out
 
         public void Send(int i)
         {
-            var conn = Server.slots[i].conn;
+            var conn = (tdsm.api.Callbacks.Netplay.slots[i] as ServerSlot).conn;
             if (conn != null)
                 conn.CopyAndSend(Segment);
         }
@@ -622,7 +624,7 @@ namespace tdsm.core.Messages.Out
                 msg.Send(plr); // send these before the login event, so messages from plugins come after
             }
 
-            var slot = Server.slots[plr];
+            var slot = tdsm.api.Callbacks.Netplay.slots[plr];
 
             slot.announced = true;
 
@@ -728,13 +730,14 @@ namespace tdsm.core.Messages.Out
 
             for (int i = 0; i < 255; i++)
             {
-                if (Server.slots[i].state >= SlotState.PLAYING && Server.slots[i].Connected)
+                var slot = tdsm.api.Callbacks.Netplay.slots[i] as ServerSlot;
+                if (slot.state >= SlotState.PLAYING && slot.Connected)
                 {
                     int X = x / 200;
                     int Y = y / 150;
                     if (X < (Main.maxTilesX / 200) && Y < (Main.maxTilesY / 150))
                     {
-                        if (Server.slots[i].tileSection[X, Y])
+                        if (tdsm.api.Callbacks.Netplay.slots[i].tileSection[X, Y])
                         {
                             if (bytes == null)
                             {
@@ -742,7 +745,7 @@ namespace tdsm.core.Messages.Out
                                 msg.FlowLiquid(x, y);
                                 bytes = msg.Output;
                             }
-                            Server.slots[i].Send(bytes);
+                            slot.Send(bytes);
                         }
                     }
                     else
@@ -807,7 +810,7 @@ namespace tdsm.core.Messages.Out
 
             for (int i = 0; i < 255; i++)
             {
-                if (Server.slots[i].state == SlotState.PLAYING)
+                if (tdsm.api.Callbacks.Netplay.slots[i].State() == SlotState.PLAYING)
                 {
                     msg.Clear();
                     msg.BuildPlayerUpdate(i);
@@ -818,7 +821,7 @@ namespace tdsm.core.Messages.Out
             msg.Clear();
 
             for (int i = 0; i < 255; i++)
-                if (Server.slots[i].state != SlotState.PLAYING)
+                if (tdsm.api.Callbacks.Netplay.slots[i].State() != SlotState.PLAYING)
                     msg.SynchBegin(i, 0);
 
             msg.Broadcast();
@@ -828,7 +831,7 @@ namespace tdsm.core.Messages.Out
         {
             for (int k = 0; k < 255; k++)
             {
-                if (Server.slots[k].state == SlotState.PLAYING && i != k)
+                if (tdsm.api.Callbacks.Netplay.slots[k].State() == SlotState.PLAYING && i != k)
                     BuildPlayerUpdate(k);
                 else if (i != k)
                     SynchBegin(k, 0);

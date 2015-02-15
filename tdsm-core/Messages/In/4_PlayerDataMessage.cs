@@ -168,8 +168,8 @@ namespace tdsm.core.Messages.In
 
                     foreach (var otherPlayer in Main.player)
                     {
-                        var otherSlot = Server.slots[otherPlayer.whoAmi];
-                        if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherSlot.state >= SlotState.CONNECTED)
+                        var otherSlot = tdsm.api.Callbacks.Netplay.slots[otherPlayer.whoAmi];
+                        if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherSlot.State() >= SlotState.CONNECTED)
                         {
                             conn.Kick("A \"" + otherPlayer.Name + "\" is already on this server.");
                             return;
@@ -228,11 +228,11 @@ namespace tdsm.core.Messages.In
             //    return;
             //}
             //bool flag = false;
-            //if (Server.slots[this.whoAmI].state < 10)
+            //if (tdsm.api.Callbacks.Netplay.slots[this.whoAmI].state < 10)
             //{
             //    for (int n = 0; n < 255; n++)
             //    {
-            //        if (n != num3 && player2.name == Main.player[n].name && Server.slots[n].active)
+            //        if (n != num3 && player2.name == Main.player[n].name && tdsm.api.Callbacks.Netplay.slots[n].active)
             //        {
             //            flag = true;
             //        }
@@ -253,8 +253,8 @@ namespace tdsm.core.Messages.In
             //    NewNetMessage.SendData(2, this.whoAmI, -1, "Empty name.", 0, 0f, 0f, 0f, 0);
             //    return;
             //}
-            //Server.slots[this.whoAmI].oldName = player2.name;
-            //Server.slots[this.whoAmI].name = player2.name;
+            //tdsm.api.Callbacks.Netplay.slots[this.whoAmI].oldName = player2.name;
+            //tdsm.api.Callbacks.Netplay.slots[this.whoAmI].name = player2.name;
             //NewNetMessage.SendData(4, -1, this.whoAmI, player2.name, num3, 0f, 0f, 0f, 0);
             //return;
         }

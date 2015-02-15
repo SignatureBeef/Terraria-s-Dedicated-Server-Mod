@@ -31,7 +31,7 @@ namespace tdsm.core.Messages.In
 				return;
 			}
 
-			if (! Server.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
+			if (! tdsm.api.Callbacks.Netplay.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
 			{
 				Tools.WriteLine ("{0} @ {1}: {2} attempted to alter world in unloaded tile.");
 				return;
@@ -40,7 +40,7 @@ namespace tdsm.core.Messages.In
 			//TODO implement the old methods
 			var ctx = new HookContext
 			{
-				Connection = Server.slots[whoAmI].conn,
+				Connection = (tdsm.api.Callbacks.Netplay.slots[whoAmI] as ServerSlot).conn,
 				Sender = player,
 				Player = player,
 			};
@@ -77,14 +77,14 @@ namespace tdsm.core.Messages.In
                 {
                     if (action == 0 || action == 2 || action == 4)
                     {
-                        Server.slots[whoAmI].spamDelBlock += 1f;
+                        tdsm.api.Callbacks.Netplay.slots[whoAmI].spamDelBlock += 1f;
                     }
                     if (action == 1 || action == 3)
                     {
-                        Server.slots[whoAmI].spamAddBlock += 1f;
+                        tdsm.api.Callbacks.Netplay.slots[whoAmI].spamAddBlock += 1f;
                     }
                 }
-                if (!Server.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
+                if (!tdsm.api.Callbacks.Netplay.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
                 {
                     fail = true;
                 }

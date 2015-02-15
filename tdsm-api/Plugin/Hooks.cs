@@ -72,7 +72,7 @@ namespace tdsm.api.Plugin
         public static readonly HookPoint<HookArgs.ProgramStart> ProgramStart;
         public static readonly HookPoint<HookArgs.StartCommandProcessing> StartCommandProcessing;
 
-		public static readonly HookPoint<HookArgs.PatchServer> PatchServer;
+        //public static readonly HookPoint<HookArgs.PatchServer> PatchServer;
 
         static HookPoints()
         {
@@ -124,20 +124,20 @@ namespace tdsm.api.Plugin
             StartCommandProcessing = new HookPoint<HookArgs.StartCommandProcessing>("start-command-processing");
             ConfigurationLine = new HookPoint<HookArgs.ConfigurationLine>("config-line");
 
-			//Non API - but to seperate from the patcher
-			PatchServer = new HookPoint<HookArgs.PatchServer>("patch-server");
+            ////Non API - but to seperate from the patcher
+            //PatchServer = new HookPoint<HookArgs.PatchServer>("patch-server");
         }
     }
 
     public static class HookArgs
 	{
-        public struct PatchServer
-        {
-//            public Injector Default;
-			public object /*AssemblyDefinition*/ Terraria { get; set;}
-            public bool IsServer { get; set; }
-            public bool IsClient { get; set; }
-        }
+//        public struct PatchServer
+//        {
+////            public Injector Default;
+//            public byte[] /*AssemblyDefinition*/ Terraria { get; set; }
+//            public bool IsServer { get; set; }
+//            public bool IsClient { get; set; }
+//        }
 
         public struct ConfigurationLine
         {

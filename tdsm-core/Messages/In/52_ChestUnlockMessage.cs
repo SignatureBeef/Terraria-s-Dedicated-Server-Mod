@@ -18,7 +18,7 @@ namespace tdsm.core.Messages.In
 
             if (playerId != whoAmI)
             {
-                Server.slots[whoAmI].Kick("Cheating detected (CHEST_UNLOCK forgery).");
+                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (CHEST_UNLOCK forgery).");
                 return;
             }
 
