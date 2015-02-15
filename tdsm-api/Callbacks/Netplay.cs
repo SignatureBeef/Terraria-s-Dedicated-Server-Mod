@@ -57,7 +57,8 @@ namespace tdsm.api.Callbacks
         }
 
         public static void SendAnglerQuest()
-        {
+		{
+#if Full_API
             for (int i = 0; i < 255; i++)
             {
                 if (slots[i].IsPlaying())
@@ -65,10 +66,12 @@ namespace tdsm.api.Callbacks
                     NetMessage.SendData(74, i, -1, Terraria.Main.player[i].name, Terraria.Main.anglerQuest, 0f, 0f, 0f, 0);
                 }
             }
+#endif
         }
 
         public static void sendWater(int x, int y)
-        {
+		{
+#if Full_API
             for (int i = 0; i < 256; i++)
             {
                 //if ((/*NetMessage.buffer[i].broadcast ||*/ Server.slots[i].state >= SlotState.SENDING_TILES) && Server.slots[i].Connected)
@@ -82,10 +85,12 @@ namespace tdsm.api.Callbacks
                     }
                 }
             }
+#endif
         }
 
         public static void syncPlayers()
-        {
+		{
+#if Full_API
             bool flag = false;
             for (int i = 0; i < 255; i++)
             {
@@ -199,11 +204,14 @@ namespace tdsm.api.Callbacks
             {
                 Terraria.WorldFile.saveWorld(false);
                 Terraria.Netplay.disconnect = true;
-            }
+			}
+#endif
         }
 
         public static void AddBan(int plr)
-        {
+		{
+#if Full_API
+			//[TODO] hook
             //Server.Bans.Add(Server.slots[plr].conn.RemoteAddress);
             //string text = Server.slots[plr].conn.RemoteAddress;
             //string value = text;
@@ -219,6 +227,7 @@ namespace tdsm.api.Callbacks
             //    streamWriter.WriteLine("//" + Terraria.Main.player[plr].name);
             //    streamWriter.WriteLine(value);
             //}
+#endif
         }
     }
 }

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+#if Full_API
 using Terraria;
+#endif
 
 namespace tdsm.api.Callbacks
 {
     public static class WorldFile
     {
         public static void loadWorld()
-        {
+		{
+			#if Full_API
             Main.WorldLoadBegin();
             Terraria.Main.checkXMas();
             Terraria.Main.checkHalloween();
@@ -122,7 +125,7 @@ namespace tdsm.api.Callbacks
                     }
                 }
             }
+			#endif
         }
-
-    }
+	}
 }
