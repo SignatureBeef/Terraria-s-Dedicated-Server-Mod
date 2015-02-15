@@ -9,7 +9,7 @@ namespace tdsm.patcher
 {
     public class Program
     {
-        public const Double Build = 1;
+        public const Int32 Build = 1;
 //        public static bool IsPatching { get; private set; }
 
 //        static Program()
