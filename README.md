@@ -6,23 +6,7 @@ Should you need help the wiki is currently in progress, but you still may view i
 ##Getting the new TDSM Rebind:
 You can either compile from source or grab the latest release located [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases).
 
-##Running TDSM Rebind:
-###Linux (Ubuntu):
-Install prerequisites
-```Batchfile
-apt-get install mono-complete
-```
-Running
-```Batchfile
-mono tdsm.exe
-```
-
-Note:
-You need a 4.0 compatible run time.
-<br/>
-If you get mscorlib errors then this is a sure sign, so you may need to add "--runtime=4.0" just after mono.
-<br/>
-If that still does not work you may need to update mono.
+See [this wiki page](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/A-Beginner%27s-Guide-for-TDSM-Rebind%3A-Installation-and-Running) for how to run the new TDSM.
 	
 ##Plugin Development
 Plugins are supported via the tdsm-api project. This DLL is hooked into the vanilla server using the tdsm-patcher project. However you must reference both the tdsm.api.dll as well as the patched tdsm.exe.
