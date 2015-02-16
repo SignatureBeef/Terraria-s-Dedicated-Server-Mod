@@ -765,8 +765,8 @@ namespace tdsm.patcher
             {
                 if (_asm.CustomAttributes[x].AttributeType.Name == "GuidAttribute")
                 {
-                    _asm.CustomAttributes[x].ConstructorArguments[0] = 
-                        new CustomAttributeArgument(_asm.CustomAttributes[x].ConstructorArguments[0].Type, Guid.NewGuid().ToString());
+                    _asm.CustomAttributes[x].ConstructorArguments[0] =
+                        new CustomAttributeArgument(_asm.CustomAttributes[x].ConstructorArguments[0].Type, tdsmUID);
                 }
                 //else if (_asm.CustomAttributes[x].AttributeType.Name == "AssemblyFileVersionAttribute")
                 //{

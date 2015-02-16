@@ -6,7 +6,7 @@ namespace tdsm.core.Messages.In
     {
         public ClientUUIDMessage()
         {
-            ValidStates = SlotState.ACCEPTED | SlotState.ASSIGNING_SLOT;
+            ValidStates = SlotState.ACCEPTED | SlotState.ASSIGNING_SLOT | SlotState.PLAYER_AUTH;
         }
 
         public override Packet GetPacket()

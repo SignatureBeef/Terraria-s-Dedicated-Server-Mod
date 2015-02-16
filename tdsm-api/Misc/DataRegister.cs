@@ -102,6 +102,11 @@ namespace tdsm.api.Misc
                 }
             }
 
+            if (!updated)
+            {
+                updated = Add(key, value, autoSave);
+            }
+
             if (autoSave) return Save() && updated;
             return updated;
         }
