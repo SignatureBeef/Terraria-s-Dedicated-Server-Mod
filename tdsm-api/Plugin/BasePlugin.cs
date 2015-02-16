@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using tdsm.api.Command;
-using tdsm.api.Permissions;
 using tdsm.api.Plugin;
 
 namespace tdsm.api
@@ -196,24 +195,6 @@ namespace tdsm.api
             }
         }
 
-        public void AddNode(string Node)
-        {
-            //if (!Program.permissionManager.ActiveNodes.Contains(Node))
-            //    Program.permissionManager.ActiveNodes.Add(Node);
-        }
-
-        public void AddNode(Node Node)
-        {
-            AddNode(Node.Path);
-        }
-
-        public Node AddAndCreateNode(string Path)
-        {
-            Node node = new Node(Path);
-            AddNode(Path);
-            return node;
-        }
-
         /// <summary>
         /// Adds new command to the server's command list
         /// </summary>
@@ -223,7 +204,7 @@ namespace tdsm.api
         {
             if (commands.ContainsKey(prefix)) throw new ApplicationException("AddCommand: duplicate command: " + prefix);
 
-			var cmd = new CommandInfo(prefix);
+            var cmd = new CommandInfo(prefix);
             cmd.BeforeEvent += NotifyBeforeCommand;
             cmd.AfterEvent += NotifyAfterCommand;
 

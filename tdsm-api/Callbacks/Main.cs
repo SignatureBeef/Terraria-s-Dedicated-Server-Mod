@@ -13,6 +13,102 @@ namespace tdsm.api.Callbacks
             PluginManager.SetHookSource(typeof(HookPoints));
             PluginManager.Initialize(Globals.PluginPath, Globals.LibrariesPath);
             PluginManager.LoadPlugins();
+
+            if (!Permissions.PermissionsManager.IsSet)
+            {
+                var file = System.IO.Path.Combine(Globals.DataPath, "permissions.xml");
+                //if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
+                if (System.IO.File.Exists(file))
+                {
+                    var handler = new Permissions.XmlSupplier(file);
+                    if (handler.Load())
+                        Permissions.PermissionsManager.SetHandler(handler);
+                }
+                //else
+                //{
+                //    var test = new Permissions.XmlReflect()
+                //    {
+                //        Groups = new Permissions.XmlGroup[]
+                //        { 
+                //            new Permissions.XmlGroup()
+                //            {
+                //                Nodes = new Permissions.XmlNode[]
+                //                {
+                //                    new Permissions.XmlNode()
+                //                    {
+                //                        Deny = true,
+                //                        Key = "tdsm.testa"
+                //                    },
+                //                    new Permissions.XmlNode()
+                //                    {
+                //                        Key = "tdsm.testb"
+                //                    }
+                //                },
+                //                Name = "groupA"
+                //            },
+                //            new Permissions.XmlGroup()
+                //            {
+                //                Nodes = new Permissions.XmlNode[]
+                //                {
+                //                    new Permissions.XmlNode()
+                //                    {
+                //                        Deny = true,
+                //                        Key = "tdsm.testm"
+                //                    },
+                //                    new Permissions.XmlNode()
+                //                    {
+                //                        Deny = true,
+                //                        Key = "tdsm.testp"
+                //                    }
+                //                },
+                //                Name = "groupb"
+                //            }
+                //        },
+                //        Players = new Permissions.XmlPlayer[]
+                //        { 
+                //            new Permissions.XmlPlayer()
+                //            {
+                //                Nodes = new Permissions.XmlNode[]
+                //                {
+                //                    new Permissions.XmlNode()
+                //                    {
+                //                        Key = "tdsm.testc"
+                //                    },
+                //                    new Permissions.XmlNode()
+                //                    {
+                //                        Deny = true,
+                //                        Key = "tdsm.testd"
+                //                    }
+                //                },
+                //                Name = "playerA",
+                //                Groups = new string[] {"groupa","groupb"}
+                //            },
+                //            new Permissions.XmlPlayer()
+                //            {
+                //                Nodes = new Permissions.XmlNode[]
+                //                {
+                //                    new Permissions.XmlNode()
+                //                    {
+                //                        Key = "tdsm.testcbbb"
+                //                    },
+                //                    new Permissions.XmlNode()
+                //                    {
+                //                        Deny = true,
+                //                        Key = "tdsm.testd"
+                //                    }
+                //                },
+                //                Name = "playerb"
+                //            }
+                //        }
+                //    };
+                //    var slz = new System.Xml.Serialization.XmlSerializer(typeof(Permissions.XmlReflect));
+                //    using (var fs = System.IO.File.OpenWrite(file))
+                //    {
+                //        slz.Serialize(fs, test);
+                //        fs.Flush();
+                //    }
+                //}
+            }
         }
 
         public static bool OnProgramStarted(string[] cmd)

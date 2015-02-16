@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using tdsm.api;
 using tdsm.api.Command;
-using tdsm.core;
-using tdsm.core.ServerCore;
 using Terraria;
 
 namespace RestrictPlugin
@@ -70,7 +68,7 @@ namespace RestrictPlugin
 
                     if (player != null)
                     {
-                        player.SetAuthenticatedAs(name);
+                        player.AuthenticatedAs = name;
 
                         if (player != sender)
                         {
@@ -179,7 +177,7 @@ namespace RestrictPlugin
                 {
                     name = player.Name;
                     player.Op = false;
-                    player.SetAuthenticatedAs(null);
+                    player.AuthenticatedAs = null;
 
                     if (player != sender)
                         player.SendMessage("<Restrict> Your registration has been revoked.");
@@ -356,12 +354,12 @@ namespace RestrictPlugin
 
             var player = (Player)sender;
 
-            if (player.GetAuthenticatedAs() != null && command == "reg")
+            if (player.AuthenticatedAs != null && command == "reg")
             {
                 sender.SendMessage("<Restrict> Already registered, use /pass to change your password.", 255, 255, 180, 180);
                 return;
             }
-            else if (player.GetAuthenticatedAs() == null && command == "pass")
+            else if (player.AuthenticatedAs == null && command == "pass")
             {
                 sender.SendMessage("<Restrict> You are a guest, use /reg to submit a registration request.", 255, 255, 180, 180);
                 return;
@@ -402,7 +400,7 @@ namespace RestrictPlugin
                 return;
             }
 
-            if (player.GetAuthenticatedAs() != null)
+            if (player.AuthenticatedAs != null)
             {
                 var pname = NameTransform(name);
                 var oname = OldNameTransform(name);
@@ -469,7 +467,7 @@ namespace RestrictPlugin
             var player = FindPlayer(rq.name);
             if (player != null) // TODO: verify IP address
             {
-                player.SetAuthenticatedAs(rq.name);
+                player.AuthenticatedAs = rq.name;
                 player.SendMessage("<Restrict> You are now registered.");
             }
 

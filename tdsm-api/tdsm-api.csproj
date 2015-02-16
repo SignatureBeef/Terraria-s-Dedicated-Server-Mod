@@ -85,7 +85,8 @@
     <Compile Include="Misc\Affix.cs" />
     <Compile Include="Misc\DataRegister.cs" />
     <Compile Include="Misc\Platform.cs" />
-    <Compile Include="Permissions\Node.cs" />
+    <Compile Include="Permissions\PermissionsManager.cs" />
+    <Compile Include="Permissions\XmlSupplier.cs" />
     <Compile Include="Plugin\HookAttribute.cs" />
     <Compile Include="Plugin\HookPoint.cs" />
     <Compile Include="Plugin\Hooks.cs" />

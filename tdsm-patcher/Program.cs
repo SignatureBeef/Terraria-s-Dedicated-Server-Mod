@@ -64,11 +64,13 @@ namespace tdsm.patcher
 #if SERVER
             var inFile = "TerrariaServer.exe";
             var fileName = "tdsm";
-            var outFile = fileName + ".exe";
+            var outFileMS = fileName + ".microsoft.exe";
+            var outFileMN = fileName + ".mono.exe";
             var patchFile = "tdsm.api.dll";
 
 #if DEV
-            if (File.Exists(outFile)) File.Delete(outFile);
+            if (File.Exists(outFileMS)) File.Delete(outFileMS);
+            if (File.Exists(outFileMN)) File.Delete(outFileMN);
 
             var root = new DirectoryInfo(Environment.CurrentDirectory);
             while (root.GetDirectories().Where(x => x.Name == "tdsm-patcher").Count() == 0)
@@ -117,12 +119,6 @@ namespace tdsm.patcher
             Console.Write("Opening up classes for API usage...");
             patcher.MakeTypesPublic(true);
             Console.Write("Ok\nHooking command line...");
-            patcher.PatchCommandLine();
-            if (isMono || (args != null && args.Where(x => x.ToLower() == "-removeupnp").Count() > 0))
-            {
-                Console.Write("Ok\nRemoving port forwarding functionality...");
-                patcher.FixNetplay();
-            }
             Console.Write("Ok\nSkipping sysmenus functions...");
             patcher.SkipMenu();
             Console.Write("Ok\nFixing code entry...");
@@ -214,20 +210,31 @@ namespace tdsm.patcher
             }
 #endif
 
-            Console.Write("Saving to {0}...", outFile);
-            patcher.Save(outFile, Build, TDSMGuid, fileName);
+            Console.Write("Saving to {0}...", outFileMS);
+            patcher.Save(outFileMS, Build, TDSMGuid, fileName);
+
+            patcher.PatchCommandLine();
+            //if (isMono || (args != null && args.Where(x => x.ToLower() == "-removeupnp").Count() > 0))
+            {
+                Console.Write("Ok\nRemoving port forwarding functionality...");
+                patcher.FixNetplay();
+            }
+            Console.Write("Ok\nSaving to {0}...", outFileMN);
+            patcher.Save(outFileMN, Build, TDSMGuid, fileName);
+
 
 #if Release || true
-            Console.WriteLine("Ok\nYou may now run {0} as you would normally.", outFile);
-            Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", outFile);
+            var current = isMono ? outFileMN : outFileMS;
+            Console.WriteLine("Ok\nYou may now run {0} as you would normally.", current);
+            Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", current);
             if (Console.ReadKey(true).Key == ConsoleKey.Y)
             {
                 if (!isMono)
                 {
                     if (File.Exists("serverconfig.txt"))
-                        System.Diagnostics.Process.Start(outFile, "-config serverconfig.txt");
+                        System.Diagnostics.Process.Start(current, "-config serverconfig.txt");
                     else
-                        System.Diagnostics.Process.Start(outFile);
+                        System.Diagnostics.Process.Start(current);
                 }
                 else
                 {
@@ -235,7 +242,7 @@ namespace tdsm.patcher
 
                     using (var ms = new MemoryStream())
                     {
-                        using (var fs = File.OpenRead(outFile))
+                        using (var fs = File.OpenRead(current))
                         {
                             var buff = new byte[256];
                             while (fs.Position < fs.Length)

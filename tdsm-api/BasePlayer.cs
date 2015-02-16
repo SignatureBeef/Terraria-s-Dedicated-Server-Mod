@@ -7,6 +7,8 @@ namespace tdsm.api
     {
         public string ClientUUId { get; set; }
 
+        public string AuthenticatedAs { get; set; }
+
         public System.Collections.Hashtable PluginData;// = new System.Collections.Hashtable();
 
         public override string Name

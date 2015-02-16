@@ -7,7 +7,6 @@ using tdsm.api.Command;
 using tdsm.api.Misc;
 using tdsm.api.Permissions;
 using tdsm.api.Plugin;
-using tdsm.core;
 using tdsm.core.ServerCore;
 using Terraria;
 
@@ -34,38 +33,38 @@ namespace RestrictPlugin
             {
                 var item = base.Find(key);
                 if (item != null)
-				{
-					Type t = typeof(T);
-					if (t.Name == "Int16")
-					{
-						short v = 0;
-						if (Int16.TryParse (item, out v)) return (T)(object)v;
-					}
-					else if (t.Name == "Int32")
-					{
-						int v = 0;
-						if (Int32.TryParse (item, out v)) return (T)(object)v;
-					}
-					else if (t.Name == "Int64")
-					{
-						long v = 0;
-						if (Int64.TryParse (item, out v)) return (T)(object)v;
-					}
-					else if (t.Name == "Double")
-					{
-						double v = 0;
-						if (Double.TryParse (item, out v)) return (T)(object)v;
-					}
-					else if (t.Name == "Single")
-					{
-						float v = 0;
-						if (Single.TryParse (item, out v)) return (T)(object)v;
-					}
-					else if (t.Name == "Boolean")
-					{
-						bool v = false;
-						if (Boolean.TryParse (item, out v)) return (T)(object)v;
-					}
+                {
+                    Type t = typeof(T);
+                    if (t.Name == "Int16")
+                    {
+                        short v = 0;
+                        if (Int16.TryParse(item, out v)) return (T)(object)v;
+                    }
+                    else if (t.Name == "Int32")
+                    {
+                        int v = 0;
+                        if (Int32.TryParse(item, out v)) return (T)(object)v;
+                    }
+                    else if (t.Name == "Int64")
+                    {
+                        long v = 0;
+                        if (Int64.TryParse(item, out v)) return (T)(object)v;
+                    }
+                    else if (t.Name == "Double")
+                    {
+                        double v = 0;
+                        if (Double.TryParse(item, out v)) return (T)(object)v;
+                    }
+                    else if (t.Name == "Single")
+                    {
+                        float v = 0;
+                        if (Single.TryParse(item, out v)) return (T)(object)v;
+                    }
+                    else if (t.Name == "Boolean")
+                    {
+                        bool v = false;
+                        if (Boolean.TryParse(item, out v)) return (T)(object)v;
+                    }
                 }
                 return defaultValue;
             }
@@ -102,14 +101,14 @@ namespace RestrictPlugin
             get { return properties.GetValue("server-id", "tdsm"); }
         }
 
-        public Node ChestBreak;
-        public Node ChestOpen;
-        public Node DoorChange;
-        public Node LiquidFlow;
-        public Node NpcHurt;
-        public Node ProjectileUse;
-        public Node SignEdit;
-        public Node WorldAlter;
+        public const String ChestBreak = "restrict.chestbreak";
+        public const String ChestOpen = "restrict.chestopen";
+        public const String DoorChange = "restrict.doorchange";
+        public const String LiquidFlow = "restrict.liquidflow";
+        public const String NpcHurt = "restrict.npchurt";
+        public const String ProjectileUse = "restrict.projectileuse";
+        public const String SignEdit = "restrict.signedit";
+        public const String WorldAlter = "restrict.worldalter";
 
         public RestrictPlugin()
         {
@@ -146,7 +145,7 @@ namespace RestrictPlugin
 
             AddCommand("ru")
                 .WithDescription("Register users or change their accounts")
-				.SetOldHelpStyle()
+                .SetOldHelpStyle()
                 .WithHelpText("Adding users or changing passwords:")
                 .WithHelpText("    ru [-o] [-f] <name> <hash>")
                 .WithHelpText("    ru [-o] [-f] <name> -p <password>")
@@ -160,8 +159,8 @@ namespace RestrictPlugin
                 .Calls(LockUsers<ISender, ArgumentList>(this.RegisterCommand));
 
             AddCommand("ur")
-				.WithDescription("Unregister users")
-				.SetOldHelpStyle()
+                .WithDescription("Unregister users")
+                .SetOldHelpStyle()
                 .WithHelpText("Deleting users:")
                 .WithHelpText("    ur [-f] <name>")
                 .WithHelpText("Options:")
@@ -170,8 +169,8 @@ namespace RestrictPlugin
                 .Calls(LockUsers<ISender, ArgumentList>(this.UnregisterCommand));
 
             AddCommand("ro")
-				.WithDescription("Configure Restrict")
-				.SetOldHelpStyle()
+                .WithDescription("Configure Restrict")
+                .SetOldHelpStyle()
                 .WithHelpText("Displaying options:")
                 .WithHelpText("    ro")
                 .WithHelpText("Setting options:")
@@ -208,15 +207,6 @@ namespace RestrictPlugin
                 .WithHelpText("yourpassword")
                 .WithPermissionNode("restrict.reg")
                 .Calls(LockUsers<ISender, string>(this.PlayerRegCommand));
-
-            ChestBreak = AddAndCreateNode("restrict.chestbreak");
-            ChestOpen = AddAndCreateNode("restrict.chestopen");
-            DoorChange = AddAndCreateNode("restrict.doorchange");
-            LiquidFlow = AddAndCreateNode("restrict.liquidflow");
-            NpcHurt = AddAndCreateNode("restrict.npchurt");
-            ProjectileUse = AddAndCreateNode("restrict.projectileuse");
-            SignEdit = AddAndCreateNode("restrict.signedit");
-            WorldAlter = AddAndCreateNode("restrict.worldalter");
         }
 
         Action<T, U> LockUsers<T, U>(Action<T, U> callback)
@@ -282,7 +272,7 @@ namespace RestrictPlugin
                 if (allowGuests)
                 {
                     ctx.SetResult(HookResult.DEFAULT);
-                    player.SetAuthenticatedAs(null);
+                    player.AuthenticatedAs = null;
                     (ctx.Connection as ClientConnection).DesiredQueue = 0; //(int)LoginPriority.QUEUE_LOW_PRIO;
 
                     Tools.WriteLine("<Restrict> Letting user {0} from {1} in as guest.", name, player.IPAddress);
@@ -327,7 +317,7 @@ namespace RestrictPlugin
                 if (allowGuests)
                 {
                     ctx.SetResult(HookResult.DEFAULT);
-                    player.SetAuthenticatedAs(null);
+                    player.AuthenticatedAs = null;
                     (ctx.Connection as ClientConnection).DesiredQueue = 0;
                 }
                 else
@@ -351,14 +341,14 @@ namespace RestrictPlugin
             if (split.Length > 1 && split[1] == "op")
             {
                 player.Op = true;
-				(ctx.Connection as ClientConnection).DesiredQueue = 3;
+                (ctx.Connection as ClientConnection).DesiredQueue = 3;
             }
             else
             {
-				(ctx.Connection as ClientConnection).DesiredQueue = 1;
+                (ctx.Connection as ClientConnection).DesiredQueue = 1;
             }
 
-            player.SetAuthenticatedAs(name);
+            player.AuthenticatedAs = name;
             ctx.SetResult(HookResult.DEFAULT);
         }
 
@@ -369,7 +359,7 @@ namespace RestrictPlugin
 
             if (player.Name == null) return;
 
-            if (player.GetAuthenticatedAs() == null)
+            if (player.AuthenticatedAs == null)
                 player.Message(255, "You are a guest, to register type: /reg yourpassword");
             else if (player.Op)
                 player.Message(255, new Color(128, 128, 255), "This humble server welcomes back Their Operating Highness.");
@@ -404,7 +394,7 @@ namespace RestrictPlugin
 
             if (!restrictGuests) return;
 
-            if (player.GetAuthenticatedAs() == null)
+            if (player.AuthenticatedAs == null)
             {
                 ctx.SetResult(HookResult.IGNORE);
                 player.SendMessage("<Restrict> You are not allowed to edit signs as a guest.");
@@ -434,7 +424,7 @@ namespace RestrictPlugin
 
             if (!restrictGuests) return;
 
-            if (player.GetAuthenticatedAs() == null)
+            if (player.AuthenticatedAs == null)
             {
                 ctx.SetResult(HookResult.RECTIFY);
                 player.SendMessage("<Restrict> You are not allowed to alter the world as a guest.");
@@ -461,7 +451,7 @@ namespace RestrictPlugin
 
             if (!restrictGuests) return;
 
-            if (player.GetAuthenticatedAs() == null)
+            if (player.AuthenticatedAs == null)
             {
                 ctx.SetResult(HookResult.RECTIFY);
                 player.SendMessage("<Restrict> You are not allowed to alter the world as a guest.");
@@ -488,7 +478,7 @@ namespace RestrictPlugin
 
             if (!restrictGuests) return;
 
-            if (player.GetAuthenticatedAs() == null)
+            if (player.AuthenticatedAs == null)
             {
                 ctx.SetResult(HookResult.IGNORE);
                 player.SendMessage("<Restrict> You are not allowed to open chests as a guest.");
@@ -515,7 +505,7 @@ namespace RestrictPlugin
 
             if (!restrictGuests) return;
 
-            if (player.GetAuthenticatedAs ()== null)
+            if (player.AuthenticatedAs == null)
             {
                 ctx.SetResult(HookResult.RECTIFY);
                 player.SendMessage("<Restrict> You are not allowed to alter the world as a guest.");
@@ -545,38 +535,38 @@ namespace RestrictPlugin
 
             if (!restrictGuests) return;
 
-            //if (player.GetAuthenticatedAs() == null)
+            //if (player.AuthenticatedAs == null)
             {
-				switch (args.TypeByte)
-				{
-					/*case ProjectileType.N10_PURIFICATION_POWDER:
-					case ProjectileType.N11_VILE_POWDER:
-					case ProjectileType.N28_BOMB:
-					case ProjectileType.N37_STICKY_BOMB:
-					case ProjectileType.N29_DYNAMITE:
-					case ProjectileType.N30_GRENADE:
-					case ProjectileType.N31_SAND_BALL:
-					case ProjectileType.N39_MUD_BALL:
-					case ProjectileType.N40_ASH_BALL:
-					case ProjectileType.N42_SAND_BALL:
-					case ProjectileType.N43_TOMBSTONE:
-					case ProjectileType.N50_GLOWSTICK:
-					case ProjectileType.N53_STICKY_GLOWSTICK:*/
-					case 10:
-					case 11:
-					case 28:
-					case 37:
-					case 29:
-					case 30:
-					case 31:
-					case 39:
-					case 40:
-					case 42:
-					case 43:
-					case 50:
-					case 53:
-						ctx.SetResult (HookResult.ERASE);
-                        if (player.GetAuthenticatedAs() == null)
+                switch (args.TypeByte)
+                {
+                    /*case ProjectileType.N10_PURIFICATION_POWDER:
+                    case ProjectileType.N11_VILE_POWDER:
+                    case ProjectileType.N28_BOMB:
+                    case ProjectileType.N37_STICKY_BOMB:
+                    case ProjectileType.N29_DYNAMITE:
+                    case ProjectileType.N30_GRENADE:
+                    case ProjectileType.N31_SAND_BALL:
+                    case ProjectileType.N39_MUD_BALL:
+                    case ProjectileType.N40_ASH_BALL:
+                    case ProjectileType.N42_SAND_BALL:
+                    case ProjectileType.N43_TOMBSTONE:
+                    case ProjectileType.N50_GLOWSTICK:
+                    case ProjectileType.N53_STICKY_GLOWSTICK:*/
+                    case 10:
+                    case 11:
+                    case 28:
+                    case 37:
+                    case 29:
+                    case 30:
+                    case 31:
+                    case 39:
+                    case 40:
+                    case 42:
+                    case 43:
+                    case 50:
+                    case 53:
+                        ctx.SetResult(HookResult.ERASE);
+                        if (player.AuthenticatedAs == null)
                         {
                             player.SendMessage("<Restrict> You are not allowed to use this projectile as a guest.");
                             player.SendMessage("<Restrict> Type \"/reg password\" to request registration.");
@@ -584,10 +574,10 @@ namespace RestrictPlugin
                         else if (IsRestrictedForUser(ctx.Player, ProjectileUse))
                             player.SendMessage("<Restrict> You are not allowed to use this projectile without permissions.");
 
-						return;
-					default:
-						break;
-				}
+                        return;
+                    default:
+                        break;
+                }
             }
 
             return;
@@ -602,7 +592,7 @@ namespace RestrictPlugin
 
             if (player == null) return;
 
-            if (player.GetAuthenticatedAs() == null)
+            if (player.AuthenticatedAs == null)
             {
                 ctx.SetResult(HookResult.RECTIFY);
                 player.SendMessage("<Restrict> You are not allowed to open and close doors as a guest.");
@@ -624,7 +614,7 @@ namespace RestrictPlugin
 
             if (player == null) return;
 
-             if (player.GetAuthenticatedAs() == null)
+            if (player.AuthenticatedAs == null)
             {
                 ctx.SetResult(HookResult.IGNORE);
                 player.SendMessage("<Restrict> You are not allowed to hurt NPCs as a guest.");
@@ -644,18 +634,23 @@ namespace RestrictPlugin
         //            return Program.permissionManager.IsPermittedImpl != null;
         //        }
 
-                public bool IsRestrictedForUser(Player player, Node node)
-                {
-        //            if (IsRunningPermissions())
-        //            {
-        //                var isPermitted = Program.permissionManager.IsPermittedImpl(node.Path, player);
-        //                var isOp        = player.Op;
+        public bool IsRestrictedForUser(Player player, string node)
+        {
+            //            if (IsRunningPermissions())
+            //            {
+            //                var isPermitted = Program.permissionManager.IsPermittedImpl(node.Path, player);
+            //                var isOp        = player.Op;
 
-        //                return !isPermitted && !isOp;
-        //            }
+            //                return !isPermitted && !isOp;
+            //            }
 
-                    return !player.Op;
-                }
+            if (PermissionsManager.IsSet)
+            {
+                return PermissionsManager.IsRestricted(node, player);
+            }
+
+            return !player.Op;
+        }
         //#endregion
     }
 }

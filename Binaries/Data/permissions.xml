@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<XmlReflect xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Groups>
+    <XmlGroup AppyToGuests="true">
+      <Name>Guest</Name>
+      <Nodes>
+        <XmlNode Key="restrict.worldalter" Deny="false" />
+      </Nodes>
+    </XmlGroup>
+  </Groups>
+  <Players>
+    <XmlPlayer>
+      <Name>DeathCradle</Name>
+      <Nodes>
+        <XmlNode Key="restrict.worldalter" Deny="true" />
+      </Nodes>
+      <Groups>
+	  <!--
+        <string>group-name</string>
+        <string>group-name</string>
+	  -->
+      </Groups>
+    </XmlPlayer>
+  </Players>
+</XmlReflect>

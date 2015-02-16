@@ -1,9 +1,9 @@
 using System;
+using tdsm.api;
+using tdsm.api.Plugin;
 using tdsm.core.Messages.Out;
 using tdsm.core.ServerCore;
 using Terraria;
-using tdsm.api;
-using tdsm.api.Plugin;
 
 namespace tdsm.core.Messages.In
 {
@@ -16,56 +16,59 @@ namespace tdsm.core.Messages.In
 
         public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
         {
-			byte action = ReadByte(readBuffer);
+            byte action = ReadByte(readBuffer);
             int x = (int)ReadInt16(readBuffer);
             int y = (int)ReadInt16(readBuffer);
-			short type = ReadInt16(readBuffer);
-			int style = (int)ReadByte(readBuffer);
-			bool fail = type == 1;
+            short type = ReadInt16(readBuffer);
+            int style = (int)ReadByte(readBuffer);
+            bool fail = type == 1;
 
-			var player = Main.player [whoAmI];
+            var player = Main.player[whoAmI];
 
-			if (x < 0 || y < 0 || x >= Main.maxTilesX || y >= Main.maxTilesY)
-			{
-				player.Kick ("Out of range tile received from client.");
-				return;
-			}
+            if (x < 0 || y < 0 || x >= Main.maxTilesX || y >= Main.maxTilesY)
+            {
+                player.Kick("Out of range tile received from client.");
+                return;
+            }
 
-			if (! tdsm.api.Callbacks.Netplay.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
-			{
-				Tools.WriteLine ("{0} @ {1}: {2} attempted to alter world in unloaded tile.");
-				return;
-			}
+            if (!tdsm.api.Callbacks.Netplay.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
+            {
+                Tools.WriteLine("{0} @ {1}: {2} attempted to alter world in unloaded tile.");
+                return;
+            }
 
-			//TODO implement the old methods
-			var ctx = new HookContext
-			{
-				Connection = (tdsm.api.Callbacks.Netplay.slots[whoAmI] as ServerSlot).conn,
-				Sender = player,
-				Player = player,
-			};
+            //TODO implement the old methods
+            var ctx = new HookContext
+            {
+                Connection = (tdsm.api.Callbacks.Netplay.slots[whoAmI] as ServerSlot).conn,
+                Sender = player,
+                Player = player,
+            };
 
-			var args = new HookArgs.PlayerWorldAlteration
-			{
-				X = x, Y = y,
-				Action = action,
-				Type = type,
-				Style = style
-			};
+            var args = new HookArgs.PlayerWorldAlteration
+            {
+                X = x,
+                Y = y,
+                Action = action,
+                Type = type,
+                Style = style
+            };
 
-			HookPoints.PlayerWorldAlteration.Invoke (ref ctx, ref args);
+            HookPoints.PlayerWorldAlteration.Invoke(ref ctx, ref args);
 
-			if (ctx.CheckForKick ())
-				return;
+            if (ctx.CheckForKick())
+                return;
 
-			if (ctx.Result == HookResult.IGNORE)
-				return;
+            if (ctx.Result == HookResult.IGNORE)
+                return;
 
-			if (ctx.Result == HookResult.RECTIFY)
-			{
-				Terraria.WorldGen.SquareTileFrame (x, y, true);
-				return;
-			}
+            if (ctx.Result == HookResult.RECTIFY)
+            {
+                //Terraria.WorldGen.SquareTileFrame (x, y, true);
+
+                NewNetMessage.SendTileSquare(whoAmI, x, y, 1);
+                return;
+            }
 
             if (Main.tile[x, y] == null)
             {
