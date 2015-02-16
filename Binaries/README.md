@@ -5,3 +5,15 @@ For a tutorial for using the patcher please visit [this wiki page](https://githu
 
 We have now also started including the generated tdsm.exe. All you need for you installation is tdsm[mono|microsoft].exe, tdsm.api.dll, KopiLua.dll, NLua.dll and Plugins/tdsm.core.dll.
 Ensure you grab the right tdsm executable for the platform you are running it on.
+
+### Directory Structure:
+```
+\tdsm\
+  KopiLua.dll
+  NLua.dll
+  tdsm.api.dll
+  tdsm.microsoft.exe *OR* tdsm.mono.exe
+\tdsm\Plugins\
+  RestrictPlugin.dll
+  tdsm.core.dll
+```
