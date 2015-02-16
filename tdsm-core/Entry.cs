@@ -1,8 +1,6 @@
-﻿using Mono.Cecil;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using tdsm.api;
 using tdsm.api.Callbacks;
 using tdsm.api.Command;
@@ -74,24 +72,24 @@ namespace tdsm.core
             Hook(HookPoints.PlayerWorldAlteration, OnPlayerWorldAlteration);
             Hook(HookPoints.ProjectileReceived, HookOrder.FIRST, OnReceiveProjectile);
 
-			AddCommand("platform")
-				.WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("Show what type of server is running TDSM")
-				.SetDefaultUsage()
-				.WithPermissionNode("tdsm.platform")
-				.Calls(this.OperatingSystem);
+            AddCommand("platform")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Show what type of server is running TDSM")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.platform")
+                .Calls(this.OperatingSystem);
 
             AddCommand("exit")
                 .WithDescription("Stops the server")
-				.WithAccessLevel(AccessLevel.CONSOLE)
-				.SetDefaultUsage()
+                .WithAccessLevel(AccessLevel.CONSOLE)
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.admin")
                 .Calls(this.Exit);
 
             AddCommand("stop")
                 .WithDescription("Stops the server")
-				.WithAccessLevel(AccessLevel.CONSOLE)
-				.SetDefaultUsage()
+                .WithAccessLevel(AccessLevel.CONSOLE)
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.admin")
                 .Calls(this.Exit);
 
@@ -138,8 +136,8 @@ namespace tdsm.core
 
             AddCommand("save-all")
                 .WithDescription("Save world and configuration data")
-				.WithAccessLevel(AccessLevel.OP)
-				.SetDefaultUsage()
+                .WithAccessLevel(AccessLevel.OP)
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.admin")
                 .Calls(this.SaveAll);
 
@@ -151,59 +149,59 @@ namespace tdsm.core
 
             AddCommand("list")
                 .WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("Lists online players")
-				.SetDefaultUsage()
+                .WithDescription("Lists online players")
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.List);
 
             AddCommand("who")
                 .WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("Lists online players")
-				.SetDefaultUsage()
+                .WithDescription("Lists online players")
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.List);
 
             AddCommand("players")
                 .WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("Lists online players")
-				.SetDefaultUsage()
+                .WithDescription("Lists online players")
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.OldList);
 
             // this is what the server crawler expects
             AddCommand("playing")
                 .WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("Lists online players")
-				.SetDefaultUsage()
+                .WithDescription("Lists online players")
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.OldList);
 
             AddCommand("online")
                 .WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("Lists online players")
-				.SetDefaultUsage()
+                .WithDescription("Lists online players")
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.List);
 
             AddCommand("me")
                 .WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("3rd person talk")
-				.SetDefaultUsage()
+                .WithDescription("3rd person talk")
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.me")
                 .Calls(this.Action);
 
             AddCommand("say")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Say a message from the server")
-				.WithHelpText("<message>")
+                .WithHelpText("<message>")
                 .WithPermissionNode("tdsm.say")
                 .Calls(this.Say);
 
             AddCommand("status")
                 .WithDescription("Server status")
-				.SetDefaultUsage()
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.status")
-				.Calls(this.ServerStatus);
+                .Calls(this.ServerStatus);
 
             AddCommand("kick")
                 .WithDescription("Kicks a player from the server")
@@ -234,8 +232,8 @@ namespace tdsm.core
 
             AddCommand("oplogout")
                 .WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("Logs out a signed in operator.")
-				.SetDefaultUsage()
+                .WithDescription("Logs out a signed in operator.")
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.oplogout")
                 .Calls(this.OpLogout);
 
@@ -317,23 +315,23 @@ namespace tdsm.core
                     ProgramLog.Log("PID file successfully created with: " + ProcessUID);
                 }
             }
-		}
+        }
 
-		[Hook(HookOrder.NORMAL)]
-		void OnStartCommandProcessing(ref HookContext ctx, ref HookArgs.StartCommandProcessing args)
-		{
-			ctx.SetResult(HookResult.IGNORE);
+        [Hook(HookOrder.NORMAL)]
+        void OnStartCommandProcessing(ref HookContext ctx, ref HookArgs.StartCommandProcessing args)
+        {
+            ctx.SetResult(HookResult.IGNORE);
 
-			(new ProgramThread("Command", ListenForCommands)).Start();
-		}
+            (new ProgramThread("Command", ListenForCommands)).Start();
+        }
 
-		[Hook(HookOrder.NORMAL)]
-		void OnBanAddRequired(ref HookContext ctx, ref HookArgs.AddBan args)
-		{
-			ctx.SetResult(HookResult.IGNORE);
+        [Hook(HookOrder.NORMAL)]
+        void OnBanAddRequired(ref HookContext ctx, ref HookArgs.AddBan args)
+        {
+            ctx.SetResult(HookResult.IGNORE);
 
-			Server.Bans.Add(args.RemoteAddress); //TODO see if port needs removing
-		}
+            Server.Bans.Add(args.RemoteAddress); //TODO see if port needs removing
+        }
 
         static void ListenForCommands()
         {
@@ -551,7 +549,8 @@ namespace tdsm.core
         {
             //ProgramLog.Log("Server state changed to: " + args.ServerChangeState.ToString());
 
-            if (args.ServerChangeState == ServerState.Initialising)
+            //if (args.ServerChangeState == ServerState.Initialising)
+            if (!Server.IsInitialised)
             {
                 Server.Init();
             }
@@ -568,8 +567,8 @@ namespace tdsm.core
         private int lastWritten = 0;
         [Hook(HookOrder.NORMAL)]
         void OnStatusTextChanged(ref HookContext ctx, ref HookArgs.StatusTextChanged args)
-		{
-			ctx.SetResult(HookResult.IGNORE);
+        {
+            ctx.SetResult(HookResult.IGNORE);
             //There's no locking and two seperate threads, so we must use local variables incase of changes
             var statusText = Terraria.Main.statusText;
             var oldStatusText = Terraria.Main.oldStatusText;

@@ -5,7 +5,7 @@ namespace tdsm.api
 {
     public static class Globals
     {
-		public const Int32 Build = 1;
+        public const Int32 Build = 1;
 
         public const Int32 TerrariaRelease = 102;
         public const String TerrariaVersion = "1.2.4.1";
@@ -16,11 +16,17 @@ namespace tdsm.api
         private const String LibrariesDirectory = "Libraries";
         private const String BackupDirectory = "BackupDirectory";
 
-		public static volatile bool Exit = false;
+        public static volatile bool Exit = false;
 
-		public static string SavePath = Environment.CurrentDirectory;
+        public static string SavePath = Environment.CurrentDirectory;
 
-		public static bool IsPatching { get; set; }
+        public static bool IsPatching { get; set; }
+
+#if Full_API
+        public const bool FullAPIDefined = true;
+#else
+        public const bool FullAPIDefined = false;
+#endif
 
         public static string WorldPath
         {

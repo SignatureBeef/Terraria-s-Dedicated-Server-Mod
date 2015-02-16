@@ -271,6 +271,8 @@ namespace tdsm.core.ServerCore
             }
         }
 
+        public static bool IsInitialised { get; private set; }
+
         public static void Init()
         {
             tdsm.api.Callbacks.Netplay.slots = new ServerSlot[256];
@@ -287,6 +289,7 @@ namespace tdsm.core.ServerCore
             Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
             Bans = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "bans.txt"));
             Whitelist = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "whitelist.txt"));
+            IsInitialised = true;
         }
 
         public static DataRegister Ops { get; private set; }

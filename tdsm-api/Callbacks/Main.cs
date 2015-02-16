@@ -19,7 +19,14 @@ namespace tdsm.api.Callbacks
         {
             System.Threading.Thread.CurrentThread.Name = "Run";
             Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             ProgramStart();
+
+            if (!Globals.FullAPIDefined)
+            {
+                Console.WriteLine("Your tdsm.api.dll is incorrect, and does not expose all methods.");
+                return false;
+            }
 
             var ctx = new HookContext()
             {
@@ -147,7 +154,7 @@ namespace tdsm.api.Callbacks
                 var args = new HookArgs.StatusTextChanged() { };
                 HookPoints.StatusTextChanged.Invoke(ref ctx, ref args);
 
-                if (ctx.Result != HookResult.IGNORE)
+                if (ctx.Result == HookResult.DEFAULT)
                 {
                     Terraria.Main.oldStatusText = Terraria.Main.statusText;
                     Tools.WriteLine(Terraria.Main.statusText);
