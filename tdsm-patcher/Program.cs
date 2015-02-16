@@ -119,6 +119,7 @@ namespace tdsm.patcher
             Console.Write("Opening up classes for API usage...");
             patcher.MakeTypesPublic(true);
             Console.Write("Ok\nHooking command line...");
+            patcher.PatchCommandLine();
             Console.Write("Ok\nSkipping sysmenus functions...");
             patcher.SkipMenu();
             Console.Write("Ok\nFixing code entry...");
@@ -212,8 +213,6 @@ namespace tdsm.patcher
 
             Console.Write("Saving to {0}...", outFileMS);
             patcher.Save(outFileMS, Build, TDSMGuid, fileName);
-
-            patcher.PatchCommandLine();
             //if (isMono || (args != null && args.Where(x => x.ToLower() == "-removeupnp").Count() > 0))
             {
                 Console.Write("Ok\nRemoving port forwarding functionality...");

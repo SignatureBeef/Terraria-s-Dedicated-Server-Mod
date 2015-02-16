@@ -60,8 +60,8 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="tdsm">
-      <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.exe</HintPath>
+    <Reference Include="tdsm.mono">
+      <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.mono.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
-      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
+      <Project>{a1f792b2-5d80-4de4-b5db-7a05dbeabd60}</Project>
       <Name>tdsm-api</Name>
     </ProjectReference>
   </ItemGroup>
