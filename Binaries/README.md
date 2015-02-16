@@ -12,7 +12,7 @@ Ensure you grab the right tdsm executable for the platform you are running it on
   KopiLua.dll
   NLua.dll
   tdsm.api.dll
-  tdsm.microsoft.exe
+  tdsm.microsoft.exe *OR* tdsm.mono.exe
 \tdsm\Plugins\
   RestrictPlugin.dll
   tdsm.core.dll
