@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using tdsm.api;
 using tdsm.core.Messages.Out;
 using Terraria;
 

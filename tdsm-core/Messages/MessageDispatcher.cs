@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using tdsm.api;
 using tdsm.core.Logging;
 using tdsm.core.ServerCore;
 

@@ -104,7 +104,7 @@
     <Compile Include="Command\ConsoleSender.cs" />
     <Compile Include="Misc\ExitException.cs" />
     <Compile Include="Tools.cs" />
-    <Compile Include="Misc\Packet.cs" />
+    <Compile Include="Packet.cs" />
     <Compile Include="IPlayerConnection.cs" />
     <Compile Include="BasePlayer.cs" />
     <Compile Include="ServerState.cs" />

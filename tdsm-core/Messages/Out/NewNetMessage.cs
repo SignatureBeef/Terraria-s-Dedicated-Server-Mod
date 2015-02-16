@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Text;
+using tdsm.api;
 using tdsm.api.Plugin;
 using tdsm.core.Logging;
 using tdsm.core.ServerCore;

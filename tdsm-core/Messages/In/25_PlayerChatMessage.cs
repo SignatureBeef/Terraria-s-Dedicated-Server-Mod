@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using System;
+using tdsm.api;
 using tdsm.api.Plugin;
 using tdsm.core.Logging;
 using tdsm.core.Messages.Out;

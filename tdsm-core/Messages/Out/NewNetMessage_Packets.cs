@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using tdsm.api;
 using Terraria;
 
 namespace tdsm.core.Messages.Out

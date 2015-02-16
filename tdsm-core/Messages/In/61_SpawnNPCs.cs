@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using tdsm.api;
 using tdsm.core.Messages.Out;
 using tdsm.core.ServerCore;
 using Terraria;

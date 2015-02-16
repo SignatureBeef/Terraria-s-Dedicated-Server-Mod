@@ -1,4 +1,5 @@
-﻿namespace tdsm.core.Messages.In
+﻿using tdsm.api;
+namespace tdsm.core.Messages.In
 {
     public class Packet67 : SlotMessageHandler
     {

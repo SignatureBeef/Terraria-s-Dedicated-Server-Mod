@@ -1,4 +1,5 @@
-﻿using tdsm.core.Messages.Out;
+﻿using tdsm.api;
+using tdsm.core.Messages.Out;
 using Terraria;
 
 namespace tdsm.core.Messages.In

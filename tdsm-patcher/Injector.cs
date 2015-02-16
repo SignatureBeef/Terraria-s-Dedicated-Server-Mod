@@ -752,11 +752,11 @@ namespace tdsm.patcher
             }
         }
 
-        public void Save(string filePath, int apiBuild, string tdsmUID, string name)
+        public void Save(string fileName, int apiBuild, string tdsmUID, string name)
         {
             //Ensure the name is updated to the new one
             _asm.Name = new AssemblyNameDefinition(name, new Version(0, 0, apiBuild, 0));
-            _asm.MainModule.Name = name + ".exe";
+            _asm.MainModule.Name = fileName;
 
             //Change the uniqueness from what Terraria has, to something different (that way vanilla isn't picked up by assembly resolutions)
             var g = _asm.CustomAttributes.Where(x => x.AttributeType.Name == "GuidAttribute").First();
@@ -775,7 +775,7 @@ namespace tdsm.patcher
                 //}
             }
 
-            _asm.Write(filePath);
+            _asm.Write(fileName);
         }
 
         public void Dispose()

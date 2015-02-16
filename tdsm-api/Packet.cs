@@ -1,4 +1,4 @@
-﻿namespace tdsm
+﻿namespace tdsm.api
 {
     public enum Packet : int
     {

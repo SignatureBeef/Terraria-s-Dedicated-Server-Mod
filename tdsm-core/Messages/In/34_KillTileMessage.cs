@@ -1,4 +1,5 @@
 using System;
+using tdsm.api;
 using tdsm.api.Plugin;
 using tdsm.core.Messages.Out;
 using Terraria;
