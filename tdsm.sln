@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdsm-api", "tdsm-api\tdsm-api.csproj", "{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdsm-patcher", "tdsm-patcher\tdsm-patcher.csproj", "{0ED8C37C-355A-4271-92B8-F9ED66881C46}"
@@ -456,8 +458,8 @@ Global
 		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.winphone_Release|x86.Build.0 = winphone_Release|x86
 		{D3090753-F6FB-476A-89DF-79DA641086B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D3090753-F6FB-476A-89DF-79DA641086B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3090753-F6FB-476A-89DF-79DA641086B9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{D3090753-F6FB-476A-89DF-79DA641086B9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D3090753-F6FB-476A-89DF-79DA641086B9}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D3090753-F6FB-476A-89DF-79DA641086B9}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{D3090753-F6FB-476A-89DF-79DA641086B9}.Debug|x86.ActiveCfg = Debug|x86
 		{D3090753-F6FB-476A-89DF-79DA641086B9}.Debug|x86.Build.0 = Debug|x86
 		{D3090753-F6FB-476A-89DF-79DA641086B9}.Just Server|Any CPU.ActiveCfg = Just Server|Any CPU
