@@ -31,6 +31,8 @@ namespace tdsm.api
                 //{
                 //    Tools.WriteLine("[Fatal] Unable to load {0}, was this plugin removed or do you need to repatch?", a.Name);
                 //}
+
+                if (a.Name == "Terraria") return Assembly.GetEntryAssembly();
                 return items;
             };
         }

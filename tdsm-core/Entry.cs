@@ -525,7 +525,7 @@ namespace tdsm.core
                     bool hb;
                     if (Boolean.TryParse(args.Value, out hb) && hb)
                     {
-                        Heartbeat.Begin(this.TDSMBuild);
+                        //Heartbeat.Begin(this.TDSMBuild);
                     }
                     break;
                 case "server-list":

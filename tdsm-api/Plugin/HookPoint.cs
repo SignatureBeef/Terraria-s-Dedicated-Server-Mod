@@ -330,20 +330,20 @@ namespace tdsm.api.Plugin
                         }
                         catch (NLua.Exceptions.LuaScriptException e)
                         {
-                            //try
-                            //{
-                            //    if (e.IsNetException && e.InnerException != null)
-                            //    {
-                            //        Tools.WriteLine("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name);
-                            //        Tools.WriteLine(e.InnerException);
-                            //    }
-                            //    else
-                            //    {
-                            //        Tools.WriteLine("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name);
-                            //        Tools.WriteLine(e);
-                            //    }
-                            //}
-                            //catch { }
+                            try
+                            {
+                                if (e.IsNetException && e.InnerException != null)
+                                {
+                                    Tools.WriteLine("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name);
+                                    Tools.WriteLine(e.InnerException);
+                                }
+                                else
+                                {
+                                    Tools.WriteLine("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name);
+                                    Tools.WriteLine(e);
+                                }
+                            }
+                            catch { }
                         }
                         catch (Exception e)
                         {

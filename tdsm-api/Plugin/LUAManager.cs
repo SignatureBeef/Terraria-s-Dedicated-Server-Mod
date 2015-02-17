@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
+using Terraria;
 
 namespace tdsm.api.Plugin
 {
@@ -12,20 +13,21 @@ namespace tdsm.api.Plugin
 
         protected override void Initialized(object state)
         {
+            Player p = null;
             base.Initialized(state);
 
             if (_ctx != null)
             {
-                _ctx.Dispose();
+                //_ctx.Dispose();
             }
 
             _ctx = new NLua.Lua();
             _ctx.LoadCLRPackage();
 
             _ctx.RegisterFunction("AddCommand", this, this.GetType().GetMethod("AddCommand"));
-            _ctx.RegisterFunction("HookBase", this, this.GetType().GetMethods()
-                .Where(x => x.Name == "HookBase" && x.GetParameters().Last().ParameterType == typeof(NLua.LuaFunction))
-                .First());
+            //_ctx.RegisterFunction("HookBase", this, this.GetType().GetMethods()
+            //    .Where(x => x.Name == "HookBase" && x.GetParameters().Last().ParameterType == typeof(NLua.LuaFunction))
+            //    .First());
 
             _ctx.DoFile(Path);
 
@@ -44,22 +46,22 @@ namespace tdsm.api.Plugin
                 IsValid = true;
 
                 var hooks = plg["Hooks"] as NLua.LuaTable;
-				if(hooks != null)
-	                foreach (KeyValuePair<Object, Object> hookTarget in hooks)
-	                {
-	                    var hook = hookTarget.Key as String;
-	                    var hookPoint = PluginManager.GetHookPoint(hook);
+                if (hooks != null)
+                    foreach (KeyValuePair<Object, Object> hookTarget in hooks)
+                    {
+                        var hook = hookTarget.Key as String;
+                        var hookPoint = PluginManager.GetHookPoint(hook);
 
-	                    if (hookPoint != null)
-	                    {
-	                        var details = hookTarget.Value as NLua.LuaTable;
-	                        var priority = (HookOrder)(details["Priority"] ?? HookOrder.NORMAL);
-	                        //var priority = FindOrder(details["Priority"] as String);
+                        if (hookPoint != null)
+                        {
+                            var details = hookTarget.Value as NLua.LuaTable;
+                            var priority = (HookOrder)(details["Priority"] ?? HookOrder.NORMAL);
+                            //var priority = FindOrder(details["Priority"] as String);
 
-	                        var del = _ctx.GetFunction(hookPoint.DelegateType, "export.Hooks." + hook + ".Call");
-	                        HookBase(hookPoint, priority, del); //TODO maybe fake an actual delegate as this is only used for registering or make a TDSM event info class 
-	                    }
-	                }
+                            var del = _ctx.GetFunction(hookPoint.DelegateType, "export.Hooks." + hook + ".Call");
+                            HookBase(hookPoint, priority, del); //TODO maybe fake an actual delegate as this is only used for registering or make a TDSM event info class 
+                        }
+                    }
             }
         }
 
@@ -185,7 +187,7 @@ namespace tdsm.api.Plugin
             base.Disposed(state);
         }
 
-//		public T[] SortAscending<T>(this Array arr, 
+        //		public T[] SortAscending<T>(this Array arr, 
     }
 
     //public class LuaCallback
