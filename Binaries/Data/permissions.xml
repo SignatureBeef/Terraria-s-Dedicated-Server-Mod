@@ -1,18 +1,29 @@
 <?xml version="1.0"?>
-<XmlReflect xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<XmlPermissions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Groups>
-    <XmlGroup AppyToGuests="true">
+	<!--
+		[ApplyToGuests] and [ApplyToRegistered] are Restrict specific flags.
+		
+		Please check your additional plugins for their additional attributes.
+	-->
+    <Group ApplyToGuests="true">
       <Name>Guest</Name>
       <Nodes>
-        <XmlNode Key="restrict.worldalter" Deny="false" />
+        <Node Key="restrict.worldalter" Deny="true" />
       </Nodes>
-    </XmlGroup>
+    </Group>
+    <Group ApplyToRegistered="true">
+      <Name>Registered</Name>
+      <Nodes>
+        <Node Key="restrict.worldalter" Deny="false" />
+      </Nodes>
+    </Group>
   </Groups>
   <Players>
-    <XmlPlayer>
+    <Player>
       <Name>DeathCradle</Name>
       <Nodes>
-        <XmlNode Key="restrict.worldalter" Deny="true" />
+        <Node Key="restrict.worldalter" Deny="true" />
       </Nodes>
       <Groups>
 	  <!--
@@ -20,6 +31,6 @@
         <string>group-name</string>
 	  -->
       </Groups>
-    </XmlPlayer>
+    </Player>
   </Players>
-</XmlReflect>
+</XmlPermissions>

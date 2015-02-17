@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -19,22 +18,59 @@ namespace tdsm.api.Permissions
         {
             try
             {
-                var slz = new XmlSerializer(typeof(XmlReflect));
-                using (var fs = File.OpenRead(_path))
+                //var slz = new XmlSerializer(typeof(XmlReflect));
+                //using (var fs = File.OpenRead(_path))
+                //{
+                //    _store = (XmlReflect)slz.Deserialize(fs);
+                //}
+
+                _store = new XmlReflect();
+                using (var reader = new System.Xml.XmlTextReader(_path))
                 {
-                    _store = (XmlReflect)slz.Deserialize(fs);
+                    var doc = new System.Xml.XmlDocument();
+                    doc.Load(reader);
+                    var list = doc.SelectNodes("XmlPermissions");
+                    if (list.Count > 0)
+                    {
+                        //Support for multiple documents
+                        foreach (System.Xml.XmlNode item in list)
+                        {
+                            foreach (System.Xml.XmlNode node in item)
+                            {
+                                switch (node.NodeType)
+                                {
+                                    case System.Xml.XmlNodeType.Element:
+                                        switch (node.Name)
+                                        {
+                                            case "Groups":
+                                                foreach (System.Xml.XmlNode child in node)
+                                                    ParseGroup(child);
+                                                break;
+                                            case "Players":
+                                                foreach (System.Xml.XmlNode child in node)
+                                                    ParsePlayer(child);
+                                                break;
+                                        }
+                                        break;
+                                    case System.Xml.XmlNodeType.None:
+                                        break;
+                                }
+                            }
+                        }
+                    }
                 }
 
-                foreach (var user in _store.Players)
-                {
-                    if (_store.Groups != null && user.Groups != null)
-                        user.MatchedGroups = _store.Groups
-                            .Where(x =>
-                                user.Groups.Where(y => x.Name != null && y.ToLower() == x.Name.ToLower()).Count() > 0
-                             )
-                            .Distinct()
-                            .ToArray();
-                }
+                if (_store.Players != null)
+                    foreach (var user in _store.Players)
+                    {
+                        if (_store.Groups != null && user.Groups != null)
+                            user.MatchedGroups = _store.Groups
+                                .Where(x =>
+                                    user.Groups.Where(y => x.Name != null && y.ToLower() == x.Name.ToLower()).Count() > 0
+                                 )
+                                .Distinct()
+                                .ToArray();
+                    }
                 return true;
             }
             catch (Exception e)
@@ -46,83 +82,191 @@ namespace tdsm.api.Permissions
             return false;
         }
 
-        public bool IsRestricted(string node, BasePlayer player)
+        public void ParseGroup(System.Xml.XmlNode node)
         {
-            if (player.Op) return false;
-
-            if (player.AuthenticatedAs != null)
+            var group = new XmlGroup()
             {
-                var lowered = player.AuthenticatedAs.ToLower();
-                var matches = _store.Players.Where(x => x.Name.ToLower() == lowered).ToArray();
-                if (matches.Length > 0)
-                {
-                    var loweredNode = node.ToLower();
-                    var allowed = false;
-                    foreach (var match in matches)
-                    {
-                        //If any denied then the player is restricted
-                        if (match.MatchedGroups
-                            .SelectMany(x => x.Nodes)
-                            .Where(x => x.Key.ToLower() == loweredNode && x.Deny)
-                            .Count() > 0) return true;
-                        if (_store.Groups
-                            .Where(x => x.AppyToGuests)
-                            .SelectMany(x => x.Nodes)
-                            .Where(x => x.Key.ToLower() == loweredNode && x.Deny)
-                            .Count() > 0) return true;
+                Attributes = new System.Collections.Generic.Dictionary<String, String>()
+            };
 
-                        if (match.MatchedGroups
-                            .SelectMany(x => x.Nodes)
-                            .Where(x => x.Key.ToLower() == loweredNode && !x.Deny)
-                            .Count() > 0) allowed = true;
-                        if (_store.Groups
-                            .Where(x => x.AppyToGuests)
-                            .SelectMany(x => x.Nodes)
-                            .Where(x => x.Key.ToLower() == loweredNode && !x.Deny)
-                            .Count() > 0) allowed = true;
+            if (node.Attributes != null && node.Attributes.Count > 0)
+            {
+                foreach (System.Xml.XmlAttribute attr in node.Attributes)
+                {
+                    if (!group.Attributes.ContainsKey(attr.Name)) group.Attributes.Add(attr.Name, attr.Value);
+                }
+            }
+
+            foreach (System.Xml.XmlNode child in node)
+            {
+                switch (child.Name)
+                {
+                    case "Name":
+                        group.Name = child.InnerText;
+                        break;
+                    case "Nodes":
+                        group.Nodes = ParseNodes(child);
+                        break;
+                }
+            }
+
+            if (_store.Groups == null) _store.Groups = new System.Collections.Generic.List<XmlGroup>() { group };
+            else _store.Groups.Add(group);
+        }
+
+        public void ParsePlayer(System.Xml.XmlNode node)
+        {
+            var player = new XmlPlayer()
+            {
+                Attributes = new System.Collections.Generic.Dictionary<String, String>()
+            };
+
+            if (node.Attributes != null && node.Attributes.Count > 0)
+            {
+                foreach (System.Xml.XmlAttribute attr in node.Attributes)
+                {
+                    if (!player.Attributes.ContainsKey(attr.Name)) player.Attributes.Add(attr.Name, attr.Value);
+                }
+            }
+
+            foreach (System.Xml.XmlNode child in node)
+            {
+                switch (child.Name)
+                {
+                    case "Name":
+                        player.Name = child.InnerText;
+                        break;
+                    case "Nodes":
+                        player.Nodes = ParseNodes(child);
+                        break;
+                    case "Groups":
+                        player.Groups = ParseArray(child);
+                        break;
+                }
+            }
+
+            if (_store.Players == null) _store.Players = new System.Collections.Generic.List<XmlPlayer>() { player };
+            else _store.Players.Add(player);
+        }
+
+        public XmlNode[] ParseNodes(System.Xml.XmlNode node)
+        {
+            var nodes = new System.Collections.Generic.List<XmlNode>();
+
+            foreach (System.Xml.XmlNode child in node)
+            {
+                if (child.Name == "Node")
+                {
+                    var nd = new XmlNode()
+                    {
+                        Key = child.Attributes["Key"].Value
+                    };
+                    if (child.Attributes["Deny"] != null)
+                    {
+                        var state = false;
+                        Boolean.TryParse(child.Attributes["Deny"].Value, out state);
+                        nd.Deny = state;
+                    }
+                    nodes.Add(nd);
+                }
+            }
+
+            return nodes.ToArray();
+        }
+
+        public string[] ParseArray(System.Xml.XmlNode node)
+        {
+            var nodes = new System.Collections.Generic.List<String>();
+
+            foreach (System.Xml.XmlNode child in node)
+            {
+                if (child.Name == "string")
+                {
+                    nodes.Add(child.InnerText);
+                }
+            }
+
+            return nodes.ToArray();
+        }
+
+        public Permission IsPermitted(string node, BasePlayer player)
+        {
+            if (player != null)
+            {
+                if (!player.Op) //Operators should never be restricted
+                {
+                    var match = _store.Players.Where(x => x.Name == player.AuthenticatedAs).ToArray();
+                    var allowed = false;
+                    var found = false;
+
+                    var nodesForUser = match.SelectMany(x => x.Nodes).Where(x => x.Key == node).ToArray();
+                    foreach (var nd in nodesForUser)
+                    {
+                        if (!found) found = true;
+                        if (nd.Deny) return Permission.Denied;
+                        if (nd.Deny == false) allowed = true;
                     }
 
-                    return !allowed;
+                    //Check for group permissions second
+                    nodesForUser = match.SelectMany(x => x.MatchedGroups)
+                            .SelectMany(x => x.Nodes)
+                            .Where(x => x.Key == node)
+                            .ToArray();
+                    foreach (var nd in nodesForUser)
+                    {
+                        if (!found) found = true;
+                        if (nd.Deny) return Permission.Denied;
+                        if (nd.Deny == false) allowed = true;
+                    }
+
+                    if (!found) return Permission.NodeNonExistent;
+
+                    return allowed ? Permission.Permitted : Permission.Denied;
                 }
+                else return Permission.Permitted;
             }
 
-            var groups = _store.Groups.Where(x => x.AppyToGuests).ToArray();
-            if (groups.Length > 0)
+            return Permission.Denied;
+        }
+
+        public Permission IsPermittedForGroup(string node, Func<System.Collections.Generic.Dictionary<String, String>, Boolean> whereHas = null)
+        {
+            var groups = _store.Groups
+                .Where(x => whereHas(x.Attributes))
+                .ToArray();
+
+            var allowed = false;
+            var found = false;
+            foreach (var group in groups)
             {
-                var loweredNode = node.ToLower();
-                var allowed = false;
-                foreach (var match in groups)
+                foreach (var nd in group.Nodes.Where(x => x.Key == node))
                 {
-                    if (match.Nodes
-                        .Where(x => x.Key.ToLower() == loweredNode && x.Deny)
-                        .Count() > 0) return true;
-
-                    if (match.Nodes
-                        .Where(x => x.Key.ToLower() == loweredNode && !x.Deny)
-                        .Count() > 0) allowed = true;
+                    if (!found) found = true;
+                    if (nd.Deny) return Permission.Denied;
+                    if (nd.Deny == false) allowed = true;
                 }
-
-                return !allowed;
             }
 
-            return !player.Op;
+            if (!found) return Permission.NodeNonExistent;
+
+            return allowed ? Permission.Permitted : Permission.Denied;
         }
     }
 
     [Serializable]
     public class XmlReflect
     {
-        public XmlGroup[] Groups { get; set; }
-        public XmlPlayer[] Players { get; set; }
+        public System.Collections.Generic.List<XmlGroup> Groups { get; set; }
+        public System.Collections.Generic.List<XmlPlayer> Players { get; set; }
     }
 
     [Serializable]
     public class XmlGroup
     {
         public string Name { get; set; }
-        [XmlAttribute]
-        public bool AppyToGuests { get; set; }
         public XmlNode[] Nodes { get; set; }
+
+        public System.Collections.Generic.Dictionary<String, String> Attributes { get; set; }
     }
 
     [Serializable]
@@ -133,7 +277,10 @@ namespace tdsm.api.Permissions
 
         [XmlIgnore]
         public XmlGroup[] MatchedGroups { get; set; }
+
         public string[] Groups { get; set; }
+
+        public System.Collections.Generic.Dictionary<String, String> Attributes { get; set; }
     }
 
     [Serializable]

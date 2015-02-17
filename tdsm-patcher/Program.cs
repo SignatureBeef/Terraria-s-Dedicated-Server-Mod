@@ -57,6 +57,19 @@ namespace tdsm.patcher
 
         static void Main(string[] args)
         {
+            //if (!tdsm.api.Permissions.PermissionsManager.IsSet)
+            //{
+            //    var file = System.IO.Path.Combine(tdsm.api.Globals.DataPath, "permissions.xml");
+            //    //if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
+            //    if (System.IO.File.Exists(file))
+            //    {
+            //        var handler = new tdsm.api.Permissions.XmlSupplier(file);
+            //        if (handler.Load())
+            //            tdsm.api.Permissions.PermissionsManager.SetHandler(handler);
+            //    }
+            //}
+
+            //return;
             //            IsPatching = true;
             Console.WriteLine("TDSM patcher build {0}", Build);
             var isMono = Type.GetType("Mono.Runtime") != null;

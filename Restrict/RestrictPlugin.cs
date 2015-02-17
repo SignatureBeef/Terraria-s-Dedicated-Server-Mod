@@ -422,18 +422,32 @@ namespace RestrictPlugin
                 return;
             }
 
-            if (!restrictGuests) return;
+            //if (!restrictGuests) return;
 
-            if (player.AuthenticatedAs == null)
+            //if (player.AuthenticatedAs == null)
+            //{
+            //    ctx.SetResult(HookResult.RECTIFY);
+            //    player.SendMessage("<Restrict> You are not allowed to alter the world as a guest.");
+            //    player.SendMessage("<Restrict> Type \"/reg password\" to request registration.");
+            //}
+            //else if (IsRestrictedForUser(ctx.Player, WorldAlter))
+            //{
+            //    ctx.SetResult(HookResult.RECTIFY);
+            //    player.SendMessage("<Restrict> You are not allowed to alter the world without permissions.");
+            //}
+
+            if (IsRestrictedForUser(ctx.Player, WorldAlter))
             {
                 ctx.SetResult(HookResult.RECTIFY);
-                player.SendMessage("<Restrict> You are not allowed to alter the world as a guest.");
-                player.SendMessage("<Restrict> Type \"/reg password\" to request registration.");
-            }
-            else if (IsRestrictedForUser(ctx.Player, WorldAlter))
-            {
-                ctx.SetResult(HookResult.RECTIFY);
-                player.SendMessage("<Restrict> You are not allowed to alter the world without permissions.");
+                if (player.AuthenticatedAs == null)
+                {
+                    player.SendMessage("<Restrict> You are not allowed to alter the world as a guest.");
+                    player.SendMessage("<Restrict> Type \"/reg password\" to request registration.");
+                }
+                else
+                {
+                    player.SendMessage("<Restrict> You are not allowed to alter the world without permissions.");
+                }
             }
         }
 
@@ -644,9 +658,31 @@ namespace RestrictPlugin
             //                return !isPermitted && !isOp;
             //            }
 
-            if (PermissionsManager.IsSet)
+            if (!player.Op && PermissionsManager.IsSet)
             {
-                return PermissionsManager.IsRestricted(node, player);
+                var isRegistered = player.AuthenticatedAs != null;
+                if (isRegistered)
+                {
+                    var user = PermissionsManager.IsPermitted(node, player);
+                    var grp = PermissionsManager.IsPermittedForGroup(node, (attributes) =>
+                    {
+                        return attributes.ContainsKey("ApplyToRegistered") && attributes["ApplyToRegistered"].ToLower() == "true";
+                    });
+
+                    if (user == Permission.Denied) return true;
+                    else if (user == Permission.Permitted) return false;
+
+                    return grp != Permission.Permitted;
+                }
+                else
+                {
+                    var grp = PermissionsManager.IsPermittedForGroup(node, (attributes) =>
+                        {
+                            return attributes.ContainsKey("ApplyToGuests") && attributes["ApplyToGuests"].ToLower() == "true";
+                        });
+
+                    return grp != Permission.Permitted;
+                }
             }
 
             return !player.Op;
