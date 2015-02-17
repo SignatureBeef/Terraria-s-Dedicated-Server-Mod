@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Terraria;
-
 namespace tdsm.api.Plugin
 {
     public class LUAPlugin : BasePlugin
@@ -13,12 +11,11 @@ namespace tdsm.api.Plugin
 
         protected override void Initialized(object state)
         {
-            Player p = null;
             base.Initialized(state);
 
             if (_ctx != null)
             {
-                //_ctx.Dispose();
+                _ctx.Dispose();
             }
 
             _ctx = new NLua.Lua();
