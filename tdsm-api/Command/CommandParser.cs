@@ -27,28 +27,28 @@ namespace tdsm.api.Command
         internal event Action<CommandInfo> BeforeEvent;
         internal event Action<CommandInfo> AfterEvent;
 
-		internal string _prefix;
-		internal bool _defaultHelp;
-		internal bool _oldHelpStyle;
+        internal string _prefix;
+        internal bool _defaultHelp;
+        internal bool _oldHelpStyle;
 
         internal NLua.LuaFunction LuaCallback;
 
-//		public int HelpTextCount
-//		{
-//			get
-//			{ return _defaultHelp ? 1 + helpText.Count : helpText.Count; }
-//		}
+        //		public int HelpTextCount
+        //		{
+        //			get
+        //			{ return _defaultHelp ? 1 + helpText.Count : helpText.Count; }
+        //		}
 
-		public string Prefix
-		{
-			get
-			{ return _prefix; }
-		}
+        public string Prefix
+        {
+            get
+            { return _prefix; }
+        }
 
-		internal CommandInfo(string prefix)
-		{
-			_prefix = prefix;
-		}
+        internal CommandInfo(string prefix)
+        {
+            _prefix = prefix;
+        }
 
         internal void InitFrom(CommandInfo other)
         {
@@ -74,23 +74,23 @@ namespace tdsm.api.Command
             return this;
         }
 
-		public CommandInfo WithHelpText(string help)
-		{
-			helpText.Add(help);
-			return this;
-		}
+        public CommandInfo WithHelpText(string help)
+        {
+            helpText.Add(help);
+            return this;
+        }
 
-		public CommandInfo SetDefaultUsage()
-		{
-			_defaultHelp = true;
-			return this;
-		}
+        public CommandInfo SetDefaultUsage()
+        {
+            _defaultHelp = true;
+            return this;
+        }
 
-		public CommandInfo SetOldHelpStyle()
-		{
-			_oldHelpStyle = true;
-			return this;
-		}
+        public CommandInfo SetOldHelpStyle()
+        {
+            _oldHelpStyle = true;
+            return this;
+        }
 
         public CommandInfo WithAccessLevel(AccessLevel accessLevel)
         {
@@ -120,47 +120,47 @@ namespace tdsm.api.Command
         {
             LuaCallback = callback;
             return this;
-		}
+        }
 
-		public void ShowHelp(ISender sender)
-		{
+        public void ShowHelp(ISender sender)
+        {
 #if Full_API
-			if(!_oldHelpStyle)
-			{
-				const String Push = "       ";
-				string command = (sender is Player ? "/" : String.Empty) + _prefix;
-				if (_defaultHelp)
-					sender.SendMessage ("Usage: " + command);
+            if (!_oldHelpStyle)
+            {
+                const String Push = "       ";
+                string command = (sender is Player ? "/" : String.Empty) + _prefix;
+                if (_defaultHelp)
+                    sender.SendMessage("Usage: " + command);
 
-				bool first = !_defaultHelp;
-				foreach (var line in helpText)
-				{
-					if (first)
-					{
-						first = false;
-						sender.SendMessage ("Usage: " + command + " " + line);
-					}
-					else sender.SendMessage (Push + command + " " + line);
-				}
-			}
-			else
-			{
-				foreach (var line in helpText)
-					sender.SendMessage(line);
-			}
+                bool first = !_defaultHelp;
+                foreach (var line in helpText)
+                {
+                    if (first)
+                    {
+                        first = false;
+                        sender.SendMessage("Usage: " + command + " " + line);
+                    }
+                    else sender.SendMessage(Push + command + " " + line);
+                }
+            }
+            else
+            {
+                foreach (var line in helpText)
+                    sender.SendMessage(line);
+            }
 #endif
-		}
+        }
 
-		public void ShowDescription(ISender sender, int padd)
-		{
+        public void ShowDescription(ISender sender, int padd)
+        {
 #if Full_API
-			var space = String.Empty;
-			for(var x = 0; x < padd - this._prefix.Length; x++) space += ' ';
-			sender.SendMessage((sender is Player ? "/" : String.Empty) + _prefix + 
-				space + " - " + (this.description ?? "No description specified")
-			);
+            var space = String.Empty;
+            for (var x = 0; x < padd - this._prefix.Length; x++) space += ' ';
+            sender.SendMessage((sender is Player ? "/" : String.Empty) + _prefix +
+                space + " - " + (this.description ?? "No description specified")
+            );
 #endif
-		}
+        }
 
         internal void Run(ISender sender, string args)
         {
@@ -310,16 +310,16 @@ namespace tdsm.api.Command
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.FPS);
 
-			AddCommand("help")
-				.WithAccessLevel(AccessLevel.PLAYER)
-				.WithDescription("Displays the commands available to the user.")
-				.SetDefaultUsage()
-				.WithPermissionNode("tdsm.help")
-				.Calls(DefaultCommands.ShowHelp);
+            AddCommand("help")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Displays the commands available to the user.")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.help")
+                .Calls(DefaultCommands.ShowHelp);
             AddCommand("plugins")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists plugins running")
-				.SetDefaultUsage()
+                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.plugins")
                 .Calls(DefaultCommands.ListPlugins);
             AddCommand("plugin")
@@ -364,7 +364,7 @@ namespace tdsm.api.Command
         {
             if (serverCommands.ContainsKey(prefix)) throw new ApplicationException("AddCommand: duplicate command: " + prefix);
 
-			var cmd = new CommandInfo(prefix);
+            var cmd = new CommandInfo(prefix);
             serverCommands[prefix] = cmd;
             serverCommands["." + prefix] = cmd;
 
@@ -414,7 +414,11 @@ namespace tdsm.api.Command
         /// <returns>True if sender can use command, false if not</returns>
         public static bool CheckAccessLevel(CommandInfo cmd, ISender sender)
         {
-            return CheckPermissions(sender, cmd) ? true : CheckAccessLevel(cmd.accessLevel, sender);
+            var perms = CheckPermissions(sender, cmd);
+            if (Permissions.PermissionsManager.IsSet && perms == Permissions.Permission.Denied)
+                return false;
+
+            return CheckAccessLevel(cmd.accessLevel, sender);
         }
 
         /// <summary>
@@ -424,7 +428,7 @@ namespace tdsm.api.Command
         /// <param name="sender">Sender to check</param>
         /// <returns>True if sender has access level equal to or greater than acc</returns>
         public static bool CheckAccessLevel(AccessLevel acc, ISender sender)
-		{
+        {
 #if Full_API
             if (sender is Player) return acc == AccessLevel.PLAYER || (acc == AccessLevel.OP && sender.Op);
 #endif
@@ -439,19 +443,19 @@ namespace tdsm.api.Command
         /// <param name="sender">Entity to check permissions for</param>
         /// <param name="cmd">Command to check for permissions on</param>
         /// <returns>True if entity can use command.  False if not.</returns>
-        public static bool CheckPermissions(ISender sender, CommandInfo cmd)
+        public static Permissions.Permission CheckPermissions(ISender sender, CommandInfo cmd)
         {
             /*
              *  [TODO] Should a node return false, Since there is three possibilites, should it return false if permissions 
              *  is enabled and allow the normal OP system work or no access at all?
              */
             if (cmd.node == null || sender is ConsoleSender || sender.Op)
-                return true;
+                return Permissions.Permission.Permitted;
 
-            //            if (sender is Player && Program.permissionManager.IsPermittedImpl != null && Statics.PermissionsEnabled)
-            //                return Program.permissionManager.IsPermittedImpl(cmd.node, sender as Player);
+            if (sender is BasePlayer && Permissions.PermissionsManager.IsSet)
+                return Permissions.PermissionsManager.IsPermitted(cmd.node, sender as BasePlayer);
 
-            return false;
+            return Permissions.Permission.Denied;
         }
 
         bool FindStringCommand(string prefix, out CommandInfo info)
@@ -543,19 +547,19 @@ namespace tdsm.api.Command
                         info.Run(sender, hargs.ArgumentString);
                     }
                     catch (NLua.Exceptions.LuaScriptException e)
-					{
-						if (e.IsNetException)
-						{
-							var ex = e.GetBaseException();
-							if (ex != null)
-							{
-								if (ex is CommandError)
-								{
-									sender.SendMessage(prefix + ": " + ex.Message);
-									info.ShowHelp(sender);
-								}
-							}
-						}
+                    {
+                        if (e.IsNetException)
+                        {
+                            var ex = e.GetBaseException();
+                            if (ex != null)
+                            {
+                                if (ex is CommandError)
+                                {
+                                    sender.SendMessage(prefix + ": " + ex.Message);
+                                    info.ShowHelp(sender);
+                                }
+                            }
+                        }
                     }
                     catch (ExitException e)
                     {

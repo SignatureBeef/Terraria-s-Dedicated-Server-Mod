@@ -67,6 +67,10 @@ namespace tdsm.api.Permissions
                             user.MatchedGroups = _store.Groups
                                 .Where(x =>
                                     user.Groups.Where(y => x.Name != null && y.ToLower() == x.Name.ToLower()).Count() > 0
+                                    ||
+                                    x.Attributes
+                                        .Where(y => y.Key == "ApplyToGuests" && y.Value.ToLower() == "true")
+                                        .Count() > 0
                                  )
                                 .Distinct()
                                 .ToArray();
@@ -199,7 +203,10 @@ namespace tdsm.api.Permissions
                     var allowed = false;
                     var found = false;
 
-                    var nodesForUser = match.SelectMany(x => x.Nodes).Where(x => x.Key == node).ToArray();
+                    var nodesForUser = match
+                        .SelectMany(x => x.Nodes)
+                        .Where(x => x.Key == node)
+                        .ToArray();
                     foreach (var nd in nodesForUser)
                     {
                         if (!found) found = true;
@@ -210,6 +217,21 @@ namespace tdsm.api.Permissions
                     //Check for group permissions second
                     nodesForUser = match.SelectMany(x => x.MatchedGroups)
                             .SelectMany(x => x.Nodes)
+                            .Where(x => x.Key == node)
+                            .ToArray();
+                    foreach (var nd in nodesForUser)
+                    {
+                        if (!found) found = true;
+                        if (nd.Deny) return Permission.Denied;
+                        if (nd.Deny == false) allowed = true;
+                    }
+
+                    //Check for DEFAULT group permissions second
+                    nodesForUser = _store.Groups
+                            .Where(y => y.Attributes
+                                .Where(z => z.Key == "ApplyToGuests" && z.Value.ToLower() == "true")
+                                .Count() > 0)
+                            .SelectMany(y => y.Nodes)
                             .Where(x => x.Key == node)
                             .ToArray();
                     foreach (var nd in nodesForUser)
