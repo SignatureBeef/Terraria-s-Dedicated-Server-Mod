@@ -270,6 +270,12 @@ namespace tdsm.core
                 .Calls(this.Heal);
 
             if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
+
+            if (!String.IsNullOrEmpty(RConBindAddress))
+            {
+                ProgramLog.Log("Starting RCON Server");
+                RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"), this.TDSMBuild);
+            }
         }
 
         void ProcessPIDFile(string pidPath)
@@ -543,6 +549,12 @@ namespace tdsm.core
                     break;
                 case "server-list-desc":
                     Heartbeat.ServerDescription = args.Value;
+                    break;
+                case "rcon-hash-nonce":
+                    RConHashNonce = args.Value;
+                    break;
+                case "rcon-bind-address":
+                    RConBindAddress = args.Value;
                     break;
             }
         }

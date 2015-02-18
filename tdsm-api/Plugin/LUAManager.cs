@@ -13,7 +13,6 @@ namespace tdsm.api.Plugin
         protected override void Initialized(object state)
         {
             base.Initialized(state);
-            Console.Read();
 
             if (_ctx != null)
             {
@@ -164,13 +163,33 @@ namespace tdsm.api.Plugin
 
         private object[] CallSelf(string function, params object[] args)
         {
-            if (_ctx != null)
+            try
             {
-                var fnc = _ctx.GetFunction("export." + function);
-                if (fnc != null)
+                if (_ctx != null)
                 {
-                    return fnc.Call(this, args);
+                    var fnc = _ctx.GetFunction("export." + function);
+                    if (fnc != null)
+                    {
+                        return fnc.Call(this, args);
+                    }
                 }
+            }
+            catch (NLua.Exceptions.LuaScriptException e)
+            {
+                try
+                {
+                    if (e.IsNetException && e.InnerException != null)
+                    {
+                        Tools.WriteLine("Plugin {0} crashed in hook {1}", this.Name, function);
+                        Tools.WriteLine(e.InnerException);
+                    }
+                    else
+                    {
+                        Tools.WriteLine("Plugin {0} crashed in hook {1}", this.Name, function);
+                        Tools.WriteLine(e);
+                    }
+                }
+                catch { }
             }
             return null;
         }
