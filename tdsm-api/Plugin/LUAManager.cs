@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace tdsm.api.Plugin
@@ -12,6 +13,7 @@ namespace tdsm.api.Plugin
         protected override void Initialized(object state)
         {
             base.Initialized(state);
+            Console.Read();
 
             if (_ctx != null)
             {
@@ -22,6 +24,7 @@ namespace tdsm.api.Plugin
             _ctx.LoadCLRPackage();
 
             _ctx.RegisterFunction("AddCommand", this, this.GetType().GetMethod("AddCommand"));
+            _ctx.RegisterFunction("ArraySort", this, this.GetType().GetMethod("ArraySort"));
             //_ctx.RegisterFunction("HookBase", this, this.GetType().GetMethods()
             //    .Where(x => x.Name == "HookBase" && x.GetParameters().Last().ParameterType == typeof(NLua.LuaFunction))
             //    .First());
@@ -184,7 +187,29 @@ namespace tdsm.api.Plugin
             base.Disposed(state);
         }
 
-        //		public T[] SortAscending<T>(this Array arr, 
+        class LuaSorter : IComparer
+        {
+            private NLua.LuaFunction _callback;
+
+            public LuaSorter(NLua.LuaFunction callback)
+            {
+                _callback = callback;
+            }
+
+            public int Compare(Object x, Object y)
+            {
+                var res = _callback.Call(x, y);
+                return (int)(double)res[0];
+            }
+        }
+
+        public Array ArraySort(Array arr, NLua.LuaFunction callback)
+        {
+            var comparer = new LuaSorter(callback);
+            Array.Sort(arr, comparer);
+
+            return arr;
+        }
     }
 
     //public class LuaCallback

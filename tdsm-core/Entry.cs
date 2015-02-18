@@ -28,6 +28,9 @@ namespace tdsm.core
         }
         public double TimelockTime { get; set; }
 
+        public static string RConHashNonce { get; set; }
+        public static string RConBindAddress { get; set; }
+
         private bool VanillaOnly
         {
             get

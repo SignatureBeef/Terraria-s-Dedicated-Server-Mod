@@ -124,7 +124,6 @@
     <Compile Include="Messages\In\8_RequestTileMessage.cs" />
     <Compile Include="Messages\In\62_PlayerDodge.cs" />
     <Compile Include="Messages\In\56_NPCName.cs" />
-    <Compile Include="Misc\DataRegister.cs" />
     <Compile Include="Misc\ProducerConsumerSignal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Messages\In\32_ChestItemMessage.cs" />
@@ -139,6 +138,9 @@
     <Compile Include="Messages\SpammableMessage.cs" />
     <Compile Include="Messages\In\6_WorldRequestMessage.cs" />
     <Compile Include="Misc\ArrayDequeue.cs" />
+    <Compile Include="RemoteConsole\RConClient.cs" />
+    <Compile Include="RemoteConsole\RConSender.cs" />
+    <Compile Include="RemoteConsole\RConServer.cs" />
     <Compile Include="ServerCore\ClientConnection.cs" />
     <Compile Include="ServerCore\Connection.cs" />
     <Compile Include="Messages\Out\NewNetMessage.cs" />
@@ -150,6 +152,10 @@
     <Compile Include="ServerCore\ServerSlot.cs" />
     <Compile Include="ServerCore\SlotManager.cs" />
     <Compile Include="Entry.cs" />
+    <Compile Include="WebInterface\Auth\IHttpAuth.cs" />
+    <Compile Include="WebInterface\Auth\HttpDigestAuth.cs" />
+    <Compile Include="WebInterface\WebRequest.cs" />
+    <Compile Include="WebInterface\WebServer.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -165,4 +171,5 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
 </Project>

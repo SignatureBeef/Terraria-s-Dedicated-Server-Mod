@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using tdsm.api;
+using tdsm.api.Misc;
 using tdsm.api.Plugin;
 using tdsm.core.Logging;
 using tdsm.core.Messages.Out;
