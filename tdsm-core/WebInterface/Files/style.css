@@ -1,0 +1,6 @@
+﻿/* Reset */
+HTML, BODY, DIV, P, H1, H2, H3, H4, H5, H6 {
+    margin: 0;
+    padding: 0;
+}
+

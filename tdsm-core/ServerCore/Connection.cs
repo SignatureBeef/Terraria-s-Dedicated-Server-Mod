@@ -417,6 +417,7 @@ namespace tdsm.core.ServerCore
             catch (ObjectDisposedException)
             {
                 HandleError(SocketError.OperationAborted);
+                Console.WriteLine("DISPOSED");
             }
 
             return false;

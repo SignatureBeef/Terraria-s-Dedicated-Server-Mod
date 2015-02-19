@@ -6,17 +6,40 @@ using tdsm.core.ServerCore;
 
 namespace tdsm.core.WebInterface
 {
-    class WebRequest : Connection, IDisposable
+    public class WebRequest : /*Connection,*/ IDisposable
     {
         public Dictionary<String, String> Headers { get; private set; }
+        public Dictionary<String, String> Request { get; private set; }
+        public string[] Segments { get; private set; }
 
         public string Method { get; private set; }
+        public string Url { get; private set; }
         public string RequestUrl { get; private set; }
+        public string Path { get; private set; }
+
+        public int StatusCode { get; set; }
+
+        public Socket Client;
 
         public WebRequest(Socket sock)
-            : base(sock)
+        //: base(sock)
         {
-            StartReceiving(new byte[4192]);
+            Client = sock;
+            StatusCode = 404;
+            //StartReceiving(new byte[4192]);
+            Request = new Dictionary<String, String>();
+        }
+
+        private byte[] buffer;
+        public void StartReceiving(byte[] buff)
+        {
+            //The HTTP request should send and stop, so we dont need to listen
+            var read = Client.Receive(buff);
+            if (read > 0)
+            {
+                buffer = buff.Take(read).ToArray();
+                ProcessRead();
+            }
         }
 
         #region "Parsing"
@@ -39,7 +62,7 @@ namespace tdsm.core.WebInterface
             next = header.IndexOf(" ", offset);
             if (next > 0)
             {
-                RequestUrl = header.Substring(offset, next - offset);
+                Url = header.Substring(offset, next - offset);
                 offset = (next - offset) + 1;
             }
             next = header.IndexOf("\r\n", offset);
@@ -58,10 +81,10 @@ namespace tdsm.core.WebInterface
             if (next > -1)
             {
                 return new string[]
-                    {
-                        header.Substring(0, next),
-                        header.Remove(0, next + 1)
-                    };
+                {
+                    header.Substring(0, next),
+                    header.Remove(0, next + 1)
+                };
             }
             return null;
         }
@@ -75,45 +98,128 @@ namespace tdsm.core.WebInterface
                 .Where(x => x != null)
                 .ToDictionary(x => x[0], x => x[1]);
         }
-        #endregion
 
-        protected override void ProcessRead()
+        private void SetSegments()
         {
-            if (recvBytes < recvBuffer.Length)
-            {
-                var html = System.Text.Encoding.UTF8.GetString(recvBuffer, 0, recvBytes);
+            if (Path != null) Segments = Path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+        }
 
-                const String HeaderSeperator = "\r\n\r\n";
-                var ix = html.IndexOf(HeaderSeperator);
+        private void ParseRequest()
+        {
+            if (Url != null)
+            {
+                var ix = Url.IndexOf("?");
                 if (ix > -1)
                 {
-                    ParseHeaders(html.Substring(0, ix));
-                    HandleRequest(this, html.Remove(0, ix + HeaderSeperator.Length));
+                    Path = Url.Substring(0, ix);
+                    RequestUrl = Url.Remove(0, ix + 1);
+                    Request = RequestUrl.Split('&')
+                        .Select(x => x.Split('='))
+                        .Where(x => x.Length == 2)
+                        .Distinct(RequestComparer.Comparer)
+                        .ToDictionary(x => x[0], x => x[1]);
+                }
+                else
+                {
+                    Path = Url;
                 }
             }
         }
 
-        protected override void HandleClosure(SocketError error)
+        class RequestComparer : IEqualityComparer<String[]>
+        {
+            public static readonly RequestComparer Comparer = new RequestComparer();
+
+
+            public bool Equals(string[] x, string[] y)
+            {
+                return x.Length == y.Length && x[0] == y[0];
+            }
+
+            public int GetHashCode(string[] obj)
+            {
+                return obj[0].GetHashCode();
+            }
+        }
+        #endregion
+
+        protected void ProcessRead()
+        {
+            var html = System.Text.Encoding.UTF8.GetString(buffer);
+
+            const String HeaderSeperator = "\r\n\r\n";
+            var ix = html.IndexOf(HeaderSeperator);
+            if (ix > -1)
+            {
+                ParseHeaders(html.Substring(0, ix));
+                ParseRequest();
+                SetSegments();
+                WebServer.HandleRequest(this, html.Remove(0, ix + HeaderSeperator.Length));
+            }
+            Error("File not found");
+        }
+
+        protected void HandleClosure(SocketError error)
         {
         }
 
-        public static void HandleRequest(WebRequest request, string content)
+        //private static string EncapsulatePath(string path)
+        //{
+        //    path = path.Replace("..", String.Empty).Replace("/", "\\");
+        //    while (path.StartsWith("\\")) path = path.Remove(0, 1);
+        //    return path;
+        //}
+
+
+        public void Send(byte[] data)
         {
-            var response = "HTTP/1.1 404 Not Found\r\n" +
-                            "Content-Type: text/html\r\n" +
+            if (Client.Connected) Client.Send(data);
+        }
+
+        public void Send(byte[] data, int length, SocketFlags flags)
+        {
+            if (Client.Connected) Client.Send(data, length, flags);
+        }
+
+        public void KickAfter(byte[] data)
+        {
+            Send(data);
+            Client.SafeClose();
+            throw new RequestEndException();
+        }
+
+        public void Error(string message)
+        {
+            Console.WriteLine("404: " + message);
+            var html = "<doctype html><html><title>Not found</title><body>" + message + "</body></html>";
+            var response = GetHeader(404, "Not Found", "text/html", html.Length);
+
+            var data = System.Text.Encoding.UTF8.GetBytes(response + html);
+            KickAfter(data);
+        }
+
+        public void RepsondHeader(int statusCode, string status, string contentType, long contentLength)
+        {
+            var response = GetHeader(statusCode, status, contentType, contentLength);
+            var data = System.Text.Encoding.UTF8.GetBytes(response);
+            Send(data);
+        }
+
+        private string GetHeader(int statusCode, string status, string contentType, long contentLength)
+        {
+            return "HTTP/1.1 " + statusCode + " " + status + "\r\n" +
+                            "Content-Type: " + contentType + "\r\n" +
                             "Server: TEST\r\n" +
                             "-Powered-By: ASP.NET\r\n" +
                             "Date: Wed, 18 Feb 2015 03:28:26 GMT\r\n" +
-                            "Content-Length: 49\r\n\r\n<doctype html><html><title>Title</title>Hi</html>";
-
-            var data = System.Text.Encoding.UTF8.GetBytes(response);
-            request.KickAfter(data);
+                            "Content-Length: " + contentLength + "\r\n\r\n";
         }
 
         public void Dispose()
         {
             Headers = null;
             Method = RequestUrl = null;
+            Console.WriteLine("DISPOSING");
         }
     }
 }

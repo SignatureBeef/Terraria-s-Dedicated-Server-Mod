@@ -556,6 +556,16 @@ namespace tdsm.core
                 case "rcon-bind-address":
                     RConBindAddress = args.Value;
                     break;
+                case "web-server-bind-address":
+                    WebInterface.WebServer.Begin(args.Value);
+                    break;
+                case "web-server-serve-files":
+                    bool serveFiles;
+                    if (Boolean.TryParse(args.Value, out serveFiles))
+                    {
+                        WebInterface.WebServer.ServeWebFiles = serveFiles;
+                    }
+                    break;
             }
         }
 
