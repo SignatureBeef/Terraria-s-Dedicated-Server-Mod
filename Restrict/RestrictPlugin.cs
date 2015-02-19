@@ -52,6 +52,11 @@ namespace RestrictPlugin
             get { return properties.GetValue("server-id", "tdsm"); }
         }
 
+        bool enableDefaultPassword
+        {
+            get { return properties.GetValue("enable-default-password", true); }
+        }
+
         public const String ChestBreak = "restrict.chestbreak";
         public const String ChestOpen = "restrict.chestopen";
         public const String DoorChange = "restrict.doorchange";
@@ -158,6 +163,9 @@ namespace RestrictPlugin
                 .WithHelpText("yourpassword")
                 .WithPermissionNode("restrict.reg")
                 .Calls(LockUsers<ISender, string>(this.PlayerRegCommand));
+
+            if (!enableDefaultPassword)
+                Netplay.password = String.Empty;
         }
 
         Action<T, U> LockUsers<T, U>(Action<T, U> callback)
