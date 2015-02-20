@@ -77,6 +77,7 @@ namespace RestrictPlugin
 
         protected override void Initialized(object state)
         {
+            ResetUsers();
             //Probably should check for existing login systems, But i'm not sure what undead would prefer atm.
             //Server.UsingLoginSystem = true;
 
@@ -164,6 +165,13 @@ namespace RestrictPlugin
                 .WithPermissionNode("restrict.reg")
                 .Calls(LockUsers<ISender, string>(this.PlayerRegCommand));
 
+            AddCommand("login")
+                .WithDescription("Allows a user to sign in after a reload")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithHelpText("yourpassword")
+                .WithPermissionNode("restrict.login")
+                .Calls(LockUsers<ISender, string>(this.PlayerLoginCommand));
+
             if (!enableDefaultPassword)
                 Netplay.password = String.Empty;
         }
@@ -177,6 +185,20 @@ namespace RestrictPlugin
                     callback(t, u);
                 }
             };
+        }
+
+        /// <summary>
+        /// Resets the restrict authenticated users upon reload
+        /// </summary>
+        void ResetUsers()
+        {
+            foreach (var plr in Main.player)
+            {
+                if (plr != null && plr.AuthenticatedBy == this.Name)
+                {
+                    plr.AuthenticatedAs = null;
+                }
+            }
         }
 
         protected override void Disposed(object state)
@@ -307,7 +329,7 @@ namespace RestrictPlugin
                 (ctx.Connection as ClientConnection).DesiredQueue = 1;
             }
 
-            player.AuthenticatedAs = name;
+            player.SetAuthentication(name, this.Name);
             ctx.SetResult(HookResult.DEFAULT);
         }
 

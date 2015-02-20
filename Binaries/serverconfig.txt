@@ -76,3 +76,16 @@ server-list-name=TDSM Server
 
 #Description to use on the server list
 server-list-desc=This is an example of the description for use in the TDSM Server List.\n\nHello World!
+
+#Address for the Remote Console server to bind to
+#rcon-bind-address=127.0.0.1:7023
+
+#Remote console unique identifier, in format of: rcon_<guid>
+#rcon-hash-nonce=rcon_<guid>
+
+#The address that the web server should listen on, to disable simply comment the line out.
+#If you change the port please ensure you change the META TAG tdsm:port in /WebInterface/Files/index.html
+#web-server-bind-address=127.0.0.1:8448
+
+#Set to false if you wish to use another application to serve HTML files (such as nginx or apache)
+#web-server-serve-files=true

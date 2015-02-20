@@ -122,7 +122,7 @@ namespace tdsm.core.Messages.In
 
                 var args = new HookArgs.PlayerChat
                 {
-                    Message = text2,
+                    Message = text,
                     Color = color,
                 };
 
@@ -131,7 +131,7 @@ namespace tdsm.core.Messages.In
                 if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
                     return;
 
-                NewNetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, text2, whoAmI, args.Color.R, args.Color.G, args.Color.B);
+                NewNetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, text, whoAmI, args.Color.R, args.Color.G, args.Color.B);
                 if (Main.dedServ)
                 {
                     ProgramLog.Log("<" + Main.player[whoAmI].name + "> " + text);

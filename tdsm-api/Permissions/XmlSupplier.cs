@@ -227,18 +227,21 @@ namespace tdsm.api.Permissions
                     }
 
                     //Check for DEFAULT group permissions second
-                    nodesForUser = _store.Groups
-                            .Where(y => y.Attributes
-                                .Where(z => z.Key == "ApplyToGuests" && z.Value.ToLower() == "true")
-                                .Count() > 0)
-                            .SelectMany(y => y.Nodes)
-                            .Where(x => x.Key == node)
-                            .ToArray();
-                    foreach (var nd in nodesForUser)
+                    if (player.AuthenticatedAs == null)
                     {
-                        if (!found) found = true;
-                        if (nd.Deny) return Permission.Denied;
-                        if (nd.Deny == false) allowed = true;
+                        nodesForUser = _store.Groups
+                                .Where(y => y.Attributes
+                                    .Where(z => z.Key == "ApplyToGuests" && z.Value.ToLower() == "true")
+                                    .Count() > 0)
+                                .SelectMany(y => y.Nodes)
+                                .Where(x => x.Key == node)
+                                .ToArray();
+                        foreach (var nd in nodesForUser)
+                        {
+                            if (!found) found = true;
+                            if (nd.Deny) return Permission.Denied;
+                            if (nd.Deny == false) allowed = true;
+                        }
                     }
 
                     if (!found) return Permission.NodeNonExistent;

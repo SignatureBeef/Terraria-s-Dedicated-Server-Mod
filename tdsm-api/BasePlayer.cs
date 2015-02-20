@@ -8,8 +8,15 @@ namespace tdsm.api
         public string ClientUUId { get; set; }
 
         public string AuthenticatedAs { get; set; }
+        public string AuthenticatedBy { get; set; }
 
         public System.Collections.Hashtable PluginData;// = new System.Collections.Hashtable();
+
+        public void SetAuthentication(string auth, string by)
+        {
+            this.AuthenticatedAs = auth;
+            this.AuthenticatedBy = by;
+        }
 
         public override string Name
         {

@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using NDesk.Options;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace RestrictPlugin
 
                     if (player != null)
                     {
-                        player.AuthenticatedAs = name;
+                        player.SetAuthentication(name, this.Name);
 
                         if (player != sender)
                         {
@@ -348,6 +349,53 @@ namespace RestrictPlugin
             PlayerCommand("reg", sender, password);
         }
 
+        void PlayerLoginCommand(ISender sender, string password)
+        {
+            if (!(sender is Player)) return;
+
+            var player = (Player)sender;
+
+            if (player.AuthenticatedAs == null)
+            {
+                var name = player.Name;
+                var pname = NameTransform(name);
+                var oname = OldNameTransform(name);
+                string entry = null;
+
+                lock (users)
+                {
+                    entry = users.Find(pname) ?? users.Find(oname);
+                }
+
+                if (entry != null)
+                {
+                    var split = entry.Split(':');
+                    var hash = split[0];
+                    var hash2 = Hash(name, password);
+
+                    if (hash != hash2)
+                    {
+                        sender.SendMessage("Authentication failed.", 255, 255, 180, 180);
+                        return;
+                    }
+
+                    if (split.Length > 1 && split[1] == "op")
+                    {
+                        player.Op = true;
+                    }
+
+                    player.SetAuthentication(name, this.Name);
+
+                    if (player.Op)
+                        player.Message(255, new Color(128, 128, 255), "This humble server welcomes back Their Operating Highness.");
+                    else
+                        player.Message(255, new Color(128, 255, 128), "Welcome back, registered user.");
+                }
+                else sender.SendMessage("Authentication failed.", 255, 255, 180, 180);
+            }
+            else sender.SendMessage("You are already authenticated.", 255, 255, 180, 180);
+        }
+
         void PlayerCommand(string command, ISender sender, string password)
         {
             if (!(sender is Player)) return;
@@ -379,9 +427,9 @@ namespace RestrictPlugin
                 return;
             }
 
-            if (password.Length < 5)
+            if (password.Length < 5 || password.ToCharArray().Distinct().Count() < 5)
             {
-                sender.SendMessage("Error: passwords must have at least 5 characters.", 255, 255, 150, 150);
+                sender.SendMessage("Error: passwords must have at least 5 unique characters.", 255, 255, 150, 150);
                 return;
             }
 
@@ -467,7 +515,7 @@ namespace RestrictPlugin
             var player = FindPlayer(rq.name);
             if (player != null) // TODO: verify IP address
             {
-                player.AuthenticatedAs = rq.name;
+                player.SetAuthentication(rq.name, this.Name);
                 player.SendMessage("<Restrict> You are now registered.");
             }
 
