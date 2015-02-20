@@ -54,7 +54,7 @@ namespace RestrictPlugin
 
         bool enableDefaultPassword
         {
-            get { return properties.GetValue("enable-default-password", true); }
+            get { return properties.GetValue("enable-default-password", false); }
         }
 
         public const String ChestBreak = "restrict.chestbreak";
