@@ -46,6 +46,10 @@ namespace tdsm.api.Misc
                     bool v = false;
                     if (Boolean.TryParse(item, out v)) return (T)(object)v;
                 }
+                else if (t.Name == "String")
+                {
+                    return (T)(object)item;
+                }
             }
             return defaultValue;
         }

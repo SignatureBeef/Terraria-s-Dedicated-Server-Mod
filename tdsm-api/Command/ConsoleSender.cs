@@ -15,9 +15,9 @@
             // I don't know what the hell was the deal with this
         }
 
-		public override void SendMessage(string Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
+        public override void SendMessage(string message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
-            Tools.WriteLine(Message);
+            System.Console.WriteLine(message);
         }
     }
 }

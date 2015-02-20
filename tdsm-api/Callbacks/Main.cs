@@ -117,12 +117,13 @@ namespace tdsm.api.Callbacks
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             ProgramStart();
-
+#pragma warning disable 0162
             if (!Globals.FullAPIDefined)
             {
                 Console.WriteLine("Your tdsm.api.dll is incorrect, and does not expose all methods.");
                 return false;
             }
+#pragma warning restore 0162
 
             var ctx = new HookContext()
             {

@@ -9,6 +9,7 @@ using tdsm.core.Definitions;
 using tdsm.core.Logging;
 using tdsm.core.Messages.Out;
 using tdsm.core.Misc;
+using tdsm.core.RemoteConsole;
 using tdsm.core.ServerCore;
 
 namespace tdsm.core
@@ -269,13 +270,18 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.heal")
                 .Calls(this.Heal);
 
-            if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
+            AddCommand("rcon")
+                .WithDescription("Manage remote console access.")
+                .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
+                .WithHelpText("Usage:   rcon load       - reload login database")
+                .WithHelpText("         rcon list       - list rcon connections")
+                .WithHelpText("         rcon cut <name> - cut off rcon connections")
+                .WithHelpText("         rcon ban <name> - cut off rcon connections and revoke access")
+                .WithHelpText("         rcon add <name> <password> - add an rcon user")
+                .WithPermissionNode("tdsm.rcon")
+                .Calls(RConServer.RConCommand);
 
-            if (!String.IsNullOrEmpty(RConBindAddress))
-            {
-                ProgramLog.Log("Starting RCON Server");
-                RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"), this.TDSMBuild);
-            }
+            if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
         }
 
         void ProcessPIDFile(string pidPath)
@@ -572,12 +578,18 @@ namespace tdsm.core
         [Hook(HookOrder.NORMAL)]
         void OnServerStateChange(ref HookContext ctx, ref HookArgs.ServerStateChange args)
         {
-            //ProgramLog.Log("Server state changed to: " + args.ServerChangeState.ToString());
+            ProgramLog.Log("Server state changed to: " + args.ServerChangeState.ToString());
 
             //if (args.ServerChangeState == ServerState.Initialising)
             if (!Server.IsInitialised)
             {
                 Server.Init();
+
+                if (!String.IsNullOrEmpty(RConBindAddress))
+                {
+                    ProgramLog.Log("Starting RCON Server");
+                    RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"), this.TDSMBuild);
+                }
             }
         }
 

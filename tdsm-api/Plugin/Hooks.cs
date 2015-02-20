@@ -69,10 +69,10 @@ namespace tdsm.api.Plugin
         //public static readonly HookPoint<HookArgs.WorldGeneration> WorldGeneration;
         public static readonly HookPoint<HookArgs.WorldRequestMessage> WorldRequestMessage;
 
-		public static readonly HookPoint<HookArgs.ProgramStart> ProgramStart;
-		public static readonly HookPoint<HookArgs.StartCommandProcessing> StartCommandProcessing;
+        public static readonly HookPoint<HookArgs.ProgramStart> ProgramStart;
+        public static readonly HookPoint<HookArgs.StartCommandProcessing> StartCommandProcessing;
 
-		public static readonly HookPoint<HookArgs.AddBan> AddBan;
+        public static readonly HookPoint<HookArgs.AddBan> AddBan;
 
         //public static readonly HookPoint<HookArgs.PatchServer> PatchServer;
 
@@ -123,9 +123,9 @@ namespace tdsm.api.Plugin
             SendNetData = new HookPoint<HookArgs.SendNetData>("netmessage-senddata");
             UpdateServer = new HookPoint<HookArgs.UpdateServer>("update-server");
             ProgramStart = new HookPoint<HookArgs.ProgramStart>("program-start");
-			StartCommandProcessing = new HookPoint<HookArgs.StartCommandProcessing>("start-command-processing");
-			ConfigurationLine = new HookPoint<HookArgs.ConfigurationLine>("config-line");
-			AddBan = new HookPoint<HookArgs.AddBan>("add-ban");
+            StartCommandProcessing = new HookPoint<HookArgs.StartCommandProcessing>("start-command-processing");
+            ConfigurationLine = new HookPoint<HookArgs.ConfigurationLine>("config-line");
+            AddBan = new HookPoint<HookArgs.AddBan>("add-ban");
 
             ////Non API - but to seperate from the patcher
             //PatchServer = new HookPoint<HookArgs.PatchServer>("patch-server");
@@ -133,25 +133,25 @@ namespace tdsm.api.Plugin
     }
 
     public static class HookArgs
-	{
-//        public struct PatchServer
-//        {
-////            public Injector Default;
-//            public byte[] /*AssemblyDefinition*/ Terraria { get; set; }
-//            public bool IsServer { get; set; }
-//            public bool IsClient { get; set; }
-//        }
+    {
+        //        public struct PatchServer
+        //        {
+        ////            public Injector Default;
+        //            public byte[] /*AssemblyDefinition*/ Terraria { get; set; }
+        //            public bool IsServer { get; set; }
+        //            public bool IsClient { get; set; }
+        //        }
 
-		public struct AddBan
-		{
-			public string RemoteAddress { get; set; }
-		}
+        public struct AddBan
+        {
+            public string RemoteAddress { get; set; }
+        }
 
-		public struct ConfigurationLine
-		{
-			public string Key { get; set; }
-			public string Value { get; set; }
-		}
+        public struct ConfigurationLine
+        {
+            public string Key { get; set; }
+            public string Value { get; set; }
+        }
 
         public struct SendNetData
         {
@@ -588,6 +588,12 @@ namespace tdsm.api.Plugin
                 get { return Type == 1 && (Action == 0 || Action == 2 || Action == 4); }
                 set { if (Action == 0 || Action == 2 || Action == 4) Type = value ? (byte)1 : (byte)0; }
             }
+
+            public Tile Tile
+            {
+                get
+                { return Main.tile[X, Y]; }
+            }
         }
 
         public struct DoorStateChanged
@@ -824,8 +830,8 @@ namespace tdsm.api.Plugin
             public int Size { get; set; }
 
             public byte[] readBuffer;
-			public int start;
-			public int applied;
+            public int start;
+            public int applied;
 
             //            public void ForEach(object state, TileSquareForEachFunc func)
             //            {

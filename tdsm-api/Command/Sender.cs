@@ -34,7 +34,7 @@ namespace tdsm.api.Command
         /// <param name="R">Red text color value</param>
         /// <param name="G">Green text color value</param>
         /// <param name="B">Blue text color value</param>
-        public abstract void SendMessage(string Message, int A = 255, float R = 255f, float G = 0f, float B = 0f);
+        public abstract void SendMessage(string message, int A = 255, float R = 255f, float G = 0f, float B = 0f);
 
         //public bool Is(Type type)
         //{
