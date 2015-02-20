@@ -366,6 +366,7 @@ namespace tdsm.api
                 else if (ext == ".lua")
                 {
                     if (!_enableLUA) _enableLUA = true;
+                    Tools.WriteLine("Loading plugin from {0}.", fileInfo.Name);
                     plugin = new LUAPlugin();
                 }
             }
