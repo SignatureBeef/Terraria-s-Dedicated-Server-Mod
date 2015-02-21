@@ -54,8 +54,6 @@ namespace tdsm.core.Messages.In
                 Style = style
             };
 
-            Tools.WriteLine("X {0}, Y {1}, Action {2}, Type {3}, Style {4}", x, y, action, type, style);
-
             HookPoints.PlayerWorldAlteration.Invoke(ref ctx, ref args);
 
             if (ctx.CheckForKick())

@@ -9,6 +9,7 @@ namespace tdsm.api.Callbacks
         {
             Tools.WriteLine("TDSM Rebind API build {0}", Globals.Build);
             Globals.Touch();
+            ID.Lookup.Initialise();
 
             PluginManager.SetHookSource(typeof(HookPoints));
             PluginManager.Initialize(Globals.PluginPath, Globals.LibrariesPath);
