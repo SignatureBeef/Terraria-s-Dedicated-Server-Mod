@@ -35,6 +35,8 @@ namespace tdsm.core.Messages.In
                 color = new Color(255, 255, 255);
             }
             string text = ReadString(readBuffer);
+            if (String.IsNullOrEmpty(text)) return;
+
             string text2 = text.ToLower();
             if (text2 == Lang.mp[6] || text2 == Lang.mp[21])
             {
