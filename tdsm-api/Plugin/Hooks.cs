@@ -255,6 +255,7 @@ namespace tdsm.api.Plugin
 
         public struct PlayerDataReceived
         {
+            public bool IsConnecting { get; set; }
             public string Name { get; set; }
 
             public byte Hair { get; set; }

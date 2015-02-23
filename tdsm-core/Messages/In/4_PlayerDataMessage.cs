@@ -83,19 +83,28 @@ namespace tdsm.core.Messages.In
                 return;
             }
 
-            if (conn.Player != null)
+            //if (conn.Player != null)
+            //{
+            //    conn.Kick("Player data sent twice.");
+            //    return;
+            //}
+
+            //var player = new Player();
+            var player = conn.Player;
+            var connecting = conn.Player == null;
+            if (connecting)
             {
-                conn.Kick("Player data sent twice.");
-                return;
+                player = new Player();
+                conn.Player = player;
+                player.Connection = conn;
+                player.IPAddress = conn.RemoteAddress;
+                player.whoAmi = conn.SlotIndex;
             }
 
-            var player = new Player();
-            conn.Player = player;
-            player.Connection = conn;
-            player.IPAddress = conn.RemoteAddress;
-            player.whoAmi = conn.SlotIndex;
-
-            var data = new HookArgs.PlayerDataReceived();
+            var data = new HookArgs.PlayerDataReceived()
+            {
+                IsConnecting = connecting
+            };
 
             var read = data.Parse(readBuffer, num + 1 /* PlayerId */, length);
             Skip(read);
@@ -150,41 +159,42 @@ namespace tdsm.core.Messages.In
 
             data.Apply(player);
 
-            if (ctx.Result == HookResult.ASK_PASS)
-            {
-                conn.State = SlotState.PLAYER_AUTH;
-
-                var msg = NewNetMessage.PrepareThreadInstance();
-                msg.PasswordRequest();
-                conn.Send(msg.Output);
-
-                return;
-            }
-            else // HookResult.DEFAULT
-            {
-                // don't allow replacing connections for guests, but do for registered users
-                if (conn.State < SlotState.PLAYING)
+            if (connecting)
+                if (ctx.Result == HookResult.ASK_PASS)
                 {
-                    var lname = player.Name.ToLower();
+                    conn.State = SlotState.PLAYER_AUTH;
 
-                    foreach (var otherPlayer in Main.player)
+                    var msg = NewNetMessage.PrepareThreadInstance();
+                    msg.PasswordRequest();
+                    conn.Send(msg.Output);
+
+                    return;
+                }
+                else // HookResult.DEFAULT
+                {
+                    // don't allow replacing connections for guests, but do for registered users
+                    if (conn.State < SlotState.PLAYING)
                     {
-                        var otherSlot = tdsm.api.Callbacks.Netplay.slots[otherPlayer.whoAmi];
-                        if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherSlot.State() >= SlotState.CONNECTED)
+                        var lname = player.Name.ToLower();
+
+                        foreach (var otherPlayer in Main.player)
                         {
-                            conn.Kick("A \"" + otherPlayer.Name + "\" is already on this server.");
-                            return;
+                            var otherSlot = tdsm.api.Callbacks.Netplay.slots[otherPlayer.whoAmi];
+                            if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherSlot.State() >= SlotState.CONNECTED)
+                            {
+                                conn.Kick("A \"" + otherPlayer.Name + "\" is already on this server.");
+                                return;
+                            }
                         }
                     }
+
+                    //conn.Queue = (int)loginEvent.Priority; // actual queueing done on world request message
+
+                    // and now decide whether to queue the connection
+                    //SlotManager.Schedule (conn, (int)loginEvent.Priority);
+
+                    //NewNetMessage.SendData (4, -1, -1, player.Name, whoAmI);
                 }
-
-                //conn.Queue = (int)loginEvent.Priority; // actual queueing done on world request message
-
-                // and now decide whether to queue the connection
-                //SlotManager.Schedule (conn, (int)loginEvent.Priority);
-
-                //NewNetMessage.SendData (4, -1, -1, player.Name, whoAmI);
-            }
 
 
 
