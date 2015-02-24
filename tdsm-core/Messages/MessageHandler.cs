@@ -75,27 +75,17 @@ namespace tdsm.core.Messages
         public bool ReadString(byte[] readBuffer, out string str)
         {
             str = null;
-            //int pos = 0;
-            //int length = 0;
-            //while (true)
-            //{
-            //    length += readBuffer[pos + _readOffset] & 0x7F;
-            //    if (readBuffer[pos++ + _readOffset] > 127)
-            //        length <<= 7;
-            //    else break;
-            //}
-            //_readOffset++;
-            int num = 0;
-            int num2 = 0;
-            while (num2 != 35)
+
+            int count = 0;
+            int shift = 0;
+            byte b;
+            while (shift != 35)
             {
-                byte b = readBuffer[_readOffset++];
-                num |= (int)(b & 127) << num2;
-                num2 += 7;
+                b = readBuffer[_readOffset++];
+                count |= (int)(b & 127) << shift;
+                shift += 7;
                 if ((b & 128) == 0)
-                {
-                    return ParseString(readBuffer, _readOffset, num, out str);
-                }
+                    return ParseString(readBuffer, _readOffset, count, out str);
             }
 
             return false;

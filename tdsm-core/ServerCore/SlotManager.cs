@@ -51,7 +51,7 @@ namespace tdsm.core.ServerCore
             if (overlimitSlots < 0) overlimitSlots = 0;
             else if (overlimitSlots > maxSlots) overlimitSlots = maxSlots;
 
-            ProgramLog.Log("{2} {0}+{1} {3}.", maxSlots, overlimitSlots, "Initialising slot serer for", "players");
+            ProgramLog.Log("{2} {0}+{1} {3}.", maxSlots, overlimitSlots, "Initialising slot server for", "players");
 
             lock (syncRoot)
             {

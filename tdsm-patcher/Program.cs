@@ -71,7 +71,7 @@ namespace tdsm.patcher
 
             //return;
             //            IsPatching = true;
-            Console.WriteLine("TDSM patcher build {0}", Build);
+            Console.WriteLine(Console.Title = String.Format("TDSM patcher build {0}", Build));
             var isMono = Type.GetType("Mono.Runtime") != null;
 
 #if SERVER
@@ -161,6 +161,8 @@ namespace tdsm.patcher
             //patcher.RemoveClientCode();
             Console.Write("Ok\nHooking Server events...");
             patcher.HookUpdateServer();
+            Console.Write("Ok\nHooking NPC Spawning...");
+            patcher.HookNPCSpawning();
             Console.Write("Ok\nHooking config...");
             patcher.HookConfig();
             Console.Write("Ok\nRouting socket implementations...");

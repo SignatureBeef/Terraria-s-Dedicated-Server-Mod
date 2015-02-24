@@ -73,6 +73,7 @@ namespace tdsm.api.Plugin
         public static readonly HookPoint<HookArgs.StartCommandProcessing> StartCommandProcessing;
 
         public static readonly HookPoint<HookArgs.AddBan> AddBan;
+        public static readonly HookPoint<HookArgs.NPCSpawn> NPCSpawn;
 
         //public static readonly HookPoint<HookArgs.PatchServer> PatchServer;
 
@@ -126,6 +127,7 @@ namespace tdsm.api.Plugin
             StartCommandProcessing = new HookPoint<HookArgs.StartCommandProcessing>("start-command-processing");
             ConfigurationLine = new HookPoint<HookArgs.ConfigurationLine>("config-line");
             AddBan = new HookPoint<HookArgs.AddBan>("add-ban");
+            NPCSpawn = new HookPoint<HookArgs.NPCSpawn>("npc-spawn");
 
             ////Non API - but to seperate from the patcher
             //PatchServer = new HookPoint<HookArgs.PatchServer>("patch-server");
@@ -141,6 +143,14 @@ namespace tdsm.api.Plugin
         //            public bool IsServer { get; set; }
         //            public bool IsClient { get; set; }
         //        }
+
+        public struct NPCSpawn
+        {
+            public int X { get; set; }
+            public int Y { get; set; }
+            public int Type { get; set; }
+            public int Start { get; set; }
+        }
 
         public struct AddBan
         {
@@ -627,17 +637,30 @@ namespace tdsm.api.Plugin
 
         public struct ProjectileReceived
         {
-            public short Id { get; set; }
-            public float X { get; set; }
-            public float Y { get; set; }
-            public float VX { get; set; }
-            public float VY { get; set; }
+            public int Id { get; set; }
+            public Vector2 Position { get; set; }
+            public Vector2 Velocity { get; set; }
+            //public float X { get; set; }
+            //public float Y { get; set; }
+            //public float VX { get; set; }
+            //public float VY { get; set; }
             public float Knockback { get; set; }
-            public short Damage { get; set; }
-            public byte Owner { get; set; }
-            public byte TypeByte { get; set; }
-            public float AI_0 { get; set; }
-            public float AI_1 { get; set; }
+            public int Damage { get; set; }
+            public int Owner { get; set; }
+            public int Type { get; set; }
+            public float[] AI { get; set; }
+
+            public float AI_0
+            {
+                get { return AI[0]; }
+                set { AI[0] = value; }
+            }
+
+            public float AI_1
+            {
+                get { return AI[01]; }
+                set { AI[01] = value; }
+            }
 
             public int ExistingIndex { get; set; }
 
@@ -670,8 +693,7 @@ namespace tdsm.api.Plugin
                 projectile.knockBack = Knockback;
                 //                projectile.position = new Vector2(X, Y);
                 //                projectile.velocity = new Vector2(VX, VY);
-                projectile.ai[0] = AI_0;
-                projectile.ai[1] = AI_1;
+                projectile.ai = AI;
             }
 
             internal void CleanupProjectile()

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Concurrent;
 using tdsm.api.Command;
 
 namespace tdsm.api
@@ -10,7 +12,7 @@ namespace tdsm.api
         public string AuthenticatedAs { get; set; }
         public string AuthenticatedBy { get; set; }
 
-        public System.Collections.Hashtable PluginData;// = new System.Collections.Hashtable();
+        public ConcurrentDictionary<String, Object> PluginData = new ConcurrentDictionary<String, Object>();
 
         public void SetAuthentication(string auth, string by)
         {

@@ -51,6 +51,8 @@ namespace tdsm.core
             }
         }
 
+        public bool StopNPCSpawning { get; set; }
+
         public Entry()
         {
             this.TDSMBuild = 1;
@@ -262,13 +264,13 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.timelock")
                 .Calls(this.Timelock);
 
-            AddCommand("heal")
-                .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Heals one or all players.")
-                .WithHelpText("<player>")
-                .WithHelpText("-all")
-                .WithPermissionNode("tdsm.heal")
-                .Calls(this.Heal);
+            //AddCommand("heal")
+            //    .WithAccessLevel(AccessLevel.OP)
+            //    .WithDescription("Heals one or all players.")
+            //    .WithHelpText("<player>")
+            //    .WithHelpText("-all")
+            //    .WithPermissionNode("tdsm.heal")
+            //    .Calls(this.Heal);
 
             AddCommand("rcon")
                 .WithDescription("Manage remote console access.")
@@ -280,6 +282,13 @@ namespace tdsm.core
                 .WithHelpText("         rcon add <name> <password> - add an rcon user")
                 .WithPermissionNode("tdsm.rcon")
                 .Calls(RConServer.RConCommand);
+
+            AddCommand("npcspawning")
+                .WithDescription("Turn NPC spawning on or off.")
+                .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
+                .WithHelpText("Usage:   npcspawning true|false")
+                .WithPermissionNode("tdsm.npcspawning")
+                .Calls(this.NPCSpawning);
 
             if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
         }
@@ -431,6 +440,13 @@ namespace tdsm.core
             }
 
             if (_useTimeLock) Terraria.Main.time = TimelockTime;
+        }
+
+        [Hook(HookOrder.NORMAL)]
+        void OnNPCSpawned(ref HookContext ctx, ref HookArgs.NPCSpawn args)
+        {
+            if (StopNPCSpawning)
+                ctx.SetResult(HookResult.IGNORE);
         }
 
         /////Avoid using this as much as possible (this goes for plugin developers too).

@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Callbacks\Configuration.cs" />
+    <Compile Include="Callbacks\NPCCallback.cs" />
     <Compile Include="Callbacks\NetMessage.cs" />
     <Compile Include="Callbacks\WorldFile.cs" />
     <Compile Include="Command\ArgumentList.cs" />

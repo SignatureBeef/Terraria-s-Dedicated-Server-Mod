@@ -752,6 +752,28 @@ namespace tdsm.patcher
             }
         }
 
+        public void HookNPCSpawning()
+        {
+            var npc = _asm.MainModule.Types.Where(x => x.Name == "NPC").First();
+            var newNPC = npc.Methods.Where(x => x.Name == "NewNPC").First();
+
+            var callback = _self.MainModule.Types.Where(x => x.Name == "NPCCallback").First();
+            var method = callback.Methods.Where(x => x.Name == "CanSpawnNPC").First();
+
+            var il = newNPC.Body.GetILProcessor();
+            var first = newNPC.Body.Instructions.First();
+
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_0));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_1));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_2));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_3));
+            il.InsertBefore(first, il.Create(OpCodes.Call, _asm.MainModule.Import(method)));
+
+            il.InsertBefore(first, il.Create(OpCodes.Brtrue_S, first));
+            il.InsertBefore(first, il.Create(OpCodes.Ldc_I4, 200));
+            il.InsertBefore(first, il.Create(OpCodes.Ret));
+        }
+
         public void Save(string fileName, int apiBuild, string tdsmUID, string name)
         {
             //Ensure the name is updated to the new one

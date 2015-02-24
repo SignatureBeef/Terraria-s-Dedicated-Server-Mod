@@ -1,5 +1,6 @@
 using System;
 using tdsm.api;
+using tdsm.api.Plugin;
 using tdsm.core.Messages.Out;
 using Terraria;
 
@@ -16,80 +17,98 @@ namespace tdsm.core.Messages.In
         {
             //TODO [ProjectileReceived]
 
-            int num67 = (int)ReadInt16(readBuffer);
-            var position3 = ReadVector2(readBuffer);
-            var velocity3 = ReadVector2(readBuffer);
-            float knockBack = ReadSingle(readBuffer);
-            int damage = (int)ReadInt16(readBuffer);
-            int num68 = (int)ReadByte(readBuffer);
-            int num69 = (int)ReadInt16(readBuffer);
-            BitsByte bitsByte10 = ReadByte(readBuffer);
-            float[] array2 = new float[Projectile.maxAI];
-            for (int num70 = 0; num70 < Projectile.maxAI; num70++)
+            var identity = (int)ReadInt16(readBuffer);
+            var position = ReadVector2(readBuffer);
+            var velocity = ReadVector2(readBuffer);
+            var knockBack = ReadSingle(readBuffer);
+            var damage = (int)ReadInt16(readBuffer);
+            /*var targetOwner =*/
+            ReadByte(readBuffer);
+            var type = (int)ReadInt16(readBuffer);
+            var flags = (BitsByte)ReadByte(readBuffer);
+            var ai = new float[Projectile.maxAI];
+
+            for (var i = 0; i < Projectile.maxAI; i++)
             {
-                if (bitsByte10[num70])
-                {
-                    array2[num70] = ReadSingle(readBuffer);
-                }
-                else
-                {
-                    array2[num70] = 0f;
-                }
+                if (flags[i]) ai[i] = ReadSingle(readBuffer);
+                else ai[i] = 0f;
             }
-            if (Main.netMode == 2)
+
+            if (Main.projHostile[type]) return;
+
+            var index = 1000;
+
+            //Attempt to find the existing projectile.
+            for (var i = 0; i < 1000; i++)
             {
-                num68 = whoAmI;
-                if (Main.projHostile[num69])
+                if (Main.projectile[i].owner == whoAmI && Main.projectile[i].identity == identity && Main.projectile[i].active)
                 {
-                    return;
-                }
-            }
-            int num71 = 1000;
-            for (int num72 = 0; num72 < 1000; num72++)
-            {
-                if (Main.projectile[num72].owner == num68 && Main.projectile[num72].identity == num67 && Main.projectile[num72].active)
-                {
-                    num71 = num72;
+                    index = i;
                     break;
                 }
             }
-            if (num71 == 1000)
+
+            if (index == 1000)
             {
-                for (int num73 = 0; num73 < 1000; num73++)
+                //Find the next slot since there was no existing projectile.
+                for (var i = 0; i < 1000; i++)
                 {
-                    if (!Main.projectile[num73].active)
+                    if (!Main.projectile[i].active)
                     {
-                        num71 = num73;
+                        index = i;
                         break;
                     }
                 }
             }
-            Projectile projectile = Main.projectile[num71];
-            if (!projectile.active || projectile.type != num69)
+
+            var player = Main.player[whoAmI];
+            var ctx = new HookContext
             {
-                projectile.SetDefaults(num69);
-                if (Main.netMode == 2)
+                Connection = player.Connection,
+                Player = player,
+                Sender = player,
+            };
+
+            var args = new HookArgs.ProjectileReceived
+            {
+                Position = position,
+                Velocity = velocity,
+                Id = identity,
+                Owner = whoAmI,
+                Knockback = knockBack,
+                Damage = damage,
+                Type = type,
+                AI = ai,
+                ExistingIndex = index < 1000 ? index : -1
+            };
+
+            HookPoints.ProjectileReceived.Invoke(ref ctx, ref args);
+
+            if (ctx.Result == HookResult.DEFAULT)
+            {
+                if (index > -1 && index < 1000)
                 {
-                    tdsm.api.Callbacks.Netplay.slots[whoAmI].spamProjectile += 1f;
+                    var projectile = Main.projectile[index];
+                    if (!projectile.active || projectile.type != type)
+                    {
+                        projectile.SetDefaults(type);
+                        tdsm.api.Callbacks.Netplay.slots[whoAmI].spamProjectile += 1f;
+                    }
+
+                    projectile.identity = identity;
+                    projectile.position = position;
+                    projectile.velocity = velocity;
+                    projectile.type = type;
+                    projectile.damage = damage;
+                    projectile.knockBack = knockBack;
+                    projectile.owner = whoAmI;
+
+                    for (var i = 0; i < Projectile.maxAI; i++)
+                        projectile.ai[i] = ai[i];
+
+                    NewNetMessage.SendData(Packet.PROJECTILE, -1, whoAmI, String.Empty, index);
                 }
             }
-            projectile.identity = num67;
-            projectile.position = position3;
-            projectile.velocity = velocity3;
-            projectile.type = num69;
-            projectile.damage = damage;
-            projectile.knockBack = knockBack;
-            projectile.owner = num68;
-            for (int num74 = 0; num74 < Projectile.maxAI; num74++)
-            {
-                projectile.ai[num74] = array2[num74];
-            }
-            if (Main.netMode == 2)
-            {
-                NewNetMessage.SendData(27, -1, whoAmI, String.Empty, num71, 0f, 0f, 0f, 0);
-                return;
-            }
-            return;
         }
     }
 }
