@@ -89,3 +89,6 @@ web-server-bind-address=127.0.0.1:8448
 
 #Set to false if you wish to use another application to serve HTML files (such as nginx or apache)
 web-server-serve-files=true
+
+#The provider/your server name shown to the web user. 
+web-server-provider=TDSM Rebind Server Host

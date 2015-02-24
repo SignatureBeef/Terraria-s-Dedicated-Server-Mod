@@ -16,6 +16,8 @@ namespace tdsm.core
 {
     public partial class Entry : BasePlugin
     {
+        public const Int32 CoreBuild = 1;
+
         private bool _useTimeLock;
         public bool UseTimeLock
         {
@@ -53,9 +55,12 @@ namespace tdsm.core
 
         public bool StopNPCSpawning { get; set; }
 
+        private string _webServerAddress { get; set; }
+        private string _webServerProvider { get; set; }
+
         public Entry()
         {
-            this.TDSMBuild = 1;
+            this.TDSMBuild = CoreBuild;
             this.Author = "TDSM";
             this.Description = "TDSM Core";
             this.Name = "TDSM Core Module";
@@ -579,7 +584,10 @@ namespace tdsm.core
                     RConBindAddress = args.Value;
                     break;
                 case "web-server-bind-address":
-                    WebInterface.WebServer.Begin(args.Value);
+                    _webServerAddress = args.Value;
+                    break;
+                case "web-server-provider":
+                    _webServerProvider = args.Value;
                     break;
                 case "web-server-serve-files":
                     bool serveFiles;
@@ -604,7 +612,10 @@ namespace tdsm.core
                 if (!String.IsNullOrEmpty(RConBindAddress))
                 {
                     ProgramLog.Log("Starting RCON Server");
-                    RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"), this.TDSMBuild);
+                    RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"));
+
+                    ProgramLog.Log("Starting Web Server");
+                    WebInterface.WebServer.Begin(_webServerAddress, _webServerProvider);
                 }
             }
         }

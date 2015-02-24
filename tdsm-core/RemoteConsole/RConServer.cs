@@ -23,11 +23,8 @@ namespace tdsm.core.RemoteConsole
 
         public static PropertiesFile LoginDatabase { get; private set; }
 
-        private static int _tdsmBuild;
-
-        public static void Start(string dbPath, int tdsmBuild)
+        public static void Start(string dbPath)
         {
-            _tdsmBuild = tdsmBuild;
             LoginDatabase = new PropertiesFile(dbPath);
             LoginDatabase.Load();
 
@@ -245,7 +242,7 @@ namespace tdsm.core.RemoteConsole
 
                 ProgramLog.Admin.Log("New remote console connection from: {0}", addr);
 
-                var rcon = new RConClient(client, addr, _tdsmBuild);
+                var rcon = new RConClient(client, addr, Entry.CoreBuild);
 
                 rcon.Greet();
 

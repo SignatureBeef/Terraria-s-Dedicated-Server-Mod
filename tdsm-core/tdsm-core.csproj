@@ -154,6 +154,7 @@
     <Compile Include="Entry.cs" />
     <Compile Include="WebInterface\Auth\IHttpAuth.cs" />
     <Compile Include="WebInterface\Auth\HttpDigestAuth.cs" />
+    <Compile Include="WebInterface\Pages\ServerInformation.cs" />
     <Compile Include="WebInterface\WebRequest.cs" />
     <Compile Include="WebInterface\WebServer.cs" />
     <Compile Include="World.cs" />
@@ -175,6 +176,7 @@
     <Content Include="WebInterface\Files\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="WebInterface\Files\jquery-2.1.3.min.js" />
     <Content Include="WebInterface\Files\style.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

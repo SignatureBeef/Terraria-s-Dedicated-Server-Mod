@@ -11,11 +11,11 @@ ModularFramework.prototype.Debug = {
 };
 
 ModularFramework.prototype.Load = function () {
-    if ('$' in window && 'TDSMNetworking' in window) {
+    if ('$' in window && 'TDSMNetworking' in window && 'OnPageReady' in window) {
         var port = this.GetPort();
         if (typeof port == 'number') {
             this.Net = new TDSMNetworking(port);
-            if ('OnReady' in window) window.OnReady();
+            window.OnPageReady();
         }
         else alert('Server setup does not specify the TDSM port!');
     }
@@ -42,4 +42,5 @@ ModularFramework.prototype.GetPort = function () {
 //    return fw;
 //})();
 
-window.TFramework = (new ModularFramework).Load();
+window.TFramework = new ModularFramework();
+window.TFramework.Load();

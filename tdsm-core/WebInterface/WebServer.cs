@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using tdsm.core.Logging;
@@ -16,17 +17,19 @@ namespace tdsm.core.WebInterface
         public abstract void ProcessRequest(WebRequest request);
     }
 
-    public class JSPacket : WebPage
+    public class WebModule : Attribute
     {
-        public override void ProcessRequest(WebRequest request)
-        {
-
-        }
+        public string Url { get; set; }
     }
 
     public static class WebServer
     {
         static IHttpAuth Authentication = new HttpDigestAuth();
+
+        /// <summary>
+        /// The name of the host to show to the web user
+        /// </summary>
+        public static string ProviderName { get; set; }
 
         /// <summary>
         /// Allows a user to disable serving web files from the server, but rather from another application such as nginx or apache.
@@ -53,8 +56,30 @@ namespace tdsm.core.WebInterface
             return true;
         }
 
-        public static void Begin(string bindAddress)
+        private static List<KeyValuePair<String, WebPage>> GatherWebPages()
         {
+            var pages = new List<KeyValuePair<String, WebPage>>();
+
+            Type type = typeof(WebPage), moduleType = typeof(WebModule);
+            foreach (Type pageType in AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(clazz => clazz.GetTypes())
+                .Where(x => type.IsAssignableFrom(x) && x != type && !x.IsAbstract))
+            {
+                var custom = pageType.GetCustomAttributes(false);
+                var module = custom.Where(x => moduleType.IsAssignableFrom(x.GetType())).FirstOrDefault();
+                if (module != null)
+                {
+                    pages.Add(new KeyValuePair<String, WebPage>(((WebModule)module).Url, (WebPage)Activator.CreateInstance(pageType)));
+                }
+            }
+
+            return pages;
+        }
+
+        public static void Begin(string bindAddress, string provider)
+        {
+            ProviderName = provider;
+
             var split = bindAddress.Split(':');
             IPAddress addr;
             ushort port;
@@ -67,10 +92,19 @@ namespace tdsm.core.WebInterface
             var server = new TcpListener(addr, port);
 
             //if (RegisterModule("tdsm.admin.js")) 
-            if (!RegisterPage("/api/tiles.json", new JSPacket()))
+            //if (!RegisterPage("/api/tiles.json", new JSPacket()))
+            //{
+            //    ProgramLog.Error.Log("Failed to register web api module.");
+            //    return;
+            //}
+
+            foreach (var page in GatherWebPages())
             {
-                ProgramLog.Error.Log("Failed to register web api module.");
-                return;
+                if (!RegisterPage(page.Key, page.Value))
+                {
+                    ProgramLog.Error.Log("Failed to register web api module: " + page.Key);
+                    return;
+                }
             }
 
             server.Start();

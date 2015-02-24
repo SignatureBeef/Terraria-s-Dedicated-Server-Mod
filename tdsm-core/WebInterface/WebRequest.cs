@@ -170,6 +170,18 @@ namespace tdsm.core.WebInterface
         //    return path;
         //}
 
+        public void Send(int value)
+        {
+            var data = BitConverter.GetBytes(value);
+            Send(data);
+        }
+
+        public void Send(string value)
+        {
+            var data = System.Text.Encoding.UTF8.GetBytes(value);
+            Send(data.Length); //Think about 7-Bit encoding
+            Send(data);
+        }
 
         public void Send(byte[] data)
         {
@@ -179,6 +191,12 @@ namespace tdsm.core.WebInterface
         public void Send(byte[] data, int length, SocketFlags flags)
         {
             if (Client.Connected) Client.Send(data, length, flags);
+        }
+
+        public void End()
+        {
+            Client.SafeClose();
+            throw new RequestEndException();
         }
 
         public void KickAfter(byte[] data)
