@@ -31,4 +31,10 @@
 /tdsm-utility/bin
 /tdsm-utility/obj
 
+
+/PluginExamples/C#/BareBones/bin
+/PluginExamples/C#/BareBones/obj
+/PluginExamples/VB/BareBones/bin
+/PluginExamples/VB/BareBones/obj
+
 cecil
