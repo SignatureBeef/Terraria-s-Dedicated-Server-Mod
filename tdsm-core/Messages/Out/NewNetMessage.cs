@@ -383,7 +383,7 @@ namespace tdsm.core.Messages.Out
                     default:
                         {
 
-                            ProgramLog.Log("Unkown send packet: {0}", packetId);
+                            ProgramLog.Log("Unknown send packet: {0}", packetId);
                             ////Unknown packet :3
                             //var ctx = new HookContext()
                             //{
