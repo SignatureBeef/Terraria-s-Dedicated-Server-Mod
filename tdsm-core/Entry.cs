@@ -25,6 +25,7 @@ namespace tdsm.core
             { return _useTimeLock; }
             set
             {
+
                 _useTimeLock = value;
                 TimelockTime = Terraria.Main.time;
             }
@@ -613,10 +614,13 @@ namespace tdsm.core
                 {
                     ProgramLog.Log("Starting RCON Server");
                     RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"));
+				}
 
-                    ProgramLog.Log("Starting Web Server");
-                    WebInterface.WebServer.Begin(_webServerAddress, _webServerProvider);
-                }
+				if (!String.IsNullOrEmpty (_webServerAddress))
+				{
+					ProgramLog.Log ("Starting Web Server");
+					WebInterface.WebServer.Begin (_webServerAddress, _webServerProvider);
+				}
             }
         }
 

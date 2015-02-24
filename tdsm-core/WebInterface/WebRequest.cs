@@ -226,11 +226,11 @@ namespace tdsm.core.WebInterface
         private string GetHeader(int statusCode, string status, string contentType, long contentLength)
         {
             return "HTTP/1.1 " + statusCode + " " + status + "\r\n" +
-                            "Content-Type: " + contentType + "\r\n" +
-                            "Server: TEST\r\n" +
-                            "-Powered-By: ASP.NET\r\n" +
-                            "Date: Wed, 18 Feb 2015 03:28:26 GMT\r\n" +
-                            "Content-Length: " + contentLength + "\r\n\r\n";
+                    "Content-Type: " + contentType + "\r\n" +
+					"Server: " + WebServer.ProviderName + "\r\n" +
+                    "X-Powered-By: TDSM\r\n" +
+                    "Date: Wed, 18 Feb 2015 03:28:26 GMT\r\n" +
+                    "Content-Length: " + contentLength + "\r\n\r\n";
         }
 
         public void Dispose()

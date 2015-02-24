@@ -39,7 +39,9 @@ namespace tdsm.core.WebInterface
         //private static System.Collections.Generic.Queue<String> _additionalModules = new System.Collections.Generic.Queue<String>();
         private static System.Collections.Generic.Dictionary<String, WebPage> _pages = new System.Collections.Generic.Dictionary<String, WebPage>();
 
-        public static readonly string HtmlDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "WebInterface", "Files");
+//        public static readonly string HtmlDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "WebInterface", "Files");
+//		public static readonly string HtmlDirectory = @"C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\tdsm-core\WebInterface\Files";
+		public static readonly string HtmlDirectory = Environment.CurrentDirectory + @"/../../../../tdsm-core/WebInterface/Files";
 
         //public static bool RegisterModule(string path)
         //{
@@ -79,6 +81,8 @@ namespace tdsm.core.WebInterface
         public static void Begin(string bindAddress, string provider)
         {
             ProviderName = provider;
+
+			Console.WriteLine ("Html directory: " + HtmlDirectory);
 
             var split = bindAddress.Split(':');
             IPAddress addr;
@@ -182,9 +186,9 @@ namespace tdsm.core.WebInterface
                 if (url == "/") url = "index.html";
                 url = url.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
                 while (url.StartsWith("\\")) url = url.Remove(0, 1);
-                var local = Path.Combine(/*WebServer.HtmlDirectory*/ @"C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\tdsm-core\WebInterface\Files", url);
+				var local = Path.Combine(WebServer.HtmlDirectory, url);
 
-                if (Path.GetFullPath(local).StartsWith(@"C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\tdsm-core\WebInterface\Files"))
+				if (Path.GetFullPath(local).StartsWith(WebServer.HtmlDirectory))
                     return new FileInfo(local);
             }
             return null;
@@ -228,8 +232,7 @@ namespace tdsm.core.WebInterface
                     }
                 }
 
-                request.Client.SafeClose();
-                throw new RequestEndException();
+				request.End ();
             }
             else
             {
@@ -238,8 +241,7 @@ namespace tdsm.core.WebInterface
                     if (_pages.ContainsKey(request.Path))
                     {
                         _pages[request.Path].ProcessRequest(request);
-                        request.Client.SafeClose();
-                        throw new RequestEndException();
+						request.End ();
                     }
             }
         }
