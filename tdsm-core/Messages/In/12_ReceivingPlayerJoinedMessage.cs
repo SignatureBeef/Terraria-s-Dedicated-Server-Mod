@@ -24,7 +24,7 @@ namespace tdsm.core.Messages.In
 
             if (playerIndex != whoAmI)
             {
-                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (RECEIVING_PLAYER_JOINED forgery).");
+                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (RECEIVING_PLAYER_JOINED forgery).");
                 return;
             }
 
@@ -47,11 +47,11 @@ namespace tdsm.core.Messages.In
 
             player.respawnTimer = Int32.MaxValue;
 
-            if (tdsm.api.Callbacks.Netplay.slots[whoAmI].State() >= SlotState.SENDING_TILES)
+            if (tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].State() >= SlotState.SENDING_TILES)
             {
-                if (tdsm.api.Callbacks.Netplay.slots[whoAmI].State() == SlotState.SENDING_TILES)
+                if (tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].State() == SlotState.SENDING_TILES)
                 {
-                    tdsm.api.Callbacks.Netplay.slots[whoAmI].SetState(SlotState.PLAYING);
+                    tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].SetState(SlotState.PLAYING);
                     NewNetMessage.OnPlayerJoined(whoAmI); // this also forwards the message
                 }
                 else

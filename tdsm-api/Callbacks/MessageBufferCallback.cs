@@ -1,6 +1,6 @@
 ﻿namespace tdsm.api.Callbacks
 {
-    public static class MessageBuffer
+    public static class MessageBufferCallback
     {
 //        public static string PlayerNameFormatForChat = "<{0}> {1}";
 //        public static string PlayerNameFormatForConsole = PlayerNameFormatForChat;

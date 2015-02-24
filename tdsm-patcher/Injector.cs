@@ -112,7 +112,7 @@ namespace tdsm.patcher
             var serv = _asm.MainModule.Types.Where(x => x.Name == "WorldGen").First();
             var main = serv.Methods.Where(x => x.Name == "serverLoadWorldCallBack" && x.IsStatic).First();
 
-            var ourClass = _self.MainModule.Types.Where(x => x.Name == "WorldFile").First();
+            var ourClass = _self.MainModule.Types.Where(x => x.Name == "WorldFileCallback").First();
             var replacement = ourClass.Methods.Where(x => x.Name == "loadWorld" && x.IsStatic).First();
 
             //Grab all occurances of "LoadDedConfig" and route it to ours
@@ -134,7 +134,7 @@ namespace tdsm.patcher
             var main = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
             var dedServ = main.Methods.Where(x => x.Name == "DedServ").First();
 
-            var selfType = _self.MainModule.Types.Where(x => x.Name == "Main").First();
+            var selfType = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
             var callback = selfType.Methods.Where(x => x.Name == "OnStatusTextChange").First();
 
             var startInstructions = dedServ.Body.Instructions
@@ -172,7 +172,7 @@ namespace tdsm.patcher
             var server = _asm.MainModule.Types.Where(x => x.Name == "NetMessage").First();
             var method = server.Methods.Where(x => x.Name == "SendData").First();
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "NetMessage").First();
+            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "NetMessageCallback").First();
             var callback = userInputClass.Methods.First(m => m.Name == "SendData");
 
             var il = method.Body.GetILProcessor();
@@ -201,7 +201,7 @@ namespace tdsm.patcher
             var server = _asm.MainModule.Types.Where(x => x.Name == "ProgramServer").First();
             var method = server.Methods.Where(x => x.Name == "Main").First();
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "Main").First();
+            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
             var callback = userInputClass.Methods.First(m => m.Name == "OnProgramStarted");
 
             var il = method.Body.GetILProcessor();
@@ -221,7 +221,7 @@ namespace tdsm.patcher
             var server = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
             var method = server.Methods.Where(x => x.Name == "UpdateServer").First();
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "Main").First();
+            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
             var callback = userInputClass.Methods.First(m => m.Name == "UpdateServerEnd");
 
             var il = method.Body.GetILProcessor();
@@ -233,7 +233,7 @@ namespace tdsm.patcher
             var server = _asm.MainModule.Types.Where(x => x.Name == "Netplay").First();
             var method = server.Methods.Where(x => x.Name == "Init").First();
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "Main").First();
+            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
             var callback = userInputClass.Methods.First(m => m.Name == "Initialise");
 
             var il = method.Body.GetILProcessor();
@@ -245,7 +245,7 @@ namespace tdsm.patcher
             var worldGen = _asm.MainModule.Types.Where(x => x.Name == "WorldGen").First();
             var method = worldGen.Methods.Where(x => x.Name == "generateWorld").First();
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "Main").First();
+            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
             var callbackBegin = userInputClass.Methods.First(m => m.Name == "WorldGenerateBegin");
             var callbackEnd = userInputClass.Methods.First(m => m.Name == "WorldGenerateEnd");
 
@@ -286,7 +286,7 @@ namespace tdsm.patcher
             var netplay = _asm.MainModule.Types.Where(x => x.Name == "Netplay").First();
             var method = netplay.Methods.Where(x => x.Name == "StartServer").First();
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "Netplay").First();
+            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "NetplayCallback").First();
             var callback = userInputClass.Methods.First(m => m.Name == "StartServer");
 
             var ins = method.Body.Instructions
@@ -643,7 +643,7 @@ namespace tdsm.patcher
                 .Where(x => x.OpCode == OpCodes.Callvirt && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "set_Position")
                 .First();
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MessageBuffer").First();
+            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MessageBufferCallback").First();
             var callback = userInputClass.Methods.First(m => m.Name == "ProcessPacket");
 
             var il = getData.Body.GetILProcessor();
@@ -704,7 +704,7 @@ namespace tdsm.patcher
 
         public void HookSockets()
         {
-            var serverClass = _self.MainModule.Types.Where(x => x.Name == "Netplay").First();
+            var serverClass = _self.MainModule.Types.Where(x => x.Name == "NetplayCallback").First();
             var sockClass = _self.MainModule.Types.Where(x => x.Name == "IAPISocket").First();
             var targetArray = serverClass.Fields.Where(x => x.Name == "slots").First();
             var targetField = sockClass.Fields.Where(x => x.Name == "tileSection").First();
@@ -730,7 +730,7 @@ namespace tdsm.patcher
                 instructions[x].Next.Next.Next.Operand = _asm.MainModule.Import(targetField);
             }
 
-            var ourClass = _self.MainModule.Types.Where(x => x.Name == "Netplay").First();
+            var ourClass = _self.MainModule.Types.Where(x => x.Name == "NetplayCallback").First();
             foreach (var rep in new string[] { "SendAnglerQuest", "sendWater", "syncPlayers", "AddBan" })
             {
                 var toBeReplaced = _asm.MainModule.Types

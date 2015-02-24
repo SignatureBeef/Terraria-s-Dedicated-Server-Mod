@@ -21,7 +21,7 @@ namespace tdsm.core.Messages.In
 
             if (playerIndex != whoAmI)
             {
-                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (KILL_PLAYER forgery).");
+                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (KILL_PLAYER forgery).");
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace tdsm.core.Messages.In
 
             var ctx = new HookContext
             {
-                Connection = (tdsm.api.Callbacks.Netplay.slots[whoAmI] as ServerSlot).conn,
+                Connection = (tdsm.api.Callbacks.NetplayCallback.slots[whoAmI] as ServerSlot).conn,
                 Sender = player,
                 Player = player,
             };

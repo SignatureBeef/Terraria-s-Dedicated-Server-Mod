@@ -121,7 +121,7 @@ namespace tdsm.core.Messages.In
 
             if (plr != whoAmI)
             {
-                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("SpawnNPC Player Forgery!");
+                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("SpawnNPC Player Forgery!");
                 return;
             }
 

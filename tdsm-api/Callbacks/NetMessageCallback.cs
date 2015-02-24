@@ -2,7 +2,7 @@
 
 namespace tdsm.api.Callbacks
 {
-    public static class NetMessage
+    public static class NetMessageCallback
     {
         public static bool SendData(int msgType, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
         {

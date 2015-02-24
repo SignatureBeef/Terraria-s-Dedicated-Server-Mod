@@ -28,9 +28,9 @@ namespace tdsm.core.Messages.In
             }
 
             int whoAmI = conn.SlotIndex;
-            if (tdsm.api.Callbacks.Netplay.slots[whoAmI].State() == SlotState.ASSIGNING_SLOT)
+            if (tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].State() == SlotState.ASSIGNING_SLOT)
             {
-                tdsm.api.Callbacks.Netplay.slots[whoAmI].SetState(SlotState.SENDING_WORLD);
+                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].SetState(SlotState.SENDING_WORLD);
             }
 
             var ctx = new HookContext() { Connection = conn, Player = conn.Player };

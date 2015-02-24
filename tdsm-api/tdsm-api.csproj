@@ -74,8 +74,8 @@
   <ItemGroup>
     <Compile Include="Callbacks\Configuration.cs" />
     <Compile Include="Callbacks\NPCCallback.cs" />
-    <Compile Include="Callbacks\NetMessage.cs" />
-    <Compile Include="Callbacks\WorldFile.cs" />
+    <Compile Include="Callbacks\NetMessageCallback.cs" />
+    <Compile Include="Callbacks\WorldFileCallback.cs" />
     <Compile Include="Command\ArgumentList.cs" />
     <Compile Include="Command\CommandParser.cs" />
     <Compile Include="Command\DefaultCommands.cs" />
@@ -111,9 +111,9 @@
     <Compile Include="IPlayerConnection.cs" />
     <Compile Include="BasePlayer.cs" />
     <Compile Include="ServerState.cs" />
-    <Compile Include="Callbacks\MessageBuffer.cs" />
-    <Compile Include="Callbacks\Main.cs" />
-    <Compile Include="Callbacks\Netplay.cs" />
+    <Compile Include="Callbacks\MessageBufferCallback.cs" />
+    <Compile Include="Callbacks\MainCallback.cs" />
+    <Compile Include="Callbacks\NetplayCallback.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -78,7 +78,7 @@
         PACKET_66 = 66,
         PACKET_67 = 67,
         PACKET_68 = 68,
-        PACKET_69 = 69,
+        CHEST_NAME_UPDATE = 69,
         CATCH_NPC = 70,
         RELEASE_NPC = 71,
         TRAVEL_SHOP = 72,

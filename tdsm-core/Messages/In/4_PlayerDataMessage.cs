@@ -179,7 +179,7 @@ namespace tdsm.core.Messages.In
 
                         foreach (var otherPlayer in Main.player)
                         {
-                            var otherSlot = tdsm.api.Callbacks.Netplay.slots[otherPlayer.whoAmi];
+                            var otherSlot = tdsm.api.Callbacks.NetplayCallback.slots[otherPlayer.whoAmi];
                             if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherSlot.State() >= SlotState.CONNECTED)
                             {
                                 conn.Kick("A \"" + otherPlayer.Name + "\" is already on this server.");

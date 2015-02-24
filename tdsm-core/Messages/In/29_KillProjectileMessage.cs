@@ -23,7 +23,7 @@ namespace tdsm.core.Messages.In
 
             if (playerId != whoAmI)
             {
-                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (KILL_PROJECTILE forgery).");
+                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (KILL_PROJECTILE forgery).");
                 return;
             }
 

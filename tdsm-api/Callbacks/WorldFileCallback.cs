@@ -9,12 +9,12 @@ using Terraria;
 
 namespace tdsm.api.Callbacks
 {
-    public static class WorldFile
+    public static class WorldFileCallback
     {
         public static void loadWorld()
 		{
 			#if Full_API
-            Main.WorldLoadBegin();
+            MainCallback.WorldLoadBegin();
             Terraria.Main.checkXMas();
             Terraria.Main.checkHalloween();
             if (!File.Exists(Terraria.Main.worldPathName) && Terraria.Main.autoGen)
@@ -107,7 +107,7 @@ namespace tdsm.api.Callbacks
                             WorldGen.WaterCheck();
                             WorldGen.gen = false;
                             NPC.setFireFlyChance();
-                            Main.WorldLoadEnd();
+                            MainCallback.WorldLoadEnd();
                         }
                     }
                     catch

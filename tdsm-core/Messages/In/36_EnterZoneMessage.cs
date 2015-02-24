@@ -19,7 +19,7 @@ namespace tdsm.core.Messages.In
 
             if (playerIndex != whoAmI)
             {
-                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (ENTER_ZONE forgery).");
+                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (ENTER_ZONE forgery).");
                 return;
             }
 

@@ -1417,7 +1417,7 @@ namespace tdsm.core.Messages.Out
 
         public void Packet69(string text, int number, float number2, float number3, float number4, int number5)
         {
-            Begin(Packet.PACKET_69);
+            Begin(Packet.CHEST_NAME_UPDATE);
 
             Netplay.GetSectionX((int)number2);
             Netplay.GetSectionY((int)number3);

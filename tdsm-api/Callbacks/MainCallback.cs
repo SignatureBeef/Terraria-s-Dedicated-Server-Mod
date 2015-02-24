@@ -3,7 +3,7 @@ using tdsm.api.Plugin;
 
 namespace tdsm.api.Callbacks
 {
-    public static class Main
+    public static class MainCallback
     {
         public static void ProgramStart()
         {

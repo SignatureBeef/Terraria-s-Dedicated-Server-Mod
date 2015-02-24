@@ -141,7 +141,7 @@ namespace tdsm.core.ServerCore
             {
                 try
                 {
-                    (tdsm.api.Callbacks.Netplay.slots[i] as ServerSlot).Kick("Server is shutting down.");
+                    (tdsm.api.Callbacks.NetplayCallback.slots[i] as ServerSlot).Kick("Server is shutting down.");
                 }
                 catch { }
             }
@@ -152,7 +152,7 @@ namespace tdsm.core.ServerCore
             {
                 try
                 {
-                    (tdsm.api.Callbacks.Netplay.slots[i] as ServerSlot).Reset();
+                    (tdsm.api.Callbacks.NetplayCallback.slots[i] as ServerSlot).Reset();
                 }
                 catch { }
             }
@@ -276,7 +276,7 @@ namespace tdsm.core.ServerCore
 
         public static void Init()
         {
-            tdsm.api.Callbacks.Netplay.slots = new ServerSlot[256];
+            tdsm.api.Callbacks.NetplayCallback.slots = new ServerSlot[256];
             for (int i = 0; i < 256; i++)
             {
                 var slot = new ServerSlot()
@@ -284,7 +284,7 @@ namespace tdsm.core.ServerCore
                     whoAmI = i
                 };
                 slot.Reset();
-                tdsm.api.Callbacks.Netplay.slots[i] = slot;
+                tdsm.api.Callbacks.NetplayCallback.slots[i] = slot;
             }
 
             Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
@@ -315,7 +315,7 @@ namespace tdsm.core.ServerCore
                 for (int j = 0; j < Main.maxSectionsX; j++)
                 {
                     for (int k = 0; k < Main.maxSectionsY; k++)
-                        tdsm.api.Callbacks.Netplay.slots[i].tileSection[j, k] = false;
+                        tdsm.api.Callbacks.NetplayCallback.slots[i].tileSection[j, k] = false;
                 }
             }
         }
@@ -329,7 +329,7 @@ namespace tdsm.core.ServerCore
             {
                 for (int j = sectionY - 1; j < sectionY + 2; j++)
                 {
-                    if (i >= 0 && i < Main.maxSectionsX && j >= 0 && j < Main.maxSectionsY && !tdsm.api.Callbacks.Netplay.slots[who].tileSection[i, j])
+                    if (i >= 0 && i < Main.maxSectionsX && j >= 0 && j < Main.maxSectionsY && !tdsm.api.Callbacks.NetplayCallback.slots[who].tileSection[i, j])
                     {
                         num++;
                     }
@@ -339,13 +339,13 @@ namespace tdsm.core.ServerCore
             {
                 int num2 = num;
                 NewNetMessage.SendData(9, who, -1, Lang.inter[44], num2, 0f, 0f, 0f, 0);
-                tdsm.api.Callbacks.Netplay.slots[who].statusText2 = "is receiving tile data";
-                tdsm.api.Callbacks.Netplay.slots[who].statusMax += num2;
+                tdsm.api.Callbacks.NetplayCallback.slots[who].statusText2 = "is receiving tile data";
+                tdsm.api.Callbacks.NetplayCallback.slots[who].statusMax += num2;
                 for (int k = sectionX - 1; k < sectionX + 2; k++)
                 {
                     for (int l = sectionY - 1; l < sectionY + 2; l++)
                     {
-                        if (k >= 0 && k < Main.maxSectionsX && l >= 0 && l < Main.maxSectionsY && !tdsm.api.Callbacks.Netplay.slots[who].tileSection[k, l])
+                        if (k >= 0 && k < Main.maxSectionsX && l >= 0 && l < Main.maxSectionsY && !tdsm.api.Callbacks.NetplayCallback.slots[who].tileSection[k, l])
                         {
                             NewNetMessage.SendSection(who, k, l, false);
                             NewNetMessage.SendData(11, who, -1, String.Empty, k, (float)l, (float)k, (float)l, 0);

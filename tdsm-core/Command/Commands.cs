@@ -1013,7 +1013,7 @@ namespace tdsm.core
                 int s;
                 args.ParseOne(out s);
 
-                var slot = tdsm.api.Callbacks.Netplay.slots[s];
+                var slot = tdsm.api.Callbacks.NetplayCallback.slots[s];
 
                 if (slot.State() != SlotState.VACANT)
                 {

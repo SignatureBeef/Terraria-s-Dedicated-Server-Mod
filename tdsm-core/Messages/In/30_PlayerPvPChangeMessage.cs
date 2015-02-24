@@ -20,7 +20,7 @@ namespace tdsm.core.Messages.In
 
             if (playerIndex != whoAmI)
             {
-                tdsm.api.Callbacks.Netplay.slots[whoAmI].Kick("Cheating detected (PLAYER_PVP_CHANGE forgery).");
+                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (PLAYER_PVP_CHANGE forgery).");
                 return;
             }
 

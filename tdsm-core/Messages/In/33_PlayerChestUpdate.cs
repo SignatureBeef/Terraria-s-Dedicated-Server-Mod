@@ -16,40 +16,37 @@ namespace tdsm.core.Messages.In
         {
             var player = Main.player[whoAmI];
 
-            int id = (int)ReadInt16(readBuffer);
-            int chestX = (int)ReadInt16(readBuffer);
-            int chestY = (int)ReadInt16(readBuffer);
-            int num88 = (int)ReadByte(readBuffer);
+            var id = (int)ReadInt16(readBuffer);
+            var chestX = (int)ReadInt16(readBuffer);
+            var chestY = (int)ReadInt16(readBuffer);
+            var nameLength = (int)ReadByte(readBuffer);
 
-            string text5 = string.Empty;
-            if (num88 != 0)
+            var name = String.Empty;
+            if (nameLength != 0)
             {
-                if (num88 <= 20)
+                if (nameLength <= 20)
                 {
-                    text5 = ReadString(readBuffer);
+                    name = ReadString(readBuffer);
                 }
-                else
+                else if (nameLength != 255)
                 {
-                    if (num88 != 255)
-                    {
-                        num88 = 0;
-                    }
+                    nameLength = 0;
                 }
             }
 
             if (Math.Abs(player.position.X / 16 - chestX) < 7 && Math.Abs(player.position.Y / 16 - chestY) < 7)
             {
-                if (num88 != 0)
+                if (nameLength != 0)
                 {
-                    int chest = Main.player[whoAmI].chest;
-                    Chest chest2 = Main.chest[chest];
-                    chest2.name = text5;
-                    NewNetMessage.SendData(69, -1, whoAmI, text5, chest, (float)chest2.x, (float)chest2.y, 0f, 0);
+                    var playerChestId = Main.player[whoAmI].chest;
+                    var playerChest = Main.chest[playerChestId];
+                    playerChest.name = name;
+
+                    NewNetMessage.SendData(69, -1, whoAmI, name, playerChestId, (float)playerChest.x, (float)playerChest.y, 0f, 0);
                 }
                 Main.player[whoAmI].chest = id;
             }
             else Main.player[whoAmI].chest = -1;
-            return;
         }
     }
 }

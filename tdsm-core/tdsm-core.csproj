@@ -112,7 +112,7 @@
     <Compile Include="Messages\In\66_Packet66.cs" />
     <Compile Include="Messages\In\67_Packet67.cs" />
     <Compile Include="Messages\In\61_SpawnNPCs.cs" />
-    <Compile Include="Messages\In\69_Packet69.cs" />
+    <Compile Include="Messages\In\69_ChestNameUpdate.cs" />
     <Compile Include="Messages\In\70_CatchNPC.cs" />
     <Compile Include="Messages\In\71_ReleaseNPC.cs" />
     <Compile Include="Messages\In\72_TravelShop.cs" />
