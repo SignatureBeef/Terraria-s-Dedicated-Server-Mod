@@ -4,8 +4,13 @@ namespace tdsm.api.Misc
 {
     public class PropertiesFile : DataRegister
     {
-        public PropertiesFile(string path)
-            : base(path)
+        //public PropertiesFile(string path)
+        //    : base(path)
+        //{
+
+        //}
+        public PropertiesFile(string path, bool lowerKeys = true, bool autoLoad = true)
+            : base(path, lowerKeys, autoLoad)
         {
 
         }

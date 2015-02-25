@@ -17,7 +17,12 @@ namespace tdsm.core.WebInterface
         public string RequestUrl { get; private set; }
         public string Path { get; private set; }
 
+        public string IPAddress { get; private set; }
+        public ushort RemotePort { get; private set; }
+
         public int StatusCode { get; set; }
+
+        public string AuthenticatedAs { get; private set; }
 
         public Socket Client;
 
@@ -154,7 +159,17 @@ namespace tdsm.core.WebInterface
                 ParseHeaders(html.Substring(0, ix));
                 ParseRequest();
                 SetSegments();
-                WebServer.HandleRequest(this, html.Remove(0, ix + HeaderSeperator.Length));
+
+                var remote = this.Client.RemoteEndPoint.ToString().Split(':');
+                if (remote.Length == 2)
+                {
+                    IPAddress = remote[0];
+                    RemotePort = ushort.Parse(remote[1]);
+
+                    AuthenticatedAs = WebServer.Authenticate(this);
+
+                    WebServer.HandleRequest(this, html.Remove(0, ix + HeaderSeperator.Length));
+                }
             }
             Error("File not found");
         }
@@ -174,6 +189,11 @@ namespace tdsm.core.WebInterface
         {
             var data = BitConverter.GetBytes(value);
             Send(data);
+        }
+
+        public void Send(bool value)
+        {
+            Send(new byte[] { (byte)(value ? 1 : 0) });
         }
 
         public void Send(string value)
@@ -216,21 +236,29 @@ namespace tdsm.core.WebInterface
             KickAfter(data);
         }
 
-        public void RepsondHeader(int statusCode, string status, string contentType, long contentLength)
+        public void RepsondHeader(int statusCode, string status, string contentType, long contentLength, string[] headers = null)
         {
-            var response = GetHeader(statusCode, status, contentType, contentLength);
+            var response = GetHeader(statusCode, status, contentType, contentLength, headers);
             var data = System.Text.Encoding.UTF8.GetBytes(response);
             Send(data);
         }
 
-        private string GetHeader(int statusCode, string status, string contentType, long contentLength)
+        private string GetHeader(int statusCode, string status, string contentType, long contentLength, string[] headers = null)
         {
-            return "HTTP/1.1 " + statusCode + " " + status + "\r\n" +
+            var defaultResp = "HTTP/1.1 " + statusCode + " " + status + "\r\n" +
                     "Content-Type: " + contentType + "\r\n" +
-					"Server: " + WebServer.ProviderName + "\r\n" +
+                    "Server: " + WebServer.ProviderName + "\r\n" +
                     "X-Powered-By: TDSM\r\n" +
                     "Date: Wed, 18 Feb 2015 03:28:26 GMT\r\n" +
-                    "Content-Length: " + contentLength + "\r\n\r\n";
+                    "Content-Length: " + contentLength + "\r\n";
+
+            if (headers != null)
+            {
+                foreach (var hdr in headers)
+                    defaultResp += hdr + "\r\n";
+            }
+
+            return defaultResp + "\r\n";
         }
 
         public void Dispose()

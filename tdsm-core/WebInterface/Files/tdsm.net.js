@@ -1,22 +1,43 @@
 ﻿function TDSMNetworking(port) {
     this.baseUrl = window.location.protocol + '//' + window.location.hostname + ':' + port + '/';
+    this.nonce = '';
 };
 
 TDSMNetworking.prototype.Ping = function (onResult) {
     GetUrlReader(this.baseUrl + 'api/info', function (reader) {
         if (reader) {
-            var provider = reader.ReadString();
-            var apiVers = reader.ReadInt32();
-            var coreVers = reader.ReadInt32();
+            onResult({
+                provider: reader.ReadString(),
+                api: reader.ReadInt32(),
+                core: reader.ReadInt32()
+            });
         }
         else onResult(false);
     });
 };
 
-function GetUrlReader(url, onResult) {
+TDSMNetworking.prototype.Login = function (auth, onResult) {
+    GetUrlReader(this.baseUrl + 'api/auth', function (reader) {
+        if (reader) {
+            onResult(reader.ReadBoolean());
+        }
+        else onResult(false);
+    }, { 'Auth': auth });
+};
+
+TDSMNetworking.prototype.GetRandom = function () {
+    return this.nonce;
+};
+
+function GetUrlReader(url, onResult, headers) {
     var request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
+
+    if (headers)
+        for (var key in headers) {
+            request.setRequestHeader(key, headers[key]);
+        }
 
     request.onload = function (oEvent) {
         var arrayBuffer = this.response;
@@ -41,9 +62,13 @@ ByteReader.prototype.ReadInt32 = function () {
             (this.buffer[this.index++] << 24))
 };
 
+ByteReader.prototype.ReadBoolean = function () {
+    return this.buffer[this.index++] == 1;
+};
+
 ByteReader.prototype.ReadString = function () {
     var length = this.ReadInt32();
-    var section = this.buffer.slice(this.index, this.index + length);
+    var section = this.buffer.subarray(this.index, this.index + length);
     this.index += length;
     return String.fromCharCode.apply(null, section);
 };

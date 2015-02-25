@@ -24,7 +24,7 @@ namespace tdsm.core.WebInterface
 
     public static class WebServer
     {
-        static IHttpAuth Authentication = new HttpDigestAuth();
+        static IHttpAuth Authentication;
 
         /// <summary>
         /// The name of the host to show to the web user
@@ -39,9 +39,10 @@ namespace tdsm.core.WebInterface
         //private static System.Collections.Generic.Queue<String> _additionalModules = new System.Collections.Generic.Queue<String>();
         private static System.Collections.Generic.Dictionary<String, WebPage> _pages = new System.Collections.Generic.Dictionary<String, WebPage>();
 
-//        public static readonly string HtmlDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "WebInterface", "Files");
-//		public static readonly string HtmlDirectory = @"C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\tdsm-core\WebInterface\Files";
-		public static readonly string HtmlDirectory = Environment.CurrentDirectory + @"/../../../../tdsm-core/WebInterface/Files";
+        //        public static readonly string HtmlDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "WebInterface", "Files");
+        //		public static readonly string HtmlDirectory = @"C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\tdsm-core\WebInterface\Files";
+        //public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"/../../../../tdsm-core/WebInterface/Files");
+        public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\..\..\tdsm-core\WebInterface\Files");
 
         //public static bool RegisterModule(string path)
         //{
@@ -49,6 +50,8 @@ namespace tdsm.core.WebInterface
         //    lock (_additionalModules) _additionalModules.Enqueue(path);
         //    return true;
         //}
+
+        static bool _exit;
 
         //TODO: use reflection in plugins
         public static bool RegisterPage(string request, WebPage page)
@@ -81,8 +84,11 @@ namespace tdsm.core.WebInterface
         public static void Begin(string bindAddress, string provider)
         {
             ProviderName = provider;
+            Authentication = new HttpDigestAuth(Path.Combine(tdsm.api.Globals.DataPath, "web.logins"));
 
-			Console.WriteLine ("Html directory: " + HtmlDirectory);
+            Authentication.CreateLogin("DeathCradle", "testing", ProviderName);
+
+            //Console.WriteLine("Html directory: " + HtmlDirectory);
 
             var split = bindAddress.Split(':');
             IPAddress addr;
@@ -119,7 +125,7 @@ namespace tdsm.core.WebInterface
                 ProgramLog.Admin.Log("Web server started on {0}.", bindAddress);
 
                 server.Server.Poll(500000, SelectMode.SelectRead);
-                for (; ; )
+                while (!_exit)
                 {
                     //var client = = server.AcceptSocket();
                     //AcceptClient(client);
@@ -177,7 +183,6 @@ namespace tdsm.core.WebInterface
                 throw new Exception("Unexpected exception in socket handling code", e);
         }
 
-
         private static FileInfo GetEncapsulated(WebRequest request)
         {
             if (request.Path != null)
@@ -186,9 +191,9 @@ namespace tdsm.core.WebInterface
                 if (url == "/") url = "index.html";
                 url = url.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
                 while (url.StartsWith("\\")) url = url.Remove(0, 1);
-				var local = Path.Combine(WebServer.HtmlDirectory, url);
+                var local = Path.Combine(WebServer.HtmlDirectory, url);
 
-				if (Path.GetFullPath(local).StartsWith(WebServer.HtmlDirectory))
+                if (Path.GetFullPath(local).StartsWith(WebServer.HtmlDirectory))
                     return new FileInfo(local);
             }
             return null;
@@ -200,6 +205,11 @@ namespace tdsm.core.WebInterface
             {".css", "text/css"}
         };
 
+        internal static string Authenticate(WebRequest request)
+        {
+            return Authentication.Authenticate(request);
+        }
+
         internal static void HandleRequest(WebRequest request, string content)
         {
             //var url = this.RequestUrl;
@@ -209,7 +219,6 @@ namespace tdsm.core.WebInterface
 
             if (local != null && local.Exists)
             {
-                Console.WriteLine("Sending file");
                 //TODO implement cache
 
                 using (var fs = local.OpenRead())
@@ -232,7 +241,7 @@ namespace tdsm.core.WebInterface
                     }
                 }
 
-				request.End ();
+                request.End();
             }
             else
             {
@@ -241,7 +250,7 @@ namespace tdsm.core.WebInterface
                     if (_pages.ContainsKey(request.Path))
                     {
                         _pages[request.Path].ProcessRequest(request);
-						request.End ();
+                        request.End();
                     }
             }
         }

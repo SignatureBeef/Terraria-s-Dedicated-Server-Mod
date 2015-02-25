@@ -88,7 +88,7 @@ namespace RestrictPlugin
             CreateDirectory(pluginFolder);
 
             properties = new PropertiesFile(pluginFolder + Path.DirectorySeparatorChar + "restrict.properties");
-            properties.Load();
+            //properties.Load();
             var dummy1 = allowGuests;
             var dummy2 = restrictGuests;
             var dummy3 = restrictGuestsDoors;
@@ -97,7 +97,7 @@ namespace RestrictPlugin
             properties.Save();
 
             users = new PropertiesFile(pluginFolder + Path.DirectorySeparatorChar + "restrict_users.properties");
-            users.Load();
+            //users.Load();
             users.Save();
 
             AddCommand("ru")

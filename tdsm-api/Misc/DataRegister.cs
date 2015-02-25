@@ -12,13 +12,15 @@ namespace tdsm.api.Misc
     {
         private string _path;
         private string[] _data;
+        private bool _lowerKeys;
 
         const char PrefixKey = '=';
-
-        public DataRegister(string path, bool autoLoad = true)
+        
+        public DataRegister(string path, bool lowerKeys = true, bool autoLoad = true)
         {
             _path = path;
             _data = new string[0];
+            _lowerKeys = lowerKeys;
 
             if (autoLoad) Load();
         }
@@ -35,7 +37,7 @@ namespace tdsm.api.Misc
             {
                 if (System.IO.File.Exists(_path))
                     _data = System.IO.File.ReadAllLines(_path)
-                        .Select(x => x.ToLower().Trim())
+                        .Select(x => x.Trim())
                         .Distinct()
                         .ToArray();
                 else System.IO.File.WriteAllText(_path, System.String.Empty);
@@ -79,7 +81,7 @@ namespace tdsm.api.Misc
             lock (_data)
             {
                 System.Array.Resize(ref _data, _data.Length + 1);
-                _data[_data.Length - 1] = key.ToLower().Trim() + PrefixKey + value;
+                _data[_data.Length - 1] = (_lowerKeys ? key.ToLower() : key).Trim() + PrefixKey + value;
             }
 
             if (autoSave) return Save();
@@ -88,7 +90,7 @@ namespace tdsm.api.Misc
 
         public bool Update(string key, string value, bool autoSave = true)
         {
-            var cleaned = key.ToLower().Trim();
+            var cleaned = (_lowerKeys ? key.ToLower() : key).Trim();
             bool updated = false;
             lock (_data)
             {
@@ -104,7 +106,7 @@ namespace tdsm.api.Misc
 
             if (!updated)
             {
-                updated = Add(key, value, autoSave);
+                updated = Add(cleaned, value, autoSave);
             }
 
             if (autoSave) return Save() && updated;
@@ -113,7 +115,7 @@ namespace tdsm.api.Misc
 
         public bool Remove(string item, bool byKey = false, bool autoSave = true)
         {
-            var cleaned = item.ToLower().Trim();
+            var cleaned = (_lowerKeys || !byKey ? item.ToLower() : item).Trim();
             lock (_data)
             {
                 if (byKey)
@@ -128,7 +130,7 @@ namespace tdsm.api.Misc
 
         public bool Contains(string item, bool byKey = false)
         {
-            var cleaned = item.ToLower().Trim();
+            var cleaned = (_lowerKeys || !byKey ? item.ToLower() : item).ToLower().Trim();
             lock (_data)
             {
                 if (byKey)
@@ -140,7 +142,7 @@ namespace tdsm.api.Misc
 
         public bool Contains(string key, string value)
         {
-            var cleaned = key.ToLower().Trim();
+            var cleaned = (_lowerKeys ? key.ToLower() : key).Trim();
             lock (_data)
             {
                 return _data.Where(x => x == (cleaned + PrefixKey + value)).Count() > 0;
@@ -154,7 +156,7 @@ namespace tdsm.api.Misc
         /// <returns></returns>
         public string Find(string key)
         {
-            var cleaned = key.ToLower().Trim();
+            var cleaned = (_lowerKeys ? key.ToLower() : key).Trim();
             var item = _data
                 .Where(x => x.StartsWith(cleaned + PrefixKey))
                 .ToArray();
