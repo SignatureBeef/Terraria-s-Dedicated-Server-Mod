@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using tdsm.api;
 using tdsm.api.Command;
 using tdsm.api.Misc;
 using tdsm.core.Logging;
@@ -27,6 +29,33 @@ namespace tdsm.core.RemoteConsole
         {
             LoginDatabase = new PropertiesFile(dbPath);
             LoginDatabase.Load();
+
+            if (String.IsNullOrEmpty(Entry.RConHashNonce))
+            {
+                var nonceFile = Path.Combine(Globals.DataPath, "rcon.nonce");
+
+                if (File.Exists(nonceFile))
+                    Entry.RConHashNonce = File.ReadAllText(nonceFile);
+
+                if (String.IsNullOrEmpty(Entry.RConHashNonce))
+                {
+                    ProgramLog.Admin.Log("The rcon nonce value has not been set, one is being generated...");
+                    var rand = new Random(Main.rand.Next(Int32.MinValue, Int32.MaxValue));
+                    var length = rand.Next(12, 32);
+                    var sb = new StringBuilder(length);
+
+                    while (sb.Length != length)
+                    {
+                        System.Threading.Thread.Sleep(rand.Next(0, 200));
+
+                        var chr = (char)(byte)rand.Next(0x20, 0x7E);
+                        sb.Append(chr);
+                    }
+                    Entry.RConHashNonce = sb.ToString();
+                    File.WriteAllText(nonceFile, Entry.RConHashNonce);
+                    ProgramLog.Admin.Log("Saved nonce to {0}", nonceFile);
+                }
+            }
 
             if (LoginDatabase.Count == 0)
             {

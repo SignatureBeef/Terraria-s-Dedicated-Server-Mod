@@ -80,8 +80,8 @@ server-list-desc=This is an example of the description for use in the TDSM Serve
 #Address for the Remote Console server to bind to
 rcon-bind-address=127.0.0.1:7023
 
-#Remote console unique identifier, in format of: rcon_<guid>
-rcon-hash-nonce=rcon_<guid>
+#Remote console random hashing key, set to something completely random. This is used to hash your user/passwords so if you change it will invalidate all logins.
+#rcon-hash-nonce=
 
 #The address that the web server should listen on, to disable simply comment the line out.
 #If you change the port please ensure you change the META TAG tdsm:port in /WebInterface/Files/index.html
