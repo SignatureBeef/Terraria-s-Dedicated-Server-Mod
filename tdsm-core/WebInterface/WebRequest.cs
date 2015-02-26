@@ -9,6 +9,7 @@ namespace tdsm.core.WebInterface
     public class WebRequest : /*Connection,*/ IDisposable
     {
         public Dictionary<String, String> Headers { get; private set; }
+        public Dictionary<String, String> ResponseHeaders { get; private set; }
         public Dictionary<String, String> Request { get; private set; }
         public string[] Segments { get; private set; }
 
@@ -33,6 +34,7 @@ namespace tdsm.core.WebInterface
             StatusCode = 404;
             //StartReceiving(new byte[4192]);
             Request = new Dictionary<String, String>();
+            ResponseHeaders = new Dictionary<String, String>();
         }
 
         private byte[] buffer;
@@ -236,14 +238,14 @@ namespace tdsm.core.WebInterface
             KickAfter(data);
         }
 
-        public void RepsondHeader(int statusCode, string status, string contentType, long contentLength, string[] headers = null)
+        public void RepsondHeader(int statusCode, string status, string contentType, long contentLength)
         {
-            var response = GetHeader(statusCode, status, contentType, contentLength, headers);
+            var response = GetHeader(statusCode, status, contentType, contentLength);
             var data = System.Text.Encoding.UTF8.GetBytes(response);
             Send(data);
         }
 
-        private string GetHeader(int statusCode, string status, string contentType, long contentLength, string[] headers = null)
+        private string GetHeader(int statusCode, string status, string contentType, long contentLength)
         {
             var defaultResp = "HTTP/1.1 " + statusCode + " " + status + "\r\n" +
                     "Content-Type: " + contentType + "\r\n" +
@@ -252,10 +254,10 @@ namespace tdsm.core.WebInterface
                     "Date: Wed, 18 Feb 2015 03:28:26 GMT\r\n" +
                     "Content-Length: " + contentLength + "\r\n";
 
-            if (headers != null)
+            if (ResponseHeaders != null)
             {
-                foreach (var hdr in headers)
-                    defaultResp += hdr + "\r\n";
+                foreach (var hdr in ResponseHeaders)
+                    defaultResp += hdr.Key + ':' + hdr.Value + "\r\n";
             }
 
             return defaultResp + "\r\n";

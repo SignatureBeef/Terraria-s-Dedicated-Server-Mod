@@ -133,6 +133,7 @@ namespace tdsm.patcher
             patcher.MakeTypesPublic(true);
             Console.Write("Ok\nHooking command line...");
             patcher.PatchCommandLine();
+            patcher.HookConsoleTitle();
             Console.Write("Ok\nSkipping sysmenus functions...");
             patcher.SkipMenu();
             Console.Write("Ok\nFixing code entry...");

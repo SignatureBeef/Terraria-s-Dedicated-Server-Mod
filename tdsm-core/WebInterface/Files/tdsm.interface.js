@@ -37,15 +37,11 @@ Interface.prototype.login = function () {
 
         if (user.length >= minUser) {
             if (pass.length >= minPass) {
-                var ha1 = md5(user + ':' + window.settings.provider + ':' + pass); //MD5(username:realm:password)
-                var ha2 = md5('auth:' + window.location.pathname); //MD5(method:URI)
-                var auth = user + '=' + md5(ha1 + ':' + TFramework.Net.GetRandom() + ':' + ha2) + ',' + window.settings.provider; //username=MD5(HA1:nonce:HA2),realm
-
                 var overlay = TInterface.modal({
                     html: 'Signing in as ' + user + '...'
                 });
                 overlay.show();
-                TFramework.Net.Login(auth, function (info) {
+                TFramework.Net.Login(user, pass, function (info) {
                     overlay.remove();
                     if (info) {
 

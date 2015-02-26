@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Globalization;
+using tdsm.api;
 
 namespace Microsoft.Xna.Framework
 {
@@ -1180,9 +1181,15 @@ namespace Microsoft.Xna.Framework
             { return Console.Title; }
             set
             {
-                Console.Title = value + " | TDSM Rebind b1";
+                SetTitle(value);
             }
         }
+
+        public static void SetTitle(string title)
+        {
+            Console.Title = title + " | TDSM Rebind build " + Globals.Build + Globals.PhaseToSuffix(Globals.BuildPhase);
+        }
+
         public IntPtr Handle { get; set; }
         public bool AllowUserResizing { get; set; }
     }

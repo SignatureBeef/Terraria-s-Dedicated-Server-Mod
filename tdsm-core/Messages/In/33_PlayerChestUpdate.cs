@@ -17,9 +17,11 @@ namespace tdsm.core.Messages.In
             var player = Main.player[whoAmI];
 
             var id = (int)ReadInt16(readBuffer);
-            var chestX = (int)ReadInt16(readBuffer);
-            var chestY = (int)ReadInt16(readBuffer);
+            ReadInt16(readBuffer);
+            ReadInt16(readBuffer);
             var nameLength = (int)ReadByte(readBuffer);
+
+            var chest = Main.chest[player.chest];
 
             var name = String.Empty;
             if (nameLength != 0)
@@ -34,15 +36,13 @@ namespace tdsm.core.Messages.In
                 }
             }
 
-            if (Math.Abs(player.position.X / 16 - chestX) < 7 && Math.Abs(player.position.Y / 16 - chestY) < 7)
+            if (Math.Abs(player.position.X / 16 - chest.x) < 7 && Math.Abs(player.position.Y / 16 - chest.y) < 7)
             {
                 if (nameLength != 0)
                 {
-                    var playerChestId = Main.player[whoAmI].chest;
-                    var playerChest = Main.chest[playerChestId];
-                    playerChest.name = name;
+                    chest.name = name;
 
-                    NewNetMessage.SendData(69, -1, whoAmI, name, playerChestId, (float)playerChest.x, (float)playerChest.y, 0f, 0);
+                    NewNetMessage.SendData(69, -1, whoAmI, name, player.chest, (float)chest.x, (float)chest.y, 0f, 0);
                 }
                 Main.player[whoAmI].chest = id;
             }

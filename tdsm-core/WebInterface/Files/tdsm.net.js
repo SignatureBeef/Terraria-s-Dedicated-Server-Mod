@@ -1,10 +1,19 @@
 ﻿function TDSMNetworking(port) {
-    this.baseUrl = window.location.protocol + '//' + window.location.hostname + ':' + port + '/';
+    this.baseUrl = window.location.protocol + '//' + window.location.hostname + ':' + port;
     this.nonce = '';
 };
 
+TDSMNetworking.prototype.GetAuth = function (relativeUrl) {
+    var ha1 = window.localStorage.getItem('__UUA');
+    var user = window.localStorage.getItem('__UUN');
+    var ha2 = md5('auth:' + relativeUrl); //MD5(method:URI)
+    var nonce = TFramework.Net.GetRandom();
+
+    return user + '=' + md5(ha1 + ':' + nonce + ':' + ha2) + ',' + window.settings.provider; //username=MD5(HA1:nonce:HA2),realm
+};
+
 TDSMNetworking.prototype.Ping = function (onResult) {
-    GetUrlReader(this.baseUrl + 'api/info', function (reader) {
+    GetUrlReader(this.baseUrl + '/api/info', function (reader) {
         if (reader) {
             onResult({
                 provider: reader.ReadString(),
@@ -16,13 +25,39 @@ TDSMNetworking.prototype.Ping = function (onResult) {
     });
 };
 
-TDSMNetworking.prototype.Login = function (auth, onResult) {
-    GetUrlReader(this.baseUrl + 'api/auth', function (reader) {
-        if (reader) {
-            onResult(reader.ReadBoolean());
-        }
-        else onResult(false);
-    }, { 'Auth': auth });
+TDSMNetworking.prototype.Login = function (user, pass, onResult) {
+    var relative = '/api/auth';
+    var apiUrl = this.baseUrl + relative;
+    function GetAuth() {
+        var ha1 = md5(user + ':' + window.settings.provider + ':' + pass); //MD5(username:realm:password)
+        window.localStorage.setItem('__UUA', ha1);
+        window.localStorage.setItem('__UUN', user);
+
+        return TFramework.Net.GetAuth(relative);
+    }
+    function TryLogin(authentication, callback) {
+        GetUrlReader(apiUrl, function (reader) {
+            if (reader) {
+                onResult(reader.ReadBoolean());
+            }
+            else onResult(false);
+        }, { 'Auth': authentication });
+    };
+    if (this.nonce == '') {
+        GetUrlReader(apiUrl, function (reader) {
+            if (reader && TFramework.Net.GetRandom() != '') {
+                TryLogin(GetAuth(), onResult);
+            }
+            else onResult(false);
+        }, { 'Auth': GetAuth() });
+    }
+    else {
+        TryLogin(GetAuth(), onResult);
+    }
+};
+
+TDSMNetworking.prototype.SetRandom = function (nonce) {
+    this.nonce = nonce;
 };
 
 TDSMNetworking.prototype.GetRandom = function () {
@@ -39,7 +74,12 @@ function GetUrlReader(url, onResult, headers) {
             request.setRequestHeader(key, headers[key]);
         }
 
-    request.onload = function (oEvent) {
+    request.onload = function (evt) {
+        var nonce = this.getResponseHeader("next-nonce");
+        if (nonce) {
+            TFramework.Net.SetRandom(nonce);
+        }
+
         var arrayBuffer = this.response;
         if (arrayBuffer) {
             onResult(new ByteReader(new Uint8Array(arrayBuffer)));

@@ -196,6 +196,27 @@ namespace tdsm.patcher
             il.InsertBefore(first, ret);
         }
 
+        public void HookConsoleTitle()
+        {
+            var cls = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
+            var method = cls.Methods.Where(x => x.Name == "DedServ").First();
+
+            var cbc = _self.MainModule.Types.Where(x => x.Name == "GameWindow").First();
+            var callback = cbc.Methods.First(m => m.Name == "SetTitle");
+
+            var il = method.Body.GetILProcessor();
+
+            var replacement = _asm.MainModule.Import(callback);
+            foreach (var ins in method.Body.Instructions
+                .Where(x => x.OpCode == OpCodes.Call 
+                    && x.Operand is MethodReference 
+                    && (x.Operand as MethodReference).DeclaringType.FullName == "System.Console" 
+                    && (x.Operand as MethodReference).Name == "set_Title"))
+            {
+                ins.Operand = replacement;
+            }
+        }
+
         public void HookProgramStart()
         {
             var server = _asm.MainModule.Types.Where(x => x.Name == "ProgramServer").First();

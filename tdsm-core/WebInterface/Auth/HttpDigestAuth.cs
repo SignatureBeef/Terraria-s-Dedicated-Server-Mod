@@ -28,7 +28,7 @@ namespace tdsm.core.WebInterface.Auth
             if (options.Length != 1) throw new InvalidOperationException("Expected realm as an option.");
             var realm = options[0];
 
-            var hash = ComputeHash(username + ':' + password + ':' + realm);
+            var hash = ComputeHash(username + ':' + realm + ':' + password);
             return _database.Update(username, hash);
         }
 
@@ -70,7 +70,7 @@ namespace tdsm.core.WebInterface.Auth
                             if (_lastNonceLookup.ContainsKey(key) && ha1 != null)
                             {
                                 var servernonce = _lastNonceLookup[key];
-                                var ha2 = ComputeHash("auth" + request.Path);
+                                var ha2 = ComputeHash("auth:" + request.Path);
                                 var serverHash = ComputeHash(ha1 + ':' + servernonce + ':' + ha2);
 
                                 if (serverHash == hash)
@@ -78,7 +78,7 @@ namespace tdsm.core.WebInterface.Auth
                                     //Push out the new nonce
                                     var nextnonce = Guid.NewGuid().ToString();
                                     _lastNonceLookup[key] = nextnonce;
-                                    request.Headers.Add("next-nonce", nextnonce);
+                                    request.ResponseHeaders.Add("next-nonce", nextnonce);
 
                                     return username;
                                 }
@@ -88,8 +88,9 @@ namespace tdsm.core.WebInterface.Auth
                                 //No user exists, so give the request a new nonce and let them revalidate
                                 var nextnonce = Guid.NewGuid().ToString();
                                 _lastNonceLookup.Add(key, nextnonce);
+                                request.ResponseHeaders.Add("next-nonce", nextnonce);
 
-                                request.RepsondHeader(403, "OK", "text/hml", 0, new string[] { "next-nonce: " + nextnonce });
+                                request.RepsondHeader(403, "OK", "text/hml", 0);
                                 request.End();
                             }
                         }
