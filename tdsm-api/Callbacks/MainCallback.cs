@@ -139,6 +139,12 @@ namespace tdsm.api.Callbacks
             return ctx.Result == HookResult.DEFAULT;
         }
 
+        public static void OnProgramFinished()
+        {
+            //Close the logging if set
+            if (Tools.WriteClose != null) Tools.WriteClose.Invoke();
+        }
+
         public static void Initialise()
         {
 #if Full_API

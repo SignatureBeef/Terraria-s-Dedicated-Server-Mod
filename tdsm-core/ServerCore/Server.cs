@@ -158,7 +158,7 @@ namespace tdsm.core.ServerCore
             }
 
             //if (!WorldFile.SaveWorld_Version2 (World.SavePath, true))
-            ProgramLog.Log("Saving failed.  Quitting without saving.");
+            //ProgramLog.Log("Saving failed.  Quitting without saving.");
 
             Netplay.ServerUp = false;
         }
@@ -264,6 +264,7 @@ namespace tdsm.core.ServerCore
         private static void ServerLoopLoop()
         {
             Terraria.Main.netMode = 2;
+            Terraria.Main.menuMode = 14;
 
             while (true)
             {

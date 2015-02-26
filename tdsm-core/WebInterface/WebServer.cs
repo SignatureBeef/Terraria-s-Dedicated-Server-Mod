@@ -52,6 +52,7 @@ namespace tdsm.core.WebInterface
         //}
 
         static bool _exit;
+        static TcpListener _server;
 
         //TODO: use reflection in plugins
         public static bool RegisterPage(string request, WebPage page)
@@ -99,7 +100,7 @@ namespace tdsm.core.WebInterface
                 ProgramLog.Error.Log("{0} is not a valid bind address, web server disabled.", bindAddress);
                 return;
             }
-            var server = new TcpListener(addr, port);
+            _server = new TcpListener(addr, port);
 
             //if (RegisterModule("tdsm.admin.js")) 
             //if (!RegisterPage("/api/tiles.json", new JSPacket()))
@@ -117,19 +118,20 @@ namespace tdsm.core.WebInterface
                 }
             }
 
-            server.Start();
+            _server.Start();
 
             (new System.Threading.Thread(() =>
             {
                 System.Threading.Thread.CurrentThread.Name = "Web";
                 ProgramLog.Admin.Log("Web server started on {0}.", bindAddress);
 
-                server.Server.Poll(500000, SelectMode.SelectRead);
+                _server.Server.Poll(500000, SelectMode.SelectRead);
+
                 while (!_exit)
                 {
                     //var client = = server.AcceptSocket();
                     //AcceptClient(client);
-                    var handle = server.BeginAcceptSocket(AcceptClient, server);
+                    var handle = _server.BeginAcceptSocket(AcceptClient, _server);
                     handle.AsyncWaitHandle.WaitOne();
                 }
 
@@ -137,38 +139,47 @@ namespace tdsm.core.WebInterface
             })).Start();
         }
 
+        public static void End()
+        {
+            _exit = true;
+            _server.Stop();
+        }
+
         static void AcceptClient(IAsyncResult result)
         {
-            var server = result.AsyncState as TcpListener;
-            var client = server.EndAcceptSocket(result);
-            client.NoDelay = true;
-            try
+            if (!_exit)
             {
+                var server = result.AsyncState as TcpListener;
+                var client = server.EndAcceptSocket(result);
+                client.NoDelay = true;
+                try
+                {
 
-                string addr;
-                var rep = client.RemoteEndPoint;
-                if (rep != null)
-                    addr = rep.ToString();
-                else
+                    string addr;
+                    var rep = client.RemoteEndPoint;
+                    if (rep != null)
+                        addr = rep.ToString();
+                    else
+                    {
+                        //return false;
+                    }
+
+                    var req = new WebRequest(client);
+                    req.StartReceiving(new byte[4192]);
+                }
+                catch (RequestEndException) { return; }
+                catch (SocketException)
+                {
+                    //client.SafeClose();
+                }
+                catch (Exception e)
                 {
                     //return false;
+                    Console.WriteLine(e);
                 }
 
-                var req = new WebRequest(client);
-                req.StartReceiving(new byte[4192]);
+                client.SafeClose();
             }
-            catch (RequestEndException) { return; }
-            catch (SocketException)
-            {
-                //client.SafeClose();
-            }
-            catch (Exception e)
-            {
-                //return false;
-                Console.WriteLine(e);
-            }
-
-            client.SafeClose();
         }
 
         static string HandleSocketException(Exception e)

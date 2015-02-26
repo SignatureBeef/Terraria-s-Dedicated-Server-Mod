@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using tdsm.api;
 using tdsm.api.Callbacks;
 using tdsm.api.Command;
@@ -77,7 +78,7 @@ namespace tdsm.core
 
                 ProgramLog.Log("TDSM Rebind core build {0}", this.Version);
 
-                Tools.SetWriteLineMethod(ProgramLog.Log);
+                Tools.SetWriteLineMethod(ProgramLog.Log, OnLogFinished);
             }
 
             //Register Hooks            
@@ -448,6 +449,13 @@ namespace tdsm.core
             if (_useTimeLock) Terraria.Main.time = TimelockTime;
         }
 
+        void OnLogFinished()
+        {
+            Thread.Sleep(500);
+            ProgramLog.Log("Log end.");
+            ProgramLog.Close();
+        }
+
         [Hook(HookOrder.NORMAL)]
         void OnNPCSpawned(ref HookContext ctx, ref HookArgs.NPCSpawn args)
         {
@@ -614,13 +622,21 @@ namespace tdsm.core
                 {
                     ProgramLog.Log("Starting RCON Server");
                     RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"));
-				}
+                }
 
-				if (!String.IsNullOrEmpty (_webServerAddress))
-				{
-					ProgramLog.Log ("Starting Web Server");
-					WebInterface.WebServer.Begin (_webServerAddress, _webServerProvider);
-				}
+                if (!String.IsNullOrEmpty(_webServerAddress))
+                {
+                    ProgramLog.Log("Starting Web Server");
+                    WebInterface.WebServer.Begin(_webServerAddress, _webServerProvider);
+                }
+            }
+
+            if (args.ServerChangeState == ServerState.Stopping)
+            {
+                RemoteConsole.RConServer.Stop();
+                WebInterface.WebServer.End();
+                //if (properties != null && File.Exists(properties.PIDFile.Trim()))
+                //File.Delete(properties.PIDFile.Trim());
             }
         }
 

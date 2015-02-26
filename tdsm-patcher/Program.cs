@@ -162,6 +162,7 @@ namespace tdsm.patcher
             //patcher.RemoveClientCode();
             Console.Write("Ok\nHooking Server events...");
             patcher.HookUpdateServer();
+            patcher.HookDedServEnd();
             Console.Write("Ok\nHooking NPC Spawning...");
             patcher.HookNPCSpawning();
             Console.Write("Ok\nHooking config...");

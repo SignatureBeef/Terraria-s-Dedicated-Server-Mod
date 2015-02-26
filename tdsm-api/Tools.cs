@@ -11,33 +11,44 @@ namespace tdsm.api
     public static class Tools
     {
         private static Action<String, Object[]> _WriteLineMethod = Console.WriteLine;
+        internal static Action WriteClose;
 
         public static void WriteLine(string fmt, params object[] args)
         {
             lock (_WriteLineMethod)
                 _WriteLineMethod(fmt, args);
-		}
+        }
 
-		public static void WriteLine(string fmt)
-		{
-			lock (_WriteLineMethod)
-				_WriteLineMethod(fmt, null);
-		}
-
-		public static void WriteLine(Exception e)
-		{
-			lock (_WriteLineMethod)
-				_WriteLineMethod(String.Format("{0}", e), null);
-		}
-
-        public static void SetWriteLineMethod(Action<String, Object[]> method)
+        public static void WriteLine(string fmt)
         {
             lock (_WriteLineMethod)
-                _WriteLineMethod = method;
+                _WriteLineMethod(fmt, null);
+        }
+
+        public static void WriteLine(Exception e)
+        {
+            lock (_WriteLineMethod)
+                _WriteLineMethod(String.Format("{0}", e), null);
+        }
+
+        public static void SetWriteLineMethod(Action<String, Object[]> writeMethod, Action closeMethod = null)
+        {
+            lock (_WriteLineMethod)
+                _WriteLineMethod = writeMethod;
+
+            if (closeMethod != null) SetWriteLineCloseMethod(closeMethod);
+        }
+
+        public static void SetWriteLineCloseMethod(Action method)
+        {
+            if (WriteClose == null) WriteClose = method;
+            else
+                lock (WriteClose)
+                    WriteClose = method;
         }
 
         public static void NotifyAllPlayers(string message, Color color, bool writeToConsole = true) //, SendingLogger Logger = SendingLogger.CONSOLE)
-		{
+        {
 #if Full_API
             foreach (var player in Main.player)
             {
@@ -45,12 +56,12 @@ namespace tdsm.api
                     NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, message, color.A, color.R, color.G, color.B);
             }
 
-			if (writeToConsole) Tools.WriteLine(message);
+            if (writeToConsole) Tools.WriteLine(message);
 #endif
         }
 
         public static void NotifyAllOps(string message, bool writeToConsole = true) //, SendingLogger Logger = SendingLogger.CONSOLE)
-		{
+        {
 #if Full_API
             foreach (var player in Main.player)
             {

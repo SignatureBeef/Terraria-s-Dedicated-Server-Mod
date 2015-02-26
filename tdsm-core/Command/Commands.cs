@@ -64,6 +64,7 @@ namespace tdsm.core
 
             Tools.NotifyAllOps("Exiting on request.");
             ServerCore.Server.StopServer();
+            Terraria.Netplay.disconnect = true;
 
             throw new ExitException(sender.SenderName + " requested that TDSM is to shutdown.");
         }

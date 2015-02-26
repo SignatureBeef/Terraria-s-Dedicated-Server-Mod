@@ -80,6 +80,19 @@ namespace tdsm.patcher
                 .Value as string;
         }
 
+        public void HookDedServEnd()
+        {
+            var main = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
+            var method = main.Methods.Where(x => x.Name == "DedServ").First();
+            var callback = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
+            var replacement = callback.Methods.Where(x => x.Name == "OnProgramFinished" && x.IsStatic).First();
+
+            var imported = _asm.MainModule.Import(replacement);
+            var il = method.Body.GetILProcessor();
+
+            il.InsertBefore(method.Body.Instructions.Last(), il.Create(OpCodes.Call, imported));
+        }
+
         public void HookConfig()
         {
             var serv = _asm.MainModule.Types.Where(x => x.Name == "ProgramServer").First();
@@ -208,9 +221,9 @@ namespace tdsm.patcher
 
             var replacement = _asm.MainModule.Import(callback);
             foreach (var ins in method.Body.Instructions
-                .Where(x => x.OpCode == OpCodes.Call 
-                    && x.Operand is MethodReference 
-                    && (x.Operand as MethodReference).DeclaringType.FullName == "System.Console" 
+                .Where(x => x.OpCode == OpCodes.Call
+                    && x.Operand is MethodReference
+                    && (x.Operand as MethodReference).DeclaringType.FullName == "System.Console"
                     && (x.Operand as MethodReference).Name == "set_Title"))
             {
                 ins.Operand = replacement;
