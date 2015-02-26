@@ -1344,7 +1344,7 @@ namespace tdsm.core.Messages.Out
             End();
         }
 
-        public void HitSwitch(int x, int y)
+        public void HitSwitch(short x, short y)
         {
             Begin(Packet.HIT_SWITCH);
 

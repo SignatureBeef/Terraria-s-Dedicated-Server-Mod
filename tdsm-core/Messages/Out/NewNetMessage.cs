@@ -380,6 +380,10 @@ namespace tdsm.core.Messages.Out
                         msg.AngerQuestsFinished(number);
                         break;
 
+                    case (int)Packet.HIT_SWITCH:
+                        msg.HitSwitch((short)number, (short)number2);
+                        break;
+
                     default:
                         {
 
