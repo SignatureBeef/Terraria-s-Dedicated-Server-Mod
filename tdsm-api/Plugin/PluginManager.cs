@@ -38,7 +38,7 @@ namespace tdsm.api
         }
 
         private static string _pluginPath = String.Empty;
-        private static string _libraryPath = String.Empty;
+        //private static string _libraryPath = String.Empty;
 
         public static Dictionary<String, BasePlugin> _plugins;
         public static int PluginCount { get { return _plugins.Count; } }
@@ -153,11 +153,10 @@ namespace tdsm.api
         /// PluginManager class constructor
         /// </summary>
         /// <param name="_pluginPath">Path to plugin directory</param>
-        /// <param name="_libraryPath">Path to library directory</param>
-        public static void Initialize(string pluginPath, string libraryPath)
+        public static void Initialize(string pluginPath)
         {
             _pluginPath = pluginPath;
-            _libraryPath = libraryPath;
+            //_libraryPath = libraryPath;
 
             _plugins = new Dictionary<String, BasePlugin>();
         }

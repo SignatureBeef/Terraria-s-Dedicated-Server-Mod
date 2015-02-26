@@ -12,7 +12,7 @@ namespace tdsm.api.Callbacks
             ID.Lookup.Initialise();
 
             PluginManager.SetHookSource(typeof(HookPoints));
-            PluginManager.Initialize(Globals.PluginPath, Globals.LibrariesPath);
+            PluginManager.Initialize(Globals.PluginPath);
             PluginManager.LoadPlugins();
 
             if (!Permissions.PermissionsManager.IsSet)
