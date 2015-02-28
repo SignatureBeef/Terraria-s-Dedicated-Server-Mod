@@ -80,8 +80,8 @@ server-list-desc=This is an example of the description for use in the TDSM Serve
 #Address for the Remote Console server to bind to
 rcon-bind-address=127.0.0.1:7023
 
-#Remote console unique identifier, in format of: rcon_<guid>
-rcon-hash-nonce=rcon_<guid>
+#Remote console random hashing key, set to something completely random. This is used to hash your user/passwords so if you change it will invalidate all logins.
+#rcon-hash-nonce=
 
 #The address that the web server should listen on, to disable simply comment the line out.
 #If you change the port please ensure you change the META TAG tdsm:port in /WebInterface/Files/index.html
@@ -89,3 +89,16 @@ web-server-bind-address=127.0.0.1:8448
 
 #Set to false if you wish to use another application to serve HTML files (such as nginx or apache)
 web-server-serve-files=true
+
+#The provider/your server name shown to the web user. 
+web-server-provider=TDSM Rebind Server Host
+
+#Max client queue memory size
+send-queue-quota=1024
+
+#Allows bypassing of the slot queue mechanism when the server reaches the player limit.
+#Note: This is typically implemented by a plugins. For example when used in conjunction with restrict it allows operators to bypass the queue.
+overlimit-slots=1
+
+#Set to false in order to prevent anyone using explosives.
+#allow-explosions=true

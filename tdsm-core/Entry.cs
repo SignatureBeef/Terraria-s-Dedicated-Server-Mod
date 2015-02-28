@@ -71,7 +71,7 @@ namespace tdsm.core
 
         protected override void Initialized(object state)
         {
-            if (!Globals.IsPatching && !ProgramLog.IsOpen)
+            if (/*!Globals.IsPatching &&*/ !ProgramLog.IsOpen)
             {
                 var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
                 ProgramLog.OpenLogFile(logFile);
@@ -80,10 +80,6 @@ namespace tdsm.core
 
                 Tools.SetWriteLineMethod(ProgramLog.Log, OnLogFinished);
             }
-
-            //Register Hooks            
-            Hook(HookPoints.PlayerWorldAlteration, OnPlayerWorldAlteration);
-            Hook(HookPoints.ProjectileReceived, HookOrder.FIRST, OnReceiveProjectile);
 
             AddCommand("platform")
                 .WithAccessLevel(AccessLevel.PLAYER)
@@ -394,24 +390,6 @@ namespace tdsm.core
             ProgramLog.Log("[TDSM] " + fmt, args);
         }
 
-        bool tileBreakageAllowed;
-        bool explosivesAllowed;
-        void OnPlayerWorldAlteration(ref HookContext ctx, ref HookArgs.PlayerWorldAlteration args)
-        {
-            if (!tileBreakageAllowed) return;
-            Log("Cancelled tile change of Player: " + ctx.Player.Name);
-            ctx.SetResult(HookResult.RECTIFY);
-        }
-
-        void OnReceiveProjectile(ref HookContext ctx, ref HookArgs.ProjectileReceived args)
-        {
-            if (!explosivesAllowed && args.Current.IsExplosive())
-            {
-                Log("Cancelled explosive usage of Player: " + ctx.Player.Name);
-                ctx.SetResult(HookResult.ERASE);
-            }
-        }
-
         [Hook(HookOrder.NORMAL)]
         void OnChat(ref HookContext ctx, ref HookArgs.PlayerChat args)
         {
@@ -602,7 +580,21 @@ namespace tdsm.core
                     bool serveFiles;
                     if (Boolean.TryParse(args.Value, out serveFiles))
                     {
-                        WebInterface.WebServer.ServeWebFiles = serveFiles;
+                        //WebInterface.WebServer.ServeWebFiles = serveFiles;
+                    }
+                    break;
+                case "send-queue-quota":
+                    int sendQueueQuota;
+                    if (Int32.TryParse(args.Value, out sendQueueQuota))
+                    {
+                        Connection.SendQueueQuota = sendQueueQuota;
+                    }
+                    break;
+                case "overlimit-slots":
+                    int overlimitSlots;
+                    if (Int32.TryParse(args.Value, out overlimitSlots))
+                    {
+                        Server.OverlimitSlots = overlimitSlots;
                     }
                     break;
             }
@@ -611,7 +603,7 @@ namespace tdsm.core
         [Hook(HookOrder.NORMAL)]
         void OnServerStateChange(ref HookContext ctx, ref HookArgs.ServerStateChange args)
         {
-            ProgramLog.Log("Server state changed to: " + args.ServerChangeState.ToString());
+            //ProgramLog.Log("Server state changed to: " + args.ServerChangeState.ToString());
 
             //if (args.ServerChangeState == ServerState.Initialising)
             if (!Server.IsInitialised)

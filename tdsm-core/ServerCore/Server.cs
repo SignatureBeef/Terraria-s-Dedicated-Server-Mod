@@ -17,6 +17,7 @@ namespace tdsm.core.ServerCore
     {
         //public static ServerSlot[] slots = new ServerSlot[256];
         //public static ProgramThread updateThread = null;
+        public static int OverlimitSlots = 1;
 
         public static void SafeClose(this Socket socket)
         {
@@ -87,7 +88,7 @@ namespace tdsm.core.ServerCore
             else
                 return;
 
-            SlotManager.Initialize(Main.maxPlayers, 1); //Program.properties.OverlimitSlots);
+            SlotManager.Initialize(Main.maxPlayers, OverlimitSlots);
 
             Netplay.ServerUp = true;
             var serverSock = Netplay.tcpListener.Server;

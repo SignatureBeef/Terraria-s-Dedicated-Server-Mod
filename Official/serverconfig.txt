@@ -92,3 +92,13 @@ web-server-serve-files=true
 
 #The provider/your server name shown to the web user. 
 web-server-provider=TDSM Rebind Server Host
+
+#Max client queue memory size
+send-queue-quota=1024
+
+#Allows bypassing of the slot queue mechanism when the server reaches the player limit.
+#Note: This is typically implemented by a plugins. For example when used in conjunction with restrict it allows operators to bypass the queue.
+overlimit-slots=1
+
+#Set to false in order to prevent anyone using explosives.
+#allow-explosions=true

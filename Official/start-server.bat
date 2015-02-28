@@ -1,7 +1,7 @@
 @echo off
 cls
 :start
-tdsm.exe -config serverconfig.txt
+tdsm.microsoft.exe -config serverconfig.txt
 @echo.
 @echo Restarting server...
 @echo.

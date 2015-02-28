@@ -29,7 +29,7 @@ namespace tdsm.api
 
         public static string SavePath = Environment.CurrentDirectory;
 
-        public static bool IsPatching { get; set; }
+        //public static bool IsPatching { get; set; }
 
 #if Full_API
         public const bool FullAPIDefined = true;

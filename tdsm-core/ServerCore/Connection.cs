@@ -10,6 +10,7 @@ namespace tdsm.core.ServerCore
 {
     public abstract class Connection
     {
+        public static int SendQueueQuota = 1024;
 
         static readonly int ARRAY_OBJECT_OVERHEAD = 4 + 3 * IntPtr.Size; // value for mono
 
@@ -212,7 +213,7 @@ namespace tdsm.core.ServerCore
 
         bool CheckQuota()
         {
-            if (QueueSize >= /*Program.properties.SendQueueQuota*/ 1024 * 1024)
+            if (QueueSize >= SendQueueQuota * 1024)
             {
                 // this is an awful hack but I was in a hurry
                 var cc = (ClientConnection)this;
@@ -417,7 +418,6 @@ namespace tdsm.core.ServerCore
             catch (ObjectDisposedException)
             {
                 HandleError(SocketError.OperationAborted);
-                Console.WriteLine("DISPOSED");
             }
 
             return false;

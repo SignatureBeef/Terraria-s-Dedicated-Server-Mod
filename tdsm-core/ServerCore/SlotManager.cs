@@ -468,15 +468,16 @@ namespace tdsm.core.ServerCore
             if (maxp >= 0 || overl >= 0)
             {
                 result = ChangeLimits(maxp < 0 ? maxSlots : maxp, overl < 0 ? overlimitSlots : overl);
-                //Tools.NotifyAllOps(
-                //    String.Format("Max player slots changed to {0}+{1}. [{2}]", result, overlimitSlots, sender.SenderName)
-                //);
+                Tools.NotifyAllOps(
+                    String.Format("Max player slots changed to {0}+{1}. [{2}]", result, overlimitSlots, sender.SenderName)
+                );
             }
 
             sender.Message(255, Color.SteelBlue, "Max player slots: {0}, overlimit slots: {1}", result, overlimitSlots);
 
             if (oldmax != maxSlots || oldover != overlimitSlots)
             {
+                Main.maxNetPlayers = maxSlots;
                 //Program.properties.MaxPlayers = maxSlots;
                 //Program.properties.OverlimitSlots = overlimitSlots;
                 //Program.properties.Save (true);
