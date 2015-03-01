@@ -16,4 +16,6 @@ Ensure you grab the right tdsm executable for the platform you are running it on
 \tdsm\Plugins\
   RestrictPlugin.dll
   tdsm.core.dll
+\tdsm\Data\
+  permissions.xml
 ```
