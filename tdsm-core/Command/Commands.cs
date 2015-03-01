@@ -617,7 +617,7 @@ namespace tdsm.core
 
             var max = Tools.AvailableItemSlots; //Perhaps remove a few incase of new drops
             if (stack > max) {
-				stack = max;
+				stack = max; // Set to Tools.AvailableItemSlots because number given was larger than this.
 			}
             var results = DefinitionManager.FindItem(name);
             if (results != null && results.Length > 0)
