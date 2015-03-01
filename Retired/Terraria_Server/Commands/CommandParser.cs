@@ -409,7 +409,7 @@ namespace Terraria_Server.Commands
 			AddCommand("spawnboss")
 				.WithAccessLevel(AccessLevel.OP)
 				.WithDescription(Languages.CommandDescription_SpawnBoss)
-				.WithHelpText("Usage:    spawnboss <eye, skeletron, eater, kingslime, prime, twins, destroyer, wof, plantera, golem>")
+				.WithHelpText("Usage:    spawnboss <eye, skeletron, eater, kingslime, prime, twins, destroyer, wof>")
 				.WithHelpText("          spawnboss eye night")
 				.WithHelpText("          spawnboss eater eye...")
 				.WithHelpText("          spawnboss <boss> -player <name>")

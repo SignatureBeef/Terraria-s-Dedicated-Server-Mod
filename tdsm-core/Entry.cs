@@ -249,7 +249,7 @@ namespace tdsm.core
             AddCommand("spawnboss")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Spawn a boss")
-                .WithHelpText("eye skeletron eater kingslime prime twins destroyer wof plantera golem")
+                .WithHelpText("eye skeletron eater kingslime prime twins destroyer wof")
                 .WithHelpText("eye twins -night")
                 .WithHelpText("-all")
                 .WithHelpText("<boss> -player <name>")
