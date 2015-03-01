@@ -1257,6 +1257,8 @@ namespace tdsm.core
             bool Wof = args.TryPop("wof");
             bool Destroyer = args.TryPop("destroyer");
             bool Prime = args.TryPop("prime");
+            bool Golem = args.TryPop("golem");
+            bool Plantera = args.TryPop("plantera");
             bool All = args.TryPop("-all");
             bool NightOverride = args.TryPop("-night") || All;
 
@@ -1301,6 +1303,8 @@ namespace tdsm.core
             if ((Wof || All) && !wofSummoned) bosses.Add(113);
             if (Destroyer || All) bosses.Add(134);
             if (Prime || All) bosses.Add(127);
+            if (Golem || All) bosses.Add(245);
+            if (Plantera || All) bosses.Add(262);
 
             if (bosses.Count > 0)
             {
@@ -1349,6 +1353,12 @@ namespace tdsm.core
                             break;
                         case 134:
                             name = "The Destroyer was";
+                            break;
+                        case 245:
+                            name = "Golem was";
+                            break;
+                        case 242:
+                            name = "Plantera was";
                             break;
 
                     }
