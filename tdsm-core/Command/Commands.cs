@@ -1260,6 +1260,8 @@ namespace tdsm.core
             bool Prime = args.TryPop("prime");
             bool Golem = args.TryPop("golem");
             bool Plantera = args.TryPop("plantera");
+            bool Retinazer = args.TryPop("retinazer");
+            bool Spazmatism = args.TryPop("spazmatism");
             bool All = args.TryPop("-all");
             bool NightOverride = args.TryPop("-night") || All;
 
@@ -1286,7 +1288,7 @@ namespace tdsm.core
 
             List<Int32> bosses = new List<Int32>();
 
-            if (EyeOC || Twins || All || Prime || Skeletron | Destroyer)
+            if (EyeOC || Twins || Spazmatism || Retinazer || All || Prime || Skeletron | Destroyer)
             {
                 if (Main.dayTime && !NightOverride)
                     throw new CommandError("The specified boss requires it to be night.");
@@ -1301,11 +1303,13 @@ namespace tdsm.core
             if (KingSlime || All) bosses.Add(50);
             if (EoW || All) bosses.Add(13);
             if (Twins || All) { bosses.Add(125); bosses.Add(126); }
-            if ((Wof || All) && !wofSummoned) bosses.Add(113);
+			if (Retinazer) bosses.Add(125);
+			if (Spazmatism) bosses.Add(126);
+            if ((Wof) && !wofSummoned) bosses.Add(113);
             if (Destroyer || All) bosses.Add(134);
             if (Prime || All) bosses.Add(127);
-            if (Golem || All) bosses.Add(245);
-            if (Plantera || All) bosses.Add(262);
+            if (Golem) bosses.Add(245);
+            if (Plantera) bosses.Add(262);
 
             if (bosses.Count > 0)
             {
