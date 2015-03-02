@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using tdsm.api;
+﻿using tdsm.api;
 using tdsm.core.Messages.Out;
 using Terraria;
 
@@ -14,48 +13,26 @@ namespace tdsm.core.Messages.In
 
         public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
         {
-            BitsByte bitsByte12 = ReadByte(readBuffer);
-            int num148 = (int)ReadInt16(readBuffer);
-            if (Main.netMode == 2)
+            var flags = (BitsByte)ReadByte(readBuffer);
+            ReadInt16(readBuffer);
+            var newPos = ReadVector2(readBuffer);
+
+            int type = 0;
+            int style = 0;
+            if (flags[0]) type++;
+            if (flags[1]) type += 2;
+            if (flags[2]) style++;
+            if (flags[3]) style++;
+
+            if (type == 0)
+                Main.player[whoAmI].Teleport(newPos, style);
+            else if (type == 1)
+                Main.npc[whoAmI].Teleport(newPos, style);
+
+            if (Main.netMode == 2 && type == 0)
             {
-                num148 = whoAmI;
+                NewNetMessage.SendData(65, -1, whoAmI, "", 0, (float)whoAmI, newPos.X, newPos.Y, style);
             }
-            Vector2 newPos = ReadVector2(readBuffer);
-            int num149 = 0;
-            int num150 = 0;
-            if (bitsByte12[0])
-            {
-                num149++;
-            }
-            if (bitsByte12[1])
-            {
-                num149 += 2;
-            }
-            if (bitsByte12[2])
-            {
-                num150++;
-            }
-            if (bitsByte12[3])
-            {
-                num150++;
-            }
-            if (num149 == 0)
-            {
-                Main.player[num148].Teleport(newPos, num150);
-            }
-            else
-            {
-                if (num149 == 1)
-                {
-                    Main.npc[num148].Teleport(newPos, num150);
-                }
-            }
-            if (Main.netMode == 2 && num149 == 0)
-            {
-                NewNetMessage.SendData(65, -1, whoAmI, "", 0, (float)num148, newPos.X, newPos.Y, num150);
-                return;
-            }
-            return;
         }
     }
 }

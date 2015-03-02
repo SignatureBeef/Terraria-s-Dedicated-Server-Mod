@@ -62,8 +62,9 @@ namespace tdsm.api
             if (this is Terraria.Player)
             {
                 var plr = (Terraria.Player)this;
-                plr.Teleport(target.position, style);
 
+                Callbacks.NetplayCallback.CheckSection(plr.whoAmi, target.position);
+                plr.Teleport(target.position, style);
                 Terraria.NetMessage.SendData((int)Packet.TELEPORT, -1, -1, "", 0, plr.whoAmi, target.position.X, target.position.Y, 3);
             }
         }
@@ -80,8 +81,9 @@ namespace tdsm.api
             {
                 var plr = (Terraria.Player)this;
                 var pos = new Vector2(x, y);
-                plr.Teleport(pos, style);
 
+                Callbacks.NetplayCallback.CheckSection(plr.whoAmi, pos);
+                plr.Teleport(pos, style);
                 Terraria.NetMessage.SendData((int)Packet.TELEPORT, -1, -1, "", 0, plr.whoAmi, pos.X, pos.Y, 3);
             }
         }

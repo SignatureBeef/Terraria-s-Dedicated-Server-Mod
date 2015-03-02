@@ -279,6 +279,7 @@ namespace tdsm.core.ServerCore
         public static void Init()
         {
             tdsm.api.Callbacks.NetplayCallback.slots = new ServerSlot[256];
+            tdsm.api.Callbacks.NetplayCallback.CheckSectionMethod = CheckSection;
             for (int i = 0; i < 256; i++)
             {
                 var slot = new ServerSlot()

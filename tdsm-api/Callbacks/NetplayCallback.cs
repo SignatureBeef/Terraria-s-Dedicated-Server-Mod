@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.IO;
 using System.Threading;
 using tdsm.api.Plugin;
@@ -39,6 +40,12 @@ namespace tdsm.api.Callbacks
     public static class NetplayCallback
     {
         public static IAPISocket[] slots;// = new IAPISocket[256];
+        public static Action<Int32, Vector2> CheckSectionMethod = Terraria.ServerSock.CheckSection;
+
+        public static void CheckSection(int slot, Vector2 position)
+        {
+            CheckSectionMethod(slot, position);
+        }
 
         public static void StartServer(object state)
         {

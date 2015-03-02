@@ -340,6 +340,20 @@ namespace tdsm.patcher
             var us = main.Methods.Where(x => x.Name == "UpdateServer").First();
             us.IsPrivate = false;
             us.IsPublic = true;
+
+            //Map ServerSock.CheckSection to our own
+            var repl = _asm.MainModule.Types
+                .SelectMany(x => x.Methods)
+                .Where(x => x.HasBody)
+                .SelectMany(x => x.Body.Instructions)
+                .Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "CheckSection")
+                .ToArray();
+            callback = userInputClass.Methods.First(m => m.Name == "CheckSection");
+            var mref = _asm.MainModule.Import(callback);
+            foreach (var inst in repl)
+            {
+                inst.Operand = mref;
+            }
         }
 
         public void FixNetplay()

@@ -731,7 +731,7 @@ namespace tdsm.core
                 if (args.Count == 0)
                 {
                     /*if (*/
-                    subject.Teleport(Main.spawnTileX, Main.spawnTileY);//)
+                    subject.Teleport(Main.spawnTileX * 16f, Main.spawnTileY * 16f - subject.height);//)
                     {
                         Tools.NotifyAllOps(String.Format("{0} has teleported to spawn", subject.Name), true);
                     }
@@ -794,7 +794,7 @@ namespace tdsm.core
                     }
 
                     /*if (*/
-                    subject.Teleport(x, y); //)
+                    subject.Teleport(x * 16f, y * 16f); //)
                     {
                         Tools.NotifyAllOps(string.Concat("Teleported ", subject.Name, " to ",
                             x, ":", y, ". [", sender.SenderName, "]"), true);
