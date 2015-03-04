@@ -314,114 +314,6 @@ namespace tdsm.core
             Tools.NotifyAllOps("Saving Complete.", true);
         }
 
-        ///// <summary>
-        ///// Sends the help list to the requesting player's chat.
-        ///// </summary>
-        ///// <param name="sender">Sending player</param>
-        ///// <param name="args">Arguments sent with command</param>
-        //public static void ShowHelp(ISender sender, ArgumentList args)
-        //{
-        //    //var commands = Program.commandParser.serverCommands;
-        //    //foreach (var plugin in PluginManager.plugins.Values)
-        //    //{
-        //    //    if (plugin.commands.Count > 0)
-        //    //    {
-        //    //        commands =
-        //    //            commands.Concat(
-        //    //                plugin.commands.Where(
-        //    //                    kvp => !commands.ContainsKey(kvp.Key)
-        //    //                    &&
-        //    //                    !kvp.Key.StartsWith(plugin.Name.ToLower() + '.'))
-        //    //                )
-        //    //                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        //    //    }
-        //    //}
-
-        //    //if (args == null || args.Count < 1)
-        //    //{
-        //    //    for (int i = 0; i < commands.Values.Count; i++)
-        //    //    {
-        //    //        string Key = commands.Keys.ToArray()[i];
-        //    //        CommandInfo cmdInfo = commands.Values.ToArray()[i];
-        //    //        if (CommandParser.CheckAccessLevel(cmdInfo, sender) && !Key.StartsWith("."))
-        //    //        {
-        //    //            string tab = "\t";
-        //    //            if (Key.Length < 8)
-        //    //            {
-        //    //                tab = "\t\t";
-        //    //            }
-        //    //            string Message = "\t" + Key + tab + "- " + cmdInfo.description;
-        //    //            if (sender is Player)
-        //    //            {
-        //    //                Message = Message.Replace("\t", String.Empty);
-        //    //            }
-        //    //            sender.Message(Message);
-        //    //        }
-        //    //    }
-        //    //}
-        //    //else
-        //    //{
-        //    //    int maxPages = (commands.Values.Count / 5) + 1;
-        //    //    if (maxPages > 0 && args.Count > 1 && args[0] != null)
-        //    //    {
-        //    //        try
-        //    //        {
-        //    //            int selectingPage = Int32.Parse(args[0].Trim());
-
-        //    //            if (selectingPage < maxPages)
-        //    //            {
-        //    //                for (int i = 0; i < maxPages; i++)
-        //    //                {
-        //    //                    if ((selectingPage <= i))
-        //    //                    {
-        //    //                        selectingPage = i * ((commands.Values.Count / 5) + 1);
-        //    //                        break;
-        //    //                    }
-        //    //                }
-
-        //    //                int toPage = commands.Values.Count;
-        //    //                if (selectingPage + 5 < toPage)
-        //    //                {
-        //    //                    toPage = selectingPage + 5;
-        //    //                }
-
-        //    //                for (int i = selectingPage; i < toPage; i++)
-        //    //                {
-        //    //                    string Key = commands.Keys.ToArray()[i];
-        //    //                    CommandInfo cmdInfo = commands.Values.ToArray()[i];
-        //    //                    if (CommandParser.CheckAccessLevel(cmdInfo, sender) && !Key.StartsWith("."))
-        //    //                    {
-        //    //                        string tab = "\t";
-        //    //                        if (Key.Length < 8)
-        //    //                        {
-        //    //                            tab = "\t\t";
-        //    //                        }
-        //    //                        string Message = "\t" + Key + tab + "- " + cmdInfo.description;
-        //    //                        if (sender is Player)
-        //    //                        {
-        //    //                            Message = Message.Replace("\t", String.Empty);
-        //    //                        }
-        //    //                        sender.Message(Message);
-        //    //                    }
-        //    //                }
-        //    //            }
-        //    //            else
-        //    //            {
-        //    //                sender.Message(Languages.InvalidPage + ": 0 -> " + (maxPages - 1).ToString());
-        //    //            }
-        //    //        }
-        //    //        catch (Exception)
-        //    //        {
-        //    //            ShowHelp(sender, null);
-        //    //        }
-        //    //    }
-        //    //    else
-        //    //    {
-        //    //        ShowHelp(sender, null);
-        //    //    }
-        //    //}
-        //}
-
         /////// <summary>
         /////// Adds or removes specified player to/from the white list.
         /////// </summary>
@@ -516,11 +408,12 @@ namespace tdsm.core
         /// <param name="args">Arguments sent with command</param>
         public void Time(ISender sender, ArgumentList args)
         {
-            double Time;
-            if (args.TryParseOne<Double>("-set", out Time))
-            {
-                World.SetTime(Time, true);
-            }
+            double time;
+            bool day;
+            if (args.TryParseTwo<Double, Boolean>("-set", out time, "-day", out day))
+                World.SetTime(time, day);
+            else if (args.TryParseOne<Double>("-set", out time)) //Support for old
+                World.SetTime(time, true);
             else
             {
                 string caseType = args.GetString(0);
@@ -551,45 +444,32 @@ namespace tdsm.core
                             World.SetTime(16200.0, false);
                             break;
                         }
+                    case "?":
                     case "-now":
                         {
-                            string AP = "AM";
-                            double time = Terraria.Main.time;
+                            var amPm = "AM";
+                            var value = Main.time;
                             if (!Main.dayTime)
-                            {
-                                time += 54000.0;
-                            }
-                            time = (time / 86400.0 * 24.0) - 19.5;
-                            if (time < 0.0)
-                            {
-                                time += 24.0;
-                            }
-                            if (time >= 12.0)
-                            {
-                                AP = "PM";
-                            }
+                                value += 54000.0;
 
-                            int Hours = (int)time;
-                            double Minutes = time - (double)Hours;
-                            string MinuteString = (Minutes * 60.0).ToString();
-                            if (Minutes < 10.0)
-                            {
-                                MinuteString = "0" + MinuteString;
-                            }
-                            if (Hours > 12)
-                            {
-                                Hours -= 12;
-                            }
-                            if (Hours == 0)
-                            {
-                                Hours = 12;
-                            }
-                            if (MinuteString.Length > 2)
-                            {
-                                MinuteString = MinuteString.Substring(0, 2);
-                            }
+                            value /= 86400.0 * 24.0;
+                            value -= 7.5 - 12.0;
 
-                            sender.Message("Current time: " + Hours + ":" + MinuteString + " " + AP);
+                            if (value < 0.0) value += 24.0;
+                            if (value >= 12.0) amPm = "PM";
+
+                            var hour = (int)value;
+                            var min = (int)(value - (double)hour) * 60.0;
+                            var minute = min.ToString();
+
+                            if (min < 10.0)
+                                minute = "0" + minute;
+                            if (hour > 12)
+                                hour -= 12;
+                            if (hour == 0)
+                                hour = 12;
+
+                            sender.Message("Current time: " + hour + ":" + minute + " " + amPm);
                             return;
                         }
                     default:
@@ -616,9 +496,10 @@ namespace tdsm.core
             string name = args.GetString(2);
 
             var max = Tools.AvailableItemSlots; //Perhaps remove a few incase of new drops
-            if (stack > max) {
-				stack = max; // Set to Tools.AvailableItemSlots because number given was larger than this.
-			}
+            if (stack > max)
+            {
+                stack = max; // Set to Tools.AvailableItemSlots because number given was larger than this.
+            }
             var results = DefinitionManager.FindItem(name);
             if (results != null && results.Length > 0)
             {
@@ -1303,8 +1184,8 @@ namespace tdsm.core
             if (KingSlime || All) bosses.Add(50);
             if (EoW || All) bosses.Add(13);
             if (Twins || All) { bosses.Add(125); bosses.Add(126); }
-			if (Retinazer) bosses.Add(125);
-			if (Spazmatism) bosses.Add(126);
+            if (Retinazer) bosses.Add(125);
+            if (Spazmatism) bosses.Add(126);
             if ((Wof) && !wofSummoned) bosses.Add(113);
             if (Destroyer || All) bosses.Add(134);
             if (Prime || All) bosses.Add(127);

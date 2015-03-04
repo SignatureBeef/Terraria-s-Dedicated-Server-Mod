@@ -8,7 +8,7 @@ namespace tdsm.api.Command
     {
         bool Op { get; set; }
         string SenderName { get; }
-        void SendMessage(string Message, int A = 255, float R = 255f, float G = 0f, float B = 0f);
+        void SendMessage(string Message, int sender = 255, float R = 255f, float G = 0f, float B = 0f);
 
 		Dictionary<string, CommandInfo> GetAvailableCommands();
     }

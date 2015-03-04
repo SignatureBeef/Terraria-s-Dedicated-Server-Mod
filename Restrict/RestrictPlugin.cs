@@ -8,7 +8,6 @@ using tdsm.api.Misc;
 using tdsm.api.Permissions;
 using tdsm.api.Plugin;
 using tdsm.core.ServerCore;
-using Terraria;
 
 namespace RestrictPlugin
 {
@@ -173,7 +172,7 @@ namespace RestrictPlugin
                 .Calls(LockUsers<ISender, string>(this.PlayerLoginCommand));
 
             if (!enableDefaultPassword)
-                Netplay.password = String.Empty;
+                Terraria.Netplay.password = String.Empty;
         }
 
         Action<T, U> LockUsers<T, U>(Action<T, U> callback)
@@ -192,7 +191,7 @@ namespace RestrictPlugin
         /// </summary>
         void ResetUsers()
         {
-            foreach (var plr in Main.player)
+            foreach (var plr in Terraria.Main.player)
             {
                 if (plr != null && plr.AuthenticatedBy == this.Name)
                 {
@@ -623,7 +622,7 @@ namespace RestrictPlugin
         }
 
         #region Permissions
-        public bool IsRestrictedForUser(Player player, string node)
+        public bool IsRestrictedForUser(BasePlayer player, string node)
         {
             if (!player.Op && PermissionsManager.IsSet)
             {
@@ -659,7 +658,7 @@ namespace RestrictPlugin
 
     internal static class PlayerExtensions
     {
-        public static void SendTimed(this Player player, string message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
+        public static void SendTimed(this BasePlayer player, string message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
             const Int32 TimeInSeconds = 2; //TODO config
             const String TimerKey = "restrict-msg-timer";

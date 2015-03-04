@@ -5,6 +5,7 @@ using System.Threading;
 using tdsm.api.Plugin;
 
 
+
 #if Full_API
 
 #endif
@@ -40,11 +41,15 @@ namespace tdsm.api.Callbacks
     public static class NetplayCallback
     {
         public static IAPISocket[] slots;// = new IAPISocket[256];
+#if Full_API
         public static Action<Int32, Vector2> CheckSectionMethod = Terraria.ServerSock.CheckSection;
+#endif
 
         public static void CheckSection(int slot, Vector2 position)
         {
+#if Full_API
             CheckSectionMethod(slot, position);
+#endif
         }
 
         public static void StartServer(object state)

@@ -31,7 +31,7 @@ namespace RestrictPlugin
                     throw new CommandError("");
 
                 var name = args[0];
-                var player = FindPlayer(name);
+                var player = Tools.GetPlayerByName(name);
 
                 if (player == null)
                 {
@@ -164,7 +164,7 @@ namespace RestrictPlugin
                     throw new CommandError("");
 
                 var name = args[0];
-                var player = FindPlayer(name);
+                var player = Tools.GetPlayerByName(name);
 
                 if (player == null)
                 {
@@ -313,7 +313,7 @@ namespace RestrictPlugin
 
                 Tools.NotifyAllOps("<Restrict> Registration request denied for: " + rq.name, true);
 
-                var player = FindPlayer(rq.name);
+                var player = Tools.GetPlayerByName(rq.name);
                 if (player != null)
                     player.SendMessage("<Restrict> Your registration request has been denied.");
             }
@@ -512,7 +512,7 @@ namespace RestrictPlugin
             users.Update(pname, hash);
             users.Save();
 
-            var player = FindPlayer(rq.name);
+            var player = Tools.GetPlayerByName(rq.name);
             if (player != null) // TODO: verify IP address
             {
                 player.SetAuthentication(rq.name, this.Name);

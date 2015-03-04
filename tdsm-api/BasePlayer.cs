@@ -35,16 +35,16 @@ namespace tdsm.api
             protected set { }
         }
 
-        public override void SendMessage(string message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
+        public override void SendMessage(string message, int sender = 255, float R = 255f, float G = 0f, float B = 0f)
         {
 #if Full_API
-            Terraria.NetMessage.SendData((int)Packet.PLAYER_CHAT, ((Terraria.Player)this).whoAmi, -1, message, A, R, G, B);
+            Terraria.NetMessage.SendData((int)Packet.PLAYER_CHAT, ((Terraria.Player)this).whoAmi, -1, message, sender, R, G, B);
 #endif
         }
 
         public void SendMessage(string message, Color color)
         {
-            SendMessage(message, color.A, color.R, color.G, color.B);
+            SendMessage(message, 255, color.R, color.G, color.B);
         }
 
         public IPlayerConnection Connection;

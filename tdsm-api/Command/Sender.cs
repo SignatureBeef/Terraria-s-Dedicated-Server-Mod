@@ -34,7 +34,7 @@ namespace tdsm.api.Command
         /// <param name="R">Red text color value</param>
         /// <param name="G">Green text color value</param>
         /// <param name="B">Blue text color value</param>
-        public abstract void SendMessage(string message, int A = 255, float R = 255f, float G = 0f, float B = 0f);
+        public abstract void SendMessage(string message, int sender = 255, float R = 255f, float G = 0f, float B = 0f);
 
         //public bool Is(Type type)
         //{
@@ -48,34 +48,34 @@ namespace tdsm.api.Command
         }
 #endif
 
-		public Dictionary<string, CommandInfo> GetAvailableCommands()
-		{
-			var available = UserInput.CommandParser.serverCommands.GetAvailableCommands (this);
+        public Dictionary<string, CommandInfo> GetAvailableCommands()
+        {
+            var available = UserInput.CommandParser.serverCommands.GetAvailableCommands(this);
 
-			foreach (var plg in PluginManager.EnumeratePlugins)
-			{
-				var additional = plg.commands.GetAvailableCommands (this)
-					.Where(x => !x.Key.StartsWith(plg.Name.ToLower()));
-				foreach (var pair in additional)
-				{
-					//Override defaults
-					if (available.ContainsKey (pair.Key))
-						available [pair.Key] = pair.Value;
-					else available.Add (pair.Key, pair.Value);
-				}
-			}
+            foreach (var plg in PluginManager.EnumeratePlugins)
+            {
+                var additional = plg.commands.GetAvailableCommands(this)
+                    .Where(x => !x.Key.StartsWith(plg.Name.ToLower()));
+                foreach (var pair in additional)
+                {
+                    //Override defaults
+                    if (available.ContainsKey(pair.Key))
+                        available[pair.Key] = pair.Value;
+                    else available.Add(pair.Key, pair.Value);
+                }
+            }
 
-			return available;
-		}
+            return available;
+        }
     }
 
-	public static class CommandMapExtensions
-	{
-		public static Dictionary<string, CommandInfo> GetAvailableCommands(this Dictionary<string, CommandInfo> map, ISender sender)
-		{
-			return map
-				.Where (x => CommandParser.CheckAccessLevel (x.Value, sender) && !x.Key.StartsWith("."))
-				.ToDictionary (x => x.Key, y => y.Value);
-		}
-	}
+    public static class CommandMapExtensions
+    {
+        public static Dictionary<string, CommandInfo> GetAvailableCommands(this Dictionary<string, CommandInfo> map, ISender sender)
+        {
+            return map
+                .Where(x => CommandParser.CheckAccessLevel(x.Value, sender) && !x.Key.StartsWith("."))
+                .ToDictionary(x => x.Key, y => y.Value);
+        }
+    }
 }

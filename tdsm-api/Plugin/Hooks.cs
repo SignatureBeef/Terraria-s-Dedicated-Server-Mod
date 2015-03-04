@@ -600,11 +600,13 @@ namespace tdsm.api.Plugin
                 set { if (Action == 0 || Action == 2 || Action == 4) Type = value ? (byte)1 : (byte)0; }
             }
 
+#if Full_API
             public Tile Tile
             {
                 get
                 { return Main.tile[X, Y]; }
             }
+#endif
         }
 
         public struct DoorStateChanged

@@ -34,7 +34,7 @@ namespace tdsm.core.Messages.In
 
                 var args = new HookArgs.ServerPassReceived
                 {
-                    Password = password,
+                    Password = password
                 };
 
                 HookPoints.ServerPassReceived.Invoke(ref ctx, ref args);

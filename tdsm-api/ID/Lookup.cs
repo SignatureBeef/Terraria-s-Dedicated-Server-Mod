@@ -29,12 +29,14 @@ namespace tdsm.api.ID
 
         internal static void Initialise()
         {
+#if Full_API
             _buff = MapFromType<Int32>(typeof(Terraria.ID.BuffID));
             _item = MapFromType<Int16>(typeof(Terraria.ID.ItemID));
             _message = MapFromType<Int16>(typeof(Terraria.ID.MessageID));
             _status = MapFromType<Int32>(typeof(Terraria.ID.StatusID));
             _tile = MapFromType<UInt16>(typeof(Terraria.ID.TileID));
             _wall = MapFromType<Byte>(typeof(Terraria.ID.WallID));
+#endif
         }
 
         static Dictionary<T, String> MapFromType<T>(Type type)
