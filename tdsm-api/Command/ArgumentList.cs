@@ -309,6 +309,21 @@ namespace tdsm.api.Command
                 }
                 return false;
             }
+            else if (typeof(T) == typeof(WorldTime))
+            {
+                var val = WorldTime.Parse(this[at]);
+                if (val != null)
+                {
+                    var gt = val.Value.GameTime;
+                    if (gt >= 0 && gt <= 54000.0)
+                    {
+                        t = (T)(object)val.Value;
+                        return true;
+                    }
+                    else throw new CommandError("Time must be between 4:30am and 7:30pm");
+                }
+                return false;
+            }
 
             throw new CommandError("Internal command error, type is unsupported by parser: {0}.", typeof(T).ToString());
         }
@@ -568,6 +583,80 @@ namespace tdsm.api.Command
             }
 
             return false;
+        }
+    }
+
+    public struct WorldTime
+    {
+        public byte Hour { get; set; }
+        public byte Minute { get; set; }
+        public bool AM { get; set; }
+
+        public double GameTime
+        {
+            get
+            {
+                var time = ((this.Hour * 60.0 * 60.0) + (this.Minute * 60.0));
+                time -= 4.5 * 60.0 * 60.0; //Time start at 4:30 am
+
+                if (!this.AM)
+                    time += 12.0 * 60.0 * 60.0;
+
+                return time;
+            }
+        }
+
+        /// <summary>
+        /// Parses time in the format of HH:mm[am|pm]
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static WorldTime? Parse(string input)
+        {
+            var split = input.Split(':');
+            if (split.Length == 2)
+            {
+                byte hour, minute;
+                if (Byte.TryParse(split[0], out hour) && split[1].Length > 2)
+                {
+                    if (Byte.TryParse(split[1].Substring(0, split[1].Length - 2), out minute))
+                    {
+                        var tk = split[1].Remove(0, split[1].Length - 2);
+
+                        return new WorldTime()
+                        {
+                            Hour = hour,
+                            Minute = minute,
+                            AM = tk.ToLower() == "am"
+                        };
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static WorldTime? Parse(double time)
+        {
+            time += 4.5 * 60.0 * 60.0; //Push back up to real time
+
+            var daytime = 12.0 * 60.0 * 60.0;
+            var am = time < daytime;
+            if (!am) time -= daytime;
+
+            var hour = (int)(time / 60.0 / 60.0);
+            var min = (int)((time - (hour * 60.0 * 60.0)) / 60.0);
+
+            return new WorldTime()
+            {
+                Hour = (byte)hour,
+                Minute = (byte)min,
+                AM = am
+            };
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0}:{1} {2}", Hour, Minute, AM ? "AM" : "PM");
         }
     }
 }

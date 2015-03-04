@@ -105,8 +105,9 @@ namespace tdsm.core
             AddCommand("time")
                 .WithDescription("Change the time of day")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithHelpText("-set <time> -day <true|false>")
-                .WithHelpText("-now")
+                .WithHelpText("set <numeric time>")
+                .WithHelpText("set 5:10am")
+                .WithHelpText("now|?")
                 .WithHelpText("day|dawn|dusk|noon|night")
                 .WithPermissionNode("tdsm.time")
                 .Calls(this.Time);

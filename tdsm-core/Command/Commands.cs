@@ -409,11 +409,23 @@ namespace tdsm.core
         public void Time(ISender sender, ArgumentList args)
         {
             double time;
-            bool day;
-            if (args.TryParseTwo<Double, Boolean>("-set", out time, "-day", out day))
+            WorldTime text;
+            if (args.TryParseOne<Double>("-set", out time) || args.TryParseOne<Double>("set", out time))
+            {
+                if (time >= 0 && time <= 54000.0)
+                {
+                    //var day = args.TryPop("-day");
+                    var day = time >= 32400.0 && time <= 54000.0;
+                    World.SetTime(time, day);
+                }
+                else sender.SendMessage("Invalid time specified, must be from 0 to 54000");
+            }
+            else if (args.TryParseOne<WorldTime>("-set", out text) || args.TryParseOne<WorldTime>("set", out text))
+            {
+                time = text.GameTime;
+                var day = time >= 32400.0 && time <= 54000.0;
                 World.SetTime(time, day);
-            else if (args.TryParseOne<Double>("-set", out time)) //Support for old
-                World.SetTime(time, true);
+            }
             else
             {
                 string caseType = args.GetString(0);
@@ -445,31 +457,12 @@ namespace tdsm.core
                             break;
                         }
                     case "?":
+                    case "now":
                     case "-now":
                         {
-                            var amPm = "AM";
-                            var value = Main.time;
-                            if (!Main.dayTime)
-                                value += 54000.0;
+                            var tm = WorldTime.Parse(Main.time);
 
-                            value /= 86400.0 * 24.0;
-                            value -= 7.5 - 12.0;
-
-                            if (value < 0.0) value += 24.0;
-                            if (value >= 12.0) amPm = "PM";
-
-                            var hour = (int)value;
-                            var min = (int)(value - (double)hour) * 60.0;
-                            var minute = min.ToString();
-
-                            if (min < 10.0)
-                                minute = "0" + minute;
-                            if (hour > 12)
-                                hour -= 12;
-                            if (hour == 0)
-                                hour = 12;
-
-                            sender.Message("Current time: " + hour + ":" + minute + " " + amPm);
+                            sender.Message("Current time: " + tm.ToString());
                             return;
                         }
                     default:
