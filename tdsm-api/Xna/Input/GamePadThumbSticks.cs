@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Xna.Framework.Graphics;
 namespace Microsoft.Xna.Framework.Input
 {
     public struct GamePadThumbSticks

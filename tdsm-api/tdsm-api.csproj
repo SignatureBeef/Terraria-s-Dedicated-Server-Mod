@@ -140,6 +140,17 @@
     <Compile Include="Xna\Input\KeyboardState.cs" />
     <Compile Include="Xna\Input\Keyboard.cs" />
     <Compile Include="Xna\Input\ButtonState.cs" />
+    <Compile Include="Xna\IPackedVector.cs" />
+    <Compile Include="Xna\GameTime.cs" />
+    <Compile Include="Xna\GameWindow.cs" />
+    <Compile Include="Xna\Point.cs" />
+    <Compile Include="Xna\MathHelper.cs" />
+    <Compile Include="Xna\Matrix.cs" />
+    <Compile Include="Xna\Vector2.cs" />
+    <Compile Include="Xna\Vector3.cs" />
+    <Compile Include="Xna\Vector4.cs" />
+    <Compile Include="Xna\Rectangle.cs" />
+    <Compile Include="Xna\GraphicsDeviceManager.cs" />
     <Compile Include="Xna\PlayerIndex.cs" />
     <Compile Include="Xna\Graphics\Viewport.cs" />
     <Compile Include="Xna\Graphics\DepthFormat.cs" />
