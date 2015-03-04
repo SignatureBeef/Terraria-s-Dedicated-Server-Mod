@@ -673,9 +673,10 @@ namespace tdsm.core
                         sender.Message(String.Format("Coordinates out of range of (0, {0}); (0, {1}).", Main.maxTilesX - 1, Main.maxTilesY - 1));
                         return;
                     }
+                    const Int32 OutOfBoundsPadding = 41;
 
                     /*if (*/
-                    subject.Teleport(x * 16f, y * 16f); //)
+                    subject.Teleport((x - OutOfBoundsPadding) * 16f, (y - OutOfBoundsPadding) * 16f); //)
                     {
                         Tools.NotifyAllOps(string.Concat("Teleported ", subject.Name, " to ",
                             x, ":", y, ". [", sender.SenderName, "]"), true);
