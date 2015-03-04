@@ -239,6 +239,11 @@ namespace tdsm.patcher
             patcher.Save(outFileMN, Build, TDSMGuid, fileName);
 
 
+            var res = new Vestris.ResourceLib.IconDirectoryResource(new Vestris.ResourceLib.IconFile("tdsm.ico"));
+            res.SaveTo(outFileMS);
+            res.SaveTo(outFileMN);
+
+
 #if Release || true
             var current = isMono ? outFileMN : outFileMS;
             Console.WriteLine("Ok\nYou may now run {0} as you would normally.", current);
