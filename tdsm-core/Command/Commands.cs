@@ -412,19 +412,17 @@ namespace tdsm.core
             WorldTime text;
             if (args.TryParseOne<Double>("-set", out time) || args.TryParseOne<Double>("set", out time))
             {
-                if (time >= 0 && time <= 54000.0)
+                if (time >= WorldTime.TimeMin && time <= WorldTime.TimeMax)
                 {
                     //var day = args.TryPop("-day");
-                    var day = time >= 32400.0 && time <= 54000.0;
-                    World.SetTime(time, day);
+                    World.SetTime(time);
                 }
-                else sender.SendMessage("Invalid time specified, must be from 0 to 54000");
+                else sender.SendMessage(String.Format("Invalid time specified, must be from {0} to {1}", WorldTime.TimeMin, WorldTime.TimeMax));
             }
             else if (args.TryParseOne<WorldTime>("-set", out text) || args.TryParseOne<WorldTime>("set", out text))
             {
                 time = text.GameTime;
-                var day = time >= 32400.0 && time <= 54000.0;
-                World.SetTime(time, day);
+                World.SetTime(time);
             }
             else
             {
@@ -443,7 +441,7 @@ namespace tdsm.core
                         }
                     case "dusk":
                         {
-                            World.SetTime(0, false);
+                            World.SetTime(0);
                             break;
                         }
                     case "noon":
@@ -453,7 +451,7 @@ namespace tdsm.core
                         }
                     case "night":
                         {
-                            World.SetTime(16200.0, false);
+                            World.SetTime(16200.0);
                             break;
                         }
                     case "?":

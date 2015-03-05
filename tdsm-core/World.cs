@@ -9,7 +9,13 @@ namespace tdsm.core
         public static void SetTime(double time, bool dayTime = true)
         {
             Terraria.Main.time = time;
-            Terraria.Main.dayTime = dayTime;
+            Terraria.Main.dayTime = time >= 13500.0 && time <= 54000.0;
+
+            if (time > 54000.0)
+            {
+                time -= 54000.0;
+                Terraria.Main.dayTime = false;
+            }
 
             if (Terraria.Main.bloodMoon)
                 Terraria.Main.bloodMoon = false;

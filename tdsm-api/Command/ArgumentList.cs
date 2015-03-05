@@ -315,12 +315,12 @@ namespace tdsm.api.Command
                 if (val != null)
                 {
                     var gt = val.Value.GameTime;
-                    if (gt >= 0 && gt <= 54000.0)
+                    if (gt >= WorldTime.TimeMin && gt <= WorldTime.TimeMax)
                     {
                         t = (T)(object)val.Value;
                         return true;
                     }
-                    else throw new CommandError("Time must be between 4:30am and 7:30pm");
+                    else throw new CommandError("Invalid time.");
                 }
                 return false;
             }
@@ -588,6 +588,9 @@ namespace tdsm.api.Command
 
     public struct WorldTime
     {
+        public const double TimeMax = 86400;
+        public const double TimeMin = 0;
+
         public byte Hour { get; set; }
         public byte Minute { get; set; }
         public bool AM { get; set; }
@@ -597,10 +600,12 @@ namespace tdsm.api.Command
             get
             {
                 var time = ((this.Hour * 60.0 * 60.0) + (this.Minute * 60.0));
-                time -= 4.5 * 60.0 * 60.0; //Time start at 4:30 am
 
                 if (!this.AM)
                     time += 12.0 * 60.0 * 60.0;
+
+                time -= 4.5 * 60.0 * 60.0; //Terrarian time (0) starts at 4:30 am
+                if (time < 0) time = TimeMax + time;
 
                 return time;
             }
@@ -617,9 +622,9 @@ namespace tdsm.api.Command
             if (split.Length == 2)
             {
                 byte hour, minute;
-                if (Byte.TryParse(split[0], out hour) && split[1].Length > 2)
+                if (Byte.TryParse(split[0], out hour) && split[1].Length > 2 && hour < 13)
                 {
-                    if (Byte.TryParse(split[1].Substring(0, split[1].Length - 2), out minute))
+                    if (Byte.TryParse(split[1].Substring(0, split[1].Length - 2), out minute) && minute < 60)
                     {
                         var tk = split[1].Remove(0, split[1].Length - 2);
 
@@ -639,12 +644,20 @@ namespace tdsm.api.Command
         {
             time += 4.5 * 60.0 * 60.0; //Push back up to real time
 
-            var daytime = 12.0 * 60.0 * 60.0;
-            var am = time < daytime;
-            if (!am) time -= daytime;
+            bool am = false;
+            if (time >= TimeMax)
+            {
+                time -= TimeMax;
+                am = true;
+            }
+            else am = time <= 12.0 * 60.0 * 60.0;
+
 
             var hour = (int)(time / 60.0 / 60.0);
             var min = (int)((time - (hour * 60.0 * 60.0)) / 60.0);
+
+            if (hour == 0) hour = 12;
+            if (hour > 12) hour -= 12;
 
             return new WorldTime()
             {
@@ -656,7 +669,7 @@ namespace tdsm.api.Command
 
         public override string ToString()
         {
-            return String.Format("{0}:{1} {2}", Hour, Minute, AM ? "AM" : "PM");
+            return String.Format("{0}:{1:00} {2}", Hour, Minute, AM ? "AM" : "PM");
         }
     }
 }
