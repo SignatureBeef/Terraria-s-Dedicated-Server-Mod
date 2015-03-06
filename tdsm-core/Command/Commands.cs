@@ -414,15 +414,18 @@ namespace tdsm.core
             {
                 if (time >= WorldTime.TimeMin && time <= WorldTime.TimeMax)
                 {
-                    //var day = args.TryPop("-day");
                     World.SetTime(time);
                 }
-                else sender.SendMessage(String.Format("Invalid time specified, must be from {0} to {1}", WorldTime.TimeMin, WorldTime.TimeMax));
+                else
+                {
+                    sender.SendMessage(String.Format("Invalid time specified, must be from {0} to {1}", WorldTime.TimeMin, WorldTime.TimeMax));
+                    return;
+                }
             }
             else if (args.TryParseOne<WorldTime>("-set", out text) || args.TryParseOne<WorldTime>("set", out text))
             {
                 time = text.GameTime;
-                World.SetTime(time);
+                World.SetParsedTime(time);
             }
             else
             {
@@ -441,7 +444,7 @@ namespace tdsm.core
                         }
                     case "dusk":
                         {
-                            World.SetTime(0);
+                            World.SetTime(0, false);
                             break;
                         }
                     case "noon":
@@ -451,16 +454,14 @@ namespace tdsm.core
                         }
                     case "night":
                         {
-                            World.SetTime(16200.0);
+                            World.SetTime(16200.0, false);
                             break;
                         }
                     case "?":
                     case "now":
                     case "-now":
                         {
-                            var tm = WorldTime.Parse(Main.time);
-
-                            sender.Message("Current time: " + tm.ToString());
+                            sender.Message("Current time: " + WorldTime.Parse(World.GetParsableTime()).ToString());
                             return;
                         }
                     default:
@@ -471,7 +472,8 @@ namespace tdsm.core
                 }
             }
             NewNetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
-            Tools.NotifyAllPlayers("Time set to " + Terraria.Main.time.ToString() + " by " + sender.SenderName, Color.Green);
+            var current = WorldTime.Parse(World.GetParsableTime()).Value;
+            Tools.NotifyAllPlayers(String.Format("Time set to {0} ({1}) by {2}", current.ToString(), current.GameTime, sender.SenderName), Color.Green);
         }
 
         /// <summary>

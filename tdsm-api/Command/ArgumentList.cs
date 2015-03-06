@@ -601,10 +601,13 @@ namespace tdsm.api.Command
             {
                 var time = ((this.Hour * 60.0 * 60.0) + (this.Minute * 60.0));
 
-                if (!this.AM)
+                if (!this.AM && this.Hour < 12)
                     time += 12.0 * 60.0 * 60.0;
+                else if (this.AM && this.Hour == 12)
+                    time -= 12.0 * 60.0 * 60.0;
 
-                time -= 4.5 * 60.0 * 60.0; //Terrarian time (0) starts at 4:30 am
+                time -= 4.5 * 60.0 * 60.0;
+
                 if (time < 0) time = TimeMax + time;
 
                 return time;
@@ -642,16 +645,12 @@ namespace tdsm.api.Command
 
         public static WorldTime? Parse(double time)
         {
-            time += 4.5 * 60.0 * 60.0; //Push back up to real time
+            time += 4.5 * 60.0 * 60.0;
 
-            bool am = false;
-            if (time >= TimeMax)
-            {
-                time -= TimeMax;
-                am = true;
-            }
-            else am = time <= 12.0 * 60.0 * 60.0;
+            if (time > TimeMax) time = time - TimeMax;
 
+            bool am = time < 12.0 * 60.0 * 60.0 || time == TimeMax;
+            if (!am) time -= 12.0 * 60.0 * 60.0;
 
             var hour = (int)(time / 60.0 / 60.0);
             var min = (int)((time - (hour * 60.0 * 60.0)) / 60.0);
@@ -671,5 +670,84 @@ namespace tdsm.api.Command
         {
             return String.Format("{0}:{1:00} {2}", Hour, Minute, AM ? "AM" : "PM");
         }
+
+#if true
+        public static bool Test()
+        {
+            if ((new WorldTime()
+            {
+                Hour = 4,
+                Minute = 30,
+                AM = true
+            }).ToString() != "4:30 AM")
+                return false;
+
+            if (WorldTime.Parse(0).ToString() != "4:30 AM")
+                return false;
+
+            if (WorldTime.Parse("12:00pm").Value.GameTime != 27000) //43200.0)
+                return false;
+            if (WorldTime.Parse("12:00am").Value.GameTime != WorldTime.TimeMax - (4.5 * 60.0 * 60.0)) //43200.0)
+            {
+                var aa = WorldTime.Parse("12:00am").Value.GameTime;
+                var a = WorldTime.Parse("12:30am").Value.GameTime;
+                var ab = WorldTime.Parse("12:59am").Value.GameTime;
+                var b = WorldTime.Parse("1:00am").Value.GameTime;
+                var c = WorldTime.Parse("3:00am").Value.GameTime;
+                var d = WorldTime.Parse("4:00am").Value.GameTime;
+                var f = WorldTime.Parse("5:00am").Value.GameTime;
+                return false;
+            }
+
+            var _12 = WorldTime.Parse("12:00am").Value.GameTime;
+            var parsed = WorldTime.Parse(_12);
+            if (parsed.ToString() != "12:00 AM")
+            {
+                return false;
+            }
+
+            _12 = WorldTime.Parse("12:01am").Value.GameTime;
+            parsed = WorldTime.Parse(_12);
+            if (parsed.ToString() != "12:01 AM")
+            {
+                return false;
+            }
+
+            for (var h = 1; h <= 24; h++)
+            {
+                for (var m = 0; m < 60; m++)
+                {
+                    var time = String.Format("{0}:{1:00} {2}", h > 12 ? h - 12 : h, m, h < 12 ? "AM" : "PM");
+
+                    System.Diagnostics.Debug.WriteLine("Testing time " + time);
+                    var t = Parse(time);
+                    if (t.ToString() != time)
+                    {
+                        return false;
+                    }
+
+                    var t2 = Parse(t.Value.GameTime);
+                    if (t2.ToString() != time)
+                    {
+                        Parse(t.Value.GameTime);
+                        Parse(t.Value.GameTime);
+                        return false;
+                    }
+
+                    //if (t2.ToString() == (new WorldTime()
+                    //{
+                    //    Hour = (byte)h,
+                    //    Minute = (byte)m,
+                    //    AM = h <= 12
+                    //}).ToString())
+                    //{
+                    //    return false;
+                    //}
+                }
+            }
+
+            return true;
+        }
+#endif
     }
 }

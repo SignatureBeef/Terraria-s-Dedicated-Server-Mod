@@ -57,6 +57,12 @@ namespace tdsm.patcher
 
         static void Main(string[] args)
         {
+            //if (!tdsm.api.Command.WorldTime.Test())
+            //{
+            //    Console.WriteLine("Time test failed");
+            //    Console.ReadKey(true);
+            //}
+
             //if (!tdsm.api.Permissions.PermissionsManager.IsSet)
             //{
             //    var file = System.IO.Path.Combine(tdsm.api.Globals.DataPath, "permissions.xml");

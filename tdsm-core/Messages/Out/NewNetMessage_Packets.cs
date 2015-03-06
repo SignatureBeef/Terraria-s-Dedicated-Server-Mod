@@ -151,6 +151,7 @@ namespace tdsm.core.Messages.Out
             if (NPC.downedBoss3) flags += 8;
             if (hardMode) flags += 16;
             if (NPC.downedClown) flags += 32;
+            if (Main.ServerSideCharacter) flags += 64;
             if (NPC.downedPlantBoss) flags += 128;
 
             Byte(flags);

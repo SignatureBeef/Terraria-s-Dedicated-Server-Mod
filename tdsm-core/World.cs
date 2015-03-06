@@ -6,21 +6,37 @@ namespace tdsm.core
 {
     public static class World
     {
-        public static void SetTime(double time, bool dayTime = true)
+        public static void SetParsedTime(double time)
         {
-            Terraria.Main.time = time;
-            Terraria.Main.dayTime = time >= 13500.0 && time <= 54000.0;
+            var dayTime = time >= 0.0 && time <= 54000.0;
 
+            //If our parsed time is now into night time, remove the 15 hours of day time and set the day flag to false
             if (time > 54000.0)
             {
                 time -= 54000.0;
-                Terraria.Main.dayTime = false;
+                dayTime = false;
             }
+
+            SetTime(time, dayTime);
+        }
+
+        public static double GetParsableTime()
+        {
+            var time = Terraria.Main.time;
+
+            if (!Terraria.Main.dayTime) time += 54000.0;
+
+            return time;
+        }
+
+        public static void SetTime(double time, bool dayTime = true)
+        {
+            Terraria.Main.time = time;
+            Terraria.Main.dayTime = dayTime;
 
             if (Terraria.Main.bloodMoon)
                 Terraria.Main.bloodMoon = false;
         }
-
 
         public static bool IsTileValid(int x, int y)
         {
