@@ -105,12 +105,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
-      <Project>{a1f792b2-5d80-4de4-b5db-7a05dbeabd60}</Project>
-      <Name>tdsm-api</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

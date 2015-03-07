@@ -71,7 +71,7 @@ namespace RestrictPlugin
             Description = "Restrict access to the server or character names.";
             Author = "UndeadMiner";
             Version = "0.38.0";
-            TDSMBuild = 1;
+            TDSMBuild = 2;
         }
 
         protected override void Initialized(object state)

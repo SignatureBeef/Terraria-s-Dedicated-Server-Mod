@@ -1,10 +1,10 @@
-﻿using System;
+﻿//#define ENABLED
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Sockets;
-using tdsm.core.Logging;
 using tdsm.core.ServerCore;
 using tdsm.core.WebInterface.Auth;
 
@@ -84,6 +84,7 @@ namespace tdsm.core.WebInterface
 
         public static void Begin(string bindAddress, string provider)
         {
+#if ENABLED
             ProviderName = provider;
             Authentication = new HttpDigestAuth(Path.Combine(tdsm.api.Globals.DataPath, "web.logins"));
 
@@ -137,12 +138,15 @@ namespace tdsm.core.WebInterface
 
                 ProgramLog.Admin.Log("Web server exited.", bindAddress);
             })).Start();
+#endif
         }
 
         public static void End()
         {
+#if ENABLED
             _exit = true;
             _server.Stop();
+#endif
         }
 
         static void AcceptClient(IAsyncResult result)

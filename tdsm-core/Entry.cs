@@ -17,7 +17,7 @@ namespace tdsm.core
 {
     public partial class Entry : BasePlugin
     {
-        public const Int32 CoreBuild = 1;
+        public const Int32 CoreBuild = 2;
 
         private bool _useTimeLock;
         public bool UseTimeLock
@@ -66,7 +66,7 @@ namespace tdsm.core
             this.Author = "TDSM";
             this.Description = "TDSM Core";
             this.Name = "TDSM Core Module";
-            this.Version = "1";
+            this.Version = "2" + Globals.PhaseToSuffix(ReleasePhase.Beta);
         }
 
         protected override void Initialized(object state)

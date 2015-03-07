@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define ENABLED
+
+using System;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -144,6 +146,7 @@ namespace tdsm.core
 
         public static void Begin(int coreBuild)
         {
+#if ENABLED
             if (_timer == null)
             {
                 _coreBuild = coreBuild;
@@ -156,12 +159,15 @@ namespace tdsm.core
                 Enabled = true;
             }
             else if (!_timer.Enabled) _timer.Enabled = true;
+#endif
         }
 
         public static void End()
         {
+#if ENABLED
             if (_timer != null) _timer.Enabled = false;
             Enabled = false;
+#endif
         }
     }
 }
