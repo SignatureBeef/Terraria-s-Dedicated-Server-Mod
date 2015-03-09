@@ -41,7 +41,7 @@ namespace tdsm.core.Messages.In
             {
                 Connection = (tdsm.api.Callbacks.NetplayCallback.slots[whoAmI] as ServerSlot).conn,
                 Sender = player,
-                Player = player,
+                Player = player
             };
 
             var args = new HookArgs.InventoryItemReceived
@@ -52,6 +52,7 @@ namespace tdsm.core.Messages.In
                 NetID = (int)ReadInt16(readBuffer),
                 //Name = Networking.StringCache.FindOrMake (new ArraySegment<Byte> (readBuffer, num, length - 4)),
             };
+            args.SetItem();
 
             HookPoints.InventoryItemReceived.Invoke(ref ctx, ref args);
 

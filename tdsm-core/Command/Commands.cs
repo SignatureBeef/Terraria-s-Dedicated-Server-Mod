@@ -1339,173 +1339,102 @@ namespace tdsm.core
             }
         }
 
-        ///// <summary>
-        ///// Disallow an item from the server
-        ///// </summary>
-        ///// <param name="sender">Sending player</param>
-        ///// <param name="args">Arguments sent with command</param>
-        //public static void ItemRejection(ISender sender, ArgumentList args)
-        //{
-        //    string exception;
-        //    if (args.TryParseOne<String>(Languages.Add, out exception))
-        //    {
-        //        if (!Server.RejectedItems.Contains(exception))
-        //        {
-        //            Server.RejectedItems.Add(exception);
-        //            sender.Message(exception + Languages.ItemRejection_Added);
-        //        }
-        //        else
-        //        {
-        //            throw new CommandError(Languages.ItemRejection_ItemExists);
-        //        }
-        //    }
-        //    else if (args.TryParseOne<String>(Languages.Remove, out exception))
-        //    {
-        //        if (Server.RejectedItems.Contains(exception))
-        //        {
-        //            Server.RejectedItems.Remove(exception);
-        //            sender.Message(exception + Languages.ItemRejection_Removed);
-        //        }
-        //        else
-        //        {
-        //            throw new CommandError(Languages.ItemRejection_ItemDoesntExist);
-        //        }
-        //    }
-        //    else if (args.TryPop(Languages.Clear))
-        //    {
-        //        Server.RejectedItems.Clear();
-        //        sender.Message(Languages.ItemRejection_Removed);
-        //    }
-        //    else
-        //    {
-        //        throw new CommandError(Languages.NoItemIDNameProvided);
-        //    }
-        //    Program.properties.RejectedItems = String.Join(",", Server.RejectedItems);
-        //    Program.properties.Save(false);
-        //}
+        /// <summary>
+        /// Manage item rejections
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public void ItemRejection(ISender sender, ArgumentList args)
+        {
+            string exception;
+            if (args.TryParseOne<String>("-add", out exception))
+            {
+                if (!Server.ItemRejections.Contains(exception))
+                {
+                    Server.ItemRejections.Add(exception);
+                    sender.Message(exception + " was successfully added.");
+                }
+                else
+                {
+                    throw new CommandError("Item already exists.");
+                }
+            }
+            else if (args.TryParseOne<String>("-remove", out exception))
+            {
+                if (Server.ItemRejections.Contains(exception))
+                {
+                    Server.ItemRejections.Remove(exception);
+                    sender.Message(exception + " was successfully removed.");
+                }
+                else
+                {
+                    throw new CommandError("Item does not exist.");
+                }
+            }
+            else if (args.TryPop("-clear"))
+            {
+                Server.ItemRejections.Clear();
+                sender.Message("Item rejection list cleared.");
+            }
+            else
+            {
+                throw new CommandError("Expected argument -add|-remove|-clear");
+            }
+        }
 
-        ///// <summary>
-        ///// Toggle whether the server allows explosions
-        ///// </summary>
-        ///// <param name="sender">Sending player</param>
-        ///// <param name="args">Arguments sent with command</param>
-        //public static void Explosions(ISender sender, ArgumentList args)
-        //{
-        //    args.ParseNone();
+        /// <summary>
+        /// Refreshes a players area
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public void Refresh(ISender sender, ArgumentList args)
+        {
+            args.ParseNone();
 
-        //    Server.AllowExplosions = !Server.AllowExplosions;
-        //    Program.properties.AllowExplosions = Server.AllowExplosions;
-        //    Program.properties.Save();
+            var player = sender as Player;
 
-        //    sender.Message(Languages.ExplosionsAreNow + (Server.AllowExplosions ? "allowed" : "disabled") + "!");
-        //}
+            if (player == null)
+            {
+                sender.Message(255, "This is a player command");
+                return;
+            }
 
-        ///// <summary>
-        ///// Refreshes a players area
-        ///// </summary>
-        ///// <param name="sender">Sending player</param>
-        ///// <param name="args">Arguments sent with command</param>
-        //public static void Refresh(ISender sender, ArgumentList args)
-        //{
-        //    args.ParseNone();
+            if (player.whoAmi < 0) return;
 
-        //    var player = sender as Player;
+            if (!player.Op)
+            {
+                var diff = DateTime.Now - player.GetLastCostlyCommand();
 
-        //    if (player == null)
-        //    {
-        //        sender.Message(255, Languages.ThisIsPlayerCommand);
-        //        return;
-        //    }
+                if (diff < TimeSpan.FromSeconds(30))
+                {
+                    sender.Message(255, "You must wait {0:0} more seconds before using this command.", 30.0 - diff.TotalSeconds);
+                    return;
+                }
 
-        //    if (player.whoAmi < 0) return;
+                player.SetLastCostlyCommand(DateTime.Now);
+            }
 
-        //    if (!player.Op)
-        //    {
-        //        var diff = DateTime.Now - player.LastCostlyCommand;
+            NewNetMessage.SendTileSquare(player.whoAmi, (int)(player.position.X / 16), (int)(player.position.Y / 16), 32);
+        }
 
-        //        if (diff < TimeSpan.FromSeconds(30))
-        //        {
-        //            sender.Message(255, Languages.YouMustWaitBeforeAnotherCommand, 30.0 - diff.TotalSeconds);
-        //            return;
-        //        }
+        /// <summary>
+        /// Enables hardmode
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public void HardMode(ISender sender, ArgumentList args)
+        {
+            args.ParseNone();
 
-        //        player.LastCostlyCommand = DateTime.Now;
-        //    }
+            if (Main.hardMode)
+                throw new CommandError("Hard mode is already enabled");
 
-        //    NewNetMessage.SendTileSquare(player.whoAmi, (int)(player.Position.X / 16), (int)(player.Position.Y / 16), 32);
-        //}
-
-        ///// <summary>
-        ///// Toggles whether the server allows RPG.
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="args"></param>
-        //public static void ToggleRPGClients(ISender sender, ArgumentList args)
-        //{
-        //    Server.AllowTDCMRPG = !Server.AllowTDCMRPG;
-        //    Program.properties.AllowTDCMRPG = Server.AllowTDCMRPG;
-
-        //    foreach (Player player in Main.player)
-        //    {
-        //        if (player.HasClientMod)
-        //            NewNetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
-        //    }
-
-        //    if (!Server.OpList.Save())
-        //    {
-        //        Tools.NotifyAllOps(Languages.OPlistFailedSave + " [" + sender.SenderName + "]", true);
-        //        return;
-        //    }
-
-        //    string message = (Server.AllowTDCMRPG) ? Languages.RPGMode_Allowed : Languages.RPGMode_Refused;
-        //    Tools.NotifyAllOps(message);
-        //}
-
-        ///// <summary>
-        ///// Spawns the TDCM Quest Giver
-        ///// </summary>
-        ///// <param name="sender">Sending player</param>
-        ///// <param name="args">Arguments sent with command</param>
-        //public static void SpawnQuestGiver(ISender sender, ArgumentList args)
-        //{
-        //    if (!Server.AllowTDCMRPG)
-        //        throw new CommandError(Languages.CannotQuestGiverWithoutTDCM);
-
-        //    int npcId;
-        //    if (NPC.TryFindNPCByName(Statics.TDCM_QUEST_GIVER, out npcId))
-        //        throw new CommandError(Languages.QuestGiverAlreadySpawned);
-
-        //    NPC.SpawnTDCMQuestGiver();
-        //}
-
-        ///// <summary>
-        ///// Enables hardmode
-        ///// </summary>
-        ///// <param name="sender">Sending player</param>
-        ///// <param name="args">Arguments sent with command</param>
-        //public static void HardMode(ISender sender, ArgumentList args)
-        //{
-        //    args.ParseNone();
-
-        //    if (Main.hardMode)
-        //        throw new CommandError(Languages.HardModeAlreadyEnabled);
-
-        //    sender.Message(Languages.StartingHardMode);
-        //    WorldModify.StartHardMode();
-        //}
-
-        ///// <summary>
-        ///// Reloads the language definitions
-        ///// </summary>
-        ///// <param name="sender">Sending player</param>
-        ///// <param name="args">Arguments sent with command</param>
-        //public static void LanguageReload(ISender sender, ArgumentList args)
-        //{
-        //    args.ParseNone();
-
-        //    sender.Message("Reloading Language File...");
-        //    sender.Message("Reloading " + (Languages.LoadClass(Collections.Registries.LANGUAGE_FILE) ? "Succeeded" : "Failed"));
-        //}
+            sender.Message("Changing to hard mode...");
+            WorldGen.hardLock = true;
+            Terraria.WorldGen.StartHardmode();
+            while (WorldGen.hardLock) Thread.Sleep(5);
+            sender.Message("Hard mode is now enabled.");
+        }
 
         ///// <summary>
         ///// Allows a user to take backups and purge old data

@@ -15,7 +15,7 @@ namespace tdsm.api.Misc
         private bool _lowerKeys;
 
         const char PrefixKey = '=';
-        
+
         public DataRegister(string path, bool lowerKeys = true, bool autoLoad = true)
         {
             _path = path;
@@ -63,6 +63,18 @@ namespace tdsm.api.Misc
                 return false;
             }
         }
+
+        public bool Clear(bool autoSave = true)
+        {
+            lock (_data)
+            {
+                _data = new string[] { };
+            }
+
+            if (autoSave) return Save();
+            return true;
+        }
+
 
         public bool Add(string item, bool autoSave = true)
         {

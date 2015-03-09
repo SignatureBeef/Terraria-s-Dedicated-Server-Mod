@@ -293,12 +293,14 @@ namespace tdsm.core.ServerCore
             Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
             Bans = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "bans.txt"));
             Whitelist = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "whitelist.txt"));
+            ItemRejections = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "itemrejection.txt"));
             IsInitialised = true;
         }
 
         public static DataRegister Ops { get; private set; }
         public static DataRegister Bans { get; private set; }
         public static DataRegister Whitelist { get; private set; }
+        public static DataRegister ItemRejections { get; private set; }
         public static bool WhitelistEnabled { get; set; }
 
         public static int GetSectionX(int x)

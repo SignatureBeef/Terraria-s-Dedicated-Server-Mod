@@ -13,7 +13,7 @@ namespace tdsm.api.Plugin
         public static readonly HookPoint<HookArgs.ConfigurationLine> ConfigurationLine;
         public static readonly HookPoint<HookArgs.StartDefaultServer> StartDefaultServer;
         //public static readonly HookPoint<HookArgs.StatusTextChanged> StatusTextChanged;
-        public static readonly HookPoint<HookArgs.UpdateServer> UpdateServer;
+        //public static readonly HookPoint<HookArgs.UpdateServer> UpdateServer;
 
         public static readonly HookPoint<HookArgs.NewConnection> NewConnection;
         public static readonly HookPoint<HookArgs.ServerStateChange> ServerStateChange;
@@ -122,7 +122,7 @@ namespace tdsm.api.Plugin
             StartDefaultServer = new HookPoint<HookArgs.StartDefaultServer>("start-default-server");
             //StatusTextChanged = new HookPoint<HookArgs.StatusTextChanged>("status-text-changed");
             SendNetData = new HookPoint<HookArgs.SendNetData>("netmessage-senddata");
-            UpdateServer = new HookPoint<HookArgs.UpdateServer>("update-server");
+            //UpdateServer = new HookPoint<HookArgs.UpdateServer>("update-server");
             ProgramStart = new HookPoint<HookArgs.ProgramStart>("program-start");
             StartCommandProcessing = new HookPoint<HookArgs.StartCommandProcessing>("start-command-processing");
             ConfigurationLine = new HookPoint<HookArgs.ConfigurationLine>("config-line");
@@ -219,7 +219,7 @@ namespace tdsm.api.Plugin
         {
         }
 
-        public struct UpdateServer { }
+        //public struct UpdateServer { }
 
         public struct ServerStateChange
         {
@@ -524,6 +524,16 @@ namespace tdsm.api.Plugin
             public string Name { get; set; }
             public int Prefix { get; set; }
             public int NetID { get; set; }
+
+            public Item Item { get; set; }
+
+            public void SetItem()
+            {
+                Item = new Item();
+                Item.netDefaults(NetID);
+                Item.stack = Amount;
+                Item.Prefix(Prefix);
+            }
         }
 
         public struct ObituaryReceived

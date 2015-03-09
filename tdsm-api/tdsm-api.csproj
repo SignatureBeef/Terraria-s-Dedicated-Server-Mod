@@ -86,8 +86,10 @@
     <Compile Include="ID\Lookup.cs" />
     <Compile Include="Misc\Affix.cs" />
     <Compile Include="Misc\DataRegister.cs" />
+    <Compile Include="Misc\InvasionType.cs" />
     <Compile Include="Misc\Platform.cs" />
     <Compile Include="Misc\PropertiesFile.cs" />
+    <Compile Include="Misc\Tasks.cs" />
     <Compile Include="Permissions\PermissionsManager.cs" />
     <Compile Include="Permissions\XmlSupplier.cs" />
     <Compile Include="Plugin\HookAttribute.cs" />

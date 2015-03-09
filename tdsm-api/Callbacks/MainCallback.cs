@@ -1,4 +1,5 @@
 ﻿using System;
+using tdsm.api.Misc;
 using tdsm.api.Plugin;
 
 namespace tdsm.api.Callbacks
@@ -6,6 +7,7 @@ namespace tdsm.api.Callbacks
     public static class MainCallback
     {
         public static Action StatusTextChange;
+        public static Action UpdateServer;
 
         public static void ProgramStart()
         {
@@ -167,12 +169,18 @@ namespace tdsm.api.Callbacks
 
         public static void UpdateServerEnd()
         {
-            var ctx = new HookContext()
-            {
-                Sender = HookContext.ConsoleSender
-            };
-            var args = new HookArgs.UpdateServer();
-            HookPoints.UpdateServer.Invoke(ref ctx, ref args);
+            /* Check tolled tasks */
+            Tasks.CheckTasks();
+
+            if (UpdateServer != null)
+                UpdateServer();
+
+            //var ctx = new HookContext()
+            //{
+            //    Sender = HookContext.ConsoleSender
+            //};
+            //var args = new HookArgs.UpdateServer();
+            //HookPoints.UpdateServer.Invoke(ref ctx, ref args);
         }
 
         public static void WorldLoadBegin()

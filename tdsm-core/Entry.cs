@@ -74,6 +74,7 @@ namespace tdsm.core
             base.Enabled();
 
             tdsm.api.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
+            tdsm.api.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
         }
 
         protected override void Initialized(object state)
@@ -163,6 +164,21 @@ namespace tdsm.core
             //    .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
             //    .WithPermissionNode("tdsm.admin")
             //    .Calls(this.Reload);
+
+            AddCommand("itemrej")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Manage item rejections")
+                .WithHelpText("Usage:    itemrej -add|-remove <id:name>")
+                .WithHelpText("          itemrej -clear")
+                .WithPermissionNode("tdsm.itemrej")
+                .Calls(this.ItemRejection);
+
+            AddCommand("refresh")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Redownload the area around you from the server")
+                .WithHelpText("Usage:    refresh")
+                .WithPermissionNode("tdsm.refresh")
+                .Calls(this.Refresh);
 
             AddCommand("list")
                 .WithAccessLevel(AccessLevel.PLAYER)
@@ -283,6 +299,12 @@ namespace tdsm.core
             //    .WithPermissionNode("tdsm.heal")
             //    .Calls(this.Heal);
 
+            AddCommand("hardmode")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Enables hard mode.")
+                .WithPermissionNode("tdsm.hardmode")
+                .Calls(this.HardMode);
+
             AddCommand("rcon")
                 .WithDescription("Manage remote console access.")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
@@ -298,6 +320,15 @@ namespace tdsm.core
                 .WithDescription("Turn NPC spawning on or off.")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
                 .WithHelpText("Usage:   npcspawning true|false")
+                .WithPermissionNode("tdsm.npcspawning")
+                .Calls(this.NPCSpawning);
+
+            AddCommand("invasion")
+                .WithDescription("Begins an invasion")
+                .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
+                .WithHelpText("Usage:   invasion golbin|frost|pirate")
+                .WithHelpText("         invasion -custom <npc id or name> <npc id or name> ...")
+                .WithHelpText("         invasion stop|end|cancel")
                 .WithPermissionNode("tdsm.npcspawning")
                 .Calls(this.NPCSpawning);
 
@@ -348,6 +379,28 @@ namespace tdsm.core
                         }
                     }
                     ProgramLog.Log("PID file successfully created with: " + ProcessUID);
+                }
+            }
+        }
+
+        [Hook(HookOrder.NORMAL)]
+        void OnInventoryItemReceived(ref HookContext ctx, ref HookArgs.InventoryItemReceived args)
+        {
+            if (Server.ItemRejections.Count > 0)
+            {
+                if (args.Item != null)
+                {
+                    if (Server.ItemRejections.Contains(args.Item.name) || Server.ItemRejections.Contains(args.Item.type.ToString()))
+                    {
+                        if (!String.IsNullOrEmpty(args.Item.name))
+                        {
+                            ctx.SetKick(args.Item.name + " is not allowed on this server.");
+                        }
+                        else
+                        {
+                            ctx.SetKick("Item type " + args.Item.type.ToString() + " is not allowed on this server.");
+                        }
+                    }
                 }
             }
         }
@@ -410,8 +463,8 @@ namespace tdsm.core
             }
         }
 
-        [Hook(HookOrder.NORMAL)]
-        void OnUpdateServer(ref HookContext ctx, ref HookArgs.UpdateServer args)
+        //[Hook(HookOrder.NORMAL)]
+        void OnUpdateServer(/*ref HookContext ctx, ref HookArgs.UpdateServer args*/)
         {
             for (var i = 0; i < Terraria.Main.player.Length; i++)
             {
