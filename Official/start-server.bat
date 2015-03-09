@@ -1,7 +1,7 @@
 @echo off
 cls
 :start
-tdsm.microsoft.exe -config serverconfig.txt
+TerrariaServer.exe -config serverconfig.txt
 @echo.
 @echo Restarting server...
 @echo.
