@@ -1,4 +1,4 @@
-﻿//#define ENABLED
+﻿#define ENABLED
 
 using System;
 using System.Net;
@@ -19,7 +19,7 @@ namespace tdsm.core
     /// </summary>
     public static class Heartbeat
     {
-        internal const String EndPoint = "http://localhost/tdsm/"; //"http://heartbeat.tdsm.org/";
+        internal const String EndPoint = "http://localhost:8076/heartbeat/"; //http://heartbeat.tdsm.org/";
         internal const Int32 MinuteInterval = 1;
 
         private static System.Timers.Timer _timer;
@@ -82,6 +82,17 @@ namespace tdsm.core
                         {
                             case ResponseCode.UpToDate:
                                 //We're online - all up to date
+                                try
+                                {
+                                    var dta = new byte[data.Length - 1];
+                                    Buffer.BlockCopy(data, 1, dta, 0, dta.Length);
+                                    var str = Encoding.UTF8.GetString(dta);
+                                    if (!String.IsNullOrEmpty(str))
+                                    {
+                                        ProgramLog.Log("Heartbeat Sent: " + str);
+                                    }
+                                }
+                                catch { }
                                 break;
                             case ResponseCode.UpdateReady:
                                 var flag = (UpdateReady)data[1];
@@ -106,7 +117,7 @@ namespace tdsm.core
                                 try
                                 {
                                     var str = Encoding.UTF8.GetString(data);
-                                    if (str != null)
+                                    if (!String.IsNullOrEmpty(str))
                                     {
                                         ProgramLog.Log("Heartbeat Sent: " + str);
                                     }
@@ -115,6 +126,15 @@ namespace tdsm.core
                                 break;
                             default:
                                 ProgramLog.Log("Invalid heartbeat response.");
+                                try
+                                {
+                                    var str = Encoding.UTF8.GetString(data);
+                                    if (!String.IsNullOrEmpty(str))
+                                    {
+                                        ProgramLog.Log("Heartbeat Sent: " + str);
+                                    }
+                                }
+                                catch { }
                                 break;
                         }
                     }

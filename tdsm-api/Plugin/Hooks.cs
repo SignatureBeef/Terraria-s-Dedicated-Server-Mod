@@ -12,7 +12,7 @@ namespace tdsm.api.Plugin
     {
         public static readonly HookPoint<HookArgs.ConfigurationLine> ConfigurationLine;
         public static readonly HookPoint<HookArgs.StartDefaultServer> StartDefaultServer;
-        public static readonly HookPoint<HookArgs.StatusTextChanged> StatusTextChanged;
+        //public static readonly HookPoint<HookArgs.StatusTextChanged> StatusTextChanged;
         public static readonly HookPoint<HookArgs.UpdateServer> UpdateServer;
 
         public static readonly HookPoint<HookArgs.NewConnection> NewConnection;
@@ -120,7 +120,7 @@ namespace tdsm.api.Plugin
             //WorldGeneration = new HookPoint<HookArgs.WorldGeneration>("world-generation");
             WorldRequestMessage = new HookPoint<HookArgs.WorldRequestMessage>("world-request-message");
             StartDefaultServer = new HookPoint<HookArgs.StartDefaultServer>("start-default-server");
-            StatusTextChanged = new HookPoint<HookArgs.StatusTextChanged>("status-text-changed");
+            //StatusTextChanged = new HookPoint<HookArgs.StatusTextChanged>("status-text-changed");
             SendNetData = new HookPoint<HookArgs.SendNetData>("netmessage-senddata");
             UpdateServer = new HookPoint<HookArgs.UpdateServer>("update-server");
             ProgramStart = new HookPoint<HookArgs.ProgramStart>("program-start");
@@ -175,7 +175,7 @@ namespace tdsm.api.Plugin
             public float Number4 { get; set; }
             public int Number5 { get; set; }
         }
-        public struct StatusTextChanged { }
+        //public struct StatusTextChanged { }
         //{
         //    public string Old { get; set; }
         //    public string New { get; set; }

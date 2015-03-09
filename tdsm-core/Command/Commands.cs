@@ -1118,6 +1118,76 @@ namespace tdsm.core
         //        throw new CommandError(String.Empty);
         //}
 
+
+        enum WorldZone
+        {
+            Any,
+            Jungle,
+            Hell,
+            Blood,
+            Candle,
+            Dungeon,
+            Holy,
+            Meteor,
+            Snow
+        }
+
+        static Player FindPlayerWithOptions(WorldZone options)
+        {
+            if (Main.rand == null) Main.rand = new Random((new Random()).Next());
+            Player[] ply;
+
+            switch (options)
+            {
+                case WorldZone.Blood:
+                    ply = (from x in Main.player where x.zoneBlood select x).ToArray();
+                    if (ply.Length > 0)
+                        return ply[Main.rand.Next(0, ply.Length - 1)];
+                    break;
+                case WorldZone.Candle:
+                    ply = (from x in Main.player where x.zoneCandle select x).ToArray();
+                    if (ply.Length > 0)
+                        return ply[Main.rand.Next(0, ply.Length - 1)];
+                    break;
+                case WorldZone.Dungeon:
+                    ply = (from x in Main.player where x.zoneDungeon select x).ToArray();
+                    if (ply.Length > 0)
+                        return ply[Main.rand.Next(0, ply.Length - 1)];
+                    break;
+                case WorldZone.Holy:
+                    ply = (from x in Main.player where x.zoneHoly select x).ToArray();
+                    if (ply.Length > 0)
+                        return ply[Main.rand.Next(0, ply.Length - 1)];
+                    break;
+                case WorldZone.Meteor:
+                    ply = (from x in Main.player where x.zoneMeteor select x).ToArray();
+                    if (ply.Length > 0)
+                        return ply[Main.rand.Next(0, ply.Length - 1)];
+                    break;
+                case WorldZone.Snow:
+                    ply = (from x in Main.player where x.zoneSnow select x).ToArray();
+                    if (ply.Length > 0)
+                        return ply[Main.rand.Next(0, ply.Length - 1)];
+                    break;
+                case WorldZone.Jungle:
+                    ply = (from x in Main.player where x.zoneJungle select x).ToArray();
+                    if (ply.Length > 0)
+                        return ply[Main.rand.Next(0, ply.Length - 1)];
+                    break;
+                case WorldZone.Hell:
+                    ply = (from x in Main.player where x.zoneHoly select x).ToArray();
+                    if (ply.Length > 0)
+                        return ply[Main.rand.Next(0, ply.Length - 1)];
+                    break;
+                case WorldZone.Any:
+                    if (Main.player.Length > 0)
+                        return Main.player[Main.rand.Next(0, Main.player.Length - 1)];
+                    break;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Summon a Boss
         /// </summary>
@@ -1137,33 +1207,36 @@ namespace tdsm.core
             bool Plantera = args.TryPop("plantera");
             bool Retinazer = args.TryPop("retinazer");
             bool Spazmatism = args.TryPop("spazmatism");
-            bool All = args.TryPop("-all");
-            bool NightOverride = args.TryPop("-night") || All;
+            //bool All = args.TryPop("-all");
+            bool NightOverride = args.TryPop("-night"); // || All;
 
-            Player player = null;
-            if (sender is Player) player = sender as Player;
-            else if (Netplay.anyClients)
-            {
-                string PlayerName;
-                if (args.TryParseOne<String>("-player", out PlayerName))
-                    player = Tools.GetPlayerByName(PlayerName);
-                else
-                {
-                    if (Main.rand == null) Main.rand = new Random((new Random()).Next());
-                    //Find Random
-                    int plr = Main.rand.Next(0, ServerCore.ClientConnection.All.Count - 1); //Get Random PLayer
-                    player = Main.player[plr];
-                }
+            //Player player = null;
+            //if (sender is Player) player = sender as Player;
+            //else if (Netplay.anyClients)
+            //{
+            //    string PlayerName;
+            //    if (args.TryParseOne<String>("-player", out PlayerName))
+            //        player = Tools.GetPlayerByName(PlayerName);
+            //    else
+            //    {
+            //        if (Main.rand == null) Main.rand = new Random((new Random()).Next());
 
-                if (player == null)
-                    throw new CommandError("Cannot find player");
-            }
-            else
+            //        var matches = 
+            //        //Find Random
+            //        int plr = Main.rand.Next(0, ServerCore.ClientConnection.All.Count - 1); //Get Random PLayer
+            //        player = Main.player[plr];
+            //    }
+
+            //    if (player == null)
+            //        throw new CommandError("Cannot find player");
+            //}
+            //else
+            if (!Netplay.anyClients)
                 throw new CommandError("No online players to spawn near.");
 
-            List<Int32> bosses = new List<Int32>();
+            var bosses = new Dictionary<Int32, object[]>();
 
-            if (EyeOC || Twins || Spazmatism || Retinazer || All || Prime || Skeletron | Destroyer)
+            if (EyeOC || Twins || Spazmatism || Retinazer || Prime || Skeletron || Destroyer)
             {
                 if (Main.dayTime && !NightOverride)
                     throw new CommandError("The specified boss requires it to be night.");
@@ -1173,42 +1246,52 @@ namespace tdsm.core
             if (Wof && wofSummoned)
                 sender.Message("Wall of Flesh already summoned, Ignoring.");
 
-            if (EyeOC || All) bosses.Add(4);
-            if (Skeletron || All) bosses.Add(35);
-            if (KingSlime || All) bosses.Add(50);
-            if (EoW || All) bosses.Add(13);
-            if (Twins || All) { bosses.Add(125); bosses.Add(126); }
-            if (Retinazer) bosses.Add(125);
-            if (Spazmatism) bosses.Add(126);
-            if ((Wof) && !wofSummoned) bosses.Add(113);
-            if (Destroyer || All) bosses.Add(134);
-            if (Prime || All) bosses.Add(127);
-            if (Golem) bosses.Add(245);
-            if (Plantera) bosses.Add(262);
+            if (EyeOC)
+                bosses.Add(4, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+            if (Skeletron)
+                bosses.Add(35, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+            if (KingSlime)
+                bosses.Add(50, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+            if (EoW)
+                bosses.Add(13, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+            if (Twins)
+            {
+                bosses.Add(125, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+                bosses.Add(126, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+            }
+            if (Retinazer)
+                bosses.Add(125, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+            if (Spazmatism)
+                bosses.Add(126, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+            if ((Wof) && !wofSummoned)
+                bosses.Add(113, new object[] { FindPlayerWithOptions(WorldZone.Hell), WorldZone.Hell });
+            if (Destroyer)
+                bosses.Add(134, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+            if (Prime)
+                bosses.Add(127, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+            if (Golem)
+                bosses.Add(245, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
+            if (Plantera)
+                bosses.Add(262, new object[] { FindPlayerWithOptions(WorldZone.Jungle), WorldZone.Jungle });
+
+            if (bosses.Where(x => x.Value == null).Count() > 0)
+            {
+                var first = bosses.Where(x => x.Value == null).First();
+                throw new CommandError("A player must be in the zone:  " + first.Value[0].ToString());
+            }
 
             if (bosses.Count > 0)
             {
                 if (NightOverride)
                 {
                     World.SetTime(16200.0, false);
-                    //NewNetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
+                    NewNetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
                 }
 
-                foreach (int bossId in bosses)
+                foreach (var def in bosses)
                 {
-                    //Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
-                    //int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
-
-                    //var npc = Main.npc[BossSlot];
-                    //var name = npc.Name;
-
-                    //if (!String.IsNullOrEmpty(npc.DisplayName))
-                    //    name = npc.DisplayName;
-
-                    //npc.TargetClosest(true);
-
                     var name = String.Empty;
-                    switch (bossId)
+                    switch (def.Key)
                     {
                         case 4:
                             name = "Eye of Cthulu was";
@@ -1247,7 +1330,7 @@ namespace tdsm.core
                     //if (!(sender is ConsoleSender))
                     //    ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.SenderName, name, BossSlot);
 
-                    NPC.SpawnOnPlayer(player.whoAmi, bossId);
+                    NPC.SpawnOnPlayer((def.Value[0] as Player).whoAmi, def.Key);
                 }
             }
             else

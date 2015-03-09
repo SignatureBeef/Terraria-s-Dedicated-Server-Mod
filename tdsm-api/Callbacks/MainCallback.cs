@@ -5,6 +5,8 @@ namespace tdsm.api.Callbacks
 {
     public static class MainCallback
     {
+        public static Action StatusTextChange;
+
         public static void ProgramStart()
         {
             Tools.WriteLine("TDSM Rebind API build {0}{1}", Globals.Build, Globals.PhaseToSuffix(Globals.BuildPhase));
@@ -251,7 +253,14 @@ namespace tdsm.api.Callbacks
 #if Full_API
             if (Terraria.Main.oldStatusText != Terraria.Main.statusText)
             {
-                var ctx = new HookContext()
+                if (StatusTextChange != null)
+                    StatusTextChange();
+                else
+                {
+                    Terraria.Main.oldStatusText = Terraria.Main.statusText;
+                    Tools.WriteLine(Terraria.Main.statusText);
+                }
+                /*var ctx = new HookContext()
                 {
                     Sender = HookContext.ConsoleSender
                 };
@@ -262,7 +271,7 @@ namespace tdsm.api.Callbacks
                 {
                     Terraria.Main.oldStatusText = Terraria.Main.statusText;
                     Tools.WriteLine(Terraria.Main.statusText);
-                }
+                }*/
                 //_textTimeout = 0;
             }
             //else if (Terraria.Main.oldStatusText == String.Empty && Terraria.Main.statusText == String.Empty)

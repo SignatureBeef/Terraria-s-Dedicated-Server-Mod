@@ -69,6 +69,13 @@ namespace tdsm.core
             this.Version = "2" + Globals.PhaseToSuffix(ReleasePhase.Beta);
         }
 
+        protected override void Enabled()
+        {
+            base.Enabled();
+
+            tdsm.api.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
+        }
+
         protected override void Initialized(object state)
         {
             if (/*!Globals.IsPatching &&*/ !ProgramLog.IsOpen)
@@ -549,7 +556,7 @@ namespace tdsm.core
                     bool hb;
                     if (Boolean.TryParse(args.Value, out hb) && hb)
                     {
-                        //Heartbeat.Begin(this.TDSMBuild);
+                        Heartbeat.Begin(this.TDSMBuild);
                     }
                     break;
                 case "server-list":
@@ -642,10 +649,10 @@ namespace tdsm.core
         }
 
         private int lastWritten = 0;
-        [Hook(HookOrder.NORMAL)]
-        void OnStatusTextChanged(ref HookContext ctx, ref HookArgs.StatusTextChanged args)
+        //[Hook(HookOrder.NORMAL)]
+        void OnStatusTextChanged() //ref HookContext ctx, ref HookArgs.StatusTextChanged args)
         {
-            ctx.SetResult(HookResult.IGNORE);
+            //ctx.SetResult(HookResult.IGNORE);
             //There's no locking and two seperate threads, so we must use local variables incase of changes
             var statusText = Terraria.Main.statusText;
             var oldStatusText = Terraria.Main.oldStatusText;
