@@ -120,6 +120,20 @@ namespace tdsm.patcher
             }
         }
 
+        public void FixStatusTexts()
+        {
+            var serv = _asm.MainModule.Types.Where(x => x.Name == "WorldFile").First();
+            var main = serv.Methods.Where(x => x.Name == "saveWorld" && x.IsStatic).First();
+
+            var il = main.Body.GetILProcessor();
+            var statusText = _asm.MainModule.Types.Where(x => x.Name == "Main").First().Fields.Where(x => x.Name == "statusText").First();
+
+            var ins = main.Body.Instructions.Where(x => x.OpCode == OpCodes.Leave_S).Last();
+
+            il.InsertBefore(ins, il.Create(OpCodes.Ldstr, ""));
+            il.InsertBefore(ins, il.Create(OpCodes.Stsfld, statusText));
+        }
+
         public void HookWorldFile_DEBUG()
         {
             var serv = _asm.MainModule.Types.Where(x => x.Name == "WorldGen").First();

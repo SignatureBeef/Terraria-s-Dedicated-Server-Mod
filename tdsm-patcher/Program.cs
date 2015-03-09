@@ -177,6 +177,8 @@ namespace tdsm.patcher
             patcher.HookSockets();
             Console.Write("Ok\nHooking DEBUG...");
             patcher.HookWorldFile_DEBUG();
+            Console.Write("Ok\nFixing statusText...");
+            patcher.FixStatusTexts();
             Console.Write("Ok\n");
 
             //TODO repace Terraria's Console.SetTitles
