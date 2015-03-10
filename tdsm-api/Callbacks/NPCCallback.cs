@@ -32,7 +32,14 @@ namespace tdsm.api.Callbacks
 
         public static void OnInvasionNPCSpawn(int x, int y)
         {
+            var ctx = new HookContext();
+            var args = new HookArgs.InvasionNPCSpawn()
+            {
+                X = x,
+                Y = y
+            };
 
+            HookPoints.InvasionNPCSpawn.Invoke(ref ctx, ref args);
         }
     }
 }
