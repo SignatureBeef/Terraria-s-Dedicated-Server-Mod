@@ -19,6 +19,22 @@ namespace tdsm.core.ServerCore
         //public static ProgramThread updateThread = null;
         public static int OverlimitSlots = 1;
 
+        private static System.Collections.Generic.List<String> _connections = new System.Collections.Generic.List<String>();
+        public static int UniqueConnections
+        {
+            get { return _connections.Count; }
+        }
+
+        public static void AddUniqueConnection(string name, string ip)
+        {
+            var key = name + ip;
+            lock (_connections)
+            {
+                if (!_connections.Contains(key))
+                    _connections.Add(key);
+            }
+        }
+
         public static void SafeClose(this Socket socket)
         {
             if (socket == null) return;

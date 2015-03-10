@@ -3,6 +3,17 @@ namespace tdsm.api.Callbacks
 {
     public static class NPCCallback
     {
+        private static int _invasionTypeCounter = 3;
+
+        /// <summary>
+        /// Returns a new invasion type that is dedicated for the callee
+        /// </summary>
+        /// <returns></returns>
+        public static int AssignInvasionType()
+        {
+            return System.Threading.Interlocked.Increment(ref _invasionTypeCounter);
+        }
+
         public static bool CanSpawnNPC(int x, int y, int type, int start = 0)
         {
             var ctx = new HookContext();
@@ -17,6 +28,11 @@ namespace tdsm.api.Callbacks
             HookPoints.NPCSpawn.Invoke(ref ctx, ref args);
 
             return ctx.Result == HookResult.DEFAULT;
+        }
+
+        public static void OnInvasionNPCSpawn(int x, int y)
+        {
+
         }
     }
 }

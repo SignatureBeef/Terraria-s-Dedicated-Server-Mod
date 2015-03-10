@@ -19,7 +19,7 @@ namespace tdsm.core
     /// </summary>
     public static class Heartbeat
     {
-        internal const String EndPoint = "http://localhost:8076/heartbeat/"; //http://heartbeat.tdsm.org/";
+        internal const String EndPoint = "http://heartbeat.tdsm.org/";
         internal const Int32 MinuteInterval = 1;
 
         private static System.Timers.Timer _timer;
@@ -62,6 +62,7 @@ namespace tdsm.core
                     req.Add("UUID", ConstructUUID());
                     req.Add("npc-def", Definitions.DefinitionManager.NPCVersion.ToString());
                     req.Add("item-def", Definitions.DefinitionManager.ItemVersion.ToString());
+                    req.Add("serviceto", ServerCore.Server.UniqueConnections.ToString());
 
                     if (PublishToList)
                     {

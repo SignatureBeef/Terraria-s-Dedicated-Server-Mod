@@ -14,6 +14,7 @@ namespace tdsm.api.Plugin
         public static readonly HookPoint<HookArgs.StartDefaultServer> StartDefaultServer;
         //public static readonly HookPoint<HookArgs.StatusTextChanged> StatusTextChanged;
         //public static readonly HookPoint<HookArgs.UpdateServer> UpdateServer;
+        public static readonly HookPoint<HookArgs.InvasionNPCSpawn> InvasionNPCSpawn;
 
         public static readonly HookPoint<HookArgs.NewConnection> NewConnection;
         public static readonly HookPoint<HookArgs.ServerStateChange> ServerStateChange;
@@ -128,6 +129,7 @@ namespace tdsm.api.Plugin
             ConfigurationLine = new HookPoint<HookArgs.ConfigurationLine>("config-line");
             AddBan = new HookPoint<HookArgs.AddBan>("add-ban");
             NPCSpawn = new HookPoint<HookArgs.NPCSpawn>("npc-spawn");
+            InvasionNPCSpawn = new HookPoint<HookArgs.InvasionNPCSpawn>("invasion-npc-spawn");
 
             ////Non API - but to seperate from the patcher
             //PatchServer = new HookPoint<HookArgs.PatchServer>("patch-server");
@@ -150,6 +152,12 @@ namespace tdsm.api.Plugin
             public int Y { get; set; }
             public int Type { get; set; }
             public int Start { get; set; }
+        }
+
+        public struct InvasionNPCSpawn
+        {
+            public int X { get; set; }
+            public int Y { get; set; }
         }
 
         public struct AddBan

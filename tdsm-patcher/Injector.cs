@@ -120,6 +120,36 @@ namespace tdsm.patcher
             }
         }
 
+        public void HookInvasions()
+        {
+            var serv = _asm.MainModule.Types.Where(x => x.Name == "NPC").First();
+            var main = serv.Methods.Where(x => x.Name == "SpawnNPC" && x.IsStatic).First();
+
+            var il = main.Body.GetILProcessor();
+            var callback = _self.MainModule.Types.Where(x => x.Name == "NPCCallback").First().Methods.Where(x => x.Name == "OnInvasionNPCSpawn").First();
+
+            var ins = main.Body.Instructions.Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "invasionType").ToArray()[1]; ;
+
+
+            /*ldloc.2
+		IL_14d1: ldc.i4.s 16
+		IL_14d3: mul
+		IL_14d4: ldc.i4.8
+		IL_14d5: add
+		IL_14d6: ldloc.3
+		IL_14d7: ldc.i4.s 16
+		IL_14d9: mul*/
+            il.InsertBefore(ins, il.Create(OpCodes.Ldloc_2));
+            il.InsertBefore(ins, il.Create(OpCodes.Ldc_I4, 16));
+            il.InsertBefore(ins, il.Create(OpCodes.Mul));
+            il.InsertBefore(ins, il.Create(OpCodes.Ldc_I4_8));
+            il.InsertBefore(ins, il.Create(OpCodes.Add));
+            il.InsertBefore(ins, il.Create(OpCodes.Ldloc_3));
+            il.InsertBefore(ins, il.Create(OpCodes.Ldc_I4, 16));
+            il.InsertBefore(ins, il.Create(OpCodes.Mul));
+            il.InsertBefore(ins, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+        }
+
         public void FixStatusTexts()
         {
             var serv = _asm.MainModule.Types.Where(x => x.Name == "WorldFile").First();
