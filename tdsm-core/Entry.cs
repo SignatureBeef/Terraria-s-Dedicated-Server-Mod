@@ -318,19 +318,19 @@ namespace tdsm.core
 
             AddCommand("npcspawning")
                 .WithDescription("Turn NPC spawning on or off.")
-                .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("Usage:   npcspawning true|false")
                 .WithPermissionNode("tdsm.npcspawning")
                 .Calls(this.NPCSpawning);
 
             AddCommand("invasion")
                 .WithDescription("Begins an invasion")
-                .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("Usage:   invasion golbin|frost|pirate")
                 .WithHelpText("         invasion -custom <npc id or name> <npc id or name> ...")
                 .WithHelpText("         invasion stop|end|cancel")
                 .WithPermissionNode("tdsm.npcspawning")
-                .Calls(this.NPCSpawning);
+                .Calls(this.invasion);
 
             if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
         }
