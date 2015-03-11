@@ -326,11 +326,11 @@ namespace tdsm.core
             AddCommand("invasion")
                 .WithDescription("Begins an invasion")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithHelpText("Usage:   invasion golbin|frost|pirate")
+                .WithHelpText("Usage:   invasion goblin|frost|pirate")
                 .WithHelpText("         invasion -custom <npc id or name> <npc id or name> ...")
                 .WithHelpText("         invasion stop|end|cancel")
                 .WithPermissionNode("tdsm.npcspawning")
-                .Calls(this.invasion);
+                .Calls(this.Invasion);
 
             if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
         }
