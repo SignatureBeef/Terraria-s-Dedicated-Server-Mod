@@ -168,8 +168,8 @@ namespace tdsm.core
             AddCommand("itemrej")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Manage item rejections")
-                .WithHelpText("Usage:    itemrej -add|-remove <id:name>")
-                .WithHelpText("          itemrej -clear")
+                .WithHelpText("-add|-remove <id:name>")
+                .WithHelpText("-clear")
                 .WithPermissionNode("tdsm.itemrej")
                 .Calls(this.ItemRejection);
 
@@ -301,6 +301,7 @@ namespace tdsm.core
 
             AddCommand("hardmode")
                 .WithAccessLevel(AccessLevel.OP)
+                .SetDefaultUsage()
                 .WithDescription("Enables hard mode.")
                 .WithPermissionNode("tdsm.hardmode")
                 .Calls(this.HardMode);
@@ -308,29 +309,29 @@ namespace tdsm.core
             AddCommand("rcon")
                 .WithDescription("Manage remote console access.")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
-                .WithHelpText("Usage:   rcon load       - reload login database")
-                .WithHelpText("         rcon list       - list rcon connections")
-                .WithHelpText("         rcon cut <name> - cut off rcon connections")
-                .WithHelpText("         rcon ban <name> - cut off rcon connections and revoke access")
-                .WithHelpText("         rcon add <name> <password> - add an rcon user")
+                .WithHelpText("load       - reload login database")
+                .WithHelpText("list       - list rcon connections")
+                .WithHelpText("cut <name> - cut off rcon connections")
+                .WithHelpText("ban <name> - cut off rcon connections and revoke access")
+                .WithHelpText("add <name> <password> - add an rcon user")
                 .WithPermissionNode("tdsm.rcon")
                 .Calls(RConServer.RConCommand);
 
             AddCommand("npcspawning")
                 .WithDescription("Turn NPC spawning on or off.")
-                .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
-                .WithHelpText("Usage:   npcspawning true|false")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithHelpText("npcspawning true|false")
                 .WithPermissionNode("tdsm.npcspawning")
                 .Calls(this.NPCSpawning);
 
             AddCommand("invasion")
                 .WithDescription("Begins an invasion")
-                .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
-                .WithHelpText("Usage:   invasion golbin|frost|pirate")
-                .WithHelpText("         invasion -custom <npc id or name> <npc id or name> ...")
-                .WithHelpText("         invasion stop|end|cancel")
-                .WithPermissionNode("tdsm.npcspawning")
-                .Calls(this.NPCSpawning);
+                .WithAccessLevel(AccessLevel.OP)
+                .WithHelpText("goblin|frost|pirate")
+                .WithHelpText("-custom <npc id or name> <npc id or name> ...")
+                .WithHelpText("stop|end|cancel")
+                .WithPermissionNode("tdsm.invasion")
+                .Calls(this.Invasion);
 
             if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
         }

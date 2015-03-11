@@ -479,8 +479,17 @@ namespace tdsm.api.Command
 			if (commands != null && commands.Count > 0)
 			{
 				int page = 0;
-				if (!args.TryGetInt (0, out page)) page = 0;
-				else page--;
+                if (!args.TryGetInt(0, out page))
+                {
+                    var command = args.GetString(0);
+                    if (commands.ContainsKey(command))
+                    {
+                        commands[command].ShowHelp(sender, true);
+                        return;
+                    }
+                    else throw new CommandError("No such command: " + command);
+                }
+                else page--;
 
 //				const Int32 MaxLines = 5;
 				var maxLines = sender is Player ? 5 : 15;

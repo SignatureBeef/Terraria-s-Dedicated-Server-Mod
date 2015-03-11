@@ -40,7 +40,7 @@ namespace tdsm.core
             if (Main.invasionType == 0)
             {
                 var custom = args.TryPop("-custom");
-                if (!custom)
+                if (custom)
                 {
                     if (args.Count > 0)
                     {

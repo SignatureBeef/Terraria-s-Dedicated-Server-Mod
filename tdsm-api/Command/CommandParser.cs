@@ -122,8 +122,14 @@ namespace tdsm.api.Command
             return this;
         }
 
-        public void ShowHelp(ISender sender)
+        public void ShowHelp(ISender sender, bool noHelp = false)
         {
+            if (helpText.Count == 0 && noHelp)
+            {
+                sender.SendMessage("No help text specified.");
+                return;
+            }
+
 #if Full_API
             if (!_oldHelpStyle)
             {
@@ -234,14 +240,17 @@ namespace tdsm.api.Command
 
 #if Full_API
             AddCommand("exit")
+                .SetDefaultUsage()
                 .WithDescription("Shutdown the server and save.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Exit);
             AddCommand("exit-nosave")
+                .SetDefaultUsage()
                 .WithDescription("Shutdown the server without saving.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.ExitNoSave);
             AddCommand("clear")
+                .SetDefaultUsage()
                 .WithDescription("Clear the console window.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Clear);
@@ -250,10 +259,12 @@ namespace tdsm.api.Command
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.MOTD);
             AddCommand("save")
+                .SetDefaultUsage()
                 .WithDescription("Save the game world.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Save);
             AddCommand("playing")
+                .SetDefaultUsage()
                 .WithDescription("Shows the list of players.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Playing);
@@ -270,42 +281,52 @@ namespace tdsm.api.Command
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Password);
             AddCommand("version")
+                .SetDefaultUsage()
                 .WithDescription("Print version number.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Version);
             AddCommand("maxplayers")
+                .SetDefaultUsage()
                 .WithDescription("Print the max number of players.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.MaxPlayers);
             AddCommand("time")
+                .SetDefaultUsage()
                 .WithDescription("Display game time.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Time);
             AddCommand("port")
+                .SetDefaultUsage()
                 .WithDescription("Print the listening port.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Port);
             AddCommand("dawn")
+                .SetDefaultUsage()
                 .WithDescription("Change time to dawn.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Dawn);
             AddCommand("noon")
+                .SetDefaultUsage()
                 .WithDescription("Change time to noon.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Noon);
             AddCommand("dusk")
+                .SetDefaultUsage()
                 .WithDescription("Change time to dusk.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Dusk);
             AddCommand("midnight")
+                .SetDefaultUsage()
                 .WithDescription("Change time to midnight.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Midnight);
             AddCommand("settle")
+                .SetDefaultUsage()
                 .WithDescription("Settle all water.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.Settle);
             AddCommand("fps")
+                .SetDefaultUsage()
                 .WithDescription("Toggle FPS monitoring.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(DefaultCommands.FPS);
@@ -313,7 +334,6 @@ namespace tdsm.api.Command
             AddCommand("help")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Displays the commands available to the user.")
-                .SetDefaultUsage()
                 .WithPermissionNode("tdsm.help")
                 .Calls(DefaultCommands.ShowHelp);
             AddCommand("plugins")

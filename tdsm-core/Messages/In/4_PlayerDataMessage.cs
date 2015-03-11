@@ -159,8 +159,6 @@ namespace tdsm.core.Messages.In
 
             data.Apply(player);
 
-            Server.AddUniqueConnection(data.Name, address);
-
             if (connecting)
                 if (ctx.Result == HookResult.ASK_PASS)
                 {

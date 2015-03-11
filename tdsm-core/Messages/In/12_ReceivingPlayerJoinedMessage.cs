@@ -60,6 +60,8 @@ namespace tdsm.core.Messages.In
                 }
                 NewNetMessage.SendData(74, whoAmI, -1, Main.player[whoAmI].name, Main.anglerQuest, 0f, 0f, 0f, 0);
             }
+
+            Server.AddUniqueConnection(player.Name, player.IPAddress.Split(':')[0]);
         }
     }
 }

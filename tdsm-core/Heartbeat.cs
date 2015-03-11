@@ -59,15 +59,17 @@ namespace tdsm.core
                     req.Add("API", Globals.Build.ToString());
                     req.Add("Core", _coreBuild.ToString());
                     req.Add("Platform", ((int)Platform.Type).ToString());
+                    req.Add("OSPlatform", ((int)Environment.OSVersion.Platform).ToString());
                     req.Add("UUID", ConstructUUID());
-                    req.Add("npc-def", Definitions.DefinitionManager.NPCVersion.ToString());
-                    req.Add("item-def", Definitions.DefinitionManager.ItemVersion.ToString());
-                    req.Add("serviceto", ServerCore.Server.UniqueConnections.ToString());
+                    req.Add("NPCDef", Definitions.DefinitionManager.NPCVersion.ToString());
+                    req.Add("ItemDef", Definitions.DefinitionManager.ItemVersion.ToString());
+                    req.Add("ServiceTo", ServerCore.Server.UniqueConnections.ToString());
 
                     if (PublishToList)
                     {
                         req.Add("Port", Terraria.Netplay.serverPort.ToString());
                         req.Add("MaxPlayers", Terraria.Main.maxPlayers.ToString());
+                        req.Add("ConnectedPlayers", ServerCore.ClientConnection.All.Count.ToString());
 
                         if (!String.IsNullOrEmpty(ServerName)) req.Add("Name", ServerName);
                         if (!String.IsNullOrEmpty(ServerDescription)) req.Add("Desc", ServerDescription);
@@ -157,6 +159,7 @@ namespace tdsm.core
             var str = String.Empty;
 
             str += Terraria.Netplay.serverPort;
+            str += Environment.MachineName;
 
             using (var hasher = new SHA256Managed())
             {
