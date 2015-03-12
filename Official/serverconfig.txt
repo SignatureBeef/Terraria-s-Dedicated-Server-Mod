@@ -16,7 +16,7 @@
 #-noupnp					Disables automatic port forwarding
 
 #Set’s the max number of players allowed on a server.  Value must be between 1 and 255
-#maxplayers=8
+maxplayers=8
 
 #Load a world and automatically start the server.
 #world=C:\Users\Defaults\My Documents\My Games\Terraria\Worlds\world1.wld

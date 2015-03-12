@@ -333,6 +333,19 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.invasion")
                 .Calls(this.Invasion);
 
+            //Template for when we have more plugins
+            //AddCommand("repo")
+            //    .WithDescription("The tdsm update repository")
+            //    .WithAccessLevel(AccessLevel.OP)
+            //    .WithHelpText("status       - Displays plugins out of date")
+            //    .WithHelpText("definitions  - Update NPC and Item definitions")
+            //    .WithHelpText("updatetest   - Tests if your plugins are compatible with the latest TDSM")
+            //    .WithHelpText("search <search params> - Browse the repository")
+            //    .WithHelpText("update <plugin name>|-all  - Update a particular plugin or all")
+            //    .WithHelpText("install <plugin name>  - Installs a plugin")
+            //    .WithPermissionNode("tdsm.repo")
+            //    .Calls(this.Repository);
+
             if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
         }
 

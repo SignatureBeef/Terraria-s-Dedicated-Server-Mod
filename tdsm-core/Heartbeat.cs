@@ -1,6 +1,7 @@
 ﻿#define ENABLED
 
 using System;
+using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -31,7 +32,7 @@ namespace tdsm.core
         public static string ServerDescription { get; set; }
 
         [Flags]
-        enum UpdateReady : byte
+        public enum UpdateReady : byte
         {
             API = 1,
             Core = 2,
@@ -40,13 +41,96 @@ namespace tdsm.core
             PluginOutOfDate = 16
         }
 
-        enum ResponseCode : byte
+        public enum ResponseCode : byte
         {
             UpToDate = 0,
             UpdateReady = 1,
+            ServerKey = 2,
 
             //Maybe a notice (flag for server/console and players - must be allowed in config)
             StringResponse = 255
+        }
+
+        private static string _serverKey = GetServerKey();
+        static string GetServerKey()
+        {
+            var file = Path.Combine(Globals.DataPath, "server.key");
+            if (File.Exists(file))
+            {
+                var key = File.ReadAllText(file);
+                if (key.Length == 36) return key;
+            }
+            return null;
+        }
+        static void SetServerKey(string key)
+        {
+            var file = Path.Combine(Globals.DataPath, "server.key");
+            if (File.Exists(file))
+                File.Delete(file);
+
+            File.WriteAllText(file, key);
+            _serverKey = key;
+        }
+
+        struct BufferReader
+        {
+            public byte[] DataBuffer;
+            public int Index;
+
+            public BufferReader(byte[] buff)
+            {
+                DataBuffer = buff;
+                Index = 0;
+            }
+
+            //public static implicit operator byte[](BufferReader bb);
+            //{
+            //    return bb.Buffer;
+            //}
+            public static implicit operator BufferReader(byte[] b)
+            {
+                return new BufferReader(b);
+            }
+
+            public ResponseCode ReadResponseCode()
+            {
+                return (ResponseCode)DataBuffer[Index++];
+            }
+
+            public UpdateReady ReadUpdateReady()
+            {
+                return (UpdateReady)DataBuffer[Index++];
+            }
+
+            public int ReadInt32()
+            {
+                Index += 4;
+                return BitConverter.ToInt32(DataBuffer, Index - 4);
+            }
+
+            public string ReadString(int length = 0)
+            {
+                int len = length > 0 ? length : DataBuffer.Length - Index;
+                if (len > 0)
+                {
+                    var dta = new byte[len];
+                    Buffer.BlockCopy(DataBuffer, Index, dta, 0, dta.Length);
+                    return Encoding.UTF8.GetString(dta);
+                }
+                return null;
+            }
+
+            public string ReadStringByDef()
+            {
+                int len = ReadInt32();
+                if (len > 0)
+                {
+                    var dta = new byte[len];
+                    Buffer.BlockCopy(DataBuffer, Index, dta, 0, dta.Length);
+                    return Encoding.UTF8.GetString(dta);
+                }
+                return null;
+            }
         }
 
         static void Beat()
@@ -60,7 +144,7 @@ namespace tdsm.core
                     req.Add("Core", _coreBuild.ToString());
                     req.Add("Platform", ((int)Platform.Type).ToString());
                     req.Add("OSPlatform", ((int)Environment.OSVersion.Platform).ToString());
-                    req.Add("UUID", ConstructUUID());
+                    if (!String.IsNullOrEmpty(_serverKey)) req.Add("UUID", _serverKey);
                     req.Add("NPCDef", Definitions.DefinitionManager.NPCVersion.ToString());
                     req.Add("ItemDef", Definitions.DefinitionManager.ItemVersion.ToString());
                     req.Add("ServiceTo", ServerCore.Server.UniqueConnections.ToString());
@@ -68,7 +152,7 @@ namespace tdsm.core
                     if (PublishToList)
                     {
                         req.Add("Port", Terraria.Netplay.serverPort.ToString());
-                        req.Add("MaxPlayers", Terraria.Main.maxPlayers.ToString());
+                        req.Add("MaxPlayers", Terraria.Main.maxNetPlayers.ToString());
                         req.Add("ConnectedPlayers", ServerCore.ClientConnection.All.Count.ToString());
 
                         if (!String.IsNullOrEmpty(ServerName)) req.Add("Name", ServerName);
@@ -81,15 +165,14 @@ namespace tdsm.core
                     var data = wc.UploadValues(EndPoint, "POST", req);
                     if (data != null && data.Length > 0)
                     {
-                        switch ((ResponseCode)data[0])
+                        var reader = (BufferReader)data;
+                        switch (reader.ReadResponseCode())
                         {
                             case ResponseCode.UpToDate:
                                 //We're online - all up to date
                                 try
                                 {
-                                    var dta = new byte[data.Length - 1];
-                                    Buffer.BlockCopy(data, 1, dta, 0, dta.Length);
-                                    var str = Encoding.UTF8.GetString(dta);
+                                    var str = reader.ReadString();
                                     if (!String.IsNullOrEmpty(str))
                                     {
                                         ProgramLog.Log("Heartbeat Sent: " + str);
@@ -98,28 +181,43 @@ namespace tdsm.core
                                 catch { }
                                 break;
                             case ResponseCode.UpdateReady:
-                                var flag = (UpdateReady)data[1];
+                                var flag = reader.ReadUpdateReady();
 
                                 var updates = String.Empty;
-                                if ((flag & UpdateReady.API) != 0) updates += "TDSM API";
-                                if ((flag & UpdateReady.Core) != 0) updates += (updates.Length > 0 ? ", " : String.Empty) + "TDSM Core";
+                                if ((flag & UpdateReady.API) != 0) updates += "API";
+                                if ((flag & UpdateReady.Core) != 0) updates += (updates.Length > 0 ? ", " : String.Empty) + "Core";
                                 if ((flag & UpdateReady.NPCDefinitions) != 0) updates += (updates.Length > 0 ? ", " : String.Empty) + "NPC definitions";
                                 if ((flag & UpdateReady.ItemDefinitions) != 0) updates += (updates.Length > 0 ? ", " : String.Empty) + "Item definitions";
 
                                 if ((flag & UpdateReady.PluginOutOfDate) != 0)
                                 {
-                                    //Read how many
-                                    //for each
-                                    //  Read name
+                                    var len = reader.ReadInt32();
+                                    //for (var x = 0; x < len; x++)
+                                    //{
+                                    //    var name = reader.ReadStringByDef();
+                                    //    if (!String.IsNullOrEmpty(name)) updates += (updates.Length > 0 ? ", " : String.Empty) + name;
+                                    //}
+                                    updates += (updates.Length > 0 ? ", " : String.Empty) + len + " plugin(s)";
                                 }
 
-                                Tools.NotifyAllOps("New updates have been found for: " + updates);
-                                //Tools.NotifyAllOps("Updates are ready for: " + updates + ", 2 plugins(s)"); Future use
+                                Tools.NotifyAllOps("Updates are ready for: " + updates);
+                                break;
+                            case ResponseCode.ServerKey:
+                                try
+                                {
+                                    var str = reader.ReadString();
+                                    if (!String.IsNullOrEmpty(str) && str.Length == 36)
+                                    {
+                                        SetServerKey(str);
+                                        Beat();
+                                    }
+                                }
+                                catch { }
                                 break;
                             case ResponseCode.StringResponse:
                                 try
                                 {
-                                    var str = Encoding.UTF8.GetString(data);
+                                    var str = reader.ReadString();
                                     if (!String.IsNullOrEmpty(str))
                                     {
                                         ProgramLog.Log("Heartbeat Sent: " + str);
@@ -131,7 +229,7 @@ namespace tdsm.core
                                 ProgramLog.Log("Invalid heartbeat response.");
                                 try
                                 {
-                                    var str = Encoding.UTF8.GetString(data);
+                                    var str = reader.ReadString();
                                     if (!String.IsNullOrEmpty(str))
                                     {
                                         ProgramLog.Log("Heartbeat Sent: " + str);

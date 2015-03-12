@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="BasePlayer.cs" />
     <Compile Include="Callbacks\Net.cs" />
+    <Compile Include="Command\PluginRepo.cs" />
     <Compile Include="Command\Invasion.cs" />
     <Compile Include="Command\Commands.cs" />
     <Compile Include="Definitions\DefinitionManager.cs" />
