@@ -639,6 +639,9 @@ namespace tdsm.core
                 case "server-list-desc":
                     Heartbeat.ServerDescription = args.Value;
                     break;
+                case "server-list-domain":
+                    Heartbeat.ServerDomain = args.Value;
+                    break;
                 case "rcon-hash-nonce":
                     RConHashNonce = args.Value;
                     break;

@@ -77,6 +77,9 @@ server-list-name=TDSM Server
 #Description to use on the server list
 server-list-desc=This is an example of the description for use in the TDSM Server List.\n\nHello World!
 
+#Instead of displaying the IP, opt to display your domain
+server-list-domain=tdsm.org
+
 #Address for the Remote Console server to bind to
 rcon-bind-address=127.0.0.1:7023
 

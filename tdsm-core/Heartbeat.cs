@@ -30,6 +30,7 @@ namespace tdsm.core
         public static bool PublishToList { get; set; }
         public static string ServerName { get; set; }
         public static string ServerDescription { get; set; }
+        public static string ServerDomain { get; set; }
 
         [Flags]
         public enum UpdateReady : byte
@@ -157,6 +158,7 @@ namespace tdsm.core
 
                         if (!String.IsNullOrEmpty(ServerName)) req.Add("Name", ServerName);
                         if (!String.IsNullOrEmpty(ServerDescription)) req.Add("Desc", ServerDescription);
+                        if (!String.IsNullOrEmpty(ServerDomain)) req.Add("Domain", ServerDomain);
                     }
 
                     //TODO; Maybe plugin versions
