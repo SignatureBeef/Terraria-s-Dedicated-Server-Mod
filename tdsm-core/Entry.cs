@@ -698,6 +698,10 @@ namespace tdsm.core
                 {
                     ProgramLog.Log("Starting Web Server");
                     WebInterface.WebServer.Begin(_webServerAddress, _webServerProvider);
+
+                    AddCommand("webauth")
+                        .WithAccessLevel(AccessLevel.OP)
+                        .Calls(WebInterface.WebServer.WebAuthCommand);
                 }
             }
 

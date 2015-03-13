@@ -1,10 +1,13 @@
-﻿//#define ENABLED
+﻿#define ENABLED
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
+using tdsm.api.Command;
+using tdsm.core.Logging;
 using tdsm.core.ServerCore;
 using tdsm.core.WebInterface.Auth;
 
@@ -25,6 +28,14 @@ namespace tdsm.core.WebInterface
     public static class WebServer
     {
         static IHttpAuth Authentication;
+
+        public static Action<ISender, ArgumentList> WebAuthCommand
+        {
+            get
+            {
+                return (Authentication as HttpDigestAuth).WebAuthCommand;
+            }
+        }
 
         /// <summary>
         /// The name of the host to show to the web user

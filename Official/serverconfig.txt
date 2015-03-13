@@ -68,7 +68,7 @@ vanilla-linux=false
 #Allows communication to the TDSM server
 heartbeat=true
 
-#true to show on the server list
+#true to show on the server list, heartbeat must be enabled.
 server-list=true
 
 #Name on server list
@@ -84,6 +84,7 @@ server-list-domain=tdsm.org
 rcon-bind-address=127.0.0.1:7023
 
 #Remote console random hashing key, set to something completely random. This is used to hash your user/passwords so if you change it will invalidate all logins.
+#If this is not specified one will be generated and stored in Data\rcon.nonce
 #rcon-hash-nonce=
 
 #The address that the web server should listen on, to disable simply comment the line out.

@@ -3,7 +3,6 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using tdsm.api;
 using tdsm.api.Misc;
@@ -21,7 +20,7 @@ namespace tdsm.core
     public static class Heartbeat
     {
         internal const String EndPoint = "http://heartbeat.tdsm.org/";
-        internal const Int32 MinuteInterval = 1;
+        internal const Double MinuteInterval = 5;
 
         private static System.Timers.Timer _timer;
         private static int _coreBuild;
@@ -84,10 +83,6 @@ namespace tdsm.core
                 Index = 0;
             }
 
-            //public static implicit operator byte[](BufferReader bb);
-            //{
-            //    return bb.Buffer;
-            //}
             public static implicit operator BufferReader(byte[] b)
             {
                 return new BufferReader(b);
@@ -116,6 +111,7 @@ namespace tdsm.core
                 {
                     var dta = new byte[len];
                     Buffer.BlockCopy(DataBuffer, Index, dta, 0, dta.Length);
+                    Index += len;
                     return Encoding.UTF8.GetString(dta);
                 }
                 return null;
@@ -123,14 +119,7 @@ namespace tdsm.core
 
             public string ReadStringByDef()
             {
-                int len = ReadInt32();
-                if (len > 0)
-                {
-                    var dta = new byte[len];
-                    Buffer.BlockCopy(DataBuffer, Index, dta, 0, dta.Length);
-                    return Encoding.UTF8.GetString(dta);
-                }
-                return null;
+                return ReadString(ReadInt32());
             }
         }
 
@@ -250,23 +239,23 @@ namespace tdsm.core
             }
         }
 
-        /// <summary>
-        /// Used to construct a consistent id, meerly to detect multiple servers on the same IP (e.g. different port)
-        /// </summary>
-        /// <returns></returns>
-        static string ConstructUUID()
-        {
-            var str = String.Empty;
+        ///// <summary>
+        ///// Used to construct a consistent id, meerly to detect multiple servers on the same IP (e.g. different port)
+        ///// </summary>
+        ///// <returns></returns>
+        //static string ConstructUUID()
+        //{
+        //    var str = String.Empty;
 
-            str += Terraria.Netplay.serverPort;
-            str += Environment.MachineName;
+        //    str += Terraria.Netplay.serverPort;
+        //    str += Environment.MachineName;
 
-            using (var hasher = new SHA256Managed())
-            {
-                var output = hasher.ComputeHash(Encoding.UTF8.GetBytes(str));
-                return BitConverter.ToString(output).Replace("-", String.Empty);
-            }
-        }
+        //    using (var hasher = new SHA256Managed())
+        //    {
+        //        var output = hasher.ComputeHash(Encoding.UTF8.GetBytes(str));
+        //        return BitConverter.ToString(output).Replace("-", String.Empty);
+        //    }
+        //}
 
         public static void Begin(int coreBuild)
         {
@@ -274,12 +263,17 @@ namespace tdsm.core
             if (_timer == null)
             {
                 _coreBuild = coreBuild;
-                _timer = new System.Timers.Timer(10 * 1000); //1000 * 60 * MinuteInterval);
-                _timer.Elapsed += (e, a) =>
+                _timer = new System.Timers.Timer(1000 * 60 * MinuteInterval);
+                var callback = new System.Timers.ElapsedEventHandler((e, a) =>
                 {
                     if (Enabled) Beat();
-                };
+                });
+                _timer.Elapsed += callback;
                 _timer.Start();
+                callback.BeginInvoke(null, null, new AsyncCallback((result) =>
+                {
+                    (result.AsyncState as System.Timers.ElapsedEventHandler).EndInvoke(result);
+                }), callback);
                 Enabled = true;
             }
             else if (!_timer.Enabled) _timer.Enabled = true;

@@ -77,27 +77,68 @@ SECTION#LoginScreen {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cfe7fa', endColorstr='#6393c1',GradientType=1 );
 }
 
-    SECTION#LoginScreen > DIV {
-        width: 50%;
-        margin-top: 50px;
-        margin-left: auto;
-        margin-right: auto;
+SECTION#AdminInterface {
+    top: 25px;
+    background: #ffffff;
+    background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
+    background: -webkit-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: -o-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: -ms-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
+}
+
+    SECTION#AdminInterface > NAV > UL {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        width: 200px;
+        border-right: 1px solid #aaa;
+        height: 100%;
+        position: absolute;
     }
 
-        SECTION#LoginScreen > DIV > LABEL {
+        SECTION#AdminInterface > NAV > UL > LI, SECTION#AdminInterface > NAV > UL > LI > A {
             display: block;
-            font-size: 20px;
         }
 
-        SECTION#LoginScreen > DIV > INPUT {
-            padding: 5px;
-            border: 1px solid #ccc;
-            min-width: 150px;
-            width: 100%;
-            display: block;
-            font-size: 17px;
-            margin-bottom: 5px;
-        }
+            SECTION#AdminInterface > NAV > UL > LI > A {
+                padding: 5px;
+                border-bottom: 1px solid #ddd;
+                border-top: 1px solid #fff;
+            }
+
+            SECTION#AdminInterface > NAV > UL > LI:first-child > A {
+                border-top: none;
+            }
+
+            SECTION#AdminInterface > NAV > UL > LI > A:hover {
+                border-bottom: 1px solid #ccc;
+                background: rgba(0,0,0,.1);
+            }
+
+SECTION#LoginScreen > DIV {
+    width: 50%;
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    SECTION#LoginScreen > DIV > LABEL {
+        display: block;
+        font-size: 20px;
+    }
+
+    SECTION#LoginScreen > DIV > INPUT {
+        padding: 5px;
+        border: 1px solid #ccc;
+        min-width: 150px;
+        width: 100%;
+        display: block;
+        font-size: 17px;
+        margin-bottom: 5px;
+    }
 
 .button-common {
     background: #6181C5;

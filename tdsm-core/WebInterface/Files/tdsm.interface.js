@@ -6,14 +6,28 @@ Interface.prototype.init = function () {
     this.header = $('HEADER');
     this.window = $('SECTION#InterfaceWindow');
     this.loginscreen = $('SECTION#LoginScreen');
+    this.adminscreen = $('SECTION#AdminInterface');
 
     this.header.hide();
     this.loginscreen.hide();
+    this.adminscreen.hide();
 };
 
 Interface.prototype.welcome = function () {
     if (this.window.is(':visible')) this.window.fadeOut();
     if (this.loginscreen.is(':visible')) this.loginscreen.fadeOut();
+
+    return this.modal({
+        html: 'Loading interface, please wait...'
+    });
+};
+
+Interface.prototype.admin = function () {
+    if (this.window.is(':visible')) this.window.fadeOut();
+    if (this.loginscreen.is(':visible')) this.loginscreen.fadeOut();
+
+    this.adminscreen.fadeIn();
+    this.current = this.adminscreen;
     return this.modal({
         html: 'Loading interface, please wait...'
     });
@@ -26,6 +40,7 @@ Interface.prototype.login = function () {
     btn[0].username = this.loginscreen.find('INPUT#LoginUserName');
     btn[0].password = this.loginscreen.find('INPUT#LoginPassword');
 
+    this.current = this.loginscreen;
     btn.click(function (evt) {
         evt.preventDefault();
         this.disabled = true;
@@ -43,11 +58,14 @@ Interface.prototype.login = function () {
                 overlay.show();
                 TFramework.Net.Login(user, pass, function (info) {
                     overlay.remove();
+                    btn[0].disabled = false;
+                    console.log(info);
                     if (info) {
-
+                        TInterface.current.find('.ui-error').html('');
+                        TInterface.admin();
                     }
                     else {
-
+                        TInterface.current.find('.ui-error').html('Invalid login.');
                     }
                 });
             }

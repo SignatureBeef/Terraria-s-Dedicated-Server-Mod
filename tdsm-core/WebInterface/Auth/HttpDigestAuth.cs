@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using tdsm.api.Command;
 using tdsm.api.Misc;
 namespace tdsm.core.WebInterface.Auth
 {
@@ -42,6 +43,14 @@ namespace tdsm.core.WebInterface.Auth
                 builder.Append(data[i].ToString("x2"));
 
             return builder.ToString();
+        }
+
+        public void WebAuthCommand(ISender sender, ArgumentList args)
+        {
+            if (args.TryPop("clear"))
+            {
+                _lastNonceLookup.Clear();
+            }
         }
 
         public string Authenticate(WebRequest request)
