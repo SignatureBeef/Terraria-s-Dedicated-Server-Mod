@@ -52,8 +52,8 @@ namespace tdsm.core.WebInterface
 
         //        public static readonly string HtmlDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "WebInterface", "Files");
         //		public static readonly string HtmlDirectory = @"C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\tdsm-core\WebInterface\Files";
-        //public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"/../../../../tdsm-core/WebInterface/Files");
-        public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\..\..\tdsm-core\WebInterface\Files");
+        public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"/../../../../tdsm-core/WebInterface/Files");
+//        public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\..\..\tdsm-core\WebInterface\Files");
 
         //public static bool RegisterModule(string path)
         //{
@@ -210,18 +210,18 @@ namespace tdsm.core.WebInterface
         }
 
         private static FileInfo GetEncapsulated(WebRequest request)
-        {
+		{
             if (request.Path != null)
             {
                 var url = request.Path;
                 if (url == "/") url = "index.html";
                 url = url.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-                while (url.StartsWith("\\")) url = url.Remove(0, 1);
+				while (url.StartsWith("\\") || url.StartsWith("/")) url = url.Remove(0, 1);
                 var local = Path.Combine(WebServer.HtmlDirectory, url);
 
                 if (Path.GetFullPath(local).StartsWith(WebServer.HtmlDirectory))
-                    return new FileInfo(local);
-            }
+					return new FileInfo(local);
+			}
             return null;
         }
 
