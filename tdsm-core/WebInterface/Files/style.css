@@ -89,6 +89,10 @@ SECTION#AdminInterface {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
 }
 
+    SECTION#AdminInterface > DIV {
+        padding-left: 200px;
+    }
+
     SECTION#AdminInterface > NAV > UL {
         margin: 0;
         padding: 0;
@@ -97,6 +101,7 @@ SECTION#AdminInterface {
         border-right: 1px solid #aaa;
         height: 100%;
         position: absolute;
+        left: 0px;
     }
 
         SECTION#AdminInterface > NAV > UL > LI, SECTION#AdminInterface > NAV > UL > LI > A {
@@ -154,5 +159,63 @@ SECTION#LoginScreen > DIV {
     }
 
     .button-common:focus {
+        color: #000;
+    }
+
+
+
+/* Plugins [TODO sperate] */
+.chat-box > TEXTAREA, .chat-box > INPUT {
+    display: block;
+    width: 99%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    padding: 0;
+    border: 1px solid #ccc;
+}
+
+.chat-box TEXTAREA {
+    min-height: 500px;
+    background: #fff;
+}
+
+.chat-box INPUT {
+    font-size: 16px;
+    padding: 5px 0;
+    width: 95%;
+    margin-left: .375%;
+    display: inline-block;
+}
+
+.chat-box BUTTON {
+    color: #333;
+    padding: 6px;
+    margin-left: 4px;
+    border: 1px solid #ccc;
+    background: #efefef;
+    font-size: 14px;
+    background: #ffffff;
+    background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
+    background: -webkit-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: -o-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: -ms-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
+}
+
+    .chat-box BUTTON:hover {
+        background: #f2f2f2;
+        background: -moz-linear-gradient(top, #f2f2f2 0%, #dadada 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f2f2), color-stop(100%,#dadada));
+        background: -webkit-linear-gradient(top, #f2f2f2 0%,#dadada 100%);
+        background: -o-linear-gradient(top, #f2f2f2 0%,#dadada 100%);
+        background: -ms-linear-gradient(top, #f2f2f2 0%,#dadada 100%);
+        background: linear-gradient(to bottom, #f2f2f2 0%,#dadada 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f2f2', endColorstr='#dadada',GradientType=0 );
+    }
+
+    .chat-box BUTTON:active {
         color: #000;
     }

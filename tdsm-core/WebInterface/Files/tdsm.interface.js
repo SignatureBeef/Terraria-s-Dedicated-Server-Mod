@@ -28,6 +28,52 @@ Interface.prototype.admin = function () {
 
     this.adminscreen.fadeIn();
     this.current = this.adminscreen;
+
+    this.adminscreen.find('NAV > UL').html('');
+    this.adminscreen.AddPanel = function (text, onTransition) {
+        var li = $('<li><a>' + text + '</a></li>');
+        this.find('NAV > UL').append(li);
+        li[0].onTransition = onTransition.bind(this);
+        li.click(function (evt) {
+            li[0].onTransition();
+        });
+
+        return li;
+    };
+    this.adminscreen.TransitionTo = function (to) {
+        var $to = $(to);
+        if (undefined !== this.current) this.current.fadeOut(function () {
+            var parent = $(this).parent();
+            $(this).remove();
+            $to.hide();
+            parent.append($to);
+            $to.fadeIn();
+        });
+        else {
+            $to.hide();
+            this.find(' > DIV').append($to);
+            $to.fadeIn();
+        }
+
+        this.current = $to;
+    };
+
+    this.adminscreen.AddPanel('Server Overview', function () {
+        this.TransitionTo('<div><table><tr><td>World Name</td><td class="cfg-worldname"></td></tr></table></div>');
+
+        //Load information
+    }).click();
+    this.adminscreen.AddPanel('Chat', function () {
+        this.TransitionTo('<div class="chat-box"><textarea disabled></textarea> <input /><button>Send</button></div>');
+
+        //Load information
+    });
+    this.adminscreen.AddPanel('Configuration', function () {
+        this.TransitionTo('<div>CONFIG</div>');
+
+        //Load information
+    });
+
     return this.modal({
         html: 'Loading interface, please wait...'
     });
@@ -62,6 +108,7 @@ Interface.prototype.login = function () {
                     console.log(info);
                     if (info) {
                         TInterface.current.find('.ui-error').html('');
+                        TInterface.setHeader(window.settings.provider + ' control panel');
                         TInterface.admin();
                     }
                     else {
@@ -162,7 +209,7 @@ function OnPageReady() {
                     core: info.core,
                     provider: info.provider
                 };
-                TInterface.setHeader(info.provider + ' server login');
+                TInterface.setHeader(window.settings.provider + ' server login');
                 TFramework.Debug.Log('Settings aquired');
 
                 TInterface.login();

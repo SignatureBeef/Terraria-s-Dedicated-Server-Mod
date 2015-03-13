@@ -69,7 +69,7 @@ vanilla-linux=false
 heartbeat=true
 
 #true to show on the server list, heartbeat must be enabled.
-server-list=true
+#server-list=true
 
 #Name on server list
 server-list-name=TDSM Server
