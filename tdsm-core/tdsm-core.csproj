@@ -52,7 +52,7 @@
     <Reference Include="Mono.Cecil">
       <HintPath>..\Binaries\Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="tdsm.microsoft">
+    <Reference Include="tdsm">
       <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.microsoft.exe</HintPath>
     </Reference>
   </ItemGroup>

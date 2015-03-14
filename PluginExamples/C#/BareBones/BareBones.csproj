@@ -28,11 +28,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="tdsm.api, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="tdsm.api">
       <HintPath>..\..\..\Binaries\tdsm.api.dll</HintPath>
     </Reference>
-    <Reference Include="tdsm.microsoft">
+    <Reference Include="tdsm">
       <HintPath>..\..\..\Binaries\tdsm.microsoft.exe</HintPath>
     </Reference>
   </ItemGroup>
