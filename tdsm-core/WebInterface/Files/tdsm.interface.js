@@ -40,38 +40,46 @@ Interface.prototype.admin = function () {
 
         return li;
     };
-    this.adminscreen.TransitionTo = function (to) {
-        var $to = $(to);
+    this.adminscreen.TransitionTo = function (to, onTransitioned) {
+        var $to = 'object' == typeof (to) && 'jquery' in to && 'selector' in to ? to : $(to);
         if (undefined !== this.current) this.current.fadeOut(function () {
             var parent = $(this).parent();
             $(this).remove();
             $to.hide();
             parent.append($to);
             $to.fadeIn();
+            if (onTransitioned) onTransitioned($to);
         });
         else {
             $to.hide();
             this.find(' > DIV').append($to);
             $to.fadeIn();
+            if (onTransitioned) onTransitioned($to);
         }
 
         this.current = $to;
+        return $to;
     };
 
     this.adminscreen.AddPanel('Server Overview', function () {
-        this.TransitionTo('<div><table><tr><td>World Name</td><td class="cfg-worldname"></td></tr></table></div>');
-
-        //Load information
+        this.TransitionTo('<div><table><tr><td>World Name</td><td class="cfg-worldname"></td></tr></table></div>', function (panel) {
+            //Load information
+        });
     }).click();
     this.adminscreen.AddPanel('Chat', function () {
-        this.TransitionTo('<div class="chat-box"><textarea disabled></textarea> <input /><button>Send</button></div>');
-
-        //Load information
+        var panel = this.TransitionTo('<div class="chat-box"><textarea disabled></textarea> <input /><button>Send</button></div>', function (panel) {
+            //Load information
+        });
     });
     this.adminscreen.AddPanel('Configuration', function () {
-        this.TransitionTo('<div>CONFIG</div>');
-
-        //Load information
+        var panel = this.TransitionTo('<div>CONFIG</div>', function (panel) {
+            //Load information
+        });
+    });
+    this.adminscreen.AddPanel('File Browser', function () {
+        var panel = this.TransitionTo('<div>...</div>', function (panel) {
+            //Load information
+        });
     });
 
     return this.modal({
