@@ -1712,30 +1712,39 @@ namespace tdsm.core
                     break;
                 case "desc":
                     string d;
-                    if (args.TryParseOne<String>(out d))
+                    if (!args.TryParseOne<String>(out d))
                     {
                         Heartbeat.ServerDescription = d;
                         sender.SendMessage("Description set to: " + Heartbeat.ServerDescription);
                     }
-                    else sender.SendMessage("Current description: " + Heartbeat.ServerDescription);
+                    else
+                    {
+                        sender.SendMessage("Current description: " + Heartbeat.ServerDescription);
+                    }
                     break;
                 case "name":
                     string n;
-                    if (args.TryParseOne<String>(out n))
+                    if (!args.TryParseOne<String>(out n))
                     {
                         Heartbeat.ServerName = n;
                         sender.SendMessage("Name set to: " + Heartbeat.ServerName);
                     }
-                    else sender.SendMessage("Current name: " + Heartbeat.ServerName);
+                    else
+                    {
+                        sender.SendMessage("Current name: " + Heartbeat.ServerName);
+                    }
                     break;
                 case "domain":
                     string h;
-                    if (args.TryParseOne<String>(out h))
+                    if (!args.TryParseOne<String>(out h))
                     {
                         Heartbeat.ServerDomain = h;
                         sender.SendMessage("Domain set to: " + Heartbeat.ServerDomain);
                     }
-                    else sender.SendMessage("Current domain: " + Heartbeat.ServerDomain);
+                    else
+                    {
+                        sender.SendMessage("Current domain: " + Heartbeat.ServerDomain);
+                    }
                     break;
                 default:
                     throw new CommandError("Not a supported serverlist command " + first);
