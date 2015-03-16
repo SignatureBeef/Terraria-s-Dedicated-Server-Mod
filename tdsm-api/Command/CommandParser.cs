@@ -126,7 +126,8 @@ namespace tdsm.api.Command
         {
             if (helpText.Count == 0 && noHelp)
             {
-                sender.SendMessage("No help text specified.");
+                // Disabled this since it's not needed. There will usually be a description. But there should be some checks on if these are actually set, especially for plugins.
+                //sender.SendMessage("No help text specified.");
                 return;
             }
 
