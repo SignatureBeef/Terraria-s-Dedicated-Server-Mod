@@ -1714,7 +1714,7 @@ namespace tdsm.core
                     string d;
                     if (!args.TryParseOne<String>(out d))
                     {
-                        Heartbeat.ServerDescription = d;
+                        Heartbeat.ServerDescription = args[1]; // Set to args[1] because d contains null.
                         sender.SendMessage("Description set to: " + Heartbeat.ServerDescription);
                     }
                     else
@@ -1726,7 +1726,7 @@ namespace tdsm.core
                     string n;
                     if (!args.TryParseOne<String>(out n))
                     {
-                        Heartbeat.ServerName = n;
+                        Heartbeat.ServerName = args[1]; // Set to args[1] because d contains null.
                         sender.SendMessage("Name set to: " + Heartbeat.ServerName);
                     }
                     else
@@ -1738,7 +1738,7 @@ namespace tdsm.core
                     string h;
                     if (!args.TryParseOne<String>(out h))
                     {
-                        Heartbeat.ServerDomain = h;
+                        Heartbeat.ServerDomain = args[1]; // Set to args[1] because d contains null.
                         sender.SendMessage("Domain set to: " + Heartbeat.ServerDomain);
                     }
                     else
