@@ -1688,5 +1688,58 @@ namespace tdsm.core
                 }
             }
         }
+        /// <summary>
+        /// Manages the server list
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public void ServerList(ISender sender, ArgumentList args)
+        {
+            var first = args.GetString(0);
+            switch (first)
+            {
+                case "enable":
+                    Heartbeat.Begin(CoreBuild);
+                    sender.SendMessage("Heartbeat enabled to the TDSM server.");
+                    break;
+                case "disable":
+                    Heartbeat.End();
+                    sender.SendMessage("Heartbeat disabled to the TDSM server.");
+                    break;
+                case "public":
+                    Heartbeat.PublishToList = args.GetBool(1);
+                    sender.SendMessage("Server list is now " + (Heartbeat.PublishToList ? "public" : "private"));
+                    break;
+                case "desc":
+                    string d;
+                    if (args.TryParseOne<String>(out d))
+                    {
+                        Heartbeat.ServerDescription = d;
+                        sender.SendMessage("Description set to: " + Heartbeat.ServerDescription);
+                    }
+                    else sender.SendMessage("Current description: " + Heartbeat.ServerDescription);
+                    break;
+                case "name":
+                    string n;
+                    if (args.TryParseOne<String>(out n))
+                    {
+                        Heartbeat.ServerName = n;
+                        sender.SendMessage("Name set to: " + Heartbeat.ServerName);
+                    }
+                    else sender.SendMessage("Current name: " + Heartbeat.ServerName);
+                    break;
+                case "domain":
+                    string h;
+                    if (args.TryParseOne<String>(out h))
+                    {
+                        Heartbeat.ServerDomain = h;
+                        sender.SendMessage("Domain set to: " + Heartbeat.ServerDomain);
+                    }
+                    else sender.SendMessage("Current domain: " + Heartbeat.ServerDomain);
+                    break;
+                default:
+                    throw new CommandError("Not a supported serverlist command " + first);
+            }
+        }
     }
 }

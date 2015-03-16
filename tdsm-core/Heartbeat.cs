@@ -31,6 +31,8 @@ namespace tdsm.core
         public static string ServerDescription { get; set; }
         public static string ServerDomain { get; set; }
 
+        private static DateTime? _lastUpdateNotice;
+
         [Flags]
         public enum UpdateReady : byte
         {
@@ -161,15 +163,15 @@ namespace tdsm.core
                         {
                             case ResponseCode.UpToDate:
                                 //We're online - all up to date
-                                try
-                                {
-                                    var str = reader.ReadString();
-                                    if (!String.IsNullOrEmpty(str))
-                                    {
-                                        ProgramLog.Log("Heartbeat Sent: " + str);
-                                    }
-                                }
-                                catch { }
+                                //try
+                                //{
+                                //    var str = reader.ReadString();
+                                //    if (!String.IsNullOrEmpty(str))
+                                //    {
+                                //        ProgramLog.Log("Heartbeat Sent: " + str);
+                                //    }
+                                //}
+                                //catch { }
                                 break;
                             case ResponseCode.UpdateReady:
                                 var flag = reader.ReadUpdateReady();
@@ -191,7 +193,14 @@ namespace tdsm.core
                                     updates += (updates.Length > 0 ? ", " : String.Empty) + len + " plugin(s)";
                                 }
 
-                                Tools.NotifyAllOps("Updates are ready for: " + updates);
+                                if (!String.IsNullOrEmpty(updates))
+                                {
+                                    if (!_lastUpdateNotice.HasValue || (DateTime.Now - _lastUpdateNotice.Value).TotalMinutes >= 60)
+                                    {
+                                        Tools.NotifyAllOps("Updates are ready for: " + updates);
+                                        _lastUpdateNotice = DateTime.Now;
+                                    }
+                                }
                                 break;
                             case ResponseCode.ServerKey:
                                 try
@@ -216,18 +225,18 @@ namespace tdsm.core
                                 }
                                 catch { }
                                 break;
-                            default:
-                                ProgramLog.Log("Invalid heartbeat response.");
-                                try
-                                {
-                                    var str = reader.ReadString();
-                                    if (!String.IsNullOrEmpty(str))
-                                    {
-                                        ProgramLog.Log("Heartbeat Sent: " + str);
-                                    }
-                                }
-                                catch { }
-                                break;
+                            //default:
+                            //    ProgramLog.Log("Invalid heartbeat response.");
+                            //    try
+                            //    {
+                            //        var str = reader.ReadString();
+                            //        if (!String.IsNullOrEmpty(str))
+                            //        {
+                            //            ProgramLog.Log("Heartbeat Sent: " + str);
+                            //        }
+                            //    }
+                            //    catch { }
+                            //    break;
                         }
                     }
                     else ProgramLog.Log("Failed get a heartbeat response.");

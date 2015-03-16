@@ -333,6 +333,18 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.invasion")
                 .Calls(this.Invasion);
 
+            AddCommand("serverlist")
+                .WithDescription("Manages the heartbeat and server list")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithHelpText("enable|disable       - Enable/disable the heartbeat")
+                .WithHelpText("publish true|false   - Allows public viewing")
+                .WithHelpText("desc|name|domain     - Displays the current")
+                .WithHelpText("desc <description>")
+                .WithHelpText("name <name>")
+                .WithHelpText("domain <domain>")
+                .WithPermissionNode("tdsm.serverlist")
+                .Calls(this.ServerList);
+
             //Template for when we have more plugins
             //AddCommand("repo")
             //    .WithDescription("The tdsm update repository")
@@ -623,7 +635,7 @@ namespace tdsm.core
                     bool hb;
                     if (Boolean.TryParse(args.Value, out hb) && hb)
                     {
-                        Heartbeat.Begin(this.TDSMBuild);
+                        Heartbeat.Begin(CoreBuild);
                     }
                     break;
                 case "server-list":
