@@ -484,6 +484,7 @@ namespace tdsm.api.Command
                     var command = args.GetString(0);
                     if (commands.ContainsKey(command))
                     {
+                        sender.SendMessage(commands[command].description);
                         commands[command].ShowHelp(sender, true);
                         return;
                     }
