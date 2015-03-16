@@ -687,6 +687,9 @@ namespace tdsm.core
                         Server.OverlimitSlots = overlimitSlots;
                     }
                     break;
+                case "pid-file":
+                    ProcessPIDFile(args.Value);
+                    break;
             }
         }
 

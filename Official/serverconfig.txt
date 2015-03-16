@@ -104,3 +104,6 @@ send-queue-quota=1024
 #Allows bypassing of the slot queue mechanism when the server reaches the player limit.
 #Note: This is typically implemented by a plugins. For example when used in conjunction with restrict it allows operators to bypass the queue.
 overlimit-slots=1
+
+#Location of a pid file to maintain.
+#pid-file=process.pid
