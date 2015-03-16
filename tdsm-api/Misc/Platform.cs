@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace tdsm.api.Misc
 {
@@ -21,32 +22,29 @@ namespace tdsm.api.Misc
 
         public static void InitPlatform()
         {
-            Type = PlatformType.UNKNOWN;
-
             switch (Environment.OSVersion.Platform)
             {
-                case PlatformID.Win32NT:
-                    Type = PlatformType.WINDOWS;
-                    break;
-                case PlatformID.Win32S:
-                    Type = PlatformType.WINDOWS;
-                    break;
-                case PlatformID.Win32Windows:
-                    Type = PlatformType.WINDOWS;
-                    break;
-                case PlatformID.WinCE:
-                    Type = PlatformType.WINDOWS;
+                case PlatformID.Unix:
+                    Type = (
+                        Directory.Exists("/Applications")
+                        && Directory.Exists("/System")
+                        && Directory.Exists("/Users")
+                        && Directory.Exists("/Volumes")
+                    ) ? PlatformType.MAC : PlatformType.LINUX;
                     break;
                 case PlatformID.MacOSX:
                     Type = PlatformType.MAC;
                     break;
-            }
-
-            if (Type == PlatformType.UNKNOWN)
-            {
-                int platformCode = (int)Environment.OSVersion.Platform;
-                if (platformCode == 4 || platformCode == 6 || platformCode == 128)
-                    Type = PlatformType.LINUX;
+                case PlatformID.Win32NT:
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Xbox:
+                    Type = PlatformType.WINDOWS;
+                    break;
+                default:
+                    Type = PlatformType.UNKNOWN;
+                    break;
             }
         }
     }
