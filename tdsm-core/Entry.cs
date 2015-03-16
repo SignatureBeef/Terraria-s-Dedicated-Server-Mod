@@ -219,7 +219,8 @@ namespace tdsm.core
             AddCommand("me")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("3rd person talk")
-                .SetDefaultUsage()
+                .WithHelpText("<message> - Message to display in third person.")
+                //.SetDefaultUsage() //This was causing an additional "me" to be displayed in the help commmand syntax.
                 .WithPermissionNode("tdsm.me")
                 .Calls(this.Action);
 
@@ -238,28 +239,28 @@ namespace tdsm.core
 
             AddCommand("kick")
                 .WithDescription("Kicks a player from the server")
-                .WithHelpText("<player>")
+                .WithHelpText("<player> - Kicks the player specified.")
                 .WithPermissionNode("tdsm.kick")
                 .Calls(this.Kick);
 
             AddCommand("op")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Allows a player server operator status")
-                .WithHelpText("<player> <password>")
+                .WithHelpText("<player> <password> - Sets the player as an operator on the server and sets the OP password for that player.")
                 .WithPermissionNode("tdsm.op")
                 .Calls(this.OpPlayer);
 
             AddCommand("deop")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Removes server operator status from a player")
-                .WithHelpText("<player>")
+                .WithHelpText("<player> - Removes server operator status from the specified player.")
                 .WithPermissionNode("tdsm.deop")
                 .Calls(this.DeopPlayer);
 
             AddCommand("oplogin")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Allows an operator to log in")
-                .WithHelpText("<password>")
+                .WithHelpText("<password> - Logs into the server as an OP.")
                 .WithPermissionNode("tdsm.oplogin")
                 .Calls(this.OpLogin);
 
@@ -320,7 +321,7 @@ namespace tdsm.core
             AddCommand("npcspawning")
                 .WithDescription("Turn NPC spawning on or off.")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithHelpText("npcspawning true|false")
+                .WithHelpText("<true|false>")
                 .WithPermissionNode("tdsm.npcspawning")
                 .Calls(this.NPCSpawning);
 
