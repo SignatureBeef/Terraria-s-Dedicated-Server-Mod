@@ -522,7 +522,14 @@ namespace tdsm.api.Command
 
                     sender.SendMessage(String.Format("[Page {0} / {1}]", page + 1, maxPages));
                 }
-                else sender.SendMessage("Invalid page, 1 -> " + maxPages);
+                else
+                {
+                    sender.SendMessage("Usage:");
+                    sender.SendMessage("    help <command> - Get help for a command.");
+                    sender.SendMessage("    help <page> - View a list of commands. Valid page numbers are 1 to " + maxPages + ".");
+                    sender.SendMessage("    Example: help oplogin");
+                    sender.SendMessage("    Example: help 1");
+                }
             }
             else sender.SendMessage("You have no available commands.");
         }
