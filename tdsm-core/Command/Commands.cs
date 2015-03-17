@@ -1118,7 +1118,6 @@ namespace tdsm.core
         //        throw new CommandError(String.Empty);
         //}
 
-
         enum WorldZone
         {
             Any,
@@ -1688,6 +1687,7 @@ namespace tdsm.core
                 }
             }
         }
+
         /// <summary>
         /// Manages the server list
         /// </summary>
@@ -1695,7 +1695,8 @@ namespace tdsm.core
         /// <param name="args">Arguments sent with command</param>
         public void ServerList(ISender sender, ArgumentList args)
         {
-            var first = args.GetString(0);
+            string first;
+            args.TryPopOne(out first);
             switch (first)
             {
                 case "enable":
@@ -1712,39 +1713,38 @@ namespace tdsm.core
                     break;
                 case "desc":
                     string d;
-                    if (!args.TryParseOne<String>(out d))
+                    if (args.TryPopOne(out d))
                     {
-                        Heartbeat.ServerDescription = args[1]; // Set to args[1] because d contains null.
+                        Heartbeat.ServerDescription = d;
                         sender.SendMessage("Description set to: " + Heartbeat.ServerDescription);
                     }
-                    else
-                    {
-                        sender.SendMessage("Current description: " + Heartbeat.ServerDescription);
-                    }
+                    else sender.SendMessage("Current description: " + Heartbeat.ServerDescription);
                     break;
                 case "name":
                     string n;
-                    if (!args.TryParseOne<String>(out n))
+                    if (args.TryPopOne(out n))
                     {
-                        Heartbeat.ServerName = args[1]; // Set to args[1] because d contains null.
+                        Heartbeat.ServerName = n;
                         sender.SendMessage("Name set to: " + Heartbeat.ServerName);
                     }
-                    else
-                    {
-                        sender.SendMessage("Current name: " + Heartbeat.ServerName);
-                    }
+                    else sender.SendMessage("Current name: " + Heartbeat.ServerName);
                     break;
                 case "domain":
                     string h;
-                    if (!args.TryParseOne<String>(out h))
+                    if (args.TryPopOne(out h))
                     {
-                        Heartbeat.ServerDomain = args[1]; // Set to args[1] because d contains null.
+                        Heartbeat.ServerDomain = h;
                         sender.SendMessage("Domain set to: " + Heartbeat.ServerDomain);
                     }
-                    else
-                    {
-                        sender.SendMessage("Current domain: " + Heartbeat.ServerDomain);
-                    }
+                    else sender.SendMessage("Current domain: " + Heartbeat.ServerDomain);
+                    break;
+                case "?":
+                case "print":
+                    sender.SendMessage("Heartbeat is " + (Heartbeat.Enabled ? "enabled" : "disabled"));
+                    sender.SendMessage("Server list " + (Heartbeat.PublishToList ? "public" : "private"));
+                    sender.SendMessage("Current name: " + Heartbeat.ServerName);
+                    sender.SendMessage("Current domain: " + Heartbeat.ServerDomain);
+                    sender.SendMessage("Current description: " + Heartbeat.ServerDescription);
                     break;
                 default:
                     throw new CommandError("Not a supported serverlist command " + first);
