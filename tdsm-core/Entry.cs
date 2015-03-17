@@ -339,7 +339,7 @@ namespace tdsm.core
             AddCommand("serverlist")
                 .WithDescription("Manages the heartbeat and server list")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithHelpText("print|?                - Displays the current details")
+                .WithHelpText("print|?              - Displays the current details")
                 .WithHelpText("enable|disable       - Enable/disable the heartbeat")
                 .WithHelpText("public true|false    - Allows public viewing")
                 .WithHelpText("desc|name|domain     - Displays the current")

@@ -357,7 +357,7 @@ namespace tdsm.api.Command
                 Main.time = 0.0;
                 NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
 
-				Tools.WriteLine("Time set to dawn");
+                Tools.WriteLine("Time set to dawn");
             }
         }
 
@@ -372,9 +372,9 @@ namespace tdsm.api.Command
             {
                 Main.dayTime = true;
                 Main.time = 27000.0;
-				NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
 
-				Tools.WriteLine("Time set to noon");
+                Tools.WriteLine("Time set to noon");
             }
         }
 
@@ -389,9 +389,9 @@ namespace tdsm.api.Command
             {
                 Main.dayTime = false;
                 Main.time = 0.0;
-				NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
 
-				Tools.WriteLine("Time set to dusk");
+                Tools.WriteLine("Time set to dusk");
             }
         }
 
@@ -406,9 +406,9 @@ namespace tdsm.api.Command
             {
                 Main.dayTime = false;
                 Main.time = 16200.0;
-				NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
 
-				Tools.WriteLine("Time set to midnight");
+                Tools.WriteLine("Time set to midnight");
             }
         }
 
@@ -466,63 +466,66 @@ namespace tdsm.api.Command
             {
                 WorldFile.saveWorld(false);
             }
-		}
+        }
 
-		/// <summary>
-		/// Shows the help.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="args">Arguments.</param>
-		public static void ShowHelp(ISender sender, ArgumentList args)
-		{
-			var commands = sender.GetAvailableCommands ();
-			if (commands != null && commands.Count > 0)
-			{
-				int page = 0;
+        /// <summary>
+        /// Shows the help.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="args">Arguments.</param>
+        public static void ShowHelp(ISender sender, ArgumentList args)
+        {
+            var commands = sender.GetAvailableCommands();
+            if (commands != null && commands.Count > 0)
+            {
+                int page = 0;
                 if (!args.TryGetInt(0, out page))
                 {
-                    var command = args.GetString(0);
-                    if (commands.ContainsKey(command))
+                    if (args.Count > 0)
                     {
-                        sender.SendMessage(commands[command].description);
-                        commands[command].ShowHelp(sender, true);
-                        return;
+                        var command = args.GetString(0);
+                        if (commands.ContainsKey(command))
+                        {
+                            sender.SendMessage(commands[command].description);
+                            commands[command].ShowHelp(sender, true);
+                            return;
+                        }
+                        else throw new CommandError("No such command: " + command);
                     }
-                    else throw new CommandError("No such command: " + command);
                 }
                 else page--;
 
-//				const Int32 MaxLines = 5;
-				var maxLines = sender is Player ? 5 : 15;
-				var lineOffset = page * maxLines;
-				var maxPages = (int)Math.Ceiling (commands.Count / (double)maxLines);
+                //				const Int32 MaxLines = 5;
+                var maxLines = sender is Player ? 5 : 15;
+                var lineOffset = page * maxLines;
+                var maxPages = (int)Math.Ceiling(commands.Count / (double)maxLines);
 
-				if (page >= 0 && page < maxPages)
-				{
-					var cmds = new List<CommandInfo> ();
-					var sorted = commands
-						.OrderBy (x => x.Key.ToLower())
-						.Select (x => x.Value)
-						.ToArray ();
-					for(var i = lineOffset; i < lineOffset + maxLines; i++)
-					{
-						if(i < sorted.Length)
-							cmds.Add (sorted [i]); 
-					}
+                if (page >= 0 && page < maxPages)
+                {
+                    var cmds = new List<CommandInfo>();
+                    var sorted = commands
+                        .OrderBy(x => x.Key.ToLower())
+                        .Select(x => x.Value)
+                        .ToArray();
+                    for (var i = lineOffset; i < lineOffset + maxLines; i++)
+                    {
+                        if (i < sorted.Length)
+                            cmds.Add(sorted[i]);
+                    }
 
-					var prefixMax = cmds
-						.Select (x => x.Prefix.Length)
-						.OrderByDescending (x => x)
-						.First ();
-					foreach (var cmd in cmds)
-						cmd.ShowDescription (sender, prefixMax);
+                    var prefixMax = cmds
+                        .Select(x => x.Prefix.Length)
+                        .OrderByDescending(x => x)
+                        .First();
+                    foreach (var cmd in cmds)
+                        cmd.ShowDescription(sender, prefixMax);
 
-					sender.SendMessage (String.Format("[Page {0} / {1}]", page + 1, maxPages));
-				}
-				else sender.SendMessage ("Invalid page, 1 -> " + maxPages);
-			}
-			else sender.SendMessage ("You have no available commands.");
-		}
+                    sender.SendMessage(String.Format("[Page {0} / {1}]", page + 1, maxPages));
+                }
+                else sender.SendMessage("Invalid page, 1 -> " + maxPages);
+            }
+            else sender.SendMessage("You have no available commands.");
+        }
     }
 }
 #endif
