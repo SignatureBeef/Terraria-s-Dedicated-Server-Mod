@@ -89,6 +89,8 @@ namespace tdsm.core
                 Tools.SetWriteLineMethod(ProgramLog.Log, OnLogFinished);
             }
 
+            WebInterface.WebPermissions.Load();
+
             AddCommand("platform")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Show what type of server is running TDSM")

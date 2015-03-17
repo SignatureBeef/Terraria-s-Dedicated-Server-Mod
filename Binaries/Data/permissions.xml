@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XmlPermissions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Groups>
-	<!--]
+    <!--]
 		[ApplyToGuests] is a tdsm flag
 		[ApplyToRegistered] is a Restrict specific flags.
 		
@@ -28,11 +28,20 @@
         <Node Key="restrict.worldalter" Deny="true" />
       </Nodes>
       <Groups>
-	  <!--
+        <!--
         <string>group-name</string>
         <string>group-name</string>
 	  -->
       </Groups>
     </Player>
   </Players>
+  <WebUsers>
+    <WebUser>
+      <Name>DeathCradle</Name>
+      <Nodes>
+        <Node Key="webinterface.filebrowser" Deny="false" />
+      </Nodes>
+      <!-- Groups aren't supported yet -->
+    </WebUser>
+  </WebUsers>
 </XmlPermissions>

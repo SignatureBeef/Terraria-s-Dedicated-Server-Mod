@@ -5,6 +5,7 @@ namespace tdsm.api.Permissions
     public static class PermissionsManager
     {
         private static IPermissionHandler _handler;
+        private static EventHandler<XmlNodeEventArgs> OnParseElement; //Im not so sure about a plugin hook for this at this stage.
 
         /// <summary>
         /// Used to detect if there is an existing handler set
@@ -21,8 +22,10 @@ namespace tdsm.api.Permissions
         /// <param name="handler"></param>
         public static void SetHandler(IPermissionHandler handler)
         {
+            var prev = _handler;
             if (_handler == null) _handler = handler;
             else lock (_handler) _handler = handler;
+
         }
 
         /// <summary>
@@ -48,6 +51,17 @@ namespace tdsm.api.Permissions
         {
             lock (_handler) return _handler.IsPermittedForGroup(node, includeGroupsWith);
         }
+
+        public static void AttatchOnParse(EventHandler<XmlNodeEventArgs> callback)
+        {
+            OnParseElement += callback;
+        }
+
+        public static void RequestParse(IPermissionHandler handler, XmlNodeEventArgs args)
+        {
+            if (OnParseElement != null)
+                OnParseElement.Invoke(handler, args);
+        }
     }
 
     /// <summary>
@@ -57,6 +71,23 @@ namespace tdsm.api.Permissions
     {
         Permission IsPermitted(string node, BasePlayer player);
         Permission IsPermittedForGroup(string node, Func<System.Collections.Generic.Dictionary<String, String>, Boolean> includeGroupsWith = null);
+
+        XmlNode[] ParseNodes(System.Xml.XmlNode node);
+        string[] ParseArray(System.Xml.XmlNode node);
+    }
+
+    //public abstract class PermissionsHandler
+    //{
+    //    public EventHandler<XmlNodeEventArgs> OnParseElement;
+
+    //    public abstract Permission IsPermitted(string node, BasePlayer player);
+    //    public abstract Permission IsPermittedForGroup(string node, Func<System.Collections.Generic.Dictionary<String, String>, Boolean> includeGroupsWith = null);
+    //}
+
+    public class XmlNodeEventArgs : EventArgs
+    {
+        //public string Name { get; set; }
+        public System.Xml.XmlNode Node { get; set; }
     }
 
     public enum Permission : byte

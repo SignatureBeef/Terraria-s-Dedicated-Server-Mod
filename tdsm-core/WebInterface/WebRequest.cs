@@ -6,6 +6,63 @@ using tdsm.core.ServerCore;
 
 namespace tdsm.core.WebInterface
 {
+    public struct RequestWriter : IDisposable
+    {
+        public int Length
+        {
+            get
+            { return _index; }
+        }
+
+        private int _index;
+        private byte[] _buffer;
+
+        public RequestWriter(int size = 1024)
+        {
+            _index = 0;
+            _buffer = new byte[size];
+        }
+
+        public void Buffer(string data)
+        {
+            Buffer(data.Length); //Think about 7-Bit encoding
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes(data);
+            Increase(bytes.Length);
+
+            System.Buffer.BlockCopy(bytes, 0, _buffer, _index, bytes.Length);
+        }
+
+        public void Buffer(int data)
+        {
+            var bytes = BitConverter.GetBytes(data);
+            Increase(bytes.Length);
+
+            System.Buffer.BlockCopy(bytes, 0, _buffer, _index, bytes.Length);
+        }
+
+        private void Increase(int extra)
+        {
+            if (_index + extra > _buffer.Length)
+            {
+                extra = (int)(Math.Ceiling(extra / 1024.0) * 1024.0);
+
+                Array.Resize(ref _buffer, _buffer.Length + extra);
+            }
+        }
+
+        internal void WriteTo(Socket sock)
+        {
+            if (sock.Connected) sock.Send(_buffer);
+        }
+
+        public void Dispose()
+        {
+            _buffer = null;
+            _index = 0;
+        }
+    }
+
     public class WebRequest : /*Connection,*/ IDisposable
     {
         public Dictionary<String, String> Headers { get; private set; }
@@ -27,6 +84,8 @@ namespace tdsm.core.WebInterface
 
         public Socket Client;
 
+        public RequestWriter Writer;
+
         public WebRequest(Socket sock)
         //: base(sock)
         {
@@ -35,6 +94,8 @@ namespace tdsm.core.WebInterface
             //StartReceiving(new byte[4192]);
             Request = new Dictionary<String, String>();
             ResponseHeaders = new Dictionary<String, String>();
+
+            Writer = new RequestWriter();
         }
 
         private byte[] buffer;
@@ -187,6 +248,13 @@ namespace tdsm.core.WebInterface
         //    return path;
         //}
 
+        public void WriteOut(string contentType)
+        {
+            RepsondHeader(StatusCode, "OK", "application/octet-stream", Writer.Length);
+            Writer.WriteTo(Client);
+            End();
+        }
+
         public void Send(int value)
         {
             var data = BitConverter.GetBytes(value);
@@ -267,6 +335,7 @@ namespace tdsm.core.WebInterface
         {
             Headers = null;
             Method = RequestUrl = null;
+            Writer.Dispose();
             Console.WriteLine("DISPOSING");
         }
     }

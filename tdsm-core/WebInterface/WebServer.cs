@@ -18,11 +18,29 @@ namespace tdsm.core.WebInterface
     public abstract class WebPage
     {
         public abstract void ProcessRequest(WebRequest request);
+
+        public string[] Nodes { get; set; }
+
+        public bool CanProcess(WebRequest request)
+        {
+            if (Nodes == null) return true;
+            var has = false;
+            foreach (var nd in Nodes)
+            {
+                if (nd == "*") return true;
+                var perm = WebPermissions.IsPermitted(nd, request);
+                if (perm == api.Permissions.Permission.Denied) return false;
+                if (perm == api.Permissions.Permission.Permitted) has = true;
+            }
+            return false;
+        }
     }
 
     public class WebModule : Attribute
     {
         public string Url { get; set; }
+
+        public string[] Nodes { get; set; }
     }
 
     public static class WebServer
@@ -53,7 +71,7 @@ namespace tdsm.core.WebInterface
         //        public static readonly string HtmlDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "WebInterface", "Files");
         //		public static readonly string HtmlDirectory = @"C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\tdsm-core\WebInterface\Files";
         public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"/../../../../tdsm-core/WebInterface/Files");
-//        public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\..\..\tdsm-core\WebInterface\Files");
+        //        public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\..\..\tdsm-core\WebInterface\Files");
 
         //public static bool RegisterModule(string path)
         //{
@@ -86,7 +104,9 @@ namespace tdsm.core.WebInterface
                 var module = custom.Where(x => moduleType.IsAssignableFrom(x.GetType())).FirstOrDefault();
                 if (module != null)
                 {
-                    pages.Add(new KeyValuePair<String, WebPage>(((WebModule)module).Url, (WebPage)Activator.CreateInstance(pageType)));
+                    var wp = (WebPage)Activator.CreateInstance(pageType);
+                    wp.Nodes = ((WebModule)module).Nodes;
+                    pages.Add(new KeyValuePair<String, WebPage>(((WebModule)module).Url, wp));
                 }
             }
 
@@ -210,18 +230,18 @@ namespace tdsm.core.WebInterface
         }
 
         private static FileInfo GetEncapsulated(WebRequest request)
-		{
+        {
             if (request.Path != null)
             {
                 var url = request.Path;
                 if (url == "/") url = "index.html";
                 url = url.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-				while (url.StartsWith("\\") || url.StartsWith("/")) url = url.Remove(0, 1);
+                while (url.StartsWith("\\") || url.StartsWith("/")) url = url.Remove(0, 1);
                 var local = Path.Combine(WebServer.HtmlDirectory, url);
 
                 if (Path.GetFullPath(local).StartsWith(WebServer.HtmlDirectory))
-					return new FileInfo(local);
-			}
+                    return new FileInfo(local);
+            }
             return null;
         }
 
@@ -275,8 +295,16 @@ namespace tdsm.core.WebInterface
                 if (request.Path != null)
                     if (_pages.ContainsKey(request.Path))
                     {
-                        _pages[request.Path].ProcessRequest(request);
-                        request.End();
+                        if (_pages[request.Path].CanProcess(request))
+                        {
+                            _pages[request.Path].ProcessRequest(request);
+                            request.End();
+                        }
+                        else
+                        {
+                            request.RepsondHeader(404, "Not Found", "text/html", 0);
+                            request.End();
+                        }
                     }
             }
         }

@@ -50,6 +50,12 @@ namespace tdsm.api.Permissions
                                                 foreach (System.Xml.XmlNode child in node)
                                                     ParsePlayer(child);
                                                 break;
+                                            default:
+                                                PermissionsManager.RequestParse(this, new XmlNodeEventArgs()
+                                                {
+                                                    Node = node
+                                                });
+                                                break;
                                         }
                                         break;
                                     case System.Xml.XmlNodeType.None:

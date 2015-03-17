@@ -155,8 +155,11 @@
     <Compile Include="Entry.cs" />
     <Compile Include="WebInterface\Auth\IHttpAuth.cs" />
     <Compile Include="WebInterface\Auth\HttpDigestAuth.cs" />
+    <Compile Include="WebInterface\Pages\Admin\Overview.cs" />
+    <Compile Include="WebInterface\Pages\Admin\WebModules.cs" />
     <Compile Include="WebInterface\Pages\Authenticate.cs" />
     <Compile Include="WebInterface\Pages\ServerInformation.cs" />
+    <Compile Include="WebInterface\WebPermissions.cs" />
     <Compile Include="WebInterface\WebRequest.cs" />
     <Compile Include="WebInterface\WebServer.cs" />
     <Compile Include="World.cs" />
@@ -194,6 +197,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="WebInterface\Files\Admin\" />
+    <Folder Include="WebInterface\Pages\Modules\" />
   </ItemGroup>
 </Project>

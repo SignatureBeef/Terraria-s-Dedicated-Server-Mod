@@ -16,14 +16,20 @@ namespace tdsm.core.WebInterface.Pages
             request.StatusCode = 200;
 
             //TODO buffer responses in order to fill the Content-Length header
-            var length = (WebServer.ProviderName.Length + 4) + 4 + 4;
-            request.RepsondHeader(200, "OK", "application/octet-stream", length);
+            //var length = (WebServer.ProviderName.Length + 4) + 4 + 4;
+            //request.RepsondHeader(200, "OK", "application/octet-stream", length);
 
-            request.Send(WebServer.ProviderName);
-            request.Send(Globals.Build);
-            request.Send(Entry.CoreBuild);
+            //request.Send(WebServer.ProviderName);
+            //request.Send(Globals.Build);
+            //request.Send(Entry.CoreBuild);
 
-            request.End();
+            //request.End();
+
+            request.Writer.Buffer(WebServer.ProviderName);
+            request.Writer.Buffer(Globals.Build);
+            request.Writer.Buffer(Entry.CoreBuild);
+
+            request.WriteOut("application/octet-stream");
         }
     }
 }
