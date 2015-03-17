@@ -527,8 +527,9 @@ namespace tdsm.api.Command
                     sender.SendMessage("Usage:");
                     sender.SendMessage("    help <command> - Get help for a command.");
                     sender.SendMessage("    help <page> - View a list of commands. Valid page numbers are 1 to " + maxPages + ".");
-                    sender.SendMessage("    Example: help oplogin");
-                    sender.SendMessage("    Example: help 1");
+                    sender.SendMessage("Examples:");
+                    sender.SendMessage("    help oplogin");
+                    sender.SendMessage("    help 1");
                 }
             }
             else sender.SendMessage("You have no available commands.");
