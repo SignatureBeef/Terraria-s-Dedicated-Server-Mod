@@ -1,0 +1,54 @@
+Terraria's Dedicated Server Mod (TDSM)
+---------------------------------------
+
+This document is dedicated for whenever a developer makes a change to the code. In order for us to keep records
+of what has happened between builds we need to keep this document up to date and in each developers repo.
+
+
+Build: 37
+===================
+	- Updated all NPC AI (38/38)
+	- Added hardmode
+	- Added all 1.1/.2 NPC's + invasions
+	- Added more hooks for new bosses/misc
+	- Snow!
+	- Few more server properties options & command line arguments
+	- Language file + generation tool
+	- Minor method changes in Server.cs & upgrade to World.cs + other misc API changes
+	- More commands.
+	- Allowed spawning through statues and spawnnpc when summoning is disabled (configurable)
+	- Code names.
+	- Standard tile compression
+	- WorldGen/Modify function semi-overhaul
+	- Player Sandbox! (Logs tile modifications)
+
+Build 38
+===================
+	- The Destroyer not correct when forced to spawn via the command.
+	- Wall tiles now blend correctly.
+	- Time locking
+	- Backup manager: Automatic or command
+	- TDSM Permissions (Both YAML & XML) - Chat hook is now early for chat plugins to take over.
+	- Restrics Npc Permission node will now work.
+	- NPC Housing
+	- Item animations (Projectiles) not being reset on occasions.
+	- Work on the Wiki Protocol Documentation.
+	- Added a hook for plugins to change where players spawn upon connection.
+	- Fixed a few boss messages being repeated and fixed up the SpawnNPC packet.
+	- Fixed an issue where new town npcs (1.1.1/1.1.2) try to continuously move in.
+	- Added affix's to the Give command, Via Int32 or their names.
+	- Plugins can now tap into the language system. There now is also no check for out of date files as it's not needed anymore.
+	- Fixed world sizes: Large maps are now ~20mb
+	- Old API: Better naming conventions.
+	- Fixed explosions.
+	- More WorldGen configurable options.
+	- Comments for property files.
+ 
+Build 39
+===================
+     - Added a Task Scheduler
+     - Updated the Update Manager
+     - Added a Task to check for updates
+     - Corrected the /reload command
+     - Added plugin commands to /help
+     - Cleaned a few plugin descriptions [Language update may be required]

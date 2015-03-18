@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{48477B14-CEAA-47AA-98F1-EF935734DBC5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>tdsm.core</RootNamespace>
+    <AssemblyName>tdsm.core</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\Binaries\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="tdsm">
+      <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.microsoft.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BasePlayer.cs" />
+    <Compile Include="Callbacks\Net.cs" />
+    <Compile Include="Command\PluginRepo.cs" />
+    <Compile Include="Command\Invasion.cs" />
+    <Compile Include="Command\Commands.cs" />
+    <Compile Include="Definitions\DefinitionManager.cs" />
+    <Compile Include="Heartbeat.cs" />
+    <Compile Include="Events\HookPoints.cs" />
+    <Compile Include="Logging\LogChannel.cs" />
+    <Compile Include="Logging\LogTarget.cs" />
+    <Compile Include="Logging\LogTraceListener.cs" />
+    <Compile Include="Logging\ProgramLog.cs" />
+    <Compile Include="Logging\ProgressLogger.cs" />
+    <Compile Include="Logging\SendingLogger.cs" />
+    <Compile Include="Messages\In\12_ReceivingPlayerJoinedMessage.cs" />
+    <Compile Include="Messages\In\13_PlayerStateUpdateMessage.cs" />
+    <Compile Include="Messages\In\15_UpdatePlayersMessage.cs" />
+    <Compile Include="Messages\In\17_TileBreakMessage.cs" />
+    <Compile Include="Messages\In\19_DoorUpdateMessage.cs" />
+    <Compile Include="Messages\In\20_TileSquareMessage.cs" />
+    <Compile Include="Messages\In\21_ItemInfoMessage.cs" />
+    <Compile Include="Messages\In\22_ItemOwnerInfoMessage.cs" />
+    <Compile Include="Messages\In\24_StrikeNPCMessage.cs" />
+    <Compile Include="Messages\In\25_PlayerChatMessage.cs" />
+    <Compile Include="Messages\In\26_StrikePlayerMessage.cs" />
+    <Compile Include="Messages\In\27_ProjectileMessage.cs" />
+    <Compile Include="Messages\In\28_DamageNPCMessage.cs" />
+    <Compile Include="Messages\In\29_KillProjectileMessage.cs" />
+    <Compile Include="Messages\In\2_DisconnectMessage.cs" />
+    <Compile Include="Messages\In\30_PlayerPvPChangeMessage.cs" />
+    <Compile Include="Messages\In\31_OpenChestMessage.cs" />
+    <Compile Include="Messages\In\33_PlayerChestUpdate.cs" />
+    <Compile Include="Messages\In\34_KillTileMessage.cs" />
+    <Compile Include="Messages\In\35_HealMessage.cs" />
+    <Compile Include="Messages\In\36_EnterZoneMessage.cs" />
+    <Compile Include="Messages\In\38_PasswordResponseMessage.cs" />
+    <Compile Include="Messages\In\40_NPCTalkMessage.cs" />
+    <Compile Include="Messages\In\41_PlayerBallswingMessage.cs" />
+    <Compile Include="Messages\In\43_PlayerUseManaUpdateMessage.cs" />
+    <Compile Include="Messages\In\44_KillPlayerPvPMessage.cs" />
+    <Compile Include="Messages\In\45_PlayerJoinPartyMessage.cs" />
+    <Compile Include="Messages\In\46_ReadSignMessage.cs" />
+    <Compile Include="Messages\In\47_WriteSignMessage.cs" />
+    <Compile Include="Messages\In\48_FlowLiquidMessage.cs" />
+    <Compile Include="Messages\In\4_PlayerDataMessage.cs" />
+    <Compile Include="Messages\In\51_SummonSkeletronMessage.cs" />
+    <Compile Include="Messages\In\53_NPCAddBuffMessage.cs" />
+    <Compile Include="Messages\In\55_PlayerAddBuffMessage.cs" />
+    <Compile Include="Messages\In\59_HitSwitchMessage.cs" />
+    <Compile Include="Messages\In\60_NPCHomeMessage.cs" />
+    <Compile Include="Messages\In\63_PaintTile.cs" />
+    <Compile Include="Messages\In\64_PaintWall.cs" />
+    <Compile Include="Messages\In\65_Teleport.cs" />
+    <Compile Include="Messages\In\66_Packet66.cs" />
+    <Compile Include="Messages\In\67_Packet67.cs" />
+    <Compile Include="Messages\In\61_SpawnNPCs.cs" />
+    <Compile Include="Messages\In\69_ChestNameUpdate.cs" />
+    <Compile Include="Messages\In\70_CatchNPC.cs" />
+    <Compile Include="Messages\In\71_ReleaseNPC.cs" />
+    <Compile Include="Messages\In\72_TravelShop.cs" />
+    <Compile Include="Messages\In\73_TeleportationPotion.cs" />
+    <Compile Include="Messages\In\74_AnglerQuest.cs" />
+    <Compile Include="Messages\In\75_AnglerFinishRegister.cs" />
+    <Compile Include="Messages\In\76_AnglerQuestsFinished.cs" />
+    <Compile Include="Messages\In\68_ClientUUIDMessage.cs" />
+    <Compile Include="Messages\In\8_RequestTileMessage.cs" />
+    <Compile Include="Messages\In\62_PlayerDodge.cs" />
+    <Compile Include="Messages\In\56_NPCName.cs" />
+    <Compile Include="Misc\ProducerConsumerSignal.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Messages\In\32_ChestItemMessage.cs" />
+    <Compile Include="Messages\In\52_ChestUnlockMessage.cs" />
+    <Compile Include="Messages\In\1_ConnectionRequestMessage.cs" />
+    <Compile Include="Messages\In\5_InventoryDataMessage.cs" />
+    <Compile Include="Messages\MessageDispatcher.cs" />
+    <Compile Include="Messages\MessageHandler.cs" />
+    <Compile Include="Messages\In\50_PlayerBuffsMessage.cs" />
+    <Compile Include="Messages\In\16_PlayerHealthUpdateMessage.cs" />
+    <Compile Include="Messages\In\42_PlayerManaUpdateMessage.cs" />
+    <Compile Include="Messages\SpammableMessage.cs" />
+    <Compile Include="Messages\In\6_WorldRequestMessage.cs" />
+    <Compile Include="Misc\ArrayDequeue.cs" />
+    <Compile Include="RemoteConsole\RConClient.cs" />
+    <Compile Include="RemoteConsole\RConSender.cs" />
+    <Compile Include="RemoteConsole\RConServer.cs" />
+    <Compile Include="ServerCore\ClientConnection.cs" />
+    <Compile Include="ServerCore\Connection.cs" />
+    <Compile Include="Messages\Out\NewNetMessage.cs" />
+    <Compile Include="Messages\Out\NewNetMessage_Packets.cs" />
+    <Compile Include="Misc\ProgramThread.cs" />
+    <Compile Include="ServerCore\Server.cs" />
+    <Compile Include="ServerCore\StringCache.cs" />
+    <Compile Include="ServerEntry.cs" />
+    <Compile Include="ServerCore\ServerSlot.cs" />
+    <Compile Include="ServerCore\SlotManager.cs" />
+    <Compile Include="Entry.cs" />
+    <Compile Include="WebInterface\Auth\IHttpAuth.cs" />
+    <Compile Include="WebInterface\Auth\HttpDigestAuth.cs" />
+    <Compile Include="WebInterface\Pages\Admin\Overview.cs" />
+    <Compile Include="WebInterface\Pages\Admin\WebModules.cs" />
+    <Compile Include="WebInterface\Pages\Authenticate.cs" />
+    <Compile Include="WebInterface\Pages\ServerInformation.cs" />
+    <Compile Include="WebInterface\WebPermissions.cs" />
+    <Compile Include="WebInterface\WebRequest.cs" />
+    <Compile Include="WebInterface\WebServer.cs" />
+    <Compile Include="World.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
+      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
+      <Name>tdsm-api</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Definitions\item.xml" />
+    <EmbeddedResource Include="Definitions\npc.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WebInterface\Files\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebInterface\Files\jquery-2.1.3.min.js" />
+    <Content Include="WebInterface\Files\md5.js" />
+    <Content Include="WebInterface\Files\style.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebInterface\Files\tdsm.net.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebInterface\Files\tdsm.interface.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebInterface\Files\tdsm.framework.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WebInterface\Pages\Modules\" />
+  </ItemGroup>
+</Project>

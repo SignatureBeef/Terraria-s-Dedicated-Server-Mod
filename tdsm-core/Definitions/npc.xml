@@ -1,0 +1,2646 @@
+<?xml version="1.0"?>
+<DefinitionFileOfNPCInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Version>1</Version>
+  <Data>
+    <NPCInfo>
+      <Id>369</Id>
+      <NetId>369</NetId>
+      <Name>Angler</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>102</Id>
+      <NetId>102</NetId>
+      <Name>Angler Fish</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>31</Id>
+      <NetId>31</NetId>
+      <Name>Angry Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>294</Id>
+      <NetId>294</NetId>
+      <Name>Angry Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>295</Id>
+      <NetId>295</NetId>
+      <Name>Angry Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>296</Id>
+      <NetId>296</NetId>
+      <Name>Angry Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>250</Id>
+      <NetId>250</NetId>
+      <Name>Angry Nimbus</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>175</Id>
+      <NetId>175</NetId>
+      <Name>Angry Trapper</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>257</Id>
+      <NetId>257</NetId>
+      <Name>Anomura Fungus</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>69</Id>
+      <NetId>69</NetId>
+      <Name>Antlion</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>157</Id>
+      <NetId>157</NetId>
+      <Name>Arapaima</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>77</Id>
+      <NetId>77</NetId>
+      <Name>Armored Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>197</Id>
+      <NetId>197</NetId>
+      <Name>Armored Viking</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>19</Id>
+      <NetId>19</NetId>
+      <Name>Arms Dealer</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>1</Id>
+      <NetId>-5</NetId>
+      <Name>Baby Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>132</Id>
+      <NetId>132</NetId>
+      <Name>Bald Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>210</Id>
+      <NetId>210</NetId>
+      <Name>Bee</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>211</Id>
+      <NetId>211</NetId>
+      <Name>Bee</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>132</Id>
+      <NetId>-29</NetId>
+      <Name>Big Bald Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>31</Id>
+      <NetId>-14</NetId>
+      <Name>Big Boned</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>173</Id>
+      <NetId>-23</NetId>
+      <Name>Big Crimera</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>183</Id>
+      <NetId>-25</NetId>
+      <Name>Big Crimslime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>6</Id>
+      <NetId>-12</NetId>
+      <Name>Big Eater</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>200</Id>
+      <NetId>-45</NetId>
+      <Name>Big Female Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>201</Id>
+      <NetId>-49</NetId>
+      <Name>Big Headache Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>231</Id>
+      <NetId>-57</NetId>
+      <Name>Big Hornet Fatty</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>232</Id>
+      <NetId>-59</NetId>
+      <Name>Big Hornet Honey</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>233</Id>
+      <NetId>-61</NetId>
+      <Name>Big Hornet Leafy</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>234</Id>
+      <NetId>-63</NetId>
+      <Name>Big Hornet Spikey</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>235</Id>
+      <NetId>-65</NetId>
+      <Name>Big Hornet Stingy</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>202</Id>
+      <NetId>-51</NetId>
+      <Name>Big Misassembled Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>176</Id>
+      <NetId>-20</NetId>
+      <Name>Big Moss Hornet</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>203</Id>
+      <NetId>-53</NetId>
+      <Name>Big Pantless Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>186</Id>
+      <NetId>-31</NetId>
+      <Name>Big Pincushion Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>223</Id>
+      <NetId>-55</NetId>
+      <Name>Big Rain Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>21</Id>
+      <NetId>-47</NetId>
+      <Name>Big Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>187</Id>
+      <NetId>-33</NetId>
+      <Name>Big Slimed Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>42</Id>
+      <NetId>-17</NetId>
+      <Name>Big Stinger</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>188</Id>
+      <NetId>-35</NetId>
+      <Name>Big Swamp Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>189</Id>
+      <NetId>-37</NetId>
+      <Name>Big Twiggy Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>3</Id>
+      <NetId>-27</NetId>
+      <Name>Big Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>74</Id>
+      <NetId>74</NetId>
+      <Name>Bird</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>297</Id>
+      <NetId>297</NetId>
+      <Name>Bird</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>298</Id>
+      <NetId>298</NetId>
+      <Name>Bird</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>163</Id>
+      <NetId>163</NetId>
+      <Name>Black Recluse</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>238</Id>
+      <NetId>238</NetId>
+      <Name>Black Recluse</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>1</Id>
+      <NetId>-6</NetId>
+      <Name>Black Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>72</Id>
+      <NetId>72</NetId>
+      <Name>Blazing Wheel</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>239</Id>
+      <NetId>239</NetId>
+      <Name>Blood Crawler</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>240</Id>
+      <NetId>240</NetId>
+      <Name>Blood Crawler</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>241</Id>
+      <NetId>241</NetId>
+      <Name>Blood Feeder</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>242</Id>
+      <NetId>242</NetId>
+      <Name>Blood Jelly</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>273</Id>
+      <NetId>273</NetId>
+      <Name>Blue Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>274</Id>
+      <NetId>274</NetId>
+      <Name>Blue Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>275</Id>
+      <NetId>275</NetId>
+      <Name>Blue Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>276</Id>
+      <NetId>276</NetId>
+      <Name>Blue Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>63</Id>
+      <NetId>63</NetId>
+      <Name>Blue Jellyfish</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>1</Id>
+      <NetId>1</NetId>
+      <Name>Blue Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>287</Id>
+      <NetId>287</NetId>
+      <Name>Bone Lee</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>40</Id>
+      <NetId>40</NetId>
+      <Name>Bone Serpent Body</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>39</Id>
+      <NetId>39</NetId>
+      <Name>Bone Serpent Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>41</Id>
+      <NetId>41</NetId>
+      <Name>Bone Serpent Tail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>105</Id>
+      <NetId>105</NetId>
+      <Name>Bound Goblin</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>123</Id>
+      <NetId>123</NetId>
+      <Name>Bound Mechanic</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>106</Id>
+      <NetId>106</NetId>
+      <Name>Bound Wizard</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>266</Id>
+      <NetId>266</NetId>
+      <Name>Brain of Cthulhu</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>46</Id>
+      <NetId>46</NetId>
+      <Name>Bunny</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>303</Id>
+      <NetId>303</NetId>
+      <Name>Bunny</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>337</Id>
+      <NetId>337</NetId>
+      <Name>Bunny</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>25</Id>
+      <NetId>25</NetId>
+      <Name>Burning Sphere</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>356</Id>
+      <NetId>356</NetId>
+      <Name>Butterfly</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>190</Id>
+      <NetId>190</NetId>
+      <Name>Cataract Eye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>190</Id>
+      <NetId>-38</NetId>
+      <Name>Cataract Eye 2</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>49</Id>
+      <NetId>49</NetId>
+      <Name>Cave Bat</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>30</Id>
+      <NetId>30</NetId>
+      <Name>Chaos Ball</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>120</Id>
+      <NetId>120</NetId>
+      <Name>Chaos Elemental</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>101</Id>
+      <NetId>101</NetId>
+      <Name>Clinger</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>54</Id>
+      <NetId>54</NetId>
+      <Name>Clothier</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>109</Id>
+      <NetId>109</NetId>
+      <Name>Clown</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>217</Id>
+      <NetId>217</NetId>
+      <Name>Cochineal Beetle</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>47</Id>
+      <NetId>47</NetId>
+      <Name>Corrupt Bunny</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>57</Id>
+      <NetId>57</NetId>
+      <Name>Corrupt Goldfish</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>168</Id>
+      <NetId>168</NetId>
+      <Name>Corrupt Penguin</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>81</Id>
+      <NetId>81</NetId>
+      <Name>Corrupt Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>94</Id>
+      <NetId>94</NetId>
+      <Name>Corruptor</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>67</Id>
+      <NetId>67</NetId>
+      <Name>Crab</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>267</Id>
+      <NetId>267</NetId>
+      <Name>Creeper</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>173</Id>
+      <NetId>173</NetId>
+      <Name>Crimera</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>183</Id>
+      <NetId>183</NetId>
+      <Name>Crimslime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>179</Id>
+      <NetId>179</NetId>
+      <Name>Crimson Axe</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>83</Id>
+      <NetId>83</NetId>
+      <Name>Cursed Hammer</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>34</Id>
+      <NetId>34</NetId>
+      <Name>Cursed Skull</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>218</Id>
+      <NetId>218</NetId>
+      <Name>Cyan Beetle</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>209</Id>
+      <NetId>209</NetId>
+      <Name>Cyborg</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>32</Id>
+      <NetId>32</NetId>
+      <Name>Dark Caster</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>79</Id>
+      <NetId>79</NetId>
+      <Name>Dark Mummy</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>38</Id>
+      <NetId>38</NetId>
+      <Name>Demolitionist</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>62</Id>
+      <NetId>62</NetId>
+      <Name>Demon</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>2</Id>
+      <NetId>2</NetId>
+      <Name>Demon Eye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>317</Id>
+      <NetId>317</NetId>
+      <Name>Demon Eye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>318</Id>
+      <NetId>318</NetId>
+      <Name>Demon Eye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>2</Id>
+      <NetId>-43</NetId>
+      <Name>Demon Eye 2</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>177</Id>
+      <NetId>177</NetId>
+      <Name>Derpling</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>371</Id>
+      <NetId>371</NetId>
+      <Name>Detonating Bubble</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>8</Id>
+      <NetId>8</NetId>
+      <Name>Devourer Body</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>7</Id>
+      <NetId>7</NetId>
+      <Name>Devourer Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>9</Id>
+      <NetId>9</NetId>
+      <Name>Devourer Tail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>285</Id>
+      <NetId>285</NetId>
+      <Name>Diabolist</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>286</Id>
+      <NetId>286</NetId>
+      <Name>Diabolist</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>192</Id>
+      <NetId>192</NetId>
+      <Name>Dialated Eye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>192</Id>
+      <NetId>-40</NetId>
+      <Name>Dialated Eye 2</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>96</Id>
+      <NetId>96</NetId>
+      <Name>Digger Body</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>95</Id>
+      <NetId>95</NetId>
+      <Name>Digger Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>97</Id>
+      <NetId>97</NetId>
+      <Name>Digger Tail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>52</Id>
+      <NetId>52</NetId>
+      <Name>Doctor Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>20</Id>
+      <NetId>20</NetId>
+      <Name>Dryad</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>362</Id>
+      <NetId>362</NetId>
+      <Name>Duck</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>363</Id>
+      <NetId>363</NetId>
+      <Name>Duck</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>364</Id>
+      <NetId>364</NetId>
+      <Name>Duck</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>365</Id>
+      <NetId>365</NetId>
+      <Name>Duck</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>370</Id>
+      <NetId>370</NetId>
+      <Name>Duke Fishron</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>68</Id>
+      <NetId>68</NetId>
+      <Name>Dungeon Guardian</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>71</Id>
+      <NetId>71</NetId>
+      <Name>Dungeon Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>288</Id>
+      <NetId>288</NetId>
+      <Name>Dungeon Spirit</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>207</Id>
+      <NetId>207</NetId>
+      <Name>Dye Trader</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>6</Id>
+      <NetId>6</NetId>
+      <Name>Eater of Souls</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>14</Id>
+      <NetId>14</NetId>
+      <Name>Eater of Worlds Body</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>13</Id>
+      <NetId>13</NetId>
+      <Name>Eater of Worlds Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>15</Id>
+      <NetId>15</NetId>
+      <Name>Eater of Worlds Tail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>350</Id>
+      <NetId>350</NetId>
+      <Name>Elf Archer</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>347</Id>
+      <NetId>347</NetId>
+      <Name>Elf Copter</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>84</Id>
+      <NetId>84</NetId>
+      <Name>Enchanted Sword</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>344</Id>
+      <NetId>344</NetId>
+      <Name>Everscream</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>4</Id>
+      <NetId>4</NetId>
+      <Name>Eye of Cthulhu</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>251</Id>
+      <NetId>251</NetId>
+      <Name>Eyezor</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>181</Id>
+      <NetId>181</NetId>
+      <Name>Face Monster</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>200</Id>
+      <NetId>200</NetId>
+      <Name>Female Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>24</Id>
+      <NetId>24</NetId>
+      <Name>Fire Imp</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>355</Id>
+      <NetId>355</NetId>
+      <Name>Firefly</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>182</Id>
+      <NetId>182</NetId>
+      <Name>Floaty Gross</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>352</Id>
+      <NetId>352</NetId>
+      <Name>Flocko</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>224</Id>
+      <NetId>224</NetId>
+      <Name>Flying Fish</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>226</Id>
+      <NetId>226</NetId>
+      <Name>Flying Snake</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>162</Id>
+      <NetId>162</NetId>
+      <Name>Frankenstein</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>361</Id>
+      <NetId>361</NetId>
+      <Name>Frog</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>259</Id>
+      <NetId>259</NetId>
+      <Name>Fungi Bulb</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>261</Id>
+      <NetId>261</NetId>
+      <Name>Fungi Spore</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>256</Id>
+      <NetId>256</NetId>
+      <Name>Fungo Fish</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>122</Id>
+      <NetId>122</NetId>
+      <Name>Gastropod</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>316</Id>
+      <NetId>316</NetId>
+      <Name>Ghost</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>93</Id>
+      <NetId>93</NetId>
+      <Name>Giant Bat</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>289</Id>
+      <NetId>289</NetId>
+      <Name>Giant Cursed Skull</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>152</Id>
+      <NetId>152</NetId>
+      <Name>Giant Flying Fox</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>260</Id>
+      <NetId>260</NetId>
+      <Name>Giant Fungi Bulb</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>176</Id>
+      <NetId>-21</NetId>
+      <Name>Giant Moss Hornet</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>153</Id>
+      <NetId>153</NetId>
+      <Name>Giant Tortoise</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>11</Id>
+      <NetId>11</NetId>
+      <Name>Giant Worm Body</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>10</Id>
+      <NetId>10</NetId>
+      <Name>Giant Worm Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>12</Id>
+      <NetId>12</NetId>
+      <Name>Giant Worm Tail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>342</Id>
+      <NetId>342</NetId>
+      <Name>Gingerbread Man</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>360</Id>
+      <NetId>360</NetId>
+      <Name>Glowing Snail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>111</Id>
+      <NetId>111</NetId>
+      <Name>Goblin Archer</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>26</Id>
+      <NetId>26</NetId>
+      <Name>Goblin Peon</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>73</Id>
+      <NetId>73</NetId>
+      <Name>Goblin Scout</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>29</Id>
+      <NetId>29</NetId>
+      <Name>Goblin Sorcerer</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>27</Id>
+      <NetId>27</NetId>
+      <Name>Goblin Thief</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>107</Id>
+      <NetId>107</NetId>
+      <Name>Goblin Tinkerer</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>28</Id>
+      <NetId>28</NetId>
+      <Name>Goblin Warrior</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>55</Id>
+      <NetId>55</NetId>
+      <Name>Goldfish</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>230</Id>
+      <NetId>230</NetId>
+      <Name>Goldfish</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>245</Id>
+      <NetId>245</NetId>
+      <Name>Golem</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>247</Id>
+      <NetId>247</NetId>
+      <Name>Golem Fist</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>248</Id>
+      <NetId>248</NetId>
+      <Name>Golem Fist</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>246</Id>
+      <NetId>246</NetId>
+      <Name>Golem Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>249</Id>
+      <NetId>249</NetId>
+      <Name>Golem Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>377</Id>
+      <NetId>377</NetId>
+      <Name>Grasshopper</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>193</Id>
+      <NetId>193</NetId>
+      <Name>Green Eye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>193</Id>
+      <NetId>-41</NetId>
+      <Name>Green Eye 2</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>103</Id>
+      <NetId>103</NetId>
+      <Name>Green Jellyfish</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>1</Id>
+      <NetId>-3</NetId>
+      <Name>Green Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>22</Id>
+      <NetId>22</NetId>
+      <Name>Guide</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>48</Id>
+      <NetId>48</NetId>
+      <Name>Harpy</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>201</Id>
+      <NetId>201</NetId>
+      <Name>Headache Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>315</Id>
+      <NetId>315</NetId>
+      <Name>Headless Horseman</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>77</Id>
+      <NetId>-15</NetId>
+      <Name>Heavy Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>277</Id>
+      <NetId>277</NetId>
+      <Name>Hell Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>278</Id>
+      <NetId>278</NetId>
+      <Name>Hell Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>279</Id>
+      <NetId>279</NetId>
+      <Name>Hell Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>280</Id>
+      <NetId>280</NetId>
+      <Name>Hell Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>60</Id>
+      <NetId>60</NetId>
+      <Name>Hellbat</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>329</Id>
+      <NetId>329</NetId>
+      <Name>Hellhound</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>174</Id>
+      <NetId>174</NetId>
+      <Name>Herpling</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>304</Id>
+      <NetId>304</NetId>
+      <Name>Hoppin' Jack</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>42</Id>
+      <NetId>42</NetId>
+      <Name>Hornet</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>231</Id>
+      <NetId>231</NetId>
+      <Name>Hornet Fatty</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>232</Id>
+      <NetId>232</NetId>
+      <Name>Hornet Honey</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>233</Id>
+      <NetId>233</NetId>
+      <Name>Hornet Leafy</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>234</Id>
+      <NetId>234</NetId>
+      <Name>Hornet Spikey</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>235</Id>
+      <NetId>235</NetId>
+      <Name>Hornet Stingy</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>150</Id>
+      <NetId>150</NetId>
+      <Name>Ice Bat</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>169</Id>
+      <NetId>169</NetId>
+      <Name>Ice Elemental</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>243</Id>
+      <NetId>243</NetId>
+      <Name>Ice Golem</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>345</Id>
+      <NetId>345</NetId>
+      <Name>Ice Queen</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>147</Id>
+      <NetId>147</NetId>
+      <Name>Ice Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>154</Id>
+      <NetId>154</NetId>
+      <Name>Ice Tortoise</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>268</Id>
+      <NetId>268</NetId>
+      <Name>Ichor Sticker</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>206</Id>
+      <NetId>206</NetId>
+      <Name>Icy Merman</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>137</Id>
+      <NetId>137</NetId>
+      <Name>Illuminant Bat</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>138</Id>
+      <NetId>138</NetId>
+      <Name>Illuminant Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>51</Id>
+      <NetId>51</NetId>
+      <Name>Jungle Bat</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>236</Id>
+      <NetId>236</NetId>
+      <Name>Jungle Creeper</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>237</Id>
+      <NetId>237</NetId>
+      <Name>Jungle Creeper</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>1</Id>
+      <NetId>-10</NetId>
+      <Name>Jungle Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>50</Id>
+      <NetId>50</NetId>
+      <Name>King Slime</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>351</Id>
+      <NetId>351</NetId>
+      <Name>Krampus</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>219</Id>
+      <NetId>219</NetId>
+      <Name>Lac Beetle</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>151</Id>
+      <NetId>151</NetId>
+      <Name>Lava bat</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>59</Id>
+      <NetId>59</NetId>
+      <Name>Lava Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>118</Id>
+      <NetId>118</NetId>
+      <Name>Leech Body</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>117</Id>
+      <NetId>117</NetId>
+      <Name>Leech Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>119</Id>
+      <NetId>119</NetId>
+      <Name>Leech Tail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>80</Id>
+      <NetId>80</NetId>
+      <Name>Light Mummy</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>358</Id>
+      <NetId>358</NetId>
+      <Name>Lightning Bug</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>198</Id>
+      <NetId>198</NetId>
+      <Name>Lihzahrd</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>199</Id>
+      <NetId>199</NetId>
+      <Name>Lihzahrd</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>173</Id>
+      <NetId>-22</NetId>
+      <Name>Little Crimera</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>183</Id>
+      <NetId>-24</NetId>
+      <Name>Little Crimslime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>6</Id>
+      <NetId>-11</NetId>
+      <Name>Little Eater</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>231</Id>
+      <NetId>-56</NetId>
+      <Name>Little Hornet Fatty</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>232</Id>
+      <NetId>-58</NetId>
+      <Name>Little Hornet Honey</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>233</Id>
+      <NetId>-60</NetId>
+      <Name>Little Hornet Leafy</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>234</Id>
+      <NetId>-62</NetId>
+      <Name>Little Hornet Spikey</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>235</Id>
+      <NetId>-64</NetId>
+      <Name>Little Hornet Stingy</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>176</Id>
+      <NetId>-19</NetId>
+      <Name>Little Moss Hornet</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>42</Id>
+      <NetId>-16</NetId>
+      <Name>Little Stinger</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>195</Id>
+      <NetId>195</NetId>
+      <Name>Lost Girl</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>43</Id>
+      <NetId>43</NetId>
+      <Name>Man Eater</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>124</Id>
+      <NetId>124</NetId>
+      <Name>Mechanic</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>17</Id>
+      <NetId>17</NetId>
+      <Name>Merchant</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>23</Id>
+      <NetId>23</NetId>
+      <Name>Meteor Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>85</Id>
+      <NetId>85</NetId>
+      <Name>Mimic</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>202</Id>
+      <NetId>202</NetId>
+      <Name>Misassembled Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>144</Id>
+      <NetId>144</NetId>
+      <Name>Mister Stabby</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>176</Id>
+      <NetId>176</NetId>
+      <Name>Moss Hornet</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>205</Id>
+      <NetId>205</NetId>
+      <Name>Moth</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>16</Id>
+      <NetId>16</NetId>
+      <Name>Mother Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>325</Id>
+      <NetId>325</NetId>
+      <Name>Mourning Wood</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>300</Id>
+      <NetId>300</NetId>
+      <Name>Mouse</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>78</Id>
+      <NetId>78</NetId>
+      <Name>Mummy</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>258</Id>
+      <NetId>258</NetId>
+      <Name>Mushi Ladybug</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>283</Id>
+      <NetId>283</NetId>
+      <Name>Necromancer</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>284</Id>
+      <NetId>284</NetId>
+      <Name>Necromancer</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>18</Id>
+      <NetId>18</NetId>
+      <Name>Nurse</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>348</Id>
+      <NetId>348</NetId>
+      <Name>Nutcracker</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>349</Id>
+      <NetId>349</NetId>
+      <Name>Nutcracker</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>196</Id>
+      <NetId>196</NetId>
+      <Name>Nymph</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>37</Id>
+      <NetId>37</NetId>
+      <Name>Old Man</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>227</Id>
+      <NetId>227</NetId>
+      <Name>Painter</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>290</Id>
+      <NetId>290</NetId>
+      <Name>Paladin</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>203</Id>
+      <NetId>203</NetId>
+      <Name>Pantless Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>252</Id>
+      <NetId>252</NetId>
+      <Name>Parrot</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>208</Id>
+      <NetId>208</NetId>
+      <Name>Party Girl</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>148</Id>
+      <NetId>148</NetId>
+      <Name>Penguin</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>149</Id>
+      <NetId>149</NetId>
+      <Name>Penguin</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>170</Id>
+      <NetId>170</NetId>
+      <Name>Pigron</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>171</Id>
+      <NetId>171</NetId>
+      <Name>Pigron</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>180</Id>
+      <NetId>180</NetId>
+      <Name>Pigron</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>186</Id>
+      <NetId>186</NetId>
+      <Name>Pincushion Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>64</Id>
+      <NetId>64</NetId>
+      <Name>Pink Jellyfish</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>1</Id>
+      <NetId>-4</NetId>
+      <Name>Pinky</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>58</Id>
+      <NetId>58</NetId>
+      <Name>Piranha</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>229</Id>
+      <NetId>229</NetId>
+      <Name>Pirate</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>216</Id>
+      <NetId>216</NetId>
+      <Name>Pirate Captain</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>213</Id>
+      <NetId>213</NetId>
+      <Name>Pirate Corsair</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>215</Id>
+      <NetId>215</NetId>
+      <Name>Pirate Crossbower</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>214</Id>
+      <NetId>214</NetId>
+      <Name>Pirate Deadeye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>212</Id>
+      <NetId>212</NetId>
+      <Name>Pirate Deckhand</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>75</Id>
+      <NetId>75</NetId>
+      <Name>Pixie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>262</Id>
+      <NetId>262</NetId>
+      <Name>Plantera</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>263</Id>
+      <NetId>263</NetId>
+      <Name>Plantera's Hook</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>264</Id>
+      <NetId>264</NetId>
+      <Name>Plantera's Tentacle</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>330</Id>
+      <NetId>330</NetId>
+      <Name>Poltergeist</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>140</Id>
+      <NetId>140</NetId>
+      <Name>Possessed Armor</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>341</Id>
+      <NetId>341</NetId>
+      <Name>Present Mimic</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>128</Id>
+      <NetId>128</NetId>
+      <Name>Prime Cannon</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>131</Id>
+      <NetId>131</NetId>
+      <Name>Prime Laser</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>129</Id>
+      <NetId>129</NetId>
+      <Name>Prime Saw</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>130</Id>
+      <NetId>130</NetId>
+      <Name>Prime Vice</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>139</Id>
+      <NetId>139</NetId>
+      <Name>Probe</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>327</Id>
+      <NetId>327</NetId>
+      <Name>Pumpking</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>328</Id>
+      <NetId>328</NetId>
+      <Name>Pumpking</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>194</Id>
+      <NetId>194</NetId>
+      <Name>Purple Eye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>194</Id>
+      <NetId>-42</NetId>
+      <Name>Purple Eye 2</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>1</Id>
+      <NetId>-7</NetId>
+      <Name>Purple Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>222</Id>
+      <NetId>222</NetId>
+      <Name>Queen Bee</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>281</Id>
+      <NetId>281</NetId>
+      <Name>Ragged Caster</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>282</Id>
+      <NetId>282</NetId>
+      <Name>Ragged Caster</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>244</Id>
+      <NetId>244</NetId>
+      <Name>Rainbow Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>301</Id>
+      <NetId>301</NetId>
+      <Name>Raven</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>253</Id>
+      <NetId>253</NetId>
+      <Name>Reaper</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>156</Id>
+      <NetId>156</NetId>
+      <Name>Red Devil</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>1</Id>
+      <NetId>-8</NetId>
+      <Name>Red Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>125</Id>
+      <NetId>125</NetId>
+      <Name>Retinazer</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>172</Id>
+      <NetId>172</NetId>
+      <Name>Rune Wizard</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>269</Id>
+      <NetId>269</NetId>
+      <Name>Rusty Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>270</Id>
+      <NetId>270</NetId>
+      <Name>Rusty Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>271</Id>
+      <NetId>271</NetId>
+      <Name>Rusty Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>272</Id>
+      <NetId>272</NetId>
+      <Name>Rusty Armored Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>142</Id>
+      <NetId>142</NetId>
+      <Name>Santa Claus</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>346</Id>
+      <NetId>346</NetId>
+      <Name>Santa-NK1</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>305</Id>
+      <NetId>305</NetId>
+      <Name>Scarecrow</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>306</Id>
+      <NetId>306</NetId>
+      <Name>Scarecrow</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>307</Id>
+      <NetId>307</NetId>
+      <Name>Scarecrow</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>308</Id>
+      <NetId>308</NetId>
+      <Name>Scarecrow</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>309</Id>
+      <NetId>309</NetId>
+      <Name>Scarecrow</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>310</Id>
+      <NetId>310</NetId>
+      <Name>Scarecrow</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>311</Id>
+      <NetId>311</NetId>
+      <Name>Scarecrow</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>312</Id>
+      <NetId>312</NetId>
+      <Name>Scarecrow</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>313</Id>
+      <NetId>313</NetId>
+      <Name>Scarecrow</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>314</Id>
+      <NetId>314</NetId>
+      <Name>Scarecrow</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>366</Id>
+      <NetId>366</NetId>
+      <Name>Scorpion</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>367</Id>
+      <NetId>367</NetId>
+      <Name>Scorpion</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>220</Id>
+      <NetId>220</NetId>
+      <Name>Sea Snail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>99</Id>
+      <NetId>99</NetId>
+      <Name>Seeker Body</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>98</Id>
+      <NetId>98</NetId>
+      <Name>Seeker Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>100</Id>
+      <NetId>100</NetId>
+      <Name>Seeker Tail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>5</Id>
+      <NetId>5</NetId>
+      <Name>Servant of Cthulhu</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>65</Id>
+      <NetId>65</NetId>
+      <Name>Shark</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>372</Id>
+      <NetId>372</NetId>
+      <Name>Sharkron</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>373</Id>
+      <NetId>373</NetId>
+      <Name>Sharkron2</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>31</Id>
+      <NetId>-13</NetId>
+      <Name>Short Bones</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>21</Id>
+      <NetId>21</NetId>
+      <Name>Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>322</Id>
+      <NetId>322</NetId>
+      <Name>Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>323</Id>
+      <NetId>323</NetId>
+      <Name>Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>324</Id>
+      <NetId>324</NetId>
+      <Name>Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>110</Id>
+      <NetId>110</NetId>
+      <Name>Skeleton Archer</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>293</Id>
+      <NetId>293</NetId>
+      <Name>Skeleton Commando</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>291</Id>
+      <NetId>291</NetId>
+      <Name>Skeleton Sniper</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>36</Id>
+      <NetId>36</NetId>
+      <Name>Skeletron Hand</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>35</Id>
+      <NetId>35</NetId>
+      <Name>Skeletron Head</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>127</Id>
+      <NetId>127</NetId>
+      <Name>Skeletron Prime</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>376</Id>
+      <NetId>376</NetId>
+      <Name>Sleeping Angler</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>191</Id>
+      <NetId>191</NetId>
+      <Name>Sleepy Eye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>191</Id>
+      <NetId>-39</NetId>
+      <Name>Sleepy Eye 2</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>302</Id>
+      <NetId>302</NetId>
+      <Name>Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>333</Id>
+      <NetId>333</NetId>
+      <Name>Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>334</Id>
+      <NetId>334</NetId>
+      <Name>Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>335</Id>
+      <NetId>335</NetId>
+      <Name>Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>336</Id>
+      <NetId>336</NetId>
+      <Name>Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>187</Id>
+      <NetId>187</NetId>
+      <Name>Slimed Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>81</Id>
+      <NetId>-1</NetId>
+      <Name>Slimeling</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>121</Id>
+      <NetId>121</NetId>
+      <Name>Slimer</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>81</Id>
+      <NetId>-2</NetId>
+      <Name>Slimer2</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>132</Id>
+      <NetId>-28</NetId>
+      <Name>Small Bald Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>200</Id>
+      <NetId>-44</NetId>
+      <Name>Small Female Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>201</Id>
+      <NetId>-48</NetId>
+      <Name>Small Headache Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>202</Id>
+      <NetId>-50</NetId>
+      <Name>Small Misassembled Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>203</Id>
+      <NetId>-52</NetId>
+      <Name>Small Pantless Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>186</Id>
+      <NetId>-30</NetId>
+      <Name>Small Pincushion Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>223</Id>
+      <NetId>-54</NetId>
+      <Name>Small Rain Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>21</Id>
+      <NetId>-46</NetId>
+      <Name>Small Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>187</Id>
+      <NetId>-32</NetId>
+      <Name>Small Slimed Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>188</Id>
+      <NetId>-34</NetId>
+      <Name>Small Swamp Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>189</Id>
+      <NetId>-36</NetId>
+      <Name>Small Twiggy Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>3</Id>
+      <NetId>-26</NetId>
+      <Name>Small Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>359</Id>
+      <NetId>359</NetId>
+      <Name>Snail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>56</Id>
+      <NetId>56</NetId>
+      <Name>Snatcher</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>145</Id>
+      <NetId>145</NetId>
+      <Name>Snow Balla</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>185</Id>
+      <NetId>185</NetId>
+      <Name>Snow Flinx</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>143</Id>
+      <NetId>143</NetId>
+      <Name>Snowman Gangsta</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>126</Id>
+      <NetId>126</NetId>
+      <Name>Spazmatism</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>70</Id>
+      <NetId>70</NetId>
+      <Name>Spike Ball</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>184</Id>
+      <NetId>184</NetId>
+      <Name>Spiked Ice Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>204</Id>
+      <NetId>204</NetId>
+      <Name>Spiked Jungle Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>326</Id>
+      <NetId>326</NetId>
+      <Name>Splinterling</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>265</Id>
+      <NetId>265</NetId>
+      <Name>Spore</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>221</Id>
+      <NetId>221</NetId>
+      <Name>Squid</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>299</Id>
+      <NetId>299</NetId>
+      <Name>Squirrel</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>178</Id>
+      <NetId>178</NetId>
+      <Name>Steampunker</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>353</Id>
+      <NetId>353</NetId>
+      <Name>Stylist</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>166</Id>
+      <NetId>166</NetId>
+      <Name>Swamp Thing</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>188</Id>
+      <NetId>188</NetId>
+      <Name>Swamp Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>292</Id>
+      <NetId>292</NetId>
+      <Name>Tactical Skeleton</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>134</Id>
+      <NetId>134</NetId>
+      <Name>The Destroyer</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>135</Id>
+      <NetId>135</NetId>
+      <Name>The Destroyer Body</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>136</Id>
+      <NetId>136</NetId>
+      <Name>The Destroyer Tail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>53</Id>
+      <NetId>53</NetId>
+      <Name>The Groom</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>115</Id>
+      <NetId>115</NetId>
+      <Name>The Hungry</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>116</Id>
+      <NetId>116</NetId>
+      <Name>The Hungry II</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>45</Id>
+      <NetId>45</NetId>
+      <Name>Tim</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>176</Id>
+      <NetId>-18</NetId>
+      <Name>Tiny Moss Hornet</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>141</Id>
+      <NetId>141</NetId>
+      <Name>Toxic Sludge</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>368</Id>
+      <NetId>368</NetId>
+      <Name>Travelling Merchant</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>160</Id>
+      <NetId>160</NetId>
+      <Name>Truffle</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>374</Id>
+      <NetId>374</NetId>
+      <Name>Truffle Worm</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>375</Id>
+      <NetId>375</NetId>
+      <Name>Truffle Worm Digger</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>189</Id>
+      <NetId>189</NetId>
+      <Name>Twiggy Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>225</Id>
+      <NetId>225</NetId>
+      <Name>Umbrella Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>44</Id>
+      <NetId>44</NetId>
+      <Name>Undead Miner</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>167</Id>
+      <NetId>167</NetId>
+      <Name>Undead Viking</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>86</Id>
+      <NetId>86</NetId>
+      <Name>Unicorn</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>158</Id>
+      <NetId>158</NetId>
+      <Name>Vampire</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>159</Id>
+      <NetId>159</NetId>
+      <Name>Vampire</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>112</Id>
+      <NetId>112</NetId>
+      <Name>Vile Spit</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>66</Id>
+      <NetId>66</NetId>
+      <Name>Voodoo Demon</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>61</Id>
+      <NetId>61</NetId>
+      <Name>Vulture</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>164</Id>
+      <NetId>164</NetId>
+      <Name>Wall Creeper</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>165</Id>
+      <NetId>165</NetId>
+      <Name>Wall Creeper</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>113</Id>
+      <NetId>113</NetId>
+      <Name>Wall of Flesh</Name>
+      <Boss>true</Boss>
+    </NPCInfo>
+    <NPCInfo>
+      <Id>114</Id>
+      <NetId>114</NetId>
+      <Name>Wall of Flesh Eye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>133</Id>
+      <NetId>133</NetId>
+      <Name>Wandering Eye</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>33</Id>
+      <NetId>33</NetId>
+      <Name>Water Sphere</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>354</Id>
+      <NetId>354</NetId>
+      <Name>Webbed Stylist</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>104</Id>
+      <NetId>104</NetId>
+      <Name>Werewolf</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>228</Id>
+      <NetId>228</NetId>
+      <Name>Witch Doctor</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>108</Id>
+      <NetId>108</NetId>
+      <Name>Wizard</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>155</Id>
+      <NetId>155</NetId>
+      <Name>Wolf</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>357</Id>
+      <NetId>357</NetId>
+      <Name>Worm</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>82</Id>
+      <NetId>82</NetId>
+      <Name>Wraith</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>89</Id>
+      <NetId>89</NetId>
+      <Name>Wyvern Body</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>90</Id>
+      <NetId>90</NetId>
+      <Name>Wyvern Body 2</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>91</Id>
+      <NetId>91</NetId>
+      <Name>Wyvern Body 3</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>87</Id>
+      <NetId>87</NetId>
+      <Name>Wyvern Head</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>88</Id>
+      <NetId>88</NetId>
+      <Name>Wyvern Legs</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>92</Id>
+      <NetId>92</NetId>
+      <Name>Wyvern Tail</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>1</Id>
+      <NetId>-9</NetId>
+      <Name>Yellow Slime</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>343</Id>
+      <NetId>343</NetId>
+      <Name>Yeti</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>3</Id>
+      <NetId>3</NetId>
+      <Name>Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>223</Id>
+      <NetId>223</NetId>
+      <Name>Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>254</Id>
+      <NetId>254</NetId>
+      <Name>Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>255</Id>
+      <NetId>255</NetId>
+      <Name>Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>319</Id>
+      <NetId>319</NetId>
+      <Name>Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>320</Id>
+      <NetId>320</NetId>
+      <Name>Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>321</Id>
+      <NetId>321</NetId>
+      <Name>Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>331</Id>
+      <NetId>331</NetId>
+      <Name>Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>332</Id>
+      <NetId>332</NetId>
+      <Name>Zombie</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>338</Id>
+      <NetId>338</NetId>
+      <Name>Zombie Elf</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>339</Id>
+      <NetId>339</NetId>
+      <Name>Zombie Elf</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>340</Id>
+      <NetId>340</NetId>
+      <Name>Zombie Elf</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+    <NPCInfo>
+      <Id>161</Id>
+      <NetId>161</NetId>
+      <Name>Zombie Eskimo</Name>
+      <Boss xsi:nil="true" />
+    </NPCInfo>
+  </Data>
+</DefinitionFileOfNPCInfo>

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6B42E70C-75CD-410B-9D4A-3EA75B6F5176}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Terraria_Server</RootNamespace>
+    <AssemblyName>Terraria_Server</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <DelaySign>False</DelaySign>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;UNSAFE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <Externalconsole>true</Externalconsole>
+    <DocumentationFile>bin\Debug\Terraria_Server.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <DocumentationFile>bin\Release\Terraria_Server.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Terraria_Server.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>2BE6936C0197F522CA29B15CDAC2482A3B4C81B9</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Terraria_Server_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <NoWin32Manifest>True</NoWin32Manifest>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>tdsm.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Just Server|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Just Server\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;UNSAFE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\Terraria_Server.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\Terraria_Server.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+    <Externalconsole>true</Externalconsole>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Just Server|x64'">
+    <OutputPath>bin\x64\Just Server\</OutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisLogFile>bin\x64\Debug\Terraria_Server.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseEntity.cs" />
+    <Compile Include="Commands\ISender.cs" />
+    <Compile Include="Definitions\NPCType.cs" />
+    <Compile Include="Definitions\ProjectileType.cs" />
+    <Compile Include="Collections\IRegisterableEntity.cs" />
+    <Compile Include="Collections\ItemRegistry.cs" />
+    <Compile Include="Collections\Registries.cs" />
+    <Compile Include="Logging\SendingLogger.cs" />
+    <Compile Include="Messages\SpammableMessage.cs" />
+    <Compile Include="Misc\InvasionType.cs" />
+    <Compile Include="Misc\Affix.cs" />
+    <Compile Include="Misc\Time.cs" />
+    <Compile Include="Language\Languages.cs" />
+    <Compile Include="Messages\ChestItemMessage.cs" />
+    <Compile Include="Messages\ConnectionRequestMessage.cs" />
+    <Compile Include="Messages\HitSwitchMessage.cs" />
+    <Compile Include="Messages\NPCHomeMessage.cs" />
+    <Compile Include="Messages\SpawnNPCs.cs" />
+    <Compile Include="TDCM\Packets\ClientModMessage.cs" />
+    <Compile Include="Messages\DamageNPCMessage.cs" />
+    <Compile Include="Messages\DoorUpdateMessage.cs" />
+    <Compile Include="Messages\EnterZoneMessage.cs" />
+    <Compile Include="Messages\FlowLiquidMessage.cs" />
+    <Compile Include="Messages\HealMessage.cs" />
+    <Compile Include="Messages\InventoryDataMessage.cs" />
+    <Compile Include="Messages\ItemInfoMessage.cs" />
+    <Compile Include="Messages\ItemOwnerInfoMessage.cs" />
+    <Compile Include="Messages\KillPlayerPvPMessage.cs" />
+    <Compile Include="Messages\KillProjectileMessage.cs" />
+    <Compile Include="Messages\KillTileMessage.cs" />
+    <Compile Include="Messages\NPCTalkMessage.cs" />
+    <Compile Include="Messages\OpenChestMessage.cs" />
+    <Compile Include="Messages\PasswordResponseMessage.cs" />
+    <Compile Include="Messages\PlayerBallswingMessage.cs" />
+    <Compile Include="Messages\PlayerBuffsMessage.cs" />
+    <Compile Include="Messages\PlayerChatMessage.cs" />
+    <Compile Include="Messages\PlayerChestUpdate.cs" />
+    <Compile Include="Messages\PlayerDataMessage.cs" />
+    <Compile Include="Messages\PlayerHealthUpdateMessage.cs" />
+    <Compile Include="Messages\PlayerJoinPartyMessage.cs" />
+    <Compile Include="Messages\PlayerManaUpdateMessage.cs" />
+    <Compile Include="Messages\PlayerPvPChangeMessage.cs" />
+    <Compile Include="Messages\PlayerStateUpdateMessage.cs" />
+    <Compile Include="Messages\PlayerUseManaUpdateMessage.cs" />
+    <Compile Include="Messages\ProjectileMessage.cs" />
+    <Compile Include="Messages\ReadSignMessage.cs" />
+    <Compile Include="Messages\ReceivingPlayerJoinedMessage.cs" />
+    <Compile Include="Messages\RequestTileMessage.cs" />
+    <Compile Include="Messages\StrikeNPCMessage.cs" />
+    <Compile Include="Messages\StrikePlayerMessage.cs" />
+    <Compile Include="Messages\SummonSkeletronMessage.cs" />
+    <Compile Include="TDCM\Packets\QuestsInfo.cs" />
+    <Compile Include="TDCM\Packets\Quests\QuestActions.cs" />
+    <Compile Include="TDCM\Packets\SpawnNPC.cs" />
+    <Compile Include="Messages\TileBreakMessage.cs" />
+    <Compile Include="Messages\TileSquareMessage.cs" />
+    <Compile Include="Messages\UpdatePlayersMessage.cs" />
+    <Compile Include="Messages\WorldRequestMessage.cs" />
+    <Compile Include="Messages\WriteSignMessage.cs" />
+    <Compile Include="Misc\Key.cs" />
+    <Compile Include="Misc\Tile\TileAction.cs" />
+    <Compile Include="Misc\Tile\TileType.cs" />
+    <Compile Include="Collections\Registry.cs" />
+    <Compile Include="Server\BackupManager.cs" />
+    <Compile Include="Misc\ChatColor.cs" />
+    <Compile Include="Misc\ExitException.cs" />
+    <Compile Include="Permissions\Node.cs" />
+    <Compile Include="Permissions\PermissionManager.cs" />
+    <Compile Include="Server\LoadMonitor.cs" />
+    <Compile Include="Commands\ConsoleSender.cs" />
+    <Compile Include="Collision.cs" />
+    <Compile Include="Misc\Color.cs" />
+    <Compile Include="Commands\Commands.cs" />
+    <Compile Include="Commands\CommandParser.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="Liquid.cs" />
+    <Compile Include="LiquidBuffer.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="NetMessage.cs" />
+    <Compile Include="NPC.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Projectile.cs" />
+    <Compile Include="Misc\Platform.cs" />
+    <Compile Include="Server\ServerProperties.cs" />
+    <Compile Include="Misc\PropertiesFile.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Misc\Rectangle.cs" />
+    <Compile Include="Server\Server.cs" />
+    <Compile Include="Server\Packet.cs" />
+    <Compile Include="Server\ServerState.cs" />
+    <Compile Include="Server\UpdateManager.cs" />
+    <Compile Include="Chest.cs" />
+    <Compile Include="Sign.cs" />
+    <Compile Include="Server\Statics.cs" />
+    <Compile Include="Misc\Vector2.cs" />
+    <Compile Include="Misc\DataRegister.cs" />
+    <Compile Include="Server\World.cs" />
+    <Compile Include="TDCM\QuestNPCType.cs" />
+    <Compile Include="TDCM\QuestType.cs" />
+    <Compile Include="WorldMod\WorldGen.cs" />
+    <Compile Include="WorldMod\WorldIO.cs" />
+    <Compile Include="WorldMod\WorldModify.cs" />
+    <Compile Include="NetPlay.cs" />
+    <Compile Include="ServerSlot.cs" />
+    <Compile Include="NetMessage_Packets.cs" />
+    <Compile Include="TileCollection.cs" />
+    <Compile Include="Tile.cs" />
+    <Compile Include="Commands\ArgumentList.cs" />
+    <Compile Include="Misc\ProducerConsumerSignal.cs" />
+    <Compile Include="Logging\LogTarget.cs" />
+    <Compile Include="Logging\ProgressLogger.cs" />
+    <Compile Include="Logging\ProgramLog.cs" />
+    <Compile Include="Logging\LogTraceListener.cs" />
+    <Compile Include="RemoteConsole\RConServer.cs" />
+    <Compile Include="RemoteConsole\RConClient.cs" />
+    <Compile Include="RemoteConsole\RConSender.cs" />
+    <Compile Include="Logging\LogChannel.cs" />
+    <Compile Include="Server\ProgramThread.cs" />
+    <Compile Include="Networking\Connection.cs" />
+    <Compile Include="Networking\ClientConnection.cs" />
+    <Compile Include="Messages\ChestUnlockMessage.cs" />
+    <Compile Include="Messages\NPCAddBuffMessage.cs" />
+    <Compile Include="Messages\PlayerAddBuffMessage.cs" />
+    <Compile Include="Misc\CloningExtensions.cs" />
+    <Compile Include="Messages\MessageHandler.cs" />
+    <Compile Include="Networking\SlotManager.cs" />
+    <Compile Include="Messages\DisconnectMessage.cs" />
+    <Compile Include="Misc\ArrayDeque.cs" />
+    <Compile Include="Messages\MessageDispatcher.cs" />
+    <Compile Include="Networking\LiquidUpdateBuffer.cs" />
+    <Compile Include="Plugins\HookPoint.cs" />
+    <Compile Include="Plugins\Hooks.cs" />
+    <Compile Include="Networking\StringCache.cs" />
+    <Compile Include="Plugins\BasePlugin.cs" />
+    <Compile Include="Plugins\HookAttribute.cs" />
+    <Compile Include="Plugins\PluginManager.cs" />
+    <Compile Include="Server\WorldSender.cs" />
+    <Compile Include="Commands\Sender.cs" />
+    <Compile Include="WorldMod\Sandbox.cs" />
+    <Compile Include="WorldMod\SandboxEditor.cs" />
+    <Compile Include="WorldMod\PlayerSandbox.cs" />
+    <Compile Include="WorldMod\SideEffect.cs" />
+    <Compile Include="Server\Tasks.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Definitions\NPCs.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Definitions\Items.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Definitions\ItemsByName.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Definitions\Projectiles.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <Content Include="tdsm.ico" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

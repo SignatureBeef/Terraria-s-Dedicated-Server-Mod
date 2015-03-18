@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>tdsm</RootNamespace>
+    <AssemblyName>tdsm</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="outfile.patched, Version=1.2.4.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\tdsm-patcher\bin\x86\Debug\outfile.patched.exe</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ArgumentList.cs" />
+    <Compile Include="ArrayDequeue.cs" />
+    <Compile Include="BaseEntity.cs" />
+    <Compile Include="BasePlayer.cs" />
+    <Compile Include="ClientConnection.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="IRegisterableEntity.cs" />
+    <Compile Include="ISender.cs" />
+    <Compile Include="Messages\ChestItemMessage.cs" />
+    <Compile Include="Messages\ChestUnlockMessage.cs" />
+    <Compile Include="Messages\ConnectionRequestMessage.cs" />
+    <Compile Include="Messages\Packet68.cs" />
+    <Compile Include="Messages\DamageNPCMessage.cs" />
+    <Compile Include="Messages\DisconnectMessage.cs" />
+    <Compile Include="Messages\DoorUpdateMessage.cs" />
+    <Compile Include="Messages\EnterZoneMessage.cs" />
+    <Compile Include="Messages\FlowLiquidMessage.cs" />
+    <Compile Include="Messages\HealMessage.cs" />
+    <Compile Include="Messages\HitSwitchMessage.cs" />
+    <Compile Include="Messages\InventoryDataMessage.cs" />
+    <Compile Include="Messages\ItemInfoMessage.cs" />
+    <Compile Include="Messages\ItemOwnerInfoMessage.cs" />
+    <Compile Include="Messages\KillPlayerPvPMessage.cs" />
+    <Compile Include="Messages\KillProjectileMessage.cs" />
+    <Compile Include="Messages\KillTileMessage.cs" />
+    <Compile Include="Messages\MessageDispatcher.cs" />
+    <Compile Include="Messages\MessageHandler.cs" />
+    <Compile Include="Messages\NPCAddBuffMessage.cs" />
+    <Compile Include="Messages\NPCHomeMessage.cs" />
+    <Compile Include="Messages\NPCTalkMessage.cs" />
+    <Compile Include="Messages\OpenChestMessage.cs" />
+    <Compile Include="Messages\PasswordResponseMessage.cs" />
+    <Compile Include="Messages\PlayerAddBuffMessage.cs" />
+    <Compile Include="Messages\PlayerBallswingMessage.cs" />
+    <Compile Include="Messages\PlayerBuffsMessage.cs" />
+    <Compile Include="Messages\PlayerChatMessage.cs" />
+    <Compile Include="Messages\PlayerChestUpdate.cs" />
+    <Compile Include="Messages\PlayerDataMessage.cs" />
+    <Compile Include="Messages\PlayerHealthUpdateMessage.cs" />
+    <Compile Include="Messages\PlayerJoinPartyMessage.cs" />
+    <Compile Include="Messages\PlayerManaUpdateMessage.cs" />
+    <Compile Include="Messages\PlayerPvPChangeMessage.cs" />
+    <Compile Include="Messages\PlayerStateUpdateMessage.cs" />
+    <Compile Include="Messages\PlayerUseManaUpdateMessage.cs" />
+    <Compile Include="Messages\ProjectileMessage.cs" />
+    <Compile Include="Messages\ReadSignMessage.cs" />
+    <Compile Include="Messages\ReceivingPlayerJoinedMessage.cs" />
+    <Compile Include="Messages\RequestTileMessage.cs" />
+    <Compile Include="Messages\SpammableMessage.cs" />
+    <Compile Include="Messages\SpawnNPCs.cs" />
+    <Compile Include="Messages\StrikeNPCMessage.cs" />
+    <Compile Include="Messages\StrikePlayerMessage.cs" />
+    <Compile Include="Messages\SummonSkeletronMessage.cs" />
+    <Compile Include="Messages\TileBreakMessage.cs" />
+    <Compile Include="Messages\TileSquareMessage.cs" />
+    <Compile Include="Messages\UpdatePlayersMessage.cs" />
+    <Compile Include="Messages\WorldRequestMessage.cs" />
+    <Compile Include="Messages\WriteSignMessage.cs" />
+    <Compile Include="Mono.cs" />
+    <Compile Include="NewNetMessage.cs" />
+    <Compile Include="NewNetMessage_Packets.cs" />
+    <Compile Include="Packet.cs" />
+    <Compile Include="Patch\MessageBuffer.cs" />
+    <Compile Include="ProgramThread.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server.cs" />
+    <Compile Include="ServerEntry.cs" />
+    <Compile Include="ServerSlot.cs" />
+    <Compile Include="SlotManager.cs" />
+    <Compile Include="Terraria\Tile.cs" />
+    <Compile Include="UserInput.cs" />
+    <Compile Include="Xna\Color.cs" />
+    <Compile Include="Xna\ContentManager.cs" />
+    <Compile Include="Xna\Game.cs" />
+    <Compile Include="Xna\Texture2D.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
