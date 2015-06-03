@@ -15,24 +15,41 @@ namespace tdsm.core.WebInterface
 {
     public class RequestEndException : Exception { }
 
+    public enum ResourceType : byte
+    {
+        Javascript = 1,
+        Stylesheet
+    }
+    public struct ResourceDependancy
+    {
+        public string Url { get; set; }
+        public ResourceType Type { get; set; }
+    }
+
     public abstract class WebPage
     {
         public abstract void ProcessRequest(WebRequest request);
 
-        public string[] Nodes { get; set; }
+        //public string[] Nodes { get; set; }
+        public WebModule ModuleInfo { get; set; }
 
         public bool CanProcess(WebRequest request)
         {
-            if (Nodes == null) return true;
+            if (ModuleInfo == null || ModuleInfo.Nodes == null) return true;
             var has = false;
-            foreach (var nd in Nodes)
+            foreach (var nd in ModuleInfo.Nodes)
             {
                 if (nd == "*") return true;
                 var perm = WebPermissions.IsPermitted(nd, request);
                 if (perm == api.Permissions.Permission.Denied) return false;
                 if (perm == api.Permissions.Permission.Permitted) has = true;
             }
-            return false;
+            return has;
+        }
+
+        public virtual ResourceDependancy[] GetDependencies()
+        {
+            return null;
         }
     }
 
@@ -41,6 +58,8 @@ namespace tdsm.core.WebInterface
         public string Url { get; set; }
 
         public string[] Nodes { get; set; }
+
+        public bool InterfaceModule { get; set; }
     }
 
     public static class WebServer
@@ -91,6 +110,17 @@ namespace tdsm.core.WebInterface
             return true;
         }
 
+        public delegate void ForEachTileFunc(WebPage page);
+
+        public static void ForEachPage(ForEachTileFunc fnc)
+        {
+            lock (_pages)
+            {
+                foreach (var item in _pages)
+                    fnc.Invoke(item.Value);
+            }
+        }
+
         private static List<KeyValuePair<String, WebPage>> GatherWebPages()
         {
             var pages = new List<KeyValuePair<String, WebPage>>();
@@ -105,7 +135,8 @@ namespace tdsm.core.WebInterface
                 if (module != null)
                 {
                     var wp = (WebPage)Activator.CreateInstance(pageType);
-                    wp.Nodes = ((WebModule)module).Nodes;
+                    //wp.Nodes = ((WebModule)module).Nodes;
+                    wp.ModuleInfo = module as WebModule;
                     pages.Add(new KeyValuePair<String, WebPage>(((WebModule)module).Url, wp));
                 }
             }
@@ -240,7 +271,19 @@ namespace tdsm.core.WebInterface
                 var local = Path.Combine(WebServer.HtmlDirectory, url);
 
                 if (Path.GetFullPath(local).StartsWith(WebServer.HtmlDirectory))
-                    return new FileInfo(local);
+                {
+                    var inf = new FileInfo(local);
+
+                    //Allow minification alternates
+                    var ex = inf.Extension.ToLower();
+                    if (ex == ".js" || ex == ".css")
+                    {
+                        var min = new FileInfo(inf.FullName.Insert(inf.FullName.Length - inf.Extension.Length, "-min"));
+                        if (min.Exists) inf = min;
+                    }
+
+                    return inf;
+                }
             }
             return null;
         }

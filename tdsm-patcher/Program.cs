@@ -1,6 +1,7 @@
 ﻿#define SERVER
 #define DEV
 //#define CLIENT
+
 using System;
 using System.IO;
 using System.Linq;
@@ -111,8 +112,10 @@ namespace tdsm.patcher
 #endif
 #elif CLIENT
             var inFile = "Terraria.exe";
-            var outFile = "tdcm.exe";
-            var patchFile = "Microsoft.Xna.Framework.dll";
+            var fileName = "tcsm";
+            var outFileMS = fileName + ".microsoft.exe";
+            var outFileMN = fileName + ".mono.exe";
+            var patchFile = "MonoGame.Framework.dll";
 #endif
             //            if (!File.Exists(inFile))
             //            {

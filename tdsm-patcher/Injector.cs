@@ -423,16 +423,17 @@ namespace tdsm.patcher
                 }
             }
 
-            netplay.Fields.Remove(
-                netplay.Fields.Where(x => x.Name == "upnpnat").First()
-            );
+            var fl = netplay.Fields.Where(x => x.Name == "upnpnat").FirstOrDefault();
+            if (fl != null)
+                netplay.Fields.Remove(fl);
 
             //Clear open and close methods
             netplay.Methods.Where(x => x.Name == "openPort").First().Body.Instructions.Clear();
             netplay.Methods.Where(x => x.Name == "closePort").First().Body.Instructions.Clear();
-            netplay.Fields.Remove(
-                netplay.Fields.Where(x => x.Name == "mappings").First()
-            );
+
+            fl = netplay.Fields.Where(x => x.Name == "mappings").FirstOrDefault();
+            if (fl != null)
+                netplay.Fields.Remove(fl);
         }
 
         public void FixEntryPoint()
@@ -715,7 +716,7 @@ namespace tdsm.patcher
             {
                 for (var x = 0; x < xnaFramework.Length; x++)
                 {
-                    xnaFramework[x].Name = "Microsoft.Xna.Framework";
+                    xnaFramework[x].Name = "MonoGame.Framework";
                     xnaFramework[x].PublicKey = null;
                     xnaFramework[x].PublicKeyToken = null;
                     xnaFramework[x].Version = new Version("3.1.2.0");

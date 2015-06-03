@@ -25,6 +25,23 @@ TDSMNetworking.prototype.Ping = function (onResult) {
     });
 };
 
+TDSMNetworking.prototype.GetModules = function (onResult) {
+    GetUrlReader(this.baseUrl + '/api/modules', function (reader) {
+        if (reader) {
+            var count = reader.ReadInt32();
+            var modules = [];
+            for (var x = 0; x < count; x++) {
+                modules.push({
+                    type: reader.ReadByte(),
+                    url: reader.ReadString()
+                })
+            }
+            onResult(modules);
+        }
+        else onResult(false);
+    });
+};
+
 TDSMNetworking.prototype.Login = function (user, pass, onResult) {
     var relative = '/api/auth';
     var apiUrl = this.baseUrl + relative;
@@ -106,9 +123,45 @@ ByteReader.prototype.ReadBoolean = function () {
     return this.buffer[this.index++] == 1;
 };
 
+ByteReader.prototype.ReadByte = function () {
+    return this.buffer[this.index++];
+};
+
 ByteReader.prototype.ReadString = function () {
     var length = this.ReadInt32();
     var section = this.buffer.subarray(this.index, this.index + length);
     this.index += length;
     return String.fromCharCode.apply(null, section);
+};
+
+ByteReader.prototype.ReadDouble = function () {
+    var section = this.buffer.subarray(this.index, this.index + 8);
+    this.index += 8;
+
+    var bf = new ArrayBuffer(8);
+    var arr = new Uint8Array(bf);
+
+    var reversed = [];
+    for (var i = 0; i < 8; i++) {
+        reversed[i] = section[(8 - 1) - i];
+    }
+
+    arr.set(reversed);
+
+    var dv = new DataView(bf);
+
+    return dv.getFloat64(0);
+};
+
+var ResourceType = {
+    Javascript: 1,
+    Stylesheet: 2
+    //fromValue: function (val) {
+    //    for (var k in ResourceType) {
+    //        if (k != 'fromValue') {
+    //            var v = ResourceType[k];
+    //            if(v == val) return 
+    //        }
+    //    }
+    //}
 };

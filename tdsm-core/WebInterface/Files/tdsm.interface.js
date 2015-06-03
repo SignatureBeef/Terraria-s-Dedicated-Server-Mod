@@ -30,7 +30,7 @@ Interface.prototype.admin = function () {
     this.current = this.adminscreen;
 
     this.adminscreen.find('NAV > UL').html('');
-    this.adminscreen.AddPanel = function (text, onTransition) {
+    this.adminscreen.AddPanel = function (index, text, onTransition) {
         var li = $('<li><a>' + text + '</a></li>');
         this.find('NAV > UL').append(li);
         li[0].onTransition = onTransition.bind(this);
@@ -61,29 +61,17 @@ Interface.prototype.admin = function () {
         return $to;
     };
 
-    this.adminscreen.AddPanel('Server Overview', function () {
-        this.TransitionTo('<div><table><tr><td>World Name</td><td class="cfg-worldname"></td></tr></table></div>', function (panel) {
-            //Load information
-        });
-    }).click();
-    this.adminscreen.AddPanel('Chat', function () {
-        var panel = this.TransitionTo('<div class="chat-box"><textarea disabled></textarea> <input /><button>Send</button></div>', function (panel) {
-            //Load information
-        });
-    });
-    this.adminscreen.AddPanel('Configuration', function () {
-        var panel = this.TransitionTo('<div>CONFIG</div>', function (panel) {
-            //Load information
-        });
-    });
-    this.adminscreen.AddPanel('File Browser', function () {
-        var panel = this.TransitionTo('<div>...</div>', function (panel) {
-            //Load information
-        });
+    TFramework.Net.GetModules(function (modules) {
+        TFramework.Debug.Raw(modules);
+        if (modules) {
+            for (var x = 0; x < modules.length; x++) {
+                TFramework.LoadDependency(modules[x]);
+            }
+        }
     });
 
     return this.modal({
-        html: 'Loading interface, please wait...'
+        html: 'Loading admin interface, please wait...'
     });
 };
 
@@ -113,7 +101,7 @@ Interface.prototype.login = function () {
                 TFramework.Net.Login(user, pass, function (info) {
                     overlay.remove();
                     btn[0].disabled = false;
-                    console.log(info);
+
                     if (info) {
                         TInterface.current.find('.ui-error').html('');
                         TInterface.setHeader(window.settings.provider + ' control panel');
@@ -225,4 +213,54 @@ function OnPageReady() {
             else TInterface.abort('Failed to contact the server.');
         });
     });
+};
+
+
+var TUI = {
+    Percentage_Tile: function (className) {
+        var inner = '';
+
+        inner += '<canvas width=110 height=110></canvas>'
+        inner += '<div class="ui-p-text"></div>'
+
+        return '<div class="ui-progress-circle ' + className + '">' + inner + '</div>';
+    }
+};
+
+function AnimateCanvasCircle(canvas, percentage, circleText) {
+    var context = canvas.getContext('2d');
+    var radius = 50;
+
+    //Reset
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    context.translate(canvas.width / 2.0, canvas.height / 2.0);
+    context.rotate(-Math.PI / 2);
+
+    context.beginPath();
+    context.arc(0, 0, radius, 0, (2 * percentage) * Math.PI, false);
+    context.lineWidth = 5;
+
+    context.strokeStyle = '#00aa00';
+    context.stroke();
+
+    context.rotate(Math.PI / 2);
+    context.font = '25px Calibri';
+    context.textBaseline = 'middle';
+    context.textAlign = 'center';
+    context.fillStyle = 'black';
+    context.fillText(circleText, 0, 0);
+};
+
+function SetProgress(className, progress, circleText, subText) {
+    var el = $('DIV.ui-progress-circle.' + className);
+    if (el && el.length > 0) {
+        el = el.first();
+        var canvas = el.find('CANVAS').first()[0];
+
+        AnimateCanvasCircle(canvas, progress, circleText);
+
+        el.find('DIV.ui-p-text').html(subText);
+    }
 };

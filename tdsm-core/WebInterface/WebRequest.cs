@@ -6,7 +6,7 @@ using tdsm.core.ServerCore;
 
 namespace tdsm.core.WebInterface
 {
-    public struct RequestWriter : IDisposable
+    public class RequestWriter : IDisposable
     {
         public int Length
         {
@@ -31,6 +31,8 @@ namespace tdsm.core.WebInterface
             Increase(bytes.Length);
 
             System.Buffer.BlockCopy(bytes, 0, _buffer, _index, bytes.Length);
+
+            _index += bytes.Length;
         }
 
         public void Buffer(int data)
@@ -39,6 +41,30 @@ namespace tdsm.core.WebInterface
             Increase(bytes.Length);
 
             System.Buffer.BlockCopy(bytes, 0, _buffer, _index, bytes.Length);
+
+            _index += bytes.Length;
+        }
+
+        public void Buffer(bool data)
+        {
+            Buffer((byte)(data ? 1 : 0));
+        }
+
+        public void Buffer(double data)
+        {
+            var bytes = BitConverter.GetBytes(data);
+            Increase(bytes.Length);
+
+            System.Buffer.BlockCopy(bytes, 0, _buffer, _index, bytes.Length);
+
+            _index += bytes.Length;
+        }
+
+        public void Buffer(byte data)
+        {
+            Increase(1);
+
+            _buffer[_index++] = data;
         }
 
         private void Increase(int extra)
@@ -53,7 +79,7 @@ namespace tdsm.core.WebInterface
 
         internal void WriteTo(Socket sock)
         {
-            if (sock.Connected) sock.Send(_buffer);
+            if (sock.Connected) sock.Send(_buffer, _index, SocketFlags.None);
         }
 
         public void Dispose()
@@ -248,9 +274,9 @@ namespace tdsm.core.WebInterface
         //    return path;
         //}
 
-        public void WriteOut(string contentType)
+        public void WriteOut(string contentType = "application/octet-stream")
         {
-            RepsondHeader(StatusCode, "OK", "application/octet-stream", Writer.Length);
+            RepsondHeader(StatusCode, "OK", contentType, Writer.Length);
             Writer.WriteTo(Client);
             End();
         }

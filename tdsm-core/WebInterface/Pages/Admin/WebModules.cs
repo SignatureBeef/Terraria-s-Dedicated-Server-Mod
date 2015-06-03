@@ -4,7 +4,7 @@ namespace tdsm.core.WebInterface.Pages.Admin
     /*
      * Note, Modules are not to send HTML, rather they are to send API information
      */
-    [WebModule(Url = "/api/modules")]
+    [WebModule(Url = "/api/modules", InterfaceModule = true, Nodes = new string[] { "*" })]
     public class WebModules : WebPage
     {
         //TODO simple JSON writer
@@ -15,17 +15,30 @@ namespace tdsm.core.WebInterface.Pages.Admin
 
         public override void ProcessRequest(WebRequest request)
         {
-            request.StatusCode = 200;
+            //We don't need a list here, but I rather get away from the lock quicker.
+            var dependencies = new System.Collections.Generic.List<ResourceDependancy>();
+            WebServer.ForEachPage((page) =>
+            {
+                var dpd = page.GetDependencies();
+                if (dpd != null)
+                {
+                    dependencies.AddRange(dpd);
+                }
+            });
 
-            //TODO buffer responses in order to fill the Content-Length header
-            //var length = (WebServer.ProviderName.Length + 4) + 4 + 4;
-            //request.RepsondHeader(200, "OK", "application/octet-stream", length);
+            //Since we are using a list we can make it a bit easier
+            request.Writer.Buffer(dependencies.Count);
 
-            //request.Send(WebServer.ProviderName);
-            //request.Send(Globals.Build);
-            //request.Send(Entry.CoreBuild);
+            foreach (var item in dependencies)
+            {
+                request.Writer.Buffer((byte)item.Type);
+                request.Writer.Buffer(item.Url);
+            }
 
-            //request.End();
+            dependencies.Clear();
+            dependencies = null;
+
+            request.WriteOut("application/octet-stream");
         }
     }
 }

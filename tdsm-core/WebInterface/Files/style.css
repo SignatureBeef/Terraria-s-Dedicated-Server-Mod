@@ -224,3 +224,29 @@ SECTION#LoginScreen > DIV {
         .chat-box BUTTON:active {
             color: #000;
         }
+
+.ui-progress-circle {
+    position: relative;
+    display: inline-block;
+    margin: 5px;
+    border: 1px solid #CBC4C4;
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 1px;
+}
+
+    .ui-progress-circle > CANVAS {
+        margin: 5px;
+    }
+
+    .ui-progress-circle > DIV.ui-p-text {
+        float: right;
+        font-size: 14px;
+    }
+
+
+        .ui-progress-circle > DIV.ui-p-text > H6 {
+            font-size: 17px;
+            color: #333;
+            text-shadow: 1px 1px 1px #BEBFC3;
+        }

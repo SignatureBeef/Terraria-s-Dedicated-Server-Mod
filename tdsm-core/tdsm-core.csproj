@@ -158,6 +158,10 @@
     <Compile Include="WebInterface\Pages\Admin\Overview.cs" />
     <Compile Include="WebInterface\Pages\Admin\WebModules.cs" />
     <Compile Include="WebInterface\Pages\Authenticate.cs" />
+    <Compile Include="WebInterface\Pages\Modules\Admin\Config.cs" />
+    <Compile Include="WebInterface\Pages\Modules\Admin\ServerOverview.cs" />
+    <Compile Include="WebInterface\Pages\Modules\Admin\FileBrowser.cs" />
+    <Compile Include="WebInterface\Pages\Modules\Admin\Chat.cs" />
     <Compile Include="WebInterface\Pages\ServerInformation.cs" />
     <Compile Include="WebInterface\WebPermissions.cs" />
     <Compile Include="WebInterface\WebRequest.cs" />
@@ -183,6 +187,19 @@
     </Content>
     <Content Include="WebInterface\Files\jquery-2.1.3.min.js" />
     <Content Include="WebInterface\Files\md5.js" />
+    <Content Include="WebInterface\Files\modules\filebrowser-min.js" />
+    <Content Include="WebInterface\Files\modules\serveroverview.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebInterface\Files\modules\filebrowser.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebInterface\Files\modules\config.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebInterface\Files\modules\chat.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="WebInterface\Files\style.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -196,7 +213,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WebInterface\Pages\Modules\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -47,7 +47,7 @@ namespace tdsm.api
         internal DateTime PathTimestamp { get; set; }
 
         internal Assembly Assembly { get; set; }
-        internal AppDomain _domain;
+        //internal AppDomain _domain;
 
         /// <summary>
         /// Whether this plugin is enabled or not

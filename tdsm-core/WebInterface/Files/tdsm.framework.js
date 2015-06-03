@@ -7,6 +7,10 @@ ModularFramework.prototype.Debug = {
     Log: function (fmt) {
         //TODO: apply args
         console.log('[Debug] ' + fmt);
+    },
+    Raw: function (value) {
+        console.log('[Debug below]');
+        console.log(value);
     }
 };
 
@@ -36,6 +40,31 @@ ModularFramework.prototype.GetPort = function () {
     return false;
 };
 
+
+ModularFramework.prototype.LoadDependency = function (dep) {
+    var el;
+    switch (dep.type) {
+        case ResourceType.Javascript:
+            el = document.createElement('SCRIPT');
+            el.src = dep.url;
+            el.async = true;
+            break;
+        case ResourceType.Stylesheet:
+            el = document.createElement('STYLE');
+            el.type = 'text/css';
+            el.rel = 'stylesheet';
+            el.href = dep.url;
+            break;
+        default:
+            throw 'Invalid dependency';
+            break;
+    }
+
+    if (el) {
+        document.body.appendChild(el);
+    }
+};
+
 //var Framework = (function () {
 //    var fw = new ModularFramework();
 //    fw.Load();
@@ -44,3 +73,8 @@ ModularFramework.prototype.GetPort = function () {
 
 window.TFramework = new ModularFramework();
 window.TFramework.Load();
+
+Math.roundTo = function (value, ep) {
+    var v = 10.0 * ep;
+    return Math.round(value * v) / v;
+};
