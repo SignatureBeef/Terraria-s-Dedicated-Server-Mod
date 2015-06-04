@@ -408,6 +408,22 @@ namespace tdsm.api
                   .Count();
             }
         }
+
+        public static int ActivePlayerCount
+        {
+            get
+            {
+                return (from p in Terraria.Main.player where p.active select p.Name).Count();
+            }
+        }
+
+        public static int MaxPlayers
+        {
+            get
+            {
+                return Main.maxNetPlayers;
+            }
+        }
 #endif
         public static RuntimePlatform RuntimePlatform
         {

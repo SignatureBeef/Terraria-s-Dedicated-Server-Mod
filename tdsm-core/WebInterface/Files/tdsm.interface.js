@@ -3,7 +3,7 @@
 
 Interface.prototype.init = function () {
     this.body = $('BODY');
-    this.header = $('HEADER');
+    this.header = $('HEADER > SPAN');
     this.window = $('SECTION#InterfaceWindow');
     this.loginscreen = $('SECTION#LoginScreen');
     this.adminscreen = $('SECTION#AdminInterface');
@@ -235,16 +235,25 @@ function AnimateCanvasCircle(canvas, percentage, circleText) {
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, canvas.width, canvas.height);
 
+    //Move to center
     context.translate(canvas.width / 2.0, canvas.height / 2.0);
     context.rotate(-Math.PI / 2);
 
+    //Draw shadow
+    context.beginPath();
+    context.arc(0, 0, radius, 0, 2 * Math.PI, false);
+    context.lineWidth = 5;
+    context.strokeStyle = '#dfdfdf';
+    context.stroke();
+
+    //Draw progress
     context.beginPath();
     context.arc(0, 0, radius, 0, (2 * percentage) * Math.PI, false);
     context.lineWidth = 5;
-
     context.strokeStyle = '#00aa00';
     context.stroke();
 
+    //Reset to draw text
     context.rotate(Math.PI / 2);
     context.font = '25px Calibri';
     context.textBaseline = 'middle';

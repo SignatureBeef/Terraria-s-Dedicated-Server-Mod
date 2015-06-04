@@ -158,6 +158,7 @@
     <Compile Include="WebInterface\Pages\Admin\Overview.cs" />
     <Compile Include="WebInterface\Pages\Admin\WebModules.cs" />
     <Compile Include="WebInterface\Pages\Authenticate.cs" />
+    <Compile Include="WebInterface\Pages\Modules\Admin\Info.cs" />
     <Compile Include="WebInterface\Pages\Modules\Admin\Config.cs" />
     <Compile Include="WebInterface\Pages\Modules\Admin\ServerOverview.cs" />
     <Compile Include="WebInterface\Pages\Modules\Admin\FileBrowser.cs" />

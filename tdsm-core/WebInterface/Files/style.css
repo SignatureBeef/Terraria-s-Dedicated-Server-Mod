@@ -17,7 +17,7 @@ BODY {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5e5e5', endColorstr='#ffffff',GradientType=0 );
 }
 
-BODY, .ui-window {
+.ui-window {
     position: fixed;
     top: 0;
     left: 0;
@@ -27,14 +27,23 @@ BODY, .ui-window {
     z-index: 1;
 }
 
-    BODY > HEADER {
-        text-align: right;
-        background: #6181C5;
-        padding: 3px;
-        font-size: 14px;
-        color: #fff;
-        text-shadow: 1px 1px 1px #465E91;
-        height: 25px;
+BODY > HEADER {
+    text-align: right;
+    background: #6181C5;
+    font-size: 100%;
+    color: #fff;
+    text-shadow: 1px 1px 1px #465E91;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3%;
+    position: fixed;
+    min-height: 25px;
+    z-index: 2;
+}
+
+    BODY > HEADER > SPAN {
+        margin-right: 5px;
     }
 
 DIV.ui-modal-bg {
@@ -66,7 +75,8 @@ SECTION#InterfaceWindow {
 }
 
 SECTION#LoginScreen {
-    top: 25px;
+    top: 3%;
+    max-height: 97%;
     background: #cfe7fa;
     background: -moz-radial-gradient(center, ellipse cover, #cfe7fa 0%, #6393c1 100%);
     background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#cfe7fa), color-stop(100%,#6393c1));
@@ -78,7 +88,8 @@ SECTION#LoginScreen {
 }
 
 SECTION#AdminInterface {
-    top: 25px;
+    top: 3%;
+    max-height: 97%;
     background: #ffffff;
     background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
@@ -90,7 +101,9 @@ SECTION#AdminInterface {
 }
 
     SECTION#AdminInterface > DIV {
-        padding-left: 200px;
+        margin-left: 200px;
+        border-left: 1px solid #aaa;
+        min-height: 100%;
     }
 
     SECTION#AdminInterface > NAV > UL {
@@ -98,7 +111,6 @@ SECTION#AdminInterface {
         padding: 0;
         list-style: none;
         width: 200px;
-        border-right: 1px solid #aaa;
         height: 100%;
         position: absolute;
         left: 0px;
@@ -111,17 +123,16 @@ SECTION#AdminInterface {
             SECTION#AdminInterface > NAV > UL > LI > A {
                 padding: 5px;
                 border-bottom: 1px solid #ddd;
-                border-top: 1px solid #fff;
+                display: block;
+                cursor: pointer;
+                color: #333;
             }
 
-            SECTION#AdminInterface > NAV > UL > LI:first-child > A {
-                border-top: none;
-            }
-
-            SECTION#AdminInterface > NAV > UL > LI > A:hover {
-                border-bottom: 1px solid #ccc;
-                background: rgba(0,0,0,.1);
-            }
+                SECTION#AdminInterface > NAV > UL > LI > A:hover {
+                    border-bottom: 1px solid #ccc;
+                    background: rgba(0,0,0,.1);
+                    color: #000;
+                }
 
 SECTION#LoginScreen > DIV {
     width: 50%;
@@ -228,25 +239,95 @@ SECTION#LoginScreen > DIV {
 .ui-progress-circle {
     position: relative;
     display: inline-block;
-    margin: 5px;
+    margin: 0 0 1% 1%;
     border: 1px solid #CBC4C4;
     padding: 5px;
     background-color: #fff;
     border-radius: 1px;
 }
 
-    .ui-progress-circle > CANVAS {
-        margin: 5px;
+
+DIV.progress-tiles {
+    text-align: center;
+    padding-top: 1%;
+}
+
+    DIV.progress-tiles > DIV.ui-progress-circle {
+        min-width: 30%;
     }
 
-    .ui-progress-circle > DIV.ui-p-text {
-        float: right;
+
+.ui-progress-circle > CANVAS {
+    margin: 5px;
+}
+
+.ui-progress-circle > DIV.ui-p-text {
+    float: right;
+    font-size: 14px;
+    min-width: 130px;
+    text-align: left;
+}
+
+
+    .ui-progress-circle > DIV.ui-p-text > H6 {
+        font-size: 17px;
+        color: #333;
+        text-shadow: 1px 1px 1px #BEBFC3;
+    }
+
+SECTION#AdminInterface.ui-window SECTION.ui-serveroverview {
+    margin: 5px;
+    margin-top: 0;
+    border: 1px solid #CBC4C4;
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 1px;
+}
+
+    SECTION#AdminInterface.ui-window SECTION.ui-serveroverview H4 {
+        font-size: 20px;
+    }
+
+    SECTION#AdminInterface.ui-window SECTION.ui-serveroverview > DIV {
+        padding: 3px 0;
+    }
+
+
+    SECTION#AdminInterface.ui-window SECTION.ui-serveroverview DIV > H5 {
+        display: inline-block;
+        font-size: 15px;
+        min-width: 175px;
+    }
+
+    SECTION#AdminInterface.ui-window SECTION.ui-serveroverview DIV > INPUT[type=text] {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 4px 2px;
+        font-size: 14px;
+        width: 300px;
+    }
+
+        SECTION#AdminInterface.ui-window SECTION.ui-serveroverview DIV > INPUT[type=text]:disabled {
+            background: #eee;
+        }
+
+
+    SECTION#AdminInterface.ui-window SECTION.ui-serveroverview DIV.uid-worldsize > SPAN {
+        display: block;
+        margin-left: 50px;
         font-size: 14px;
     }
 
 
-        .ui-progress-circle > DIV.ui-p-text > H6 {
-            font-size: 17px;
-            color: #333;
-            text-shadow: 1px 1px 1px #BEBFC3;
+        SECTION#AdminInterface.ui-window SECTION.ui-serveroverview DIV.uid-worldsize > SPAN > H6 {
+            display: inline-block;
+            font-size: 13px;
+            margin-right: 5px;
+            min-width: 60px;
         }
+
+
+    SECTION#AdminInterface.ui-window SECTION.ui-serveroverview TEXTAREA {
+        width: 300px;
+        height: 100px;
+    }

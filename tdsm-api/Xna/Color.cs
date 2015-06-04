@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Reflection;
 
 namespace Microsoft.Xna.Framework
 {
@@ -352,7 +351,7 @@ namespace Microsoft.Xna.Framework
             }
         }
         /// <summary>Gets the current color as a packed value.</summary>
-        [CLSCompliant(false)]
+        //[CLSCompliant(false)]
         public uint PackedValue
         {
             get

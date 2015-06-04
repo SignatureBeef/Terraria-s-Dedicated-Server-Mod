@@ -274,8 +274,9 @@ namespace tdsm.core.WebInterface
         //    return path;
         //}
 
-        public void WriteOut(string contentType = "application/octet-stream")
+        public void WriteOut(string contentType = "application/octet-stream", int statusCode = 200)
         {
+            StatusCode = statusCode;
             RepsondHeader(StatusCode, "OK", contentType, Writer.Length);
             Writer.WriteTo(Client);
             End();

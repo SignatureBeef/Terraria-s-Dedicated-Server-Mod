@@ -26,6 +26,8 @@ namespace tdsm.core.ServerCore
             get { return _connections.Count; }
         }
 
+        public static bool AcceptNewConnections { get; set; }
+
         public static System.Collections.Generic.List<String> LoadUniqueConnection()
         {
             try
@@ -95,6 +97,8 @@ namespace tdsm.core.ServerCore
             Netplay.serverListenIP = Netplay.serverIP;
             Netplay.disconnect = false;
 
+            AcceptNewConnections = true;
+
             //			for (int i = 0; i < 256; i++)
             //			{
             ////                Netplay.slots[i] = new ServerSlot();
@@ -138,20 +142,24 @@ namespace tdsm.core.ServerCore
                 {
                     Netplay.anyClients = ClientConnection.All.Count > 0; //clientList.Count > 0;
 
-                    serverSock.Poll(500000, SelectMode.SelectRead);
-
                     if (Netplay.disconnect) break;
 
-                    // Accept new clients
-                    while (Netplay.tcpListener.Pending())
+                    if (AcceptNewConnections)
                     {
-                        var client = Netplay.tcpListener.AcceptSocket();
-                        var accepted = AcceptClient(client);
-                        if (accepted)
+                        serverSock.Poll(500000, SelectMode.SelectRead);
+
+                        // Accept new clients
+                        while (Netplay.tcpListener.Pending())
                         {
-                            Netplay.anyClients = true;
+                            var client = Netplay.tcpListener.AcceptSocket();
+                            var accepted = AcceptClient(client);
+                            if (accepted)
+                            {
+                                Netplay.anyClients = true;
+                            }
                         }
                     }
+                    else Thread.Sleep(200);
                 }
             }
             catch (Exception e)
