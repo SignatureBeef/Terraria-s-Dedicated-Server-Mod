@@ -23,68 +23,103 @@ namespace tdsm.core
         /// <param name="args">Arguments.</param>
         public void VariableMan(ISender sender, ArgumentList args)
         {
-            // var <type> <field> 
-            // var <type> <field> <valuetobeset>
-            var type = args.GetString(0);
-            var mem = args.GetString(1);
+            // var <exec|field>
+            // var field <namespace.type> <fieldname>
+            // var field <namespace.type> <fieldname> <valuetobeset>
 
-            //Find the type
-            var at = Type.GetType(type);
-            if (at == null) at = System.Reflection.Assembly.GetEntryAssembly().GetType(type);
-            if (at == null) at = System.Reflection.Assembly.GetCallingAssembly().GetType(type);
-            if (at == null) at = System.Reflection.Assembly.GetExecutingAssembly().GetType(type);
-            if (at == null) throw new CommandError("Invalid type: " + type);
+            // var exec <namespace.type> <methodname>
+            //No arguments supported yet
+            var cmd = args.GetString(0);
 
-            //Find the field
-            var am = at.GetField(mem);
-            if (am == null) throw new CommandError("Invalid field: " + mem);
-
-            string val = null, dataType = null;
-            if (args.TryGetString(2, out val) && args.TryGetString(3, out dataType) && dataType != null)
+            if (cmd == "field")
             {
-                object data = null;
+                var type = args.GetString(1);
+                var mem = args.GetString(2);
 
-                switch (dataType.ToLower())
+                //Find the type
+                var at = Type.GetType(type);
+                if (at == null) at = System.Reflection.Assembly.GetEntryAssembly().GetType(type);
+                if (at == null) at = System.Reflection.Assembly.GetCallingAssembly().GetType(type);
+                if (at == null) at = System.Reflection.Assembly.GetExecutingAssembly().GetType(type);
+                if (at == null) throw new CommandError("Invalid type: " + type);
+
+                //Find the field
+                var am = at.GetField(mem);
+                if (am == null) throw new CommandError("Invalid field: " + mem);
+
+                string val = null;
+                if (args.TryGetString(3, out val))
                 {
-                    case "bool":
-                        data = Boolean.Parse(val);
-                        break;
-                    case "int16":
-                        data = Int16.Parse(val);
-                        break;
-                    case "int32":
-                        data = Int32.Parse(val);
-                        break;
-                    case "int64":
-                        data = Int64.Parse(val);
-                        break;
-                    case "byte":
-                        data = Byte.Parse(val);
-                        break;
-                    case "double":
-                        data = Double.Parse(val);
-                        break;
-                    case "single":
-                        data = Single.Parse(val);
-                        break;
-                    default:
-                        throw new CommandError("Invalid data type: " + dataType);
+                    object data = null;
+
+                    switch (am.FieldType.Name)
+                    {
+                        case "Boolean":
+                            data = Boolean.Parse(val);
+                            break;
+                        case "Int16":
+                            data = Int16.Parse(val);
+                            break;
+                        case "Int32":
+                            data = Int32.Parse(val);
+                            break;
+                        case "Int64":
+                            data = Int64.Parse(val);
+                            break;
+                        case "Byte":
+                            data = Byte.Parse(val);
+                            break;
+                        case "Double":
+                            data = Double.Parse(val);
+                            break;
+                        case "Single":
+                            data = Single.Parse(val);
+                            break;
+                        default:
+                            throw new CommandError("Unsupported datatype");
+                    }
+
+                    am.SetValue(null, data);
+
+                    var v = am.GetValue(null);
+                    if (v != null) val = v.ToString();
+                    else val = "null";
+                    sender.Message("Value is now: " + val);
                 }
-
-                am.SetValue(null, data);
-
-                var v = am.GetValue(null);
-                if (v != null) val = v.ToString();
-                else val = "null";
-                sender.Message("Value is now: " + val);
+                else
+                {
+                    var v = am.GetValue(null);
+                    if (v != null) val = v.ToString();
+                    else val = "null";
+                    sender.Message("Value: " + val);
+                }
             }
-            else
+            else if (cmd == "exec")
             {
-                var v = am.GetValue(null);
-                if (v != null) val = v.ToString();
-                else val = "null";
-                sender.Message("Value: " + val);
+                var type = args.GetString(1);
+                var mthd = args.GetString(2);
+
+                //Find the type
+                var at = Type.GetType(type);
+                if (at == null) at = System.Reflection.Assembly.GetEntryAssembly().GetType(type);
+                if (at == null) at = System.Reflection.Assembly.GetCallingAssembly().GetType(type);
+                if (at == null) at = System.Reflection.Assembly.GetExecutingAssembly().GetType(type);
+                if (at == null) throw new CommandError("Invalid type: " + type);
+
+                //Find the field
+                var am = at.GetMethod(mthd);
+                if (am == null) throw new CommandError("Invalid method: " + mthd);
+
+                var prms = am.GetParameters();
+                if (prms.Length == 0)
+                {
+                    var res = am.Invoke(null, null);
+                    var result = res == null ? "null" : res.ToString();
+                    sender.Message("Result: " + result);
+                }
+                else sender.Message("Arguments are not yet supported for exec");
             }
+            else sender.Message("Unsupported var command: " + cmd);
         }
 
         /// <summary>
@@ -542,6 +577,12 @@ namespace tdsm.core
                         }
                 }
             }
+
+            if (Main.dayTime)
+            {
+                if (Main.eclipse) Main.eclipse = false;
+            }
+
             NewNetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
             var current = WorldTime.Parse(World.GetParsableTime()).Value;
             Tools.NotifyAllPlayers(String.Format("Time set to {0} ({1}) by {2}", current.ToString(), current.GameTime, sender.SenderName), Color.Green);
