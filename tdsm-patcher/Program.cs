@@ -149,14 +149,19 @@ namespace tdsm.patcher
 
             var patcher = new Injector(inFile, patchFile);
 
-            var vers = patcher.GetAssemblyVersion();
-            if (vers != APIWrapper.TerrariaVersion)
+
+            var noVersionCheck = args != null && args.Where(x => x.ToLower() == "-nover").Count() > 0;
+            if(noVersionCheck != true)
             {
-                Console.Write("This patcher only supports Terraria {0}, but we have detected something else {1}. Continue? (y/n)",
-                    APIWrapper.TerrariaVersion,
-                    vers);
-                if (Console.ReadKey(true).Key != ConsoleKey.Y) return;
-                Console.WriteLine();
+                var vers = patcher.GetAssemblyVersion();
+                if (vers != APIWrapper.TerrariaVersion)
+                {
+                    Console.Write("This patcher only supports Terraria {0}, but we have detected something else {1}. Continue? (y/n)",
+                        APIWrapper.TerrariaVersion,
+                        vers);
+                    if (Console.ReadKey(true).Key != ConsoleKey.Y) return;
+                    Console.WriteLine();
+                }
             }
 #if SERVER
             Console.Write("Opening up classes for API usage...");
@@ -327,6 +332,10 @@ namespace tdsm.patcher
                         }
                     }
                 }
+            }
+            else
+            {
+                Console.WriteLine("Ok\n");
             }
 #endif
         }

@@ -114,8 +114,8 @@ namespace tdsm.patcher
             _domain = AppDomain.CreateDomain("TDSM_API_WRAPPER", null /*AppDomain.CurrentDomain.Evidence*/, new AppDomainSetup()
             {
                 //ShadowCopyFiles = "false",
-                ApplicationBase = Environment.CurrentDirectory,
-                AppDomainManagerAssembly = String.Empty
+                ApplicationBase = Environment.CurrentDirectory/*, Commented out as OSX does not have this?
+                AppDomainManagerAssembly = String.Empty*/
             });
 
             //Console.WriteLine("Domain: " + ((_domain == null) ? "null" : "not null"));
