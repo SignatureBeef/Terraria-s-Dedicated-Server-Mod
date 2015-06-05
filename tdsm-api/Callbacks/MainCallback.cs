@@ -9,7 +9,8 @@ namespace tdsm.api.Callbacks
         public static Action StatusTextChange;
         public static Action UpdateServer;
 
-        public static bool StartEclipse;
+        //public static bool StartEclipse;
+        //public static bool StartBloodMoon;
 
         public static void ProgramStart()
         {

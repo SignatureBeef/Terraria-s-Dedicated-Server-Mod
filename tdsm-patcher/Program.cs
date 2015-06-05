@@ -205,8 +205,10 @@ namespace tdsm.patcher
             patcher.FixStatusTexts();
             Console.Write("Ok\nHooking invasions...");
             patcher.HookInvasions();
-            Console.Write("Ok\nHooking eclipse...");
-            patcher.HookEclipse();
+            //Console.Write("Ok\nHooking eclipse...");
+            //patcher.HookEclipse();
+            //Console.Write("Ok\nHooking blood moon...");
+            //patcher.HookBloodMoon();
             Console.Write("Ok\n");
 
             //TODO repace Terraria's Console.SetTitles

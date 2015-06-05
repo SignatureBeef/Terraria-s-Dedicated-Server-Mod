@@ -1872,8 +1872,16 @@ namespace tdsm.core
                 case "eclipse":
                     if (!Main.eclipse)
                     {
-                        World.SetTime(32400.0, false);
-                        tdsm.api.Callbacks.MainCallback.StartEclipse = true;
+                        _disableActiveEvents(sender);
+
+                        World.SetTime(0);
+                        //tdsm.api.Callbacks.MainCallback.StartEclipse = true;
+                        Main.eclipse = true;
+
+                        NetMessage.SendData(25, -1, -1, Lang.misc[20], 255, 50f, 255f, 130f, 0);
+                        NewNetMessage.SendData(Packet.WORLD_DATA);
+
+                        ProgramLog.Admin.Log(Lang.misc[20]);
                     }
                     else
                     {
@@ -1884,35 +1892,83 @@ namespace tdsm.core
                 case "snowmoon":
                     if (!Main.snowMoon)
                     {
+                        _disableActiveEvents(sender);
+                        World.SetTime(16200.0, false);
+                        NetMessage.SendData(25, -1, -1, Lang.misc[34], 255, 50f, 255f, 130f, 0);
                         Main.startSnowMoon();
+                        NewNetMessage.SendData(Packet.WORLD_DATA);
+
+                        ProgramLog.Admin.Log(Lang.misc[34]);
+                        ProgramLog.Admin.Log("First Wave: Zombie Elf and Gingerbread Man");
                     }
                     else
                     {
-                        Main.snowMoon = false;
+                        Main.stopMoonEvent();
+                        sender.Message("The snow moon was disabled.");
                     }
                     break;
                 case "pumpkinmoon":
                     if (!Main.pumpkinMoon)
                     {
+                        _disableActiveEvents(sender);
+                        World.SetTime(16200.0, false);
+                        NetMessage.SendData(25, -1, -1, Lang.misc[31], 255, 50f, 255f, 130f, 0);
                         Main.startPumpkinMoon();
+                        NewNetMessage.SendData(Packet.WORLD_DATA);
+
+                        ProgramLog.Admin.Log(Lang.misc[31]);
+                        ProgramLog.Admin.Log("First Wave: " + Main.npcName[305]);
                     }
                     else
                     {
-                        Main.pumpkinMoon = false;
+                        Main.stopMoonEvent();
+                        sender.Message("The pumpkin moon was disabled.");
                     }
                     break;
-                    //case "bloodmoon": WIP
-                    //    if (!Main.bloodMoon)
-                    //    {
-                    //        Main.blo
-                    //    }
-                    //    else
-                    //    {
-                    //        Main.bloodMoon = false;
-                    //    }
+                case "bloodmoon":
+                    if (!Main.bloodMoon)
+                    {
+                        _disableActiveEvents(sender);
+                        World.SetTime(0, false);
+                        //tdsm.api.Callbacks.MainCallback.StartEclipse = true;
+                        Main.bloodMoon = true;
+                        NewNetMessage.SendData(Packet.WORLD_DATA);
+                        NetMessage.SendData(25, -1, -1, Lang.misc[8], 255, 50f, 255f, 130f, 0);
+
+                        ProgramLog.Admin.Log(Lang.misc[8]);
+                    }
+                    else
+                    {
+                        Main.bloodMoon = false;
+                        sender.Message("The blood moon was disabled.");
+                    }
                     break;
                 default:
                     throw new CommandError("Not a supported event " + first);
+            }
+        }
+
+        static void _disableActiveEvents(ISender sender)
+        {
+            if (Main.bloodMoon)
+            {
+                Main.bloodMoon = false;
+                sender.Message("The blood moon was disabled.");
+            }
+            if (Main.eclipse)
+            {
+                Main.eclipse = false;
+                sender.Message("The eclipse was disabled.");
+            }
+            if (Main.snowMoon)
+            {
+                Main.snowMoon = false;
+                sender.Message("The snow moon was disabled.");
+            }
+            if (Main.pumpkinMoon)
+            {
+                Main.pumpkinMoon = false;
+                sender.Message("The pumpkin moon was disabled.");
             }
         }
     }

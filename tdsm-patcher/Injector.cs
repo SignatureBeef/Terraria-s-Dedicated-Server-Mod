@@ -908,6 +908,56 @@ namespace tdsm.patcher
             il.InsertAfter(startEclipse.Next, il.Create(OpCodes.Ldc_I4_0));
         }
 
+        public void HookBloodMoon()
+        {
+            var type = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
+            var mth = type.Methods.Where(x => x.Name == "UpdateTime").First();
+
+            var callback = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
+            var field = callback.Fields.Where(x => x.Name == "StartBloodMoon").First();
+            //return;
+            var il = mth.Body.GetILProcessor();
+            var start = il.Body.Instructions.Where(x =>
+                x.OpCode == OpCodes.Ldsfld
+                && x.Operand is FieldReference
+                && (x.Operand as FieldReference).Name == "spawnEye"
+                && x.Next.Next.OpCode == OpCodes.Ldsfld
+                && x.Next.Next.Operand is FieldReference
+                && (x.Next.Next.Operand as FieldReference).Name == "moonPhase"
+            ).First();
+
+            //Preserve
+            var old = start.Operand as FieldReference;
+            var target = start.Next as Instruction;
+
+            //Replace with ours to keep the IL inline
+            start.Operand = _asm.MainModule.Import(field);
+            //Readd the preserved
+            il.InsertAfter(start, il.Create(OpCodes.Ldsfld, old));
+
+            //Now find the target instruction if the value is true
+            Instruction begin = start.Next;
+            var i = 12;
+            while (i > 0)
+            {
+                i--;
+                begin = begin.Next;
+            }
+            il.InsertAfter(start, il.Create(OpCodes.Brtrue, begin));
+
+            //Since all we care about is setting the StartBloodMoon to TRUE; we need to be able to disable once done.
+            var startBloodMoon = il.Body.Instructions.Where(x =>
+                x.OpCode == OpCodes.Ldsfld
+                && x.Operand is FieldReference
+                && (x.Operand as FieldReference).Name == "bloodMoon"
+                && x.Next.Next.OpCode == OpCodes.Ldsfld
+                && x.Next.Next.Operand is FieldReference
+                && (x.Next.Next.Operand as FieldReference).Name == "netMode"
+            ).First();
+            il.InsertAfter(startBloodMoon.Next, il.Create(OpCodes.Stsfld, start.Operand as FieldReference));
+            il.InsertAfter(startBloodMoon.Next, il.Create(OpCodes.Ldc_I4_0));
+        }
+
         public void Save(string fileName, int apiBuild, string tdsmUID, string name)
         {
             //Ensure the name is updated to the new one
