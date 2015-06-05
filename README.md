@@ -15,7 +15,7 @@ The Plugin API is essentially the same as the old TDSM, so you can go about crea
 In addition to the old .NET plugins we now also support LUA. They function in the same manner as if it was a standard .NET plugin. I do suggest that if you need a high performance plugin/event that you use .NET.
 <br/>
 <br/>
-This time TDSM's is in fact a plugin to this API, and is known as the "core". So in fact any developer may come along and write another server mod for say their client mod (it's also possible for the patcher to patch the client executable, though implementation upon request).
+This time TDSM is in fact a plugin to this API, and is known as the "core". So in fact any developer may come along and write another server mod for say their client mod (it's also possible for the patcher to patch the client executable, though implementation upon request).
 <br/>
 <br/>
 Intereracting with TDSM's core dll is as easy as simply creating the reference to it, and then using it's exposed methods.
