@@ -41,8 +41,12 @@ Note: The API is not for new functionality, rather it is for exposing the offici
 First open the correct solution file, tdsm.sln for Visual Studio or tdsm-md.sln for MonoDevelop and ensure that the Debug x86 platform is selected.
 
 
-Build the tdsm-api without the API reference (see defined symbol Full_API in the project properties/options compiler settings for tdsm-api) then build and run tdsm-patcher. 
-It will output tdsm.exe, you now will need to reference the newly generated tdsm.exe in each project where the Terraria namespace is used. You must then redefine Full_API and rebuild the solution/project in order to expose all of the (Cecil altered) API to the rest of the projects.
+1. Build the tdsm-api without the API reference (see defined symbol Full_API in the project properties/options compiler settings for tdsm-api) 
+2. Then build and run tdsm-patcher (in Visual Studio right click the tdsm-patcher project: Debug -> Start New Instance). Do not start the server at this stage.
+3. By default the tdsm solution already is referencing the generated, but if not search the tdsm-patcher\bin\x86\Debug directory for the generated executable and add it as a reference.
+4. Readd Full_API to the tdsm-ap project and rebuild it.
+5. Rebuild the entire solution
+6. You are ready to run the patcher.
 
 You are then ready to run the patcher for one last time, this will output the tdsm.exe that you can run a server with.
 <br/>
