@@ -16,6 +16,29 @@ namespace tdsm.core
 {
     public partial class Entry
     {
+        private static object GetDataValue(Type dataType, string val)
+        {
+            switch (dataType.Name)
+            {
+                case "Boolean":
+                    return Boolean.Parse(val);
+                case "Int16":
+                    return Int16.Parse(val);
+                case "Int32":
+                    return Int32.Parse(val);
+                case "Int64":
+                    return Int64.Parse(val);
+                case "Byte":
+                    return Byte.Parse(val);
+                case "Double":
+                    return Double.Parse(val);
+                case "Single":
+                    return Single.Parse(val);
+                default:
+                    throw new CommandError("Unsupported datatype");
+            }
+        }
+
         /// <summary>
         /// Allows on the fly variable modifications
         /// </summary>
@@ -50,35 +73,7 @@ namespace tdsm.core
                 string val = null;
                 if (args.TryGetString(3, out val))
                 {
-                    object data = null;
-
-                    switch (am.FieldType.Name)
-                    {
-                        case "Boolean":
-                            data = Boolean.Parse(val);
-                            break;
-                        case "Int16":
-                            data = Int16.Parse(val);
-                            break;
-                        case "Int32":
-                            data = Int32.Parse(val);
-                            break;
-                        case "Int64":
-                            data = Int64.Parse(val);
-                            break;
-                        case "Byte":
-                            data = Byte.Parse(val);
-                            break;
-                        case "Double":
-                            data = Double.Parse(val);
-                            break;
-                        case "Single":
-                            data = Single.Parse(val);
-                            break;
-                        default:
-                            throw new CommandError("Unsupported datatype");
-                    }
-
+                    object data = GetDataValue(am.FieldType, val);
                     am.SetValue(null, data);
 
                     var v = am.GetValue(null);
@@ -89,6 +84,41 @@ namespace tdsm.core
                 else
                 {
                     var v = am.GetValue(null);
+                    if (v != null) val = v.ToString();
+                    else val = "null";
+                    sender.Message("Value: " + val);
+                }
+            }
+            else if (cmd == "prop")
+            {
+                var type = args.GetString(1);
+                var prop = args.GetString(2);
+
+                //Find the type
+                var at = Type.GetType(type);
+                if (at == null) at = System.Reflection.Assembly.GetEntryAssembly().GetType(type);
+                if (at == null) at = System.Reflection.Assembly.GetCallingAssembly().GetType(type);
+                if (at == null) at = System.Reflection.Assembly.GetExecutingAssembly().GetType(type);
+                if (at == null) throw new CommandError("Invalid type: " + type);
+
+                //Find the field
+                var am = at.GetProperty(prop);
+                if (am == null) throw new CommandError("Invalid property: " + prop);
+
+                string val = null;
+                if (args.TryGetString(3, out val))
+                {
+                    object data = GetDataValue(am.PropertyType, val);
+                    am.SetValue(null, data, null);
+
+                    var v = am.GetValue(null, null);
+                    if (v != null) val = v.ToString();
+                    else val = "null";
+                    sender.Message("Value is now: " + val);
+                }
+                else
+                {
+                    var v = am.GetValue(null, null);
                     if (v != null) val = v.ToString();
                     else val = "null";
                     sender.Message("Value: " + val);

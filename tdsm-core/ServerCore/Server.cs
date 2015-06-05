@@ -27,6 +27,54 @@ namespace tdsm.core.ServerCore
         }
 
         public static bool AcceptNewConnections { get; set; }
+        private static string _cannotAcceptMessage;
+        public static string CannotAcceptMessage
+        {
+            get
+            {
+                return _cannotAcceptMessage;
+            }
+            set
+            {
+                _cannotAcceptMessage = value;
+
+                var messageLength = (short)(0 /* this message length*/ + 1 /*PacketId*/ + value.Length);
+
+                using (var ms = new System.IO.MemoryStream())
+                {
+                    using (var bw = new System.IO.BinaryWriter(ms))
+                    {
+                        bw.Write(messageLength);
+                        bw.Write((byte)Packet.DISCONNECT);
+                        bw.Write(value);
+                    }
+
+                    _NoAcceptData = ms.ToArray();
+                }
+
+                ////Set the disconnect packet
+                //var size = (short)(2 /* this message length*/ + 1 /*PacketId*/ + value.Length);
+
+                //var data = System.Text.Encoding.UTF8.GetBytes(value);
+                //var messageLength = BitConverter.GetBytes(size);
+
+                //var tmp = new byte[size + 2 /* Message length */];
+
+                ////Message size
+                //Buffer.BlockCopy(messageLength, 0, tmp, 0, messageLength.Length);
+
+
+
+                ////Packet
+                //tmp[2] = (byte)Packet.DISCONNECT;
+
+                ////Message
+                //Buffer.BlockCopy(data, 0, tmp, 3, data.Length);
+
+                //_NoAcceptData = tmp;
+            }
+        }
+        public static byte[] _NoAcceptData;
 
         public static System.Collections.Generic.List<String> LoadUniqueConnection()
         {
@@ -43,6 +91,13 @@ namespace tdsm.core.ServerCore
 
             return new System.Collections.Generic.List<String>();
         }
+
+
+        static Server()
+        {
+            CannotAcceptMessage = "This server is not accepting any new connections";
+        }
+
         public static void AddUniqueConnection(string name, string ip)
         {
             var key = name + ip;
@@ -82,6 +137,39 @@ namespace tdsm.core.ServerCore
             }
             catch (SocketException) { }
             catch (ObjectDisposedException) { }
+        }
+
+        private class SocketDisconnecter : IDisposable
+        {
+            private Socket _socket;
+            public SocketDisconnecter(Socket sock, int closeAfter = 1000)
+            {
+                _socket = sock;
+                var tmr = new Timer((sender) =>
+                {
+                    try
+                    {
+                        var tm = sender as Timer;
+                        tm.Dispose();
+
+                        _socket.SafeClose();
+                    }
+                    catch { }
+
+                    this.Dispose();
+                });
+                tmr.Change(closeAfter, closeAfter);
+            }
+
+            public void Dispose()
+            {
+                try
+                {
+                    _socket.Dispose();
+                }
+                catch { }
+                _socket = null;
+            }
         }
 
         public static void ServerLoop()
@@ -144,22 +232,27 @@ namespace tdsm.core.ServerCore
 
                     if (Netplay.disconnect) break;
 
-                    if (AcceptNewConnections)
-                    {
-                        serverSock.Poll(500000, SelectMode.SelectRead);
+                    serverSock.Poll(500000, SelectMode.SelectRead);
 
-                        // Accept new clients
-                        while (Netplay.tcpListener.Pending())
+                    // Accept new clients
+                    while (Netplay.tcpListener.Pending())
+                    {
+                        var client = Netplay.tcpListener.AcceptSocket();
+                        if (AcceptNewConnections)
                         {
-                            var client = Netplay.tcpListener.AcceptSocket();
                             var accepted = AcceptClient(client);
                             if (accepted)
                             {
                                 Netplay.anyClients = true;
                             }
                         }
+                        else
+                        {
+                            client.NoDelay = true;
+                            client.Send(_NoAcceptData);
+                            new SocketDisconnecter(client);
+                        }
                     }
-                    else Thread.Sleep(200);
                 }
             }
             catch (Exception e)

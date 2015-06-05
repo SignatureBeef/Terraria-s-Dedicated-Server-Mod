@@ -352,7 +352,7 @@ namespace tdsm.core
             AddCommand("var")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Experimental variable manipulation")
-                .WithHelpText("<field|exec> <namespace.classname> <fieldname|methodname>")
+                .WithHelpText("<field|exec|prop> <namespace.classname> <fieldname|methodname>")
                 .WithHelpText("field Terraria.Main eclipse          #Get the value")
                 .WithHelpText("field Terraria.Main eclipse false    #Set the value")
                 .WithHelpText("eclipse")
