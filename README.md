@@ -46,12 +46,7 @@ First open the correct solution file, tdsm.sln for Visual Studio or tdsm-md.sln 
 3. By default the tdsm solution already is referencing the generated, but if not search the tdsm-patcher\bin\x86\Debug directory for the generated executable and add it as a reference.
 4. Readd Full_API to the tdsm-ap project and rebuild it.
 5. Rebuild the entire solution
-6. You are ready to run the patcher.
-
-You are then ready to run the patcher for one last time, this will output the tdsm.exe that you can run a server with.
-<br/>
-<br/>
-Please note you will also require the latest Mono.Cecil and NLua libraries.
+6. You are ready to run the patcher. The regenerated tdsm.<platform>.exe output is the executable you can use to run a server.
 
 ##API Development
 Currently essential hooks are being implemented. However should you need a missing hook simply request it or you can submit a pull request.
