@@ -514,7 +514,6 @@ namespace tdsm.patcher
             il.InsertBefore(loc, il.Create(OpCodes.Ret));
         }
 
-
         /// <summary>
         /// Adds our command line hook so we get input control from the admin
         /// </summary>
@@ -865,6 +864,48 @@ namespace tdsm.patcher
             il.InsertBefore(first, il.Create(OpCodes.Brtrue_S, first));
             il.InsertBefore(first, il.Create(OpCodes.Ldc_I4, 200));
             il.InsertBefore(first, il.Create(OpCodes.Ret));
+        }
+
+        public void HookEclipse()
+        {
+            var type = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
+            var mth = type.Methods.Where(x => x.Name == "UpdateTime").First();
+
+            var callback = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
+            var field = callback.Fields.Where(x => x.Name == "StartEclipse").First();
+
+            var il = mth.Body.GetILProcessor();
+            var start = il.Body.Instructions.Where(x =>
+                x.OpCode == OpCodes.Ldsfld
+                && x.Operand is FieldReference
+                && (x.Operand as FieldReference).Name == "hardMode"
+                && x.Previous.OpCode == OpCodes.Call
+                && x.Previous.Operand is MethodReference
+                && (x.Previous.Operand as MethodReference).Name == "StartInvasion"
+            ).First();
+
+            //Preserve
+            var old = start.Operand as FieldReference;
+
+            //Replace with ours to keep the IL inline
+            start.Operand = _asm.MainModule.Import(field);
+            //Readd the preserved
+            il.InsertAfter(start, il.Create(OpCodes.Ldsfld, old));
+
+            //Now find the target instruction if the value is true
+            var startEclipse = il.Body.Instructions.Where(x =>
+                x.OpCode == OpCodes.Stsfld
+                && x.Operand is FieldReference
+                && (x.Operand as FieldReference).Name == "eclipse"
+                && x.Next.OpCode == OpCodes.Ldsfld
+                && x.Next.Operand is FieldReference
+                && (x.Next.Operand as FieldReference).Name == "eclipse"
+            ).First().Previous;
+            il.InsertAfter(start, il.Create(OpCodes.Brtrue, startEclipse));
+
+            //Since all we care about is setting the StartEclipse to TRUE; we need to be able to disable once done.
+            il.InsertAfter(startEclipse.Next, il.Create(OpCodes.Stsfld, start.Operand as FieldReference));
+            il.InsertAfter(startEclipse.Next, il.Create(OpCodes.Ldc_I4_0));
         }
 
         public void Save(string fileName, int apiBuild, string tdsmUID, string name)

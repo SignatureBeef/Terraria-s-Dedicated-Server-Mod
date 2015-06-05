@@ -1,10 +1,6 @@
-﻿using System;
+﻿
+using System;
 using System.Reflection;
-using System.IO;
-using Mono.Cecil;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-
 namespace tdsm.patcher
 {
     [Serializable]
@@ -110,41 +106,61 @@ namespace tdsm.patcher
         static AppDomain _domain;
         static APIWrapper()
         {
-            _domain = AppDomain.CreateDomain("TDSM_API_WRAPPER", AppDomain.CurrentDomain.Evidence, new AppDomainSetup()
+            //_domain = AppDomain.CreateDomain("TDSM_API_WRAPPER", AppDomain.CurrentDomain.Evidence, new AppDomainSetup()
+            //{
+            //    //ShadowCopyFiles = "false",
+            //    ApplicationBase = Environment.CurrentDirectory
+            //});
+            _domain = AppDomain.CreateDomain("TDSM_API_WRAPPER", null /*AppDomain.CurrentDomain.Evidence*/, new AppDomainSetup()
             {
                 //ShadowCopyFiles = "false",
-                ApplicationBase = Environment.CurrentDirectory
+                ApplicationBase = Environment.CurrentDirectory,
+                AppDomainManagerAssembly = String.Empty
             });
 
-            _domain.AssemblyResolve += (s, a) =>
-            {
-                try
-                {
-                    //return Assembly.LoadFrom(Path.Combine(Globals.PluginPath, a.Name + ".dll"));
-                }
-                catch { }
-                return null;
-            };
+            //Console.WriteLine("Domain: " + ((_domain == null) ? "null" : "not null"));
+
+            //_domain.AssemblyResolve += (s, a) =>
+            //{
+            //    try
+            //    {
+            //        //return Assembly.LoadFrom(Path.Combine(Globals.PluginPath, a.Name + ".dll"));
+            //    }
+            //    catch { }
+            //    return null;
+            //};
 
             var type = typeof(Proxy);
+            foreach (var file in new string[] { "tdsm-patcher.exe", "tdsm.api.dll" })
+            {
+                if (!System.IO.File.Exists(file))
+                {
+                    var bin = System.IO.Path.Combine(Environment.CurrentDirectory, "bin", "x86", "Debug", file);
+                    if (System.IO.File.Exists(bin))
+                    {
+                        System.IO.File.Copy(bin, file);
+                        Console.WriteLine("Copied: " + file);
+                    }
+                }
+            }
             var plugin = _domain.CreateInstance(type.Assembly.FullName, type.FullName);
             var r = plugin.CreateObjRef(typeof(MarshalByRefObject));
-            //var p = r.GetRealObject(new System.Runtime.Serialization.StreamingContext( System.Runtime.Serialization.StreamingContextStates.CrossAppDomain));
+            ////var p = r.GetRealObject(new System.Runtime.Serialization.StreamingContext( System.Runtime.Serialization.StreamingContextStates.CrossAppDomain));
             _api = plugin.Unwrap() as Proxy;
 
-            _api.Load(Path.Combine(Environment.CurrentDirectory, "tdsm.api.dll"));
+            _api.Load(System.IO.Path.Combine(Environment.CurrentDirectory, "tdsm.api.dll"));
 
-            var has = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.GetName().Name == "tdsm.api").Count() > 0;
+            //var has = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.GetName().Name == "tdsm.api").Count() > 0;
             //var asm = _domain.GetAssemblies();
         }
 
-        public static int Build
-        {
-            get
-            {
-                return _api.Build;
-            }
-        }
+        //public static int Build
+        //{
+        //    get
+        //    {
+        //        return _api.Build;
+        //    }
+        //}
 
         public static string TerrariaVersion
         {
@@ -154,59 +170,59 @@ namespace tdsm.patcher
             }
         }
 
-        public static string LibrariesPath
-        {
-            get
-            {
-                return _api.LibrariesPath;
-            }
-        }
+        //public static string LibrariesPath
+        //{
+        //    get
+        //    {
+        //        return _api.LibrariesPath;
+        //    }
+        //}
 
-        public static string PluginPath
-        {
-            get
-            {
-                return _api.PluginPath;
-            }
-        }
+        //public static string PluginPath
+        //{
+        //    get
+        //    {
+        //        return _api.PluginPath;
+        //    }
+        //}
 
-        public static bool IsPatching
-        {
-            get
-            {
-                return _api.IsPatching;
-            }
-            set
-            {
-                _api.IsPatching = value;
-            }
-        }
+        //public static bool IsPatching
+        //{
+        //    get
+        //    {
+        //        return _api.IsPatching;
+        //    }
+        //    set
+        //    {
+        //        _api.IsPatching = value;
+        //    }
+        //}
 
-        public static void Initialise()
-        {
-            _api.Initialise();
-        }
+        //public static void Initialise()
+        //{
+        //    _api.Initialise();
+        //}
 
-        public static byte[] InvokeEvent(byte[] terraria, bool isServer)
-        {
-            _api.InvokeEvent(terraria, isServer);
-            return terraria; // _api.InvokeEvent(terraria, isServer);
-        }
+        //public static byte[] InvokeEvent(byte[] terraria, bool isServer)
+        //{
+        //    _api.InvokeEvent(terraria, isServer);
+        //    return terraria; // _api.InvokeEvent(terraria, isServer);
+        //}
 
-        public static void Finish()
-        {
-            _domain.DomainUnload += (a,b) =>
-            {
-                System.Diagnostics.Debug.Print("DOMAIN UNLOADED =============");
-            };
-            AppDomain.Unload(_domain);
-            _domain = null;
-        }
+        //public static void Finish()
+        //{
+        //    _domain.DomainUnload += (a, b) =>
+        //    {
+        //        System.Diagnostics.Debug.Print("DOMAIN UNLOADED =============");
+        //    };
+        //    AppDomain.Unload(_domain);
+        //    _domain = null;
+        //}
 
-        public static bool IsDotNet()
-        {
-            return true;
-        }
+        //public static bool IsDotNet()
+        //{
+        //    return true;
+        //}
     }
 }
 

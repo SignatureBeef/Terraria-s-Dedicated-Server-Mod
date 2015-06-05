@@ -17,6 +17,77 @@ namespace tdsm.core
     public partial class Entry
     {
         /// <summary>
+        /// Allows on the fly variable modifications
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="args">Arguments.</param>
+        public void VariableMan(ISender sender, ArgumentList args)
+        {
+            // var <type> <field> 
+            // var <type> <field> <valuetobeset>
+            var type = args.GetString(0);
+            var mem = args.GetString(1);
+
+            //Find the type
+            var at = Type.GetType(type);
+            if (at == null) at = System.Reflection.Assembly.GetEntryAssembly().GetType(type);
+            if (at == null) at = System.Reflection.Assembly.GetCallingAssembly().GetType(type);
+            if (at == null) at = System.Reflection.Assembly.GetExecutingAssembly().GetType(type);
+            if (at == null) throw new CommandError("Invalid type: " + type);
+
+            //Find the field
+            var am = at.GetField(mem);
+            if (am == null) throw new CommandError("Invalid field: " + mem);
+
+            string val = null, dataType = null;
+            if (args.TryGetString(2, out val) && args.TryGetString(3, out dataType) && dataType != null)
+            {
+                object data = null;
+
+                switch (dataType.ToLower())
+                {
+                    case "bool":
+                        data = Boolean.Parse(val);
+                        break;
+                    case "int16":
+                        data = Int16.Parse(val);
+                        break;
+                    case "int32":
+                        data = Int32.Parse(val);
+                        break;
+                    case "int64":
+                        data = Int64.Parse(val);
+                        break;
+                    case "byte":
+                        data = Byte.Parse(val);
+                        break;
+                    case "double":
+                        data = Double.Parse(val);
+                        break;
+                    case "single":
+                        data = Single.Parse(val);
+                        break;
+                    default:
+                        throw new CommandError("Invalid data type: " + dataType);
+                }
+
+                am.SetValue(null, data);
+
+                var v = am.GetValue(null);
+                if (v != null) val = v.ToString();
+                else val = "null";
+                sender.Message("Value is now: " + val);
+            }
+            else
+            {
+                var v = am.GetValue(null);
+                if (v != null) val = v.ToString();
+                else val = "null";
+                sender.Message("Value: " + val);
+            }
+        }
+
+        /// <summary>
         /// Informs the sender of what system TDSM is running on
         /// </summary>
         /// <param name="sender">Sender.</param>
@@ -1748,6 +1819,26 @@ namespace tdsm.core
                     break;
                 default:
                     throw new CommandError("Not a supported serverlist command " + first);
+            }
+        }
+
+        /// <summary>
+        /// Starts an event
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public void WorldEvent(ISender sender, ArgumentList args)
+        {
+            string first;
+            args.TryPopOne(out first);
+            switch (first)
+            {
+                case "eclipse":
+                    World.SetTime(32400.0, false);
+                    tdsm.api.Callbacks.MainCallback.StartEclipse = true;
+                    break;
+                default:
+                    throw new CommandError("Not a supported event " + first);
             }
         }
     }

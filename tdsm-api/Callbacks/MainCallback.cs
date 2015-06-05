@@ -9,6 +9,8 @@ namespace tdsm.api.Callbacks
         public static Action StatusTextChange;
         public static Action UpdateServer;
 
+        public static bool StartEclipse;
+
         public static void ProgramStart()
         {
             Tools.WriteLine("TDSM Rebind API build {0}{1}", Globals.Build, Globals.PhaseToSuffix(Globals.BuildPhase));

@@ -12,7 +12,7 @@ namespace tdsm.core
 {
     /// <summary>
     /// This is a multi purpose class.
-    /// 1) It sends non identifiable data to the heatbeat server for us to see the stats (unless allowed)
+    /// 1) It sends non identifiable data to the heatbeat server for us to see the stats (when allowed)
     /// 2) The heartbeat server will reply with particular case data. Responses are:
     ///     a) 1 = OK
     ///     b) 2 = Update available

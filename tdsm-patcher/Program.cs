@@ -88,6 +88,27 @@ namespace tdsm.patcher
             var outFileMN = fileName + ".mono.exe";
             var patchFile = "tdsm.api.dll";
 
+            if (!File.Exists(inFile))
+            {
+                var bin = Path.Combine(Environment.CurrentDirectory, "bin", "x86", "Debug", inFile);
+                if (File.Exists(bin)) inFile = bin;
+            }
+            if (!File.Exists(patchFile))
+            {
+                var bin = Path.Combine(Environment.CurrentDirectory, "bin", "x86", "Debug", patchFile);
+                if (File.Exists(bin)) patchFile = bin;
+            }
+
+            var resourceLib = "Vestris.ResourceLib.dll";
+            if (!System.IO.File.Exists(resourceLib))
+            {
+                var bin = System.IO.Path.Combine(Environment.CurrentDirectory, "bin", "x86", "Debug", resourceLib);
+                if (System.IO.File.Exists(bin))
+                {
+                    System.IO.File.Copy(bin, resourceLib);
+                }
+            }
+
 #if DEV
             if (File.Exists(outFileMS)) File.Delete(outFileMS);
             if (File.Exists(outFileMN)) File.Delete(outFileMN);
@@ -184,6 +205,8 @@ namespace tdsm.patcher
             patcher.FixStatusTexts();
             Console.Write("Ok\nHooking invasions...");
             patcher.HookInvasions();
+            Console.Write("Ok\nHooking eclipse...");
+            patcher.HookEclipse();
             Console.Write("Ok\n");
 
             //TODO repace Terraria's Console.SetTitles
@@ -251,6 +274,7 @@ namespace tdsm.patcher
             Console.Write("Ok\nSaving to {0}...", outFileMN);
             patcher.Save(outFileMN, Build, TDSMGuid, fileName);
 
+            Console.Write("Ok\nUpdating icons...");
             if (!isMono)
             {
                 var res = new Vestris.ResourceLib.IconDirectoryResource(new Vestris.ResourceLib.IconFile("tdsm.ico"));
@@ -258,44 +282,47 @@ namespace tdsm.patcher
                 res.SaveTo(outFileMN);
             }
 
-
 #if Release || true
-            var current = isMono ? outFileMN : outFileMS;
-            Console.WriteLine("Ok\nYou may now run {0} as you would normally.", current);
-            Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", current);
-            if (Console.ReadKey(true).Key == ConsoleKey.Y)
+            var noRun = args != null && args.Where(x => x.ToLower() == "-norun").Count() > 0;
+            if (!noRun)
             {
-                if (!isMono)
+                var current = isMono ? outFileMN : outFileMS;
+                Console.WriteLine("Ok\nYou may now run {0} as you would normally.", current);
+                Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", current);
+                if (Console.ReadKey(true).Key == ConsoleKey.Y)
                 {
-                    if (File.Exists("serverconfig.txt"))
-                        System.Diagnostics.Process.Start(current, "-config serverconfig.txt");
-                    else
-                        System.Diagnostics.Process.Start(current);
-                }
-                else
-                {
-                    Console.Clear();
-
-                    using (var ms = new MemoryStream())
+                    if (!isMono)
                     {
-                        using (var fs = File.OpenRead(current))
-                        {
-                            var buff = new byte[256];
-                            while (fs.Position < fs.Length)
-                            {
-                                var task = fs.Read(buff, 0, buff.Length);
-                                ms.Write(buff, 0, task);
-                            }
-                        }
-
-                        ms.Seek(0L, SeekOrigin.Begin);
-                        var asm = System.Reflection.Assembly.Load(ms.ToArray());
                         if (File.Exists("serverconfig.txt"))
-                            asm.EntryPoint.Invoke(null, new object[] {
+                            System.Diagnostics.Process.Start(current, "-config serverconfig.txt");
+                        else
+                            System.Diagnostics.Process.Start(current);
+                    }
+                    else
+                    {
+                        Console.Clear();
+
+                        using (var ms = new MemoryStream())
+                        {
+                            using (var fs = File.OpenRead(current))
+                            {
+                                var buff = new byte[256];
+                                while (fs.Position < fs.Length)
+                                {
+                                    var task = fs.Read(buff, 0, buff.Length);
+                                    ms.Write(buff, 0, task);
+                                }
+                            }
+
+                            ms.Seek(0L, SeekOrigin.Begin);
+                            var asm = System.Reflection.Assembly.Load(ms.ToArray());
+                            if (File.Exists("serverconfig.txt"))
+                                asm.EntryPoint.Invoke(null, new object[] {
 								new string[] { "-config", "serverconfig.txt" }
 							});
-                        else
-                            asm.EntryPoint.Invoke(null, null);
+                            else
+                                asm.EntryPoint.Invoke(null, null);
+                        }
                     }
                 }
             }

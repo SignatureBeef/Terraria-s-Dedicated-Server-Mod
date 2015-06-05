@@ -349,6 +349,19 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.serverlist")
                 .Calls(this.ServerList);
 
+            AddCommand("var")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Experimental variable manipulation")
+                .WithPermissionNode("tdsm.var")
+                .Calls(this.VariableMan);
+
+            AddCommand("worldevent")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Start or stop an event")
+                .WithHelpText("eclipse")
+                .WithPermissionNode("tdsm.worldevent")
+                .Calls(this.WorldEvent);
+
             //Template for when we have more plugins
             //AddCommand("repo")
             //    .WithDescription("The tdsm update repository")

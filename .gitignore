@@ -38,3 +38,15 @@
 /PluginExamples/VB/BareBones/obj
 
 cecil
+
+/tdsm-patcher/KopiLua.dll
+/tdsm-patcher/NLua.dll
+/tdsm-patcher/tdsm.api.dll
+/tdsm-patcher/tdsm.api.pdb
+/tdsm-patcher/tdsm.microsoft.exe
+/tdsm-patcher/tdsm.mono.exe
+/tdsm-patcher/corenet
+/tdsm-patcher/Plugins
+/tdsm-patcher/tdsm-patcher.exe
+/tdsm-patcher/Vestris.ResourceLib.dll
+/tdsm-patcher/project.lock.json
