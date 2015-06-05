@@ -578,11 +578,6 @@ namespace tdsm.core
                 }
             }
 
-            if (Main.dayTime)
-            {
-                if (Main.eclipse) Main.eclipse = false;
-            }
-
             NewNetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
             var current = WorldTime.Parse(World.GetParsableTime()).Value;
             Tools.NotifyAllPlayers(String.Format("Time set to {0} ({1}) by {2}", current.ToString(), current.GameTime, sender.SenderName), Color.Green);
@@ -1875,8 +1870,16 @@ namespace tdsm.core
             switch (first)
             {
                 case "eclipse":
-                    World.SetTime(32400.0, false);
-                    tdsm.api.Callbacks.MainCallback.StartEclipse = true;
+                    if (!Main.eclipse)
+                    {
+                        World.SetTime(32400.0, false);
+                        tdsm.api.Callbacks.MainCallback.StartEclipse = true;
+                    }
+                    else
+                    {
+                        Main.eclipse = false;
+                        sender.Message("The eclipse was disabled.");
+                    }
                     break;
                 default:
                     throw new CommandError("Not a supported event " + first);

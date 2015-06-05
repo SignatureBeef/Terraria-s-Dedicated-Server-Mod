@@ -36,6 +36,9 @@ namespace tdsm.core
 
             if (Terraria.Main.bloodMoon)
                 Terraria.Main.bloodMoon = false;
+
+            if (Terraria.Main.eclipse)
+                Terraria.Main.eclipse = false;
         }
 
         public static bool IsTileValid(int x, int y)
