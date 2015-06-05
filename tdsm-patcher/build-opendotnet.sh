@@ -1,3 +1,4 @@
+#!/bin/bash
 reset
 #When i was debugging...
 #COPY ..\..\Terraria-s-Dedicated-Server-Mod\tdsm-patcher\APIWrapper.cs .
@@ -25,4 +26,12 @@ cp ../KopiLua.dll .
 cp ../NLua.dll .
 cp ../Plugins/tdsm.core.dll Plugins/.
 
-echo You now can run tdsm.exe using \"dnx tdsm.exe\" from inside the corenet directory.
+echo Writing the run file
+cat > tdsm.sh << EOF
+ulimit -n 12288
+dnx tdsm.exe
+EOF
+
+chmod u+x tdsm.sh
+
+echo You now can run tdsm.exe using \"./tdsm.sh\" from inside the corenet directory.
