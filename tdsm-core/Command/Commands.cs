@@ -1881,6 +1881,36 @@ namespace tdsm.core
                         sender.Message("The eclipse was disabled.");
                     }
                     break;
+                case "snowmoon":
+                    if (!Main.snowMoon)
+                    {
+                        Main.startSnowMoon();
+                    }
+                    else
+                    {
+                        Main.snowMoon = false;
+                    }
+                    break;
+                case "pumpkinmoon":
+                    if (!Main.pumpkinMoon)
+                    {
+                        Main.startPumpkinMoon();
+                    }
+                    else
+                    {
+                        Main.pumpkinMoon = false;
+                    }
+                    break;
+                    //case "bloodmoon": WIP
+                    //    if (!Main.bloodMoon)
+                    //    {
+                    //        Main.blo
+                    //    }
+                    //    else
+                    //    {
+                    //        Main.bloodMoon = false;
+                    //    }
+                    break;
                 default:
                     throw new CommandError("Not a supported event " + first);
             }
