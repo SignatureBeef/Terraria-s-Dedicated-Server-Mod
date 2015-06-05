@@ -2001,5 +2001,71 @@ namespace tdsm.core
                 sender.Message("The pumpkin moon was disabled.");
             }
         }
+
+        Task _waitingForPlayers;
+        private bool? _waitFPState;
+        /// <summary>
+        /// Tell the server to wait for all players to disconnect before restarting
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public void WaitForPlayers(ISender sender, ArgumentList args)
+        {
+            RestartWhenNoPlayers = !RestartWhenNoPlayers;
+            sender.Message("The server is " + (RestartWhenNoPlayers ? "waiting to restart" : "not restarting"));
+
+            if (_waitFPState == null) _waitFPState = Server.AcceptNewConnections;
+
+            if (RestartWhenNoPlayers)
+            {
+                Server.AcceptNewConnections = false;
+                if (ClientConnection.All.Count == 0)
+                {
+                    Server.PerformRestart();
+                    return;
+                }
+
+                if (_waitingForPlayers.IsEmpty())
+                {
+                    _waitingForPlayers = new Task()
+                    {
+                        Enabled = true,
+                        Method = (tsk) =>
+                        {
+                            Tools.NotifyAllPlayers("The server is waiting to restart.", Color.Orange);
+                            Tools.NotifyAllPlayers("Please finish what you are doing and disconnect.", Color.Orange);
+                        },
+                        Trigger = 5 * 1000
+                    };
+                    Tasks.Schedule(_waitingForPlayers);
+                }
+                else
+                {
+                    _waitingForPlayers.Enabled = false;
+                }
+            }
+            else
+            {
+                Server.AcceptNewConnections = _waitFPState.Value; //Restore
+                if (_waitingForPlayers.Enabled)
+                {
+                    if (_waitingForPlayers.HasTriggered)
+                    {
+                        Tools.NotifyAllPlayers("Restart was terminated.", Color.Orange);
+                    }
+                    _waitingForPlayers.Enabled = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Restart and reload the world without reloading the application
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public void Restart_Soft(ISender sender, ArgumentList args)
+        {
+            Server.PerformRestart();
+        }
     }
 }

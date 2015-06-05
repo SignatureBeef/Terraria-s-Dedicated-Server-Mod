@@ -60,6 +60,8 @@ namespace tdsm.core
         private string _webServerAddress { get; set; }
         private string _webServerProvider { get; set; }
 
+        public bool RestartWhenNoPlayers { get; set; }
+
         public Entry()
         {
             this.TDSMBuild = CoreBuild;
@@ -368,6 +370,28 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.worldevent")
                 .Calls(this.WorldEvent);
 
+            AddCommand("maxplayers")
+                .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
+                .WithDescription("Set the maximum number of player slots.")
+                .WithHelpText("Usage:    maxplayers <num> - set the max number of slots")
+                .WithHelpText("          maxplayers <num> <num> - also set the number of overlimit slots")
+                .WithPermissionNode("tdsm.maxplayers")
+                .Calls(SlotManager.MaxPlayersCommand);
+
+            AddCommand("q")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("List connections waiting in queues.")
+                .WithHelpText("q")
+                .WithPermissionNode("tdsm.q")
+                .Calls(SlotManager.QCommand);
+
+            AddCommand("conn")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Accept new connections.")
+                .WithHelpText("conn")
+                .WithPermissionNode("tdsm.conn")
+                .Calls(Server.Command_AcceptConnections);
+
             //Template for when we have more plugins
             //AddCommand("repo")
             //    .WithDescription("The tdsm update repository")
@@ -460,6 +484,15 @@ namespace tdsm.core
             ctx.SetResult(HookResult.IGNORE);
 
             (new ProgramThread("Command", ListenForCommands)).Start();
+        }
+
+        [Hook(HookOrder.NORMAL)]
+        void OnPlayerDisconnected(ref HookContext ctx, ref HookArgs.PlayerLeftGame args)
+        {
+            if (RestartWhenNoPlayers && ClientConnection.All.Count == 0)
+            {
+                Server.PerformRestart();
+            }
         }
 
         [Hook(HookOrder.NORMAL)]

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using tdsm.api;
+using tdsm.api.Command;
 using tdsm.api.Misc;
 using tdsm.api.Plugin;
 using tdsm.core.Logging;
@@ -92,10 +93,20 @@ namespace tdsm.core.ServerCore
             return new System.Collections.Generic.List<String>();
         }
 
-
         static Server()
         {
             CannotAcceptMessage = "This server is not accepting any new connections";
+        }
+
+        /// <summary>
+        /// Toggle whether the server should accept new connections
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public static void Command_AcceptConnections(ISender sender, ArgumentList args)
+        {
+            AcceptNewConnections = !AcceptNewConnections;
+            sender.Message("New connections are " + (AcceptNewConnections ? "allowed" : "not allowed"));
         }
 
         public static void AddUniqueConnection(string name, string ip)
@@ -498,6 +509,17 @@ namespace tdsm.core.ServerCore
                     }
                 }
             }
+        }
+
+        public static void PerformRestart()
+        {
+            Tools.NotifyAllPlayers("Server is being restarted...", Color.Purple); //Ensure write to console in the case of no players
+            //Close connections
+            //Unload the world
+            //delay 3 seconds
+            //Reload world
+            //Restart server
+            Server.StopServer();
         }
     }
 }

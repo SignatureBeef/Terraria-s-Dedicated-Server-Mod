@@ -12,7 +12,7 @@ namespace tdsm.api.Misc
 
         public object Data;
 
-        public bool Triggered
+        public bool Triggerable
         {
             get
             {
@@ -31,7 +31,7 @@ namespace tdsm.api.Misc
             {
                 _enabled = value;
 
-                if (_enabled) Reset();
+                if (_enabled) Reset(false);
             }
         }
 
@@ -44,6 +44,14 @@ namespace tdsm.api.Misc
         public int Trigger { get; set; }
 
         /// <summary>
+        /// Informs if the tack has been performed at leat once
+        /// </summary>
+        /// <value>
+        /// The trigger.
+        /// </value>
+        public bool HasTriggered { get; private set; }
+
+        /// <summary>
         /// Gets or sets the method to be called.
         /// </summary>
         /// <value>
@@ -51,16 +59,17 @@ namespace tdsm.api.Misc
         /// </value>
         public Action<Task> Method { get; set; }
 
-        public void Reset(bool clearData = true)
+        public void Reset(bool triggered = true, bool clearData = true)
         {
             _insertedAt = DateTime.Now;
 
             if (clearData) Data = null;
+            HasTriggered = triggered;
         }
 
         public Task Init()
         {
-            Reset();
+            Reset(false);
             return this;
         }
 
@@ -92,7 +101,7 @@ namespace tdsm.api.Misc
                 for (var i = 0; i < _tasks.Count; i++)
                 {
                     Task task = _tasks.Pop();
-                    if (task.Triggered)
+                    if (task.Triggerable)
                     {
                         task.Method.BeginInvoke
                         (task,
