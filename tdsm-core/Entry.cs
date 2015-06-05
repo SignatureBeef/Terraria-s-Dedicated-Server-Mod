@@ -392,6 +392,20 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.conn")
                 .Calls(Server.Command_AcceptConnections);
 
+            AddCommand("restart")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Restart the server.")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.restart")
+                .Calls(this.Restart_Soft);
+
+            AddCommand("restartw")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Wait for users to disconnect and then restart.")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.restartw")
+                .Calls(this.WaitForPlayers);
+
             //Template for when we have more plugins
             //AddCommand("repo")
             //    .WithDescription("The tdsm update repository")
@@ -489,9 +503,10 @@ namespace tdsm.core
         [Hook(HookOrder.NORMAL)]
         void OnPlayerDisconnected(ref HookContext ctx, ref HookArgs.PlayerLeftGame args)
         {
-            if (RestartWhenNoPlayers && ClientConnection.All.Count == 0)
+            if (RestartWhenNoPlayers && ClientConnection.All.Count - 1 == 0)
             {
                 Server.PerformRestart();
+                Server.AcceptNewConnections = _waitFPState.Value;
             }
         }
 
@@ -503,11 +518,11 @@ namespace tdsm.core
             Server.Bans.Add(args.RemoteAddress); //TODO see if port needs removing
         }
 
-        static void ListenForCommands()
+        void ListenForCommands()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             ProgramLog.Log("Ready for commands.");
-            while (!Terraria.Netplay.disconnect)
+            while (!Terraria.Netplay.disconnect || Server.RestartInProgress)
             {
                 try
                 {

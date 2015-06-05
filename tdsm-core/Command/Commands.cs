@@ -1978,6 +1978,7 @@ namespace tdsm.core
             }
         }
 
+        //TODO clean code, only have command methods in this file; everything else in entry perhaps.
         static void _disableActiveEvents(ISender sender)
         {
             if (Main.bloodMoon)
@@ -2022,6 +2023,7 @@ namespace tdsm.core
                 if (ClientConnection.All.Count == 0)
                 {
                     Server.PerformRestart();
+                    Server.AcceptNewConnections = _waitFPState.Value;
                     return;
                 }
 
@@ -2032,10 +2034,17 @@ namespace tdsm.core
                         Enabled = true,
                         Method = (tsk) =>
                         {
-                            Tools.NotifyAllPlayers("The server is waiting to restart.", Color.Orange);
-                            Tools.NotifyAllPlayers("Please finish what you are doing and disconnect.", Color.Orange);
+                            Tools.NotifyAllPlayers("The server is waiting to restart.", Color.Orange, false);
+                            Tools.NotifyAllPlayers("Please finish what you are doing and disconnect.", Color.Orange, false);
+
+                            var players = from p in Terraria.Main.player where p.active orderby p.name select p.Name;
+
+                            var pn = players.Count();
+                            if (pn == 0) return;
+
+                            ProgramLog.Admin.Log("Notified player(s) of restart: " + String.Join(", ", players));
                         },
-                        Trigger = 5 * 1000
+                        Trigger = 60
                     };
                     Tasks.Schedule(_waitingForPlayers);
                 }

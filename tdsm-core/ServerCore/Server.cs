@@ -77,6 +77,8 @@ namespace tdsm.core.ServerCore
         }
         public static byte[] _NoAcceptData;
 
+        public static bool RestartInProgress { get; set; }
+
         public static System.Collections.Generic.List<String> LoadUniqueConnection()
         {
             try
@@ -237,7 +239,7 @@ namespace tdsm.core.ServerCore
 
             try
             {
-                while (!Netplay.disconnect)
+                while (!Netplay.disconnect && !RestartInProgress)
                 {
                     Netplay.anyClients = ClientConnection.All.Count > 0; //clientList.Count > 0;
 
@@ -278,6 +280,7 @@ namespace tdsm.core.ServerCore
                 Netplay.tcpListener.Stop();
             }
             catch (SocketException) { }
+            Netplay.tcpListener = null;
 
             lock (ClientConnection.All)
             {
@@ -387,7 +390,7 @@ namespace tdsm.core.ServerCore
             Netplay.disconnect = false;
         }
 
-        public static void StopServer()
+        public static void StopServer(bool disconnect = true)
         {
             var ctx = new HookContext
             {
@@ -402,15 +405,20 @@ namespace tdsm.core.ServerCore
             HookPoints.ServerStateChange.Invoke(ref ctx, ref args);
 
             //Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
-            ProgramLog.Log("Disabling Plugins");
-            PluginManager.DisablePlugins();
+            if (disconnect)
+            {
+                ProgramLog.Log("Disabling Plugins");
+                PluginManager.DisablePlugins();
+            }
 
             Console.Write("Saving world...");
             WorldFile.saveWorld(false);
 
             Thread.Sleep(5000);
             ProgramLog.Log("Closing Connections...");
-            Netplay.disconnect = true;
+            Netplay.disconnect = disconnect;
+
+            Netplay.ServerUp = false;
         }
 
         private static void ServerLoopLoop()
@@ -420,8 +428,12 @@ namespace tdsm.core.ServerCore
 
             while (true)
             {
-                ServerLoop();
-                while (Netplay.disconnect) Thread.Sleep(100);
+                if (!RestartInProgress)
+                {
+                    ServerLoop();
+                    while (Netplay.disconnect) Thread.Sleep(100);
+                }
+                else Thread.Sleep(200);
             }
         }
 
@@ -513,13 +525,33 @@ namespace tdsm.core.ServerCore
 
         public static void PerformRestart()
         {
-            Tools.NotifyAllPlayers("Server is being restarted...", Color.Purple); //Ensure write to console in the case of no players
+            RestartInProgress = true;
+            Tools.NotifyAllPlayers("Server was requested to restart...", Color.Purple); //Ensure write to console in the case of no players
+
             //Close connections
             //Unload the world
-            //delay 3 seconds
             //Reload world
             //Restart server
-            Server.StopServer();
+
+            //ProgramLog.Admin.Log("Stopping server...");
+            Server.StopServer(false);
+            while (Netplay.ServerUp) System.Threading.Thread.Sleep(100);
+
+            ProgramLog.Admin.Log("Clearing the world...");
+            WorldGen.clearWorld();
+
+            GC.Collect();
+            Thread.Sleep(1000);
+
+            ProgramLog.Admin.Log("Reloading the world...");
+            WorldFile.loadWorld();
+
+            //Server.StartServer();
+            //ThreadPool.QueueUserWorkItem(new WaitCallback(tdsm.api.Callbacks.NetplayCallback.StartServer), 1);
+            //while (RestartInProgress) System.Threading.Thread.Sleep(100);
+            RestartInProgress = false;
+
+            Tools.NotifyAllPlayers("Restart complete...", Color.Purple);
         }
     }
 }

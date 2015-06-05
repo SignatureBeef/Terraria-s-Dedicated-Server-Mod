@@ -38,6 +38,23 @@ namespace tdsm.core.Misc
             thread.Start();
         }
 
+        //public void Kill()
+        //{
+        //    try
+        //    {
+        //        thread.Abort();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        var name = String.Empty;
+        //        if (thread != null)
+        //        {
+        //            name = thread.Name ?? "<noname>";
+        //        }
+        //        ProgramLog.Error.Log("Failed to kill thread: " + name, e);
+        //    }
+        //}
+
         private static volatile bool have_prctl = true;
 
         [DllImport("libc.so.6")]
