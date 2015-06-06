@@ -104,6 +104,13 @@ namespace tdsm.api.Command
             return this;
         }
 
+        public CommandInfo WithPermissionNode()
+        {
+            const String tdsm = "tdsm.";
+            this.node = tdsm + this._prefix;
+            return this;
+        }
+
         public CommandInfo Calls(Action<ISender, ArgumentList> callback)
         {
             tokenCallback = callback;

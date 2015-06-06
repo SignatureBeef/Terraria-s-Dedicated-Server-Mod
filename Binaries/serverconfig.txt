@@ -16,7 +16,7 @@
 #-noupnp					Disables automatic port forwarding
 
 #Set’s the max number of players allowed on a server.  Value must be between 1 and 255
-#maxplayers=8
+maxplayers=8
 
 #Load a world and automatically start the server.
 #world=C:\Users\Defaults\My Documents\My Games\Terraria\Worlds\world1.wld
@@ -68,8 +68,8 @@ vanilla-linux=false
 #Allows communication to the TDSM server
 heartbeat=true
 
-#true to show on the server list
-server-list=true
+#true to show on the server list, heartbeat must be enabled.
+#server-list=true
 
 #Name on server list
 server-list-name=TDSM Server
@@ -77,10 +77,14 @@ server-list-name=TDSM Server
 #Description to use on the server list
 server-list-desc=This is an example of the description for use in the TDSM Server List.\n\nHello World!
 
+#Instead of displaying the IP, opt to display your domain
+server-list-domain=tdsm.org
+
 #Address for the Remote Console server to bind to
 rcon-bind-address=127.0.0.1:7023
 
 #Remote console random hashing key, set to something completely random. This is used to hash your user/passwords so if you change it will invalidate all logins.
+#If this is not specified one will be generated and stored in Data\rcon.nonce
 #rcon-hash-nonce=
 
 #The address that the web server should listen on, to disable simply comment the line out.
@@ -100,3 +104,6 @@ send-queue-quota=1024
 #Allows bypassing of the slot queue mechanism when the server reaches the player limit.
 #Note: This is typically implemented by a plugins. For example when used in conjunction with restrict it allows operators to bypass the queue.
 overlimit-slots=1
+
+#Location of a pid file to maintain.
+#pid-file=process.pid

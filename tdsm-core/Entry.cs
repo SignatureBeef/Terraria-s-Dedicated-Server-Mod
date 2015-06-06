@@ -406,6 +406,15 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.restartw")
                 .Calls(this.WaitForPlayers);
 
+#if DEBUG
+            AddCommand("repo")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Search for or update plugins.")
+                .SetDefaultUsage()
+                .WithPermissionNode()
+                .Calls(this.RepositoryCommand);
+#endif
+
             //Template for when we have more plugins
             //AddCommand("repo")
             //    .WithDescription("The tdsm update repository")

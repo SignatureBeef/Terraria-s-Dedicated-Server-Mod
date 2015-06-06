@@ -87,9 +87,9 @@ namespace tdsm.core.WebInterface
         //private static System.Collections.Generic.Queue<String> _additionalModules = new System.Collections.Generic.Queue<String>();
         private static System.Collections.Generic.Dictionary<String, WebPage> _pages = new System.Collections.Generic.Dictionary<String, WebPage>();
 
-        //        public static readonly string HtmlDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "WebInterface", "Files");
+        public static readonly string HtmlDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "WebInterface", "Files");
         //		public static readonly string HtmlDirectory = @"C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\tdsm-core\WebInterface\Files";
-        public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"/../../../../tdsm-core/WebInterface/Files");
+        //public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"/../../../../tdsm-core/WebInterface/Files");
         //        public static readonly string HtmlDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\..\..\tdsm-core\WebInterface\Files");
 
         //public static bool RegisterModule(string path)

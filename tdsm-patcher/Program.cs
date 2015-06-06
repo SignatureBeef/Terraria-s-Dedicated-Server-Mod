@@ -129,6 +129,7 @@ namespace tdsm.patcher
             //Copy (root, "Restrict", Path.Combine (Environment.CurrentDirectory, "Plugins"), "RestrictPlugin");
             Copy(root, "External", Environment.CurrentDirectory, "KopiLua", false);
             Copy(root, "External", Environment.CurrentDirectory, "NLua", false);
+            Copy(root, "tdsm-core", Environment.CurrentDirectory, "Newtonsoft.Json", true);
 
 #endif
 #elif CLIENT
@@ -151,7 +152,7 @@ namespace tdsm.patcher
 
 
             var noVersionCheck = args != null && args.Where(x => x.ToLower() == "-nover").Count() > 0;
-            if(noVersionCheck != true)
+            if (noVersionCheck != true)
             {
                 var vers = patcher.GetAssemblyVersion();
                 if (vers != APIWrapper.TerrariaVersion)
@@ -285,8 +286,22 @@ namespace tdsm.patcher
             if (!isMono)
             {
                 var res = new Vestris.ResourceLib.IconDirectoryResource(new Vestris.ResourceLib.IconFile("tdsm.ico"));
-                res.SaveTo(outFileMS);
-                res.SaveTo(outFileMN);
+                try
+                {
+                    res.SaveTo(outFileMS);
+                }
+                catch
+                {
+                    Console.WriteLine("Failed to write icon for: " + outFileMS);
+                }
+                try
+                {
+                    res.SaveTo(outFileMN);
+                }
+                catch
+                {
+                    Console.WriteLine("Failed to write icon for: " + outFileMN);
+                }
             }
 
 #if Release || true
