@@ -67,6 +67,11 @@ namespace tdsm.api.Misc
             HasTriggered = triggered;
         }
 
+        public void SetImmediate()
+        {
+            _insertedAt = DateTime.Now.AddSeconds(-Trigger);
+        }
+
         public Task Init()
         {
             Reset(false);

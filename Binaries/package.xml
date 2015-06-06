@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<UpdatePackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Instructions>
+		<UpdateInstruction PackageFile="tdsm.api.dll" Destination="tdsm.api.dll" />
+		<UpdateInstruction PackageFile="tdsm.api.pdb" Destination="tdsm.api.pdb" />
+		<UpdateInstruction PackageFile="Pluginstdsm.core.pdb" Destination="tdsm.api.pdb" />
+		<UpdateInstruction PackageFile="tdsm.api.pdb" Destination="tdsm.api.pdb" />
+	</Instructions>
+</UpdatePackage>

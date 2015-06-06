@@ -128,7 +128,7 @@ function StartMonitoring() {
 function OnMonitorResult(data) {
     console.log(data);
 
-    SetProgress('ui-players', data.ConnectedPlayers / data.MaxPlayers / 100.0,
+    SetProgress('ui-players', data.ConnectedPlayers / data.MaxPlayers,
         data.ConnectedPlayers,
         '<h6>Connected Players</h6>' +
         '<div><b>Max players</b>: ' + data.MaxPlayers + '</div>');

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using tdsm.api;
 using tdsm.api.Permissions;
 
 namespace tdsm.core.WebInterface
@@ -7,6 +8,7 @@ namespace tdsm.core.WebInterface
     public static class WebPermissions
     {
         private static System.Collections.Generic.List<XmlPlayer> _store;
+        static ScheduledNotification _ntfPermError;
 
         public static void Load()
         {
@@ -59,8 +61,10 @@ namespace tdsm.core.WebInterface
 
         public static Permission IsPermitted(string node, WebRequest req)
         {
-            if (req != null)
+            if (req != null && _store != null)
             {
+                if (_ntfPermError != null) _ntfPermError.Enabled = false;
+
                 var match = _store.Where(x => x.Name == req.AuthenticatedAs).ToArray();
                 var allowed = false;
                 var found = false;
@@ -109,6 +113,19 @@ namespace tdsm.core.WebInterface
                 if (!found) return Permission.NodeNonExistent;
 
                 return allowed ? Permission.Permitted : Permission.Denied;
+            }
+            else
+            {
+                if (null == _store)
+                {
+                    if (_ntfPermError == null)
+                    {
+                        _ntfPermError = new ScheduledNotification("Web permissions are missing and is preventing logins", Microsoft.Xna.Framework.Color.Red, 10);
+                        _ntfPermError.SetImmediate();
+                    }
+
+                    if (!_ntfPermError.Enabled) _ntfPermError.Enabled = true;
+                }
             }
 
             return Permission.Denied;

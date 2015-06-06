@@ -172,8 +172,8 @@ namespace tdsm.api.Callbacks
 
         public static void UpdateServerEnd()
         {
-            /* Check tolled tasks */
-            Tasks.CheckTasks();
+            ///* Check tolled tasks */
+            //Tasks.CheckTasks();
 
             if (UpdateServer != null)
                 UpdateServer();
@@ -261,6 +261,9 @@ namespace tdsm.api.Callbacks
         //private static int _textTimeout = 0;
         public static void OnStatusTextChange()
         {
+            /* Check tolled tasks - OnStatusTextChanged is called without clients connected */
+            Tasks.CheckTasks();
+
 #if Full_API
             if (Terraria.Main.oldStatusText != Terraria.Main.statusText)
             {
