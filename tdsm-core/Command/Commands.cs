@@ -2003,7 +2003,7 @@ namespace tdsm.core
             }
         }
 
-        Task _waitingForPlayers;
+        Task _tskWaitForPlayers;
         private bool? _waitFPState;
         /// <summary>
         /// Tell the server to wait for all players to disconnect before restarting
@@ -2013,7 +2013,6 @@ namespace tdsm.core
         public void WaitForPlayers(ISender sender, ArgumentList args)
         {
             RestartWhenNoPlayers = !RestartWhenNoPlayers;
-            sender.Message("The server is " + (RestartWhenNoPlayers ? "waiting to restart" : "not restarting"));
 
             if (_waitFPState == null) _waitFPState = Server.AcceptNewConnections;
 
@@ -2022,14 +2021,13 @@ namespace tdsm.core
                 Server.AcceptNewConnections = false;
                 if (ClientConnection.All.Count == 0)
                 {
-                    Server.PerformRestart();
-                    Server.AcceptNewConnections = _waitFPState.Value;
+                    PerformRestart();
                     return;
                 }
 
-                if (_waitingForPlayers.IsEmpty())
+                if (_tskWaitForPlayers == null)
                 {
-                    _waitingForPlayers = new Task()
+                    _tskWaitForPlayers = new Task()
                     {
                         Enabled = true,
                         Method = (tsk) =>
@@ -2046,25 +2044,27 @@ namespace tdsm.core
                         },
                         Trigger = 60
                     };
-                    Tasks.Schedule(_waitingForPlayers);
+                    Tasks.Schedule(_tskWaitForPlayers);
                 }
                 else
                 {
-                    _waitingForPlayers.Enabled = false;
+                    _tskWaitForPlayers.Enabled = true;
                 }
             }
             else
             {
                 Server.AcceptNewConnections = _waitFPState.Value; //Restore
-                if (_waitingForPlayers.Enabled)
+                if (_tskWaitForPlayers != null && _tskWaitForPlayers.Enabled)
                 {
-                    if (_waitingForPlayers.HasTriggered)
+                    if (_tskWaitForPlayers.HasTriggered)
                     {
                         Tools.NotifyAllPlayers("Restart was terminated.", Color.Orange);
                     }
-                    _waitingForPlayers.Enabled = false;
+                    _tskWaitForPlayers.Enabled = false;
                 }
             }
+
+            sender.Message("The server is " + (_tskWaitForPlayers != null && _tskWaitForPlayers.Enabled ? "waiting to restart" : "not restarting"));
         }
 
         /// <summary>
@@ -2074,7 +2074,7 @@ namespace tdsm.core
         /// <param name="args">Arguments sent with command</param>
         public void Restart_Soft(ISender sender, ArgumentList args)
         {
-            Server.PerformRestart();
+            PerformRestart();
         }
     }
 }

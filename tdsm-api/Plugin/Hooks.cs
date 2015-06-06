@@ -532,15 +532,19 @@ namespace tdsm.api.Plugin
             public string Name { get; set; }
             public int Prefix { get; set; }
             public int NetID { get; set; }
-
+            
+#if Full_API
             public Item Item { get; set; }
+#endif
 
             public void SetItem()
             {
+#if Full_API
                 Item = new Item();
                 Item.netDefaults(NetID);
                 Item.stack = Amount;
                 Item.Prefix(Prefix);
+#endif
             }
         }
 

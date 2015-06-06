@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace tdsm.api.Misc
 {
-    public struct Task
+    public class Task /* Needed this to be a reference type */
     {
-        public static readonly Task Empty;
+        //public static readonly Task Empty;
 
         private DateTime _insertedAt;
         private bool _enabled;
@@ -73,15 +73,16 @@ namespace tdsm.api.Misc
             return this;
         }
 
-        public bool IsEmpty()
-        {
-            return this.Trigger == Empty.Trigger && this.Method == Empty.Method;
-        }
+        //public bool IsEmpty()
+        //{
+        //    return this.Trigger == Empty.Trigger && this.Method == Empty.Method;
+        //}
     }
 
     public static class Tasks
     {
         static Stack<Task> _tasks;
+        static DateTime _lastCheck;
 
         static Tasks()
         {
@@ -96,23 +97,29 @@ namespace tdsm.api.Misc
 
         internal static void CheckTasks()
         {
-            lock (_tasks)
+            const Int32 CheckIntervalMs = 200;
+
+            if ((DateTime.Now - _lastCheck).TotalMilliseconds >= CheckIntervalMs)
             {
-                for (var i = 0; i < _tasks.Count; i++)
+                _lastCheck = DateTime.Now;
+                lock (_tasks)
                 {
-                    Task task = _tasks.Pop();
-                    if (task.Triggerable)
+                    for (var i = 0; i < _tasks.Count; i++)
                     {
-                        task.Method.BeginInvoke
-                        (task,
-                            (IAsyncResult res) =>
-                            {
-                                task.Method.EndInvoke(res);
-                            }, null
-                        );
-                        task.Reset();
+                        Task task = _tasks.Pop();
+                        if (task.Triggerable)
+                        {
+                            task.Method.BeginInvoke
+                            (task,
+                                (IAsyncResult res) =>
+                                {
+                                    task.Method.EndInvoke(res);
+                                }, null
+                            );
+                            task.Reset();
+                        }
+                        _tasks.Push(task);
                     }
-                    _tasks.Push(task);
                 }
             }
         }

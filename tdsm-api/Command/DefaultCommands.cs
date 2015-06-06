@@ -138,7 +138,12 @@ namespace tdsm.api.Command
                 {
                     if (!plugin.IsEnabled || plugin.Name.Trim().Length > 0)
                     {
-                        plugins += ", " + plugin.Name.Trim();
+                        var name = plugin.Name.Trim();
+                        if (!String.IsNullOrEmpty(plugin.Version))
+                        {
+                            name += " (" + plugin.Version + ")";
+                        }
+                        plugins += ", " + name;
                     }
                 }
                 if (plugins.StartsWith(","))
@@ -261,6 +266,7 @@ namespace tdsm.api.Command
             if (sender is ConsoleSender)
             {
                 Tools.WriteLine("Terraria Server " + Main.versionNumber);
+                Tools.WriteLine("TDSM API Version " + Globals.Build + Globals.PhaseToSuffix(Globals.BuildPhase));
             }
         }
 

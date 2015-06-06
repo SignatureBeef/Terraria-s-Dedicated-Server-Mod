@@ -645,6 +645,14 @@ namespace tdsm.api
                                 if (i > 0)
                                     msg.Append(", ");
                                 msg.Append(plugin.Name);
+
+                                if (!String.IsNullOrEmpty(plugin.Version))
+                                {
+                                    msg.Append(" (");
+                                    msg.Append(plugin.Version);
+                                    msg.Append(")");
+                                }
+
                                 if (!plugin.IsEnabled)
                                     msg.Append("[OFF]");
                                 i++;

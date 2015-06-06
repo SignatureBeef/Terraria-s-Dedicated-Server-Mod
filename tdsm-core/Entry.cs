@@ -366,7 +366,7 @@ namespace tdsm.core
             AddCommand("worldevent")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Start or stop an event")
-                .WithHelpText("eclipse")
+                .WithHelpText("eclipse|bloodmoon|pumpkinmoon|snowmoon")
                 .WithPermissionNode("tdsm.worldevent")
                 .Calls(this.WorldEvent);
 
@@ -505,8 +505,7 @@ namespace tdsm.core
         {
             if (RestartWhenNoPlayers && ClientConnection.All.Count - 1 == 0)
             {
-                Server.PerformRestart();
-                Server.AcceptNewConnections = _waitFPState.Value;
+                PerformRestart();
             }
         }
 
@@ -879,6 +878,14 @@ namespace tdsm.core
                 }
             }
             Terraria.Main.oldStatusText = statusText;
+        }
+
+        public void PerformRestart()
+        {
+            Server.PerformRestart();
+            RestartWhenNoPlayers = false;
+            if (_tskWaitForPlayers != null) _tskWaitForPlayers.Enabled = false;
+            Server.AcceptNewConnections = _waitFPState.Value;
         }
     }
 }
