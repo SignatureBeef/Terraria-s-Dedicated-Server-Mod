@@ -104,7 +104,7 @@ namespace tdsm.api.Command
             return this;
         }
 
-        public CommandInfo WithPermissionNode()
+        internal CommandInfo WithPermissionNode()
         {
             const String tdsm = "tdsm.";
             this.node = tdsm + this._prefix;

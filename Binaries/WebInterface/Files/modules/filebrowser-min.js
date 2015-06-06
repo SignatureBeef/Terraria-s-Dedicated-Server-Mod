@@ -1,0 +1,1 @@
+(window.OnFileBrowserReady=function(){"TInterface"in window&&"adminscreen"in TInterface?TInterface.adminscreen.AddPanel(4,"File Browser",function(){this.TransitionTo("<div>...</div>",function(a){})}):window.setTimeout(window.OnFileBrowserReady,50)})();

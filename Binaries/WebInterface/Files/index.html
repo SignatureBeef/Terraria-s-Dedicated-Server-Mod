@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="tdsm:port" content="8448" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,600' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <header><span></span></header>
+    <section id="InterfaceWindow" class="ui-window">
+        <nav></nav>
+        <div>
+
+        </div>
+    </section>
+    <section id="LoginScreen" class="ui-window">
+        <div>
+            <label for="LoginUserName">Username</label>
+            <input type="text" id="LoginUserName" value="DeathCradle" />
+            <label for="LoginPassword">Password</label>
+            <input type="password" id="LoginPassword" value="testing" />
+            <button class="button-common">Login</button>
+            <span class="ui-error"></span>
+        </div>
+    </section>
+    <section id="AdminInterface" class="ui-window">
+        <nav>
+            <ul>
+                <!--<li>
+                    <a>
+                        Server Overview
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        Chat
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        Configuration
+                    </a>
+                </li>-->
+            </ul>
+        </nav>
+        <div></div>
+    </section>
+
+    <!-- Get modernizr once completed (using a custom build) -->
+    <!--<script src="https://code.jquery.com/jquery-2.1.3.min.js" defer async></script>-->
+    <script src="jquery-2.1.3.min.js" defer async></script>
+    <script src="md5.js" defer async></script>
+    <script src="tdsm.framework.js" defer async></script>
+    <script src="tdsm.interface.js" defer async></script>
+    <script src="tdsm.net.js" defer async></script>
+</body>
+</html>
