@@ -1,8 +1,4 @@
-reset
-#When i was debugging...
-#COPY ..\..\Terraria-s-Dedicated-Server-Mod\tdsm-patcher\APIWrapper.cs .
-#COPY ..\..\Terraria-s-Dedicated-Server-Mod\tdsm-patcher\Program.cs .
-
+clear
 #Update DNU packages
 echo Updating dnu packages...
 dnu restore
