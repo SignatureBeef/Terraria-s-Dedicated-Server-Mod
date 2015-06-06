@@ -55,7 +55,6 @@
     <Reference Include="tdsm">
       <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.microsoft.exe</HintPath>
     </Reference>
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoUpdater.cs" />

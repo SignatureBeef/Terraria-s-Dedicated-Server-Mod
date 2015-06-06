@@ -18,29 +18,29 @@ namespace tdsm.core
             //    }
             //}
 
-            var zip = System.IO.Packaging.ZipPackage.Open("package.zip");
+            //var zip = System.IO.Packaging.ZipPackage.Open("package.zip");
 
-            foreach (var part in zip.GetParts())
-            {
+            //foreach (var part in zip.GetParts())
+            //{
 
-                //if (part.ContentType.ToLowerInvariant().StartsWith("image/"))
-                //{
-                //    string target = Path.Combine(
-                //        dir.FullName, CreateFilenameFromUri(part.Uri));
-                //    using (Stream source = part.GetStream(
-                //        FileMode.Open, FileAccess.Read))
-                //    using (Stream destination = File.OpenWrite(target))
-                //    {
-                //        byte[] buffer = new byte[0x1000];
-                //        int read;
-                //        while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
-                //        {
-                //            destination.Write(buffer, 0, read);
-                //        }
-                //    }
-                //    Console.WriteLine("Extracted {0}", target);
-                //}
-            }
+            //    //if (part.ContentType.ToLowerInvariant().StartsWith("image/"))
+            //    //{
+            //    //    string target = Path.Combine(
+            //    //        dir.FullName, CreateFilenameFromUri(part.Uri));
+            //    //    using (Stream source = part.GetStream(
+            //    //        FileMode.Open, FileAccess.Read))
+            //    //    using (Stream destination = File.OpenWrite(target))
+            //    //    {
+            //    //        byte[] buffer = new byte[0x1000];
+            //    //        int read;
+            //    //        while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
+            //    //        {
+            //    //            destination.Write(buffer, 0, read);
+            //    //        }
+            //    //    }
+            //    //    Console.WriteLine("Extracted {0}", target);
+            //    //}
+            //}
         }
     }
 
