@@ -154,6 +154,12 @@ namespace tdsm.core.WebInterface
 
             //Console.WriteLine("Html directory: " + HtmlDirectory);
 
+            var fl = new FileInfo(Path.Combine(HtmlDirectory, "index.html"));
+            if (!fl.Exists)
+            {
+                ProgramLog.Admin.Log("Web server files missing from: " + fl.Directory.FullName);
+            }
+
             var split = bindAddress.Split(':');
             IPAddress addr;
             ushort port;
