@@ -46,7 +46,7 @@ First open the correct solution file, tdsm.sln for Visual Studio or tdsm-md.sln 
 3. By default the tdsm solution already is referencing the generated server exe, but if not search the tdsm-patcher\bin\x86\Debug directory for the generated executable and add it as a reference.
 4. Readd Full_API to the tdsm-api project and rebuild it.
 5. Rebuild the entire solution so all projects are now using the latest api and server executable
-6. You are ready to run the patcher again. This time the generated tdsm.<platform>.exe is the executable you can use to run a server.
+6. You are ready to run the patcher again. This time the generated tdsm.[platform].exe is the executable you can use to run a server.
 
 ##API Development
 Currently essential hooks are being implemented. However should you need a missing hook simply request it or you can submit a pull request.
