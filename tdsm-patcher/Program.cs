@@ -369,6 +369,7 @@ namespace tdsm.patcher
 
         static void UpdateBinaries()
         {
+			Console.WriteLine ("Current: " + Environment.CurrentDirectory);
             foreach (var rel in new string[]
             { 
                 "tdsm.api.dll",
@@ -386,10 +387,12 @@ namespace tdsm.patcher
                 "KopiLua.dll"
             })
             {
-                const String PathToBinaries = "..{0}..{0}..{0}..{0}Binaries{0}{1}";
-                var pth = String.Format(PathToBinaries, Path.DirectorySeparatorChar, rel);
                 if (File.Exists(rel))
-                {
+				{
+					const String PathToBinaries = "..{0}..{0}..{0}Binaries{0}{1}";
+					var pth = String.Format(PathToBinaries, Path.DirectorySeparatorChar, rel);
+					Console.WriteLine ("Target: " + pth);
+
                     if (File.Exists(pth)) File.Delete(pth);
                     File.Copy(rel, pth);
                 }
