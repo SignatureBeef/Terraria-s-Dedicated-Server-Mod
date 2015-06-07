@@ -8,6 +8,8 @@ namespace tdsm.api.Command
     {
         static Action<String, Byte, Byte, Byte> _consoleMethod;
 
+        public static ConsoleColor DefaultColour = ConsoleColor.White;
+
         /// <summary>
         /// Set the Console WriteLine method
         /// </summary>
@@ -46,6 +48,7 @@ namespace tdsm.api.Command
                 {
                     Console.ForegroundColor = FromColor(R, G, B);
                     Console.WriteLine(message);
+                    Console.ForegroundColor = DefaultColour;
                 }
             }
             else _consoleMethod(message, R, G, B);

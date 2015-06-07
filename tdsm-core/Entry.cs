@@ -89,6 +89,7 @@ namespace tdsm.core
                 ProgramLog.Log("TDSM Rebind core build {0}", this.Version);
 
                 Tools.SetWriteLineMethod(ProgramLog.Log, OnLogFinished);
+                ConsoleSender.DefaultColour = ConsoleColor.Gray;
                 //ConsoleSender.SetMethod((msg, r, g, b) =>
                 //{
                 //    Console.ForegroundColor = FromColor((byte)r, (byte)g, (byte)b);
