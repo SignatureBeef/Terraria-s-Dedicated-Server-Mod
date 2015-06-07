@@ -8,9 +8,9 @@ namespace tdsm.api.Command
     {
         bool Op { get; set; }
         string SenderName { get; }
-        void SendMessage(string message, int sender = 255, float R = 255f, float G = 0f, float B = 0f);
+        void SendMessage(string message, int sender = 255, byte R = 255, byte G = 255, byte B = 255);
 
-		Dictionary<string, CommandInfo> GetAvailableCommands();
+        Dictionary<string, CommandInfo> GetAvailableCommands();
     }
 
     public static class ISenderExtensions
@@ -23,6 +23,11 @@ namespace tdsm.api.Command
         public static void Message(this ISender recpt, string message, params object[] args)
         {
             recpt.SendMessage(String.Format(message, args));
+        }
+
+        public static void Message(this ISender recpt, string message, Color colour, params object[] args)
+        {
+            recpt.SendMessage(String.Format(message, args), 255, colour.R, colour.G, colour.B);
         }
 
         public static void Message(this ISender recpt, int sender, string message)
@@ -50,7 +55,7 @@ namespace tdsm.api.Command
             switch (type)
             {
                 case SenderType.CONSOLE:
-					return sender is ConsoleSender;// && !(sender is RemoteConsole.RConSender);
+                    return sender is ConsoleSender;// && !(sender is RemoteConsole.RConSender);
 #if Full_API
                 case SenderType.PLAYER:
                     return sender is Terraria.Player;

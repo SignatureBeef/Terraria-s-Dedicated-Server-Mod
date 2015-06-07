@@ -14,7 +14,7 @@ namespace tdsm.core.RemoteConsole
             Client = rcon;
         }
 
-        public override void SendMessage(string message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
+        public override void SendMessage(string message, int A = 255, byte R = 255, byte G = 255, byte B = 255)
         {
             Client.WriteLine(message);
         }

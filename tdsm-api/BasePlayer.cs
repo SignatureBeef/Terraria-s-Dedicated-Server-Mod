@@ -35,7 +35,7 @@ namespace tdsm.api
             protected set { }
         }
 
-        public override void SendMessage(string message, int sender = 255, float R = 255f, float G = 0f, float B = 0f)
+        public override void SendMessage(string message, int sender = 255, byte R = 255, byte G = 255, byte B = 255)
         {
 #if Full_API
             Terraria.NetMessage.SendData((int)Packet.PLAYER_CHAT, ((Terraria.Player)this).whoAmi, -1, message, sender, R, G, B);

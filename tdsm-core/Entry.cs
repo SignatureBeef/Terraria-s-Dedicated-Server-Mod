@@ -89,6 +89,11 @@ namespace tdsm.core
                 ProgramLog.Log("TDSM Rebind core build {0}", this.Version);
 
                 Tools.SetWriteLineMethod(ProgramLog.Log, OnLogFinished);
+                //ConsoleSender.SetMethod((msg, r, g, b) =>
+                //{
+                //    Console.ForegroundColor = FromColor((byte)r, (byte)g, (byte)b);
+                //    Console.WriteLine(msg);
+                //});
             }
 
             WebInterface.WebPermissions.Load();
@@ -373,8 +378,8 @@ namespace tdsm.core
             AddCommand("maxplayers")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
                 .WithDescription("Set the maximum number of player slots.")
-                .WithHelpText("Usage:    maxplayers <num> - set the max number of slots")
-                .WithHelpText("          maxplayers <num> <num> - also set the number of overlimit slots")
+                .WithHelpText("<num> - set the max number of slots")
+                .WithHelpText("<num> <num> - also set the number of overlimit slots")
                 .WithPermissionNode("tdsm.maxplayers")
                 .Calls(SlotManager.MaxPlayersCommand);
 
@@ -390,6 +395,7 @@ namespace tdsm.core
                 .WithDescription("Accept new connections.")
                 .WithHelpText("conn")
                 .WithPermissionNode("tdsm.conn")
+                .SetDefaultUsage()
                 .Calls(Server.Command_AcceptConnections);
 
             AddCommand("restart")
@@ -410,8 +416,11 @@ namespace tdsm.core
             AddCommand("repo")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Search for or update plugins.")
-                .SetDefaultUsage()
-                .WithPermissionNode()
+                .WithHelpText("<status|update> <plugin name>")
+                .WithHelpText("status --all")
+                .WithHelpText("update --all")
+                .WithHelpText("update \"TDSM Core Module\"")
+                .WithPermissionNode("tdsm.repo")
                 .Calls(this.RepositoryCommand);
 #endif
 

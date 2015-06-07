@@ -78,7 +78,9 @@ namespace tdsm.patcher
 
             //return;
             //            IsPatching = true;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(Console.Title = String.Format("TDSM patcher build {0}", Build));
+            Console.ForegroundColor = ConsoleColor.White;
             var isMono = Type.GetType("Mono.Runtime") != null;
 
 #if SERVER
@@ -272,6 +274,7 @@ namespace tdsm.patcher
             }
 #endif
 
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write("Saving to {0}...", outFileMS);
             patcher.Save(outFileMS, Build, TDSMGuid, fileName);
             //if (isMono || (args != null && args.Where(x => x.ToLower() == "-removeupnp").Count() > 0))
@@ -281,8 +284,10 @@ namespace tdsm.patcher
             }
             Console.Write("Ok\nSaving to {0}...", outFileMN);
             patcher.Save(outFileMN, Build, TDSMGuid, fileName);
+            Console.WriteLine("Ok");
 
-            Console.Write("Ok\nUpdating icons...");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Updating icons...");
             if (!isMono)
             {
                 var res = new Vestris.ResourceLib.IconDirectoryResource(new Vestris.ResourceLib.IconFile("tdsm.ico"));
@@ -309,7 +314,9 @@ namespace tdsm.patcher
             if (!noRun)
             {
                 var current = isMono ? outFileMN : outFileMS;
-                Console.WriteLine("Ok\nYou may now run {0} as you would normally.", current);
+                Console.WriteLine("Ok");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("You may now run {0} as you would normally.", current);
                 Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", current);
                 if (Console.ReadKey(true).Key == ConsoleKey.Y)
                 {
