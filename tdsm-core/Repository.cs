@@ -128,6 +128,8 @@ namespace tdsm.core
 
     public class UpdateInstruction
     {
+        public string DirectorySeperator = "\\";
+        
         /// <summary>
         /// The source file in the ZIP package
         /// </summary>
@@ -135,22 +137,10 @@ namespace tdsm.core
         public string PackageFileName { get; set; }
 
         /// <summary>
-        /// The directory
-        /// </summary>
-        [System.Xml.Serialization.XmlAttribute]
-        public string[] PackageFileDirectories { get; set; }
-
-        /// <summary>
         /// The destination to be installed to relative to the TDSM installation directory
         /// </summary>
         [System.Xml.Serialization.XmlAttribute]
-        public string DestinationFileName { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [System.Xml.Serialization.XmlAttribute]
-        public string[] DestinationDirectories { get; set; }
+        public string DestinationFileName { get; set; } //If blank use PackageFileName
     }
 
     public class PackageInfo
