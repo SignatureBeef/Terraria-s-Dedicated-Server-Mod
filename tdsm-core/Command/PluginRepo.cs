@@ -16,7 +16,7 @@ namespace tdsm.core
                     break;*/
                 case "status":
                     pkg = args.GetString(1);
-                    all = pkg == "--all";
+                    all = pkg == "-all";
 
                     sender.Message("Finding updates...", Microsoft.Xna.Framework.Color.Yellow);
 
@@ -37,12 +37,12 @@ namespace tdsm.core
                     }
                     else
                     {
-                        sender.Message(pkg == "--all" ? "No updates available" : ("No package called: " + pkg), Microsoft.Xna.Framework.Color.Red);
+                        sender.Message(all ? "No updates available" : ("No package called: " + pkg), Microsoft.Xna.Framework.Color.Red);
                     }
                     break;
                 case "update":
                     pkg = args.GetString(1);
-                    all = pkg == "--all";
+                    all = pkg == "-all";
 
                     sender.Message("Finding updates...", Microsoft.Xna.Framework.Color.Yellow);
 
@@ -63,7 +63,7 @@ namespace tdsm.core
                     }
                     else
                     {
-                        sender.Message(pkg == "--all" ? "No updates available" : ("No package called: " + pkg), Microsoft.Xna.Framework.Color.Red);
+                        sender.Message(all ? "No updates available" : ("No package called: " + pkg), Microsoft.Xna.Framework.Color.Red);
                     }
                     break;
                 default:

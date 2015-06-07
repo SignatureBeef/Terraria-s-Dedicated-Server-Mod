@@ -394,7 +394,6 @@ namespace tdsm.core
             AddCommand("conn")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Accept new connections.")
-                .WithHelpText("conn")
                 .WithPermissionNode("tdsm.conn")
                 .SetDefaultUsage()
                 .Calls(Server.Command_AcceptConnections);
@@ -402,24 +401,18 @@ namespace tdsm.core
             AddCommand("restart")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Restart the server.")
-                .SetDefaultUsage()
+                .WithHelpText("<no parameters>    - Restart immediately.")
+                .WithHelpText("--wait             - Wait for users to disconnect and then restart.")
                 .WithPermissionNode("tdsm.restart")
-                .Calls(this.Restart_Soft);
-
-            AddCommand("restartw")
-                .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Wait for users to disconnect and then restart.")
-                .SetDefaultUsage()
-                .WithPermissionNode("tdsm.restartw")
-                .Calls(this.WaitForPlayers);
+                .Calls(this.Restart);
 
 #if DEBUG
             AddCommand("repo")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Search for or update plugins.")
                 .WithHelpText("<status|update> <plugin name>")
-                .WithHelpText("status --all")
-                .WithHelpText("update --all")
+                .WithHelpText("status -all")
+                .WithHelpText("update -all")
                 .WithHelpText("update \"TDSM Core Module\"")
                 .WithPermissionNode("tdsm.repo")
                 .Calls(this.RepositoryCommand);
@@ -904,7 +897,7 @@ namespace tdsm.core
             Server.PerformRestart();
             RestartWhenNoPlayers = false;
             if (_tskWaitForPlayers != null) _tskWaitForPlayers.Enabled = false;
-            Server.AcceptNewConnections = _waitFPState.Value;
+            Server.AcceptNewConnections = _waitFPState.HasValue ? _waitFPState.Value : true;
         }
     }
 }
