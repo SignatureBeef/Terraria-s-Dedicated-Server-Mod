@@ -309,6 +309,11 @@ namespace tdsm.patcher
                 }
             }
 
+#if DEBUG
+            Console.Write("Ok\nUpdating Binaries folder...");
+            UpdateBinaries();
+#endif
+
 #if Release || true
             var noRun = args != null && args.Where(x => x.ToLower() == "-norun").Count() > 0;
             if (!noRun)
@@ -360,6 +365,35 @@ namespace tdsm.patcher
                 Console.WriteLine("Ok\n");
             }
 #endif
+        }
+
+        static void UpdateBinaries()
+        {
+            foreach (var rel in new string[]
+            { 
+                "tdsm.api.dll",
+                "tdsm.api.pdb",
+                "Newtonsoft.Json.dll",
+                "Newtonsoft.Json.pdb",
+                "NLua.dll",
+                "Plugins" + Path.DirectorySeparatorChar + "tdsm.core.dll",
+                "Plugins" + Path.DirectorySeparatorChar + "tdsm.core.pdb",
+                "Plugins" + Path.DirectorySeparatorChar + "RestrictPlugin.dll",
+                "Plugins" + Path.DirectorySeparatorChar + "RestrictPlugin.pdb",
+                "tdsm-patcher.exe",
+                "tdsm-patcher.pdb",
+                "Vestris.ResourceLib.dll",
+                "KopiLua.dll"
+            })
+            {
+                const String PathToBinaries = "..{0}..{0}..{0}..{0}Binaries{0}{1}";
+                var pth = String.Format(PathToBinaries, Path.DirectorySeparatorChar, rel);
+                if (File.Exists(rel))
+                {
+                    if (File.Exists(pth)) File.Delete(pth);
+                    File.Copy(rel, pth);
+                }
+            }
         }
     }
 }
