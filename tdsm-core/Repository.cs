@@ -166,7 +166,7 @@ namespace tdsm.core
                 }
             }
 
-            return null;
+            return extractDir;
         }
 
         public static bool InstallUpdate(string path)
@@ -184,11 +184,21 @@ namespace tdsm.core
                 if (!String.IsNullOrEmpty(tmp))
                 {
                     //Read package
-                    foreach (var fl in System.IO.Directory.GetFiles(tmp, "*/*", System.IO.SearchOption.AllDirectories))
+                    var pkgFile = System.IO.Path.Combine(tmp, "package.json");
+                    if (System.IO.File.Exists(pkgFile))
                     {
-                        //if fl in package then
-                        //  Move and replace targets
-                        //end if
+                        var pkg = Newtonsoft.Json.JsonConvert.DeserializeObject<UpdatePackage>(System.IO.File.ReadAllText(pkgFile));
+
+                        foreach (var fl in System.IO.Directory.GetFiles(tmp, "*/*", System.IO.SearchOption.AllDirectories))
+                        {
+                            //if fl in package then
+                            //  Move and replace targets
+                            //end if
+                        }
+                    }
+                    else
+                    {
+                        //TODO throw custom repo error
                     }
                 }
             }
