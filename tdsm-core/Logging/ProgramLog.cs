@@ -48,8 +48,9 @@ namespace tdsm.core.Logging
             public LogTarget target;
             public LogChannel channel;
             public SendingLogger logger;
+            public ConsoleColor? color;
 
-            public LogEntry(object message, object args, SendingLogger logger = SendingLogger.CONSOLE)
+            public LogEntry(object message, object args, SendingLogger logger = SendingLogger.CONSOLE, ConsoleColor? color = null)
             {
                 this.target = null;
                 this.thread = Thread.CurrentThread;
@@ -58,6 +59,7 @@ namespace tdsm.core.Logging
                 this.args = args;
                 this.channel = null;
                 this.logger = logger;
+                this.color = color;
             }
         }
 
@@ -144,6 +146,11 @@ namespace tdsm.core.Logging
             Write(new LogEntry(format, args));
         }
 
+        public static void Log(string format, ConsoleColor colour, params object[] args)
+        {
+            Write(new LogEntry(format, args, SendingLogger.CONSOLE, colour));
+        }
+
         public static void Log(LogChannel channel, string text, bool multi = false)
         {
             if (!multi)
@@ -218,6 +225,8 @@ namespace tdsm.core.Logging
 
             if (entry.channel != null)
                 output.color = entry.channel.Color;
+            else if (entry.color != null)
+                output.color = entry.color.Value;
 
             output.logger = entry.logger;
 

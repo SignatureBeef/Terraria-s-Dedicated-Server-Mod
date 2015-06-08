@@ -8,7 +8,7 @@ namespace tdsm.api.Command
     {
         static Action<String, Byte, Byte, Byte> _consoleMethod;
 
-        public static ConsoleColor DefaultColour = ConsoleColor.White;
+        public static ConsoleColor DefaultColour = ConsoleColor.Gray;
 
         /// <summary>
         /// Set the Console WriteLine method
@@ -43,11 +43,11 @@ namespace tdsm.api.Command
             if (_consoleMethod == null)
             {
                 if (R == 255 && G == 255 && B == 255)
-                    System.Console.WriteLine(message);
+                    Tools.WriteLine(message);
                 else
                 {
-                    Console.ForegroundColor = FromColor(R, G, B);
-                    Console.WriteLine(message);
+                    //Console.ForegroundColor = FromColor(R, G, B);
+                    Tools.WriteLine(message, FromColor(R, G, B));
                     Console.ForegroundColor = DefaultColour;
                 }
             }

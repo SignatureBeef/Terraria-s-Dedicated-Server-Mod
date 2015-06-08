@@ -131,6 +131,7 @@ namespace tdsm.patcher
             //Copy (root, "Restrict", Path.Combine (Environment.CurrentDirectory, "Plugins"), "RestrictPlugin");
             Copy(root, "External", Environment.CurrentDirectory, "KopiLua", false);
             Copy(root, "External", Environment.CurrentDirectory, "NLua", false);
+            Copy(root, "External", Environment.CurrentDirectory, "ICSharpCode.SharpZipLib", false);
             Copy(root, "tdsm-core", Environment.CurrentDirectory, "Newtonsoft.Json", true);
 
 #endif
@@ -396,7 +397,8 @@ namespace tdsm.patcher
                 "tdsm-patcher.exe",
                 "tdsm-patcher.pdb",
                 "Vestris.ResourceLib.dll",
-                "KopiLua.dll"
+                "KopiLua.dll",
+                "ICSharpCode.SharpZipLib.dll"
             })
             {
                 if (File.Exists(rel))

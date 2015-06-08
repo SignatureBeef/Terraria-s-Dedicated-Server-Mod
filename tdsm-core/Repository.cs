@@ -1,6 +1,7 @@
 ﻿#define RESPONSE_TYPE_JSON
 
 using System;
+using System.Linq;
 using System.Net;
 using tdsm.api;
 using tdsm.core.Logging;
@@ -45,7 +46,53 @@ namespace tdsm.core
             return null;
         }
 
-        public static bool PerformUpdate(PackageInfo info)
+        class GitHubRelease
+        {
+            [Newtonsoft.Json.JsonProperty("assets")]
+            public GitHubAssets[] Assets { get; set; }
+
+            [Newtonsoft.Json.JsonProperty("published_at")]
+            public DateTime PublishedAt { get; set; }
+        }
+
+        class GitHubAssets
+        {
+            [Newtonsoft.Json.JsonProperty("browser_download_url")]
+            public string DownloadUrl { get; set; }
+
+            [Newtonsoft.Json.JsonProperty("name")]
+            public string FileName { get; set; }
+        }
+
+        static GitHubRelease GetGitHubRelease(string url)
+        {
+            url = "https://api.github.com/repos/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases";
+            try
+            {
+                var wr = WebRequest.Create(url) as HttpWebRequest;
+                wr.UserAgent = "TDSM";
+                wr.Method = "GET";
+
+                string json = null;
+                using (var sr = new System.IO.StreamReader(wr.GetResponse().GetResponseStream()))
+                {
+                    json = sr.ReadToEnd();
+                }
+
+                if (!String.IsNullOrEmpty(json))
+                {
+                    var releases = Newtonsoft.Json.JsonConvert.DeserializeObject<GitHubRelease[]>(json).OrderByDescending(x => x.PublishedAt);
+                    if (releases.Count() > 0) return releases.First();
+                }
+            }
+            catch
+            {
+                //Perhaps we need a [CurrentCommand].AddError
+            }
+            return null;
+        }
+
+        public static string FetchUpdate(PackageInfo info)
         {
             var tmp = System.IO.Path.Combine(Environment.CurrentDirectory, ".repo");
             var di = new System.IO.DirectoryInfo(tmp);
@@ -55,45 +102,113 @@ namespace tdsm.core
                 di.Attributes = System.IO.FileAttributes.Hidden;
             }
 
-            var fileName = info.DownloadUrl;
-            var last = fileName.LastIndexOf("/");
-            if (last > -1)
+            var isGitHub = System.Text.RegularExpressions.Regex.IsMatch(info.DownloadUrl, "https://api.github.com/repos/.*/.*/releases", System.Text.RegularExpressions.RegexOptions.Singleline);
+            if (isGitHub)
             {
-                fileName = fileName.Remove(0, last);
+                var release = GetGitHubRelease(info.DownloadUrl);
+                if (release.Assets != null && release.Assets.Length > 0)
+                {
+                    var saveAs = System.IO.Path.Combine(tmp, release.Assets[0].FileName);
+                    //if (System.IO.File.Exists(saveAs)) System.IO.File.Delete(saveAs);
+                    //using (var wc = new ProgressWebClient("Downloading"))
+                    //{
+                    //    var wait = new System.Threading.AutoResetEvent(false);
+                    //    wc.DownloadFileCompleted += (s, a) =>
+                    //    {
+                    //        wait.Set();
+                    //    };
+                    //    wc.DownloadFileAsync(new Uri(release.Assets[0].DownloadUrl), saveAs);
+
+                    //    wait.WaitOne();
+                    return saveAs;
+                    //}
+                }
+            }
+            else
+            {
+                var fileName = info.DownloadUrl;
+                var last = fileName.LastIndexOf("/");
+                if (last > -1)
+                {
+                    fileName = fileName.Remove(0, last);
+                }
+            }
+
+            return null;
+        }
+
+        private static string ExtractZip(System.IO.FileInfo info)
+        {
+            var extractDir = System.IO.Path.Combine(info.Directory.FullName, info.Name.Substring(0, info.Name.Length - info.Extension.Length));
+            if (!System.IO.Directory.Exists(extractDir)) System.IO.Directory.CreateDirectory(extractDir);
+
+            var zip = new ICSharpCode.SharpZipLib.Zip.ZipFile(info.FullName);
+            foreach (ICSharpCode.SharpZipLib.Zip.ZipEntry entry in zip)
+            {
+                var dst = System.IO.Path.Combine(extractDir, entry.Name.Replace('/', System.IO.Path.DirectorySeparatorChar));
+                if (System.IO.File.Exists(dst)) System.IO.File.Delete(dst);
+
+                var inf = new System.IO.FileInfo(dst);
+                if (!inf.Directory.Exists) inf.Directory.Create();
+
+                using (var zipStream = zip.GetInputStream(entry))
+                {
+                    using (var output = System.IO.File.OpenWrite(dst))
+                    {
+                        var buffer = new byte[4096];
+
+                        while (zipStream.Position < zipStream.Length)
+                        {
+                            var read = zipStream.Read(buffer, 0, buffer.Length);
+                            output.Write(buffer, 0, read);
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public static bool InstallUpdate(string path)
+        {
+            //Extract ZIP's into a seperate folder
+            //Install everything else as a plugin
+
+            var info = new System.IO.FileInfo(path);
+
+            var ext = info.Extension.ToLower();
+            if (ext == ".zip")
+            {
+                //Extract into a temporary directory incase of zip exceptions that could potentially corrupt our installation
+                var tmp = ExtractZip(info);
+                if (!String.IsNullOrEmpty(tmp))
+                {
+                    //Read package
+                    foreach (var fl in System.IO.Directory.GetFiles(tmp, "*/*", System.IO.SearchOption.AllDirectories))
+                    {
+                        //if fl in package then
+                        //  Move and replace targets
+                        //end if
+                    }
+                }
+            }
+            else if (ext == ".lua" || ext == ".dll")
+            {
+                //Move and replace targets
             }
 
             return false;
-            //using (var fs = System.IO.File.OpenRead("package.zip"))
-            //{
-            //    using (var pk = new System.IO.Compression.GZipStream(fs, System.IO.Compression.CompressionMode.Decompress))
-            //    {
+        }
 
-            //    }
-            //}
+        public static bool PerformUpdate(PackageInfo info)
+        {
+            var upd = FetchUpdate(info);
+            if (!String.IsNullOrEmpty(upd))
+            {
+                return InstallUpdate(upd);
+            }
 
-            //var zip = System.IO.Packaging.ZipPackage.Open("package.zip");
-
-            //foreach (var part in zip.GetParts())
-            //{
-
-            //    //if (part.ContentType.ToLowerInvariant().StartsWith("image/"))
-            //    //{
-            //    //    string target = Path.Combine(
-            //    //        dir.FullName, CreateFilenameFromUri(part.Uri));
-            //    //    using (Stream source = part.GetStream(
-            //    //        FileMode.Open, FileAccess.Read))
-            //    //    using (Stream destination = File.OpenWrite(target))
-            //    //    {
-            //    //        byte[] buffer = new byte[0x1000];
-            //    //        int read;
-            //    //        while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
-            //    //        {
-            //    //            destination.Write(buffer, 0, read);
-            //    //        }
-            //    //    }
-            //    //    Console.WriteLine("Extracted {0}", target);
-            //    //}
-            //}
+            return false;
         }
 
         private static PackageInfo GetUpdateInfo(string packageName, string currentVersion = null)
