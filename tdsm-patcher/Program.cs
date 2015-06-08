@@ -369,7 +369,19 @@ namespace tdsm.patcher
 
         static void UpdateBinaries()
         {
-			Console.WriteLine ("Current: " + Environment.CurrentDirectory);
+            var pathToBinaries = new DirectoryInfo(Environment.CurrentDirectory);
+            while (!Directory.Exists(Path.Combine(pathToBinaries.FullName, "Binaries")))
+            {
+                pathToBinaries = pathToBinaries.Parent;
+            }
+            pathToBinaries = new DirectoryInfo(Path.Combine(pathToBinaries.FullName, "Binaries"));
+
+            if (!pathToBinaries.Exists)
+            {
+                Console.WriteLine("Failed to copy to binaries.");
+                return;
+            }
+
             foreach (var rel in new string[]
             { 
                 "tdsm.api.dll",
@@ -388,10 +400,8 @@ namespace tdsm.patcher
             })
             {
                 if (File.Exists(rel))
-				{
-					const String PathToBinaries = "..{0}..{0}..{0}Binaries{0}{1}";
-					var pth = String.Format(PathToBinaries, Path.DirectorySeparatorChar, rel);
-					Console.WriteLine ("Target: " + pth);
+                {
+                    var pth = Path.Combine(pathToBinaries.FullName, rel);
 
                     if (File.Exists(pth)) File.Delete(pth);
                     File.Copy(rel, pth);

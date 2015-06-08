@@ -45,8 +45,24 @@ namespace tdsm.core
             return null;
         }
 
-        public static void PerformUpdate()
+        public static bool PerformUpdate(PackageInfo info)
         {
+            var tmp = System.IO.Path.Combine(Environment.CurrentDirectory, ".repo");
+            var di = new System.IO.DirectoryInfo(tmp);
+            if (!di.Exists)
+            {
+                di.Create();
+                di.Attributes = System.IO.FileAttributes.Hidden;
+            }
+
+            var fileName = info.DownloadUrl;
+            var last = fileName.LastIndexOf("/");
+            if (last > -1)
+            {
+                fileName = fileName.Remove(0, last);
+            }
+
+            return false;
             //using (var fs = System.IO.File.OpenRead("package.zip"))
             //{
             //    using (var pk = new System.IO.Compression.GZipStream(fs, System.IO.Compression.CompressionMode.Decompress))
@@ -129,7 +145,7 @@ namespace tdsm.core
     public class UpdateInstruction
     {
         public string DirectorySeperator = "\\";
-        
+
         /// <summary>
         /// The source file in the ZIP package
         /// </summary>

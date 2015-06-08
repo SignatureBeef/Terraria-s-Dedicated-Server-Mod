@@ -59,6 +59,8 @@ namespace tdsm.core
                         foreach (var upd in updates)
                         {
                             sender.Message("Updating {0}", Microsoft.Xna.Framework.Color.Green, upd.Name);
+
+                            Repository.PerformUpdate(upd);
                         }
                     }
                     else
