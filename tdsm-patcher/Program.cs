@@ -426,7 +426,9 @@ namespace tdsm.patcher
                 "KopiLua.dll",
                 "ICSharpCode.SharpZipLib.dll",
                 "Mono.Nat.dll",
-                "Mono.Nat.pdb"
+                "Mono.Nat.pdb",
+                "tdsm.microsoft.exe",
+                "tdsm.mono.exe"
             })
             {
                 if (File.Exists(rel))

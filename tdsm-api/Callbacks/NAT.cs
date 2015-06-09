@@ -1,11 +1,8 @@
 ﻿//#define ENABLE_NAT
 
-using Terraria;
 namespace tdsm.api.Callbacks
 {
-    //https://github.com/mono/mono-upnp/releases
     //https://github.com/mono/Mono.Nat/releases
-    //https://github.com/lontivero/Open.NAT fork of Mono.Nat
     public static class NAT
     {
         public static void OpenPort()
