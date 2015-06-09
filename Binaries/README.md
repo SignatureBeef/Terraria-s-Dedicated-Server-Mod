@@ -3,8 +3,7 @@ This section contains the dump of our bin directories, and you could consider th
 
 For a tutorial for using the patcher please visit [this wiki page](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/A-Beginner%27s-Guide-for-TDSM-Rebind%3A-Installation-and-Running).
 
-We have now also started including the generated tdsm.exe. All you need for you installation is tdsm[mono|microsoft].exe, tdsm.api.dll, KopiLua.dll, NLua.dll and Plugins/tdsm.core.dll.
-Ensure you grab the right tdsm executable for the platform you are running it on.
+We have now also started including the generated tdsm.exe. The minimalistic installation for TDSM is shown with the directory structure below (all using files available within this Binaries folder):
 
 ### Directory Structure:
 ```
@@ -12,7 +11,6 @@ Ensure you grab the right tdsm executable for the platform you are running it on
   tdsm.api.dll
   tdsm.microsoft.exe *OR* tdsm.mono.exe
 \tdsm\Plugins\
-  RestrictPlugin.dll
   tdsm.core.dll
 \tdsm\Data\
   permissions.xml
