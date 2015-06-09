@@ -5,6 +5,7 @@ Should you need help the wiki is currently in progress, but you still may view i
 
 ##Getting the new TDSM Rebind:
 You can either compile from source or grab the latest release located [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases).
+Alternatively you can get one of the latest pre-release binaries [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries).
 
 See [this wiki page](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/A-Beginner%27s-Guide-for-TDSM-Rebind%3A-Installation-and-Running) for how to run the new TDSM.
 	
