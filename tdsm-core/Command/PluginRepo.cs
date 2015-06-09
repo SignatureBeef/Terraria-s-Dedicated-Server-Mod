@@ -60,7 +60,21 @@ namespace tdsm.core
                         {
                             sender.Message("Updating {0}", Microsoft.Xna.Framework.Color.Green, upd.Name);
 
-                            Repository.PerformUpdate(upd);
+                            try
+                            {
+                                if (Repository.PerformUpdate(upd))
+                                {
+                                    sender.Message("Install complete", Microsoft.Xna.Framework.Color.Green);
+                                }
+                                else
+                                {
+                                    sender.Message("Install failed", Microsoft.Xna.Framework.Color.Red);
+                                }
+                            }
+                            catch (RepositoryError err)
+                            {
+                                sender.Message(err.Message, Microsoft.Xna.Framework.Color.Red);
+                            }
                         }
                     }
                     else

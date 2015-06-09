@@ -58,6 +58,9 @@
     <AssemblyName>tdsm.api</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Nat">
+      <HintPath>..\External\Mono.Nat.dll</HintPath>
+    </Reference>
     <Reference Include="NLua">
       <HintPath>..\External\NLua.dll</HintPath>
     </Reference>
@@ -74,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Callbacks\Configuration.cs" />
+    <Compile Include="Callbacks\NAT.cs" />
     <Compile Include="Callbacks\NPCCallback.cs" />
     <Compile Include="Callbacks\NetMessageCallback.cs" />
     <Compile Include="Callbacks\WorldFileCallback.cs" />

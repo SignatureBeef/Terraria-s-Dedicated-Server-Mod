@@ -427,13 +427,48 @@ namespace tdsm.patcher
             if (fl != null)
                 netplay.Fields.Remove(fl);
 
-            //Clear open and close methods
-            netplay.Methods.Where(x => x.Name == "openPort").First().Body.Instructions.Clear();
-            netplay.Methods.Where(x => x.Name == "closePort").First().Body.Instructions.Clear();
+            //Clear open and close methods, add reference to the APIs
+            var cb = netplay.Methods.Where(x => x.Name == "openPort")
+                .First()
+                .Body;
+            cb.InitLocals = false;
+            cb.Variables.Clear();
+            cb.Instructions.Clear();
+            //cb.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Nop));
+            //cb.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Call, _asm.MainModule.Import(openCallback)));
+
+            var close = netplay.Methods.Where(x => x.Name == "closePort")
+                .First()
+                .Body;
+            close.Instructions.Clear();
+            //close.Instructions.Add(close.GetILProcessor().Create(OpCodes.Nop));
+            //close.Instructions.Add(close.GetILProcessor().Create(OpCodes.Call, _asm.MainModule.Import(closeCallback)));
 
             fl = netplay.Fields.Where(x => x.Name == "mappings").FirstOrDefault();
             if (fl != null)
                 netplay.Fields.Remove(fl);
+
+            //use our uPNP (when using native terraria server)
+            var natClass = _self.MainModule.Types.Where(x => x.Name == "NAT").First();
+            var openCallback = natClass.Methods.First(m => m.Name == "OpenPort");
+            var closeCallback = natClass.Methods.First(m => m.Name == "ClosePort");
+
+            var serverLoop = netplay.Methods.Where(x => x.Name == "ServerLoop").First();
+
+            foreach (var ins in serverLoop.Body.Instructions
+                .Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && new string[] { "openPort", "closePort" }.Contains((x.Operand as MethodReference).Name))
+                )
+            {
+                var mr = ins.Operand as MemberReference;
+                if (mr.Name == "closePort")
+                {
+                    ins.Operand = _asm.MainModule.Import(closeCallback);
+                }
+                else
+                {
+                    ins.Operand = _asm.MainModule.Import(openCallback);
+                }
+            }
         }
 
         public void FixEntryPoint()
@@ -974,6 +1009,16 @@ namespace tdsm.patcher
                     _asm.CustomAttributes[x].ConstructorArguments[0] =
                         new CustomAttributeArgument(_asm.CustomAttributes[x].ConstructorArguments[0].Type, tdsmUID);
                 }
+                else if (_asm.CustomAttributes[x].AttributeType.Name == "AssemblyTitleAttribute")
+                {
+                    _asm.CustomAttributes[x].ConstructorArguments[0] =
+                        new CustomAttributeArgument(_asm.CustomAttributes[x].ConstructorArguments[0].Type, name);
+                }
+                else if (_asm.CustomAttributes[x].AttributeType.Name == "AssemblyProductAttribute")
+                {
+                    _asm.CustomAttributes[x].ConstructorArguments[0] =
+                        new CustomAttributeArgument(_asm.CustomAttributes[x].ConstructorArguments[0].Type, name);
+                }
                 //else if (_asm.CustomAttributes[x].AttributeType.Name == "AssemblyFileVersionAttribute")
                 //{
                 //    _asm.CustomAttributes[x].ConstructorArguments[0] =
@@ -981,7 +1026,13 @@ namespace tdsm.patcher
                 //}
             }
 
-            _asm.Write(fileName);
+            //_asm.Write(fileName);
+            using (var fs = File.OpenWrite(fileName))
+            {
+                _asm.Write(fs);
+                fs.Flush();
+                fs.Close();
+            }
         }
 
         public void Dispose()

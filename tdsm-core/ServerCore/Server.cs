@@ -237,6 +237,15 @@ namespace tdsm.core.ServerCore
             Netplay.ServerUp = true;
             var serverSock = Netplay.tcpListener.Server;
 
+            if (Netplay.uPNP)
+            {
+                try
+                {
+                    tdsm.api.Callbacks.NAT.OpenPort();
+                }
+                catch { }
+            }
+
             try
             {
                 while (!Netplay.disconnect && !RestartInProgress)
@@ -316,6 +325,15 @@ namespace tdsm.core.ServerCore
             //ProgramLog.Log("Saving failed.  Quitting without saving.");
 
             Netplay.ServerUp = false;
+
+            if (Netplay.uPNP)
+            {
+                try
+                {
+                    tdsm.api.Callbacks.NAT.ClosePort();
+                }
+                catch { }
+            }
         }
 
         static bool AcceptClient(Socket client)
