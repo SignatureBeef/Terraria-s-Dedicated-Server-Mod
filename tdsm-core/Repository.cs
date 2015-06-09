@@ -303,6 +303,14 @@ namespace tdsm.core
         #endregion
 
         /// <summary>
+        /// Checks if all installed plugins are compatible with the latest recorded TDSM version
+        /// </summary>
+        public static void CheckForLatest()
+        {
+
+        }
+
+        /// <summary>
         /// Perform and update
         /// </summary>
         /// <param name="info"></param>

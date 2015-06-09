@@ -9,8 +9,6 @@ Ensure you grab the right tdsm executable for the platform you are running it on
 ### Directory Structure:
 ```
 \tdsm\
-  KopiLua.dll
-  NLua.dll
   tdsm.api.dll
   tdsm.microsoft.exe *OR* tdsm.mono.exe
 \tdsm\Plugins\
@@ -18,4 +16,10 @@ Ensure you grab the right tdsm executable for the platform you are running it on
   tdsm.core.dll
 \tdsm\Data\
   permissions.xml
+\tdsm\Libraries\
+  ICSharpCode.SharpZipLib.dll
+  KopiLua.dll
+  Mono.Nat.dll
+  Newtonsoft.Json.dll
+  NLua.dll
 ```

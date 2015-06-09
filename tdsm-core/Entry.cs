@@ -409,14 +409,13 @@ namespace tdsm.core
 #if DEBUG
             AddCommand("repo")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Search for or update plugins.")
-                .WithHelpText("<status|update> <plugin name>")
+                .WithDescription("Install or update plugins.")
+                .WithHelpText("<status|update|install> <plugin name>")
                 .WithHelpText("status -all")
                 .WithHelpText("update -all")
                 .WithHelpText("update \"TDSM Core Module\"")
                 .WithPermissionNode("tdsm.repo")
                 .Calls(this.RepositoryCommand);
-#endif
 
             //Template for when we have more plugins
             //AddCommand("repo")
@@ -430,6 +429,7 @@ namespace tdsm.core
             //    .WithHelpText("install <plugin name>  - Installs a plugin")
             //    .WithPermissionNode("tdsm.repo")
             //    .Calls(this.Repository);
+#endif
 
             if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
         }

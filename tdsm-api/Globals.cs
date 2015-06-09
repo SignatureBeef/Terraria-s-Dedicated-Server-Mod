@@ -22,7 +22,7 @@ namespace tdsm.api
         private const String WorldDirectory = "Worlds";
         private const String PluginDirectory = "Plugins";
         private const String DataDirectory = "Data";
-        //private const String LibrariesDirectory = "Libraries";
+        private const String LibrariesDirectory = "Libraries";
         //private const String BackupDirectory = "BackupDirectory";
 
         public static volatile bool Exit = false;
@@ -55,11 +55,11 @@ namespace tdsm.api
             { return Path.Combine(SavePath, PluginDirectory); }
         }
 
-        //public static string LibrariesPath
-        //{
-        //    get
-        //    { return Path.Combine(SavePath, PluginDirectory, LibrariesDirectory); }
-        //}
+        public static string LibrariesPath
+        {
+            get
+            { return Path.Combine(SavePath, LibrariesDirectory); }
+        }
 
         public static string DataPath
         {
@@ -73,7 +73,7 @@ namespace tdsm.api
             if (!Directory.Exists(WorldPath)) Directory.CreateDirectory(WorldPath);
             //if (!Directory.Exists(WorldBackupPath)) Directory.CreateDirectory(WorldBackupPath);
             if (!Directory.Exists(PluginPath)) Directory.CreateDirectory(PluginPath);
-            //if (!Directory.Exists(LibrariesPath)) Directory.CreateDirectory(LibrariesPath);
+            if (!Directory.Exists(LibrariesPath)) Directory.CreateDirectory(LibrariesPath);
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
         }
 

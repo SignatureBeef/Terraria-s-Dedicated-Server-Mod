@@ -129,11 +129,11 @@ namespace tdsm.patcher
             Copy(root, "tdsm-api", Environment.CurrentDirectory);
             Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
             //Copy (root, "Restrict", Path.Combine (Environment.CurrentDirectory, "Plugins"), "RestrictPlugin");
-            Copy(root, "External", Environment.CurrentDirectory, "KopiLua", false);
-            Copy(root, "External", Environment.CurrentDirectory, "NLua", false);
-            Copy(root, "External", Environment.CurrentDirectory, "ICSharpCode.SharpZipLib", false);
-            Copy(root, "External", Environment.CurrentDirectory, "Mono.Nat", false);
-            Copy(root, "tdsm-core", Environment.CurrentDirectory, "Newtonsoft.Json", true);
+            Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "KopiLua", false);
+            Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "NLua", false);
+            Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "ICSharpCode.SharpZipLib", false);
+            Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "Mono.Nat", false);
+            Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Libraries"), "Newtonsoft.Json", true);
 
 #endif
 #elif CLIENT
@@ -413,9 +413,9 @@ namespace tdsm.patcher
             { 
                 "tdsm.api.dll",
                 "tdsm.api.pdb",
-                "Newtonsoft.Json.dll",
-                "Newtonsoft.Json.pdb",
-                "NLua.dll",
+                "Libraries" + Path.DirectorySeparatorChar + "Newtonsoft.Json.dll",
+                "Libraries" + Path.DirectorySeparatorChar + "Newtonsoft.Json.pdb",
+                "Libraries" + Path.DirectorySeparatorChar + "NLua.dll",
                 "Plugins" + Path.DirectorySeparatorChar + "tdsm.core.dll",
                 "Plugins" + Path.DirectorySeparatorChar + "tdsm.core.pdb",
                 "Plugins" + Path.DirectorySeparatorChar + "RestrictPlugin.dll",
@@ -423,10 +423,10 @@ namespace tdsm.patcher
                 "tdsm-patcher.exe",
                 "tdsm-patcher.pdb",
                 "Vestris.ResourceLib.dll",
-                "KopiLua.dll",
-                "ICSharpCode.SharpZipLib.dll",
-                "Mono.Nat.dll",
-                "Mono.Nat.pdb",
+                "Libraries" + Path.DirectorySeparatorChar + "KopiLua.dll",
+                "Libraries" + Path.DirectorySeparatorChar + "ICSharpCode.SharpZipLib.dll",
+                "Libraries" + Path.DirectorySeparatorChar + "Mono.Nat.dll",
+                "Libraries" + Path.DirectorySeparatorChar + "Mono.Nat.pdb",
                 "tdsm.microsoft.exe",
                 "tdsm.mono.exe"
             })
@@ -435,7 +435,10 @@ namespace tdsm.patcher
                 {
                     var pth = Path.Combine(pathToBinaries.FullName, rel);
 
-                    if (File.Exists(pth)) File.Delete(pth);
+                    var inf = new FileInfo(pth);
+                    if (!inf.Directory.Exists) inf.Directory.Create();
+                    if (inf.Exists) inf.Delete();
+
                     File.Copy(rel, pth);
                 }
             }
