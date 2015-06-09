@@ -434,15 +434,11 @@ namespace tdsm.patcher
             cb.InitLocals = false;
             cb.Variables.Clear();
             cb.Instructions.Clear();
-            //cb.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Nop));
-            //cb.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Call, _asm.MainModule.Import(openCallback)));
 
             var close = netplay.Methods.Where(x => x.Name == "closePort")
                 .First()
                 .Body;
             close.Instructions.Clear();
-            //close.Instructions.Add(close.GetILProcessor().Create(OpCodes.Nop));
-            //close.Instructions.Add(close.GetILProcessor().Create(OpCodes.Call, _asm.MainModule.Import(closeCallback)));
 
             fl = netplay.Fields.Where(x => x.Name == "mappings").FirstOrDefault();
             if (fl != null)
@@ -456,7 +452,9 @@ namespace tdsm.patcher
             var serverLoop = netplay.Methods.Where(x => x.Name == "ServerLoop").First();
 
             foreach (var ins in serverLoop.Body.Instructions
-                .Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && new string[] { "openPort", "closePort" }.Contains((x.Operand as MethodReference).Name))
+                .Where(x => x.OpCode == OpCodes.Call
+                    && x.Operand is MethodReference
+                    && new string[] { "openPort", "closePort" }.Contains((x.Operand as MethodReference).Name))
                 )
             {
                 var mr = ins.Operand as MemberReference;

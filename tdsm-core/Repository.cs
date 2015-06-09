@@ -1,5 +1,6 @@
 ﻿#define RESPONSE_TYPE_JSON
 
+using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 using System.Linq;
@@ -40,7 +41,6 @@ namespace tdsm.core
 
         private static GitHubRelease GetGitHubRelease(string url)
         {
-            url = "https://api.github.com/repos/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases";
             try
             {
                 var wr = WebRequest.Create(url) as HttpWebRequest;
@@ -119,11 +119,19 @@ namespace tdsm.core
             catch (Exception e)
             {
                 ProgramLog.Error.Log("Failed to fetch package", e);
+                return null;
             }
 
 #if RESPONSE_TYPE_JSON
-            var pkg = Newtonsoft.Json.JsonConvert.DeserializeObject<PackageInfo[]>(data);
-            if (pkg != null && pkg.Length == 1) return pkg[0];
+            try
+            {
+                var pkg = Newtonsoft.Json.JsonConvert.DeserializeObject<PackageInfo[]>(data);
+                if (pkg != null && pkg.Length == 1) return pkg[0];
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Error.Log("Failed to parse package info", e);
+            }
 #else
 #endif
 
@@ -200,7 +208,7 @@ namespace tdsm.core
             }
         }
 
-        private static bool InstallUpdate(string path)
+        private static string[] InstallUpdate(string path)
         {
             //Extract ZIP's into a seperate folder
             //Install everything else as a plugin
@@ -264,7 +272,7 @@ namespace tdsm.core
                             Directory.Delete(tmp, true);
                             File.Delete(path);
 
-                            return true;
+                            return pkg.PluginsToLoad;
                         }
                         else
                         {
@@ -288,7 +296,7 @@ namespace tdsm.core
                 if (File.Exists(dest)) File.Delete(dest);
                 File.Move(info.FullName, dest);
 
-                return true;
+                return new string[] { dest };
             }
             else throw new RepositoryError("No package support for {0}", ext ?? "<unknown>");
         }
@@ -304,7 +312,38 @@ namespace tdsm.core
             var upd = FetchUpdate(info);
             if (!String.IsNullOrEmpty(upd))
             {
-                return InstallUpdate(upd);
+                var plugins = InstallUpdate(upd);
+
+                foreach (var plg in plugins)
+                {
+                    var newPlugin = PluginManager.LoadPluginFromPath(plg);
+                    if (newPlugin != null)
+                    {
+                        //Determine if we must replace an existing or enable a new plugin
+                        var oldPlugin = PluginManager.GetPlugin(newPlugin.Name);
+                        if (oldPlugin != null)
+                        {
+                            if (PluginManager.ReplacePlugin(oldPlugin, newPlugin))
+                            {
+                                ProgramLog.Admin.Log("Plugin {0} has been replaced.", oldPlugin.Name, Color.DodgerBlue);
+                            }
+                            else if (oldPlugin.IsDisposed)
+                            {
+                                ProgramLog.Admin.Log("Replacement of plugin {0} failed, it has been unloaded.", oldPlugin.Name, Color.DodgerBlue);
+                            }
+                            else
+                            {
+                                ProgramLog.Admin.Log("Replacement of plugin {0} failed, old instance kept.", oldPlugin.Name, Color.DodgerBlue);
+                            }
+
+                            break;
+                        }
+
+                        PluginManager.RegisterPlugin(newPlugin);
+                    }
+                }
+
+                return plugins != null && plugins.Length > 0;
             }
 
             return false;
@@ -324,7 +363,7 @@ namespace tdsm.core
         /// </summary>
         /// <param name="packageName"></param>
         /// <returns></returns>
-        public static PackageInfo[] GetAvailableUpdate(string packageName = null)
+        public static PackageInfo[] GetAvailableUpdate(string packageName = null, bool updateOnly = true)
         {
             if (String.IsNullOrEmpty(packageName))
             {
@@ -346,7 +385,27 @@ namespace tdsm.core
             }
             else
             {
-                var res = GetUpdateInfo(packageName);
+                string current = null, lowered = packageName.ToLower();
+                foreach (var plg in PluginManager.EnumeratePlugins)
+                {
+                    if (plg.Name.ToLower() == lowered)
+                    {
+                        current = plg.Version;
+                        break;
+                    }
+                }
+
+                if (updateOnly && String.IsNullOrEmpty(current))
+                {
+                    throw new RepositoryError("No installed package by name {0}", packageName);
+                }
+
+                if (!updateOnly && !String.IsNullOrEmpty(current))
+                {
+                    throw new RepositoryError("{0} is already installed", packageName);
+                }
+
+                var res = GetUpdateInfo(packageName, current);
                 if (res != null) return new PackageInfo[] { res };
             }
 
@@ -358,6 +417,8 @@ namespace tdsm.core
     {
         [System.Xml.Serialization.XmlArray]
         public UpdateInstruction[] Instructions { get; set; }
+
+        public string[] PluginsToLoad { get; set; }
     }
 
     public class UpdateInstruction

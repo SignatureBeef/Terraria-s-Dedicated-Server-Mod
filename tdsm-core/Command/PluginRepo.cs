@@ -1,4 +1,5 @@
 ﻿using System;
+using tdsm.api;
 using tdsm.api.Command;
 
 namespace tdsm.core
@@ -46,40 +47,104 @@ namespace tdsm.core
 
                     sender.Message("Finding updates...", Microsoft.Xna.Framework.Color.Yellow);
 
-                    var updates = Repository.GetAvailableUpdate(all ? null : pkg);
-                    if (updates != null && updates.Length > 0)
+                    try
                     {
-                        if (!all && updates.Length > 1)
+                        var updates = Repository.GetAvailableUpdate(all ? null : pkg);
+                        if (updates != null && updates.Length > 0)
                         {
-                            sender.Message("Too many packages found, please inform the TDSM Team", Microsoft.Xna.Framework.Color.Red);
-                            return;
+                            if (!all && updates.Length > 1)
+                            {
+                                sender.Message("Too many packages found, please inform the TDSM Team", Microsoft.Xna.Framework.Color.Red);
+                                return;
+                            }
+
+                            sender.Message("Found {0} update{1}:", Microsoft.Xna.Framework.Color.Yellow, updates.Length, updates.Length > 1 ? "s" : String.Empty);
+                            foreach (var upd in updates)
+                            {
+                                sender.Message("Updating {0}", Microsoft.Xna.Framework.Color.Green, upd.Name);
+
+                                try
+                                {
+                                    if (Repository.PerformUpdate(upd))
+                                    {
+                                        sender.Message("Install complete", Microsoft.Xna.Framework.Color.Green);
+                                    }
+                                    else
+                                    {
+                                        sender.Message("Install failed", Microsoft.Xna.Framework.Color.Red);
+                                    }
+                                }
+                                catch (RepositoryError err)
+                                {
+                                    sender.Message(err.Message, Microsoft.Xna.Framework.Color.Red);
+                                }
+                            }
                         }
-
-                        sender.Message("Found {0} update{1}:", Microsoft.Xna.Framework.Color.Yellow, updates.Length, updates.Length > 1 ? "s" : String.Empty);
-                        foreach (var upd in updates)
+                        else
                         {
-                            sender.Message("Updating {0}", Microsoft.Xna.Framework.Color.Green, upd.Name);
-
-                            try
-                            {
-                                if (Repository.PerformUpdate(upd))
-                                {
-                                    sender.Message("Install complete", Microsoft.Xna.Framework.Color.Green);
-                                }
-                                else
-                                {
-                                    sender.Message("Install failed", Microsoft.Xna.Framework.Color.Red);
-                                }
-                            }
-                            catch (RepositoryError err)
-                            {
-                                sender.Message(err.Message, Microsoft.Xna.Framework.Color.Red);
-                            }
+                            sender.Message(all ? "No updates available" : ("No update or package for: " + pkg), Microsoft.Xna.Framework.Color.Red);
                         }
                     }
-                    else
+                    catch (RepositoryError err)
                     {
-                        sender.Message(all ? "No updates available" : ("No package called: " + pkg), Microsoft.Xna.Framework.Color.Red);
+                        sender.Message(err.Message, Microsoft.Xna.Framework.Color.Red);
+                    }
+                    break;
+                case "install":
+                    pkg = args.GetString(1);
+
+                    sender.Message("Finding package...", Microsoft.Xna.Framework.Color.Yellow);
+
+                    try
+                    {
+                        var install = Repository.GetAvailableUpdate(pkg, false);
+                        if (install != null && install.Length > 0)
+                        {
+                            if (install.Length > 1)
+                            {
+                                sender.Message("Too many packages found, please inform the TDSM Team", Microsoft.Xna.Framework.Color.Red);
+                                return;
+                            }
+
+                            //Ensure not already installed
+                            foreach (var plg in PluginManager.EnumeratePlugins)
+                            {
+                                if (plg.Name.ToLower() == pkg)
+                                {
+                                    sender.Message("Package already installed, please use 'repo update \"" + pkg + "\"'", Microsoft.Xna.Framework.Color.Red);
+                                    break;
+                                }
+                            }
+
+                            foreach (var upd in install)
+                            {
+                                sender.Message("Installing {0}", Microsoft.Xna.Framework.Color.Green, upd.Name);
+
+                                try
+                                {
+                                    if (Repository.PerformUpdate(upd))
+                                    {
+                                        sender.Message("Install complete", Microsoft.Xna.Framework.Color.Green);
+                                    }
+                                    else
+                                    {
+                                        sender.Message("Install failed", Microsoft.Xna.Framework.Color.Red);
+                                    }
+                                }
+                                catch (RepositoryError err)
+                                {
+                                    sender.Message(err.Message, Microsoft.Xna.Framework.Color.Red);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            sender.Message("No package called: " + pkg, Microsoft.Xna.Framework.Color.Red);
+                        }
+                    }
+                    catch (RepositoryError err)
+                    {
+                        sender.Message(err.Message, Microsoft.Xna.Framework.Color.Red);
                     }
                     break;
                 default:

@@ -1,5 +1,8 @@
 ﻿//#define ENABLE_NAT
 
+#if ENABLE_NAT
+using Terraria;
+#endif
 namespace tdsm.api.Callbacks
 {
     //https://github.com/mono/Mono.Nat/releases

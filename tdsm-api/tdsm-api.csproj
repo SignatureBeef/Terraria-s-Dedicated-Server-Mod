@@ -86,7 +86,6 @@
     <Compile Include="Command\DefaultCommands.cs" />
     <Compile Include="Command\ISender.cs" />
     <Compile Include="Command\Sender.cs" />
-    <Compile Include="DomainEntry.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="ID\Lookup.cs" />
     <Compile Include="Misc\Affix.cs" />

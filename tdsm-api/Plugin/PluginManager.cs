@@ -931,6 +931,21 @@ namespace tdsm.api
                 }
         }
 
+        public static void RegisterPlugin(BasePlugin plugin)
+        {
+            if (!plugin.InitializeAndHookUp())
+            {
+                Tools.WriteLine("Failed to initialize new plugin instance.", Color.DodgerBlue);
+            }
+
+            _plugins.Add(plugin.Name.ToLower().Trim(), plugin);
+
+            if (!plugin.Enable())
+            {
+                Tools.WriteLine("Failed to enable new plugin instance.", Color.DodgerBlue);
+            }
+        }
+
         public static PluginLoadStatus LoadAndInitPlugin(string Path)
         {
             var rPlg = LoadPluginFromDLL(Path);
