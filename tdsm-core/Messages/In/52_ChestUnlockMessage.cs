@@ -17,7 +17,7 @@ namespace tdsm.core.Messages.In
         {
             byte playerId = ReadByte(readBuffer);
 
-            if (playerId != whoAmI)
+			if (playerId != whoAmI && Entry.EnableCheatProtection)
             {
                 tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (CHEST_UNLOCK forgery).");
                 return;

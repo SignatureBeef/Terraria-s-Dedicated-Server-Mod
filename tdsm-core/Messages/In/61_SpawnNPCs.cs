@@ -119,7 +119,7 @@ namespace tdsm.core.Messages.In
 
             int plr = ReadInt32(readBuffer);
 
-            if (plr != whoAmI)
+			if (plr != whoAmI && Entry.EnableCheatProtection)
             {
                 tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("SpawnNPC Player Forgery!");
                 return;

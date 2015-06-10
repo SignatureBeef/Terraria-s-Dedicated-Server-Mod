@@ -16,7 +16,7 @@ namespace tdsm.core.Messages.In
 
         public override void Process(int whoAmI, byte[] readBuffer, int length, int num)
         {
-            if (ReadByte(readBuffer) != whoAmI)
+			if (ReadByte(readBuffer) != whoAmI && Entry.EnableCheatProtection)
             {
                 tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (PLAYER_STATE_UPDATE forgery).");
                 return;

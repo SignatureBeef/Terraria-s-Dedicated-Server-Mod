@@ -22,7 +22,7 @@ namespace tdsm.core.Messages.In
         {
             int playerIndex = (int)ReadByte(readBuffer);
 
-            if (playerIndex != whoAmI)
+			if (playerIndex != whoAmI && Entry.EnableCheatProtection)
             {
                 tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (RECEIVING_PLAYER_JOINED forgery).");
                 return;

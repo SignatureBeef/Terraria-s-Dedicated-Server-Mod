@@ -19,7 +19,7 @@ namespace tdsm.core.Messages.In
             int start = num - 1;
             int playerIndex = ReadByte(readBuffer);
 
-            if (playerIndex != whoAmI)
+			if (playerIndex != whoAmI && Entry.EnableCheatProtection)
             {
                 tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (KILL_PLAYER forgery).");
                 return;

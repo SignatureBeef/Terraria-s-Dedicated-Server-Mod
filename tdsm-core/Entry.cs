@@ -33,8 +33,9 @@ namespace tdsm.core
         }
         public double TimelockTime { get; set; }
 
-        public static string RConHashNonce { get; set; }
-        public static string RConBindAddress { get; set; }
+		public static string RConHashNonce { get; set; }
+		public static string RConBindAddress { get; set; }
+		public static bool EnableCheatProtection { get; set; }
 
         private bool VanillaOnly
         {
@@ -772,6 +773,13 @@ namespace tdsm.core
                 case "pid-file":
                     ProcessPIDFile(args.Value);
                     break;
+                case "cheat-detection":
+                    bool cheatDetection;
+                    if (Boolean.TryParse(args.Value, out cheatDetection))
+                    {
+                        EnableCheatProtection = cheatDetection;
+                    }
+					break;
             }
         }
 

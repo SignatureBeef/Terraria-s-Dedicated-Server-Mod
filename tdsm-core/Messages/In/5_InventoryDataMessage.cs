@@ -24,7 +24,7 @@ namespace tdsm.core.Messages.In
         {
             int playerIndex = ReadByte(readBuffer);
 
-            if (playerIndex != whoAmI)
+			if (playerIndex != whoAmI && Entry.EnableCheatProtection)
             {
                 tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (INVENTORY_DATA forgery).");
                 return;
