@@ -33,9 +33,9 @@ namespace tdsm.core
         }
         public double TimelockTime { get; set; }
 
-		public static string RConHashNonce { get; set; }
-		public static string RConBindAddress { get; set; }
-		public static bool EnableCheatProtection { get; set; }
+        public static string RConHashNonce { get; set; }
+        public static string RConBindAddress { get; set; }
+        public static bool EnableCheatProtection { get; set; }
 
         private bool VanillaOnly
         {
@@ -78,7 +78,7 @@ namespace tdsm.core
 
             tdsm.api.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
             tdsm.api.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
-			EnableCheatProtection = true;
+            EnableCheatProtection = true;
         }
 
         protected override void Initialized(object state)
@@ -780,7 +780,7 @@ namespace tdsm.core
                     {
                         EnableCheatProtection = cheatDetection;
                     }
-					break;
+                    break;
             }
         }
 

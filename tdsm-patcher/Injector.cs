@@ -855,6 +855,39 @@ namespace tdsm.patcher
                 instructions[x].Next.Next.Next.Operand = _asm.MainModule.Import(targetField);
             }
 
+
+            //TODO BELOW - update ServerSock::announce to IAPISocket::announce (etc)
+            ////Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
+            //instructions = _asm.MainModule.Types
+            //   .SelectMany(x => x.Methods
+            //       .Where(y => y.HasBody && y.Body.Instructions != null)
+            //   )
+            //   .SelectMany(x => x.Body.Instructions)
+            //   .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Ldsfld
+            //       && x.Operand is FieldReference
+            //       && (x.Operand as FieldReference).FieldType.FullName == "Terraria.ServerSock[]"
+            //   )
+            //   .ToArray();
+
+            //for (var x = 0; x < instructions.Length; x++)
+            //{
+            //    instructions[x].Operand = _asm.MainModule.Import(targetArray);
+
+            //    var var = instructions[x].Next.Next.Next;
+            //    if (var.OpCode == OpCodes.Ldfld && var.Operand is MemberReference)
+            //    {
+            //        var mem = var.Operand as MemberReference;
+            //        if (mem.DeclaringType.Name == "ServerSock")
+            //        {
+            //            var ourVar = sockClass.Fields.Where(j => j.Name == mem.Name).FirstOrDefault();
+            //            if (ourVar != null)
+            //            {
+            //                var.Operand = _asm.MainModule.Import(ourVar);
+            //            }
+            //        }
+            //    }
+            //}
+
             var ourClass = _self.MainModule.Types.Where(x => x.Name == "NetplayCallback").First();
             foreach (var rep in new string[] { "SendAnglerQuest", "sendWater", "syncPlayers", "AddBan" })
             {
