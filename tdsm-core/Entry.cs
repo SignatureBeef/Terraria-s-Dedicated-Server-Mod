@@ -506,7 +506,6 @@ namespace tdsm.core
             }
         }
 
-
         [Hook(HookOrder.NORMAL)]
         void OnPlayerJoin(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)
         {

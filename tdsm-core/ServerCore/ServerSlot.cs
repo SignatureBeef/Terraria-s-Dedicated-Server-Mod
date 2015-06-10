@@ -62,7 +62,10 @@ namespace tdsm.core.ServerCore
     {
         public volatile ClientConnection conn;
 
-        public new SlotState state
+        //The base.state will always be zero.
+        //Luckily how the sockets works this ServerSlot class is only ever used by the core.
+        //The core will never use base.state
+        public SlotState state
         {
             get { return conn == null ? SlotState.VACANT : conn.State; }
             set

@@ -1,4 +1,4 @@
-﻿//#define ENABLE_NAT
+﻿#define ENABLE_NAT
 
 #if ENABLE_NAT
 using Terraria;
@@ -8,14 +8,19 @@ namespace tdsm.api.Callbacks
     //https://github.com/mono/Mono.Nat/releases
     public static class NAT
     {
+        public static bool EnableNAT = false;
+
         public static void OpenPort()
         {
 #if ENABLE_NAT
-            Netplay.portForwardIP = Netplay.LocalIPAddress();
-            Netplay.portForwardPort = Netplay.serverPort;
+            if (EnableNAT)
+            {
+                Netplay.portForwardIP = Netplay.LocalIPAddress();
+                Netplay.portForwardPort = Netplay.serverPort;
 
-            Mono.Nat.NatUtility.DeviceFound += NatUtility_DeviceFound;
-            Mono.Nat.NatUtility.StartDiscovery();
+                Mono.Nat.NatUtility.DeviceFound += NatUtility_DeviceFound;
+                Mono.Nat.NatUtility.StartDiscovery();
+            }
 #endif
 
             //if (Netplay.mappings != null)
@@ -38,11 +43,35 @@ namespace tdsm.api.Callbacks
         static void NatUtility_DeviceFound(object sender, Mono.Nat.DeviceEventArgs e)
         {
 #if ENABLE_NAT
-            var map = new Mono.Nat.Mapping(Mono.Nat.Protocol.Tcp, Netplay.portForwardPort, Netplay.portForwardPort)
+            if (EnableNAT)
             {
-                Description = "Terraria Server"
-            };
-            e.Device.CreatePortMap(map);
+                var current = e.Device.GetAllMappings();
+                if (current != null)
+                {
+                    foreach (var map in current)
+                    {
+                        if (map.Protocol == Mono.Nat.Protocol.Tcp && map.PrivatePort == Netplay.portForwardPort && map.PublicPort == Netplay.portForwardPort)
+                        {
+                            Netplay.portForwardOpen = true;
+                        }
+                    }
+                }
+
+                if (!Netplay.portForwardOpen)
+                {
+                    var terrariaMap = new Mono.Nat.Mapping(Mono.Nat.Protocol.Tcp, Netplay.portForwardPort, Netplay.portForwardPort)
+                    {
+                        Description = "Terraria Server"
+                    };
+                    e.Device.CreatePortMap(terrariaMap);
+                    Tools.WriteLine("Created a new NAT map record for Terraria Server");
+                    Netplay.portForwardOpen = true;
+                }
+                else
+                {
+                    Tools.WriteLine("Detected an existing NAT map record for Terraria Server");
+                }
+            }
 #endif
         }
 
@@ -50,7 +79,7 @@ namespace tdsm.api.Callbacks
         {
             //if (Netplay.portForwardOpen)
             //{
-            //    Netplay.mappings.Remove(Netplay.portForwardPort, "TCP");
+            //    //Netplay.mappings.Remove(Netplay.portForwardPort, "TCP");
             //}
         }
     }

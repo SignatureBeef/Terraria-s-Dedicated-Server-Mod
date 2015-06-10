@@ -21,7 +21,7 @@ namespace tdsm.api.Callbacks
                             if (ix > -1)
                             {
                                 var key = line.Substring(0, ix);
-								var value = line.Substring(ix + 1, line.Length - (ix + 1));
+                                var value = line.Substring(ix + 1, line.Length - (ix + 1));
 #if Full_API
                                 switch (key.ToLower())
                                 {
@@ -108,6 +108,14 @@ namespace tdsm.api.Callbacks
                                             Tools.WriteLine("Failed to parse config option {0}", key);
                                         }
                                         else Terraria.Main.npcStreamSpeed = npcstream;
+                                        break;
+                                    case "mono-nat-testing":
+                                        bool monoNat;
+                                        if (!Boolean.TryParse(value, out monoNat))
+                                        {
+                                            Tools.WriteLine("Failed to parse config option {0}", key);
+                                        }
+                                        else NAT.EnableNAT = monoNat;
                                         break;
                                     default:
                                         var ctx = new HookContext()
