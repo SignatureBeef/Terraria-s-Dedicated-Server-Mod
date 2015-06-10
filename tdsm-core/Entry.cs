@@ -78,6 +78,7 @@ namespace tdsm.core
 
             tdsm.api.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
             tdsm.api.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
+			EnableCheatProtection = true;
         }
 
         protected override void Initialized(object state)
