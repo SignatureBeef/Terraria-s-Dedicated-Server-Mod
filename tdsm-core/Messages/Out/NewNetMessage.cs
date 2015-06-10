@@ -72,7 +72,7 @@ namespace tdsm.core.Messages.Out
 
         public static void BootPlayer(int plr, string msg)
         {
-            tdsm.api.Callbacks.NetplayCallback.slots[plr].Kick(msg);
+            Terraria.Netplay.serverSock[plr].Kick(msg);
         }
 
         public static int SendData(Packet packet, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
@@ -436,7 +436,7 @@ namespace tdsm.core.Messages.Out
                     //					}
 
                 }
-                else if ((tdsm.api.Callbacks.NetplayCallback.slots[remoteClient] as ServerSlot).Connected)
+                else if ((Terraria.Netplay.serverSock[remoteClient] as ServerSlot).Connected)
                 {
                     msg.Send(remoteClient);
                     //NewNetMessage.buffer[remoteClient].spamCount++;
@@ -471,10 +471,10 @@ namespace tdsm.core.Messages.Out
         {
             if (sectionX >= 0 && sectionY >= 0 && sectionX < Main.maxSectionsX && sectionY < Main.maxSectionsY)
             {
-                tdsm.api.Callbacks.NetplayCallback.slots[whoAmi].tileSection[sectionX, sectionY] = true;
+                Terraria.Netplay.serverSock[whoAmi].tileSection[sectionX, sectionY] = true;
                 try
                 {
-                    (tdsm.api.Callbacks.NetplayCallback.slots[whoAmi] as ServerSlot).conn.SendSection(sectionX, sectionY);
+                    (Terraria.Netplay.serverSock[whoAmi] as ServerSlot).conn.SendSection(sectionX, sectionY);
                 }
                 catch (NullReferenceException) { }
             }
@@ -484,9 +484,9 @@ namespace tdsm.core.Messages.Out
         {
             if (sectionX >= 0 && sectionY >= 0 && sectionX < Main.maxSectionsX && sectionY < Main.maxSectionsY)
             {
-                if (!skipSent || !tdsm.api.Callbacks.NetplayCallback.slots[whoAmi].tileSection[sectionX, sectionY])
+                if (!skipSent || !Terraria.Netplay.serverSock[whoAmi].tileSection[sectionX, sectionY])
                 {
-                    tdsm.api.Callbacks.NetplayCallback.slots[whoAmi].tileSection[sectionX, sectionY] = true;
+                    Terraria.Netplay.serverSock[whoAmi].tileSection[sectionX, sectionY] = true;
                     int number = sectionX * 200;
                     int num = sectionY * 150;
                     int num2 = 150;
@@ -515,7 +515,7 @@ namespace tdsm.core.Messages.Out
             //ProgramLog.Log ("Broadcast, {0} {1}", Netplay.slots[0].state, Netplay.slots[0].Connected);
             for (int k = 0; k < 255; k++)
             {
-                var slot = tdsm.api.Callbacks.NetplayCallback.slots[k] as ServerSlot;
+                var slot = Terraria.Netplay.serverSock[k] as ServerSlot;
                 if (slot.state >= SlotState.PLAYING && slot.Connected)
                 {
                     slot.Send(bytes);
@@ -528,7 +528,7 @@ namespace tdsm.core.Messages.Out
             //ProgramLog.Log ("BroadcastExcept({2}), {0} {1}", Netplay.slots[0].state, Netplay.slots[0].Connected, i);
             for (int k = 0; k < 255; k++)
             {
-                var slot = tdsm.api.Callbacks.NetplayCallback.slots[k] as ServerSlot;
+                var slot = Terraria.Netplay.serverSock[k] as ServerSlot;
                 if (slot.state >= SlotState.PLAYING && slot.Connected && k != i)
                 {
                     slot.Send(bytes);
@@ -568,7 +568,7 @@ namespace tdsm.core.Messages.Out
 
         public void Send(int i)
         {
-            var conn = (tdsm.api.Callbacks.NetplayCallback.slots[i] as ServerSlot).conn;
+            var conn = (Terraria.Netplay.serverSock[i] as ServerSlot).conn;
             if (conn != null)
                 conn.CopyAndSend(Segment);
         }
@@ -629,7 +629,7 @@ namespace tdsm.core.Messages.Out
                 msg.Send(plr); // send these before the login event, so messages from plugins come after
             }
 
-            var slot = tdsm.api.Callbacks.NetplayCallback.slots[plr];
+            var slot = Terraria.Netplay.serverSock[plr];
 
             slot.announced = true;
 
@@ -735,14 +735,14 @@ namespace tdsm.core.Messages.Out
 
             for (int i = 0; i < 255; i++)
             {
-                var slot = tdsm.api.Callbacks.NetplayCallback.slots[i] as ServerSlot;
+                var slot = Terraria.Netplay.serverSock[i] as ServerSlot;
                 if (slot.state >= SlotState.PLAYING && slot.Connected)
                 {
                     int X = x / 200;
                     int Y = y / 150;
                     if (X < (Main.maxTilesX / 200) && Y < (Main.maxTilesY / 150))
                     {
-                        if (tdsm.api.Callbacks.NetplayCallback.slots[i].tileSection[X, Y])
+                        if (Terraria.Netplay.serverSock[i].tileSection[X, Y])
                         {
                             if (bytes == null)
                             {
@@ -815,7 +815,7 @@ namespace tdsm.core.Messages.Out
 
             for (int i = 0; i < 255; i++)
             {
-                if (tdsm.api.Callbacks.NetplayCallback.slots[i].State() == SlotState.PLAYING)
+                if (Terraria.Netplay.serverSock[i].State() == SlotState.PLAYING)
                 {
                     msg.Clear();
                     msg.BuildPlayerUpdate(i);
@@ -826,7 +826,7 @@ namespace tdsm.core.Messages.Out
             msg.Clear();
 
             for (int i = 0; i < 255; i++)
-                if (tdsm.api.Callbacks.NetplayCallback.slots[i].State() != SlotState.PLAYING)
+                if (Terraria.Netplay.serverSock[i].State() != SlotState.PLAYING)
                     msg.SynchBegin(i, 0);
 
             msg.Broadcast();
@@ -836,7 +836,7 @@ namespace tdsm.core.Messages.Out
         {
             for (int k = 0; k < 255; k++)
             {
-                if (tdsm.api.Callbacks.NetplayCallback.slots[k].State() == SlotState.PLAYING && i != k)
+                if (Terraria.Netplay.serverSock[k].State() == SlotState.PLAYING && i != k)
                     BuildPlayerUpdate(k);
                 else if (i != k)
                     SynchBegin(k, 0);

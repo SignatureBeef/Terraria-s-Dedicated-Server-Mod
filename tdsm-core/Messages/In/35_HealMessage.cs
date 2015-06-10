@@ -19,7 +19,7 @@ namespace tdsm.core.Messages.In
 
 			if (playerIndex != whoAmI && Entry.EnableCheatProtection)
             {
-                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (HEAL_PLAYER forgery).");
+                Terraria.Netplay.serverSock[whoAmI].Kick("Cheating detected (HEAL_PLAYER forgery).");
                 return;
             }
 

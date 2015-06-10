@@ -27,14 +27,39 @@ namespace tdsm.api.Callbacks
         public float spamDelBlockMax = 500f;
         public float spamWaterMax = 50f;
 
-        public abstract bool IsPlaying();
-        public abstract bool CanSendWater();
-        public abstract string RemoteAddress();
+        public int state;
+
+        //TDSM core doesn't use these - only here for vanilla
+        public System.Net.Sockets.TcpClient tcpClient;
+        public System.Net.Sockets.NetworkStream networkStream;
+        public byte[] readBuffer;
+        public bool kill;
+        public bool active;
+        public bool locked;
+        public int timeOut;
+        public byte[] writeBuffer;
+
+        public virtual bool IsPlaying()
+        {
+            return state == 10;
+        }
+        public virtual bool CanSendWater()
+        {
+            return state >= 3;
+        }
+        public virtual string RemoteAddress()
+        {
+            return tcpClient.Client.RemoteEndPoint.ToString();
+        }
+
+        public abstract void SpamUpdate();
+        public abstract void SpamClear();
+        public abstract void Reset();
     }
 
     public static class NetplayCallback
     {
-        public static IAPISocket[] slots;// = new IAPISocket[256];
+        //public static IAPISocket[] slots;// = new IAPISocket[256];
 #if Full_API
         public static Action<Int32, Vector2> CheckSectionMethod = Terraria.ServerSock.CheckSection;
 #endif
@@ -68,10 +93,10 @@ namespace tdsm.api.Callbacks
         public static void SendAnglerQuest()
         {
 #if Full_API
-            if (slots != null)
+            if (Terraria.Netplay.serverSock != null)
                 for (int i = 0; i < 255; i++)
                 {
-                    if (slots[i].IsPlaying())
+                    if (Terraria.Netplay.serverSock[i].IsPlaying())
                     {
                         NetMessageCallback.SendData(74, i, -1, Terraria.Main.player[i].name, Terraria.Main.anglerQuest, 0f, 0f, 0f, 0);
                     }
@@ -82,15 +107,15 @@ namespace tdsm.api.Callbacks
         public static void sendWater(int x, int y)
         {
 #if Full_API
-            if (slots != null)
+            if (Terraria.Netplay.serverSock != null)
                 for (int i = 0; i < 256; i++)
                 {
                     //if ((/*NetMessage.buffer[i].broadcast ||*/ Server.slots[i].state >= SlotState.SENDING_TILES) && Server.slots[i].Connected)
-                    if (slots[i].CanSendWater())
+                    if (Terraria.Netplay.serverSock[i].CanSendWater())
                     {
                         int num = x / 200;
                         int num2 = y / 150;
-                        if (slots[i].tileSection[num, num2])
+                        if (Terraria.Netplay.serverSock[i].tileSection[num, num2])
                         {
                             NetMessageCallback.SendData(48, i, -1, "", x, (float)y, 0f, 0f, 0);
                         }
@@ -103,7 +128,7 @@ namespace tdsm.api.Callbacks
         {
 #if Full_API
             bool flag = false;
-            if (slots != null)
+            if (Terraria.Netplay.serverSock != null)
                 for (int i = 0; i < 255; i++)
                 {
                     int num = 0;
@@ -111,11 +136,11 @@ namespace tdsm.api.Callbacks
                     {
                         num = 1;
                     }
-                    if (slots[i].IsPlaying())
+                    if (Terraria.Netplay.serverSock[i].IsPlaying())
                     {
                         if (Terraria.Main.autoShutdown && !flag)
                         {
-                            string text = slots[i].RemoteAddress();
+                            string text = Terraria.Netplay.serverSock[i].RemoteAddress();
                             string a = text;
                             for (int j = 0; j < text.Length; j++)
                             {
@@ -165,9 +190,9 @@ namespace tdsm.api.Callbacks
                         NetMessageCallback.SendData(5, -1, i, Terraria.Main.player[i].dye[5].name, i, 80f, (float)Terraria.Main.player[i].dye[5].prefix, 0f, 0);
                         NetMessageCallback.SendData(5, -1, i, Terraria.Main.player[i].dye[6].name, i, 81f, (float)Terraria.Main.player[i].dye[6].prefix, 0f, 0);
                         NetMessageCallback.SendData(5, -1, i, Terraria.Main.player[i].dye[7].name, i, 82f, (float)Terraria.Main.player[i].dye[7].prefix, 0f, 0);
-                        if (!slots[i].announced)
+                        if (!Terraria.Netplay.serverSock[i].announced)
                         {
-                            slots[i].announced = true;
+                            Terraria.Netplay.serverSock[i].announced = true;
                             NetMessageCallback.SendData(25, -1, i, Terraria.Main.player[i].name + " " + Terraria.Lang.mp[19], 255, 255f, 240f, 20f, 0);
                             if (Terraria.Main.dedServ)
                             {
@@ -179,13 +204,13 @@ namespace tdsm.api.Callbacks
                     {
                         num = 0;
                         NetMessageCallback.SendData(14, -1, i, "", i, (float)num, 0f, 0f, 0);
-                        if (slots[i].announced)
+                        if (Terraria.Netplay.serverSock[i].announced)
                         {
-                            slots[i].announced = false;
-                            NetMessageCallback.SendData(25, -1, i, slots[i].oldName + " " + Terraria.Lang.mp[20], 255, 255f, 240f, 20f, 0);
+                            Terraria.Netplay.serverSock[i].announced = false;
+                            NetMessageCallback.SendData(25, -1, i, Terraria.Netplay.serverSock[i].oldName + " " + Terraria.Lang.mp[20], 255, 255f, 240f, 20f, 0);
                             if (Terraria.Main.dedServ)
                             {
-                                Tools.WriteLine(slots[i].oldName + " " + Terraria.Lang.mp[20]);
+                                Tools.WriteLine(Terraria.Netplay.serverSock[i].oldName + " " + Terraria.Lang.mp[20]);
                             }
                         }
                     }
@@ -229,14 +254,14 @@ namespace tdsm.api.Callbacks
             };
             var args = new HookArgs.AddBan()
             {
-                RemoteAddress = slots[plr].RemoteAddress()
+                RemoteAddress = Terraria.Netplay.serverSock[plr].RemoteAddress()
             };
 
             HookPoints.AddBan.Invoke(ref ctx, ref args);
 
             if (ctx.Result == HookResult.DEFAULT)
             {
-                string remote = slots[plr].RemoteAddress();
+                string remote = Terraria.Netplay.serverSock[plr].RemoteAddress();
                 string ip = remote;
                 for (int i = 0; i < remote.Length; i++)
                 {

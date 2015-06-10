@@ -315,7 +315,14 @@ namespace tdsm.patcher
             var callback = userInputClass.Methods.First(m => m.Name == "Initialise");
 
             var il = method.Body.GetILProcessor();
-            il.InsertBefore(method.Body.Instructions.First(), il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+            var first = method.Body.Instructions.First();
+            //il.InsertBefore(method.Body.Instructions.First(), il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+
+
+            il.InsertBefore(first, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+
+            il.InsertBefore(first, il.Create(OpCodes.Brtrue_S, first));
+            il.InsertBefore(first, il.Create(OpCodes.Ret));
         }
 
         public void HookWorldEvents()
@@ -831,7 +838,7 @@ namespace tdsm.patcher
         {
             var serverClass = _self.MainModule.Types.Where(x => x.Name == "NetplayCallback").First();
             var sockClass = _self.MainModule.Types.Where(x => x.Name == "IAPISocket").First();
-            var targetArray = serverClass.Fields.Where(x => x.Name == "slots").First();
+            //var targetArray = serverClass.Fields.Where(x => x.Name == "slots").First();
             var targetField = sockClass.Fields.Where(x => x.Name == "tileSection").First();
 
             //Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
@@ -851,13 +858,13 @@ namespace tdsm.patcher
 
             for (var x = 0; x < instructions.Length; x++)
             {
-                instructions[x].Operand = _asm.MainModule.Import(targetArray);
+                //instructions[x].Operand = _asm.MainModule.Import(targetArray);
                 instructions[x].Next.Next.Next.Operand = _asm.MainModule.Import(targetField);
             }
 
 
             //TODO BELOW - update ServerSock::announce to IAPISocket::announce (etc)
-            ////Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
+            //Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
             //instructions = _asm.MainModule.Types
             //   .SelectMany(x => x.Methods
             //       .Where(y => y.HasBody && y.Body.Instructions != null)
@@ -873,20 +880,44 @@ namespace tdsm.patcher
             //{
             //    instructions[x].Operand = _asm.MainModule.Import(targetArray);
 
-            //    var var = instructions[x].Next.Next.Next;
-            //    if (var.OpCode == OpCodes.Ldfld && var.Operand is MemberReference)
-            //    {
-            //        var mem = var.Operand as MemberReference;
-            //        if (mem.DeclaringType.Name == "ServerSock")
-            //        {
-            //            var ourVar = sockClass.Fields.Where(j => j.Name == mem.Name).FirstOrDefault();
-            //            if (ourVar != null)
-            //            {
-            //                var.Operand = _asm.MainModule.Import(ourVar);
-            //            }
-            //        }
-            //    }
+            //    //var var = instructions[x].Next.Next.Next;
+            //    //if (var.OpCode == OpCodes.Ldfld && var.Operand is MemberReference)
+            //    //{
+            //    //    var mem = var.Operand as MemberReference;
+            //    //    if (mem.DeclaringType.Name == "ServerSock")
+            //    //    {
+            //    //        var ourVar = sockClass.Fields.Where(j => j.Name == mem.Name).FirstOrDefault();
+            //    //        if (ourVar != null)
+            //    //        {
+            //    //            var.Operand = _asm.MainModule.Import(ourVar);
+            //    //        }
+            //    //    }
+            //    //}
             //}
+            instructions = _asm.MainModule.Types
+               .SelectMany(x => x.Methods
+                   .Where(y => y.HasBody && y.Body.Instructions != null)
+               )
+               .SelectMany(x => x.Body.Instructions)
+               .Where(x => (x.OpCode == Mono.Cecil.Cil.OpCodes.Ldfld || x.OpCode == Mono.Cecil.Cil.OpCodes.Stfld)
+                   && x.Operand is MemberReference
+                   && (x.Operand as MemberReference).DeclaringType.FullName == "Terraria.ServerSock"
+               )
+               .ToArray();
+
+            for (var x = 0; x < instructions.Length; x++)
+            {
+                var var = instructions[x];
+                if (var.Operand is MemberReference)
+                {
+                    var mem = var.Operand as MemberReference;
+                    var ourVar = sockClass.Fields.Where(j => j.Name == mem.Name).FirstOrDefault();
+                    if (ourVar != null)
+                    {
+                        var.Operand = _asm.MainModule.Import(ourVar);
+                    }
+                }
+            }
 
             var ourClass = _self.MainModule.Types.Where(x => x.Name == "NetplayCallback").First();
             foreach (var rep in new string[] { "SendAnglerQuest", "sendWater", "syncPlayers", "AddBan" })
@@ -908,6 +939,31 @@ namespace tdsm.patcher
                     toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
                 }
             }
+
+            //Change to override
+            var serverSock = _asm.MainModule.Types.Where(x => x.Name == "ServerSock").First();
+            serverSock.BaseType = _asm.MainModule.Import(sockClass);
+            foreach (var rep in new string[] { "SpamUpdate", "SpamClear", "Reset" })
+            {
+                var mth = serverSock.Methods.Where(x => x.Name == rep).First();
+                mth.IsVirtual = true;
+            }
+
+            //Remove variables that are in the base class
+            foreach (var fld in sockClass.Fields)
+            {
+                var rem = serverSock.Fields.Where(x => x.Name == fld.Name).FirstOrDefault();
+                if (rem != null)
+                {
+                    serverSock.Fields.Remove(rem);
+                }
+            }
+
+            //Now change Netplay.serverSock to the IAPISocket type
+            var netplay = _asm.MainModule.Types.Where(x => x.Name == "Netplay").First();
+            var serverSockArr = netplay.Fields.Where(x => x.Name == "serverSock").First();
+            var at = new ArrayType(_asm.MainModule.Import(sockClass));
+            serverSockArr.FieldType = at;
         }
 
         public void HookNPCSpawning()

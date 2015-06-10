@@ -24,7 +24,7 @@ namespace tdsm.core.Messages.In
 
 			if (playerIndex != whoAmI && Entry.EnableCheatProtection)
             {
-                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("Cheating detected (RECEIVING_PLAYER_JOINED forgery).");
+                Terraria.Netplay.serverSock[whoAmI].Kick("Cheating detected (RECEIVING_PLAYER_JOINED forgery).");
                 return;
             }
 
@@ -47,11 +47,11 @@ namespace tdsm.core.Messages.In
 
             player.respawnTimer = Int32.MaxValue;
 
-            if (tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].State() >= SlotState.SENDING_TILES)
+            if (Terraria.Netplay.serverSock[whoAmI].State() >= SlotState.SENDING_TILES)
             {
-                if (tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].State() == SlotState.SENDING_TILES)
+                if (Terraria.Netplay.serverSock[whoAmI].State() == SlotState.SENDING_TILES)
                 {
-                    tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].SetState(SlotState.PLAYING);
+                    Terraria.Netplay.serverSock[whoAmI].SetState(SlotState.PLAYING);
                     NewNetMessage.OnPlayerJoined(whoAmI); // this also forwards the message
                 }
                 else

@@ -121,7 +121,7 @@ namespace tdsm.core.Messages.In
 
 			if (plr != whoAmI && Entry.EnableCheatProtection)
             {
-                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].Kick("SpawnNPC Player Forgery!");
+                Terraria.Netplay.serverSock[whoAmI].Kick("SpawnNPC Player Forgery!");
                 return;
             }
 

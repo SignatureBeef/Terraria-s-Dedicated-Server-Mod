@@ -320,8 +320,8 @@ namespace tdsm.patcher
                             var ver = (Vestris.ResourceLib.VersionResource)ri[Vestris.ResourceLib.Kernel32.ResourceTypes.RT_VERSION].First();
 
                             var inf = (Vestris.ResourceLib.StringFileInfo)ver["StringFileInfo"];
-                            inf["OriginalFilename"] = fl + '\0';
-                            inf["InternalName"] = fl + '\0';
+                            inf["OriginalFilename"] = fileName + ".exe" + '\0';
+                            inf["InternalName"] = fileName + ".exe" + '\0';
                             inf["ProductName"] = fileName + '\0';
                             inf["FileDescription"] = fileName + '\0';
 
@@ -345,7 +345,17 @@ namespace tdsm.patcher
             var noRun = args != null && args.Where(x => x.ToLower() == "-norun").Count() > 0;
             if (!noRun)
             {
-                var current = isMono ? outFileMN : outFileMS;
+                //var current = isMono ? outFileMN : outFileMS;
+                if (File.Exists("tdsm.exe")) File.Delete("tdsm.exe");
+                if (isMono)
+                {
+                    File.Copy(outFileMN, "tdsm.exe");
+                }
+                else
+                {
+                    File.Copy(outFileMS, "tdsm.exe");
+                }
+                var current = "tdsm.exe";
                 Console.WriteLine("Ok");
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine("You may now run {0} as you would normally.", current);

@@ -62,7 +62,7 @@ namespace tdsm.core.ServerCore
     {
         public volatile ClientConnection conn;
 
-        public SlotState state
+        public new SlotState state
         {
             get { return conn == null ? SlotState.VACANT : conn.State; }
             set
@@ -117,7 +117,7 @@ namespace tdsm.core.ServerCore
             state = SlotState.VACANT;
         }
 
-        public void SpamUpdate()
+        public override void SpamUpdate()
         {
             if (!Netplay.spamCheck)
             {
@@ -165,7 +165,7 @@ namespace tdsm.core.ServerCore
             }
         }
 
-        public void SpamClear()
+        public override void SpamClear()
         {
             this.spamProjectile = 0f;
             this.spamAddBlock = 0f;
@@ -173,7 +173,7 @@ namespace tdsm.core.ServerCore
             this.spamWater = 0f;
         }
 
-        public void Reset()
+        public override void Reset()
         {
             if (tileSection != null && tileSection.GetLength(0) >= Main.maxSectionsX && tileSection.GetLength(1) >= Main.maxSectionsY)
             {

@@ -31,7 +31,7 @@ namespace tdsm.core.Messages.In
                 return;
             }
 
-            if (!tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
+            if (!Terraria.Netplay.serverSock[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
             {
                 Tools.WriteLine("{0} @ {1}: {2} attempted to alter world in unloaded tile.");
                 return;
@@ -40,7 +40,7 @@ namespace tdsm.core.Messages.In
             //TODO implement the old methods
             var ctx = new HookContext
             {
-                Connection = (tdsm.api.Callbacks.NetplayCallback.slots[whoAmI] as ServerSlot).conn,
+                Connection = (Terraria.Netplay.serverSock[whoAmI] as ServerSlot).conn,
                 Sender = player,
                 Player = player,
             };
@@ -80,14 +80,14 @@ namespace tdsm.core.Messages.In
                 {
                     if (action == 0 || action == 2 || action == 4)
                     {
-                        tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].spamDelBlock += 1f;
+                        Terraria.Netplay.serverSock[whoAmI].spamDelBlock += 1f;
                     }
                     if (action == 1 || action == 3)
                     {
-                        tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].spamAddBlock += 1f;
+                        Terraria.Netplay.serverSock[whoAmI].spamAddBlock += 1f;
                     }
                 }
-                if (!tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
+                if (!Terraria.Netplay.serverSock[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
                 {
                     fail = true;
                 }

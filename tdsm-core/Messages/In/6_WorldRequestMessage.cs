@@ -28,9 +28,9 @@ namespace tdsm.core.Messages.In
             }
 
             int whoAmI = conn.SlotIndex;
-            if (tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].State() == SlotState.ASSIGNING_SLOT)
+            if (Terraria.Netplay.serverSock[whoAmI].State() == SlotState.ASSIGNING_SLOT)
             {
-                tdsm.api.Callbacks.NetplayCallback.slots[whoAmI].SetState(SlotState.SENDING_WORLD);
+                Terraria.Netplay.serverSock[whoAmI].SetState(SlotState.SENDING_WORLD);
             }
 
             var ctx = new HookContext() { Connection = conn, Player = conn.Player };

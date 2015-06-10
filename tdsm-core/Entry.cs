@@ -506,6 +506,14 @@ namespace tdsm.core
             }
         }
 
+
+        [Hook(HookOrder.NORMAL)]
+        void OnPlayerJoin(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)
+        {
+            var sl = Terraria.Netplay.serverSock[args.Slot];
+
+        }
+
         [Hook(HookOrder.NORMAL)]
         void OnStartCommandProcessing(ref HookContext ctx, ref HookArgs.StartCommandProcessing args)
         {
@@ -818,6 +826,8 @@ namespace tdsm.core
                 //if (properties != null && File.Exists(properties.PIDFile.Trim()))
                 //File.Delete(properties.PIDFile.Trim());
             }
+
+            ctx.SetResult(HookResult.IGNORE); //Don't continue on with vanilla code
         }
 
         [Hook(HookOrder.NORMAL)]

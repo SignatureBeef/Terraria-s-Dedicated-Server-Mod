@@ -1027,7 +1027,7 @@ namespace tdsm.core
                 int s;
                 args.ParseOne(out s);
 
-                var slot = tdsm.api.Callbacks.NetplayCallback.slots[s];
+                var slot = Terraria.Netplay.serverSock[s];
 
                 if (slot.State() != SlotState.VACANT)
                 {

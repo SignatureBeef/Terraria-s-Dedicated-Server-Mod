@@ -305,7 +305,7 @@ namespace tdsm.core.ServerCore
             {
                 try
                 {
-                    (tdsm.api.Callbacks.NetplayCallback.slots[i] as ServerSlot).Kick("Server is shutting down.");
+                    (Terraria.Netplay.serverSock[i] as ServerSlot).Kick("Server is shutting down.");
                 }
                 catch { }
             }
@@ -316,7 +316,7 @@ namespace tdsm.core.ServerCore
             {
                 try
                 {
-                    (tdsm.api.Callbacks.NetplayCallback.slots[i] as ServerSlot).Reset();
+                    (Terraria.Netplay.serverSock[i] as ServerSlot).Reset();
                 }
                 catch { }
             }
@@ -459,7 +459,7 @@ namespace tdsm.core.ServerCore
 
         public static void Init()
         {
-            tdsm.api.Callbacks.NetplayCallback.slots = new ServerSlot[256];
+            Terraria.Netplay.serverSock = new ServerSlot[256];
             tdsm.api.Callbacks.NetplayCallback.CheckSectionMethod = CheckSection;
             for (int i = 0; i < 256; i++)
             {
@@ -468,7 +468,7 @@ namespace tdsm.core.ServerCore
                     whoAmI = i
                 };
                 slot.Reset();
-                tdsm.api.Callbacks.NetplayCallback.slots[i] = slot;
+                Terraria.Netplay.serverSock[i] = slot;
             }
 
             Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
@@ -484,16 +484,6 @@ namespace tdsm.core.ServerCore
         public static DataRegister ItemRejections { get; private set; }
         public static bool WhitelistEnabled { get; set; }
 
-        public static int GetSectionX(int x)
-        {
-            return x / 200;
-        }
-
-        public static int GetSectionY(int y)
-        {
-            return y / 150;
-        }
-
         public static void ResetSections()
         {
             for (int i = 0; i < 256; i++)
@@ -501,7 +491,7 @@ namespace tdsm.core.ServerCore
                 for (int j = 0; j < Main.maxSectionsX; j++)
                 {
                     for (int k = 0; k < Main.maxSectionsY; k++)
-                        tdsm.api.Callbacks.NetplayCallback.slots[i].tileSection[j, k] = false;
+                        Terraria.Netplay.serverSock[i].tileSection[j, k] = false;
                 }
             }
         }
@@ -515,7 +505,7 @@ namespace tdsm.core.ServerCore
             {
                 for (int j = sectionY - 1; j < sectionY + 2; j++)
                 {
-                    if (i >= 0 && i < Main.maxSectionsX && j >= 0 && j < Main.maxSectionsY && !tdsm.api.Callbacks.NetplayCallback.slots[who].tileSection[i, j])
+                    if (i >= 0 && i < Main.maxSectionsX && j >= 0 && j < Main.maxSectionsY && !Terraria.Netplay.serverSock[who].tileSection[i, j])
                     {
                         num++;
                     }
@@ -525,13 +515,13 @@ namespace tdsm.core.ServerCore
             {
                 int num2 = num;
                 NewNetMessage.SendData(9, who, -1, Lang.inter[44], num2, 0f, 0f, 0f, 0);
-                tdsm.api.Callbacks.NetplayCallback.slots[who].statusText2 = "is receiving tile data";
-                tdsm.api.Callbacks.NetplayCallback.slots[who].statusMax += num2;
+                Terraria.Netplay.serverSock[who].statusText2 = "is receiving tile data";
+                Terraria.Netplay.serverSock[who].statusMax += num2;
                 for (int k = sectionX - 1; k < sectionX + 2; k++)
                 {
                     for (int l = sectionY - 1; l < sectionY + 2; l++)
                     {
-                        if (k >= 0 && k < Main.maxSectionsX && l >= 0 && l < Main.maxSectionsY && !tdsm.api.Callbacks.NetplayCallback.slots[who].tileSection[k, l])
+                        if (k >= 0 && k < Main.maxSectionsX && l >= 0 && l < Main.maxSectionsY && !Terraria.Netplay.serverSock[who].tileSection[k, l])
                         {
                             NewNetMessage.SendSection(who, k, l, false);
                             NewNetMessage.SendData(11, who, -1, String.Empty, k, (float)l, (float)k, (float)l, 0);
@@ -546,12 +536,6 @@ namespace tdsm.core.ServerCore
             RestartInProgress = true;
             Tools.NotifyAllPlayers("Server was requested to restart...", Color.Purple); //Ensure write to console in the case of no players
 
-            //Close connections
-            //Unload the world
-            //Reload world
-            //Restart server
-
-            //ProgramLog.Admin.Log("Stopping server...");
             Server.StopServer(false);
             while (Netplay.ServerUp) System.Threading.Thread.Sleep(100);
 
@@ -564,9 +548,6 @@ namespace tdsm.core.ServerCore
             ProgramLog.Admin.Log("Reloading the world...");
             WorldFile.loadWorld();
 
-            //Server.StartServer();
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(tdsm.api.Callbacks.NetplayCallback.StartServer), 1);
-            //while (RestartInProgress) System.Threading.Thread.Sleep(100);
             RestartInProgress = false;
 
             Tools.NotifyAllPlayers("Restart complete...", Color.Purple);
