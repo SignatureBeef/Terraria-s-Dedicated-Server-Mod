@@ -7,7 +7,7 @@ Should you need help the wiki is currently in progress, but you still may view i
 You can either compile from source or grab the latest release located [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases).
 Alternatively you can get one of the latest pre-release binaries [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries).
 
-See [this wiki page](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/A-Beginner%27s-Guide-for-TDSM-Rebind%3A-Installation-and-Running) for how to run the new TDSM.
+See [this wiki page](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server) for how to run the new TDSM.
 	
 ##Plugin Development
 Plugins are supported via the tdsm-api project. This DLL is hooked into the vanilla server using the tdsm-patcher project. However you must reference both the tdsm.api.dll as well as the patched tdsm.exe.
