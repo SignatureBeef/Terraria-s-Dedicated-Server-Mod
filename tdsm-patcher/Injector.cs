@@ -436,16 +436,24 @@ namespace tdsm.patcher
 
             //Clear open and close methods, add reference to the APIs
             var cb = netplay.Methods.Where(x => x.Name == "openPort")
-                .First()
-                .Body;
-            cb.InitLocals = false;
-            cb.Variables.Clear();
-            cb.Instructions.Clear();
+                .First();
+            //    .Body;
+            //cb.InitLocals = false;
+            //cb.Variables.Clear();
+            //cb.Instructions.Clear();
+            netplay.Methods.Remove(cb);
+            //cb.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Nop));
+            //cb.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Ret));
 
             var close = netplay.Methods.Where(x => x.Name == "closePort")
-                .First()
-                .Body;
-            close.Instructions.Clear();
+                .First();
+            //    .Body;
+            //close.InitLocals = false;
+            //close.Variables.Clear();
+            //close.Instructions.Clear();
+            //close.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Nop));
+            //close.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Ret));
+            netplay.Methods.Remove(close);
 
             fl = netplay.Fields.Where(x => x.Name == "mappings").FirstOrDefault();
             if (fl != null)
