@@ -15,25 +15,25 @@ namespace tdsm.core
             {
                 /*case "search": Lets see how many plugins we have
                     break;*/
-#if DEBUG
-                case "check":
-                    //Purpose is to check if all plugins are supported by the latest heartbeat TDSM version
-                    //Gather plugin names + version and send to heartbeat in one request
+                //#if DEBUG
+                //                case "check": //Maybe b3
+                //                    //Purpose is to check if all plugins are supported by the latest heartbeat TDSM version
+                //                    //Gather plugin names + version and send to heartbeat in one request
 
-                    //Heartbeat responds json messages direct to console:
-                    // [
-                    //  {
-                    //      Colour: {},
-                    //      Message: "TDSM Core [READY]"
-                    //  },
-                    //  {
-                    //      Colour: {},
-                    //      Message: "Restrict [No update]"
-                    //  }
-                    // ]
-                    sender.Message("Not yet implemented");
-                    break;
-#endif
+                //                    //Heartbeat responds json messages direct to console:
+                //                    // [
+                //                    //  {
+                //                    //      Colour: {},
+                //                    //      Message: "TDSM Core [READY]"
+                //                    //  },
+                //                    //  {
+                //                    //      Colour: {},
+                //                    //      Message: "Restrict [No update]"
+                //                    //  }
+                //                    // ]
+                //                    sender.Message("Not yet implemented");
+                //                    break;
+                //#endif
                 case "status":
                     pkg = args.GetString(1);
                     all = pkg == "-all";

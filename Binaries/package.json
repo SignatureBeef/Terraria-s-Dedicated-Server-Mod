@@ -1,16 +1,9 @@
 {
 	Instructions: [
-		{ PackageFileName: "tdsm.api.dll" },
-		{ PackageFileName: "tdsm.api.pdb" },
-		{ PackageFileName: "Plugins\tdsm.core.dll" },
-		{ PackageFileName: "Plugins\tdsm.core.pdb" },
-		{ PackageFileName: "tdsm-patcher.pdb" },
-		{ PackageFileName: "tdsm-patcher.exe" },
-		{ PackageFileName: "KopiLua.dll" },
-		{ PackageFileName: "Mono.Cecil.dll" },
-		{ PackageFileName: "Newtonsoft.Json.dll" },
-		{ PackageFileName: "Newtonsoft.Json.pdb" },
-		{ PackageFileName: "NLua.dll" },
-		{ PackageFileName: "ResourceLib" }
+		{ PackageFileName: "Plugins\\tdsm.core.dll" },
+		{ PackageFileName: "Plugins\\tdsm.core.pdb" }
+	],
+	PluginsToLoad: [
+		"Plugins\\tdsm.core.dll"
 	]
 }
