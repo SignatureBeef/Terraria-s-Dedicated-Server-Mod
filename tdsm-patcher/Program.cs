@@ -219,6 +219,11 @@ namespace tdsm.patcher
             //patcher.HookEclipse();
             //Console.Write("Ok\nHooking blood moon...");
             //patcher.HookBloodMoon();
+
+            //We only need one TDSM.exe if this works...
+            Console.Write("Ok\nRemoving port forwarding functionality...");
+            patcher.FixNetplay();
+
             Console.Write("Ok\n");
 
             //TODO repace Terraria's Console.SetTitles
@@ -280,10 +285,10 @@ namespace tdsm.patcher
             Console.Write("Saving to {0}...", outFileMS);
             patcher.Save(outFileMS, Build, TDSMGuid, fileName);
             //if (isMono || (args != null && args.Where(x => x.ToLower() == "-removeupnp").Count() > 0))
-            {
-                Console.Write("Ok\nRemoving port forwarding functionality...");
-                patcher.FixNetplay();
-            }
+            //{
+            //    Console.Write("Ok\nRemoving port forwarding functionality...");
+            //    patcher.FixNetplay();
+            //}
             Console.Write("Ok\nSaving to {0}...", outFileMN);
             patcher.Save(outFileMN, Build, TDSMGuid, fileName);
             patcher.Dispose();
