@@ -127,7 +127,8 @@ namespace tdsm.patcher
                 }
                 root = root.Parent;
             }
-
+            
+            Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "tdsm.api");
             Copy(root, "tdsm-api", Environment.CurrentDirectory);
             Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
             //Copy (root, "Restrict", Path.Combine (Environment.CurrentDirectory, "Plugins"), "RestrictPlugin");
@@ -182,8 +183,6 @@ namespace tdsm.patcher
             patcher.FixEntryPoint();
             Console.Write("Ok\nPatching save paths...");
             patcher.FixSavePath();
-            //Console.Write("Ok\nPutting Terraria on a diet...");
-            //patcher.ChangeTileToStruct();
             Console.Write("Ok\nHooking receive buffer...");
             patcher.HookMessageBuffer();
             Console.Write("Ok\nAdding the slot manager...");
@@ -211,8 +210,6 @@ namespace tdsm.patcher
             patcher.HookConfig();
             Console.Write("Ok\nRouting socket implementations...");
             patcher.HookSockets();
-//            Console.Write("Ok\nHooking DEBUG...");
-//            patcher.HookWorldFile_DEBUG();
             Console.Write("Ok\nFixing statusText...");
             patcher.FixStatusTexts();
             Console.Write("Ok\nHooking invasions...");
@@ -225,6 +222,11 @@ namespace tdsm.patcher
             //We only need one TDSM.exe if this works...
             Console.Write("Ok\nRemoving port forwarding functionality...");
             patcher.FixNetplay();
+
+//            Console.Write("Ok\nPutting Terraria on a diet...");
+//            patcher.ChangeTileToStruct();
+//            Console.Write("Ok\nHooking DEBUG...");
+//            patcher.HookWorldFile_DEBUG();
 
             Console.Write("Ok\n");
 

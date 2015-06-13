@@ -172,7 +172,6 @@ namespace tdsm.patcher
             var ourClass = _self.MainModule.Types.Where(x => x.Name == "WorldFileCallback").First();
             var replacement = ourClass.Methods.Where(x => x.Name == "loadWorld" && x.IsStatic).First();
 
-            //Grab all occurances of "LoadDedConfig" and route it to ours
             var toBeReplaced = main.Body.Instructions
                 .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Call
                     && x.Operand is MethodReference
@@ -184,6 +183,18 @@ namespace tdsm.patcher
             {
                 toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
             }
+
+//            lastMaxTilesX
+
+            var fld = serv.Fields.Where(x => x.Name == "lastMaxTilesX").First();
+            fld.IsPrivate = false;
+            fld.IsFamily = false;
+            fld.IsPublic = true;
+
+            fld = serv.Fields.Where(x => x.Name == "lastMaxTilesY").First();
+            fld.IsPrivate = false;
+            fld.IsFamily = false;
+            fld.IsPublic = true;
         }
 
         public void HookStatusText()
@@ -739,7 +750,87 @@ namespace tdsm.patcher
                 }
                 catch { }
             }
+            
 
+
+            var tl = _asm.MainModule.Types.Where(x => x.Name == "Tile").First();
+            //Add operators that call a static API function for comparisions
+
+
+            //Do == operator
+            var boolType = _asm.MainModule.Import(typeof(Boolean));
+            var ui = _self.MainModule.Types.Where(x => x.Name == "UserInput").First();
+            var method = new MethodDefinition("op_Equality", 
+                                                  MethodAttributes.Public | 
+                                                  MethodAttributes.Static |
+                                                  MethodAttributes.HideBySig |
+                                                  MethodAttributes.SpecialName, boolType);
+            
+            method.Parameters.Add (new ParameterDefinition ("t1", ParameterAttributes.None, tl));
+            method.Parameters.Add (new ParameterDefinition ("t2", ParameterAttributes.None, tl));
+            
+            
+            var callback = ui.Methods.Where(x => x.Name == "Tile_Equality").First();
+            
+            var il = method.Body.GetILProcessor();
+            
+            method.Body.Instructions.Add(il.Create(OpCodes.Nop));
+            method.Body.Instructions.Add(il.Create(OpCodes.Ldarg_0));
+            method.Body.Instructions.Add(il.Create(OpCodes.Ldarg_1));
+            method.Body.Instructions.Add(il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+            method.Body.Instructions.Add(il.Create(OpCodes.Stloc_0));
+            
+            var val = il.Create(OpCodes.Ldloc_0);
+            method.Body.Instructions.Add(val);
+            method.Body.Instructions.Add(il.Create(OpCodes.Ret));
+            
+            var br = il.Create(OpCodes.Br, val);
+            il.InsertBefore(val, br);
+            
+            //We're storing one local variable
+            method.Body.Variables.Add(new VariableDefinition(boolType));
+            
+            tl.Methods.Add(method);
+
+            //Do != operator
+            method = new MethodDefinition("op_Inequality", 
+                                                  MethodAttributes.Public | 
+                                                  MethodAttributes.Static |
+                                                  MethodAttributes.HideBySig |
+                                                  MethodAttributes.SpecialName, boolType);
+            
+            method.Parameters.Add (new ParameterDefinition ("t1", ParameterAttributes.None, tl));
+            method.Parameters.Add (new ParameterDefinition ("t2", ParameterAttributes.None, tl));
+            
+            
+            callback = ui.Methods.Where(x => x.Name == "Tile_Inequality").First();
+            
+            il = method.Body.GetILProcessor();
+            
+            method.Body.Instructions.Add(il.Create(OpCodes.Nop));
+            method.Body.Instructions.Add(il.Create(OpCodes.Ldarg_0));
+            method.Body.Instructions.Add(il.Create(OpCodes.Ldarg_1));
+            method.Body.Instructions.Add(il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+            method.Body.Instructions.Add(il.Create(OpCodes.Stloc_0));
+            
+            val = il.Create(OpCodes.Ldloc_0);
+            method.Body.Instructions.Add(val);
+            method.Body.Instructions.Add(il.Create(OpCodes.Ret));
+            
+            br = il.Create(OpCodes.Br, val);
+            il.InsertBefore(val, br);
+            
+            //We're storing one local variable
+            method.Body.Variables.Add(new VariableDefinition(boolType));
+            
+            tl.Methods.Add(method);
+
+            //Now to change how tiles are accessed.
+            //Change to by-reference when creating a new tile for the tile array
+            //Replace callvirt with call for each method of tile
+            //br.s should be replaced with br after instanciation
+            //ceq (and other comparitors) must now be replaced with call, and to the appropriate operator
+            //Add nop's
         }
 
         /// <summary>

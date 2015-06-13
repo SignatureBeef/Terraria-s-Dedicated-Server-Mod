@@ -623,7 +623,7 @@ namespace tdsm.api.Plugin
             }
 
 #if Full_API
-            public Tile Tile
+            public Terraria.Tile Tile
             {
                 get
                 { return Main.tile[X, Y]; }

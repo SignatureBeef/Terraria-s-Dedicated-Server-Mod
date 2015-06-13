@@ -1,12 +1,12 @@
 ﻿//using Microsoft.Xna.Framework;
 //using Terraria;
-
+//
 //namespace tdsm
 //{
 //    public struct Tile
 //    {
 //        public static Tile Empty = default(Tile);
-
+//
 //        public ushort type;
 //        public byte wall;
 //        public byte liquid;
@@ -80,8 +80,8 @@
 //        {
 //            return base.MemberwiseClone();
 //        }
-
-
+//
+//
 //        public void Clear()
 //        {
 //            this.type = 0;

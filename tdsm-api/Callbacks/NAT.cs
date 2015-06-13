@@ -1,9 +1,7 @@
 ﻿#define ENABLE_NAT
 
-#if ENABLE_NAT
-using Terraria;
-#endif
 using System;
+using Terraria;
 
 namespace tdsm.api.Callbacks
 {
