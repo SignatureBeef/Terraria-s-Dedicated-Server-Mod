@@ -112,6 +112,3 @@ overlimit-slots=1
 #this will allow you to do so. (This is seperate from the official server's "secure" config property)
 #Enabled by default
 #cheat-detection=true
-
-#This is a testing variable and is not to be used in production until it is verified as working.
-mono-nat-testing=true

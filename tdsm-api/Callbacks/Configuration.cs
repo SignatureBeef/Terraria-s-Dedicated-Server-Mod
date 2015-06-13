@@ -109,14 +109,6 @@ namespace tdsm.api.Callbacks
                                         }
                                         else Terraria.Main.npcStreamSpeed = npcstream;
                                         break;
-                                    case "mono-nat-testing":
-                                        bool monoNat;
-                                        if (!Boolean.TryParse(value, out monoNat))
-                                        {
-                                            Tools.WriteLine("Failed to parse config option {0}", key);
-                                        }
-                                        else NAT.EnableNAT = monoNat;
-                                        break;
                                     default:
                                         var ctx = new HookContext()
                                         {

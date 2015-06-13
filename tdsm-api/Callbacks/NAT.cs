@@ -10,19 +10,14 @@ namespace tdsm.api.Callbacks
     //https://github.com/mono/Mono.Nat/releases
     public static class NAT
     {
-        public static bool EnableNAT = false;
-
         public static void OpenPort()
         {
 #if ENABLE_NAT
-            if (EnableNAT)
-            {
-                Netplay.portForwardIP = Netplay.LocalIPAddress();
-                Netplay.portForwardPort = Netplay.serverPort;
+            Netplay.portForwardIP = Netplay.LocalIPAddress();
+            Netplay.portForwardPort = Netplay.serverPort;
 
-                Mono.Nat.NatUtility.DeviceFound += NatUtility_DeviceFound;
-                Mono.Nat.NatUtility.StartDiscovery();
-            }
+            Mono.Nat.NatUtility.DeviceFound += NatUtility_DeviceFound;
+            Mono.Nat.NatUtility.StartDiscovery();
 #endif
 
             //if (Netplay.mappings != null)
@@ -45,44 +40,41 @@ namespace tdsm.api.Callbacks
         static void NatUtility_DeviceFound(object sender, Mono.Nat.DeviceEventArgs e)
         {
 #if ENABLE_NAT
-            if (EnableNAT)
+            try
             {
-                try
+                if(e.Device is Mono.Nat.Upnp.UpnpNatDevice) //TODO, see if Pmp should work as well
                 {
-                    if(e.Device is Mono.Nat.Upnp.UpnpNatDevice) //TODO, see if Pmp should work as well
+                    var current = e.Device.GetAllMappings();
+                    if (current != null)
                     {
-                        var current = e.Device.GetAllMappings();
-                        if (current != null)
+                        foreach (var map in current)
                         {
-                            foreach (var map in current)
+                            if (map.Protocol == Mono.Nat.Protocol.Tcp && map.PrivatePort == Netplay.portForwardPort && map.PublicPort == Netplay.portForwardPort)
                             {
-                                if (map.Protocol == Mono.Nat.Protocol.Tcp && map.PrivatePort == Netplay.portForwardPort && map.PublicPort == Netplay.portForwardPort)
-                                {
-                                    Netplay.portForwardOpen = true;
-                                }
+                                Netplay.portForwardOpen = true;
                             }
                         }
+                    }
 
-                        if (!Netplay.portForwardOpen)
+                    if (!Netplay.portForwardOpen)
+                    {
+                        var terrariaMap = new Mono.Nat.Mapping(Mono.Nat.Protocol.Tcp, Netplay.portForwardPort, Netplay.portForwardPort)
                         {
-                            var terrariaMap = new Mono.Nat.Mapping(Mono.Nat.Protocol.Tcp, Netplay.portForwardPort, Netplay.portForwardPort)
-                            {
-                                Description = "Terraria Server"
-                            };
-                            e.Device.CreatePortMap(terrariaMap);
-                            Tools.WriteLine("Created a new NAT map record for Terraria Server");
-                            Netplay.portForwardOpen = true;
-                        }
-                        else
-                        {
-                            Tools.WriteLine("Detected an existing NAT map record for Terraria Server");
-                        }
+                            Description = "Terraria Server"
+                        };
+                        e.Device.CreatePortMap(terrariaMap);
+                        Tools.WriteLine("Created a new NAT map record for Terraria Server");
+                        Netplay.portForwardOpen = true;
+                    }
+                    else
+                    {
+                        Tools.WriteLine("Detected an existing NAT map record for Terraria Server");
                     }
                 }
-                catch(Exception ex)
-                {
-                    Tools.WriteLine(ex);
-                }
+            }
+            catch(Exception ex)
+            {
+                Tools.WriteLine(ex);
             }
 #endif
         }
