@@ -788,6 +788,13 @@ namespace tdsm.core
                         EnableCheatProtection = cheatDetection;
                     }
                     break;
+                case "log-rotation":
+                    bool logRotation;
+                    if (Boolean.TryParse(args.Value, out logRotation))
+                    {
+                        ProgramLog.LogRotation = logRotation;
+                    }
+                    break;
             }
         }
 

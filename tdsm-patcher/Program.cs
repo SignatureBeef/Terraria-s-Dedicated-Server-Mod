@@ -76,6 +76,18 @@ namespace tdsm.patcher
             //    }
             //}
 
+
+			
+//			Mono.Nat.NatUtility.DeviceFound += (sender, ags) =>
+//			{
+//				Console.WriteLine("Found");
+//			};
+//			Mono.Nat.NatUtility.StartDiscovery();
+//			Console.WriteLine("Started");
+//
+//			Console.ReadKey (true);
+//			return;
+
             //return;
             //            IsPatching = true;
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -209,8 +221,8 @@ namespace tdsm.patcher
             patcher.HookConfig();
             Console.Write("Ok\nRouting socket implementations...");
             patcher.HookSockets();
-            Console.Write("Ok\nHooking DEBUG...");
-            patcher.HookWorldFile_DEBUG();
+//            Console.Write("Ok\nHooking DEBUG...");
+//            patcher.HookWorldFile_DEBUG();
             Console.Write("Ok\nFixing statusText...");
             patcher.FixStatusTexts();
             Console.Write("Ok\nHooking invasions...");

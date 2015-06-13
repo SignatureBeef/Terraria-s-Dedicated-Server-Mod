@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 
 using tdsm.core.Misc;
+using System.IO;
 
 namespace tdsm.core.Logging
 {
@@ -13,6 +14,8 @@ namespace tdsm.core.Logging
         static ProducerConsumerSignal logSignal = new ProducerConsumerSignal(false);
         static LogTarget console = new StandardOutputTarget();
         static LogTarget logFile = null;
+
+		public static bool LogRotation { get; set; }
 
         static volatile bool exit = false;
 
@@ -29,6 +32,8 @@ namespace tdsm.core.Logging
 
             lock (logTargets)
                 logTargets.Add(console);
+
+			LogRotation = true;
         }
 
         public static readonly LogChannel Users = new LogChannel("USR", ConsoleColor.Magenta);
@@ -69,14 +74,14 @@ namespace tdsm.core.Logging
         {
             var newpath = path;
 
-            //if (Program.properties.LogRotation)
-            //{
-            //    var absolute = Path.GetFullPath (path);
-            //    var dir = Path.GetDirectoryName (absolute);
-            //    var name = Path.GetFileNameWithoutExtension (path);
-            //    var ext = Path.GetExtension (path);
-            //    newpath = Path.Combine (dir, String.Format ("{0}_{1:yyyyMMdd_HHmm}{2}", name, DateTime.Now, ext));
-            //}
+			if (LogRotation)
+            {
+                var absolute = Path.GetFullPath (path);
+                var dir = Path.GetDirectoryName (absolute);
+                var name = Path.GetFileNameWithoutExtension (path);
+                var ext = Path.GetExtension (path);
+                newpath = Path.Combine (dir, String.Format ("{0}_{1:yyyyMMdd_HHmm}{2}", name, DateTime.Now, ext));
+            }
 
             logFile = new FileOutputTarget(newpath);
 
