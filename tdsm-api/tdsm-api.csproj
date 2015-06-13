@@ -58,9 +58,6 @@
     <AssemblyName>tdsm.api</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Nat">
-      <HintPath>..\External\Mono.Nat.dll</HintPath>
-    </Reference>
     <Reference Include="NLua">
       <HintPath>..\External\NLua.dll</HintPath>
     </Reference>
@@ -73,6 +70,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="tdsm">
       <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.microsoft.exe</HintPath>
+    </Reference>
+    <Reference Include="Mono.Nat">
+      <HintPath>..\External\Mono.Nat.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

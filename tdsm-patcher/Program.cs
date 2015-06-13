@@ -6,6 +6,10 @@ using System;
 using System.IO;
 using System.Linq;
 
+//using System.Net.Sockets;
+//using System.Text;
+//using System.Net;
+
 namespace tdsm.patcher
 {
     public class Program
@@ -54,7 +58,7 @@ namespace tdsm.patcher
             if (File.Exists(pdbF)) File.Copy(pdbF, pdbT);
 
         }
-#endif
+  #endif
 
         static void Main(string[] args)
         {
@@ -76,20 +80,6 @@ namespace tdsm.patcher
             //    }
             //}
 
-
-			
-//			Mono.Nat.NatUtility.DeviceFound += (sender, ags) =>
-//			{
-//				Console.WriteLine("Found");
-//			};
-//			Mono.Nat.NatUtility.StartDiscovery();
-//			Console.WriteLine("Started");
-//
-//			Console.ReadKey (true);
-//			return;
-
-            //return;
-            //            IsPatching = true;
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(Console.Title = String.Format("TDSM patcher build {0}", Build));
             Console.ForegroundColor = ConsoleColor.White;

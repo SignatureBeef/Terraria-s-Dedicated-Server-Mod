@@ -114,4 +114,4 @@ overlimit-slots=1
 #cheat-detection=true
 
 #This is a testing variable and is not to be used in production until it is verified as working.
-#mono-nat-testing=false
+mono-nat-testing=true
