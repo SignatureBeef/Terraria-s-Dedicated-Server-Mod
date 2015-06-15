@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using tdsm.api;
@@ -132,6 +133,7 @@ namespace tdsm.core
                 using (var wc = new WebClient())
                 {
                     var req = new System.Collections.Specialized.NameValueCollection();
+//                    var req = new System.Collections.Generic.Dictionary<String, String>();
                     req.Add("API", Globals.Build.ToString());
                     req.Add("Core", _coreBuild.ToString());
                     req.Add("Platform", ((int)Platform.Type).ToString());
@@ -156,6 +158,8 @@ namespace tdsm.core
                     //TODO; think about branches, release or dev
 
                     var data = wc.UploadValues(EndPoint, "POST", req);
+//                    var parameters = (from x in req select String.Concat(x.Key, "=", Uri.EscapeDataString(x.Value))).ToArray();
+//                    var data = wc.DownloadData(EndPoint + "?" + String.Join("&", parameters));
                     if (data != null && data.Length > 0)
                     {
                         var reader = (BufferReader)data;
@@ -220,6 +224,7 @@ namespace tdsm.core
                                     var str = reader.ReadString();
                                     if (!String.IsNullOrEmpty(str))
                                     {
+
                                         ProgramLog.Log("Heartbeat Sent: " + str);
                                     }
                                 }
@@ -242,10 +247,18 @@ namespace tdsm.core
                     else ProgramLog.Log("Failed get a heartbeat response.");
                 }
             }
+#if DEBUG
+            catch(Exception e)
+            {
+                ProgramLog.Log("Heartbeat failed, are we online or is the tdsm server down?");
+                ProgramLog.Log(e);
+            }
+#else
             catch
             {
                 ProgramLog.Log("Heartbeat failed, are we online or is the tdsm server down?");
             }
+#endif
         }
 
         ///// <summary>

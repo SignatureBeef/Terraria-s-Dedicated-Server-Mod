@@ -68,11 +68,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="tdsm">
-      <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.microsoft.exe</HintPath>
-    </Reference>
     <Reference Include="Mono.Nat">
       <HintPath>..\External\Mono.Nat.dll</HintPath>
+    </Reference>
+    <Reference Include="tdsm">
+      <HintPath>..\Binaries\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

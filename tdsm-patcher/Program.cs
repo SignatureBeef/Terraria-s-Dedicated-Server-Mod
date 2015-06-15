@@ -88,8 +88,9 @@ namespace tdsm.patcher
 #if SERVER
             var inFile = "TerrariaServer.exe";
             var fileName = "tdsm";
-            var outFileMS = fileName + ".microsoft.exe";
-            var outFileMN = fileName + ".mono.exe";
+//            var outFileMS = fileName + ".microsoft.exe";
+//            var outFileMN = fileName + ".mono.exe";
+            var output = fileName + ".exe";
             var patchFile = "tdsm.api.dll";
 
             if (!File.Exists(inFile))
@@ -114,8 +115,9 @@ namespace tdsm.patcher
             }
 
 #if DEV
-            if (File.Exists(outFileMS)) File.Delete(outFileMS);
-            if (File.Exists(outFileMN)) File.Delete(outFileMN);
+//            if (File.Exists(outFileMS)) File.Delete(outFileMS);
+//            if (File.Exists(outFileMN)) File.Delete(outFileMN);
+            if (File.Exists(output)) File.Delete(output);
 
             var root = new DirectoryInfo(Environment.CurrentDirectory);
             while (root.GetDirectories().Where(x => x.Name == "tdsm-patcher").Count() == 0)
@@ -286,24 +288,24 @@ namespace tdsm.patcher
 #endif
 
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write("Saving to {0}...", outFileMS);
-            patcher.Save(outFileMS, Build, TDSMGuid, fileName);
-            //if (isMono || (args != null && args.Where(x => x.ToLower() == "-removeupnp").Count() > 0))
-            //{
-            //    Console.Write("Ok\nRemoving port forwarding functionality...");
-            //    patcher.FixNetplay();
-            //}
-            Console.Write("Ok\nSaving to {0}...", outFileMN);
-            patcher.Save(outFileMN, Build, TDSMGuid, fileName);
+//            //if (isMono || (args != null && args.Where(x => x.ToLower() == "-removeupnp").Count() > 0))
+//            //{
+//            //    Console.Write("Ok\nRemoving port forwarding functionality...");
+//            //    patcher.FixNetplay();
+//            //}
+//            Console.Write("Ok\nSaving to {0}...", outFileMN);
+//            patcher.Save(outFileMN, Build, TDSMGuid, fileName);
+            Console.Write("Saving to {0}...", output);
+            patcher.Save(output, Build, TDSMGuid, fileName);
             patcher.Dispose();
-            Console.WriteLine("Ok");
+//            Console.WriteLine("Ok");
 
             Console.ForegroundColor = ConsoleColor.White;
             if (!isMono)
             {
-                Console.Write("Updating icons...");
+                Console.Write("Ok\nUpdating icons...");
                 var res = new Vestris.ResourceLib.IconDirectoryResource(new Vestris.ResourceLib.IconFile("tdsm.ico"));
-                foreach (var fl in new string[] { outFileMS, outFileMN })
+                foreach (var fl in new string[] { output}) //outFileMS, outFileMN })
                 {
                     try
                     {
@@ -317,7 +319,7 @@ namespace tdsm.patcher
                 }
 
                 Console.Write("Ok\nUpdating headers...");
-                foreach (var fl in new string[] { outFileMS, outFileMN })
+                foreach (var fl in new string[] { output}) //outFileMS, outFileMN })
                 {
                     try
                     {
@@ -355,28 +357,28 @@ namespace tdsm.patcher
             if (!noRun)
             {
                 //var current = isMono ? outFileMN : outFileMS;
-                if (File.Exists("tdsm.exe")) File.Delete("tdsm.exe");
-                if (isMono)
-                {
-                    File.Copy(outFileMN, "tdsm.exe");
-                }
-                else
-                {
-                    File.Copy(outFileMS, "tdsm.exe");
-                }
-                var current = "tdsm.exe";
+//                if (File.Exists("tdsm.exe")) File.Delete("tdsm.exe");
+//                if (isMono)
+//                {
+//                    File.Copy(outFileMN, "tdsm.exe");
+//                }
+//                else
+//                {
+//                    File.Copy(outFileMS, "tdsm.exe");
+//                }
+//                var current = "tdsm.exe";
                 Console.WriteLine("Ok");
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("You may now run {0} as you would normally.", current);
-                Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", current);
+                Console.WriteLine("You may now run {0} as you would normally.", output);
+                Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", output);
                 if (Console.ReadKey(true).Key == ConsoleKey.Y)
                 {
                     if (!isMono)
                     {
                         if (File.Exists("serverconfig.txt"))
-                            System.Diagnostics.Process.Start(current, "-config serverconfig.txt");
+                            System.Diagnostics.Process.Start(output, "-config serverconfig.txt");
                         else
-                            System.Diagnostics.Process.Start(current);
+                            System.Diagnostics.Process.Start(output);
                     }
                     else
                     {
@@ -384,7 +386,7 @@ namespace tdsm.patcher
 
                         using (var ms = new MemoryStream())
                         {
-                            using (var fs = File.OpenRead(current))
+                            using (var fs = File.OpenRead(output))
                             {
                                 var buff = new byte[256];
                                 while (fs.Position < fs.Length)
@@ -446,8 +448,9 @@ namespace tdsm.patcher
                 "Libraries" + Path.DirectorySeparatorChar + "ICSharpCode.SharpZipLib.dll",
                 "Libraries" + Path.DirectorySeparatorChar + "Mono.Nat.dll",
                 "Libraries" + Path.DirectorySeparatorChar + "Mono.Nat.pdb",
-                "tdsm.microsoft.exe",
-                "tdsm.mono.exe"
+                "tdsm.exe"
+//                "tdsm.microsoft.exe",
+//                "tdsm.mono.exe"
             })
             {
                 if (File.Exists(rel))

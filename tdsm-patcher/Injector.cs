@@ -754,6 +754,7 @@ namespace tdsm.patcher
 
 
             var tl = _asm.MainModule.Types.Where(x => x.Name == "Tile").First();
+            MethodDefinition opInequality, opEquality;
             //Add operators that call a static API function for comparisions
 
 
@@ -789,7 +790,8 @@ namespace tdsm.patcher
             
             //We're storing one local variable
             method.Body.Variables.Add(new VariableDefinition(boolType));
-            
+
+            opEquality = method;
             tl.Methods.Add(method);
 
             //Do != operator
@@ -823,6 +825,7 @@ namespace tdsm.patcher
             //We're storing one local variable
             method.Body.Variables.Add(new VariableDefinition(boolType));
             
+            opInequality = method;
             tl.Methods.Add(method);
 
             //Now to change how tiles are accessed.
@@ -831,6 +834,70 @@ namespace tdsm.patcher
             //br.s should be replaced with br after instanciation
             //ceq (and other comparitors) must now be replaced with call, and to the appropriate operator
             //Add nop's
+
+            //By ref.
+//            var byRef = new TypeReference(tl.Namespace, tl.Name, _asm.MainModule, tl.Scope, true);
+//            var byRef = new ByReferenceType(new TypeSpecification(tl)
+//                                            {
+//
+//            });
+
+            var mda = new ArrayType(tl);
+            mda.Dimensions.Clear();
+            mda.Dimensions.Insert(0, new ArrayDimension(0, null));
+            mda.Dimensions.Insert(0, new ArrayDimension(0, null));
+//            mda.Dimensions.Add(new ArrayDimension(0,0));
+            var byRef = mda;
+
+            foreach (var mtd in _asm.MainModule.Types
+                     .SelectMany(x => x.Methods)
+                     .Where(y => y.Body != null && y.Body.Instructions.Where(z=> 
+                                                  z.OpCode == OpCodes.Call
+                                                  && z.Operand is MethodReference
+                                                  && (z.Operand as MethodReference).DeclaringType.FullName.Contains("Terraria.Tile")
+                                                  ).Count() > 0))
+            {
+                var instructions = mtd.Body.Instructions.Where(z=> 
+                                                             z.OpCode == OpCodes.Call
+                                                             && z.Operand is MethodReference
+                      
+                                                               && (z.Operand as MethodReference).DeclaringType.FullName.Contains("Terraria.Tile")).ToArray();
+                var mil = mtd.Body.GetILProcessor();
+                foreach (var ins in instructions)
+                {
+                    var mref = (ins.Operand as MethodReference);
+                    mref.DeclaringType = byRef;
+
+                    if (mref.Name == "Get" && ins.Next.Next.OpCode == OpCodes.Ceq && ins.Next.Next.Next.OpCode == OpCodes.Brtrue_S)
+                    {
+//                        ins.Next.Next = mil.Create(OpCodes.Call, opInequality);
+//                        ins.Next.Next.Next = mil.Create(OpCodes.Brfalse, ins.Next.Next.Next.Operand as Instruction);
+                        mil.Replace(ins.Next.Next, mil.Create(OpCodes.Call, opInequality));
+                        mil.Replace(ins.Next.Next.Next, mil.Create(OpCodes.Brfalse, ins.Next.Next.Next.Operand as Instruction));
+                    }
+                }
+            }
+
+            //Section 2 for inequality
+            foreach (var mtd in _asm.MainModule.Types
+                     .SelectMany(x => x.Methods)
+                     .Where(y => y.Body != null && y.Body.Instructions.Where(z=> 
+                                                                    z.OpCode == OpCodes.Newobj
+                                                                    && z.Operand is MethodReference
+                                                                    && (z.Operand as MethodReference).DeclaringType.FullName == ("Terraria.Tile")
+                                                                    ).Count() > 0))
+            {
+                var instructions = mtd.Body.Instructions.Where(z=> 
+                                                               z.OpCode == OpCodes.Newobj
+                                                               && z.Operand is MethodReference
+                                                               && (z.Operand as MethodReference).DeclaringType.FullName == ("Terraria.Tile")
+                                                               ).ToArray();
+                var mil = mtd.Body.GetILProcessor();
+                foreach (var ins in instructions)
+                {
+
+                }
+            }
         }
 
         /// <summary>
