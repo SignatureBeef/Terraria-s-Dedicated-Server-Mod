@@ -1,0 +1,15 @@
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\BareBones.XML
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\BareBones.dll
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\BareBones.pdb
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\FSharp.Core.dll
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\tdsm.api.dll
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\Mono.Nat.dll
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\NLua.dll
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\KopiLua.dll
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\tdsm.api.pdb
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\FSharp.Core.xml
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\Mono.Nat.pdb
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\obj\Debug\BareBones.fsprojResolveAssemblyReference.cache
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\obj\Debug\BareBones.dll
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\obj\Debug\BareBones.pdb
+C:\Development\Sync\Terraria-s-Dedicated-Server-Mod\PluginExamples\F#\BareBones\bin\Debug\tdsm.microsoft.exe
