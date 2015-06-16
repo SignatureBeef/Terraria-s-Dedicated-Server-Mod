@@ -6,7 +6,7 @@ namespace tdsm.core.ServerCharacters
 {
     public static class CharacterManager
     {
-        class NewPlayerInfo
+        public class NewPlayerInfo
         {
             public int Mana { get; set; }
             public int Health { get; set; }
@@ -31,8 +31,8 @@ namespace tdsm.core.ServerCharacters
         {
 
         }
-
-        public static ServerCharacter LoadForPlayer(Player player)
+        
+        public static ServerCharacter LoadPlayerData(Player player)
         {
             if (player.AuthenticatedAs != null)
             {
@@ -45,6 +45,20 @@ namespace tdsm.core.ServerCharacters
             }
             return null;
         }
+        
+        public static ServerCharacter SavePlayerData(Player player)
+        {
+            if (player.AuthenticatedAs != null)
+            {
+                var file = Path.Combine(Globals.CharacterDataPath, player.AuthenticatedAs, ".ssc");
+                var data = new ServerCharacter()
+                {
+                    Mana = player.statMana
+                };
+                var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+                System.IO.File.WriteAllText(file, json);
+            }
+            return null;
+        }
     }
-
 }

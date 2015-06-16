@@ -21,14 +21,19 @@ namespace tdsm.core.ServerCharacters
         public InventoryItem[] Inventory { get; set; }
     }
 
-    class SimpleColor
+    public class SimpleColor
     {
         public byte R { get; set; }
         public byte G { get; set; }
         public byte B { get; set; }
+
+        public Microsoft.Xna.Framework.Color ToXna()
+        {
+            return new Microsoft.Xna.Framework.Color(R, G, B, 255);
+        }
     }
 
-    class PlayerItem
+    public class PlayerItem
     {
         public short NetId { get; set; }
         public short Stack { get; set; }
@@ -38,11 +43,11 @@ namespace tdsm.core.ServerCharacters
         {
             NetId = netId;
             Stack = stack;
-            Stack = stack;
+            Prefix = prefix;
         }
     }
 
-    class InventoryItem : PlayerItem
+    public class InventoryItem : PlayerItem
     {
         public byte Slot { get; set; }
 

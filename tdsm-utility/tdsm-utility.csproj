@@ -62,7 +62,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="tdsm">
-      <HintPath>..\tdsm-patcher\bin\x86\Debug\tdsm.mono.exe</HintPath>
+      <HintPath>..\Binaries\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
