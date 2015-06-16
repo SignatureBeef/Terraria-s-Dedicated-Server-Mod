@@ -1,4 +1,4 @@
 language: csharp
 solution: tdsm.sln
 script:
-  - xbuild /p:Configuration="Debug|x86" tdsm.sln
+  - xbuild /p:Configuration=Debug tdsm.sln
