@@ -69,6 +69,8 @@
     <Compile Include="Misc\ProgressWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ServerCharacters\CharacterManager.cs" />
+    <Compile Include="ServerCharacters\ServerCharacter.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="BasePlayer.cs" />
     <Compile Include="Callbacks\Net.cs" />

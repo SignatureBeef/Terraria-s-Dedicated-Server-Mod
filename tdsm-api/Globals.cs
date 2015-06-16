@@ -23,6 +23,7 @@ namespace tdsm.api
         private const String PluginDirectory = "Plugins";
         private const String DataDirectory = "Data";
         private const String LibrariesDirectory = "Libraries";
+        private const String CharacterData = "Characters";
         //private const String BackupDirectory = "BackupDirectory";
 
         public static volatile bool Exit = false;
@@ -67,6 +68,12 @@ namespace tdsm.api
             { return Path.Combine(SavePath, DataDirectory); }
         }
 
+        public static string CharacterDataPath
+        {
+            get
+            { return Path.Combine(SavePath, DataDirectory, CharacterData); }
+        }
+
         public static void Touch()
         {
             if (!Directory.Exists(SavePath)) Directory.CreateDirectory(SavePath);
@@ -75,6 +82,7 @@ namespace tdsm.api
             if (!Directory.Exists(PluginPath)) Directory.CreateDirectory(PluginPath);
             if (!Directory.Exists(LibrariesPath)) Directory.CreateDirectory(LibrariesPath);
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
+            if (!Directory.Exists(CharacterDataPath)) Directory.CreateDirectory(CharacterDataPath);
         }
 
         /// <summary>
