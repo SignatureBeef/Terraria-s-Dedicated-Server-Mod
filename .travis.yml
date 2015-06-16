@@ -1,2 +1,2 @@
 language: csharp
-solution: tdsm.sln
+solution: tdsm-api\tdsm-api.csproj
