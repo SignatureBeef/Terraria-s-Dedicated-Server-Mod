@@ -35,7 +35,7 @@
       <HintPath>..\..\..\Binaries\tdsm.api.dll</HintPath>
     </Reference>
     <Reference Include="tdsm">
-      <HintPath>..\..\..\Binaries\tdsm.microsoft.exe</HintPath>
+      <HintPath>..\..\..\Binaries\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
