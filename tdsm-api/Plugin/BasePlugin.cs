@@ -5,9 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using tdsm.api.Command;
-using tdsm.api.Plugin;
 
-namespace tdsm.api
+namespace tdsm.api.Plugin
 {
     /// <summary>
     /// Plugin class, used as base for plugin extensions

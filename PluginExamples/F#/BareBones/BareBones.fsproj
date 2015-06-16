@@ -41,7 +41,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
     <Reference Include="tdsm">
-      <HintPath>..\..\..\Binaries\tdsm.microsoft.exe</HintPath>
+      <HintPath>..\..\..\Binaries\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

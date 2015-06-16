@@ -795,6 +795,13 @@ namespace tdsm.core
                         ProgramLog.LogRotation = logRotation;
                     }
                     break;
+                case "server-side-characters":
+                    bool serverSideCharacters;
+                    if (Boolean.TryParse(args.Value, out serverSideCharacters))
+                    {
+                        Terraria.Main.ServerSideCharacter = serverSideCharacters;
+                    }
+                    break;
             }
         }
 

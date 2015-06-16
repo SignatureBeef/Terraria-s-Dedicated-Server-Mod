@@ -57,6 +57,9 @@
     <WarningLevel>4</WarningLevel>
     <AssemblyName>tdsm.api</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>tdsm.api</AssemblyName>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="NLua">
       <HintPath>..\External\NLua.dll</HintPath>

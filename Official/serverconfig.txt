@@ -112,3 +112,5 @@ overlimit-slots=1
 #this will allow you to do so. (This is seperate from the official server's "secure" config property)
 #Enabled by default
 #cheat-detection=true
+
+server-side-characters=true
