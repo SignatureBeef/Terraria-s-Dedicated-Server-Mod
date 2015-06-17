@@ -58,7 +58,7 @@ namespace tdsm.patcher
             if (File.Exists(pdbF)) File.Copy(pdbF, pdbT);
 
         }
-  #endif
+#endif
 
         static void Main(string[] args)
         {
@@ -88,8 +88,8 @@ namespace tdsm.patcher
 #if SERVER
             var inFile = "TerrariaServer.exe";
             var fileName = "tdsm";
-//            var outFileMS = fileName + ".microsoft.exe";
-//            var outFileMN = fileName + ".mono.exe";
+            //            var outFileMS = fileName + ".microsoft.exe";
+            //            var outFileMN = fileName + ".mono.exe";
             var output = fileName + ".exe";
             var patchFile = "tdsm.api.dll";
 
@@ -115,8 +115,8 @@ namespace tdsm.patcher
             }
 
 #if DEV
-//            if (File.Exists(outFileMS)) File.Delete(outFileMS);
-//            if (File.Exists(outFileMN)) File.Delete(outFileMN);
+            //            if (File.Exists(outFileMS)) File.Delete(outFileMS);
+            //            if (File.Exists(outFileMN)) File.Delete(outFileMN);
             if (File.Exists(output)) File.Delete(output);
 
             var root = new DirectoryInfo(Environment.CurrentDirectory);
@@ -129,7 +129,7 @@ namespace tdsm.patcher
                 }
                 root = root.Parent;
             }
-            
+
             Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "tdsm.api");
             Copy(root, "tdsm-api", Environment.CurrentDirectory);
             Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
@@ -225,10 +225,10 @@ namespace tdsm.patcher
             Console.Write("Ok\nRemoving port forwarding functionality...");
             patcher.FixNetplay();
 
-//            Console.Write("Ok\nPutting Terraria on a diet...");
-//            patcher.ChangeTileToStruct();
-//            Console.Write("Ok\nHooking DEBUG...");
-//            patcher.HookWorldFile_DEBUG();
+            //            Console.Write("Ok\nPutting Terraria on a diet...");
+            //            patcher.ChangeTileToStruct();
+            //            Console.Write("Ok\nHooking DEBUG...");
+            //            patcher.HookWorldFile_DEBUG();
 
             Console.Write("Ok\n");
 
@@ -288,24 +288,24 @@ namespace tdsm.patcher
 #endif
 
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-//            //if (isMono || (args != null && args.Where(x => x.ToLower() == "-removeupnp").Count() > 0))
-//            //{
-//            //    Console.Write("Ok\nRemoving port forwarding functionality...");
-//            //    patcher.FixNetplay();
-//            //}
-//            Console.Write("Ok\nSaving to {0}...", outFileMN);
-//            patcher.Save(outFileMN, Build, TDSMGuid, fileName);
+            //            //if (isMono || (args != null && args.Where(x => x.ToLower() == "-removeupnp").Count() > 0))
+            //            //{
+            //            //    Console.Write("Ok\nRemoving port forwarding functionality...");
+            //            //    patcher.FixNetplay();
+            //            //}
+            //            Console.Write("Ok\nSaving to {0}...", outFileMN);
+            //            patcher.Save(outFileMN, Build, TDSMGuid, fileName);
             Console.Write("Saving to {0}...", output);
             patcher.Save(output, Build, TDSMGuid, fileName);
             patcher.Dispose();
-//            Console.WriteLine("Ok");
+            //            Console.WriteLine("Ok");
 
             Console.ForegroundColor = ConsoleColor.White;
             if (!isMono)
             {
                 Console.Write("Ok\nUpdating icons...");
                 var res = new Vestris.ResourceLib.IconDirectoryResource(new Vestris.ResourceLib.IconFile("tdsm.ico"));
-                foreach (var fl in new string[] { output}) //outFileMS, outFileMN })
+                foreach (var fl in new string[] { output }) //outFileMS, outFileMN })
                 {
                     try
                     {
@@ -319,7 +319,7 @@ namespace tdsm.patcher
                 }
 
                 Console.Write("Ok\nUpdating headers...");
-                foreach (var fl in new string[] { output}) //outFileMS, outFileMN })
+                foreach (var fl in new string[] { output }) //outFileMS, outFileMN })
                 {
                     try
                     {
@@ -357,16 +357,16 @@ namespace tdsm.patcher
             if (!noRun)
             {
                 //var current = isMono ? outFileMN : outFileMS;
-//                if (File.Exists("tdsm.exe")) File.Delete("tdsm.exe");
-//                if (isMono)
-//                {
-//                    File.Copy(outFileMN, "tdsm.exe");
-//                }
-//                else
-//                {
-//                    File.Copy(outFileMS, "tdsm.exe");
-//                }
-//                var current = "tdsm.exe";
+                //                if (File.Exists("tdsm.exe")) File.Delete("tdsm.exe");
+                //                if (isMono)
+                //                {
+                //                    File.Copy(outFileMN, "tdsm.exe");
+                //                }
+                //                else
+                //                {
+                //                    File.Copy(outFileMS, "tdsm.exe");
+                //                }
+                //                var current = "tdsm.exe";
                 Console.WriteLine("Ok");
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine("You may now run {0} as you would normally.", output);

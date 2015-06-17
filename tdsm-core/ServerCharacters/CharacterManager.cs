@@ -31,7 +31,27 @@ namespace tdsm.core.ServerCharacters
         {
 
         }
-        
+
+        static bool _hadPlayers;
+        public static bool EnsureSave { get; set; }
+        public static void SaveAll()
+        {
+            //Don't perform any unnecessary writes
+            var hasPlayers = ServerCore.ClientConnection.All.Count > 0;
+            if (!hasPlayers && !_hadPlayers && !EnsureSave) return;
+
+            EnsureSave = false;
+            foreach (var ply in Terraria.Main.player)
+            {
+                if (ply != null && ply.active)
+                {
+                    SavePlayerData(ply);
+                }
+            }
+
+            _hadPlayers = hasPlayers;
+        }
+
         public static ServerCharacter LoadPlayerData(Player player)
         {
             if (player.AuthenticatedAs != null)
@@ -45,16 +65,13 @@ namespace tdsm.core.ServerCharacters
             }
             return null;
         }
-        
+
         public static ServerCharacter SavePlayerData(Player player)
         {
             if (player.AuthenticatedAs != null)
             {
                 var file = Path.Combine(Globals.CharacterDataPath, player.AuthenticatedAs, ".ssc");
-                var data = new ServerCharacter()
-                {
-                    Mana = player.statMana
-                };
+                var data = new ServerCharacter(player);
                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
                 System.IO.File.WriteAllText(file, json);
             }

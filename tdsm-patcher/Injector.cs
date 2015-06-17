@@ -184,7 +184,7 @@ namespace tdsm.patcher
                 toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
             }
 
-//            lastMaxTilesX
+            //            lastMaxTilesX
 
             var fld = serv.Fields.Where(x => x.Name == "lastMaxTilesX").First();
             fld.IsPrivate = false;
@@ -750,7 +750,7 @@ namespace tdsm.patcher
                 }
                 catch { }
             }
-            
+
 
 
             var tl = _asm.MainModule.Types.Where(x => x.Name == "Tile").First();
@@ -761,33 +761,33 @@ namespace tdsm.patcher
             //Do == operator
             var boolType = _asm.MainModule.Import(typeof(Boolean));
             var ui = _self.MainModule.Types.Where(x => x.Name == "UserInput").First();
-            var method = new MethodDefinition("op_Equality", 
-                                                  MethodAttributes.Public | 
+            var method = new MethodDefinition("op_Equality",
+                                                  MethodAttributes.Public |
                                                   MethodAttributes.Static |
                                                   MethodAttributes.HideBySig |
                                                   MethodAttributes.SpecialName, boolType);
-            
-            method.Parameters.Add (new ParameterDefinition ("t1", ParameterAttributes.None, tl));
-            method.Parameters.Add (new ParameterDefinition ("t2", ParameterAttributes.None, tl));
-            
-            
+
+            method.Parameters.Add(new ParameterDefinition("t1", ParameterAttributes.None, tl));
+            method.Parameters.Add(new ParameterDefinition("t2", ParameterAttributes.None, tl));
+
+
             var callback = ui.Methods.Where(x => x.Name == "Tile_Equality").First();
-            
+
             var il = method.Body.GetILProcessor();
-            
+
             method.Body.Instructions.Add(il.Create(OpCodes.Nop));
             method.Body.Instructions.Add(il.Create(OpCodes.Ldarg_0));
             method.Body.Instructions.Add(il.Create(OpCodes.Ldarg_1));
             method.Body.Instructions.Add(il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
             method.Body.Instructions.Add(il.Create(OpCodes.Stloc_0));
-            
+
             var val = il.Create(OpCodes.Ldloc_0);
             method.Body.Instructions.Add(val);
             method.Body.Instructions.Add(il.Create(OpCodes.Ret));
-            
+
             var br = il.Create(OpCodes.Br, val);
             il.InsertBefore(val, br);
-            
+
             //We're storing one local variable
             method.Body.Variables.Add(new VariableDefinition(boolType));
 
@@ -795,36 +795,36 @@ namespace tdsm.patcher
             tl.Methods.Add(method);
 
             //Do != operator
-            method = new MethodDefinition("op_Inequality", 
-                                                  MethodAttributes.Public | 
+            method = new MethodDefinition("op_Inequality",
+                                                  MethodAttributes.Public |
                                                   MethodAttributes.Static |
                                                   MethodAttributes.HideBySig |
                                                   MethodAttributes.SpecialName, boolType);
-            
-            method.Parameters.Add (new ParameterDefinition ("t1", ParameterAttributes.None, tl));
-            method.Parameters.Add (new ParameterDefinition ("t2", ParameterAttributes.None, tl));
-            
-            
+
+            method.Parameters.Add(new ParameterDefinition("t1", ParameterAttributes.None, tl));
+            method.Parameters.Add(new ParameterDefinition("t2", ParameterAttributes.None, tl));
+
+
             callback = ui.Methods.Where(x => x.Name == "Tile_Inequality").First();
-            
+
             il = method.Body.GetILProcessor();
-            
+
             method.Body.Instructions.Add(il.Create(OpCodes.Nop));
             method.Body.Instructions.Add(il.Create(OpCodes.Ldarg_0));
             method.Body.Instructions.Add(il.Create(OpCodes.Ldarg_1));
             method.Body.Instructions.Add(il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
             method.Body.Instructions.Add(il.Create(OpCodes.Stloc_0));
-            
+
             val = il.Create(OpCodes.Ldloc_0);
             method.Body.Instructions.Add(val);
             method.Body.Instructions.Add(il.Create(OpCodes.Ret));
-            
+
             br = il.Create(OpCodes.Br, val);
             il.InsertBefore(val, br);
-            
+
             //We're storing one local variable
             method.Body.Variables.Add(new VariableDefinition(boolType));
-            
+
             opInequality = method;
             tl.Methods.Add(method);
 
@@ -836,31 +836,31 @@ namespace tdsm.patcher
             //Add nop's
 
             //By ref.
-//            var byRef = new TypeReference(tl.Namespace, tl.Name, _asm.MainModule, tl.Scope, true);
-//            var byRef = new ByReferenceType(new TypeSpecification(tl)
-//                                            {
-//
-//            });
+            //            var byRef = new TypeReference(tl.Namespace, tl.Name, _asm.MainModule, tl.Scope, true);
+            //            var byRef = new ByReferenceType(new TypeSpecification(tl)
+            //                                            {
+            //
+            //            });
 
             var mda = new ArrayType(tl);
             mda.Dimensions.Clear();
             mda.Dimensions.Insert(0, new ArrayDimension(0, null));
             mda.Dimensions.Insert(0, new ArrayDimension(0, null));
-//            mda.Dimensions.Add(new ArrayDimension(0,0));
+            //            mda.Dimensions.Add(new ArrayDimension(0,0));
             var byRef = mda;
 
             foreach (var mtd in _asm.MainModule.Types
                      .SelectMany(x => x.Methods)
-                     .Where(y => y.Body != null && y.Body.Instructions.Where(z=> 
+                     .Where(y => y.Body != null && y.Body.Instructions.Where(z =>
                                                   z.OpCode == OpCodes.Call
                                                   && z.Operand is MethodReference
                                                   && (z.Operand as MethodReference).DeclaringType.FullName.Contains("Terraria.Tile")
                                                   ).Count() > 0))
             {
-                var instructions = mtd.Body.Instructions.Where(z=> 
+                var instructions = mtd.Body.Instructions.Where(z =>
                                                              z.OpCode == OpCodes.Call
                                                              && z.Operand is MethodReference
-                      
+
                                                                && (z.Operand as MethodReference).DeclaringType.FullName.Contains("Terraria.Tile")).ToArray();
                 var mil = mtd.Body.GetILProcessor();
                 foreach (var ins in instructions)
@@ -870,8 +870,8 @@ namespace tdsm.patcher
 
                     if (mref.Name == "Get" && ins.Next.Next.OpCode == OpCodes.Ceq && ins.Next.Next.Next.OpCode == OpCodes.Brtrue_S)
                     {
-//                        ins.Next.Next = mil.Create(OpCodes.Call, opInequality);
-//                        ins.Next.Next.Next = mil.Create(OpCodes.Brfalse, ins.Next.Next.Next.Operand as Instruction);
+                        //                        ins.Next.Next = mil.Create(OpCodes.Call, opInequality);
+                        //                        ins.Next.Next.Next = mil.Create(OpCodes.Brfalse, ins.Next.Next.Next.Operand as Instruction);
                         mil.Replace(ins.Next.Next, mil.Create(OpCodes.Call, opInequality));
                         mil.Replace(ins.Next.Next.Next, mil.Create(OpCodes.Brfalse, ins.Next.Next.Next.Operand as Instruction));
                     }
@@ -881,13 +881,13 @@ namespace tdsm.patcher
             //Section 2 for inequality
             foreach (var mtd in _asm.MainModule.Types
                      .SelectMany(x => x.Methods)
-                     .Where(y => y.Body != null && y.Body.Instructions.Where(z=> 
+                     .Where(y => y.Body != null && y.Body.Instructions.Where(z =>
                                                                     z.OpCode == OpCodes.Newobj
                                                                     && z.Operand is MethodReference
                                                                     && (z.Operand as MethodReference).DeclaringType.FullName == ("Terraria.Tile")
                                                                     ).Count() > 0))
             {
-                var instructions = mtd.Body.Instructions.Where(z=> 
+                var instructions = mtd.Body.Instructions.Where(z =>
                                                                z.OpCode == OpCodes.Newobj
                                                                && z.Operand is MethodReference
                                                                && (z.Operand as MethodReference).DeclaringType.FullName == ("Terraria.Tile")

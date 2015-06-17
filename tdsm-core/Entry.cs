@@ -509,8 +509,9 @@ namespace tdsm.core
         [Hook(HookOrder.NORMAL)]
         void OnPlayerJoin(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)
         {
-            var sl = Terraria.Netplay.serverSock[args.Slot];
-
+            //The player may randomly disconnect at any time, and if it's before the point of saving then the data may be lost.
+            //So we must ensure the data is saved.
+            ServerCharacters.CharacterManager.EnsureSave = true;
         }
 
         [Hook(HookOrder.NORMAL)]

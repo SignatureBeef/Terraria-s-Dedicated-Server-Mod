@@ -877,7 +877,7 @@ namespace tdsm.core.Messages.Out
 
         sealed class SealedBinaryWriter : System.IO.BinaryWriter
         {
-            public SealedBinaryWriter(Stream stream) : base(stream, Encoding.ASCII) { }
+            public SealedBinaryWriter(Stream stream) : base(stream, Encoding.UTF8) { }
         }
 
         public void Begin()
