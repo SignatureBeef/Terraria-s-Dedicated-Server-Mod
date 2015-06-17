@@ -60,12 +60,13 @@
     <StartupObject>tdsm.patcher.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\cecil\bin\net_4_0_Debug\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\Binaries\Mono.Cecil.dll</HintPath>
-    </Reference>
     <Reference Include="Vestris.ResourceLib">
       <HintPath>..\External\Vestris.ResourceLib.dll</HintPath>
     </Reference>
