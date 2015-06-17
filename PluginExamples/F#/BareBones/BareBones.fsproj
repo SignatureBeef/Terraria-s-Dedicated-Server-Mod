@@ -43,17 +43,13 @@
     <Reference Include="tdsm">
       <HintPath>..\..\..\Binaries\tdsm.exe</HintPath>
     </Reference>
+    <Reference Include="tdsm.api">
+      <HintPath>..\..\..\Binaries\tdsm.api.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library1.fs" />
     <None Include="Script.fsx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\tdsm-api\tdsm-api.csproj">
-      <Name>tdsm-api</Name>
-      <Project>{a1f792b2-5d80-4de4-b5db-7a05dbeabd60}</Project>
-      <Private>True</Private>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
