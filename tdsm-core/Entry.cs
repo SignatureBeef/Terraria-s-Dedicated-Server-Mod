@@ -611,6 +611,19 @@ namespace tdsm.core
             }
         }
 
+        [Hook(HookOrder.NORMAL)]
+        void OnPlayerAuthenticationChanged(ref HookContext ctx, ref HookArgs.PlayerAuthenticationChanged args)
+        {
+            if (Terraria.Main.ServerSideCharacter)
+            {
+                var cfg = ServerCharacters.CharacterManager.LoadPlayerData(ctx.Player, true);
+                if (cfg != null)
+                {
+                    cfg.ApplyToPlayer(ctx.Player);
+                }
+            }
+        }
+
         void OnLogFinished()
         {
             Thread.Sleep(500);

@@ -7,13 +7,6 @@ namespace tdsm.core.ServerCharacters
 {
     public static class CharacterManager
     {
-        public class NewPlayerInfo
-        {
-            public int Mana { get; set; }
-            public int Health { get; set; }
-
-            public PlayerItem[] Inventory { get; set; }
-        }
 
         public static NewPlayerInfo StartingOutInfo = new NewPlayerInfo()
         {
@@ -60,7 +53,7 @@ namespace tdsm.core.ServerCharacters
             }
         }
 
-        public static ServerCharacter LoadPlayerData(Player player)
+        public static ServerCharacter LoadPlayerData(Player player, bool returnNewInfo = false)
         {
             if (player.AuthenticatedAs != null)
             {
@@ -70,6 +63,8 @@ namespace tdsm.core.ServerCharacters
                     var json = System.IO.File.ReadAllText(file);
                     return Newtonsoft.Json.JsonConvert.DeserializeObject<ServerCharacter>(json);
                 }
+                else if (returnNewInfo)
+                    return new ServerCharacter(StartingOutInfo);
             }
             return null;
         }

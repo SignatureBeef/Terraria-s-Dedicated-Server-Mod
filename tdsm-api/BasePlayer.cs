@@ -16,8 +16,35 @@ namespace tdsm.api
 
         public void SetAuthentication(string auth, string by)
         {
+            var ctx = new Plugin.HookContext()
+            {
+                Player = this as Terraria.Player,
+                Connection = this.Connection
+            };
+            var changing = new Plugin.HookArgs.PlayerAuthenticationChanging()
+            {
+                AuthenticatedAs = this.AuthenticatedAs,
+                AuthenticatedBy = this.AuthenticatedBy
+            };
+
+            Plugin.HookPoints.PlayerAuthenticationChanging.Invoke(ref ctx, ref changing);
+            if (ctx.Result != Plugin.HookResult.CONTINUE) return;
+
             this.AuthenticatedAs = auth;
             this.AuthenticatedBy = by;
+
+            ctx = new Plugin.HookContext()
+            {
+                Player = this as Terraria.Player,
+                Connection = this.Connection
+            };
+            var changed = new Plugin.HookArgs.PlayerAuthenticationChanged()
+            {
+                AuthenticatedAs = this.AuthenticatedAs,
+                AuthenticatedBy = this.AuthenticatedBy
+            };
+
+            Plugin.HookPoints.PlayerAuthenticationChanged.Invoke(ref ctx, ref changed);
         }
 
         public override string Name

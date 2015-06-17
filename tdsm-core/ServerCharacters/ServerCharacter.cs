@@ -1,9 +1,18 @@
 ﻿using System;
 using System.Linq;
+using tdsm.core.Messages.Out;
 using Terraria;
 
 namespace tdsm.core.ServerCharacters
 {
+    public class NewPlayerInfo
+    {
+        public int Mana { get; set; }
+        public int Health { get; set; }
+
+        public PlayerItem[] Inventory { get; set; }
+    }
+
     public class ServerCharacter : IDisposable
     {
         public bool Male { get; set; }
@@ -108,6 +117,11 @@ namespace tdsm.core.ServerCharacters
             //}
         }
 
+        public ServerCharacter(NewPlayerInfo info)
+        {
+
+        }
+
         /// <summary>
         /// Applies server config data to the player
         /// </summary>
@@ -173,6 +187,17 @@ namespace tdsm.core.ServerCharacters
 
                 player.armor[slotItem.Slot] = item;
             }
+
+            //Update client
+            this.Send(player);
+        }
+
+        public void Send(Player player)
+        {
+            var msg = NewNetMessage.PrepareThreadInstance();
+            msg.PlayerData(player.whoAmi);
+            msg.BuildPlayerUpdate(player.whoAmi);
+            msg.Broadcast();
         }
 
         public void Dispose()

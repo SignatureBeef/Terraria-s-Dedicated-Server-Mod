@@ -28,6 +28,8 @@ namespace tdsm.api.Plugin
         public static readonly HookPoint<HookArgs.ServerPassReceived> ServerPassReceived;
         public static readonly HookPoint<HookArgs.PlayerPassReceived> PlayerPassReceived;
         public static readonly HookPoint<HookArgs.PlayerDataReceived> PlayerDataReceived;
+        public static readonly HookPoint<HookArgs.PlayerAuthenticationChanging> PlayerAuthenticationChanging;
+        public static readonly HookPoint<HookArgs.PlayerAuthenticationChanged> PlayerAuthenticationChanged;
         public static readonly HookPoint<HookArgs.StateUpdateReceived> StateUpdateReceived;
         public static readonly HookPoint<HookArgs.InventoryItemReceived> InventoryItemReceived;
         public static readonly HookPoint<HookArgs.ObituaryReceived> ObituaryReceived;
@@ -107,6 +109,8 @@ namespace tdsm.api.Plugin
             PlayerEnteringGame = new HookPoint<HookArgs.PlayerEnteringGame>("player-entering-game");
             PlayerEnteredGame = new HookPoint<HookArgs.PlayerEnteredGame>("player-entered-game");
             PlayerLeftGame = new HookPoint<HookArgs.PlayerLeftGame>("player-left-game");
+            PlayerAuthenticationChanging = new HookPoint<HookArgs.PlayerAuthenticationChanging>("player-auth-changing");
+            PlayerAuthenticationChanged = new HookPoint<HookArgs.PlayerAuthenticationChanged>("player-auth-change");
             //Explosion = new HookPoint<HookArgs.Explosion>("explosion");
             SignTextSet = new HookPoint<HookArgs.SignTextSet>("sign-text-set");
             SignTextGet = new HookPoint<HookArgs.SignTextGet>("sign-text-get");
@@ -152,6 +156,18 @@ namespace tdsm.api.Plugin
             public int Y { get; set; }
             public int Type { get; set; }
             public int Start { get; set; }
+        }
+
+        public struct PlayerAuthenticationChanging
+        {
+            public string AuthenticatedAs { get; set; }
+            public string AuthenticatedBy { get; set; }
+        }
+
+        public struct PlayerAuthenticationChanged
+        {
+            public string AuthenticatedAs { get; set; }
+            public string AuthenticatedBy { get; set; }
         }
 
         public struct InvasionNPCSpawn
@@ -532,7 +548,7 @@ namespace tdsm.api.Plugin
             public string Name { get; set; }
             public int Prefix { get; set; }
             public int NetID { get; set; }
-            
+
 #if Full_API
             public Item Item { get; set; }
 #endif
