@@ -8,6 +8,8 @@ namespace tdsm.patcher
 {
     public class Injector : IDisposable
     {
+        /* TODO: Replace all .Select(...).First() with Single. I haven't had the time for them all */
+
         private AssemblyDefinition _asm;
         private AssemblyDefinition _self;
 
@@ -82,10 +84,10 @@ namespace tdsm.patcher
 
         public void HookDedServEnd()
         {
-            var main = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            var method = main.Methods.Where(x => x.Name == "DedServ").First();
-            var callback = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
-            var replacement = callback.Methods.Where(x => x.Name == "OnProgramFinished" && x.IsStatic).First();
+            var main = _asm.MainModule.Types.Single(x => x.Name == "Main");
+            var method = main.Methods.Single(x => x.Name == "DedServ");
+            var callback = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
+            var replacement = callback.Methods.Single(x => x.Name == "OnProgramFinished" && x.IsStatic);
 
             var imported = _asm.MainModule.Import(replacement);
             var il = method.Body.GetILProcessor();
@@ -95,10 +97,10 @@ namespace tdsm.patcher
 
         public void HookConfig()
         {
-            var serv = _asm.MainModule.Types.Where(x => x.Name == "ProgramServer").First();
-            var main = serv.Methods.Where(x => x.Name == "Main" && x.IsStatic).First();
-            var ourClass = _self.MainModule.Types.Where(x => x.Name == "Configuration").First();
-            var replacement = ourClass.Methods.Where(x => x.Name == "Load" && x.IsStatic).First();
+            var serv = _asm.MainModule.Types.Single(x => x.Name == "ProgramServer");
+            var main = serv.Methods.Single(x => x.Name == "Main" && x.IsStatic);
+            var ourClass = _self.MainModule.Types.Single(x => x.Name == "Configuration");
+            var replacement = ourClass.Methods.Single(x => x.Name == "Load" && x.IsStatic);
 
             //Grab all occurances of "LoadDedConfig" and route it to ours
             var toBeReplaced = main.Body.Instructions
@@ -122,13 +124,18 @@ namespace tdsm.patcher
 
         public void HookInvasions()
         {
-            var serv = _asm.MainModule.Types.Where(x => x.Name == "NPC").First();
-            var main = serv.Methods.Where(x => x.Name == "SpawnNPC" && x.IsStatic).First();
+            var serv = _asm.MainModule.Types.Single(x => x.Name == "NPC");
+            var main = serv.Methods.Single(x => x.Name == "SpawnNPC" && x.IsStatic);
 
             var il = main.Body.GetILProcessor();
-            var callback = _self.MainModule.Types.Where(x => x.Name == "NPCCallback").First().Methods.Where(x => x.Name == "OnInvasionNPCSpawn").First();
+            var callback = _self.MainModule.Types
+                .Single(x => x.Name == "NPCCallback")
+                .Methods.Single(x => x.Name == "OnInvasionNPCSpawn");
 
-            var ins = main.Body.Instructions.Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "invasionType").ToArray()[1]; ;
+            var ins = main.Body.Instructions.Where(x =>
+                x.OpCode == OpCodes.Ldsfld
+                && x.Operand is FieldReference
+                && (x.Operand as FieldReference).Name == "invasionType").ToArray()[1];
 
 
             /*ldloc.2
@@ -152,11 +159,11 @@ namespace tdsm.patcher
 
         public void FixStatusTexts()
         {
-            var serv = _asm.MainModule.Types.Where(x => x.Name == "WorldFile").First();
-            var main = serv.Methods.Where(x => x.Name == "saveWorld" && x.IsStatic).First();
+            var serv = _asm.MainModule.Types.Single(x => x.Name == "WorldFile");
+            var main = serv.Methods.Single(x => x.Name == "saveWorld" && x.IsStatic);
 
             var il = main.Body.GetILProcessor();
-            var statusText = _asm.MainModule.Types.Where(x => x.Name == "Main").First().Fields.Where(x => x.Name == "statusText").First();
+            var statusText = _asm.MainModule.Types.Single(x => x.Name == "Main").Fields.Single(x => x.Name == "statusText");
 
             var ins = main.Body.Instructions.Where(x => x.OpCode == OpCodes.Leave_S).Last();
 

@@ -604,6 +604,11 @@ namespace tdsm.core
             }
 
             if (_useTimeLock) Terraria.Main.time = TimelockTime;
+
+            if (Terraria.Main.ServerSideCharacter)
+            {
+                ServerCharacters.CharacterManager.SaveAll();
+            }
         }
 
         void OnLogFinished()
