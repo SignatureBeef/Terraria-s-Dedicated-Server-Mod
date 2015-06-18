@@ -8,8 +8,6 @@ namespace tdsm.patcher
 {
     public class Injector : IDisposable
     {
-        /* TODO: Replace all .Select(...).First() with Single. I haven't had the time for them all */
-
         private AssemblyDefinition _asm;
         private AssemblyDefinition _self;
 
@@ -75,8 +73,7 @@ namespace tdsm.patcher
         public string GetAssemblyVersion()
         {
             return _asm.CustomAttributes
-                .Where(x => x.AttributeType.Name == "AssemblyFileVersionAttribute")
-                .First()
+                .Single(x => x.AttributeType.Name == "AssemblyFileVersionAttribute")
                 .ConstructorArguments
                 .First()
                 .Value as string;
@@ -173,11 +170,11 @@ namespace tdsm.patcher
 
         public void HookWorldFile_DEBUG()
         {
-            var serv = _asm.MainModule.Types.Where(x => x.Name == "WorldGen").First();
-            var main = serv.Methods.Where(x => x.Name == "serverLoadWorldCallBack" && x.IsStatic).First();
+            var serv = _asm.MainModule.Types.Single(x => x.Name == "WorldGen");
+            var main = serv.Methods.Single(x => x.Name == "serverLoadWorldCallBack" && x.IsStatic);
 
-            var ourClass = _self.MainModule.Types.Where(x => x.Name == "WorldFileCallback").First();
-            var replacement = ourClass.Methods.Where(x => x.Name == "loadWorld" && x.IsStatic).First();
+            var ourClass = _self.MainModule.Types.Single(x => x.Name == "WorldFileCallback");
+            var replacement = ourClass.Methods.Single(x => x.Name == "loadWorld" && x.IsStatic);
 
             var toBeReplaced = main.Body.Instructions
                 .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Call
@@ -193,12 +190,12 @@ namespace tdsm.patcher
 
             //            lastMaxTilesX
 
-            var fld = serv.Fields.Where(x => x.Name == "lastMaxTilesX").First();
+            var fld = serv.Fields.Single(x => x.Name == "lastMaxTilesX");
             fld.IsPrivate = false;
             fld.IsFamily = false;
             fld.IsPublic = true;
 
-            fld = serv.Fields.Where(x => x.Name == "lastMaxTilesY").First();
+            fld = serv.Fields.Single(x => x.Name == "lastMaxTilesY");
             fld.IsPrivate = false;
             fld.IsFamily = false;
             fld.IsPublic = true;
@@ -206,11 +203,11 @@ namespace tdsm.patcher
 
         public void HookStatusText()
         {
-            var main = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            var dedServ = main.Methods.Where(x => x.Name == "DedServ").First();
+            var main = _asm.MainModule.Types.Single(x => x.Name == "Main");
+            var dedServ = main.Methods.Single(x => x.Name == "DedServ");
 
-            var selfType = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
-            var callback = selfType.Methods.Where(x => x.Name == "OnStatusTextChange").First();
+            var selfType = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
+            var callback = selfType.Methods.Single(x => x.Name == "OnStatusTextChange");
 
             var startInstructions = dedServ.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "oldStatusText")
@@ -244,10 +241,10 @@ namespace tdsm.patcher
 
         public void HookNetMessage()
         {
-            var server = _asm.MainModule.Types.Where(x => x.Name == "NetMessage").First();
-            var method = server.Methods.Where(x => x.Name == "SendData").First();
+            var server = _asm.MainModule.Types.Single(x => x.Name == "NetMessage");
+            var method = server.Methods.Single(x => x.Name == "SendData");
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "NetMessageCallback").First();
+            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "NetMessageCallback");
             var callback = userInputClass.Methods.First(m => m.Name == "SendData");
 
             var il = method.Body.GetILProcessor();
@@ -273,10 +270,10 @@ namespace tdsm.patcher
 
         public void HookConsoleTitle()
         {
-            var cls = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            var method = cls.Methods.Where(x => x.Name == "DedServ").First();
+            var cls = _asm.MainModule.Types.Single(x => x.Name == "Main");
+            var method = cls.Methods.Single(x => x.Name == "DedServ");
 
-            var cbc = _self.MainModule.Types.Where(x => x.Name == "GameWindow").First();
+            var cbc = _self.MainModule.Types.Single(x => x.Name == "GameWindow");
             var callback = cbc.Methods.First(m => m.Name == "SetTitle");
 
             var il = method.Body.GetILProcessor();
@@ -294,10 +291,10 @@ namespace tdsm.patcher
 
         public void HookProgramStart()
         {
-            var server = _asm.MainModule.Types.Where(x => x.Name == "ProgramServer").First();
-            var method = server.Methods.Where(x => x.Name == "Main").First();
+            var server = _asm.MainModule.Types.Single(x => x.Name == "ProgramServer");
+            var method = server.Methods.Single(x => x.Name == "Main");
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
+            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
             var callback = userInputClass.Methods.First(m => m.Name == "OnProgramStarted");
 
             var il = method.Body.GetILProcessor();
@@ -314,10 +311,10 @@ namespace tdsm.patcher
 
         public void HookUpdateServer()
         {
-            var server = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            var method = server.Methods.Where(x => x.Name == "UpdateServer").First();
+            var server = _asm.MainModule.Types.Single(x => x.Name == "Main");
+            var method = server.Methods.Single(x => x.Name == "UpdateServer");
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
+            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
             var callback = userInputClass.Methods.First(m => m.Name == "UpdateServerEnd");
 
             var il = method.Body.GetILProcessor();
@@ -326,10 +323,10 @@ namespace tdsm.patcher
 
         public void HookInitialise()
         {
-            var server = _asm.MainModule.Types.Where(x => x.Name == "Netplay").First();
-            var method = server.Methods.Where(x => x.Name == "Init").First();
+            var server = _asm.MainModule.Types.Single(x => x.Name == "Netplay");
+            var method = server.Methods.Single(x => x.Name == "Init");
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
+            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
             var callback = userInputClass.Methods.First(m => m.Name == "Initialise");
 
             var il = method.Body.GetILProcessor();
@@ -345,10 +342,10 @@ namespace tdsm.patcher
 
         public void HookWorldEvents()
         {
-            var worldGen = _asm.MainModule.Types.Where(x => x.Name == "WorldGen").First();
-            var method = worldGen.Methods.Where(x => x.Name == "generateWorld").First();
+            var worldGen = _asm.MainModule.Types.Single(x => x.Name == "WorldGen");
+            var method = worldGen.Methods.Single(x => x.Name == "generateWorld");
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
+            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
             var callbackBegin = userInputClass.Methods.First(m => m.Name == "WorldGenerateBegin");
             var callbackEnd = userInputClass.Methods.First(m => m.Name == "WorldGenerateEnd");
 
@@ -356,8 +353,8 @@ namespace tdsm.patcher
             il.InsertBefore(method.Body.Instructions.First(), il.Create(OpCodes.Call, _asm.MainModule.Import(callbackBegin)));
             il.InsertBefore(method.Body.Instructions.Last(), il.Create(OpCodes.Call, _asm.MainModule.Import(callbackEnd)));
 
-            var worldFile = _asm.MainModule.Types.Where(x => x.Name == "WorldFile").First();
-            method = worldFile.Methods.Where(x => x.Name == "loadWorld").First();
+            var worldFile = _asm.MainModule.Types.Single(x => x.Name == "WorldFile");
+            method = worldFile.Methods.Single(x => x.Name == "loadWorld");
 
             callbackBegin = userInputClass.Methods.First(m => m.Name == "WorldLoadBegin");
             callbackEnd = userInputClass.Methods.First(m => m.Name == "WorldLoadEnd");
@@ -386,27 +383,25 @@ namespace tdsm.patcher
 
         public void PatchServer()
         {
-            var netplay = _asm.MainModule.Types.Where(x => x.Name == "Netplay").First();
-            var method = netplay.Methods.Where(x => x.Name == "StartServer").First();
+            var netplay = _asm.MainModule.Types.Single(x => x.Name == "Netplay");
+            var method = netplay.Methods.Single(x => x.Name == "StartServer");
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "NetplayCallback").First();
+            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "NetplayCallback");
             var callback = userInputClass.Methods.First(m => m.Name == "StartServer");
 
-            var ins = method.Body.Instructions
-                .Where(x => x.OpCode == OpCodes.Ldftn)
-                .First();
+            var ins = method.Body.Instructions.Single(x => x.OpCode == OpCodes.Ldftn);
             ins.Operand = _asm.MainModule.Import(callback);
 
             //Make the Player inherit our defaults
-            var player = _asm.MainModule.Types.Where(x => x.Name == "Player").First();
-            var baseType = _self.MainModule.Types.Where(x => x.Name == "BasePlayer").First();
-            //var interfaceType = _self.MainModule.Types.Where(x => x.Name == "ISender").First();
+            var player = _asm.MainModule.Types.Single(x => x.Name == "Player");
+            var baseType = _self.MainModule.Types.Single(x => x.Name == "BasePlayer");
+            //var interfaceType = _self.MainModule.Types.Single(x => x.Name == "ISender");
 
             player.BaseType = _asm.MainModule.Import(baseType);
 
             //Make the UpdateServer function public
-            var main = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            var us = main.Methods.Where(x => x.Name == "UpdateServer").First();
+            var main = _asm.MainModule.Types.Single(x => x.Name == "Main");
+            var us = main.Methods.Single(x => x.Name == "UpdateServer");
             us.IsPrivate = false;
             us.IsPublic = true;
 
@@ -428,8 +423,8 @@ namespace tdsm.patcher
         public void FixNetplay()
         {
             const String NATGuid = "AE1E00AA-3FD5-403C-8A27-2BBDC30CD0E1";
-            var netplay = _asm.MainModule.Types.Where(x => x.Name == "Netplay").First();
-            var staticConstructor = netplay.Methods.Where(x => x.Name == ".cctor").First();
+            var netplay = _asm.MainModule.Types.Single(x => x.Name == "Netplay");
+            var staticConstructor = netplay.Methods.Single(x => x.Name == ".cctor");
 
             var il = staticConstructor.Body.GetILProcessor();
             var counting = 0;
@@ -448,13 +443,12 @@ namespace tdsm.patcher
                 }
             }
 
-            var fl = netplay.Fields.Where(x => x.Name == "upnpnat").FirstOrDefault();
+            var fl = netplay.Fields.SingleOrDefault(x => x.Name == "upnpnat");
             if (fl != null)
                 netplay.Fields.Remove(fl);
 
             //Clear open and close methods, add reference to the APIs
-            var cb = netplay.Methods.Where(x => x.Name == "openPort")
-                .First();
+            var cb = netplay.Methods.Single(x => x.Name == "openPort");
             //    .Body;
             //cb.InitLocals = false;
             //cb.Variables.Clear();
@@ -463,8 +457,7 @@ namespace tdsm.patcher
             //cb.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Nop));
             //cb.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Ret));
 
-            var close = netplay.Methods.Where(x => x.Name == "closePort")
-                .First();
+            var close = netplay.Methods.Single(x => x.Name == "closePort");
             //    .Body;
             //close.InitLocals = false;
             //close.Variables.Clear();
@@ -473,16 +466,16 @@ namespace tdsm.patcher
             //close.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Ret));
             netplay.Methods.Remove(close);
 
-            fl = netplay.Fields.Where(x => x.Name == "mappings").FirstOrDefault();
+            fl = netplay.Fields.SingleOrDefault(x => x.Name == "mappings");
             if (fl != null)
                 netplay.Fields.Remove(fl);
 
             //use our uPNP (when using native terraria server)
-            var natClass = _self.MainModule.Types.Where(x => x.Name == "NAT").First();
+            var natClass = _self.MainModule.Types.Single(x => x.Name == "NAT");
             var openCallback = natClass.Methods.First(m => m.Name == "OpenPort");
             var closeCallback = natClass.Methods.First(m => m.Name == "ClosePort");
 
-            var serverLoop = netplay.Methods.Where(x => x.Name == "ServerLoop").First();
+            var serverLoop = netplay.Methods.Single(x => x.Name == "ServerLoop");
 
             foreach (var ins in serverLoop.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Call
@@ -504,8 +497,8 @@ namespace tdsm.patcher
 
         public void FixEntryPoint()
         {
-            var netplay = _asm.MainModule.Types.Where(x => x.Name == "ProgramServer").First();
-            var staticConstructor = netplay.Methods.Where(x => x.Name == "Main").First();
+            var netplay = _asm.MainModule.Types.Single(x => x.Name == "ProgramServer");
+            var staticConstructor = netplay.Methods.Single(x => x.Name == "Main");
 
             var il = staticConstructor.Body.GetILProcessor();
             var counting = 0;
@@ -527,8 +520,8 @@ namespace tdsm.patcher
 
         public void FixSavePath()
         {
-            var netplay = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            var staticConstructor = netplay.Methods.Where(x => x.Name == ".cctor").First();
+            var netplay = _asm.MainModule.Types.Single(x => x.Name == "Main");
+            var staticConstructor = netplay.Methods.Single(x => x.Name == ".cctor");
 
             var il = staticConstructor.Body.GetILProcessor();
             var removing = false;
@@ -550,8 +543,8 @@ namespace tdsm.patcher
                 if (ins.OpCode == OpCodes.Stsfld && ins.Operand is FieldDefinition && (ins.Operand as FieldDefinition).Name == "SavePath")
                 {
                     //Insert the new value
-                    var patches = _self.MainModule.Types.Where(k => k.Name == "Patches").First();
-                    var dir = _asm.MainModule.Import(patches.Methods.Where(k => k.Name == "GetCurrentDirectory").First());
+                    var patches = _self.MainModule.Types.Single(k => k.Name == "Patches");
+                    var dir = _asm.MainModule.Import(patches.Methods.Single(k => k.Name == "GetCurrentDirectory"));
 
                     il.InsertBefore(ins, il.Create(OpCodes.Call, dir));
                     removing = false;
@@ -568,14 +561,13 @@ namespace tdsm.patcher
 
         public void SkipMenu()
         {
-            var main = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
+            var main = _asm.MainModule.Types.Single(x => x.Name == "Main");
 
-            var initialise = main.Methods.Where(x => x.Name == "Initialize").First();
+            var initialise = main.Methods.Single(x => x.Name == "Initialize");
             var loc = initialise.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldDefinition)
                 //.Select(x => x.Operand as FieldDefinition)
-                .Where(x => (x.Operand as FieldDefinition).Name == "skipMenu")
-                .First();
+                .Single(x => (x.Operand as FieldDefinition).Name == "skipMenu");
             var il = initialise.Body.GetILProcessor();
             il.InsertBefore(loc, il.Create(OpCodes.Ret));
         }
@@ -585,17 +577,16 @@ namespace tdsm.patcher
         /// </summary>
         public void PatchCommandLine()
         {
-            var t_mainClass = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
+            var t_mainClass = _asm.MainModule.Types.Single(x => x.Name == "Main");
 
             //Simply switch to ours
-            var serv = t_mainClass.Methods.Where(x => x.Name == "DedServ").First();
+            var serv = t_mainClass.Methods.Single(x => x.Name == "DedServ");
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "UserInput").First();
+            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "UserInput");
             var callback = userInputClass.Methods.First(m => m.Name == "ListenForCommands");
 
             var ins = serv.Body.Instructions
-                .Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "startDedInput")
-                .First();
+                .Single(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "startDedInput");
             ins.Operand = _asm.MainModule.Import(callback);
 
             var ignore = new string[] {
@@ -612,7 +603,7 @@ namespace tdsm.patcher
                     && (x.Operand as MethodReference).DeclaringType.FullName == "System.Console")
                 .ToArray();
 
-            var tools = _self.MainModule.Types.Where(x => x.Name == "Tools").First();
+            var tools = _self.MainModule.Types.Single(x => x.Name == "Tools");
             foreach (var oci in cwi)
             {
                 var mr = oci.Operand as MethodReference;
@@ -683,17 +674,17 @@ namespace tdsm.patcher
         /// </summary>
         public void ChangeTileToStruct()
         {
-            var tileClass = _asm.MainModule.Types.Where(x => x.Name == "Tile").First();
-            var refClass = _self.MainModule.Types.Where(x => x.Name == "TileData").First();
+            var tileClass = _asm.MainModule.Types.Single(x => x.Name == "Tile");
+            var refClass = _self.MainModule.Types.Single(x => x.Name == "TileData");
 
-            var userInput = _self.MainModule.Types.Where(x => x.Name == "UserInput").First();
-            var DefaultTile = userInput.Fields.Where(x => x.Name == "DefaultTile").First();
+            var userInput = _self.MainModule.Types.Single(x => x.Name == "UserInput");
+            var DefaultTile = userInput.Fields.Single(x => x.Name == "DefaultTile");
 
             //tileClass.BaseType = refClass.BaseType;
             //tileClass.IsSequentialLayout = true;
 
             //Update nulls to defaults
-            var mainClass = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
+            var mainClass = _asm.MainModule.Types.Single(x => x.Name == "Main");
 
             var defaultTile = _asm.MainModule.Import(DefaultTile);
 
@@ -760,14 +751,14 @@ namespace tdsm.patcher
 
 
 
-            var tl = _asm.MainModule.Types.Where(x => x.Name == "Tile").First();
+            var tl = _asm.MainModule.Types.Single(x => x.Name == "Tile");
             MethodDefinition opInequality, opEquality;
             //Add operators that call a static API function for comparisions
 
 
             //Do == operator
             var boolType = _asm.MainModule.Import(typeof(Boolean));
-            var ui = _self.MainModule.Types.Where(x => x.Name == "UserInput").First();
+            var ui = _self.MainModule.Types.Single(x => x.Name == "UserInput");
             var method = new MethodDefinition("op_Equality",
                                                   MethodAttributes.Public |
                                                   MethodAttributes.Static |
@@ -778,7 +769,7 @@ namespace tdsm.patcher
             method.Parameters.Add(new ParameterDefinition("t2", ParameterAttributes.None, tl));
 
 
-            var callback = ui.Methods.Where(x => x.Name == "Tile_Equality").First();
+            var callback = ui.Methods.Single(x => x.Name == "Tile_Equality");
 
             var il = method.Body.GetILProcessor();
 
@@ -812,7 +803,7 @@ namespace tdsm.patcher
             method.Parameters.Add(new ParameterDefinition("t2", ParameterAttributes.None, tl));
 
 
-            callback = ui.Methods.Where(x => x.Name == "Tile_Inequality").First();
+            callback = ui.Methods.Single(x => x.Name == "Tile_Inequality");
 
             il = method.Body.GetILProcessor();
 
@@ -940,15 +931,16 @@ namespace tdsm.patcher
 
         public void HookMessageBuffer()
         {
-            var tClass = _asm.MainModule.Types.Where(x => x.Name == "MessageBuffer").First();
-            var getData = tClass.Methods.Where(x => x.Name == "GetData").First();
-            var whoAmI = tClass.Fields.Where(x => x.Name == "whoAmI").First();
+            var tClass = _asm.MainModule.Types.Single(x => x.Name == "MessageBuffer");
+            var getData = tClass.Methods.Single(x => x.Name == "GetData");
+            var whoAmI = tClass.Fields.Single(x => x.Name == "whoAmI");
 
             var insertionPoint = getData.Body.Instructions
-                .Where(x => x.OpCode == OpCodes.Callvirt && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "set_Position")
-                .First();
+                .Single(x => x.OpCode == OpCodes.Callvirt
+                    && x.Operand is MethodReference
+                    && (x.Operand as MethodReference).Name == "set_Position");
 
-            var userInputClass = _self.MainModule.Types.Where(x => x.Name == "MessageBufferCallback").First();
+            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "MessageBufferCallback");
             var callback = userInputClass.Methods.First(m => m.Name == "ProcessPacket");
 
             var il = getData.Body.GetILProcessor();
@@ -972,14 +964,13 @@ namespace tdsm.patcher
                 while (mth.HasBody && hasMatch)
                 {
                     var match = mth.Body.Instructions
-                        .Where(x => x.OpCode == OpCodes.Ldsfld
+                        .SingleOrDefault(x => x.OpCode == OpCodes.Ldsfld
                             && x.Operand is FieldReference
                             && (x.Operand as FieldReference).Name == "netMode"
                             && x.Next.OpCode == OpCodes.Ldc_I4_1
                             && (x.Next.Next.OpCode == OpCodes.Bne_Un_S) // || x.Next.Next.OpCode == OpCodes.Bne_Un)
                             && !offsets.Contains(x)
-                            && (x.Previous == null || x.Previous.OpCode != OpCodes.Bne_Un_S))
-                        .FirstOrDefault();
+                            && (x.Previous == null || x.Previous.OpCode != OpCodes.Bne_Un_S));
 
                     hasMatch = match != null;
                     if (hasMatch)
@@ -1009,10 +1000,10 @@ namespace tdsm.patcher
 
         public void HookSockets()
         {
-            var serverClass = _self.MainModule.Types.Where(x => x.Name == "NetplayCallback").First();
-            var sockClass = _self.MainModule.Types.Where(x => x.Name == "IAPISocket").First();
-            //var targetArray = serverClass.Fields.Where(x => x.Name == "slots").First();
-            var targetField = sockClass.Fields.Where(x => x.Name == "tileSection").First();
+            var serverClass = _self.MainModule.Types.Single(x => x.Name == "NetplayCallback");
+            var sockClass = _self.MainModule.Types.Single(x => x.Name == "IAPISocket");
+            //var targetArray = serverClass.Fields.Single(x => x.Name == "slots");
+            var targetField = sockClass.Fields.Single(x => x.Name == "tileSection");
 
             //Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
             var instructions = _asm.MainModule.Types
@@ -1104,7 +1095,7 @@ namespace tdsm.patcher
                 if (var.Operand is MethodDefinition)
                 {
                     var mth = var.Operand as MethodDefinition;
-                    var ourVar = sockClass.Methods.Where(j => j.Name == mth.Name).FirstOrDefault();
+                    var ourVar = sockClass.Methods.SingleOrDefault(j => j.Name == mth.Name);
                     if (ourVar != null)
                     {
                         var.Operand = _asm.MainModule.Import(ourVar);
@@ -1117,7 +1108,7 @@ namespace tdsm.patcher
                 else if (var.Operand is MemberReference)
                 {
                     var mem = var.Operand as MemberReference;
-                    var ourVar = sockClass.Fields.Where(j => j.Name == mem.Name).FirstOrDefault();
+                    var ourVar = sockClass.Fields.SingleOrDefault(j => j.Name == mem.Name);
                     if (ourVar != null)
                     {
                         var.Operand = _asm.MainModule.Import(ourVar);
@@ -1282,7 +1273,7 @@ namespace tdsm.patcher
 
                         ix += 3;
                     }
-                    else if (removing && ins.OpCode == OpCodes.Callvirt && isPlayingComplete )
+                    else if (removing && ins.OpCode == OpCodes.Callvirt && isPlayingComplete)
                     {
                         if (ins.Operand is MethodReference)
                         {
@@ -1308,11 +1299,11 @@ namespace tdsm.patcher
 
         public void HookNPCSpawning()
         {
-            var npc = _asm.MainModule.Types.Where(x => x.Name == "NPC").First();
-            var newNPC = npc.Methods.Where(x => x.Name == "NewNPC").First();
+            var npc = _asm.MainModule.Types.Single(x => x.Name == "NPC");
+            var newNPC = npc.Methods.Single(x => x.Name == "NewNPC");
 
-            var callback = _self.MainModule.Types.Where(x => x.Name == "NPCCallback").First();
-            var method = callback.Methods.Where(x => x.Name == "CanSpawnNPC").First();
+            var callback = _self.MainModule.Types.Single(x => x.Name == "NPCCallback");
+            var method = callback.Methods.Single(x => x.Name == "CanSpawnNPC");
 
             var il = newNPC.Body.GetILProcessor();
             var first = newNPC.Body.Instructions.First();
@@ -1330,21 +1321,21 @@ namespace tdsm.patcher
 
         public void HookEclipse()
         {
-            var type = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            var mth = type.Methods.Where(x => x.Name == "UpdateTime").First();
+            var type = _asm.MainModule.Types.Single(x => x.Name == "Main");
+            var mth = type.Methods.Single(x => x.Name == "UpdateTime");
 
-            var callback = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
-            var field = callback.Fields.Where(x => x.Name == "StartEclipse").First();
+            var callback = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
+            var field = callback.Fields.Single(x => x.Name == "StartEclipse");
 
             var il = mth.Body.GetILProcessor();
-            var start = il.Body.Instructions.Where(x =>
+            var start = il.Body.Instructions.Single(x =>
                 x.OpCode == OpCodes.Ldsfld
                 && x.Operand is FieldReference
                 && (x.Operand as FieldReference).Name == "hardMode"
                 && x.Previous.OpCode == OpCodes.Call
                 && x.Previous.Operand is MethodReference
                 && (x.Previous.Operand as MethodReference).Name == "StartInvasion"
-            ).First();
+            );
 
             //Preserve
             var old = start.Operand as FieldReference;
@@ -1355,14 +1346,14 @@ namespace tdsm.patcher
             il.InsertAfter(start, il.Create(OpCodes.Ldsfld, old));
 
             //Now find the target instruction if the value is true
-            var startEclipse = il.Body.Instructions.Where(x =>
+            var startEclipse = il.Body.Instructions.Single(x =>
                 x.OpCode == OpCodes.Stsfld
                 && x.Operand is FieldReference
                 && (x.Operand as FieldReference).Name == "eclipse"
                 && x.Next.OpCode == OpCodes.Ldsfld
                 && x.Next.Operand is FieldReference
                 && (x.Next.Operand as FieldReference).Name == "eclipse"
-            ).First().Previous;
+            ).Previous;
             il.InsertAfter(start, il.Create(OpCodes.Brtrue, startEclipse));
 
             //Since all we care about is setting the StartEclipse to TRUE; we need to be able to disable once done.
@@ -1372,21 +1363,21 @@ namespace tdsm.patcher
 
         public void HookBloodMoon()
         {
-            var type = _asm.MainModule.Types.Where(x => x.Name == "Main").First();
-            var mth = type.Methods.Where(x => x.Name == "UpdateTime").First();
+            var type = _asm.MainModule.Types.Single(x => x.Name == "Main");
+            var mth = type.Methods.Single(x => x.Name == "UpdateTime");
 
-            var callback = _self.MainModule.Types.Where(x => x.Name == "MainCallback").First();
-            var field = callback.Fields.Where(x => x.Name == "StartBloodMoon").First();
+            var callback = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
+            var field = callback.Fields.Single(x => x.Name == "StartBloodMoon");
             //return;
             var il = mth.Body.GetILProcessor();
-            var start = il.Body.Instructions.Where(x =>
+            var start = il.Body.Instructions.Single(x =>
                 x.OpCode == OpCodes.Ldsfld
                 && x.Operand is FieldReference
                 && (x.Operand as FieldReference).Name == "spawnEye"
                 && x.Next.Next.OpCode == OpCodes.Ldsfld
                 && x.Next.Next.Operand is FieldReference
                 && (x.Next.Next.Operand as FieldReference).Name == "moonPhase"
-            ).First();
+            );
 
             //Preserve
             var old = start.Operand as FieldReference;
@@ -1408,14 +1399,14 @@ namespace tdsm.patcher
             il.InsertAfter(start, il.Create(OpCodes.Brtrue, begin));
 
             //Since all we care about is setting the StartBloodMoon to TRUE; we need to be able to disable once done.
-            var startBloodMoon = il.Body.Instructions.Where(x =>
+            var startBloodMoon = il.Body.Instructions.Single(x =>
                 x.OpCode == OpCodes.Ldsfld
                 && x.Operand is FieldReference
                 && (x.Operand as FieldReference).Name == "bloodMoon"
                 && x.Next.Next.OpCode == OpCodes.Ldsfld
                 && x.Next.Next.Operand is FieldReference
                 && (x.Next.Next.Operand as FieldReference).Name == "netMode"
-            ).First();
+            );
             il.InsertAfter(startBloodMoon.Next, il.Create(OpCodes.Stsfld, start.Operand as FieldReference));
             il.InsertAfter(startBloodMoon.Next, il.Create(OpCodes.Ldc_I4_0));
         }
@@ -1427,7 +1418,7 @@ namespace tdsm.patcher
             _asm.MainModule.Name = fileName;
 
             //Change the uniqueness from what Terraria has, to something different (that way vanilla isn't picked up by assembly resolutions)
-            var g = _asm.CustomAttributes.Where(x => x.AttributeType.Name == "GuidAttribute").First();
+            var g = _asm.CustomAttributes.Single(x => x.AttributeType.Name == "GuidAttribute");
 
             for (var x = 0; x < _asm.CustomAttributes.Count; x++)
             {
