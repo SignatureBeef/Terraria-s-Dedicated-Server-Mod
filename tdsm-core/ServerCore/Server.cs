@@ -316,7 +316,7 @@ namespace tdsm.core.ServerCore
             {
                 try
                 {
-                    (Terraria.Netplay.serverSock[i] as ServerSlot).Reset();
+                    Terraria.Netplay.serverSock[i].Reset();
                 }
                 catch { }
             }

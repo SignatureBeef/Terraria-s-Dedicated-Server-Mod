@@ -17,9 +17,9 @@ namespace tdsm.core.Messages.In
             int num138 = (int)ReadInt16(readBuffer);
             int num139 = (int)ReadInt16(readBuffer);
             byte b10 = ReadByte(readBuffer);
-            if (num137 >= 200)
+            if (num137 >= 200 && Entry.EnableCheatProtection)
             {
-                NewNetMessage.BootPlayer(whoAmI, "cheating attempt detected: Invalid kick-out");
+                NewNetMessage.BootPlayer(whoAmI, "Cheating attempt detected: Invalid kick-out");
                 return;
             }
             if (Main.netMode == 1)

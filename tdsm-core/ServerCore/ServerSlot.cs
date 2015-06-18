@@ -65,7 +65,7 @@ namespace tdsm.core.ServerCore
         //The base.state will always be zero.
         //Luckily how the sockets works this ServerSlot class is only ever used by the core.
         //The core will never use base.state
-        public SlotState state
+        public new SlotState state
         {
             get { return conn == null ? SlotState.VACANT : conn.State; }
             set
@@ -130,19 +130,19 @@ namespace tdsm.core.ServerCore
                 this.spamWater = 0f;
                 return;
             }
-            if (this.spamProjectile > this.spamProjectileMax)
+            if (this.spamProjectile > this.spamProjectileMax && Entry.EnableCheatProtection)
             {
                 NewNetMessage.BootPlayer(this.whoAmI, "Cheating attempt detected: Projectile spam");
             }
-            if (this.spamAddBlock > this.spamAddBlockMax)
+            if (this.spamAddBlock > this.spamAddBlockMax && Entry.EnableCheatProtection)
             {
                 NewNetMessage.BootPlayer(this.whoAmI, "Cheating attempt detected: Add tile spam");
             }
-            if (this.spamDelBlock > this.spamDelBlockMax)
+            if (this.spamDelBlock > this.spamDelBlockMax && Entry.EnableCheatProtection)
             {
                 NewNetMessage.BootPlayer(this.whoAmI, "Cheating attempt detected: Remove tile spam");
             }
-            if (this.spamWater > this.spamWaterMax)
+            if (this.spamWater > this.spamWaterMax && Entry.EnableCheatProtection)
             {
                 NewNetMessage.BootPlayer(this.whoAmI, "Cheating attempt detected: Liquid spam");
             }
@@ -166,6 +166,29 @@ namespace tdsm.core.ServerCore
             {
                 this.spamWater = 0f;
             }
+        }
+
+        public override bool SectionRange(int size, int firstX, int firstY)
+        {
+            for (var i = 0; i < 4; i++)
+            {
+                var x = firstX;
+                var y = firstY;
+                if (i == 1) x += size;
+
+                if (i == 2) y += size;
+                if (i == 3)
+                {
+                    x += size;
+                    y += size;
+                }
+
+                var sectionX = Netplay.GetSectionX(x);
+                var sectionY = Netplay.GetSectionY(y);
+                if (this.tileSection[sectionX, sectionY])
+                    return true;
+            }
+            return false;
         }
 
         public override void SpamClear()

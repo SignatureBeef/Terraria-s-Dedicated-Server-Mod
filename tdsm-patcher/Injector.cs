@@ -1067,21 +1067,54 @@ namespace tdsm.patcher
             //    //    }
             //    //}
             //}
+
             instructions = _asm.MainModule.Types
                .SelectMany(x => x.Methods
                    .Where(y => y.HasBody && y.Body.Instructions != null)
                )
                .SelectMany(x => x.Body.Instructions)
-               .Where(x => (x.OpCode == Mono.Cecil.Cil.OpCodes.Ldfld || x.OpCode == Mono.Cecil.Cil.OpCodes.Stfld)
-                   && x.Operand is MemberReference
-                   && (x.Operand as MemberReference).DeclaringType.FullName == "Terraria.ServerSock"
+               .Where(x => (x.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt)
+                   &&
+                   (
+                        (x.Operand is MemberReference && (x.Operand as MemberReference).DeclaringType.FullName == "Terraria.ServerSock")
+                        ||
+                        (x.Operand is MethodDefinition && (x.Operand as MethodDefinition).DeclaringType.FullName == "Terraria.ServerSock")
+                   )
+               )
+               .ToArray();
+
+            instructions = _asm.MainModule.Types
+               .SelectMany(x => x.Methods
+                   .Where(y => y.HasBody && y.Body.Instructions != null)
+               )
+               .SelectMany(x => x.Body.Instructions)
+               .Where(x => (x.OpCode == Mono.Cecil.Cil.OpCodes.Ldfld || x.OpCode == Mono.Cecil.Cil.OpCodes.Stfld || x.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt)
+                   &&
+                   (
+                        (x.Operand is MemberReference && (x.Operand as MemberReference).DeclaringType.FullName == "Terraria.ServerSock")
+                        ||
+                        (x.Operand is MethodDefinition && (x.Operand as MethodDefinition).DeclaringType.FullName == "Terraria.ServerSock")
+                   )
                )
                .ToArray();
 
             for (var x = 0; x < instructions.Length; x++)
             {
                 var var = instructions[x];
-                if (var.Operand is MemberReference)
+                if (var.Operand is MethodDefinition)
+                {
+                    var mth = var.Operand as MethodDefinition;
+                    var ourVar = sockClass.Methods.Where(j => j.Name == mth.Name).FirstOrDefault();
+                    if (ourVar != null)
+                    {
+                        var.Operand = _asm.MainModule.Import(ourVar);
+                    }
+                    else
+                    {
+
+                    }
+                }
+                else if (var.Operand is MemberReference)
                 {
                     var mem = var.Operand as MemberReference;
                     var ourVar = sockClass.Fields.Where(j => j.Name == mem.Name).FirstOrDefault();
@@ -1092,8 +1125,8 @@ namespace tdsm.patcher
                 }
             }
 
-            var ourClass = _self.MainModule.Types.Where(x => x.Name == "NetplayCallback").First();
-            foreach (var rep in new string[] { "SendAnglerQuest", "sendWater", "syncPlayers", "AddBan" })
+            var ourClass = _self.MainModule.Types.Single(x => x.Name == "NetplayCallback");
+            foreach (var rep in new string[] { "SendAnglerQuest",/* "sendWater", "syncPlayers",*/ "AddBan" })
             {
                 var toBeReplaced = _asm.MainModule.Types
                     .SelectMany(x => x.Methods
@@ -1106,7 +1139,7 @@ namespace tdsm.patcher
                     )
                     .ToArray();
 
-                var replacement = ourClass.Methods.Where(x => x.Name == rep).First();
+                var replacement = ourClass.Methods.Single(x => x.Name == rep);
                 for (var x = 0; x < toBeReplaced.Length; x++)
                 {
                     toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
@@ -1114,18 +1147,18 @@ namespace tdsm.patcher
             }
 
             //Change to override
-            var serverSock = _asm.MainModule.Types.Where(x => x.Name == "ServerSock").First();
+            var serverSock = _asm.MainModule.Types.Single(x => x.Name == "ServerSock");
             serverSock.BaseType = _asm.MainModule.Import(sockClass);
-            foreach (var rep in new string[] { "SpamUpdate", "SpamClear", "Reset" })
+            foreach (var rep in new string[] { "SpamUpdate", "SpamClear", "Reset", "SectionRange" })
             {
-                var mth = serverSock.Methods.Where(x => x.Name == rep).First();
+                var mth = serverSock.Methods.Single(x => x.Name == rep);
                 mth.IsVirtual = true;
             }
 
             //Remove variables that are in the base class
             foreach (var fld in sockClass.Fields)
             {
-                var rem = serverSock.Fields.Where(x => x.Name == fld.Name).FirstOrDefault();
+                var rem = serverSock.Fields.SingleOrDefault(x => x.Name == fld.Name);
                 if (rem != null)
                 {
                     serverSock.Fields.Remove(rem);
@@ -1133,10 +1166,144 @@ namespace tdsm.patcher
             }
 
             //Now change Netplay.serverSock to the IAPISocket type
-            var netplay = _asm.MainModule.Types.Where(x => x.Name == "Netplay").First();
-            var serverSockArr = netplay.Fields.Where(x => x.Name == "serverSock").First();
+            var netplay = _asm.MainModule.Types.Single(x => x.Name == "Netplay");
+            var serverSockArr = netplay.Fields.Single(x => x.Name == "serverSock");
             var at = new ArrayType(_asm.MainModule.Import(sockClass));
             serverSockArr.FieldType = at;
+
+
+
+            var sendWater = _asm.MainModule.Types.Single(x => x.Name == "NetMessage").Methods.Single(x => x.Name == "sendWater");
+            {
+                var ix = 0;
+                var removing = false;
+                while (sendWater.Body.Instructions.Count > 0 && ix < sendWater.Body.Instructions.Count)
+                {
+                    var first = false;
+                    var ins = sendWater.Body.Instructions[ix];
+                    if (ins.OpCode == OpCodes.Ldsfld && ins.Operand is FieldReference && (ins.Operand as FieldReference).Name == "buffer")
+                    {
+                        removing = true;
+                        first = true;
+                    }
+                    else first = false;
+
+                    if (ins.OpCode == OpCodes.Brfalse_S)
+                    {
+                        //Keep instruction, and replace the first (previous instruction)
+                        var canSendWater = _self.MainModule.Types.Single(x => x.Name == "IAPISocket").Methods.Single(x => x.Name == "CanSendWater");
+
+                        //IL_0011: nop
+                        //IL_0012: ldsfld class tdsm.api.Callbacks.IAPISocket[] [tdsm]Terraria.Netplay::serverSock
+                        //IL_0017: ldloc.0
+                        //IL_0018: ldelem.ref
+                        //IL_0019: callvirt instance bool tdsm.api.Callbacks.IAPISocket::CanSendWater()
+                        //IL_001e: ldc.i4.0
+                        //IL_001f: ceq
+                        //IL_0021: stloc.3
+                        //IL_0022: ldloc.3
+                        //IL_0023: brtrue.s IL_006e
+
+                        var il = sendWater.Body.GetILProcessor();
+                        var target = ins.Previous;
+                        var newTarget = il.Create(OpCodes.Nop);
+
+                        il.Replace(target, newTarget);
+
+                        il.InsertAfter(newTarget, il.Create(OpCodes.Callvirt, _asm.MainModule.Import(canSendWater)));
+                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldelem_Ref));
+                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldloc_0));
+                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldsfld, _asm.MainModule.Import(serverSockArr)));
+
+                        removing = false;
+                        break;
+                    }
+
+                    if (removing && !first)
+                    {
+                        sendWater.Body.Instructions.RemoveAt(ix);
+                    }
+
+                    if (!removing || first) ix++;
+                }
+            }
+
+            var syncPlayers = _asm.MainModule.Types.Single(x => x.Name == "NetMessage").Methods.Single(x => x.Name == "syncPlayers");
+            {
+                var ix = 0;
+                var removing = false;
+                var isPlayingComplete = false;
+                while (syncPlayers.Body.Instructions.Count > 0 && ix < syncPlayers.Body.Instructions.Count)
+                {
+                    var first = false;
+                    var ins = syncPlayers.Body.Instructions[ix];
+                    if (ins.OpCode == OpCodes.Ldsfld && ins.Operand is FieldDefinition && (ins.Operand as FieldDefinition).Name == "serverSock")
+                    {
+                        removing = true;
+                        first = true;
+
+                        if (isPlayingComplete)
+                        {
+                            //We'll use the next two instructions because im cheap.
+                            ix += 2;
+                        }
+                    }
+                    else first = false;
+
+                    if (removing && ins.OpCode == OpCodes.Bne_Un)
+                    {
+                        //Keep instruction, and replace the first (previous instruction)
+                        var isPlaying = _self.MainModule.Types.Single(x => x.Name == "IAPISocket").Methods.Single(x => x.Name == "IsPlaying");
+
+                        //IL_0036: nop
+
+                        //IL_0037: ldsfld class tdsm.api.Callbacks.IAPISocket[] [tdsm]Terraria.Netplay::serverSock
+                        //IL_003c: ldloc.1
+                        //IL_003d: ldelem.ref
+                        //IL_003e: callvirt instance bool tdsm.api.Callbacks.IAPISocket::IsPlaying()
+                        //IL_0043: ldc.i4.0
+                        //IL_0044: ceq
+                        //IL_0046: stloc.s CS$4$0000
+                        //IL_0048: ldloc.s CS$4$0000
+                        //IL_004a: brtrue IL_0874
+
+                        var il = syncPlayers.Body.GetILProcessor();
+                        var target = ins.Previous;
+
+                        il.InsertAfter(target, il.Create(OpCodes.Callvirt, _asm.MainModule.Import(isPlaying)));
+                        il.InsertAfter(target, il.Create(OpCodes.Ldelem_Ref));
+                        il.InsertAfter(target, il.Create(OpCodes.Ldloc_1));
+
+                        il.Replace(ins, il.Create(OpCodes.Brfalse, ins.Operand as Instruction));
+
+                        isPlayingComplete = true;
+                        removing = false;
+                        //break;
+
+                        ix += 3;
+                    }
+                    else if (removing && ins.OpCode == OpCodes.Callvirt && isPlayingComplete )
+                    {
+                        if (ins.Operand is MethodReference)
+                        {
+                            var md = ins.Operand as MethodReference;
+                            if (md.DeclaringType.Name == "Object" && md.Name == "ToString")
+                            {
+                                var remoteAddress = _self.MainModule.Types.Single(x => x.Name == "IAPISocket").Methods.Single(x => x.Name == "RemoteAddress");
+                                ins.Operand = _asm.MainModule.Import(remoteAddress);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (removing && !first)
+                    {
+                        syncPlayers.Body.Instructions.RemoveAt(ix);
+                    }
+
+                    if (!removing || first) ix++;
+                }
+            }
         }
 
         public void HookNPCSpawning()

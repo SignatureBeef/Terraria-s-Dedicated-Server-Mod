@@ -64,7 +64,7 @@ namespace tdsm.core.ServerCharacters
                     return Newtonsoft.Json.JsonConvert.DeserializeObject<ServerCharacter>(json);
                 }
                 else if (returnNewInfo)
-                    return new ServerCharacter(StartingOutInfo);
+                    return new ServerCharacter(StartingOutInfo, player);
             }
             return null;
         }

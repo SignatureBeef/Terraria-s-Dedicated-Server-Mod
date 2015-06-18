@@ -117,9 +117,37 @@ namespace tdsm.core.ServerCharacters
             //}
         }
 
-        public ServerCharacter(NewPlayerInfo info)
+        public ServerCharacter(NewPlayerInfo info, Player player)
         {
+            //I need to test this soon. I'm not sure that the first time a player authenticates whether we use the existing player data (ie male, colours etc)
+            //At this stage, it'll clone
 
+            this.Male = player.male;
+
+            this.Mana = info.Mana;
+            this.Health = info.Health;
+            this.MaxHealth = info.Health;
+
+            this.SpawnX = player.SpawnX;
+            this.SpawnY = player.SpawnY;
+
+            this.HideVisual = player.hideVisual;
+            this.HairDye = player.hairDye;
+
+            this.Hair = player.hair;
+            this.Difficulty = player.difficulty;
+
+            this.HairColor = player.hairColor;
+            this.SkinColor = player.skinColor;
+            this.EyeColor = player.eyeColor;
+            this.ShirtColor = player.shirtColor;
+            this.UnderShirtColor = player.underShirtColor;
+            this.PantsColor = player.pantsColor;
+            this.ShoeColor = player.shoeColor;
+
+            this.Inventory = info.Inventory
+                .Select((item, index) => item == null ? null : new SlotItem(item.NetId, item.Stack, item.Prefix, index))
+                .ToList();
         }
 
         /// <summary>

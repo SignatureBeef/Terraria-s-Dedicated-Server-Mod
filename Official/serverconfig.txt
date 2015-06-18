@@ -66,7 +66,7 @@ usewhitelist=false
 vanilla-linux=false
 
 #Allows communication to the TDSM server
-heartbeat=true
+#heartbeat=true
 
 #true to show on the server list, heartbeat must be enabled.
 #server-list=true
