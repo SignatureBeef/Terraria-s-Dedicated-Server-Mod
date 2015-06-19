@@ -589,18 +589,18 @@ namespace tdsm.core
                 var player = Terraria.Main.player[i];
                 //if (player.active)
                 {
-                    var conn = player.Connection;
+                    var conn = (player.Connection as ClientConnection);
                     if (conn != null)
                         conn.Flush();
                 }
-                if (Terraria.Main.player[i].active)
-                {
-                    Server.CheckSection(i, Terraria.Main.player[i].position);
+                //if (Terraria.Main.player[i].active)
+                //{
+                //    Server.CheckSection(i, Terraria.Main.player[i].position);
 
-                    //TODO SpamUpdate
-                    //if(tdsm.api.Callbacks.Netplay.slots[i].conn != null && tdsm.api.Callbacks.Netplay.slots[i].conn.Active )
-                    //    tdsm.api.Callbacks.Netplay.slots[i].conn.s
-                }
+                //    //TODO SpamUpdate
+                //    //if(tdsm.api.Callbacks.Netplay.slots[i].conn != null && tdsm.api.Callbacks.Netplay.slots[i].conn.Active )
+                //    //    tdsm.api.Callbacks.Netplay.slots[i].conn.s
+                //}
             }
 
             if (_useTimeLock) Terraria.Main.time = TimelockTime;

@@ -101,8 +101,8 @@ namespace tdsm.core.Messages.In
                         var otherConn = otherPlayer.Connection;
                         if (otherPlayer.Name != null
                             && lower == otherPlayer.Name.ToLower()
-                            && otherConn != null
-                            && otherConn.HasConnected())
+                            && (otherConn as ClientConnection) != null
+                            && (otherConn as ClientConnection).HasConnected())
                         {
                             if (!reserved)
                             {

@@ -148,17 +148,36 @@ namespace tdsm.patcher
             var outFileMN = fileName + ".mono.exe";
             var patchFile = "MonoGame.Framework.dll";
 #endif
-            //            if (!File.Exists(inFile))
-            //            {
-            //                //Download the official from out github
-            //                //using (var wc = new System.Net.WebClient())
-            //                //{
-            //
-            //                //}
-            //            }
+            if (!File.Exists(inFile))
+            {
+                //Download the supported vanilla software from our GitHub repo
+                Console.WriteLine("The original Re-Logic TerrariaServer.exe is missing, download?");
+                if (Console.ReadKey(true).Key == ConsoleKey.Y)
+                {
+                    //TODO add throbber
+                    const String Url = "https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/raw/master/Official/TerrariaServer.exe";
+                    using (var wc = new System.Net.WebClient())
+                    {
+                        var started = DateTime.Now;
+                        try
+                        {
+                            wc.DownloadFile(Url, inFile);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            Console.WriteLine("Press any key to exit...");
+                            Console.ReadKey(true);
+                            return;
+                        }
+                        var duration = DateTime.Now - started;
+                        Console.WriteLine("Download completed in {0:c}", duration);
+                    }
+                }
+                else return;
+            }
 
             var patcher = new Injector(inFile, patchFile);
-
 
             var noVersionCheck = args != null && args.Where(x => x.ToLower() == "-nover").Count() > 0;
             if (noVersionCheck != true)
@@ -166,9 +185,8 @@ namespace tdsm.patcher
                 var vers = patcher.GetAssemblyVersion();
                 if (vers != APIWrapper.TerrariaVersion)
                 {
-                    Console.Write("This patcher only supports Terraria {0}, but we have detected something else {1}. Continue? (y/n)",
-                        APIWrapper.TerrariaVersion,
-                        vers);
+                    Console.WriteLine("This patcher only supports Terraria {0}, but we have detected something else {1}.", APIWrapper.TerrariaVersion, vers);
+                    Console.Write("There's a high chance this will fail, continue? (y/n)");
                     if (Console.ReadKey(true).Key != ConsoleKey.Y) return;
                     Console.WriteLine();
                 }
@@ -224,6 +242,9 @@ namespace tdsm.patcher
             //We only need one TDSM.exe if this works...
             Console.Write("Ok\nRemoving port forwarding functionality...");
             patcher.FixNetplay();
+
+            Console.Write("Ok\n");
+            patcher.InjectHooks();
 
             //            Console.Write("Ok\nPutting Terraria on a diet...");
             //            patcher.ChangeTileToStruct();

@@ -306,7 +306,7 @@ namespace tdsm.core
         {
             args.ParseNone();
 
-            var players = from p in Main.player where p.active select p.Name;
+            var players = from p in Main.player where p.active select String.Format("{0}, ({1})", p.Name, p.IPAddress);
             var line = String.Concat("Current players:", String.Join(", ", players), (players.Count() > 0) ? "." : String.Empty);
 
             sender.Message(line, 255, 255, 240, 20);

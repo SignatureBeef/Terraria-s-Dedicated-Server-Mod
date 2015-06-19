@@ -6,18 +6,18 @@ using System.Linq;
 
 namespace tdsm.patcher
 {
-    public class Injector : IDisposable
+    public partial class Injector : IDisposable
     {
         private AssemblyDefinition _asm;
         private AssemblyDefinition _self;
 
-        public AssemblyDefinition Terraria
+        public AssemblyDefinition TerrariaAssembly
         {
             get
             { return _asm; }
         }
 
-        public AssemblyDefinition API
+        public AssemblyDefinition APIAssembly
         {
             get
             { return _self; }
@@ -63,6 +63,8 @@ namespace tdsm.patcher
                 ms.Seek(0L, SeekOrigin.Begin);
                 _self = AssemblyDefinition.ReadAssembly(ms);
             }
+
+            InitOrganisers();
         }
 
         /// <summary>
@@ -81,10 +83,8 @@ namespace tdsm.patcher
 
         public void HookDedServEnd()
         {
-            var main = _asm.MainModule.Types.Single(x => x.Name == "Main");
-            var method = main.Methods.Single(x => x.Name == "DedServ");
-            var callback = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
-            var replacement = callback.Methods.Single(x => x.Name == "OnProgramFinished" && x.IsStatic);
+            var method = Terraria.Main.Methods.Single(x => x.Name == "DedServ");
+            var replacement = API.MainCallback.Methods.Single(x => x.Name == "OnProgramFinished" && x.IsStatic);
 
             var imported = _asm.MainModule.Import(replacement);
             var il = method.Body.GetILProcessor();
@@ -94,10 +94,8 @@ namespace tdsm.patcher
 
         public void HookConfig()
         {
-            var serv = _asm.MainModule.Types.Single(x => x.Name == "ProgramServer");
-            var main = serv.Methods.Single(x => x.Name == "Main" && x.IsStatic);
-            var ourClass = _self.MainModule.Types.Single(x => x.Name == "Configuration");
-            var replacement = ourClass.Methods.Single(x => x.Name == "Load" && x.IsStatic);
+            var main = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main" && x.IsStatic);
+            var replacement = API.Configuration.Methods.Single(x => x.Name == "Load" && x.IsStatic);
 
             //Grab all occurances of "LoadDedConfig" and route it to ours
             var toBeReplaced = main.Body.Instructions
@@ -121,28 +119,16 @@ namespace tdsm.patcher
 
         public void HookInvasions()
         {
-            var serv = _asm.MainModule.Types.Single(x => x.Name == "NPC");
-            var main = serv.Methods.Single(x => x.Name == "SpawnNPC" && x.IsStatic);
+            var main = Terraria.NPC.Methods.Single(x => x.Name == "SpawnNPC" && x.IsStatic);
 
             var il = main.Body.GetILProcessor();
-            var callback = _self.MainModule.Types
-                .Single(x => x.Name == "NPCCallback")
-                .Methods.Single(x => x.Name == "OnInvasionNPCSpawn");
+            var callback = API.NPCCallback.Methods.Single(x => x.Name == "OnInvasionNPCSpawn");
 
             var ins = main.Body.Instructions.Where(x =>
                 x.OpCode == OpCodes.Ldsfld
                 && x.Operand is FieldReference
                 && (x.Operand as FieldReference).Name == "invasionType").ToArray()[1];
 
-
-            /*ldloc.2
-		IL_14d1: ldc.i4.s 16
-		IL_14d3: mul
-		IL_14d4: ldc.i4.8
-		IL_14d5: add
-		IL_14d6: ldloc.3
-		IL_14d7: ldc.i4.s 16
-		IL_14d9: mul*/
             il.InsertBefore(ins, il.Create(OpCodes.Ldloc_2));
             il.InsertBefore(ins, il.Create(OpCodes.Ldc_I4, 16));
             il.InsertBefore(ins, il.Create(OpCodes.Mul));
@@ -156,11 +142,10 @@ namespace tdsm.patcher
 
         public void FixStatusTexts()
         {
-            var serv = _asm.MainModule.Types.Single(x => x.Name == "WorldFile");
-            var main = serv.Methods.Single(x => x.Name == "saveWorld" && x.IsStatic);
+            var main = Terraria.WorldFile.Methods.Single(x => x.Name == "saveWorld" && x.IsStatic);
 
             var il = main.Body.GetILProcessor();
-            var statusText = _asm.MainModule.Types.Single(x => x.Name == "Main").Fields.Single(x => x.Name == "statusText");
+            var statusText = Terraria.Main.Fields.Single(x => x.Name == "statusText");
 
             var ins = main.Body.Instructions.Where(x => x.OpCode == OpCodes.Leave_S).Last();
 
@@ -170,13 +155,10 @@ namespace tdsm.patcher
 
         public void HookWorldFile_DEBUG()
         {
-            var serv = _asm.MainModule.Types.Single(x => x.Name == "WorldGen");
-            var main = serv.Methods.Single(x => x.Name == "serverLoadWorldCallBack" && x.IsStatic);
+            var mth = Terraria.WorldGen.Methods.Single(x => x.Name == "serverLoadWorldCallBack" && x.IsStatic);
+            var replacement = API.WorldFileCallback.Methods.Single(x => x.Name == "loadWorld" && x.IsStatic);
 
-            var ourClass = _self.MainModule.Types.Single(x => x.Name == "WorldFileCallback");
-            var replacement = ourClass.Methods.Single(x => x.Name == "loadWorld" && x.IsStatic);
-
-            var toBeReplaced = main.Body.Instructions
+            var toBeReplaced = mth.Body.Instructions
                 .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Call
                     && x.Operand is MethodReference
                     && (x.Operand as MethodReference).Name == "loadWorld"
@@ -188,14 +170,13 @@ namespace tdsm.patcher
                 toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
             }
 
-            //            lastMaxTilesX
-
-            var fld = serv.Fields.Single(x => x.Name == "lastMaxTilesX");
+            //Make public
+            var fld = Terraria.WorldGen.Fields.Single(x => x.Name == "lastMaxTilesX");
             fld.IsPrivate = false;
             fld.IsFamily = false;
             fld.IsPublic = true;
 
-            fld = serv.Fields.Single(x => x.Name == "lastMaxTilesY");
+            fld = Terraria.WorldGen.Fields.Single(x => x.Name == "lastMaxTilesY");
             fld.IsPrivate = false;
             fld.IsFamily = false;
             fld.IsPublic = true;
@@ -203,11 +184,8 @@ namespace tdsm.patcher
 
         public void HookStatusText()
         {
-            var main = _asm.MainModule.Types.Single(x => x.Name == "Main");
-            var dedServ = main.Methods.Single(x => x.Name == "DedServ");
-
-            var selfType = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
-            var callback = selfType.Methods.Single(x => x.Name == "OnStatusTextChange");
+            var dedServ = Terraria.Main.Methods.Single(x => x.Name == "DedServ");
+            var callback = API.MainCallback.Methods.Single(x => x.Name == "OnStatusTextChange");
 
             var startInstructions = dedServ.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "oldStatusText")
@@ -241,11 +219,8 @@ namespace tdsm.patcher
 
         public void HookNetMessage()
         {
-            var server = _asm.MainModule.Types.Single(x => x.Name == "NetMessage");
-            var method = server.Methods.Single(x => x.Name == "SendData");
-
-            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "NetMessageCallback");
-            var callback = userInputClass.Methods.First(m => m.Name == "SendData");
+            var method = Terraria.NetMessage.Methods.Single(x => x.Name == "SendData");
+            var callback = API.NetMessageCallback.Methods.First(m => m.Name == "SendData");
 
             var il = method.Body.GetILProcessor();
 
@@ -270,11 +245,8 @@ namespace tdsm.patcher
 
         public void HookConsoleTitle()
         {
-            var cls = _asm.MainModule.Types.Single(x => x.Name == "Main");
-            var method = cls.Methods.Single(x => x.Name == "DedServ");
-
-            var cbc = _self.MainModule.Types.Single(x => x.Name == "GameWindow");
-            var callback = cbc.Methods.First(m => m.Name == "SetTitle");
+            var method = Terraria.Main.Methods.Single(x => x.Name == "DedServ");
+            var callback = API.GameWindow.Methods.First(m => m.Name == "SetTitle");
 
             var il = method.Body.GetILProcessor();
 
@@ -291,11 +263,8 @@ namespace tdsm.patcher
 
         public void HookProgramStart()
         {
-            var server = _asm.MainModule.Types.Single(x => x.Name == "ProgramServer");
-            var method = server.Methods.Single(x => x.Name == "Main");
-
-            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
-            var callback = userInputClass.Methods.First(m => m.Name == "OnProgramStarted");
+            var method = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main");
+            var callback = API.MainCallback.Methods.First(m => m.Name == "OnProgramStarted");
 
             var il = method.Body.GetILProcessor();
 
@@ -311,11 +280,8 @@ namespace tdsm.patcher
 
         public void HookUpdateServer()
         {
-            var server = _asm.MainModule.Types.Single(x => x.Name == "Main");
-            var method = server.Methods.Single(x => x.Name == "UpdateServer");
-
-            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
-            var callback = userInputClass.Methods.First(m => m.Name == "UpdateServerEnd");
+            var method = Terraria.Main.Methods.Single(x => x.Name == "UpdateServer");
+            var callback = API.MainCallback.Methods.First(m => m.Name == "UpdateServerEnd");
 
             var il = method.Body.GetILProcessor();
             il.InsertBefore(method.Body.Instructions.Last(), il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
@@ -323,16 +289,11 @@ namespace tdsm.patcher
 
         public void HookInitialise()
         {
-            var server = _asm.MainModule.Types.Single(x => x.Name == "Netplay");
-            var method = server.Methods.Single(x => x.Name == "Init");
-
-            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
-            var callback = userInputClass.Methods.First(m => m.Name == "Initialise");
+            var method = Terraria.Netplay.Methods.Single(x => x.Name == "Init");
+            var callback = API.MainCallback.Methods.First(m => m.Name == "Initialise");
 
             var il = method.Body.GetILProcessor();
             var first = method.Body.Instructions.First();
-            //il.InsertBefore(method.Body.Instructions.First(), il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
-
 
             il.InsertBefore(first, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
 
@@ -342,22 +303,18 @@ namespace tdsm.patcher
 
         public void HookWorldEvents()
         {
-            var worldGen = _asm.MainModule.Types.Single(x => x.Name == "WorldGen");
-            var method = worldGen.Methods.Single(x => x.Name == "generateWorld");
-
-            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
-            var callbackBegin = userInputClass.Methods.First(m => m.Name == "WorldGenerateBegin");
-            var callbackEnd = userInputClass.Methods.First(m => m.Name == "WorldGenerateEnd");
+            var method = Terraria.WorldGen.Methods.Single(x => x.Name == "generateWorld");
+            var callbackBegin = API.MainCallback.Methods.First(m => m.Name == "WorldGenerateBegin");
+            var callbackEnd = API.MainCallback.Methods.First(m => m.Name == "WorldGenerateEnd");
 
             var il = method.Body.GetILProcessor();
             il.InsertBefore(method.Body.Instructions.First(), il.Create(OpCodes.Call, _asm.MainModule.Import(callbackBegin)));
             il.InsertBefore(method.Body.Instructions.Last(), il.Create(OpCodes.Call, _asm.MainModule.Import(callbackEnd)));
 
-            var worldFile = _asm.MainModule.Types.Single(x => x.Name == "WorldFile");
-            method = worldFile.Methods.Single(x => x.Name == "loadWorld");
+            method = Terraria.WorldFile.Methods.Single(x => x.Name == "loadWorld");
 
-            callbackBegin = userInputClass.Methods.First(m => m.Name == "WorldLoadBegin");
-            callbackEnd = userInputClass.Methods.First(m => m.Name == "WorldLoadEnd");
+            callbackBegin = API.MainCallback.Methods.First(m => m.Name == "WorldLoadBegin");
+            callbackEnd = API.MainCallback.Methods.First(m => m.Name == "WorldLoadEnd");
 
             il = method.Body.GetILProcessor();
             il.InsertBefore(method.Body.Instructions.First(), il.Create(OpCodes.Call, _asm.MainModule.Import(callbackBegin)));
@@ -383,48 +340,42 @@ namespace tdsm.patcher
 
         public void PatchServer()
         {
-            var netplay = _asm.MainModule.Types.Single(x => x.Name == "Netplay");
-            var method = netplay.Methods.Single(x => x.Name == "StartServer");
-
-            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "NetplayCallback");
-            var callback = userInputClass.Methods.First(m => m.Name == "StartServer");
+            var method = Terraria.Netplay.Methods.Single(x => x.Name == "StartServer");
+            var callback = API.NetplayCallback.Methods.First(m => m.Name == "StartServer");
 
             var ins = method.Body.Instructions.Single(x => x.OpCode == OpCodes.Ldftn);
             ins.Operand = _asm.MainModule.Import(callback);
 
             //Make the Player inherit our defaults
-            var player = _asm.MainModule.Types.Single(x => x.Name == "Player");
-            var baseType = _self.MainModule.Types.Single(x => x.Name == "BasePlayer");
+            //var baseType = _self.MainModule.Types.Single(x => x.Name == "BasePlayer");
             //var interfaceType = _self.MainModule.Types.Single(x => x.Name == "ISender");
 
-            player.BaseType = _asm.MainModule.Import(baseType);
+            Terraria.Player.BaseType = _asm.MainModule.Import(API.BasePlayer);
 
             //Make the UpdateServer function public
-            var main = _asm.MainModule.Types.Single(x => x.Name == "Main");
-            var us = main.Methods.Single(x => x.Name == "UpdateServer");
+            var us = Terraria.Main.Methods.Single(x => x.Name == "UpdateServer");
             us.IsPrivate = false;
             us.IsPublic = true;
 
-            //Map ServerSock.CheckSection to our own
-            var repl = _asm.MainModule.Types
-                .SelectMany(x => x.Methods)
-                .Where(x => x.HasBody)
-                .SelectMany(x => x.Body.Instructions)
-                .Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "CheckSection")
-                .ToArray();
-            callback = userInputClass.Methods.First(m => m.Name == "CheckSection");
-            var mref = _asm.MainModule.Import(callback);
-            foreach (var inst in repl)
-            {
-                inst.Operand = mref;
-            }
+            ////Map ServerSock.CheckSection to our own
+            //var repl = _asm.MainModule.Types
+            //    .SelectMany(x => x.Methods)
+            //    .Where(x => x.HasBody)
+            //    .SelectMany(x => x.Body.Instructions)
+            //    .Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "CheckSection")
+            //    .ToArray();
+            //callback = userInputClass.Methods.First(m => m.Name == "CheckSection");
+            //var mref = _asm.MainModule.Import(callback);
+            //foreach (var inst in repl)
+            //{
+            //    inst.Operand = mref;
+            //}
         }
 
         public void FixNetplay()
         {
             const String NATGuid = "AE1E00AA-3FD5-403C-8A27-2BBDC30CD0E1";
-            var netplay = _asm.MainModule.Types.Single(x => x.Name == "Netplay");
-            var staticConstructor = netplay.Methods.Single(x => x.Name == ".cctor");
+            var staticConstructor = Terraria.Netplay.Methods.Single(x => x.Name == ".cctor");
 
             var il = staticConstructor.Body.GetILProcessor();
             var counting = 0;
@@ -443,39 +394,38 @@ namespace tdsm.patcher
                 }
             }
 
-            var fl = netplay.Fields.SingleOrDefault(x => x.Name == "upnpnat");
+            var fl = Terraria.Netplay.Fields.SingleOrDefault(x => x.Name == "upnpnat");
             if (fl != null)
-                netplay.Fields.Remove(fl);
+                Terraria.Netplay.Fields.Remove(fl);
 
             //Clear open and close methods, add reference to the APIs
-            var cb = netplay.Methods.Single(x => x.Name == "openPort");
+            var cb = Terraria.Netplay.Methods.Single(x => x.Name == "openPort");
             //    .Body;
             //cb.InitLocals = false;
             //cb.Variables.Clear();
             //cb.Instructions.Clear();
-            netplay.Methods.Remove(cb);
+            Terraria.Netplay.Methods.Remove(cb);
             //cb.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Nop));
             //cb.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Ret));
 
-            var close = netplay.Methods.Single(x => x.Name == "closePort");
+            var close = Terraria.Netplay.Methods.Single(x => x.Name == "closePort");
             //    .Body;
             //close.InitLocals = false;
             //close.Variables.Clear();
             //close.Instructions.Clear();
             //close.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Nop));
             //close.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Ret));
-            netplay.Methods.Remove(close);
+            Terraria.Netplay.Methods.Remove(close);
 
-            fl = netplay.Fields.SingleOrDefault(x => x.Name == "mappings");
+            fl = Terraria.Netplay.Fields.SingleOrDefault(x => x.Name == "mappings");
             if (fl != null)
-                netplay.Fields.Remove(fl);
+                Terraria.Netplay.Fields.Remove(fl);
 
             //use our uPNP (when using native terraria server)
-            var natClass = _self.MainModule.Types.Single(x => x.Name == "NAT");
-            var openCallback = natClass.Methods.First(m => m.Name == "OpenPort");
-            var closeCallback = natClass.Methods.First(m => m.Name == "ClosePort");
+            var openCallback = API.NAT.Methods.First(m => m.Name == "OpenPort");
+            var closeCallback = API.NAT.Methods.First(m => m.Name == "ClosePort");
 
-            var serverLoop = netplay.Methods.Single(x => x.Name == "ServerLoop");
+            var serverLoop = Terraria.Netplay.Methods.Single(x => x.Name == "ServerLoop");
 
             foreach (var ins in serverLoop.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Call
@@ -497,8 +447,7 @@ namespace tdsm.patcher
 
         public void FixEntryPoint()
         {
-            var netplay = _asm.MainModule.Types.Single(x => x.Name == "ProgramServer");
-            var staticConstructor = netplay.Methods.Single(x => x.Name == "Main");
+            var staticConstructor = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main");
 
             var il = staticConstructor.Body.GetILProcessor();
             var counting = 0;
@@ -520,8 +469,7 @@ namespace tdsm.patcher
 
         public void FixSavePath()
         {
-            var netplay = _asm.MainModule.Types.Single(x => x.Name == "Main");
-            var staticConstructor = netplay.Methods.Single(x => x.Name == ".cctor");
+            var staticConstructor = Terraria.Main.Methods.Single(x => x.Name == ".cctor");
 
             var il = staticConstructor.Body.GetILProcessor();
             var removing = false;
@@ -543,8 +491,7 @@ namespace tdsm.patcher
                 if (ins.OpCode == OpCodes.Stsfld && ins.Operand is FieldDefinition && (ins.Operand as FieldDefinition).Name == "SavePath")
                 {
                     //Insert the new value
-                    var patches = _self.MainModule.Types.Single(k => k.Name == "Patches");
-                    var dir = _asm.MainModule.Import(patches.Methods.Single(k => k.Name == "GetCurrentDirectory"));
+                    var dir = _asm.MainModule.Import(API.Patches.Methods.Single(k => k.Name == "GetCurrentDirectory"));
 
                     il.InsertBefore(ins, il.Create(OpCodes.Call, dir));
                     removing = false;
@@ -561,9 +508,7 @@ namespace tdsm.patcher
 
         public void SkipMenu()
         {
-            var main = _asm.MainModule.Types.Single(x => x.Name == "Main");
-
-            var initialise = main.Methods.Single(x => x.Name == "Initialize");
+            var initialise = Terraria.Main.Methods.Single(x => x.Name == "Initialize");
             var loc = initialise.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldDefinition)
                 //.Select(x => x.Operand as FieldDefinition)
@@ -577,13 +522,10 @@ namespace tdsm.patcher
         /// </summary>
         public void PatchCommandLine()
         {
-            var t_mainClass = _asm.MainModule.Types.Single(x => x.Name == "Main");
-
             //Simply switch to ours
-            var serv = t_mainClass.Methods.Single(x => x.Name == "DedServ");
+            var serv = Terraria.Main.Methods.Single(x => x.Name == "DedServ");
 
-            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "UserInput");
-            var callback = userInputClass.Methods.First(m => m.Name == "ListenForCommands");
+            var callback = API.UserInput.Methods.First(m => m.Name == "ListenForCommands");
 
             var ins = serv.Body.Instructions
                 .Single(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "startDedInput");
@@ -603,11 +545,10 @@ namespace tdsm.patcher
                     && (x.Operand as MethodReference).DeclaringType.FullName == "System.Console")
                 .ToArray();
 
-            var tools = _self.MainModule.Types.Single(x => x.Name == "Tools");
             foreach (var oci in cwi)
             {
                 var mr = oci.Operand as MethodReference;
-                var writeline = tools.Methods.First(m => m.Name == "WriteLine"
+                var writeline = API.Tools.Methods.First(m => m.Name == "WriteLine"
                     && CompareParameters(m.Parameters, mr.Parameters));
                 oci.Operand = _asm.MainModule.Import(writeline);
             }
@@ -641,8 +582,7 @@ namespace tdsm.patcher
             for (var x = 0; x < types.Length; x++)
                 types[x].IsPublic = true;
 
-            var sd = _asm.MainModule.Types.Where(x => x.Name == "WorldGen")
-                .SelectMany(x => x.Fields)
+            var sd = Terraria.WorldGen.Fields
                 .Where(x => x.Name == "stopDrops")
                 .Select(x => x)
                 .First();
@@ -651,16 +591,14 @@ namespace tdsm.patcher
 
             if (server)
             {
-                sd = _asm.MainModule.Types.Where(x => x.Name == "ProgramServer")
-                    .SelectMany(x => x.Fields)
+                sd = Terraria.ProgramServer.Fields
                     .Where(x => x.Name == "Game")
                     .Select(x => x)
                     .First();
                 sd.IsPrivate = false;
                 sd.IsPublic = true;
 
-                var main = _asm.MainModule.Types.Where(x => x.Name == "Main")
-                    .SelectMany(x => x.Methods)
+                var main = Terraria.Main.Methods
                     .Where(x => x.Name == "Update")
                     .Select(x => x)
                     .First();
@@ -684,7 +622,7 @@ namespace tdsm.patcher
             //tileClass.IsSequentialLayout = true;
 
             //Update nulls to defaults
-            var mainClass = _asm.MainModule.Types.Single(x => x.Name == "Main");
+            //var mainClass = _asm.MainModule.Types.Single(x => x.Name == "Main");
 
             var defaultTile = _asm.MainModule.Import(DefaultTile);
 
@@ -697,7 +635,7 @@ namespace tdsm.patcher
                 .SelectMany(x => x.Methods
 
                     .Where(k => k.Body != null && k.Body.GetILProcessor().Body != null && k.Body.GetILProcessor().Body.Instructions.Where(i => i.OpCode == OpCodes.Ldsfld
-                        && ((FieldReference)i.Operand).DeclaringType.FullName == mainClass.FullName
+                        && ((FieldReference)i.Operand).DeclaringType.FullName == Terraria.Main.FullName
                         && ((FieldReference)i.Operand).Name == "tile"
                         && i.Next.Next.Next.OpCode == OpCodes.Call).Count() > 0)
                 )
@@ -709,7 +647,7 @@ namespace tdsm.patcher
                     var proc = item.Body.GetILProcessor();
                     var iuns = proc.Body.Instructions
                             .Where(k => k.OpCode == OpCodes.Ldsfld
-                                && ((FieldReference)k.Operand).DeclaringType.FullName == mainClass.FullName
+                                && ((FieldReference)k.Operand).DeclaringType.FullName == Terraria.Main.FullName
                                 && ((FieldReference)k.Operand).Name == "tile"
                                 && k.Next.Next.Next.OpCode == OpCodes.Call)
                             .ToArray();
@@ -725,7 +663,7 @@ namespace tdsm.patcher
                 .SelectMany(x => x.Methods
 
                     .Where(k => k.Body != null && k.Body.GetILProcessor().Body != null && k.Body.GetILProcessor().Body.Instructions.Where(i => i.OpCode == OpCodes.Ldsfld
-                        && ((FieldReference)i.Operand).DeclaringType.FullName == mainClass.FullName
+                        && ((FieldReference)i.Operand).DeclaringType.FullName == Terraria.Main.FullName
                         && ((FieldReference)i.Operand).Name == "tile"
                         && i.OpCode == OpCodes.Ldsfld
                         && i.Next.Next.Next.OpCode == OpCodes.Ldnull).Count() > 0)
@@ -738,7 +676,7 @@ namespace tdsm.patcher
                     var proc = item.Body.GetILProcessor();
                     var iuns = proc.Body.Instructions
                             .Where(k => k.OpCode == OpCodes.Ldsfld
-                                && ((FieldReference)k.Operand).DeclaringType.FullName == mainClass.FullName
+                                && ((FieldReference)k.Operand).DeclaringType.FullName == Terraria.Main.FullName
                                 && ((FieldReference)k.Operand).Name == "tile"
                                 && k.Next.Next.Next.OpCode == OpCodes.Ldnull)
                             .ToArray();
@@ -758,7 +696,7 @@ namespace tdsm.patcher
 
             //Do == operator
             var boolType = _asm.MainModule.Import(typeof(Boolean));
-            var ui = _self.MainModule.Types.Single(x => x.Name == "UserInput");
+            //var ui = _self.MainModule.Types.Single(x => x.Name == "UserInput");
             var method = new MethodDefinition("op_Equality",
                                                   MethodAttributes.Public |
                                                   MethodAttributes.Static |
@@ -769,7 +707,7 @@ namespace tdsm.patcher
             method.Parameters.Add(new ParameterDefinition("t2", ParameterAttributes.None, tl));
 
 
-            var callback = ui.Methods.Single(x => x.Name == "Tile_Equality");
+            var callback = API.UserInput.Methods.Single(x => x.Name == "Tile_Equality");
 
             var il = method.Body.GetILProcessor();
 
@@ -803,7 +741,7 @@ namespace tdsm.patcher
             method.Parameters.Add(new ParameterDefinition("t2", ParameterAttributes.None, tl));
 
 
-            callback = ui.Methods.Single(x => x.Name == "Tile_Inequality");
+            callback = API.UserInput.Methods.Single(x => x.Name == "Tile_Inequality");
 
             il = method.Body.GetILProcessor();
 
@@ -931,17 +869,15 @@ namespace tdsm.patcher
 
         public void HookMessageBuffer()
         {
-            var tClass = _asm.MainModule.Types.Single(x => x.Name == "MessageBuffer");
-            var getData = tClass.Methods.Single(x => x.Name == "GetData");
-            var whoAmI = tClass.Fields.Single(x => x.Name == "whoAmI");
+            var getData = Terraria.MessageBuffer.Methods.Single(x => x.Name == "GetData");
+            var whoAmI = Terraria.MessageBuffer.Fields.Single(x => x.Name == "whoAmI");
 
             var insertionPoint = getData.Body.Instructions
                 .Single(x => x.OpCode == OpCodes.Callvirt
                     && x.Operand is MethodReference
                     && (x.Operand as MethodReference).Name == "set_Position");
 
-            var userInputClass = _self.MainModule.Types.Single(x => x.Name == "MessageBufferCallback");
-            var callback = userInputClass.Methods.First(m => m.Name == "ProcessPacket");
+            var callback = API.MessageBufferCallback.Methods.First(m => m.Name == "ProcessPacket");
 
             var il = getData.Body.GetILProcessor();
             il.InsertAfter(insertionPoint, il.Create(OpCodes.Stloc_0));
@@ -1000,10 +936,7 @@ namespace tdsm.patcher
 
         public void HookSockets()
         {
-            var serverClass = _self.MainModule.Types.Single(x => x.Name == "NetplayCallback");
-            var sockClass = _self.MainModule.Types.Single(x => x.Name == "IAPISocket");
-            //var targetArray = serverClass.Fields.Single(x => x.Name == "slots");
-            var targetField = sockClass.Fields.Single(x => x.Name == "tileSection");
+            var targetField = API.IAPISocket.Fields.Single(x => x.Name == "tileSection");
 
             //Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
             var instructions = _asm.MainModule.Types
@@ -1095,20 +1028,16 @@ namespace tdsm.patcher
                 if (var.Operand is MethodDefinition)
                 {
                     var mth = var.Operand as MethodDefinition;
-                    var ourVar = sockClass.Methods.SingleOrDefault(j => j.Name == mth.Name);
+                    var ourVar = API.IAPISocket.Methods.SingleOrDefault(j => j.Name == mth.Name);
                     if (ourVar != null)
                     {
                         var.Operand = _asm.MainModule.Import(ourVar);
-                    }
-                    else
-                    {
-
                     }
                 }
                 else if (var.Operand is MemberReference)
                 {
                     var mem = var.Operand as MemberReference;
-                    var ourVar = sockClass.Fields.SingleOrDefault(j => j.Name == mem.Name);
+                    var ourVar = API.IAPISocket.Fields.SingleOrDefault(j => j.Name == mem.Name);
                     if (ourVar != null)
                     {
                         var.Operand = _asm.MainModule.Import(ourVar);
@@ -1116,8 +1045,7 @@ namespace tdsm.patcher
                 }
             }
 
-            var ourClass = _self.MainModule.Types.Single(x => x.Name == "NetplayCallback");
-            foreach (var rep in new string[] { "SendAnglerQuest",/* "sendWater", "syncPlayers",*/ "AddBan" })
+            foreach (var rep in new string[] { /*"SendAnglerQuest", "sendWater", "syncPlayers",*/ "AddBan" })
             {
                 var toBeReplaced = _asm.MainModule.Types
                     .SelectMany(x => x.Methods
@@ -1130,7 +1058,7 @@ namespace tdsm.patcher
                     )
                     .ToArray();
 
-                var replacement = ourClass.Methods.Single(x => x.Name == rep);
+                var replacement = API.NetplayCallback.Methods.Single(x => x.Name == rep);
                 for (var x = 0; x < toBeReplaced.Length; x++)
                 {
                     toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
@@ -1138,33 +1066,29 @@ namespace tdsm.patcher
             }
 
             //Change to override
-            var serverSock = _asm.MainModule.Types.Single(x => x.Name == "ServerSock");
-            serverSock.BaseType = _asm.MainModule.Import(sockClass);
+            Terraria.ServerSock.BaseType = _asm.MainModule.Import(API.IAPISocket);
             foreach (var rep in new string[] { "SpamUpdate", "SpamClear", "Reset", "SectionRange" })
             {
-                var mth = serverSock.Methods.Single(x => x.Name == rep);
+                var mth = Terraria.ServerSock.Methods.Single(x => x.Name == rep);
                 mth.IsVirtual = true;
             }
 
             //Remove variables that are in the base class
-            foreach (var fld in sockClass.Fields)
+            foreach (var fld in API.IAPISocket.Fields)
             {
-                var rem = serverSock.Fields.SingleOrDefault(x => x.Name == fld.Name);
+                var rem = Terraria.ServerSock.Fields.SingleOrDefault(x => x.Name == fld.Name);
                 if (rem != null)
                 {
-                    serverSock.Fields.Remove(rem);
+                    Terraria.ServerSock.Fields.Remove(rem);
                 }
             }
 
             //Now change Netplay.serverSock to the IAPISocket type
-            var netplay = _asm.MainModule.Types.Single(x => x.Name == "Netplay");
-            var serverSockArr = netplay.Fields.Single(x => x.Name == "serverSock");
-            var at = new ArrayType(_asm.MainModule.Import(sockClass));
+            var serverSockArr = Terraria.Netplay.Fields.Single(x => x.Name == "serverSock");
+            var at = new ArrayType(_asm.MainModule.Import(API.IAPISocket));
             serverSockArr.FieldType = at;
 
-
-
-            var sendWater = _asm.MainModule.Types.Single(x => x.Name == "NetMessage").Methods.Single(x => x.Name == "sendWater");
+            var sendWater = Terraria.NetMessage.Methods.Single(x => x.Name == "sendWater");
             {
                 var ix = 0;
                 var removing = false;
@@ -1182,18 +1106,7 @@ namespace tdsm.patcher
                     if (ins.OpCode == OpCodes.Brfalse_S)
                     {
                         //Keep instruction, and replace the first (previous instruction)
-                        var canSendWater = _self.MainModule.Types.Single(x => x.Name == "IAPISocket").Methods.Single(x => x.Name == "CanSendWater");
-
-                        //IL_0011: nop
-                        //IL_0012: ldsfld class tdsm.api.Callbacks.IAPISocket[] [tdsm]Terraria.Netplay::serverSock
-                        //IL_0017: ldloc.0
-                        //IL_0018: ldelem.ref
-                        //IL_0019: callvirt instance bool tdsm.api.Callbacks.IAPISocket::CanSendWater()
-                        //IL_001e: ldc.i4.0
-                        //IL_001f: ceq
-                        //IL_0021: stloc.3
-                        //IL_0022: ldloc.3
-                        //IL_0023: brtrue.s IL_006e
+                        var canSendWater = API.IAPISocket.Methods.Single(x => x.Name == "CanSendWater");
 
                         var il = sendWater.Body.GetILProcessor();
                         var target = ins.Previous;
@@ -1219,7 +1132,7 @@ namespace tdsm.patcher
                 }
             }
 
-            var syncPlayers = _asm.MainModule.Types.Single(x => x.Name == "NetMessage").Methods.Single(x => x.Name == "syncPlayers");
+            var syncPlayers = Terraria.NetMessage.Methods.Single(x => x.Name == "syncPlayers");
             {
                 var ix = 0;
                 var removing = false;
@@ -1244,19 +1157,7 @@ namespace tdsm.patcher
                     if (removing && ins.OpCode == OpCodes.Bne_Un)
                     {
                         //Keep instruction, and replace the first (previous instruction)
-                        var isPlaying = _self.MainModule.Types.Single(x => x.Name == "IAPISocket").Methods.Single(x => x.Name == "IsPlaying");
-
-                        //IL_0036: nop
-
-                        //IL_0037: ldsfld class tdsm.api.Callbacks.IAPISocket[] [tdsm]Terraria.Netplay::serverSock
-                        //IL_003c: ldloc.1
-                        //IL_003d: ldelem.ref
-                        //IL_003e: callvirt instance bool tdsm.api.Callbacks.IAPISocket::IsPlaying()
-                        //IL_0043: ldc.i4.0
-                        //IL_0044: ceq
-                        //IL_0046: stloc.s CS$4$0000
-                        //IL_0048: ldloc.s CS$4$0000
-                        //IL_004a: brtrue IL_0874
+                        var isPlaying = API.IAPISocket.Methods.Single(x => x.Name == "IsPlaying");
 
                         var il = syncPlayers.Body.GetILProcessor();
                         var target = ins.Previous;
@@ -1280,7 +1181,7 @@ namespace tdsm.patcher
                             var md = ins.Operand as MethodReference;
                             if (md.DeclaringType.Name == "Object" && md.Name == "ToString")
                             {
-                                var remoteAddress = _self.MainModule.Types.Single(x => x.Name == "IAPISocket").Methods.Single(x => x.Name == "RemoteAddress");
+                                var remoteAddress = API.IAPISocket.Methods.Single(x => x.Name == "RemoteAddress");
                                 ins.Operand = _asm.MainModule.Import(remoteAddress);
                                 break;
                             }
@@ -1295,15 +1196,53 @@ namespace tdsm.patcher
                     if (!removing || first) ix++;
                 }
             }
+
+            var sendAngler = Terraria.NetMessage.Methods.Single(x => x.Name == "SendAnglerQuest");
+            {
+                var ix = 0;
+                var removing = false;
+                while (sendAngler.Body.Instructions.Count > 0 && ix < sendAngler.Body.Instructions.Count)
+                {
+                    var first = false;
+                    var ins = sendAngler.Body.Instructions[ix];
+                    if (ins.OpCode == OpCodes.Ldsfld && ins.Operand is FieldDefinition && (ins.Operand as FieldDefinition).Name == "serverSock")
+                    {
+                        removing = true;
+                        first = true;
+
+                        //Reuse the next two as well
+                        ix += 2;
+                    }
+                    else first = false;
+
+                    if (removing && ins.OpCode == OpCodes.Bne_Un_S)
+                    {
+                        //Keep instruction, and replace the first (previous instruction)
+                        var isPlaying = API.IAPISocket.Methods.Single(x => x.Name == "IsPlaying");
+
+                        var il = sendAngler.Body.GetILProcessor();
+
+                        il.InsertBefore(ins, il.Create(OpCodes.Callvirt, _asm.MainModule.Import(isPlaying)));
+                        il.Replace(ins, il.Create(OpCodes.Brfalse, ins.Operand as Instruction));
+
+                        removing = false;
+                        break;
+                    }
+
+                    if (removing && !first)
+                    {
+                        sendAngler.Body.Instructions.RemoveAt(ix);
+                    }
+
+                    if (!removing || first) ix++;
+                }
+            }
         }
 
         public void HookNPCSpawning()
         {
-            var npc = _asm.MainModule.Types.Single(x => x.Name == "NPC");
-            var newNPC = npc.Methods.Single(x => x.Name == "NewNPC");
-
-            var callback = _self.MainModule.Types.Single(x => x.Name == "NPCCallback");
-            var method = callback.Methods.Single(x => x.Name == "CanSpawnNPC");
+            var newNPC = Terraria.NPC.Methods.Single(x => x.Name == "NewNPC");
+            var method = API.NPCCallback.Methods.Single(x => x.Name == "CanSpawnNPC");
 
             var il = newNPC.Body.GetILProcessor();
             var first = newNPC.Body.Instructions.First();
@@ -1321,11 +1260,8 @@ namespace tdsm.patcher
 
         public void HookEclipse()
         {
-            var type = _asm.MainModule.Types.Single(x => x.Name == "Main");
-            var mth = type.Methods.Single(x => x.Name == "UpdateTime");
-
-            var callback = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
-            var field = callback.Fields.Single(x => x.Name == "StartEclipse");
+            var mth = Terraria.Main.Methods.Single(x => x.Name == "UpdateTime");
+            var field = API.MainCallback.Fields.Single(x => x.Name == "StartEclipse");
 
             var il = mth.Body.GetILProcessor();
             var start = il.Body.Instructions.Single(x =>
@@ -1363,11 +1299,8 @@ namespace tdsm.patcher
 
         public void HookBloodMoon()
         {
-            var type = _asm.MainModule.Types.Single(x => x.Name == "Main");
-            var mth = type.Methods.Single(x => x.Name == "UpdateTime");
-
-            var callback = _self.MainModule.Types.Single(x => x.Name == "MainCallback");
-            var field = callback.Fields.Single(x => x.Name == "StartBloodMoon");
+            var mth = Terraria.Main.Methods.Single(x => x.Name == "UpdateTime");
+            var field = API.MainCallback.Fields.Single(x => x.Name == "StartBloodMoon");
             //return;
             var il = mth.Body.GetILProcessor();
             var start = il.Body.Instructions.Single(x =>

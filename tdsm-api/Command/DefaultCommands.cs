@@ -90,36 +90,21 @@ namespace tdsm.api.Command
         {
             if (sender is ConsoleSender)
             {
-                int num5 = 0;
+                var count = 0;
                 for (int i = 0; i < 255; i++)
                 {
                     if (Main.player[i].active)
                     {
-                        num5++;
-                        Tools.WriteLine(string.Concat(new object[]
-					    {
-						    Main.player[i].name,
-						    " (",
-						    Netplay.serverSock[i].tcpClient.Client.RemoteEndPoint,
-						    ")"
-					    }));
+                        count++;
+                        Tools.WriteLine("{0} ({1})", Main.player[i].name, Netplay.serverSock[i].RemoteAddress());
                     }
                 }
-                if (num5 == 0)
-                {
+                if (count == 0)
                     Tools.WriteLine("No players connected.");
-                }
+                else if (count == 1)
+                    Tools.WriteLine("1 player connected.");
                 else
-                {
-                    if (num5 == 1)
-                    {
-                        Tools.WriteLine("1 player connected.");
-                    }
-                    else
-                    {
-                        Tools.WriteLine(num5 + " players connected.");
-                    }
-                }
+                    Tools.WriteLine(count + " players connected.");
             }
         }
 
@@ -175,11 +160,11 @@ namespace tdsm.api.Command
                 {
                     bool found = false;
                     var lowered = player.ToLower();
-                    for (int j = 0; j < 255; j++)
+                    for (int i = 0; i < 255; i++)
                     {
-                        if (Main.player[j].active && Main.player[j].name.ToLower() == lowered)
+                        if (Main.player[i].active && Main.player[i].name.ToLower() == lowered)
                         {
-                            NetMessage.SendData(2, j, -1, "Kicked from server.", 0, 0f, 0f, 0f, 0);
+                            NetMessage.SendData(2, i, -1, "Kicked from server.", 0, 0f, 0f, 0f, 0);
                             found = true;
                         }
                     }
@@ -205,12 +190,12 @@ namespace tdsm.api.Command
                 {
                     bool found = false;
                     var lowered = player.ToLower();
-                    for (int k = 0; k < 255; k++)
+                    for (int i = 0; i < 255; i++)
                     {
-                        if (Main.player[k].active && Main.player[k].name.ToLower() == lowered)
+                        if (Main.player[i].active && Main.player[i].name.ToLower() == lowered)
                         {
-                            Netplay.AddBan(k);
-                            NetMessage.SendData(2, k, -1, "Banned from server.", 0, 0f, 0f, 0f, 0);
+                            Callbacks.NetplayCallback.AddBan(i);
+                            NetMessage.SendData(2, i, -1, "Banned from server.", 0, 0f, 0f, 0f, 0);
                             found = true;
                         }
                     }
@@ -361,7 +346,7 @@ namespace tdsm.api.Command
             {
                 Main.dayTime = true;
                 Main.time = 0.0;
-                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+                NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
                 Tools.WriteLine("Time set to dawn");
             }
@@ -378,7 +363,7 @@ namespace tdsm.api.Command
             {
                 Main.dayTime = true;
                 Main.time = 27000.0;
-                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+                NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
                 Tools.WriteLine("Time set to noon");
             }
@@ -395,7 +380,7 @@ namespace tdsm.api.Command
             {
                 Main.dayTime = false;
                 Main.time = 0.0;
-                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+                NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
                 Tools.WriteLine("Time set to dusk");
             }
@@ -412,7 +397,7 @@ namespace tdsm.api.Command
             {
                 Main.dayTime = false;
                 Main.time = 16200.0;
-                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f, 0);
+                NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
                 Tools.WriteLine("Time set to midnight");
             }
