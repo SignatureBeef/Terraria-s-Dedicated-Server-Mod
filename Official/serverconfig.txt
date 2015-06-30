@@ -63,7 +63,7 @@ priority=1
 usewhitelist=false
 
 #true to enforce the core to only run as a vanilla server under linux
-vanilla-linux=false
+vanilla-server=false
 
 #Allows communication to the TDSM server
 #heartbeat=true
@@ -114,3 +114,7 @@ overlimit-slots=1
 #cheat-detection=true
 
 server-side-characters=true
+
+#DEVELOPER config. This section is to disable TDSM starting it's own custom server implementation.
+#Set to false to use Re-Logic server code
+tdsm-server-core=true

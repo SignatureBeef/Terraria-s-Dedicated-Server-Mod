@@ -79,7 +79,7 @@ namespace tdsm.patcher
             //            tdsm.api.Permissions.PermissionsManager.SetHandler(handler);
             //    }
             //}
-
+                
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(Console.Title = String.Format("TDSM patcher build {0}", Build));
             Console.ForegroundColor = ConsoleColor.White;
@@ -248,8 +248,8 @@ namespace tdsm.patcher
 
             //            Console.Write("Ok\nPutting Terraria on a diet...");
             //            patcher.ChangeTileToStruct();
-            //            Console.Write("Ok\nHooking DEBUG...");
-            //            patcher.HookWorldFile_DEBUG();
+                        Console.Write("Ok\nHooking DEBUG...");
+                        patcher.HookWorldFile_DEBUG();
 
             Console.Write("Ok\n");
 
@@ -318,6 +318,11 @@ namespace tdsm.patcher
             //            patcher.Save(outFileMN, Build, TDSMGuid, fileName);
             Console.Write("Saving to {0}...", output);
             patcher.Save(output, Build, TDSMGuid, fileName);
+
+
+            var t = patcher.Terraria.Netplay.Fields.Single(x => x.Name == "serverSock");
+
+
             patcher.Dispose();
             //            Console.WriteLine("Ok");
 

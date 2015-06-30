@@ -57,6 +57,7 @@ namespace tdsm.core
         }
 
         public bool StopNPCSpawning { get; set; }
+        public bool RunServerCore { get; set; }
 
         private string _webServerAddress { get; set; }
         private string _webServerProvider { get; set; }
@@ -79,6 +80,7 @@ namespace tdsm.core
             tdsm.api.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
             tdsm.api.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
             EnableCheatProtection = true;
+            RunServerCore = true;
         }
 
         protected override void Initialized(object state)
@@ -716,10 +718,14 @@ namespace tdsm.core
         [Hook(HookOrder.NORMAL)]
         void OnDefaultServerStart(ref HookContext ctx, ref HookArgs.StartDefaultServer args)
         {
-            ProgramLog.Log("Starting TDSM's slot server...");
-            ctx.SetResult(HookResult.IGNORE);
+            if (RunServerCore)
+            {
+                ProgramLog.Log("Starting TDSM's slot server...");
+                ctx.SetResult(HookResult.IGNORE);
 
-            ServerCore.Server.StartServer();
+                ServerCore.Server.StartServer();
+            } else
+                ProgramLog.Log("Vanilla only specified, continuing on with Re-Logic code...");
         }
 
         [Hook(HookOrder.NORMAL)]
@@ -819,6 +825,13 @@ namespace tdsm.core
                     if (Boolean.TryParse(args.Value, out serverSideCharacters))
                     {
                         Terraria.Main.ServerSideCharacter = serverSideCharacters;
+                    }
+                    break;
+                case "tdsm-server-core":
+                    bool runServerCore;
+                    if (Boolean.TryParse(args.Value, out runServerCore))
+                    {
+                        RunServerCore = runServerCore;
                     }
                     break;
             }

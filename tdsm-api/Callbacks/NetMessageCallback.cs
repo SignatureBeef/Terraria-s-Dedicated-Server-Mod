@@ -1,4 +1,5 @@
 ﻿using tdsm.api.Plugin;
+using Terraria;
 
 namespace tdsm.api.Callbacks
 {

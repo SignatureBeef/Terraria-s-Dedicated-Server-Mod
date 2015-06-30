@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 #if Full_API
 using Terraria;
+using tdsm.api.Callbacks;
 
 namespace tdsm.api.Command
 {

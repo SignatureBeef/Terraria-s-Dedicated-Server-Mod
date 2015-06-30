@@ -1,7 +1,5 @@
-﻿#define ENABLE_NAT
+﻿//#define ENABLE_NAT
 
-using System;
-using Terraria;
 
 namespace tdsm.api.Callbacks
 {
@@ -85,106 +83,106 @@ namespace tdsm.api.Callbacks
             //}
         }
 
-        
-//        static class NatUtility
-//        {
-//            private static bool _discovering;
-//            private static Socket _discoverer;
-//            
-//            public delegate void DiscoveryError(DiscoverError err);
-//            public static DiscoveryError OnDiscoveryError;
-//            
-//            public enum DiscoverResult
-//            {
-//                Started,
-//                InProcess
-//            }
-//            public enum DiscoverError
-//            {
-//                NoLocalIP
-//            }
-//            public static DiscoverResult Discover(int broadcastPort)
-//            {
-//                if (null == _discoverer && !_discovering)
-//                {
-//                    _discovering = true;
-//                    System.Threading.ThreadPool.QueueUserWorkItem(Discovery, broadcastPort);
-//                    return DiscoverResult.Started;
-//                } else
-//                    return DiscoverResult.InProcess;
-//            }
-//            
-//            private static string GetLocalIP()
-//            {
-//                
-//                var itfs = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
-//                foreach (var itf in itfs)
-//                {
-//                    if (itf.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up)
-//                    {
-//                        var props = itf.GetIPProperties();
-//                        //                        var old = props.GetIPv4Properties();
-//                        //                        var nw = props.GetIPv6Properties();
-//                        foreach (var add in props.UnicastAddresses)
-//                        {
-//                            if (add.DuplicateAddressDetectionState == System.Net.NetworkInformation.DuplicateAddressDetectionState.Preferred)
-//                            {
-//                                if (add.AddressPreferredLifetime != UInt32.MaxValue)
-//                                {
-//                                    
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                
-//                var entry = Dns.GetHostEntry(Dns.GetHostName());
-//                foreach (var ip in entry.AddressList)
-//                {
-//                    if (ip.AddressFamily == AddressFamily.InterNetwork || ip.AddressFamily == AddressFamily.InterNetworkV6)
-//                    {
-//                        return ip.ToString();
-//                    }
-//                }
-//                
-//                return null;
-//            }
-//            
-//            private static void ClearSock()
-//            {
-//                if (_discoverer != null)
-//                {
-//                    if (_discoverer.Connected)
-//                        _discoverer.Close();
-//                    _discoverer.Dispose();
-//                    _discoverer = null;
-//                }
-//            }
-//            
-//            private static void Discovery(object broadcastPort)
-//            {
-//                _discoverer = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-//                _discoverer.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
-//                
-//                var ip = GetLocalIP();
-//                if (String.IsNullOrEmpty(ip))
-//                {
-//                    if(OnDiscoveryError != null) OnDiscoveryError.Invoke(DiscoverError.NoLocalIP);
-//                    ClearSock();
-//                    return;
-//                }
-//                
-//                var request = new StringBuilder();
-//                request.Append("M-SEARCH * HTTP/1.1\r\n");
-//                request.Append("HOST: ");
-//                request.Append(ip);
-//                request.Append(':');
-//                request.Append(broadcastPort.ToString());
-//                request.Append("\r\n");
-//                request.Append("ST:upnp:rootdevice\r\n");
-//                request.Append("MAN:\"ssdp:discover\"\r\n");
-//                request.Append("MX:3\r\n\r\n");
-//            }
-//        }
+
+        //        static class NatUtility
+        //        {
+        //            private static bool _discovering;
+        //            private static Socket _discoverer;
+        //            
+        //            public delegate void DiscoveryError(DiscoverError err);
+        //            public static DiscoveryError OnDiscoveryError;
+        //            
+        //            public enum DiscoverResult
+        //            {
+        //                Started,
+        //                InProcess
+        //            }
+        //            public enum DiscoverError
+        //            {
+        //                NoLocalIP
+        //            }
+        //            public static DiscoverResult Discover(int broadcastPort)
+        //            {
+        //                if (null == _discoverer && !_discovering)
+        //                {
+        //                    _discovering = true;
+        //                    System.Threading.ThreadPool.QueueUserWorkItem(Discovery, broadcastPort);
+        //                    return DiscoverResult.Started;
+        //                } else
+        //                    return DiscoverResult.InProcess;
+        //            }
+        //            
+        //            private static string GetLocalIP()
+        //            {
+        //                
+        //                var itfs = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
+        //                foreach (var itf in itfs)
+        //                {
+        //                    if (itf.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up)
+        //                    {
+        //                        var props = itf.GetIPProperties();
+        //                        //                        var old = props.GetIPv4Properties();
+        //                        //                        var nw = props.GetIPv6Properties();
+        //                        foreach (var add in props.UnicastAddresses)
+        //                        {
+        //                            if (add.DuplicateAddressDetectionState == System.Net.NetworkInformation.DuplicateAddressDetectionState.Preferred)
+        //                            {
+        //                                if (add.AddressPreferredLifetime != UInt32.MaxValue)
+        //                                {
+        //                                    
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //                
+        //                var entry = Dns.GetHostEntry(Dns.GetHostName());
+        //                foreach (var ip in entry.AddressList)
+        //                {
+        //                    if (ip.AddressFamily == AddressFamily.InterNetwork || ip.AddressFamily == AddressFamily.InterNetworkV6)
+        //                    {
+        //                        return ip.ToString();
+        //                    }
+        //                }
+        //                
+        //                return null;
+        //            }
+        //            
+        //            private static void ClearSock()
+        //            {
+        //                if (_discoverer != null)
+        //                {
+        //                    if (_discoverer.Connected)
+        //                        _discoverer.Close();
+        //                    _discoverer.Dispose();
+        //                    _discoverer = null;
+        //                }
+        //            }
+        //            
+        //            private static void Discovery(object broadcastPort)
+        //            {
+        //                _discoverer = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        //                _discoverer.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+        //                
+        //                var ip = GetLocalIP();
+        //                if (String.IsNullOrEmpty(ip))
+        //                {
+        //                    if(OnDiscoveryError != null) OnDiscoveryError.Invoke(DiscoverError.NoLocalIP);
+        //                    ClearSock();
+        //                    return;
+        //                }
+        //                
+        //                var request = new StringBuilder();
+        //                request.Append("M-SEARCH * HTTP/1.1\r\n");
+        //                request.Append("HOST: ");
+        //                request.Append(ip);
+        //                request.Append(':');
+        //                request.Append(broadcastPort.ToString());
+        //                request.Append("\r\n");
+        //                request.Append("ST:upnp:rootdevice\r\n");
+        //                request.Append("MAN:\"ssdp:discover\"\r\n");
+        //                request.Append("MX:3\r\n\r\n");
+        //            }
+        //        }
     }
 }

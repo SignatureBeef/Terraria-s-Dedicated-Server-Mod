@@ -629,7 +629,7 @@ namespace tdsm.core.Messages.Out
                 msg.Send(plr); // send these before the login event, so messages from plugins come after
             }
 
-            var slot = Terraria.Netplay.serverSock[plr];
+            var slot = Terraria.Netplay.serverSock[plr] as ServerSlot;
 
             slot.announced = true;
 

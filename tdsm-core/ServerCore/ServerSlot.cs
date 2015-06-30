@@ -42,23 +42,38 @@ namespace tdsm.core.ServerCore
 
     public static class IAPISocketExtensions
     {
-        public static void Kick(this tdsm.api.Callbacks.IAPISocket sock, string reason)
+        public static void Kick(this Terraria.ServerSock sock, string reason)
         {
             (sock as ServerSlot).Kick(reason);
         }
 
-        public static SlotState State(this tdsm.api.Callbacks.IAPISocket sock)
+        public static SlotState State(this Terraria.ServerSock sock)
         {
             return (sock as ServerSlot).state;
         }
 
-        public static void SetState(this tdsm.api.Callbacks.IAPISocket sock, SlotState state)
+        public static void SetState(this Terraria.ServerSock sock, SlotState state)
         {
             (sock as ServerSlot).state = state;
+        } 
+
+        public static bool IsPlaying(this Terraria.ServerSock sock)
+        {
+            return (sock as ServerSlot).state == SlotState.PLAYING;
+        }
+        
+        public static bool CanSendWater(this Terraria.ServerSock sock)
+        {
+            return (sock as ServerSlot).state >= SlotState.SENDING_TILES && (sock as ServerSlot).Connected;
+        }
+        
+        public static string RemoteAddress(this Terraria.ServerSock sock)
+        {
+            return (sock as ServerSlot).remoteAddress;
         }
     }
 
-    public class ServerSlot : tdsm.api.Callbacks.IAPISocket
+    public class ServerSlot : Terraria.ServerSock
     {
         public volatile ClientConnection conn;
 
@@ -81,7 +96,7 @@ namespace tdsm.core.ServerCore
         //public string statusText2;
         //public int statusCount;
         //public int statusMax;
-        //public volatile string remoteAddress;
+        public volatile string remoteAddress;
         //public bool[,] tileSection;
         //public string statusText = String.Empty;
         //public bool announced;
@@ -120,7 +135,7 @@ namespace tdsm.core.ServerCore
             state = SlotState.VACANT;
         }
 
-        public override void SpamUpdate()
+        public new void SpamUpdate()
         {
             if (!Netplay.spamCheck)
             {
@@ -168,7 +183,7 @@ namespace tdsm.core.ServerCore
             }
         }
 
-        public override bool SectionRange(int size, int firstX, int firstY)
+        public new bool SectionRange(int size, int firstX, int firstY)
         {
             for (var i = 0; i < 4; i++)
             {
@@ -191,7 +206,7 @@ namespace tdsm.core.ServerCore
             return false;
         }
 
-        public override void SpamClear()
+        public new void SpamClear()
         {
             this.spamProjectile = 0f;
             this.spamAddBlock = 0f;
@@ -199,7 +214,7 @@ namespace tdsm.core.ServerCore
             this.spamWater = 0f;
         }
 
-        public override void Reset()
+        public new void Reset()
         {
             if (tileSection != null && tileSection.GetLength(0) >= Main.maxSectionsX && tileSection.GetLength(1) >= Main.maxSectionsY)
             {
@@ -266,19 +281,19 @@ namespace tdsm.core.ServerCore
             conn.CopyAndSend(new ArraySegment<byte>(data, offset, length));
         }
 
-        public override bool IsPlaying()
-        {
-            return state == SlotState.PLAYING;
-        }
-
-        public override bool CanSendWater()
-        {
-            return state >= SlotState.SENDING_TILES && Connected;
-        }
-
-        public override string RemoteAddress()
-        {
-            return conn.RemoteAddress;
-        }
+//        public override bool IsPlaying()
+//        {
+//            return state == SlotState.PLAYING;
+//        }
+//
+//        public override bool CanSendWater()
+//        {
+//            return state >= SlotState.SENDING_TILES && Connected;
+//        }
+//
+//        public override string RemoteAddress()
+//        {
+//            return conn.RemoteAddress;
+//        }
     }
 }
