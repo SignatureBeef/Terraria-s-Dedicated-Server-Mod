@@ -79,7 +79,7 @@ namespace tdsm.patcher
             //            tdsm.api.Permissions.PermissionsManager.SetHandler(handler);
             //    }
             //}
-                
+
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(Console.Title = String.Format("TDSM patcher build {0}", Build));
             Console.ForegroundColor = ConsoleColor.White;
@@ -196,60 +196,62 @@ namespace tdsm.patcher
             patcher.MakeTypesPublic(true);
             Console.Write("Ok\nHooking command line...");
             patcher.PatchCommandLine();
-            patcher.HookConsoleTitle();
-            Console.Write("Ok\nSkipping sysmenus functions...");
-            patcher.SkipMenu();
-            Console.Write("Ok\nFixing code entry...");
-            patcher.FixEntryPoint();
-            Console.Write("Ok\nPatching save paths...");
-            patcher.FixSavePath();
-            Console.Write("Ok\nHooking receive buffer...");
-            patcher.HookMessageBuffer();
-            Console.Write("Ok\nAdding the slot manager...");
-            patcher.PatchServer();
+            Console.Write("Ok\nHooking players...");
+            patcher.PatchPlayer();
+            ////patcher.HookConsoleTitle();
+            //Console.Write("Ok\nSkipping sysmenus functions...");
+            //patcher.SkipMenu();
+            //Console.Write("Ok\nFixing code entry...");
+            //patcher.FixEntryPoint();
+            //Console.Write("Ok\nPatching save paths...");
+            //patcher.FixSavePath();
+            //Console.Write("Ok\nHooking receive buffer...");
+            //patcher.HookMessageBuffer();
+            //Console.Write("Ok\nAdding the slot manager...");
+            //patcher.PatchServer();
             Console.Write("Ok\nPatching XNA...");
             patcher.PatchXNA(true);
             Console.Write("Ok\nHooking start...");
             patcher.HookProgramStart();
-            Console.Write("Ok\nHooking initialise...");
-            patcher.HookInitialise();
-            Console.Write("Ok\nHooking into world events...");
-            patcher.HookWorldEvents();
-            Console.Write("Ok\nHooking statusText...");
-            patcher.HookStatusText();
-            Console.Write("Ok\nHooking NetMessage...");
-            patcher.HookNetMessage();
-            //Console.Write("Ok\nRemoving client code...");
-            //patcher.RemoveClientCode();
-            Console.Write("Ok\nHooking Server events...");
-            patcher.HookUpdateServer();
-            patcher.HookDedServEnd();
-            Console.Write("Ok\nHooking NPC Spawning...");
-            patcher.HookNPCSpawning();
-            Console.Write("Ok\nHooking config...");
-            patcher.HookConfig();
-            Console.Write("Ok\nRouting socket implementations...");
-            patcher.HookSockets();
-            Console.Write("Ok\nFixing statusText...");
-            patcher.FixStatusTexts();
-            Console.Write("Ok\nHooking invasions...");
-            patcher.HookInvasions();
+            //Console.Write("Ok\nHooking initialise...");
+            //patcher.HookInitialise();
+            //Console.Write("Ok\nHooking into world events...");
+            //patcher.HookWorldEvents();
+            //Console.Write("Ok\nHooking statusText...");
+            //patcher.HookStatusText();
+            //Console.Write("Ok\nHooking NetMessage...");
+            //patcher.HookNetMessage();
+            ////Console.Write("Ok\nRemoving client code...");
+            ////patcher.RemoveClientCode();
+            //Console.Write("Ok\nHooking Server events...");
+            //patcher.HookUpdateServer();
+            //patcher.HookDedServEnd();
+            //Console.Write("Ok\nHooking NPC Spawning...");
+            //patcher.HookNPCSpawning();
+            //Console.Write("Ok\nHooking config...");
+            //patcher.HookConfig();
+            ////Console.Write("Ok\nRouting socket implementations...");
+            ////patcher.HookSockets();
+            //Console.Write("Ok\nFixing statusText...");
+            //patcher.FixStatusTexts();
+            //Console.Write("Ok\nHooking invasions...");
+            //patcher.HookInvasions();
             //Console.Write("Ok\nHooking eclipse...");
             //patcher.HookEclipse();
             //Console.Write("Ok\nHooking blood moon...");
             //patcher.HookBloodMoon();
 
-            //We only need one TDSM.exe if this works...
-            Console.Write("Ok\nRemoving port forwarding functionality...");
-            patcher.FixNetplay();
+            ////We only need one TDSM.exe if this works...
+            //Console.Write("Ok\nRemoving port forwarding functionality...");
+            //patcher.FixNetplay();
 
-            Console.Write("Ok\n");
-            patcher.InjectHooks();
+            //Console.Write("Ok\n");
+            //patcher.InjectHooks();
 
             //            Console.Write("Ok\nPutting Terraria on a diet...");
             //            patcher.ChangeTileToStruct();
-                        Console.Write("Ok\nHooking DEBUG...");
-                        patcher.HookWorldFile_DEBUG();
+            //Console.Write("Ok\nHooking DEBUG...");
+            //patcher.HookWorldFile_DEBUG();
 
             Console.Write("Ok\n");
 
@@ -320,7 +322,7 @@ namespace tdsm.patcher
             patcher.Save(output, Build, TDSMGuid, fileName);
 
 
-            var t = patcher.Terraria.Netplay.Fields.Single(x => x.Name == "serverSock");
+            //var t = patcher.Terraria.Netplay.Fields.Single(x => x.Name == "serverSock");
 
 
             patcher.Dispose();
@@ -424,12 +426,19 @@ namespace tdsm.patcher
 
                             ms.Seek(0L, SeekOrigin.Begin);
                             var asm = System.Reflection.Assembly.Load(ms.ToArray());
-                            if (File.Exists("serverconfig.txt"))
-                                asm.EntryPoint.Invoke(null, new object[] {
+                            try
+                            {
+                                if (File.Exists("serverconfig.txt"))
+                                    asm.EntryPoint.Invoke(null, new object[] {
 								new string[] { "-config", "serverconfig.txt" }
 							});
-                            else
-                                asm.EntryPoint.Invoke(null, null);
+                                else
+                                    asm.EntryPoint.Invoke(null, null);
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
                         }
                     }
                 }

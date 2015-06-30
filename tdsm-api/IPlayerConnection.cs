@@ -11,22 +11,22 @@
         //void Flush();
     }
 
-    /// <summary>
-    /// Used for the vanilla connection implementation
-    /// </summary>
-    public class APIConnection : IPlayerConnection
-    {
-        public int whoAmI;
+    ///// <summary>
+    ///// Used for the vanilla connection implementation
+    ///// </summary>
+    //public class APIConnection : IPlayerConnection
+    //{
+    //    public int Id;
 
-        public bool DisconnectInProgress()
-        {
-            return Terraria.Netplay.serverSock[whoAmI].kill;
-        }
+    //    public bool DisconnectInProgress()
+    //    {
+    //        return Terraria.Netplay.Clients[Id].kill;
+    //    }
 
-        public void Kick(string reason, bool announce = true)
-        {
-            Terraria.NetMessage.SendData(2, whoAmI, -1, reason, 0, 0f, 0f, 0f, 0);
-        }
-    }
+    //    public void Kick(string reason, bool announce = true)
+    //    {
+    //        Terraria.NetMessage.SendData(2, Id, -1, reason, 0, 0f, 0f, 0f, 0);
+    //    }
+    //}
 }
 

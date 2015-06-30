@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using tdsm.core.Logging;
 
-using tdsm.core.ServerCore;
+//using tdsm.core.ServerCore;
 
 namespace tdsm.core.RemoteConsole
 {

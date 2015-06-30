@@ -25,7 +25,7 @@ namespace tdsm.core.Messages.In
 
 			if (playerIndex != whoAmI && Entry.EnableCheatProtection)
             {
-                Terraria.Netplay.serverSock[whoAmI].Kick("Cheating detected (PLAYER_HEALTH_UPDATE forgery).");
+                Terraria.Netplay.Clients[whoAmI].Kick("Cheating detected (PLAYER_HEALTH_UPDATE forgery).");
                 return;
             }
 

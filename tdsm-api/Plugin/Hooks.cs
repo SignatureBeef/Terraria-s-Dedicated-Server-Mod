@@ -356,7 +356,7 @@ namespace tdsm.api.Plugin
             public void Apply(Player player)
             {
                 player.hair = Hair;
-                player.male = Male;
+                //player.male = Male;
                 player.difficulty = Difficulty;
                 player.name = Name;
 
@@ -717,7 +717,7 @@ namespace tdsm.api.Plugin
                 //
                 //                projectile = Registries.Projectile.Create(TypeByte);
 
-                //                projectile.whoAmI = index;
+                //                projectile.Id = index;
                 //                Apply(projectile);
 
                 return projectile;
@@ -740,7 +740,7 @@ namespace tdsm.api.Plugin
             {
                 if (projectile != null)
                 {
-                    //                    Projectile.FreeSlot(projectile.identity, projectile.Owner, projectile.whoAmI);
+                    //                    Projectile.FreeSlot(projectile.identity, projectile.Owner, projectile.Id);
                     projectile = null;
                 }
             }

@@ -264,7 +264,7 @@ namespace tdsm.core.ServerCore
             conn.State = SlotState.ASSIGNING_SLOT;
             conn.ResetTimeout();
 
-            var slot = Terraria.Netplay.serverSock[id] as ServerSlot;
+            var slot = Terraria.Netplay.Clients[id] as ServerSlot;
             slot.remoteAddress = conn.RemoteAddress;
             slot.conn = conn;
 
@@ -326,7 +326,7 @@ namespace tdsm.core.ServerCore
         {
             ClientConnection assignedTo = null;
 
-            var slot = Terraria.Netplay.serverSock[id] as ServerSlot;
+            var slot = Terraria.Netplay.Clients[id] as ServerSlot;
             slot.Reset();
 
             lock (syncRoot)

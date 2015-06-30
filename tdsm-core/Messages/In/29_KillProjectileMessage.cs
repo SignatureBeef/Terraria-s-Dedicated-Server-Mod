@@ -23,7 +23,7 @@ namespace tdsm.core.Messages.In
 
 			if (playerId != whoAmI && Entry.EnableCheatProtection)
             {
-                Terraria.Netplay.serverSock[whoAmI].Kick("Cheating detected (KILL_PROJECTILE forgery).");
+                Terraria.Netplay.Clients[whoAmI].Kick("Cheating detected (KILL_PROJECTILE forgery).");
                 return;
             }
 

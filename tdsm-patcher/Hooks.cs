@@ -68,8 +68,8 @@ namespace tdsm.patcher
             var il = getData.Body.GetILProcessor();
             var playerObject = firstDifficulty.Previous.Previous.Previous.Previous.Operand;
 
-            il.InsertAfter(firstDifficulty, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
-            il.InsertAfter(firstDifficulty, il.Create(OpCodes.Ldloc, playerObject as VariableDefinition));
+            //il.InsertAfter(firstDifficulty, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+            //il.InsertAfter(firstDifficulty, il.Create(OpCodes.Ldloc, playerObject as VariableDefinition));
         }
     }
 

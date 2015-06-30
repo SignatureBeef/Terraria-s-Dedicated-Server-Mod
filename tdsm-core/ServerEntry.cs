@@ -24,7 +24,7 @@ namespace tdsm.core
                     try
                     {
                         int serverPort = Convert.ToInt32(args[i]);
-                        Netplay.serverPort = serverPort;
+                        Netplay.ListenPort = serverPort;
                     }
                     catch
                     {
@@ -45,7 +45,7 @@ namespace tdsm.core
                 if (args[i].ToLower() == "-pass" || args[i].ToLower() == "-password")
                 {
                     i++;
-                    Netplay.password = args[i];
+                    Netplay.ServerPassword = args[i];
                 }
                 if (args[i].ToLower() == "-lang")
                 {
@@ -55,7 +55,7 @@ namespace tdsm.core
                 if (args[i].ToLower() == "-world")
                 {
                     i++;
-                    game.SetWorld(args[i]);
+                    game.SetWorld(args[i], false);
                 }
                 if (args[i].ToLower() == "-worldname")
                 {
@@ -70,7 +70,7 @@ namespace tdsm.core
                 if (args[i].ToLower() == "-banlist")
                 {
                     i++;
-                    Netplay.banFile = args[i];
+                    Netplay.BanFilePath = args[i];
                 }
                 if (args[i].ToLower() == "-autoshutdown")
                 {
@@ -94,7 +94,7 @@ namespace tdsm.core
                 }
                 if (args[i].ToLower() == "-noupnp")
                 {
-                    Netplay.uPNP = false;
+                    Netplay.UseUPNP = false;
                 }
             }
             game.DedServ();

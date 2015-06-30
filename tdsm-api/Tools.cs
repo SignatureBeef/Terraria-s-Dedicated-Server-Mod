@@ -35,6 +35,11 @@ namespace tdsm.api
             WriteLine(fmt, null);
         }
 
+        public static void WriteLine(object arg)
+        {
+            WriteLine("{0}", arg);
+        }
+
         public static void WriteLine(Exception e)
         {
             WriteLine("{0}", e);
@@ -64,7 +69,7 @@ namespace tdsm.api
             foreach (var player in Main.player)
             {
                 if (player.active)
-                    NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, message, 255 /* PlayerId */, color.R, color.G, color.B);
+                    NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmI, -1, message, 255 /* PlayerId */, color.R, color.G, color.B);
             }
 
             if (writeToConsole) Tools.WriteLine(message);
@@ -77,7 +82,7 @@ namespace tdsm.api
             foreach (var player in Main.player)
             {
                 if (player.active && player.Op)
-                    NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, message, 255 /* PlayerId */, 176f, 196, 222f);
+                    NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmI, -1, message, 255 /* PlayerId */, 176f, 196, 222f);
             }
 
             if (writeToConsole) Tools.WriteLine(message);

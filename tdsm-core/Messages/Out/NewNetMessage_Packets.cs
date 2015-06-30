@@ -38,13 +38,17 @@ namespace tdsm.core.Messages.Out
 
             Byte(playerId);
 
-            Byte(player.male ? 0 : 1);
+            //1.3
+            //Byte(player.male ? 0 : 1);
             Byte(player.hair);
 
             String(player.name);
 
             Byte(player.hairDye);
-            Byte(player.hideVisual);
+            for (var i = 0; i < 8; i++)
+            {
+                Byte(player.hideVisual[i]);
+            }
 
             Color(player.hairColor);
             Color(player.skinColor);
@@ -426,7 +430,7 @@ namespace tdsm.core.Messages.Out
                     binaryWriter.Write(yStart);
                     binaryWriter.Write(width);
                     binaryWriter.Write(height);
-                    NetMessage.CompressTileBlock_Inner(binaryWriter, xStart, yStart, (int)width, (int)height, packChests);
+                    NetMessage.CompressTileBlock_Inner(binaryWriter, xStart, yStart, (int)width, (int)height);
                     int num = this.buf.Length;
                     if ((long)bufferStart + memoryStream.Length > (long)num)
                     {

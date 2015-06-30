@@ -92,7 +92,7 @@ namespace tdsm.core.Messages.In
                     if (!projectile.active || projectile.type != type)
                     {
                         projectile.SetDefaults(type);
-                        Terraria.Netplay.serverSock[whoAmI].spamProjectile += 1f;
+                        Terraria.Netplay.Clients[whoAmI].SpamProjectile += 1f;
                     }
 
                     projectile.identity = identity;

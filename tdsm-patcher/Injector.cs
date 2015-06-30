@@ -142,6 +142,8 @@ namespace tdsm.patcher
 
         public void FixStatusTexts()
         {
+            //1.3
+            return;
             var main = Terraria.WorldFile.Methods.Single(x => x.Name == "saveWorld" && x.IsStatic);
 
             var il = main.Body.GetILProcessor();
@@ -290,6 +292,8 @@ namespace tdsm.patcher
 
         public void HookInitialise()
         {
+            //1.3
+            return;
             var method = Terraria.Netplay.Methods.Single(x => x.Name == "Init");
             var callback = API.MainCallback.Methods.First(m => m.Name == "Initialise");
 
@@ -339,6 +343,19 @@ namespace tdsm.patcher
             //TODO work out why it crashes when you replace Ret with Ret
         }
 
+        public void PatchPlayer()
+        {
+            Terraria.Player.BaseType = _asm.MainModule.Import(API.BasePlayer);
+
+            ////By default the constructor calls Object.ctor. 
+            //var ctor = Terraria.Player.Methods.Single(x => x.Name == ".ctor");
+            //var baseCtor = API.BasePlayer.Methods.Single(x => x.Name == ".ctor");
+
+            //var ctorIl = ctor.Body.GetILProcessor();
+            //ctorIl.Body.Instructions.Insert(0, ctorIl.Create(OpCodes.Call, _asm.MainModule.Import(baseCtor)));
+            //ctorIl.Body.Instructions.Insert(0, ctorIl.Create(OpCodes.Ldarg_0));
+        }
+
         public void PatchServer()
         {
             var method = Terraria.Netplay.Methods.Single(x => x.Name == "StartServer");
@@ -351,20 +368,11 @@ namespace tdsm.patcher
             //var baseType = _self.MainModule.Types.Single(x => x.Name == "BasePlayer");
             //var interfaceType = _self.MainModule.Types.Single(x => x.Name == "ISender");
 
-            Terraria.Player.BaseType = _asm.MainModule.Import(API.BasePlayer);
-
-            //By default the constructor calls Object.ctor. This should also be changed to our socket since it now inherits that.
-            var ctor = Terraria.Player.Methods.Single(x => x.Name == ".ctor");
-            var baseCtor = API.BasePlayer.Methods.Single(x => x.Name == ".ctor");
-
-            var ctorIl = ctor.Body.GetILProcessor();
-            ctorIl.Body.Instructions.Insert(0, ctorIl.Create(OpCodes.Call, _asm.MainModule.Import(baseCtor)));
-            ctorIl.Body.Instructions.Insert(0, ctorIl.Create(OpCodes.Ldarg_0));
-
-            var rem = ctorIl.Body.Instructions.Single(x => x.OpCode == OpCodes.Call
-                && x.Operand is MethodReference && (x.Operand as MethodReference).DeclaringType.Name == "Object");
-            ctorIl.Remove(rem.Previous);
-            ctorIl.Remove(rem);
+            //1.3
+            //var rem = ctorIl.Body.Instructions.Single(x => x.OpCode == OpCodes.Call
+            //    && x.Operand is MethodReference && (x.Operand as MethodReference).DeclaringType.Name == "Object");
+            //ctorIl.Remove(rem.Previous);
+            //ctorIl.Remove(rem);
 
             //Make the UpdateServer function public
             var us = Terraria.Main.Methods.Single(x => x.Name == "UpdateServer");
@@ -413,7 +421,7 @@ namespace tdsm.patcher
                 Terraria.Netplay.Fields.Remove(fl);
 
             //Clear open and close methods, add reference to the APIs
-            var cb = Terraria.Netplay.Methods.Single(x => x.Name == "openPort");
+            var cb = Terraria.Netplay.Methods.Single(x => x.Name == "OpenPort");
             //    .Body;
             //cb.InitLocals = false;
             //cb.Variables.Clear();
@@ -444,7 +452,7 @@ namespace tdsm.patcher
             foreach (var ins in serverLoop.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Call
                     && x.Operand is MethodReference
-                    && new string[] { "openPort", "closePort" }.Contains((x.Operand as MethodReference).Name))
+                    && new string[] { "OpenPort", "closePort" }.Contains((x.Operand as MethodReference).Name))
                 )
             {
                 var mr = ins.Operand as MemberReference;

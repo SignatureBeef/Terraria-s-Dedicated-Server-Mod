@@ -121,7 +121,7 @@ namespace tdsm.core.Messages.In
 
 			if (plr != whoAmI && Entry.EnableCheatProtection)
             {
-                Terraria.Netplay.serverSock[whoAmI].Kick("SpawnNPC Player Forgery!");
+                Terraria.Netplay.Clients[whoAmI].Kick("SpawnNPC Player Forgery!");
                 return;
             }
 

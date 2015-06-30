@@ -18,7 +18,7 @@ namespace tdsm.core.Messages.In
         {
 			if (ReadByte(readBuffer) != whoAmI && Entry.EnableCheatProtection)
             {
-                Terraria.Netplay.serverSock[whoAmI].Kick("Cheating detected (PLAYER_STATE_UPDATE forgery).");
+                Terraria.Netplay.Clients[whoAmI].Kick("Cheating detected (PLAYER_STATE_UPDATE forgery).");
                 return;
             }
             var player = Main.player[whoAmI];
@@ -74,7 +74,7 @@ namespace tdsm.core.Messages.In
             args.ApplyParams(player);
             args.ApplyKeys(player);
 
-            if (Terraria.Netplay.serverSock[whoAmI].IsPlaying())
+            if (Terraria.Netplay.Clients[whoAmI].IsPlaying())
             {
                 NewNetMessage.SendData(13, -1, whoAmI, String.Empty, whoAmI);
             }

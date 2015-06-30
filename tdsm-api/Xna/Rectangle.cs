@@ -3,6 +3,13 @@ namespace Microsoft.Xna.Framework
 {
     public struct Rectangle
     {
+        private static Rectangle _empty = default(Rectangle);
+        public static Rectangle Empty
+        {
+            get
+            { return Rectangle._empty; }
+        }
+
         public static Rectangle[] Array;
 
         public int X;

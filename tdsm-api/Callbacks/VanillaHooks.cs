@@ -16,7 +16,7 @@ namespace tdsm.api.Callbacks
 
             var args = new HookArgs.PlayerEnteredGame
             {
-                Slot = player.whoAmi
+                Slot = player.whoAmI
             };
 
             ctx.SetResult(HookResult.DEFAULT, false);

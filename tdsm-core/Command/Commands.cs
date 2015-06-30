@@ -8,8 +8,8 @@ using tdsm.api.Command;
 using tdsm.api.Misc;
 using tdsm.core.Definitions;
 using tdsm.core.Logging;
-using tdsm.core.Messages.Out;
-using tdsm.core.ServerCore;
+//using tdsm.core.Messages.Out;
+//using tdsm.core.ServerCore;
 using Terraria;
 
 namespace tdsm.core
@@ -199,7 +199,8 @@ namespace tdsm.core
             args.ParseNone();
 
             Tools.NotifyAllOps("Exiting on request.");
-            ServerCore.Server.StopServer();
+            //ServerCore.Server.StopServer();
+            Terraria.Netplay.TcpListener.StopListening();
             Terraria.Netplay.disconnect = true;
 
             throw new ExitException(sender.SenderName + " requested that TDSM is to shutdown.");
@@ -342,7 +343,8 @@ namespace tdsm.core
             if (on > 0)
                 os = "Ops: " + String.Join(", ", ops);
 
-            sender.Message(string.Concat(os, ps, " (", on + pn, "/", SlotManager.MaxSlots, ")"), 255, 255, 240, 20);
+            //sender.Message(string.Concat(os, ps, " (", on + pn, "/", SlotManager.MaxSlots, ")"), 255, 255, 240, 20);
+            sender.Message(string.Concat(os, ps, " (", on + pn, "/", Netplay.MaxConnections, ")"), 255, 255, 240, 20);
         }
 
         /// <summary>
@@ -356,9 +358,9 @@ namespace tdsm.core
             {
                 ProgramLog.Log("* " + sender.SenderName + " " + message);
                 if (sender is Player)
-                    NewNetMessage.SendData(25, -1, -1, "* " + sender.SenderName + " " + message, 255, 200, 100, 0);
+                    NetMessage.SendData(25, -1, -1, "* " + sender.SenderName + " " + message, 255, 200, 100, 0);
                 else
-                    NewNetMessage.SendData(25, -1, -1, "* " + sender.SenderName + " " + message, 255, 238, 130, 238);
+                    NetMessage.SendData(25, -1, -1, "* " + sender.SenderName + " " + message, 255, 238, 130, 238);
             }
             else
             {
@@ -385,7 +387,7 @@ namespace tdsm.core
             if (!String.IsNullOrEmpty(message))
             {
                 ProgramLog.Log("<" + sender.SenderName + "> " + ((sender is ConsoleSender) ? String.Empty : "SERVER: ") + message);
-                NewNetMessage.SendData(25, -1, -1, "SERVER: " + message, 255, 238, 130, 238);
+                NetMessage.SendData(25, -1, -1, "SERVER: " + message, 255, 238, 130, 238);
             }
             else
             {
@@ -412,7 +414,7 @@ namespace tdsm.core
                 }
 
                 //subject.HealEffect(subject.statLifeMax, true);
-                NewNetMessage.SendData(35, -1, -1, String.Empty, subject.whoAmi, (float)subject.statLifeMax, 0f, 0f, 0);
+                NetMessage.SendData(35, -1, -1, String.Empty, subject.whoAmI, (float)subject.statLifeMax, 0f, 0f, 0);
             }
             else if (args.TryPop("-all"))
             {
@@ -420,7 +422,7 @@ namespace tdsm.core
                 {
                     if (plr.active)
                     {
-                        NewNetMessage.SendData(35, -1, -1, String.Empty, plr.whoAmi, (float)plr.statLifeMax, 0f, 0f, 0);
+                        NetMessage.SendData(35, -1, -1, String.Empty, plr.whoAmI, (float)plr.statLifeMax, 0f, 0f, 0);
                     }
                 }
             }
@@ -436,7 +438,7 @@ namespace tdsm.core
         {
             Tools.NotifyAllOps("Saving world.....");
 
-            WorldFile.saveWorld();
+            Terraria.IO.WorldFile.saveWorld();
 
             while (WorldGen.saveLock)
                 Thread.Sleep(100);
@@ -608,7 +610,7 @@ namespace tdsm.core
                 }
             }
 
-            NewNetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
+            NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
             var current = WorldTime.Parse(World.GetParsableTime()).Value;
             Tools.NotifyAllPlayers(String.Format("Time set to {0} ({1}) by {2}", current.ToString(), current.GameTime, sender.SenderName), Color.Green);
         }
@@ -1027,8 +1029,9 @@ namespace tdsm.core
                 int s;
                 args.ParseOne(out s);
 
-                var slot = Terraria.Netplay.serverSock[s];
+                var slot = Terraria.Netplay.Clients[s];
 
+#if TDSMServer
                 if (slot.State() != SlotState.VACANT)
                 {
                     slot.Kick("You have been kicked by " + sender.SenderName + ".");
@@ -1041,6 +1044,9 @@ namespace tdsm.core
                 {
                     sender.Message("Kick slot is empty");
                 }
+#else
+                NetMessage.SendData(2, slot.Id, -1, "Kicked from server.", 0, 0f, 0f, 0f, 0, 0, 0);
+#endif
             }
             else
             {
@@ -1054,7 +1060,7 @@ namespace tdsm.core
                 }
 
                 player.Kick("You have been kicked by " + sender.SenderName + ".");
-                NewNetMessage.SendData(25, -1, -1, player.Name + " has been kicked by " + sender.SenderName + ".", 255);
+                NetMessage.SendData(25, -1, -1, player.Name + " has been kicked by " + sender.SenderName + ".", 255);
             }
         }
 
@@ -1275,47 +1281,49 @@ namespace tdsm.core
 
             switch (options)
             {
-                case WorldZone.Blood:
-                    ply = (from x in Main.player where x.zoneBlood select x).ToArray();
-                    if (ply.Length > 0)
-                        return ply[Main.rand.Next(0, ply.Length - 1)];
-                    break;
-                case WorldZone.Candle:
-                    ply = (from x in Main.player where x.zoneCandle select x).ToArray();
-                    if (ply.Length > 0)
-                        return ply[Main.rand.Next(0, ply.Length - 1)];
-                    break;
-                case WorldZone.Dungeon:
-                    ply = (from x in Main.player where x.zoneDungeon select x).ToArray();
-                    if (ply.Length > 0)
-                        return ply[Main.rand.Next(0, ply.Length - 1)];
-                    break;
-                case WorldZone.Holy:
-                    ply = (from x in Main.player where x.zoneHoly select x).ToArray();
-                    if (ply.Length > 0)
-                        return ply[Main.rand.Next(0, ply.Length - 1)];
-                    break;
-                case WorldZone.Meteor:
-                    ply = (from x in Main.player where x.zoneMeteor select x).ToArray();
-                    if (ply.Length > 0)
-                        return ply[Main.rand.Next(0, ply.Length - 1)];
-                    break;
-                case WorldZone.Snow:
-                    ply = (from x in Main.player where x.zoneSnow select x).ToArray();
-                    if (ply.Length > 0)
-                        return ply[Main.rand.Next(0, ply.Length - 1)];
-                    break;
-                case WorldZone.Jungle:
-                    ply = (from x in Main.player where x.zoneJungle select x).ToArray();
-                    if (ply.Length > 0)
-                        return ply[Main.rand.Next(0, ply.Length - 1)];
-                    break;
-                case WorldZone.Hell:
-                    ply = (from x in Main.player where x.zoneHoly select x).ToArray();
-                    if (ply.Length > 0)
-                        return ply[Main.rand.Next(0, ply.Length - 1)];
-                    break;
-                case WorldZone.Any:
+                    //1.3
+                //case WorldZone.Blood:
+                //    ply = (from x in Main.player where x.zoneBlood select x).ToArray();
+                //    if (ply.Length > 0)
+                //        return ply[Main.rand.Next(0, ply.Length - 1)];
+                //    break;
+                //case WorldZone.Candle:
+                //    ply = (from x in Main.player where x.zoneCandle select x).ToArray();
+                //    if (ply.Length > 0)
+                //        return ply[Main.rand.Next(0, ply.Length - 1)];
+                //    break;
+                //case WorldZone.Dungeon:
+                //    ply = (from x in Main.player where x.zoneDungeon select x).ToArray();
+                //    if (ply.Length > 0)
+                //        return ply[Main.rand.Next(0, ply.Length - 1)];
+                //    break;
+                //case WorldZone.Holy:
+                //    ply = (from x in Main.player where x.zoneHoly select x).ToArray();
+                //    if (ply.Length > 0)
+                //        return ply[Main.rand.Next(0, ply.Length - 1)];
+                //    break;
+                //case WorldZone.Meteor:
+                //    ply = (from x in Main.player where x.zoneMeteor select x).ToArray();
+                //    if (ply.Length > 0)
+                //        return ply[Main.rand.Next(0, ply.Length - 1)];
+                //    break;
+                //case WorldZone.Snow:
+                //    ply = (from x in Main.player where x.zoneSnow select x).ToArray();
+                //    if (ply.Length > 0)
+                //        return ply[Main.rand.Next(0, ply.Length - 1)];
+                //    break;
+                //case WorldZone.Jungle:
+                //    ply = (from x in Main.player where x.zoneJungle select x).ToArray();
+                //    if (ply.Length > 0)
+                //        return ply[Main.rand.Next(0, ply.Length - 1)];
+                //    break;
+                //case WorldZone.Hell:
+                //    ply = (from x in Main.player where x.zoneHoly select x).ToArray();
+                //    if (ply.Length > 0)
+                //        return ply[Main.rand.Next(0, ply.Length - 1)];
+                //    break;
+                //case WorldZone.Any:
+                default:
                     if (Main.player.Length > 0)
                         return Main.player[Main.rand.Next(0, Main.player.Length - 1)];
                     break;
@@ -1421,7 +1429,7 @@ namespace tdsm.core
                 if (NightOverride)
                 {
                     World.SetTime(16200.0, false);
-                    NewNetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
+                    NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
                 }
 
                 foreach (var def in bosses)
@@ -1466,7 +1474,7 @@ namespace tdsm.core
                     //if (!(sender is ConsoleSender))
                     //    ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.SenderName, name, BossSlot);
 
-                    NPC.SpawnOnPlayer((def.Value[0] as Player).whoAmi, def.Key);
+                    NPC.SpawnOnPlayer((def.Value[0] as Player).whoAmI, def.Key);
                 }
             }
             else
@@ -1482,6 +1490,7 @@ namespace tdsm.core
         /// <param name="args">Arguments sent with command</param>
         public void ItemRejection(ISender sender, ArgumentList args)
         {
+#if TDSMServer
             string exception;
             if (args.TryParseOne<String>("-add", out exception))
             {
@@ -1516,6 +1525,7 @@ namespace tdsm.core
             {
                 throw new CommandError("Expected argument -add|-remove|-clear");
             }
+#endif
         }
 
         /// <summary>
@@ -1535,7 +1545,7 @@ namespace tdsm.core
                 return;
             }
 
-            if (player.whoAmi < 0) return;
+            if (player.whoAmI < 0) return;
 
             if (!player.Op)
             {
@@ -1550,7 +1560,7 @@ namespace tdsm.core
                 player.SetLastCostlyCommand(DateTime.Now);
             }
 
-            NewNetMessage.SendTileSquare(player.whoAmi, (int)(player.position.X / 16), (int)(player.position.Y / 16), 32);
+            NetMessage.SendTileSquare(player.whoAmI, (int)(player.position.X / 16), (int)(player.position.Y / 16), 32);
         }
 
         /// <summary>
@@ -1566,9 +1576,9 @@ namespace tdsm.core
                 throw new CommandError("Hard mode is already enabled");
 
             sender.Message("Changing to hard mode...");
-            WorldGen.hardLock = true;
+            WorldGen.IsGeneratingHardMode = true;
             Terraria.WorldGen.StartHardmode();
-            while (WorldGen.hardLock) Thread.Sleep(5);
+            while (WorldGen.IsGeneratingHardMode) Thread.Sleep(5);
             sender.Message("Hard mode is now enabled.");
         }
 
@@ -1688,7 +1698,8 @@ namespace tdsm.core
 
             if ((args.Plugin as Entry).UseTimeLock)
             {
-                if (!setNow) NewNetMessage.SendData(Packet.WORLD_DATA);
+                //if (!setNow) NewNetMessage.SendData(Packet.WORLD_DATA);
+                if (!setNow) NetMessage.SendData((int)Packet.WORLD_DATA);
 
                 sender.Message(
                     String.Format("Time lock has set at {0}.", (args.Plugin as Entry).TimelockTime),
@@ -1704,6 +1715,7 @@ namespace tdsm.core
         /// <param name="args">Arguments sent with command</param>
         public void OpPlayer(ISender sender, ArgumentList args)
         {
+#if TDSMServer
             var playerName = args.GetString(0);
             var password = args.GetString(1);
 
@@ -1731,6 +1743,7 @@ namespace tdsm.core
                 Tools.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
                 return;
             }
+#endif
         }
 
         /// <summary>
@@ -1753,7 +1766,8 @@ namespace tdsm.core
 
             //    player.Op = false;
             //}
-
+            
+#if TDSMServer
             if (Server.Ops.Contains(playerName))
             {
                 var player = Tools.GetPlayerByName(playerName);
@@ -1772,6 +1786,7 @@ namespace tdsm.core
                 }
             }
             else sender.SendMessage("No user found by " + playerName);
+#endif
         }
 
         /// <summary>
@@ -1781,6 +1796,7 @@ namespace tdsm.core
         /// <param name="password">Password for verification</param>
         public void OpLogin(ISender sender, string password)
         {
+#if TDSMServer
             if (sender is Player)
             {
                 var player = sender as Player;
@@ -1797,6 +1813,7 @@ namespace tdsm.core
                     player.SendMessage("Login failed", Color.DarkRed);
                 }
             }
+#endif
         }
 
         /// <summary>
@@ -1909,7 +1926,7 @@ namespace tdsm.core
                         Main.eclipse = true;
 
                         NetMessage.SendData(25, -1, -1, Lang.misc[20], 255, 50f, 255f, 130f, 0);
-                        NewNetMessage.SendData(Packet.WORLD_DATA);
+                        NetMessage.SendData((int)Packet.WORLD_DATA);
 
                         ProgramLog.Admin.Log(Lang.misc[20]);
                     }
@@ -1926,7 +1943,7 @@ namespace tdsm.core
                         World.SetTime(16200.0, false);
                         NetMessage.SendData(25, -1, -1, Lang.misc[34], 255, 50f, 255f, 130f, 0);
                         Main.startSnowMoon();
-                        NewNetMessage.SendData(Packet.WORLD_DATA);
+                        NetMessage.SendData((int)Packet.WORLD_DATA);
 
                         ProgramLog.Admin.Log(Lang.misc[34]);
                         ProgramLog.Admin.Log("First Wave: Zombie Elf and Gingerbread Man");
@@ -1944,7 +1961,7 @@ namespace tdsm.core
                         World.SetTime(16200.0, false);
                         NetMessage.SendData(25, -1, -1, Lang.misc[31], 255, 50f, 255f, 130f, 0);
                         Main.startPumpkinMoon();
-                        NewNetMessage.SendData(Packet.WORLD_DATA);
+                        NetMessage.SendData((int)Packet.WORLD_DATA);
 
                         ProgramLog.Admin.Log(Lang.misc[31]);
                         ProgramLog.Admin.Log("First Wave: " + Main.npcName[305]);
@@ -1962,7 +1979,7 @@ namespace tdsm.core
                         World.SetTime(0, false);
                         //tdsm.api.Callbacks.MainCallback.StartEclipse = true;
                         Main.bloodMoon = true;
-                        NewNetMessage.SendData(Packet.WORLD_DATA);
+                        NetMessage.SendData((int)Packet.WORLD_DATA);
                         NetMessage.SendData(25, -1, -1, Lang.misc[8], 255, 50f, 255f, 130f, 0);
 
                         ProgramLog.Admin.Log(Lang.misc[8]);
@@ -2013,6 +2030,7 @@ namespace tdsm.core
         /// <param name="args">Arguments sent with command</param>
         public void Restart(ISender sender, ArgumentList args)
         {
+#if TDSMServer
             string cmd = null;
             args.TryGetString(0, out cmd);
 
@@ -2075,6 +2093,7 @@ namespace tdsm.core
                 sender.Message("The server is " + (_tskWaitForPlayers != null && _tskWaitForPlayers.Enabled ? "waiting to restart" : "not restarting"));
             }
             else throw new CommandError("No restart command: " + cmd);
+#endif
         }
     }
 }

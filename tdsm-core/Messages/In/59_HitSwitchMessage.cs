@@ -16,7 +16,7 @@ namespace tdsm.core.Messages.In
         {
             int x = (int)ReadInt16(readBuffer);
             int y = (int)ReadInt16(readBuffer);
-            Wiring.hitSwitch(x, y);
+            Wiring.HitSwitch(x, y);
             if (Main.netMode == 2)
             {
                 NewNetMessage.SendData(59, -1, whoAmI, String.Empty, x, (float)y, 0f, 0f, 0);

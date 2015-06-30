@@ -8,7 +8,7 @@ namespace tdsm.api.Callbacks
 {
 //    public abstract class IAPISocket : Terraria.ServerSock
 //    {
-////        public int whoAmI;
+////        public int Id;
 ////        public string statusText2;
 ////        public int statusCount;
 ////        public int statusMax;
@@ -46,7 +46,7 @@ namespace tdsm.api.Callbacks
 //        public virtual bool CanSendWater()
 //        {
 //            //return state >= 3;
-//            return (Terraria.NetMessage.buffer[whoAmI].broadcast || state >= 3) && tcpClient.Connected;
+//            return (Terraria.NetMessage.buffer[Id].broadcast || state >= 3) && tcpClient.Connected;
 //        }
 //        public virtual string RemoteAddress()
 //        {
@@ -71,20 +71,20 @@ namespace tdsm.api.Callbacks
 
     public static class SocketExtensions
     {
-        public static bool IsPlaying(this Terraria.ServerSock sock)
+        public static bool IsPlaying(this Terraria.RemoteClient sock)
         {
-            return sock.state == 10;
+            return sock.State == 10;
         }
 
-        public static bool CanSendWater(this Terraria.ServerSock sock)
+        public static bool CanSendWater(this Terraria.RemoteClient sock)
         {
             //return state >= 3;
-            return (Terraria.NetMessage.buffer[sock.whoAmI].broadcast || sock.state >= 3) && sock.tcpClient.Connected;
+            return (Terraria.NetMessage.buffer[sock.Id].broadcast || sock.State >= 3) && sock.Socket.IsConnected();
         }
 
-        public static string RemoteAddress(this Terraria.ServerSock sock)
+        public static string RemoteAddress(this Terraria.RemoteClient sock)
         {
-            return sock.tcpClient.Client.RemoteEndPoint.ToString();
+            return sock.Socket.GetRemoteAddress().ToString();
         }
     }
 
@@ -92,13 +92,13 @@ namespace tdsm.api.Callbacks
     {
 //        public static Terraria.ServerSock[] slots;// = new IAPISocket[256];
 #if Full_API
-        public static Action<Int32, Vector2> CheckSectionMethod = Terraria.ServerSock.CheckSection;
+        public static Action<Int32, Vector2, Int32> CheckSectionMethod = Terraria.RemoteClient.CheckSection;
 #endif
 
-        public static void CheckSection(int slot, Vector2 position)
+        public static void CheckSection(int slot, Vector2 position, int fluff = 1)
         {
 #if Full_API
-            CheckSectionMethod(slot, position);
+            CheckSectionMethod(slot, position, fluff);
 #endif
         }
 
@@ -130,14 +130,14 @@ namespace tdsm.api.Callbacks
             };
             var args = new HookArgs.AddBan()
             {
-                RemoteAddress = Terraria.Netplay.serverSock[plr].RemoteAddress()
+                RemoteAddress = Terraria.Netplay.Clients[plr].RemoteAddress()
             };
 
             HookPoints.AddBan.Invoke(ref ctx, ref args);
 
             if (ctx.Result == HookResult.DEFAULT)
             {
-                string remote = Terraria.Netplay.serverSock[plr].RemoteAddress();
+                string remote = Terraria.Netplay.Clients[plr].RemoteAddress();
                 string ip = remote;
                 for (int i = 0; i < remote.Length; i++)
                 {
@@ -146,7 +146,7 @@ namespace tdsm.api.Callbacks
                         ip = remote.Substring(0, i);
                     }
                 }
-                using (StreamWriter streamWriter = new StreamWriter(Terraria.Netplay.banFile, true))
+                using (StreamWriter streamWriter = new StreamWriter(Terraria.Netplay.BanFilePath, true))
                 {
                     streamWriter.WriteLine("//" + Terraria.Main.player[plr].name);
                     streamWriter.WriteLine(ip);
@@ -164,14 +164,14 @@ namespace tdsm.api.Callbacks
             }
             for (int i = 0; i < 256; i++)
             {
-                if ((Terraria.NetMessage.buffer [i] != null && 
-                     Terraria.NetMessage.buffer [i].broadcast || Terraria.Netplay.serverSock [i].state >= 3) && 
-                    Terraria.Netplay.serverSock [i] != null &&
-                    Terraria.Netplay.serverSock [i].tcpClient != null && Terraria.Netplay.serverSock [i].tcpClient.Connected)
+                if ((Terraria.NetMessage.buffer [i] != null &&
+                     Terraria.NetMessage.buffer[i].broadcast || Terraria.Netplay.Clients[i].State >= 3) &&
+                    Terraria.Netplay.Clients[i] != null &&
+                    Terraria.Netplay.Clients[i].Socket != null && Terraria.Netplay.Clients[i].Socket.IsConnected())
                 {
                     int num = x / 200;
                     int num2 = y / 150;
-                    if (Terraria.Netplay.serverSock [i].tileSection [num, num2])
+                    if (Terraria.Netplay.Clients[i].TileSections[num, num2])
                     {
                         Terraria.NetMessage.SendData (48, i, -1, "", x, (float)y, 0f, 0f, 0);
                     }

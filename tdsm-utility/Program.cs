@@ -10,8 +10,8 @@ namespace tdsm.utility
         static void Main(string[] args)
         {
             Terraria.Main.dedServ = true;
-            DumpNPCs(377);
-            DumpItems(2748);
+            DumpNPCs(539);
+            DumpItems(3596);
         }
 
         static void DumpNPCs(int maxNPCs)

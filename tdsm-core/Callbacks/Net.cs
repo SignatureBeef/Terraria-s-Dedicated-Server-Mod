@@ -26,7 +26,7 @@
 //                {
 //                    int num = x / 200;
 //                    int num2 = y / 150;
-//                    if (tdsm.api.Callbacks.Netplay.slots[i].tileSection[num, num2])
+//                    if (tdsm.api.Callbacks.Netplay.slots[i].TileSections[num, num2])
 //                    {
 //                        NewNetMessage.SendData(48, i, -1, "", x, (float)y, 0f, 0f, 0);
 //                    }

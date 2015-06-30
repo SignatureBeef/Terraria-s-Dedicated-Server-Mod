@@ -22,7 +22,7 @@ namespace tdsm.api.ID
 
         static Dictionary<Int32, String> _buff;
         static Dictionary<Int16, String> _item;
-        static Dictionary<Int16, String> _message;
+        static Dictionary<Byte, String> _message;
         static Dictionary<Int32, String> _status;
         static Dictionary<UInt16, String> _tile;
         static Dictionary<Byte, String> _wall;
@@ -30,12 +30,19 @@ namespace tdsm.api.ID
         internal static void Initialise()
         {
 #if Full_API
-            _buff = MapFromType<Int32>(typeof(Terraria.ID.BuffID));
-            _item = MapFromType<Int16>(typeof(Terraria.ID.ItemID));
-            _message = MapFromType<Int16>(typeof(Terraria.ID.MessageID));
-            _status = MapFromType<Int32>(typeof(Terraria.ID.StatusID));
-            _tile = MapFromType<UInt16>(typeof(Terraria.ID.TileID));
-            _wall = MapFromType<Byte>(typeof(Terraria.ID.WallID));
+            try
+            {
+                _buff = MapFromType<Int32>(typeof(Terraria.ID.BuffID));
+                _item = MapFromType<Int16>(typeof(Terraria.ID.ItemID));
+                _message = MapFromType<Byte>(typeof(Terraria.ID.MessageID));
+                _status = MapFromType<Int32>(typeof(Terraria.ID.StatusID));
+                _tile = MapFromType<UInt16>(typeof(Terraria.ID.TileID));
+                _wall = MapFromType<Byte>(typeof(Terraria.ID.WallID));
+            }
+            catch (Exception e)
+            {
+                Tools.WriteLine(e);
+            }
 #endif
         }
 
@@ -74,7 +81,7 @@ namespace tdsm.api.ID
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static string FindMessageById(short id)
+        public static string FindMessageById(Byte id)
         {
             if (_message.ContainsKey(id)) return _message[id];
             return null;

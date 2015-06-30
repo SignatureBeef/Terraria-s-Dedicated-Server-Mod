@@ -37,7 +37,7 @@ namespace tdsm.api.Command
         {
             if (sender is ConsoleSender)
             {
-                WorldFile.saveWorld(false);
+                Terraria.IO.WorldFile.saveWorld(false);
                 Netplay.disconnect = true;
             }
         }
@@ -97,7 +97,7 @@ namespace tdsm.api.Command
                     if (Main.player[i].active)
                     {
                         count++;
-                        Tools.WriteLine("{0} ({1})", Main.player[i].name, Netplay.serverSock[i].RemoteAddress());
+                        Tools.WriteLine("{0} ({1})", Main.player[i].name, Netplay.Clients[i].RemoteAddress());
                     }
                 }
                 if (count == 0)
@@ -214,7 +214,7 @@ namespace tdsm.api.Command
         {
             if (sender is ConsoleSender)
             {
-                if (String.IsNullOrEmpty(Netplay.password))
+                if (String.IsNullOrEmpty(Netplay.ServerPassword))
                 {
                     if (String.IsNullOrEmpty(password))
                     {
@@ -222,21 +222,21 @@ namespace tdsm.api.Command
                     }
                     else
                     {
-                        Netplay.password = password;
-                        Tools.WriteLine("Password: " + Netplay.password);
+                        Netplay.ServerPassword = password;
+                        Tools.WriteLine("Password: " + Netplay.ServerPassword);
                     }
                 }
                 else
                 {
                     if (String.IsNullOrEmpty(password))
                     {
-                        Netplay.password = String.Empty;
+                        Netplay.ServerPassword = String.Empty;
                         Tools.WriteLine("Password disabled.");
                     }
                     else
                     {
-                        Netplay.password = password;
-                        Tools.WriteLine("Password: " + Netplay.password);
+                        Netplay.ServerPassword = password;
+                        Tools.WriteLine("Password: " + Netplay.ServerPassword);
                     }
                 }
             }
@@ -332,7 +332,7 @@ namespace tdsm.api.Command
         {
             if (sender is ConsoleSender)
             {
-                Tools.WriteLine("Port: " + Netplay.serverPort);
+                Tools.WriteLine("Port: " + Netplay.ListenPort);
             }
         }
 
@@ -456,7 +456,7 @@ namespace tdsm.api.Command
         {
             if (sender is ConsoleSender)
             {
-                WorldFile.saveWorld(false);
+                Terraria.IO.WorldFile.saveWorld(false);
             }
         }
 

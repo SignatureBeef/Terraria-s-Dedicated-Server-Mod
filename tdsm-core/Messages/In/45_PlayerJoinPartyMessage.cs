@@ -20,7 +20,7 @@ namespace tdsm.core.Messages.In
 
 			if (playerIndex != whoAmI && Entry.EnableCheatProtection)
             {
-                Terraria.Netplay.serverSock[whoAmI].Kick("Cheating detected (PLAYER_JOIN_PARTY forgery).");
+                Terraria.Netplay.Clients[whoAmI].Kick("Cheating detected (PLAYER_JOIN_PARTY forgery).");
                 return;
             }
 

@@ -13,5 +13,26 @@ namespace Microsoft.Xna.Framework
             this.X = x;
             this.Y = y;
         }
+        public static bool operator ==(Point a, Point b)
+        {
+            return a.Equals(b);
+        }
+        public static bool operator !=(Point a, Point b)
+        {
+            return a.X != b.X || a.Y != b.Y;
+        }
+        public override bool Equals(object obj)
+        {
+            bool result = false;
+            if (obj is Point)
+            {
+                result = this.Equals((Point)obj);
+            }
+            return result;
+        }
+        public override int GetHashCode()
+        {
+            return this.X.GetHashCode() + this.Y.GetHashCode();
+        }
     }
 }

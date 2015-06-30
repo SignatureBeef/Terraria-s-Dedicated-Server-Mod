@@ -141,13 +141,13 @@ namespace tdsm.core
                     if (!String.IsNullOrEmpty(_serverKey)) req.Add("UUID", _serverKey);
                     req.Add("NPCDef", Definitions.DefinitionManager.NPCVersion.ToString());
                     req.Add("ItemDef", Definitions.DefinitionManager.ItemVersion.ToString());
-                    req.Add("ServiceTo", ServerCore.Server.UniqueConnections.ToString());
+                    //req.Add("ServiceTo", ServerCore.Server.UniqueConnections.ToString());
 
                     if (PublishToList)
                     {
-                        req.Add("Port", Terraria.Netplay.serverPort.ToString());
+                        req.Add("Port", Terraria.Netplay.ServerIP.ToString());
                         req.Add("MaxPlayers", Terraria.Main.maxNetPlayers.ToString());
-                        req.Add("ConnectedPlayers", ServerCore.ClientConnection.All.Count.ToString());
+                        //req.Add("ConnectedPlayers", ServerCore.ClientConnection.All.Count.ToString());
 
                         if (!String.IsNullOrEmpty(ServerName)) req.Add("Name", ServerName);
                         if (!String.IsNullOrEmpty(ServerDescription)) req.Add("Desc", ServerDescription);

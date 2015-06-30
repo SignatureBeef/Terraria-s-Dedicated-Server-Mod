@@ -19,7 +19,7 @@ namespace tdsm.core.Messages.In
 
 			if (playerIndex != whoAmI && Entry.EnableCheatProtection)
             {
-                Terraria.Netplay.serverSock[whoAmI].Kick("Cheating detected (ENTER_ZONE forgery).");
+                Terraria.Netplay.Clients[whoAmI].Kick("Cheating detected (ENTER_ZONE forgery).");
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace tdsm.core.Messages.In
 
             //Todo refactor
             BitsByte bitsByte11 = ReadByte(readBuffer);
-            player9.zoneEvil = bitsByte11[0];
+            player9.zonw = bitsByte11[0];
             player9.zoneMeteor = bitsByte11[1];
             player9.zoneDungeon = bitsByte11[2];
             player9.zoneJungle = bitsByte11[3];

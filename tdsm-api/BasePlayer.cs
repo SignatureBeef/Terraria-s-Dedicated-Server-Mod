@@ -65,7 +65,7 @@ namespace tdsm.api
         public override void SendMessage(string message, int sender = 255, byte R = 255, byte G = 255, byte B = 255)
         {
 #if Full_API
-            Terraria.NetMessage.SendData((int)Packet.PLAYER_CHAT, ((Terraria.Player)this).whoAmi, -1, message, sender, R, G, B);
+            Terraria.NetMessage.SendData((int)Packet.PLAYER_CHAT, ((Terraria.Player)this).whoAmI, -1, message, sender, R, G, B);
 #endif
         }
 
@@ -90,9 +90,9 @@ namespace tdsm.api
             {
                 var plr = (Terraria.Player)this;
 
-                Callbacks.NetplayCallback.CheckSection(plr.whoAmi, target.position);
+                Callbacks.NetplayCallback.CheckSection(plr.whoAmI, target.position);
                 plr.Teleport(target.position, style);
-                Terraria.NetMessage.SendData((int)Packet.TELEPORT, -1, -1, "", 0, plr.whoAmi, target.position.X, target.position.Y, 3);
+                Terraria.NetMessage.SendData((int)Packet.TELEPORT, -1, -1, "", 0, plr.whoAmI, target.position.X, target.position.Y, 3);
             }
         }
 
@@ -109,9 +109,9 @@ namespace tdsm.api
                 var plr = (Terraria.Player)this;
                 var pos = new Vector2(x, y);
 
-                Callbacks.NetplayCallback.CheckSection(plr.whoAmi, pos);
+                Callbacks.NetplayCallback.CheckSection(plr.whoAmI, pos);
                 plr.Teleport(pos, style);
-                Terraria.NetMessage.SendData((int)Packet.TELEPORT, -1, -1, "", 0, plr.whoAmi, pos.X, pos.Y, 3);
+                Terraria.NetMessage.SendData((int)Packet.TELEPORT, -1, -1, "", 0, plr.whoAmI, pos.X, pos.Y, 3);
             }
         }
 

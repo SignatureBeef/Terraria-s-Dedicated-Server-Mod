@@ -19,7 +19,7 @@ namespace tdsm.core.Messages.In
 
 			if (playerId != whoAmI && Entry.EnableCheatProtection)
             {
-                Terraria.Netplay.serverSock[whoAmI].Kick("Cheating detected (CHEST_UNLOCK forgery).");
+                Terraria.Netplay.Clients[whoAmI].Kick("Cheating detected (CHEST_UNLOCK forgery).");
                 return;
             }
 

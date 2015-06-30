@@ -1,0 +1,2261 @@
+Version 1.3 Changes-----------------------------------------------------------------------------------------------
+
+
+Features and Mechanics:
+  Revamped Town NPCs. They now sit, avoid monsters, socialize, avoid sitting near chests, and fight back against threats!
+  Chest open/close is now animated.
+  You can now join multiplayer games through Steam.
+  Steam Cloud saving is now available.
+  Achievements are now available through Steam and in game.
+  Character Select Menu has been revamped to show additional character information.
+  You can now toggle Screen Capture mode by pressing F1. This allows for taking much larger screenshots in game.
+  Your abilities while mounting have been enhanced - fishing and attacking while mounted are now possible..
+  Added the option to disable Blood and Gore.
+  You can now find the Skeleton Merchant underground. He has some unique items to sell, if you catch him at the right time.
+  There are several new appearance options available during character creation.
+  Enemy Banners now empower players nearby when facing the same enemy displayed on the banner.
+  Worlds now keep track of how many enemies have been killed and reward banners for every 50 kills.
+  The server will announce which player got the 50th kill.
+  When chatting with other players using the Chat Bar, you can now link items by pressing Shift+Left Click on the item you wish to share.
+  The angler always rewards money.
+  You can now remove spawn points by right clicking your bed.
+  You now get fishing rewards for every 5 turn ins, versus the previous requirement of 10.
+  The game will now tell you how much money you dropped upon death.
+  The player’s last death location is now shown on the map, aiding the retrieval of lost money and/or items..
+  Strange Plants can now be located and given to the Dye Trader for new dye rewards.
+  Information Accessories now work from the player’s inventory (versus needing to be equipped), and stats can be shared with players around you.
+  Dressers can now be used as chests. Clicking the bottom of the dresser will still open the color changing menu.
+  You can now purchase items using all money in your character storage - including money in your inventory, Piggybank, and Safe.
+  You can now hammer traps to change their direction of fire.
+  Deleting a world or character will now move it to the recycle bin versus permanent deletion. (Windows Only)
+  Added Minecart, Mount, Pet and Grappling Hook slots.
+  Bosses now have minimap icons.
+  Bubbles and lava immunity bars now appear above your head.
+  Added ability to favorite items by pressing Alt+Left Click. Favorited items cannot be quick-trashed, quick-stacked, or deposited.
+  Added an inventory button to Quick Stack to All Nearby Chests, making inventory management much quicker.
+  Quick stack now creates new stacks in your chests for items you have in inventory if applicable.
+  The Dye System has been overhauled to improve the general appearance of all Dyes.
+  Crafting Grid button now has new graphics for toggling.
+  Smart Cursor now also works for Paintbrush, Paint Roller, Paint Scraper, Buckets, Alchemy, Acorns, and Actuators.
+  Platforms will now automatically place as stairs if placed appropriately using Smart Cursor.
+  You can now right click clickable tiles when the mouse is hovering on them in Smart Cursor.
+
+
+Expert Mode:
+  Expert mode can now be toggled in the World Creation Menu. This will trigger a host of changes, all designed to provide a greater challenge with the promise of greater rewards. Some of those challenges are listed below:
+  You stay dead longer before being able to respawn during boss fights.
+  Boss health scales in multiplayer depending on the number of players.
+  Weaker enemies gain increased stats as the players progress, starting in hardmode.
+  You drop 75% of your gold upon death.
+  Enemies can pick up your gold when you die and attempt to run off with it. Kill them to retrieve your loot.
+  Monsters have a small chance to spawn in towns.
+  Some normal enemies have been given new AI.
+  Bosses have been given new AI.
+  Bosses will drop Treasure Bags containing powerful expert exclusive items to reward those up to the challenge.
+  Pots now drop more stuff when broken.
+  Ice Monsters gain an additional chance to freeze upon hitting the player.
+  Quest rewards give more money.
+  Bats have a chance to give the new Feral Bite debuff. This debuff will increase player damage but lower player health regen. This debuff will also cause other random debuffs to be applied to the player
+  Life Regen isn’t as effective unless the player has the Well Fed buff.
+  Vampire and Spectre healing is slightly less effective than in normal mode.
+  The Defense statistic is more effective than in normal mode.
+
+
+Events:
+  Invasion Events now have a progress bar, showing how far along the player is towards completion.
+  The new randomly-triggered Slime Rain event is now included.
+  The Goblin Invasion event has been graphically updated and will have a new mini boss enemy in Hardmode.
+  The Pirate Invasion has a new mini boss.
+  The Blood Moon has a new graphical effect as well as several new enemies.
+  The Solar Eclipse can now be triggered with the Solar Tablet summoning item. This event also has several new enemies and rewards.
+  The new Martian Madness event can be triggered after the player defeats The Golem.
+  Cultists will now begin to spawn outside the Dungeon after the player defeats The Golem. Defeating them will start the beginning of the end.
+
+
+Crafting:
+  You can now craft items from a chest while it is open without having to place its contents in the player inventory beforehand..
+  There is a new Alchemy Table that has a chance to reduce potion crafting cost.
+  Crafting Wooden Arrows now gives 10 per recipe instead of 5. Their cost has been reduced to 5 copper.
+  You can now craft Bone Platforms.
+  Greater Healing Potions now cost less to craft.
+  Holy Water is now slightly easier to craft.
+  You now craft Cursed, Demon, Frost, Ichor, and Ultrabright Living Fire Blocks.
+  You can now craft Gender Change potions.
+  You can now craft the Wormhole Potion. This potion allows you to teleport to any player on your team by clicking them on the map.
+  You can now craft Honeyfall Blocks and Walls.
+  You can now craft Chlorophyte Bricks and Walls.
+  You can now craft Crimtane Bricks and Walls.
+  You can now craft Shroomite Plating and Walls.
+  Beenades can now be crafted.
+  Water Candles can now be crafted.
+  You can now craft Crisp Honey Blocks.
+  You can now craft Sunplate Blocks and Disc Walls.
+  You can now craft Keys of Light and Keys of Night.
+  Pink Gel - and several items that are crafted from Pink Gel - have been added.
+  You can now craft Magic Water Droppers.
+  You can now craft Meteor Bricks and furniture.
+  You can now craft Granite and Marble furniture.
+  Martian Furniture can now be crafted.
+  You can now craft Enchanted Nightcrawlers.
+  Lowered the cost for Meteor Gear.
+  Space Gun now only requires Meteorite Bars.
+  Crimtane and Demonite bars now cost 3 ore.
+  You can now craft Target Dummies to test your damage per second.
+  Avenger Emblems are now crafted from any emblem and all 3 hardmode boss souls.
+  Neptune’s Shell is no longer craftable and is only dropped from the Creature from the Deep.
+  Reduced the crafting cost of Rainbow Rod, Fairy Bell, and Magical Harp.
+  Broken Hero Sword is no longer needed to craft the Terra Blade.
+  You can now craft Spectre Bars.
+  Fireplaces and Chimneys are now craftable.
+  Phasesabers are now crafted at a Mythril Anvil.
+
+
+Miscellaneous:
+  Platforms now stack to 999.
+  A new friendly NPC - The Tax Collector - will join you if rescued.
+  You can now revert Platforms back to their original materials via crafting.
+  Corrupt and Crimson Trees now drop Acorns.
+  Coins are now animated.
+  You can now automatically break stone piles when trying to place things over them.
+  There are now visible cracks shown on solid blocks and trees when they have been hit.
+  You can now mouse over signs to read them versus having to click on them.
+  Revamped liquid networking code to be much less laggy in multiplayer.
+  Pots now drop more money based on the type of pot.
+  Pots will now drop an additional 10% more money for every boss and invasion you defeat.
+  Living Wood chests will now always contain a Living Wood Wand and Leaf Wand.
+  You no longer take fall damage while on Bunny Mount.
+  Copper, Iron, Silver, and Gold have all been given new ore textures.
+  The Axe now has a 1 in 50 chance to drop from Plantera, down from 1 in 200.
+  Voodoo Demons now spawn more often
+  Golden Critters now have a chance to spawn.
+  Event enemies now run away when the event is over.
+  NPCs now only load their textures when they get in screen range.
+  Setting the window's resolution to a greater value than the maximum will now attempt to maintain its aspect ratio. (e.g. 2560x1440 will no-longer downscale to 1920x1200, but instead 1920x1080)
+  Rain has been optimized.
+  Bees can fall through platforms.
+  Smart Wall is now properly blocked by doors even if they're open.
+  Undead Miners now have a chance to drop Mining Helmets.
+  Tim is more likely to spawn if you need his hat.
+  Critters now have a sell price.
+  Well Fed buff times have been increased
+  Wyverns spawn more frequently if there is a Water Candle buff in effect.
+  Fixed health bar issues for Wyvern and Destroyer.
+  Players now spawn with half their life if the player’s max health is greater than 5 hearts.
+  The Painter NPC now shows up after 8 npcs are in town, instead of 4.
+  The Party Girl NPC now only shows up if there are 14 npcs, instead of 8.
+  The Dye Trader NPC now only shows up after defeating any of the easymode bosses.
+  Changed the spawn order for Town NPCs so that the more important ones spawn first.
+  Chlorophyte can grow in bigger chunks now.
+  Life fruit can spawn closer together now.
+  King slime can now move through platforms
+  Improved summoned minions attack AI.
+  Unicorns are more likely to spawn if a Water Cande buff is in effect.
+  Some Underworld drops are now a little more common.
+  Angry Nimbus more likely to spawn.
+  You can now find Crimson, Corruption, and Hallowed Large Mimics.
+  Spiders can now move through platforms.
+  You can no longer grapple while frozen.
+  Sky quest fish can no longer be found on the surface.
+  Reduced the number of water tiles needed to fish successfully in the sky.
+  Hornets and Walkers will no longer shoot at you while Stealthed.
+  Underground houses have been redesigned.
+  Coin Portals have a chance to spawn after breaking pots.
+  Blink Root growth has been slowed down.
+  Daybloom growth has been sped up.
+  It now takes longer for weeds to grow in clay pots.
+  Meteorites spawn in larger chunks.
+  Damage dealt by others in multiplayer now appears faded vs normal damage numbers.
+  Weapon Imbues now last 20 minutes and persist through death.
+  Increased some of the spawn rates for the rare hardmode dungeon monsters.
+  Dungeon Necromancers are less likely to teleport when hit.
+  Frost Armor is now crafted from Titanium and Adamantite bars rather than Hallowed.
+  Chlorophyte can now revert Corruption or Crimson spread. It also turns nearby dirt into mud.
+  Equipment slots now display a picture of the slots purpose.
+  Duke Fishron now enrages when you leave the ocean.
+  Pygmy’s now have a chance to inflict poison and venom.
+  Pygmy’s now have a larger range and the first projectile thrown will always pierce rather than getting stuck.
+  King Slime can now teleport when not in range of the player for over 5 seconds.
+
+
+Items:
+  There are over 800 new items to discover.
+  There are new powerful items waiting to be fished up in the underground Crimson, Corruption, and Hallow.
+  All 2x2 items can now be placed on tables.
+  Item stack sizes are now universal.
+  Wooden Minecarts are now the default minecart.
+  Added several Yoyos, string accessories, and counterweights.
+  Several items have had graphical updates.
+  Lots of new banners have been added.
+  Signs and Tombstones can now be placed on tables.
+  Staff of Regrowth has been greatly improved.
+  The range of Wrenches and Wire Cutters has been boosted.
+  Slightly buffed the damage of the Musket.
+  The Titanium Armor invincibility armor set effect now only happens once every 30s.
+  Adamantite Armor now provides 4 more defense.
+  Honeyed Goggles drop chance has been increased significantly.
+  Whoopie Cushion drop chance has been increased.
+  Bug net is now only 50 silver.
+  Significantly boosted the speed bonus of the Magic Quiver.
+  Increased the length of time for Spider Turret, Crimson Rod, Nimbus Rod.
+  Chests are now more likely to contain Recall Potions.
+  You can now craft Sticky and Bouncy Dynamite.
+  You can now find the Sparky Painting in the Dungeon. R.I.P Sparky Doo.
+  Molotov Cocktails now do significantly less damage.
+  Bottled water now stacks to 999.
+  Improved Spider Minion AI. They now latch on to enemies and follow the player better.
+  Fountains now cost 4 gold each and are available as soon as you get the Witch Doctor.
+  The Recall Potion recipe now utilizes Daybloom instead of Deathweed.
+  Spectral fish are a bit easier to catch.
+  Bait now lasts a bit longer.
+  The Snowball Launcher and Snowball Cannon now have more damage and knockback.
+  Ice Blade does slightly more damage.
+  Increased critical hit bonus from Jungle Armor and Ancient Cobalt Armor
+  Shiverthorn grows a little faster.
+  Deathweed now also blooms on full moons.
+  Fireblossom now blooms during the evening.
+  Ice Rod is less expensive, and the blocks have a longer duration.
+  Mana potions are less expensive and stack higher.
+  Shadow Chests now contain a new item.
+  Several new fishing rewards have been added.
+  You can now catch Specular Fish in the Ice Biome.
+  You can now fish for biome-exclusive crates in their respective biomes.
+  Wooden Chests contain several new items.
+  You can now craft Web and Silk Rope.
+  Snow Balls now do more damage.
+  Snowball Launcher and Cannon have had their values adjusted .
+  Boomerangs have a smaller collision box for tiles.
+  Dynamite’s value has been lowered.
+  Jungle Bats, Ice Bats, and Giant Bats now drop Depth Meter.
+  Mother Slime, Snow Flinx, Undead Viking, and Armored Viking now drop the Compass.
+  Beach Ball is now sold by the Party Girl.
+  Ice Boomerang and Ice Blade have been buffed.
+  Baby Jellyfish now have a sell price.
+  Rotten Eggs are now less common in Goodie Bags.
+  Pinky has an increased chance to drop the Slime Staff.
+  Lesser Restoration Potions are now just Restoration Potions.
+  The Solidifier now drops from King Slime.
+  Gold Ring now drops from the Pirate Invasion.
+  Uzi droprate has been increased.
+  Sniper Rifle now does more damage and has an increased fire rate.
+  Venus Magnum now fires faster.
+  Invisibility Potions now give full invisibility and reduce aggro when not attacking.
+  Adamantite and Titanium Forges are now animated.
+  Dye Vat is now animated.
+  You can now place fishing crates.
+  Jungle Grubs now fall out of Jungle Plants and can be used as bait.
+  Star in a Bottle now gives the Mana Regen buff.
+  Extractinators can now be found in Fishing Crates.
+  You can now place torches on platforms.
+  Increased Antlion Mandible drop rate significantly.
+  Increased Mining Potion duration.
+  Sickle is now sold year long.
+  Planter Boxes are now sold by the Dryad.
+  Cobalt, Obsidian, Mythril, Adamantite, Mythril Brick, and Adamantite Brick all have new textures.
+  Fire Gauntlet has been buffed.
+  Buffed Ice Sickle and its drop rate.
+  Increased the drop rates for most Hardmode Dungeon items.
+  There is a 1 in 7 chance that a Hardmode Dungeon monster will spawn on any Hardmode Dungeon backwall.
+  Dungeon Spirit spawns have been slightly increased.
+  Hydra and Spider Turret can now be placed on platforms.
+  Keys to Biome Chests are now dropped instead of molds. Biome Chests can only be opened after Plantera has been defeated.
+  Added Fallen Tuxedo. This is sold by the Clothier on a Bloodmoon.
+  Campfires can now be turned on/off.
+  Lihzahrd Furnace is now guaranteed loot in every Jungle Temple chest.
+  Steampunk Wings are now obtainable.
+  Staff of Earth has been buffed.
+  Golem Fist has been buffed.
+  Xmas Tree Sword has been buffed.
+  Flamelash has been buffed.
+  Spectre Staff has been buffed.
+  Flower Pow has been buffed.
+  Frost Staff has been buffed.
+  Trident has been buffed.
+  KO Cannon has been buffed.
+  Flower of Frost has been buffed.
+  Flower of Fire has been buffed.
+  Keybrand has been buffed.
+  Magnet Sphere has been buffed.
+  Possessed Hatched has been buffed.
+  Razorblade Typhoon now uses more mana.
+  Flamelash and Flower of Fire now use less mana.
+  Ice Rod blocks are now slippery.
+  Hardmode Ore crafted swords and Excalibur are now auto swing and do 15% more damage.
+  Chlorophyte Swords have been buffed.
+  Bait can be put in ammo slot.
+
+
+Music:
+  Pirate Invasion now has a new track.
+  The Underworld now has a new track.
+  Goblin Invasion now has a new track.
+  Added Martian Madness track.
+  Added Lunar Event track.
+  Added Final Boss track.
+
+
+Atmosphere:
+  Added several new mini biomes to world gen.
+  New Biome - The Underground Desert.
+  Liquid Visuals have been revamped.
+  Sky Lakes now spawn.
+  Added a light effect to the Glass Kiln.
+  Slimes can now have items visible inside them that will drop when they die.
+  Wall of Flesh will now spawn a cage of Crimtane Bricks when slain in a Crimson World.
+  Accessory dyes now apply to particle effects spawned from them.
+  Changed player animations to be less bouncy.
+  Trees now drop Acorns alongside actual tree items (rather than either/or).
+  Palm tree tops now drop Acorns.
+  The Crimson now has aligned fauna: Vicious Mushrooms, Vicious Powder, and Crimtane Thorns.
+  Game default cave parallax is now 60 , rather than 0.
+  NPCs will not climb stairs into another room anymore.
+  Goblins now have gore unique to each goblin.
+  Improved NPC graphics.
+  Pigrons have appear in greater varieties.
+  Sunflowers now glow at night and give a "Happy" buff that reduces monster spawns and increases movement speed.
+  Heads on the map stay the same size (regardless of map size).
+  Updated Fountain Graphics.
+  You can now find Marble and Granite biomes underground.
+  Dirt Rod can now move through tiles when held and is cheaper.
+  Pine Tree variations have been added to the Ice Biome.
+  Honey Patches will now spawn during world gen in the Jungle.
+  Ice Patches will now spawn during world gen in the Ice Biome.
+  Abandoned Mine Tracks have been added to world gen.
+  Added several new walls to world gen.
+  There are now water, honey, and lava drips found in the world. They can also be placed with Magic Droppers.
+
+
+Bug Fixes:
+  A large amount of bugs have been fixed from prior releases - and even more related to 1.3 itself. This is a partial list.
+  Fixed bug where chandeliers would spawn lit up in underground cabins.
+  Fixed bug where KO Cannon could drop from statue-spawned monsters.
+  Fixed a bug that would place alchemy plants over alchemy plants in pots.
+  Fixed a graphical issue with Alchemy plants. They had half pixels.
+  Angler Vest now draws the player's hand properly.
+  Pharaoh's Robe now draws the player's hand properly.
+  Fixed bug where shooting chain projectiles and aiming directly at the shooter's center would crash the game.
+  Fixed a bug where the Skyware Workbench was made at the Glass Kiln.
+  Fixed bug where shooter NPCs walked slower to the left than to the right.
+  Fixed bug where long hair would draw even if the player is invisible.
+  Fixed bug where Worms would not drop gore segments on death.
+  Fixed a bug where you could spawn a heart/enemy from a statue using wires faster than intended..
+  Fixed a bug where the game could crash if the Rod of Discord was used on the far right of the world.
+  Fixed bug where worms would walk up slopes funny.
+  Dynamic lighting now stays when the game is paused.
+  Fixed a bug where Piranha Statues weren't spawning properly when a world was created.
+  Fixed a bug where the Beds weren't fully drawing.
+  Fixed a few cage types that were drawing improperly.
+  Fixed bug where Skeletron Prime's bombs would not deal damage upon exploding in multiplayer.
+  Fixed bug where dart & spear traps would gain damage bonuses and crit chance from ranged stats in singleplayer.
+  Fixed bug where Broken Armor's time was set back to 5 minutes from 2 minutes in update 1.2
+  Fixed bug where mouse-hover over Slime & Pumpkin Bed would show the wrong item icon.
+  Fixed a bug where Ice Rod tiles could spawn dirt when saving a world.
+  Fixed a bug where Blue Slab Walls from the dungeon weren't considered player housing when the player would place them.
+  Fixed a bug where whether the Stylist was saved or not wasn't saving in the World save.
+  Fixed a bug where switches would attach to a tree when it wasn't a valid placement spot.
+  Fixed a bug where the server could crash when creating a new world during tree placement.
+  Fixed bugs where Obsidian furniture was not surviving in lava properly. Affected Beds, Sofas, Dressers and Pianos.
+  Fixed a bug where Levers placed on walls would float if the wall was destroyed.
+  Fixed a bug where a specific configuration of a slope and tile could cause players to hover in the air.
+  Fixed bug that allowed stacked stairs to act as an ultra-fast elevator.
+  Fixed bug where players would run up stairs when running against them.
+  Fixed a bug where the sloped version of damaging blocks would not hurt players.
+  Fixed bug that prevented Deep Cyan Paint from displaying correctly on some tiles.
+  Fixed a bug where traps could sometimes cause the game to crash when triggered.
+  Fixed bug / exploit where generated chlorophyte ores would not update on clients in multiplayer sometimes.
+  Fixed bug where projectiles did not reset frame on set defaults.
+  Fixed bug where body frames were 1 frame behind leg frames when walking around.
+  Fixed bug where 'defeated golem' flag was passed into newly created worlds.
+
+ And much, much more...
+
+
+Version 1.2.4.1 Changes-------------------------------------------------------------------------------------------
+
+
+	Pumpkin Dressers now properly take Pumpkins to craft.
+	Spooky Wood Dresser is now obtainable.
+	Fixed a bug where Ebonwood Clock would require wood rather than Ebonwood.
+	Fixed a bug where the Sapphire Staff would require Silver Ore instead of Silver Bars.
+	All summoning weapons now cost 10 Mana to use. This will allow them to get the Mythical prefix.
+	All of Fishron’s weaponry now sells for 5 gold coins. This will fix the low prefix costs.
+	Fixed an issue with Flipper Potions grammar.
+	Angler’s quests now show when using other languages. The text is still in English...translations should be happening soon.
+	Topaz Gemspark Blocks now emit yellow light rather than purple.
+	Fixed a bug where Duke Fishron did not drop Greater Healing Potions when dying.
+	Fixed the bug where the wiring system was not activating Doors, Music Boxes and Fountains properly.
+	Added Cactus Platforms and Tables.
+	Fixed a crash when using Team Dye with a Flying Carpet.
+	Made Smart Cursor smarter when placing Minecart Tracks.
+	Fixed a bug where trying to use multiple Truffle Worms while line is pulled would make numerous Fishrons appear.
+	Fixed a bug where trying to use a fishing pole while pulling a snapped line would make the bobber appear again.
+	Flailron’s chain will now go back faster if it is too far and disappear if it still cannot catch up.
+	Fixed a bug where Smart Cursor wall would not ignore doors pillar when open.
+	Fixed bug where Sleeping Angler Kid would move slowly on tiles if attacked by monsters.
+	Fixed bug where wing time would go into infinity if you held the jump button while standing and having Rocket Boots equipped.
+	Fixed bug where Palm Wood and Boreal Wood wouldn’t merge with other wood types.
+	Fixed bug where Palm Wood and Boreal Wood were not blocking light.
+	Fixed a bug where Lamp Posts would emit blue light when they are off.
+	Fixed a leak in the net code.
+	Fixed bug where the Minecarts could go ultra-speed using boosters. (sorry guys :P )
+	Fixed bug where the player would stay rotated when leaving a Minecart.
+	Elf Vanity now drops from Zombie Elves during a Frost Moon.
+	Sails now cost 50 copper a piece.
+	The proper items will now drop on Mediumcore/Hardcore deaths.
+	You can now place Fishing Rods, Rod of Discord, and the Coin Gun in the Weapon Rack.
+	The Traveling Merchant now sells animal skins at random.
+	Cooked Fish and Cooked Shrimp are now crafted at a Cooking Pot rather than a Furnace.
+	Pressure Plate Tracks will no longer change to regular tracks in certain setups.
+	You can now craft Steampunk Candles.
+	Fixed bug where High Test Fishing Line accessory did nothing. It now makes sure the line won’t snap.
+	Fixed bug where pressing “Reset to default” in controls would reset the quick mana key to M rather than J.
+	Booster Tracks and Minecart Track intersections can no longer be triggered as rapidly.
+	Fixed bug where the players hand would draw behind the head when wearing Bee Armor.
+	Fixed a typo in one of the Merchant’s first names.
+	Living Fire Blocks no longer die if they are dropped in lava.
+	The Anchor weapon now comes back to the player if it gets too far away.
+	Fixed bug where fishing bobbers would not disappear when you die.
+	Fixed bug where Palm Wood weapons could not get prefixes.
+	Fixed bug where hardmode dungeon casters would shoot more than 1 projectile in multiplayer.
+	Fixed a bug where the Hornet, Imp, and Slime minion buffs did not disappear upon leaving a world.
+	Added the missing Boreal Wood weaponry.
+	Fixed issues where the Truffle Worm would be consumed without summoning Duke Fishron.
+	Only one Duke Fishron can be summoned at a time. The bobber will not bob if one is already alive.
+	Reverted a floating character fix. Platform elevators will work again.
+	Ocean mobs can now spawn on biome oceans, this applies to the Sleeping Angler Kid as well.
+	Turtle and Spider armors now dye properly.
+	Fixed bug where glowsticks will not be selected when the mouse is near the player in a dry area.
+	Zephyr Fish now has a proper tooltip.
+	Crimson Axe Banner has a new (fixed) look.
+	Mannequin and Womannequin have a new item icon.
+	Fixed the Ebonwood/Shadewood clock mixup.
+	Using Paint Sprayer with Brick Layer or Cement Mixer now places at the proper speed.
+	You can now turn when placing Minecart tracks.
+	Obsidian Chest recipe actually works now and Dungeon chests have recipes.
+	Fixed a bug that would make recently summoned minions vanish in some circumstances.
+	Fixed bug that made the game crash when using the anchor under certain circumstances.
+	Fixed bug where Frost Moon waves 14 to 19 had "Santank" instead of "Santa-NK1" for the name.
+	Fixed bug where upon loading the player might sometimes have empty spaces between their buffs.
+	Frost Armor now correctly plays a special sound when hit.
+	Coralstone Blocks now show up on the map.
+	Fixed bug where Twin Minion pairs could go uneven / re-summoning would fail.
+	Fixed bug where trees won't grow behind biome wooden fences.
+	Right-clicking to open a chest, Piggy Bank or Safe will no longer pick up an item from the stack where the cursor is.
+	Fixed bug where “Wyverntail” was named “Whyverntail.”
+	Fixed crafting exploit when you right click items in the inventory.
+	Golden Clock now correctly drops from pirate invasions.
+	Flesh Blocks now have a squish sound when hit.
+	Added Glass Chest.
+	Fixed bugs where swinging coins could do damage.
+	Fixed an issue where some cloaks were drawing over the Minecart.
+
+
+Version 1.2.4 Changes-------------------------------------------------------------------------------------------
+
+
+Features and Mechanics:
+	You can now get quests from the Angler NPC for cool rewards. Each time you complete a quest, the rewards progressively get better.
+	You can now use critters as bait for fishing.
+	You can now ride around in style on the new Minecart system.
+	Beaches no longer feel so empty.
+	Truffle Worms now spawn in hardmode Mushroom biomes. Be weary using this bait near the Ocean.
+	You can now place weapons and tools on the craftable Weapon Rack. (Thank you Goryo for your suggestion!)
+	Added Smart Cursor. This can be toggled using control and has an interface option. Smart Cursor makes digging, chopping, placing, and breaking much faster and easier.
+	You can now craft stone letters and numbers with a Heavy Workbench.
+	Lihzahrd Powercells drop more commonly from enemies in the temple.
+	Rain is now red during a Blood Moon.
+	Updated Gemspark tiles to make the inner border complete.
+	You can now place coins to create Coin Piles. (Thanks Omnir!)
+	Added several new underground cave wall graphics.
+	Moss backgrounds have been updated with new textures.
+	Replaced grass graphics for when they are surrounded.
+	Grass is now killed when a player covers it in solid tiles.
+	You can now find shark statues in worldgen , they spawn sharks when there's enough space.
+	It is now much more likely that you will spawn on a flat clean surface when creating a new world.
+	Added some world gen cleanup to remove small segments of floating blocks.
+	Worms now spawn when breaking rock and dirt piles.
+	Grasshoppers can now be found when you cut grass.
+	Rainbow Bricks and Brick Walls now go through the entire spectrum. 
+	Hives are now more common.
+	The Abeemination no longer requires Obsidian, Crisp Honey, or a Demon Altar to be crafted. 
+
+
+Pixel Piracy Crossover Content:
+	Falcon Blade.
+	Pirate Minions.
+	Placeable Sail “wall” sold by the Pirate NPC.
+	Placeable Pixel Piracy painting.
+	Ginger Beard vanity item. 
+
+
+Items: 
+	There are now 22 new potions you can craft from fishing and/or shiverthorn related materials.
+	There are now 5 new mounts to help you traverse the terrain. 
+	There are several new pets including the Mini Minotaur (Thank you Tobuscus)
+	You can now craft couches out of silk+material. (Thank you Eikester for the 20 you contributed)
+	Dressers and Pianos have all been given custom graphics. (Thank you Eikester)
+	You can now craft Grandfather Clocks out of more materials.
+	Over 100 new furniture items have been added to complete old furniture types.
+	Trees in the Ice Biome now drop Boreal Wood.
+	You can now craft furniture out of Boreal Wood.
+	Queen Bee,King Slime and Pirate Invasion now have larger loot tables.
+	There are 6 new summoner weapons.
+	There are now 2 new summoner armors.
+	You can now craft Molotov Cocktails out of Silk+Ale+Torch.
+	The underworld and Dungeons have more furniture from new world creation.
+	You can now craft Gemspark Walls.
+	You can now craft Tin Plating tiles and walls.
+	You can now craft Confetti tiles and walls.
+	You can now craft Midnight Confetti tiles and walls.
+	You can now craft Waterfall tiles.
+	You can now craft Lavafall tiles.
+	Living Fire Blocks now drop from enemies in hardmode Hell.
+	Updated Glass Wall item sprite.
+	Added fireworks box (wirable and placable , you can also use it by right clicking)
+	Added Firework Fountain.
+
+
+New Music:
+	Underground Crimson
+
+
+Optimizations:
+	Wiring system runs at least three times faster. Longer wire systems get larger gains.
+	Improved multiplayer performance. 
+
+
+Bug Fixes:
+	Fixed bug where the last bucket of a stack wouldnt go into an available stack when used.
+	Fixed bug where buckets don't stack together by themselves when dropped in the world.
+	Fixed bug where Gemspark Blocks wouldn't merge well after being actuated.
+	Fixed bug where "The jungle grows restless" message would appear before you have beat all 3 Mech Bosses.
+	Improved readability of two of the guide's tips as per complaints.
+	Fixed bug where Truffles had a hole in his shop if you didn't meet a requirement.
+	Changed the Quick Heal to use the best fit healing item instead of the first.
+	Fixed a bug where only one wire attached to a Lever would work when you flipped it.
+	Fixed exploit where you could dupe pets with Bug Net in multiplayer.
+	Fixed bug where spawn rates would increase underground when a moon event is happening.
+	Fixed bug where Crimsand Blocks would attempt to enter ammo slots on pickup by themselves.
+	Fixed bug where Flask of Gold would apply Ichor debuff on enemies rather than Midas debuff.
+	Fixed the crash when a chest is placed above but not directly on a Boulder.
+	Fixed bug where Mana Crystals wouldn't immediately fill the new Mana Star they give when used.
+	Fixed bug where Well Fed granted 10% magic damage and no ranged damage by mistake (was most likely a typo , magic damage 5% twice , 1 of them near the ranged crit boost).
+	Rudolph no longer flies the moment he touches down if the jump button is held.
+	Fixed a bug where Rudolph could sometimes regain the ability to double jump while flying.
+	Dressers , Pianos and Tables no longer emit particles when struck - you're not breaking them.
+	Fixed a bug where Glass Walls were not drawing to the map properly.
+	Fixed a bug where the background was showing through some Stone Slab parts.
+	Fixed bugs with the sign / npc chat display again.
+	Fixed bug where tile wands did not consume items if you had high tile placement speed.
+	Fixed bug where breakable pots wouldn't drop life and mana when you weren't at your max if you had temporary increasers.
+	Fixed bug where other player's pets would disappear after a while (in multiplayer).
+	Fixed a bug that could cause the Minimap to crash the game.
+	Fireworks now show the wiring layout when selected.
+	Fixed bug where watches show 2 ':' marks when displaying time.
+	Wooden fence types now properly let the sunlight through.
+	Updated graphics for Chairs and Tall Torches to fix some issues.
+	Fixed a bug where bad item stack sizes could cause the game to crash when saving.
+	Fixed an alignment issue with Pearlwood Chandelier.
+	Actuated tiles no longer remove the water over them on world load.
+	Fixed bug where minions on multiplayer would disappear after a while.
+	Fixed a bug where buff tooltips were staying visible on the map screen.
+	Fixed the name for the Hoppin' Jack NPC.
+	Fixed issue where minions would not sync upon spawning them in multiplayer.
+	Fixed grammar issues with magic quiver tooltips.
+	Fixed issue where Death Sickle and Vampire Knives would not animate properly on other players in multiplayer.
+	Fixed issue where Scorpions worked with King Statue and Travelling Merchant did not.
+	Fixed the exploit where you could have infinite Hoverboard hovering time.
+	Invasion summon items will no longer be consumed if no invasion would happen using it.
+	Not destroying a Shadow Orb at all will no longer block Natural Pirate invasions.
+	Painted walls show up properly on the map. 
+	Fixed issue where holding binoculars with mouse would still move your camera , making it annoying to move them to chests and the likes.
+	Fixed bug where you couldn't dye the Flying Carpet accessory.
+	Fixed exploit where you could buy and sell stackable items for profit.
+	Fixed bug where glass would not let sun through properly.
+	Fixed bug where wings wouldn't work after getting out of water with Merman accessories equipped.
+	Fixed a bug where you would die on entering a world from fall damage.
+	Fixed exploit where you could duplicate buckets on Mannequins.
+	Purification Powder now says 'cleanses the evil' rather than 'cleanses the corruption' (to make it crimson compatible)
+	Fixed bug where magic missiles, drills and dirt rods would not function properly in reverse gravity.
+	Fixed bug where the player would float when standing between a downwards slope and a halftile.
+	Fixed bug where close dropped wires wouldn't merge with each other.
+
+
+
+Version 1.2.3.1 Changes-------------------------------------------------------------------------------------------
+
+
+Balance Changes:
+	Spectre Hood doesn't increase mana usage anymore.
+	Made it slightly easier to advance in frostmoon waves.
+	Made several frostmoon monsters shoot slower and do less damage.
+
+
+Bug Fixes:
+	Fixed bug with a naked arm drawing over some vanity shirts.
+	Fixed bug where Autopause played bad with Chest renaming (and sign editing a bit).
+	Fixed bug where Brick Layer and Cement Mixer were not reducing stack quantities when placing items.
+	Fixed bug where prefixes were not getting set properly on a world load.
+	Fixed bug where coins would disappear during Quick Stack. 
+	Fixed an exploit where you could duplicate coins with Quick Stack.
+	Fixed crashes when starting the dedicated server in a language other than English.
+	Fixed an issue where Team Dyes were causing crashes when used with Capes.
+	Fixed a bug where the map was drawing Fireblossom wrong.
+	Fixed a bug where the map was showing Water Candle as Band of Regeneration.
+	Fixed bug that was causing maps from older versions to erase. 
+	Fixed a bug where Chests could not be placed on 2x1 tiles. There had to be a solid tile to the right of the chest to place it.
+	Fixed several typos.
+	Fixed bug where in-game options Map Control section wasn't blocking input like the regular controls.
+	Fixed bug where Hardcore characters couldn't open the menu after death.
+	Fixed bug where opening a chest with a sign open would lock the inventory.
+	Fixed bug where stylist had a hole in her selling list if you didn't meet a requirement.
+	Fixed bug where Magnet Sphere applied venom and Venom Staff did not.
+	Fixed the problem with the familiar wig and missing hair.
+	Added Butterfly Bottle recipes.
+	Fixed non-animating critter cages.
+	Due to layering issues, you can no longer show a shield and a cloak at the same time.
+	Gemspark blocks now properly glow when dropped as items in the world.
+	Fixed bug where hidden accessories still applied their dye color (wings still apply it if hidden but in the air).
+	You can only equip one pair of wings at a time.
+	Face accessories that shouldn't show hair no longer show hair.
+	Fixed the Cthulhu typos in game.
+	Hardmode bosses no longer spawn if another boss is alive.
+	Hardmode bosses will no longer spawn if no player is above ground.
+	Fixed an issue where placing a bucket on a mannequin would eat it whole
+	Fixed workaround delay for placing things on mannequin starts using your items.
+	The travelling merchant can no longer spawn in lava.
+	Fixed problems with rescued NPCs not having any names.
+	Fixed the recipe for Super Mana Potions. They now correctly create 15 Super Mana Potions.
+	Fixed the Stylist name "Esmeralda" to not have a space at the end.
+	Platinum coins now stack to 999.
+	Fixed an issue where tiles might not update properly in multiplayer.
+	Fixed torches being able to be placed on wrong sides of slopes (that leaves them in air).
+	Fixed the problem with altars/pots/chests spawning in bugged conditions.
+	Fixed a bug with ice bricks not blending with snow blocks.
+	Fixed the Fairy Bell buff from breaking quick buff.
+	Chests should no longer lose their names in multiplayer.
+	Fixed bug where players would fall into tiles when walking into a ceiling with a mount.
+	Fixed bug where Cogs could be overwritten by another item in the Steampunker's shop.
+	Fixed bug where prefixes would be lost when you buy an item from the shop with right click.
+	Fixed bug where long hairs would draw the front part in the player's feet when in reverse gravity.
+	Fixed bug where palladium pickaxe and drill would say they can mine adamantium and titanium when that's no longer the case.
+	Arcane Rune Walls now count for housing.
+	Fixed bug that allowed mana hair to go pink when you armor that gives max mana.
+	Fixed bug where capes did not show properly when mounted.
+	Fixed issue where maps were not saving on some worlds.
+	Fixed bug where Blue Moon and Harpoon had invisible hit boxes near the player.
+	Fixed bug where frostburn wasn't applied in pvp when using flower of frost.
+	Fixed bug that allowed levers to be placed and immediately broken.
+	Fixed bug where queen/king statues didn't teleport stylist and travelling merchant respectively.
+	Fixed bug where painted tiles did not draw on the map properly.
+	Fixed bug where steampunk workbench was not craftable.
+	Fixed bug where you could have Fairy Bell and other light pets up simultaneously.
+	Fixed a few language issues pointed out on the forums.
+	Fixed a bug where Extendo Grip let you open chests that would instantly close again.
+
+
+Version 1.2.3 Changes---------------------------------------------------------------------------------------------
+
+
+Features and Mechanics:
+	You can now name chests.
+	Added ingame settings menu.
+	There's now options for the ambient sound.
+	Save and Exit is now in the settings menu.
+	Added sliders for parallax & volume settings.
+	Game now loads at saved resolution and even remembers if you use maximized window.
+	Reforging cost is now 1/3 the value of an item, instead of 1/2 the value.
+	You can now turn platforms into stairs using the hammer.
+	Added infinite wiring support across the map.
+	Updated Robe graphics.
+	Updated Music Box graphics. Each music box now has a unique design.
+	Music notes now come from music boxes.
+	Update the graphics for Cobalt Shield, Obsidian Shield, and Paladin Shield.
+	You can now place switches and levers on walls.
+	Accessories now have an option to be visible and show on your character. This can be toggled off and on.
+	You can now wear vanity wings.
+	Wings can now be dyed. 
+	Dyes are now stackable.
+	Buckets are now stackable. 
+	Ore now stacks to 999.
+	You can now change cloths colors at a dresser.
+	Added Ctrl + Z, X, C, and V (clear line, cut line, copy line, and paste into line respectively).
+	Added Shift+Insert, Shift+Delete, Ctrl+Insert (paste, cut, and copy respectively).
+	Added the ability to mine multiple tiles without resetting the hit count on every tile.
+	Increased tile limit to 65536.
+	Added cactus variations.
+	Added biome specific stalactite variations.
+	You can now place saplings on all grass types.
+	Reduced the effect of campfire and heart lantern regeneration.
+	Ancient Shadow armor drop rate was reduced slightly.
+	Multicore Lighting added to options menu.
+	There are now critter sounds.
+	Added sounds for Waterfalls and Lavafalls.
+	Birds are now more likely to spawn in mornings. Each type has several songs to sing.
+	When you hover over text in the interface menu the text now turns yellow.
+	Replaced Tree 9's graphic.
+	Players have a longer respawn delay after a non pvp death with a boss alive in multiplayer.
+	Dark tiles on the map no longer tell you what they are when moused over.
+	Added upside down slopes.
+	Upside down slopes spawn in new worlds.
+	Using Mana Potions now puts a debuff on the player that lowers magic damage based on the amount of time left.
+	Mana potions all have higher stacks.
+	Spelunker no longer gives off light. This prevents ore from showing up on the map
+	Spelunker now causes ore to be gold colored on the screen
+	Hunter potion no longer gives off light. enemies will appear in red, friendly creatures appear in green.
+	Slightly reduced the chance for rain.
+	Pyramids are slightly more common.
+	Waterleaf now only blooms in the rain.
+	Life crystals no longer spawn in the dungeon.
+
+
+New Items:
+	Added several new paint colors: Brown, Shadow, and Negative paint. 
+	Added Team Dye: Changes colors depending on team.
+	Added Beetle Armor. There are two difference chest pieces, one for melee offense another for melee defense. 
+	Added Beetle Husks to craft Beetle Armor - drops from Golem.
+	Added Beetle Wings.
+	Added Shroomite Digging Claw.
+	Added Gemspark Blocks.
+	Added Gemspark Block waterfalls.
+	Added Womannequin.
+	Added several new wallpapers to the Painter.
+	You can now craft an animated steampunk tileset out of Cogs.
+	Added several new weapons racks that can be made at a Sawmill. 
+	All bosses now have a chance to drop a Boss Mask.
+	Added Waterfall and Lavafall Walls. These are craftable by having a Crystal Ball and glass near a water or lava source. 
+	The Merchant now sells a Bug Net. 
+	You can now catch and release several critters using the Bug Net.
+	You can now place critters in cages.
+	Added Crimson seeds.
+	Added 8 new crafting stations.
+	Over 100 new furnitures were added to existing tilesets.
+	Added Heavy Workbench.
+	Added Copper Plating, Stone Slabs, and Sandstone Slabs. These are crafted at the Heavy Workbench.
+	Added Venom Staff.
+	Added Super Mana Potions.
+
+
+New Npc:
+	Added Stylist NPC (Congratulations Ripsand!) - Sells rare hair dye, changes hair style and color. (spawns in spider caves). She will also sell new hair styles! (Thanks Omnir)
+	Added 20 new friendly critters.
+	Added Traveling Merchant. He will randomly show up once you have at least 2 NPCS and stay for one day. His inventory will always be random and present things he has found during his time spent traveling. He has over 30 different things he can sell.
+
+
+Hardmode Balance Changes:
+	Drastically increased the drop chance of Keymolds. 
+	Ice Golem now drops a Frozen core that is used with Hallowed Bars to craft Frost Armor.
+	The Pickaxe Axe now requires 1 soul from each Mech boss to craft.
+	The Drax requires a soul from each boss to craft.
+	Plantera bulb's don't spawn until all 3 mech bosses are defeated.
+	You cannot summon the Golem until after Plantera has been defeated.
+	Mech bosses are now slightly more difficult.
+	The Golem has had its life, defense, and damage increased slightly.
+	The Golems attacks now penetrate walls.
+	The Golem now shoots 2 beams if you are directly above or below him.
+	Increased Golem Fist damage and knockback.
+	Increased the size of temple boss rooms.
+	Wasp gun damage increased by 3.
+	Golden shower debuff time was reduced to 10 seconds..
+	Golden shower now only penetrates 5 targets.
+	Golden Shower now does slightly less damage.
+	Autohammer can only be bought after killing Plantera.
+	The Mushroom Spear can now only be obtained once you have killed one of the mech bosses.
+	The Mushroom Spear has had its sale price increased.
+	The Hammush can now only be obtained once you have killed a hardmode boss.
+	Souls now sell for less.
+	Gungnir now sells for less.
+	The Hammush has had its sale price increased.
+	Poison Staff and Frost Staff do less damage now.
+	Chlorophyte is slightly more rare and grows slower.
+	Crystal leaf does a bit more damage and shoots faster.
+	The Rod of Discord now takes 1/6 of your life rather than 1/5.
+	The Rod of Discord debuff now lasts 8s down from 10s.
+	Slightly buffed Shotgun, Marrow, and Ice bow.
+	Slightly buffed Repeater Damage.
+	Increased the damage of Terra Blade.
+	Increased the damage of True Excalibur.
+	Increased the damage of True Night’s Edge.
+	Terra Blade, True Excalibur, and True Night’s Edge shoot beams more rapidly
+	Rainbow Rod does more damage.
+	Rainbow gun's rainbow now lasts 10 seconds.
+	Buffed Unholy Spear use speed.
+	Lowered the damage of Chlorophyte Bullets.
+	New hardmode ore spawns slightly less and is slightly harder to craft.
+	Palladium pickaxe can no longer mine Adamantite and Titanium.
+	Meteor heads no longer drop loot in hardmode.
+	Increased Lost Girl spawn chance.
+	Scourge of the Corrupter does slightly more damage.
+	Corruption, Crimson, and Hallow Grass wall spreads further.
+	Frostburn debuff now does more damage over time.
+	Added Spectre Mask and Spectre damage set bonus.
+	Nerfed Spectre Healing helmet.
+	Spectre Healing Armor: Now uses more mana instead of decreasing mana usage.
+	Retinazor shoots lasers a bit slower, and they do slightly less damage.
+	The North Pole now does less damage and has a cap on its projectiles. 
+	Increased Scourge of the Corruptor's damage.
+
+
+Pre Hardmode Balance Changes:
+	Lesser mana potions are no longer craftable. They will always be sold by the merchant.
+	Tim is now more common. 
+	Increased Bee Gun damage by 1.
+	Natures gift is now slightly more common.
+	Increased mana usage of gem staves.
+	Slightly lowered damage of higher tier gem staves.
+	Lowered value of Magic dagger and Beegun
+
+
+Optimizations:
+	Sped up world loading a bit by directly copying tile data from runs.
+	Terraria has a more efficient format for the World saves. On average it's 20% of their previous size.
+	Lighting no longer loads on servers, saves 50 megs of memory.
+	Sped up world clearing when changing from one offline world to another.
+	Optimized lighting code for better performance.
+	Optimized rain performance.
+	Sped up Rain Cloud code and made it draw better.
+	Reduced netcode data usage for tiles by 75% to 85%.
+	Map drawing changed to work over time rather than lock the machine up while it happens.
+	Maps draw much faster and their save files are 60% smaller.
+	Moved tile framing to real time to cut out having to do it during world load.
+	Removed overhead from drawing tiles and walls. Light mode 0/1 run 15% faster.
+	Checking World Alignment sped up significantly.
+	Checking World Alignment folded into LoadWorld. Gets rid of a lot of overhead.
+	Sped up the Water moving code a bit. 5-10%.
+
+
+Bug Fixes:
+	Pumpkin Moon and Frost Moon can now be started when using a Snowman pet.
+	The game will now verify there is a lihzahrd altar at the end of world gen. This should hopefully fix the bug with there sometimes being none.
+	Mouse will no longer function if you have a window over Terraria's window.
+	You can no longer waste boss summon items by using them after that boss has spawned.
+	Fixed a bug where too many Waterfalls would crash the game.
+	Fixed a bug with mana stars not dropping in multiplayer.
+	Fixed a bug where numerous NPCs could spawn if you beat a hardmode boss in a non-hardmode world.
+	Instead of consuming 2 blocks, extractinating has a chance of giving a smaller amount of money.
+	The Golem's evil plans are no longer foiled by platforms.
+	Invasions can now spawn enemies anywhere near friendly NPCs instead of just the middle of the world.
+	One of the twins can no longer despawn as long as the other is still active.
+	Destroyer now drops loot on the closest segment to the player
+	Fixed Sugar Cookie typo.
+	All waves in Frost Moon correctly use "Flocko" in the warning.
+	Boulders with Chests on them no longer crash the game if the boulder is hit.
+	Red Stucco no longer spreads corruption.
+	Piggy Bank and Safe now correctly combine coins when Quick Stacking.
+	Changed how damage/tooltips are generated so weapons get the full damage boost % instead of losing a bit to float precision.
+	Nurse no longer charges for, or removes the potion cooldown, heart lantern and campfire buffs.
+	Fixed a bug where moving very large quantities of water could leave some water floating.
+	Fixed bug where ancient cobalt armor pieces did not grant critical strike chance.
+	Fixed bug where inactive tiles counted for sticky purposes.
+	Fixed bug where wings appear too high when on a mount, made hoverboard not appear on a mount.
+	Fixed bug where sign bubbles would appear in the wrong place at reverse gravity.
+	Fixed two of the floating player bugs where the player is wildly off the surface they are standing on.
+	Fixed a bug with leaving honey having water sound and particles.
+	Fixed bug where featherfall potion did not function equally on reverse gravity.
+	Fixed minor bug with rain sounds.
+	Fixed bug where you didn't get the set bonus by mixing Ancient Cobalt & Jungle armor pieces.
+	You can now see the archery buff's damage bonus in the item tooltips when its up.
+	Fixed bug where blizzard staff could shoot upwards if you stand in hell's bottom.
+	Fixed exploit where queen bee could get stuck in tiles and not move
+	Fixed a bug where Crimsand deserts were not making the water show up red.
+	Mechanical Glove only improves melee damage.
+	Fixed bug where you cant hurt the clothier with clothier voodoo doll using projectiles (bows / guns / thrown items / spears / flails and so on)
+	Fixed a bug with guns not shooting bullets with the correct velocity
+	Fixed bug where spawn rates were higher than intended everywhere rather than when below the middle of dirt layer.
+	Fixed bug where NPCs that don't really die (Slimer, Mother Slime, Corrupt Slime) drop hearts and mana stars on shapeshifting (dying).
+	Fixed bug where you can respawn skeletron prime if you kill its prime cannon hand and not skeletron prime himself.
+	Fixed bug where heart crystals could spawn in nonsolid areas.
+	Fixed bug where skeletron hand hook did not remain attached to tiles as much as the rest of the hooks in the game.
+	Fixed bug where info accessories displayed info when you looked at empty signs but not when you looked at texty signs.
+	Fixed bug where the selected item was affected by pressing numbers while editing signs.
+	Fixed a bug where health bars would appear empty when really full.
+	Fixed bug where Dust would grow massive when you paused the game.
+	Improved Dryad's world status dialog
+	Coins now stack as best as they can when you deposit or quickstack them in chests.
+	Fixed bug where fairy bell would not sync properly in multiplayer.
+	Fixed bug where fairy bell fairy color would not save / load.
+	Fixed bug where Shadewood Bow could not be reforged.
+	Fixed bug where Restoration Potion's rarity was lower than Mana or Life Potion's rarity (despite being the same tier).
+	Fixed bug in world gen where Restoration potions could generate with their stack over the max.
+	Fixed bug where platinum candle did not emit light in non-rgb lighting mode.
+	Fixed bug where piranha gun would chase invincible enemies (blazing wheels and dungeon flails).
+	Fixed bug where nurse would charge money to remove water candle debuff.
+	Fixed bug where north pole projectile could attain enough gravity velocity to pass through blocks.
+	Made Frozen debuff not hide your armor.
+	Bug Fix:You can no longer interact with stuff when fullscreen map is open.
+	Fixed hoverboard bug where you could walk on air while in reverse gravity.
+	Added unimplemented crimson monster sounds.
+	Fixed general bug with gravity where it did not account some terms for half blocks.
+	Fixed issue where you cannot jump while in reverse gravity in water.
+	Fixed bug where certain hats would be placed weirdly under reversed gravity.
+	Fixed bug where rune robe particles appeared on player's head in reverse gravity.
+	Fixed bug where chat bubbles displayed "wrong" in reverse gravity.
+	Fixed tile sheet for Water Fountain to remove two bars that vanish when you turn them on. (Jungle/Snow biomes).
+	Fixed bug where blazing wheels didn't get placed into tiles.
+	Fixed bug where Crimsand Blocks couldn't be shot out of a Sandgun (added crimsand friendly projectile).
+	Fixed bug where merchant would not spawn if you own over 21k platinum.
+	Fixed bug where you couldn't pick up crimson grass and hallowed grass with dirt rod.
+	Fixed bug where dirt rod ball shakes erratically in water.
+	Fixed bug where dungeon guardian still tried dealing 9999 damage (and was exploitable thanks to that).
+	Fixed bug where flesh walls didn't return the item when destroyed.
+	Fixed bug where gingerbread men dropped yeti head gores for feet.
+	Fixed bug where attempting to move npcs with reverse gravity used the opposite screen height position.
+	Fixed bug where Brain of Cthulhu wouldn't make dryad spawn or stop talking about the chasms.
+	Fixed bug where guide will tell you to press ESC to open inventory even if you changed your keys.
+	Fixed bug where chests could be placed in bad positions (e.g. ice blocks or sloped tiles in worldgen).
+	Fixed bug where hooks would break if they try to attach to blocks with liquid in them.
+	Flocko & Elf Copter now both correctly run away at dawn.
+	Summoning Golem will now properly only use one Power Cell.
+	Title Screen music can now be correctly captured when it plays from another Music Box.
+	Fixed a typo on the Alternate Undeground Music Box.
+	Fixed bug where special armor visuals don't apply with auto-pause on (robes / werewolf / merform).
+	Necro Armor reports the right ranged boost on it's Tooltip.
+	Touching Lava while in Merform will no longer force the player to leave the water and renter to get the Merform back.
+	Teleporting from Honey to Water will no longer leave the player moving slowly, as if they are still in honey.
+	Fixed bug where Guide would talk about crafting lens when you don't have any.
+	Fixed bug where Guide would talk about shadow orbs and corruption in a crimson world.
+	Fixed bug where Guide would keep talking about shadow orbs until you beat Skeletron rather than eater of worlds / brain of cthulhu.
+	Fixed bug where Dryad would mention the corruption in purification powder suggestion while in crimson world.
+	Fixed bug where zooming with sniper scope / binoculars would go in opposite height direction when in reverse gravity.
+	'Down' button in reverse gravity with feather fall now correctly does the same thing as 'Down' in feather fall without reverse gravity.
+	Fixed bug where Crimson hearts would be called shadow orbs in minimap
+	Rod of Discord works properly when gravity is flipped.
+	Fixed the bug where removing walls in the Underworld would not update the map.
+	Fixed bug where certain items would be invisible when using flame dye.
+	Using a Rod of Discord releases all grapples.
+	Fixed a typo in the Steampunker dialog about the Pirate.
+	Using a teleporter tile releases all grapples.
+	Touching lava while in water will now properly put the fire buff out when you leave lava.
+	Fixed issue where merman / werewolf transforms are visible when you're invisible.
+	Fixed bug where wing items showed on player's back when in merman form.
+	Fixed bug where pirate captains would be dismembered into 5 heads instead of 1 body.
+	Fixed robe lower body animation issues when using items.
+	Fixed precision with hydra staff in reverse gravity.
+	Fixed starfury getting magic prefixes despite being melee weapon.
+	Fixed starfury projectiles being magic instead of melee (no longer triggers spectre set or scale with magic crit).
+	Fixed bug where you could place campfire in water.
+	Fixed exploit with moving items around in auto-pause.
+	Fixed bug where Sand falling was not unsloping tiles.
+	Fixed bug where mannequins wouldn’t draw robe bottoms.
+	Fixed bug where skeletron hand hook would emit glows of melee enchantments.
+	Golem and plantera now drop money (15 gold each).
+	Fixed bug where Staff of Earth's boulders would sink through tiles if they're in water.
+	Fixed issue where magma stone fire particles would apply to bug net.
+	Crimson Hearts now have the right name when hovered over on the map.
+	Fixed Princess robe not having a bottom.
+	Fixed bug where chaos elementals can spawn prehardmode.
+	Fixed exploit where shadow dodge buff wouldn't be removed if its the last buff in a full buff list.
+	Fixed exploit where you could throw torches to activate hotbar items without costs.
+	Fixed dying by demon altar having no message.
+	Wearing Frost Armor no longer makes Spiky Ball Traps give Frostburn debuffs.
+	Spear traps will vanish when reaching the trap, whether it is inactive or not.
+	Enemy attacks no longer trigger Spectre set healing from hitting friendly NPCs.
+	Running underwater no longer causes flashes of the Suffocation debuff.
+	Dark Mummy and Pixie no longer drop both Status Protection accessories at the same time, 100% of the time.
+	Ancient Cobalt gear no longer drops both Armor and Legs at the same time.
+	Crimson Altar now shows up when you hover over it on the map.
+	Bug where Spectre Staff was trying to chase a Wyvern off the top of the map fixed.
+	Fixed bug where Crimson Axe npc wouldn't drop Nazar.
+	Fixed bug where Crimtane’s name wouldnt be displayed in mouseover on map.
+	Fixed bug where mayan dart trap darts were affected from frost armor
+	Thorns potion now properly requires worm tooth to craft.
+	Fixed issue where Ice Torch would not emit light when thrown on the ground.
+	Fixed bug where wisp spazzes in water.
+	Fixed frost moon wave display test (Elf Zombie to Zombie Elf).
+	Fixed a bug that was causing the Map to draw over already drawn areas.
+	Fixed the Nymph Banner typo.
+	Fixed a crash when you destroy a teleporter with a chest on top.
+	Fixed a typo causing Bezoars to drop from the Steampunker (178) instead of Moss Hornet (176).
+	Fixed bug where platinum candle was not right clickable.
+	Fixed crash on minimizing the game.
+	Fixed torch duplication bug.
+	North Pole can no longer fire through walls.
+	Fixed a bug with the Christmas Hook.
+	Extractinator now only consumes 1 block at a time (bug fix)
+	Golem and Plantera now flee to despawn after all players have been killed.
+
+
+Version 1.2.2 Changes---------------------------------------------------------------------------------------------
+
+
+Mechanics and Gameplay:
+
+	The content of presents have been altered and now contain more goodies. They are also now placeable and stack in your inventory.
+	Santa Claus now has a larger variety of Holiday related items that he will sell to you.
+	Frostmoon is a new event that can be triggered in hardmode. It has 15 standard waves as well as 5 extra bonus waves.
+	There are several new pets as well as 1 new mount that will drop off one of the Frostmoon bosses.
+	Holiday themed wallpaper can now be purchased from the Painter. 
+	Maximum player buff slots has been increased to 22.
+
+
+New Music:
+
+	There is now an alternate to the underground theme.
+	There is a new track that will play during the Frostmoon.
+
+
+Bug fixes:
+
+	Recording Pumpkin song no longer creates an Ankh.
+	NPCs now go to shelter during eclipses.
+	World gen no longer saves broken chest slots.
+	Increased the damage bonus of stealthing in Shroomite armor.
+	Items which regenerate health per hit now have a cap of 2 hearts per second.
+	Flame traps will no longer trigger healing from Spectre Armor.
+
+
+Version 1.2.1.2 Changes---------------------------------------------------------------------------------------------
+
+
+Bug Fixes:
+
+	You can no longer see enemy players on the map during PvP
+	Jack ‘O Lanterns no longer show up as Chandeliers on the map
+	Costumed Zombies will no longer open doors on non bloodmoon nights
+	Costumed Demon Eyes will now correctly leave at night
+	Rifle Scope now works with Candy Corn Rifle and Stake Launcher
+	Rifle Scope no longer zooms when moused over interactable objects
+	Added save file validation before overwriting previous worlds (to prevent file corruption)
+	Fixed a bug that was causing monsters to only show one debuff on multiplayer
+	Changed the requirement for the demolitionist to sell land mines to defeating Plantera
+	Fixed a bug that could cause aggro reduction to not work correctly
+	Skeletron now spawns on the Clothier when using a Clothier Voodoo Doll
+	Flame and Frozen wings now fade when stealthed
+	Monsters that transform now correctly keep their debuffs
+	Ice Staff will now trigger Spectre’s set bonus
+	Actuators no longer work on doors
+	You can no longer teleport into the jungle temple
+	Added some checks to ensure multiple NPCs of the same type don’t spawn
+	Improved tile handling performance (Thanks Solsund!)
+	Bat Hook now correctly drops from Goodie Bags
+	Witch Doctor now correctly sells cauldrons during Halloween
+	You can now correctly step up all types of platforms
+	Opening a chest can no longer grab items from it automatically on a small screen
+	Water Fountains are now sold after defeating Plantera
+	Using Rod of Discord near the end of the map will no longer cause you to crash
+
+
+Changes:
+
+	Using the Rod of Discord now gives a debuff that takes life when it’s used again
+	There is now a buff icon for campfire and water candle
+	Plantera now enrages when taken out of the Jungle or to the surface
+	The Destroyer is now immune to all debuffs
+	Some enemies will no longer chase players depending on level of stealth and distance
+	Shroomite Armor no longer loses stealth when using items
+	Critical Strike increase on accessory reforges have been doubled
+	Tabi and Master Ninja gear now bring the player to full speed instead of stopping
+	Piranha Gun now hits monsters more times per second
+
+
+New Items:
+
+	Heart Lanterns are now craftable out of Life Crystals
+	Sniper Scope is now craftable at the Tinkerer’s Workshop
+	Sparkfrost Boots are now craftable at the Tinkerer’s Workshop
+	Jellyfish Diving Gear is now craftable at the Tinkerer’s Workshop
+	Arctic Diving Gear is now craftable at the Tinkerer’s Workshop
+	Fart in a Balloon is now craftable at the Tinkerer’s Workshop
+	Papyrus Scarab is now craftable at the Tinkerer’s Workshop
+	Celestial Stone is now craftable at the Tinkerer’s Workshop
+	Hoverboard is now craftable from Shroomite
+
+
+New Music:
+	A new track has been added for the Pumpkin Moon Event
+
+
+Version 1.2.1.1 Changes---------------------------------------------------------------------------------------------
+
+
+	Merchant now correctly sells the Sickle
+	Fixed several graphical issues with the new Halloween costumes
+	Pumpkin Seeds now have a price
+	All the new Halloween weapons can now be reforged
+	Hellbats now drop Magma stones instead of Giant Fungi Bulbs
+	Rotten Eggs now correctly damage friendly NPCs
+	The duration of Pumpking’s scythe attack has been reduced
+	Fixed a graphical bug with Spear Traps
+	Fixed a graphical bug with the height of drawn tiles
+	Mechanical Bosses will no longer spawn during Pumpkin Moons
+	Fixed a bug causing the game to not check for Halloween dates in multiplayer
+
+
+Version 1.2.1 Changes-----------------------------------------------------------------------------------------------
+
+
+Bug Fixes:
+
+	Fixed an issue causing walls to not have different frames (Thanks Solsund!)
+	Fixed an issue with world saves being larger than they should (Thanks Solsund!)
+	Frozen Slime blocks are now craftable
+	You can no longer reforge Music Boxes
+	You can no longer place Campfires in water
+	Palladium, Orichalcum, and Titanium bricks now show correctly on the map
+	Placed Lihzahrd Brick Walls now show correctly on the map
+	Fixed a bug that would prevent Pirates from spawning
+	Titanstone now correctly blends with dirt
+	Fixed several typos
+	Minimap now draws over enemy health bars
+	Walls now correctly draw behind Super Dart Traps
+	Eater’s Bone now correctly drops from the Eater of Worlds
+	Adjusted mannequin layering to draw armors correctly
+
+
+Changes:
+
+	Mice can no longer be killed by monsters
+	Mice can no longer spawn in hell
+	Magma stone will no longer show a fire effect for non melee weapons
+	Floaty Gross now cause weakness and drop Vitamins
+	Sunflowers now reduce Crimson’s effects
+	Crimson and Hollow now counteract each other
+	Reduces the chance for a mechanical boss summon to drop during hardmode
+	Hardmode Dungeon Keys must now be crafted from rare drops
+	Pygmy Staff has had its damage increased slightly
+	Updated female armor sprites
+	Added messages to help the player progress in hardmode
+	Reduced chance for a Dungeon Spirit to drop
+	Spectre Armor now requires Chlorophyte Bars to craft
+	Spectre Wings now need 10 ectoplasm to craft
+	Spectre Armor now only heals for 8% instead of 10%
+
+
+Additions:
+
+	Added Pumpkin Tiles and Walls
+	Added Hay Tiles and Walls
+	Added Spooky Wood Tiles and Walls
+	Added Goodie Bags that drop from most monsters during Halloween
+	Added new Pumpkin Moon event that will be available all year
+	Added new Halloween themed pets
+	Added new Halloween themed costumes
+	Added new Halloween themed paintings
+	Added new Halloween themed weapons and armor
+	Several common enemies will now be in costumes
+	Hearts and Stars have been replaced with something more festive
+	Several friendly NPCs will sell costumes
+	Dryad will now sell Pumpkin Seeds year round
+	Merchant will now sell an item to harvest hay during Halloween
+	Pumpkins will grow on their own during Halloween
+	Added new decorative items craftable from Pumpkins and Spooky Wood
+
+
+Version 1.2.0.3.1 Changes-------------------------------------------------------------------------------------------
+
+
+	Fixed random crashing when in a snow biome in multiplayer
+	Fixed a problem with painted tiles not being painted in multiplayer
+	Fixed a problem that defeating plantera would force serverside characters
+
+
+Version 1.2.0.3 Changes---------------------------------------------------------------------------------------------
+
+
+New Additions:
+
+	87 new banners were added as drops from monsters
+	Glass Furniture- Now craftable with glass
+	Hive Furniture- Now craftable with crisp honey
+	Steampunk Furniture- Now craftable with cogs
+	Pirates will now randomly drop fancy gold furniture
+	You can now craft more furniture out of wood with a sawmill (barstools, banquet tables, etc..)
+	Lihzahrd Walls are now obtainable 
+	You can now craft living wood walls
+	Added new friendly critters: Blue Jay, Cardinal, Squirrel, and Mouse
+	Whoopee Cushion now has a higher drop rate
+	You can now tinker a whoopee cushion with a cloud in a bottle
+
+
+Bug Fixes and Changes:
+
+	Dungeon guardian now does 1000 damage
+	Chlorophyte Drill and Pickaxe can now mine Chlorophyte
+	The Rod of Discord now properly drops
+	The Uzi now has the correct drop rate
+	Easy mode jungle enemies now have a small chance of spawning in hardmode jungle
+	Moss hornets can now drop Bezoars
+	You can no longer duplicate items with the merchant
+	Snow particles will no longer spawn on backwalls
+	Fixed a bug that would cause monsters to despawn on servers but not clients
+	You can no longer duplicate items through reforge
+	The Mummy Shirt now correctly shows the players hand
+	The graphic for Pirate Pants has been fixed
+	The Party Girl will now sell the Bubble Wand
+	The Mushroom Spear can now be reforged
+	The Heat Ray now uses mana
+	The Leaf Blower now uses mana
+	Marshmallows no longer duplicate (for real this time)
+	The Frost Breastplate now correctly gives bonus based off the tooltip
+	You can no longer sell money
+	Orichalcum axe now requires an orichalcum anvil to craft
+	Fixed an exploit that would crash servers and clients
+	You can now attack the Clothier with the Clothier Voodoo doll equipped
+	Purification powder now works on crimson ice
+	Holy water now works on crimson
+	Eclipses are no longer persistent between worlds
+	Fixed switch duplication bug
+	Fixed a bug that would cause tiles to be painted on multiplayer when they shouldn’t be
+	Reduced the number of particles some items/spells create
+	Slightly improved performance when a large number of particles are on screen
+	Fixed a bug that would cause coins to disappear instead of converting into the next highest currency
+	Lucky coin no longer drops coins from statue spawned monsters
+	Bunny cannon will return to you when broken
+	NPCs that require Plantera to be defeated to sell things now do so correctly in multiplayer
+	King and Queen statues will correctly summon the new NPCs
+	Typing before the password screen when hosting will no longer cause those keys to be the password
+	Holding coins when dying will now correctly drop those as well
+	Flame thrower now does ranged damage instead of magic
+	Blue and Green Wrenches show the number of wire available
+	You can now reforge the Book of Skulls
+	Fixed several typos
+	Fixed a bug that caused the music box to record instantly
+	Green solution will now turn Mushroom Biomes back into Jungle
+	Traps no longer trigger Spectre Armor (Sorry Hero)
+	You can no longer create a slope or half tile under a Lihzahrd Altar 
+	People playing on small screens should no longer auto equip an item from a chest or pick it up
+	Rocket Launcher will now drop off of the Skeleton Commando
+	Goldfish will no longer drop pirate maps near the ocean
+	The Eater’s Bone will now properly drop
+
+
+Balance Changes:
+
+	The defense of Spectre Armor has been slightly lowered
+	The defense of Turtle Armor has been lowered
+	The attack speed, damage, knockback, and life return of Vampire Knives has been lowered slightly
+	Dungeon Spirit spawn chance has been lowered
+	Increased the reach of Wrenches and Wire Cutters
+	Hardmode Crimson, Corruption, and Hallow spread is now slowed after killing Plantera instead of any Mechanical Boss
+	Slightly increased the chance for an eclipse to happen, but they will now only happen after killing a Mechanical Boss
+	Hardmode Dungeon Monsters will now only spawn after Plantera has been defeated
+	Coins will now auto stack when close to eachother
+	Shadowbeam Staff does less damage each time it hits something
+	Spectre Armor does less healing each time the same projectile deals damage
+	Piranha gun now does slightly more damage
+	Pyramids are slightly more common
+
+
+Version 1.2.0.2 Changes---------------------------------------------------------------------------------------------
+
+
+	The game will no longer look for the square root of zero.
+	Projectiles and harpoon should no longer cause out of memory exception
+	The guide will no longer say you need a hammer to break life crystals
+	The guide will no longer say you need 10 fallen stars to make a mana crystal
+	Dungeon platform item icons will now display the right color
+	Clay pot dupe no longer works
+	Snipers will now drop sniper rifles
+	Opening doors will no longer cause a room to be unsuitable
+	Hardmode summon items will no longer drop from monsters that have been spawned from statues
+	Chests, crystal hearts, and statues should no longer spawn on ice
+	Crafting recipe for sticky glowsticks has been fixed
+	Pumping honey will no longer turn honey into water
+	Fixed trashing coin dupe
+	Shadow orb and fairy bell no longer show a duration
+	If you place a bed somewhere that would cause you to not spawn without breaking through blocks you will now get a message when trying to set your spawn point letting you know the bed is not in a suitable position.
+	Fixed a bug with cooking marshmallows with your mouse
+	Blackout debuff can no longer be removed by right clicking it
+	Slightly reduced how much memory the map requires on large worlds
+	You can no longer use actuators to deactivate temple blocks before killing Plantera
+	The flare gun will no longer light up when you are out of torches
+	You can now craft battle potions with vertebrea
+	Lihzahrd altar should now spawn and use power cells properly
+	Minimum particle display has been increased for certain conditions
+	Switch duplication no longer works
+	Notes from the magical harp now count as magic and should trigger the spectre set bonus
+	Bombs will no longer blow up chlorophyte
+	You can no longer break into Lihzahrd temple with chlorophyte drill
+	Sun Stone and Moon Stone now only increase melee damage by 10% instead of 20%
+	Blue flares have been added to the game and can be purchased by the merchant if you have a flare gun
+
+
+Version 1.2.0.1 Changes---------------------------------------------------------------------------------------------
+
+
+Bug Fixes:
+
+	Configuration settings will be set to default to fix problems with loading incorrect configurations from previous versions
+	Fixed a bug that was causing some players to crash on startup with the message: System.OutOfMemoryException: Insufficient memory to continue the execution of the program.
+
+
+Version 1.2 Changes---------------------------------------------------------------------------------------------
+
+
+Bug Fixes:
+
+	You can no longer craft items or money by placing items in the trash.
+	You can no longer sell your gold to NPC's
+	Music box/chest duping no longer works
+	Bunnies/Goldfish spawned from statues no longer drop money during a Bloodmoon
+	Equipping items to the social slot in German no longer crashes the game
+	The game will no longer create a random password during multiplayer world generation
+	You can now reforge in all languages
+	Active blocks will no longer become inactive with a chest on them
+	Fixed a bug that would cause a suitable house to be unsuitable
+	Fixed a lot of bugs that were not listed
+
+
+Mechanics and Gameplay:
+
+	Enemies now have a health bar
+	There is now a map, mini map, and overlay that only shows tiles the brightest they have ever been
+	The map can be toggled using tab, m, or through the map icons
+	“M” has been remapped for the map feature
+	“J” is now the default button for mana use
+	There is now an extended crafting menu that will show everything you can craft
+	Some items now stack to 999
+	Character slots have been increased to 1,000
+	World slots have been increased to 1,000
+	The starting female cloths have been modified
+	There are several new hairstyles
+	Character creation has been remodeled
+	Chest sizes have been doubled
+	Your inventory space has been increased by 10
+	You no longer need to jump to ascend single blocks
+	The hammer is now used for creating slopes, halftiles, and breaking walls only
+	The axe is now only used for chopping down trees and giant mushrooms
+	Pickaxes will now remove blocks, placeable objects, and items such as Life Crystals and chests
+	You can now paint any solid tile or item
+	Dye slots have been added
+	You will now start with 20 mana
+	You can now craft early game magic robes and staves
+	Bricks, wood, stone and glass all now blend together
+	Mana Crystals only require 5 fallen stars to craft, down from 10
+	If water touches a halftile it will create a waterfall
+	Your world has a chance to get alternative ore as a replacement for copper, iron, silver, and gold
+	Your world has a chance to have a replacement for the Corruption
+	Your world has a chance to get alternative ores as a replacement for Cobalt, Mythril, and Adamantite
+	Your world has a rare chance to have a pyramid or living tree spawn during world generation each containing their own loot table
+	There is a new hardmode jungle temple
+	There are now beehives that can be found in the jungle
+	There are now several new backgrounds and tree variations your world has a chance to generate
+	Water will now change color based on the biome you are in and depth underground
+	Ropes are now found early game and can be used to craft rope coils for traversing the world
+	Chains can now be placed and used as a rope mechanism
+	Mushroom grass/seeds can now grow and spread above ground
+	There are now 3 colors for wires
+	Actuators can be used to make any solid tile active and inactive
+	There is 1 new liquid type that can be found in the Jungle
+	There are several new fountains that will change the color of water when they are place nearby
+	Pearlstone bricks no longer spread hallow
+	Rain and blizzards have been added
+	There is a new snow biome with unique treasures and items for normal and hardmode
+	Enemies no longer trigger underground pressure plates
+	There are new pressure plates that can only be triggered by certain things such as the player, enemies, or both
+	Clowns will no longer blow up tiles
+	There are several new buffs and debuffs
+	There are now mini Capture the Gem addition to the game. You can craft large gems that draw a gem icon above the player holding the gem and if the player is killed the gem will be dropped next to their corpse
+	There are 2 new hardmode events
+	Werewolf form has been buffed and can take place every night
+	Broken armor debuff only lasts 2 minutes, down from 5
+	You now use a pickaxe to remove armor from a mannequin
+	Players no longer take double damage in pvp
+	Items of the same type will now stack when next to each other
+	When using a gravitation potion your world will invert rather than your character
+	You can no longer become invincible when touching fire blocks
+	Increased speed at which you can buy stacks of things
+
+
+Graphical Changes:
+
+	The sun is now brighter
+	Midnight is now darker
+	The sky has a smooth gradient
+	There are several items that have had graphical upgrades such as gems, colored torches, minishark, muramasa, aqua scepter,
+	starfury, ect..
+	There are now stalagmites, icecicles, moss, plants, rocks, and other "piles" added to enhance the environment
+	There are several new mini caves that can be found with unique backgrounds
+	Each biome will now have chests and pots with unique graphics
+	The dungeon now has 3 unique textures/colors and furniture
+	Hell houses have been remodeled
+	Floating islands have been remodeled
+	Each biome will now have unique textures and wood types:
+	Corruption: Ebonwood
+	Jungle: Rich Mahogany
+	Crimson: Shadewood
+	Hallow: Pearlwood
+	Each brick now has its own unique texture
+	Each brick wall now has its own unique texture
+	Torches are now animated and can be placed on walls
+	Common enemies such as demon eyes, skeletons, and zombies have all been given graphical variations
+	There are several new tombstones
+	All objects in the game that sparkle will now sparkle with a corresponding color
+
+
+Recipes/Items:
+
+	In total there are over 1,000 new items
+	There are 10 new ores
+	There are 4 new wood types
+	There are 31 new brick types
+	You can now imbue melee weapons
+	There are several new arrow and bullet types
+	There are several new crafting stations
+	There are several new wands used for crafting new bricks and brick walls
+	You can now craft bricks, walls, and furniture out of several new materials:
+	Slime, Bone, Mushroom, Living wood, Flesh, Silt, and many more!
+	You can now craft Jester Arrows
+	There are 12 new wing types
+	There are several new vanity sets
+	There are a lot of new rare drops added to enemies
+	You can now craft stained glass
+	There is an item in hardmode that allows you to change biomes
+	There is an item in hardmode that allows you to increase your max health
+	There are 29 new tinker combinations
+	Several new items have been added to the game that are used for crafting dyes
+	Starfury now acts as a melee weapon and has had its damaged increased
+	Aqua Scepter has been redesigned and does slightly more damage for less mana
+	Water bolt has been redesigned and does slightly more damage
+	Vilethorn does more damage and uses less mana
+	Magic Daggers have been buffed
+	All of the old classic armors can be found as rare drops and have the same stats as their current counterparts and count towards set bonuses
+	Items that were called dyes previously for crafting have been changed to thread
+	Chests now have larger loot tables
+	You can now make picks instead of drills and axes instead of chainsaws in late game tiers
+	Increased the drop rate of souls
+	There are over 50 paintings that can be collected randomly throughout the world
+	Jungle armor no longer requires gems
+	The amount of meteorite required for crafting has been decreased
+	Meteorite armor has more defense and does more damage
+	Silt and slush can be extracted into useful materials, items, and money
+	Each boss has a rare chance to drop a placeable boss trophy
+	Hooks can now be crafted out of gems
+	Depth meter is no longer craftable
+	Stars can now be crafted with bottles to make a new light source
+	Floating island chests no longer require a key
+	Gems and bars can be placed
+	Items made from hellstone now require less hellstone
+
+
+NPCS:
+
+	There are 8 new friendly npcs
+	There are 4 new bosses
+	There are over 100 new enemies
+	Friendly npcs will sell different items depending on certain conditions such as time of day or biome they are living in
+	Hardmode bosses have a chance to spawn on their own to help players progress through the game
+	Current hardmode bosses now do slightly less damage and have had their health decreased
+	There is a rare spawn mini boss that can be found during blizzards in the above ground ice biome
+	There are over 15 new pets that can be found in chests and dropped rarely off enemies
+	Early hardmode enemies now do less damage and have less health/defense.
+	Skeletron can now be summoned and has a small loot table
+
+
+Music:
+
+	There are 15 new tracks for the game, 3 of which are from the console version of the game
+	Day theme 2 will loop into day theme 1 to add variation above ground
+	Desert, ocean, glowing mushrooms, dungeon, and space all have their own tracks now
+	Ice biome has an above and below ground track
+
+
+Performance/Miscellaneous:
+
+	The game now only loads assets when needed, reducing the amount of RAM used
+	Optimized tile data to reduce RAM usage
+	There game will now ask you if you want to use UPnP to automatically port-forward when hosting multiplayer
+
+
+Version 1.1.2 Changes---------------------------------------------------------------------------------------------
+
+
+    Terraria has been translated to German, Italian, French, and Spanish.
+    When first run, Terraria will ask which language to use.  This can be changed in the options menu.
+    Terraria now has support for accented letters and multiple keyboard layouts.
+    Fixed a bug that would cause spawn items to sometimes not work on multiplayer games. (Hopefully)
+    Fixed a bug that would allow you to create items using the crafting guide.
+    Fixed several multiplayer security issues.
+    Fixed a bug that would sometimes cause the Eater of Worlds to not spawn after three shadow orbs had been smashed.
+
+
+Version 1.1.1 Changes---------------------------------------------------------------------------------------------
+
+
+Bug Fixes / Performance
+
+    Reduced the amount of RAM needed to run Terraria.
+    Added an option to turn backgrounds off.
+    Improved the automatic game quality adjuster.
+    Lighting update won’t skip as much on lower quality levels.
+    Items dropped on death for hardcore and mediumcore characters will retain their conditions.
+    Space Gun now has a value.
+    Water Bolt can now have conditions.
+    Diving Helmet now works correctly.
+    Walls now correctly show behind Glass Blocks.
+    You can now untie bound NPC’s with Autopause enabled.
+    Mediumcore and hardcore players will drop their cursor item on death.
+    Coins held on the cursor will correctly be dropped on death.
+    Dryad’s Corruption and Hallow status numbers are correct.
+    Wyverns are less common and will be less likely to spawn near the ground.
+    Mana Flower's price has been increased.
+    Fixed the shadow glitch of trippy lighting.
+    Music Boxes no longer dupe when placed on platforms.
+    Fixed an issue that caused stacked coins to go missing from chests during multiplayer.
+    Cursed Torch item now emits light in water.
+    Harpoon can now be reforged.
+    Lighting will now be set to Retro instead of crashing if Terraria is unable to switch to the new lighting mode.
+    Keybindings will no longer sometimes be set to "None" automatically.
+    Bombs thrown by clowns will now show that the wall has been destroyed in multiplayer.
+    Crystal Shards now give off light in retro and white color mode.
+    Hallowed Armor only has graphical effects with the helmet.
+    Players now have hair under their hats.
+    Statues no longer turn into Armor Statues when they are smashed from the top.
+    Clowns only throw bombs when their target is alive.
+
+
+Items
+
+    Added Candy Cane Blocks & Walls.
+    Added Green Candy Cane Blocks & Walls.
+    Added Snow Blocks.
+    Added Snow Bricks & Walls.
+    Added Red, Green, and Blue Lights.
+    Added Presents that are dropped by monsters during the holiday season.
+    Added Snow Globe.
+    Added Santa’s Outfit.
+
+
+NPC’s
+
+    Added Snowman Gangsta.
+    Added Mister Stabby.
+    Added Snow Balla.
+    Added Santa Claus.
+
+
+World
+
+    Snow biomes will always be created during world gen during the holiday season.  There is a 1 in 3 chance for snow biomes to be created during world gen during the rest of the year.
+
+
+Version 1.1 Changes---------------------------------------------------------------------------------------------
+
+
+NPC’s
+
+    There are thirty-six new monsters!
+    The underworld has a new master, the Wall of Flesh.  Defeating him will unlock new challenges for your world.
+    There are three harder versions of the older bosses.
+    There are now three new friendly NPC’s that can be rescued after specific conditions are met.
+    The Dryad will now tell you the percentage of Corruption vs. Hallow in the world.
+    Made several small changes to allow for better underground cities.
+        New NPCs will spawn in their homes underground, instead of on the surface.
+        Worms will no longer spawn when near a friendly NPC.
+        Underground towns will now reduce, and eventually stop, enemy spawning.
+
+
+Items
+
+    Added thirty-nine statues that are scattered around the world.  Some of them do special things when activated with mechanics!
+    Star Cannon : Shoots faster.
+    Sandgun : Sand shot from it does more damage, and it shoots faster.
+    Blowpipe : Now listed as ranged.
+    Goblins no longer drop rocket boots during an invasion.  Instead they are sold by a new NPC that can be rescued underground after the player has defeated the Goblin Army.
+    Boomerang type weapons are listed as melee.
+    Added four new armor sets.  Each set has different helms that give bonuses to melee, ranged, or magic, respectively.
+    There are twenty-one new accessories.
+    Weapons and accessories can now have random conditions that modify their stats.  These conditions can be changed for a price by visiting a new NPC.
+    The crafting requirements for Molten and Jungle gear have been reduced.
+    Some accessories can now be combined at a Tinkerer’s Workshop.
+    Colored Torches can now be crafted out of Gems and Torches.
+    Added Mannequins that are crafted out of wood.  Place armor on them for decoration/storage.
+    Added the Wrench to place wires.
+    Added Wire Cutters to remove wires.
+    Added Pressure Plates, Switches, and Timers to activate devices.
+    Added Music Boxes that record and play in-game music.
+    Added Pumps to transport liquids.
+    Added loads of other new items and weapons waiting to be found!
+    Putting the Guide Voodoo Doll in lava is now a bad idea...or is it?
+
+
+Lighting / Display
+
+    Terraria now has smooth, colored lighting!  You can toggle between the four lighting modes: Color, White, Retro, and Trippy in the Options Menu or by pressing F7.
+    Made several lighting and display optimizations to increase game performance.
+    Added automatic graphic quality adjustment based on the game’s frame rate.  This setting can be toggled in the Options Menu.
+
+
+Multiplayer
+
+    Fixed a problem with item syncing for newly connected players.
+    Fixed a bug that caused graphical issues for player’s using automatic weapons.
+    Added a limit to how often the server can broadcast NPC update packets.  This prevents NPC’s from trying to update every cycle which would cause massive amounts of lag.
+    Reduced the amount of data needed to transmit tiles down to 25%.
+    The server now only broadcasts tile data to the players who need it.
+    The server now withholds some NPC, player, and projectile packets based on player distance from them.
+    Fixed a bug where water is consumed when a player cures Corruption with Purification Powder while standing in water.
+
+
+World
+
+    Above ground tunnels may now be created during world gen.
+    Smashing Demon Altars with a special item will cause new ore to appear around the world.
+    Defeating the hell boss will now increase the difficulty of the world.  Harder monsters will spawn, and the Corruption’s rate of spread will be greatly increased.
+    Defeating the hell boss will allow the Corruption to spread underground, over sand, stone, and Sunflowers, and through Jungles, destroying them if you let it!
+    There is a new biome, The Hallow, that will be created when the hell boss is defeated.
+    Removed obsolete lighting code, reducing both RAM usage and world save file sizes.
+    Added several small features to world gen.
+    Tweaked the way and amount of Underground Mushroom biome spawn.
+    Demon Torches now appear in shelters generated in the underworld.
+    Underground cabins may randomly spawn around chests.
+    Different styles of wall can now be placed next to one another without showing the background between them, allowing for more creative building.
+    When nearing the top of the world, the player will now leave the atmosphere and be less affected by gravity.
+    There are now three types of traps that are generated underground.  Watch your step!
+    Cacti no longer damage players.
+
+
+Game Interface
+
+    Items being held by the mouse will now be used by left clicking.  This allows the player to place objects without putting them on the hotbar.  Right clicking will now drop the item.
+    Placing objects on grass will now destroy the grass.
+    The crafting menu now scales to fit the size of the screen.
+    When the inventory is open, the number of the selected item in the hotbar will appear in green.
+    There is a new NPC housing interface that can be used to assign living areas to NPC’s.  This interface will also tell you if a room is missing any requirements.
+
+
+Misc
+
+    There is a new music track for The Hallow biome.
+    Underground Corruption has its own music track.
+    Underground Hallow has its own music track.
+    There are two new boss music tracks.
+    Greatly reduced world save file sizes.
+    Decreased tile frame detection time by 15%.
+    Your trash can is now emptied when you die.
+    Added an auto select hotkey that will pick a tool from the player’s inventory based on what their mouse is hovering over.  This defaults to Left Shift.
+    All players will now leave behind tombstones when killed.
+    There is now a random option in the player creation menu.
+    Female players now have separate armor graphics.
+    Added a new mechanical system!  Holding a mechanical item will display the wire grid to create interesting new devices.
+    There are new overworld backgrounds for each biome!
+
+
+Bug Fixes
+
+    Fixed a bug that would cause the server to think a player is dead if he/she reaches 1 HP without dying.
+    Fixed a bug that wouldn’t allow players to craft from the ammo slot.
+    Fixed a bug that would crash the game when player tried to draw water outside the bounds of the world.
+    Fixed a bug that would cause mana regen to ignore stat bonuses given by armor or accessories
+    Fixed a bug that would sometimes cause the game to crash when growing Underground Jungle grass.
+    Wooden Platforms no longer attach to non-solid objects.
+    Placing and removing items during the placing animation will no longer destroy the item when it is collected.
+    Fixed a bug that would cause graphical abnormalities when the lighting changes dramatically.
+    The FPS display (F10) shows the correct number.
+    Fixed a bug that swapped the lighting of players pants and head armor.
+    Fixed a problem that would cause water to settle in strange positions.
+    Fixed a problem that caused objects with transparency to appear darker than they should.
+
+
+
+Version 1.0.6.1 Changes-----------------------------------------------------------------------------------------
+
+    Fixed a bug that would cause chests to contain stacks of empty items.
+    The crafting list now correctly updates after using the container loot buttons.
+    The direction bathtubs face when placed is now correctly sent to the server.  This prevents bathtub duplication issues.
+    Smashing Obsidian Walls no longer gives Obsidian Ore.
+    Walls that are automatically placed to fill small gaps are now correctly taken from the player’s inventory.
+    Fixed a bug that causes Green Slimes to get stuck in the ground and start sinking.
+    Player ghosts no longer move when typing.
+    Fixed a bug that would cause mana to sometimes not regenerate when the player has 0 mana.
+    Slimes no longer chase the player in water when they are not in aggressive mode.
+    Lesser Restoration Potions and Restoration Potions now only heal for 50/100 life and 50/100 mana.
+    Lesser Mana Potions and Mana Potions now only restore 50/100 mana.
+    Changed the way the value of stacked items is rounded to fix selling/buyback inconsistencies.
+    Some items can now be placed in lava, this includes clay pots and fire blossom seeds.
+    Fixed a bug that would cause shadow orbs to me smashed during world generation.  This was causing meteors to start spawning before the player is at the appropriate gear level.
+    Generated dirt walls now correctly blend with player placed dirt walls. Player placed dirt walls now have new graphics to differ from generated walls.
+    Boomerangs now reset correctly when you use your magic mirror if they are still flying.
+    Mediumcore characters now correctly drop ammo on death.
+    “Misc” has been reworded to say “Shoes” on the shoes color settings screen.
+    Added the Sawmill which replaces the Workbench for “advanced” wood crafting.  The Workbench is now designated for “basic” wood crafting.
+
+
+Version 1.0.6 Changes-----------------------------------------------------------------------------------------
+
+NPCs
+
+    New Enemy : Spike Ball (An Immortal Enemy.)
+    New Enemy : Blazing Wheel (An Immortal Enemy.)
+    New Enemy : Dungeon Slime (Contains Golden Keys)
+    New Enemy : Goblin Scout
+    Hornets in the Underground Jungle now shoot stingers. These stingers have a 1 in 3 chance of poisoning their target for 10 seconds.
+    EoW is no longer “defeated” when he flees.
+    Cursed Skulls now now have a chance to apply the Cursed debuff.
+    Npcs that are far from home and try to turn to return home will no longer twitch left and right when stuck.
+    Bats, Harpy and Demon AI has been improved to prevent wall hugging.
+    Slimes when in water will now turn around when they have no where to go.
+    Man Eaters and Snatchers now have less HP, and are drawn above tiles rather than behind.
+    Lava Slimes no longer spawn lava when killed.
+    Meteor Heads now move much slower but do a lot more damage.
+    Bone Serpents now have a new death sound, and their hit-box has been fixed.
+    Hornets are correctly now unable to enter water.
+    Vultures should no longer ‘float’ if the sand they are perched on falls from beneath them.
+    NPC’s furniture requirements have changed to work with new items.NPCs now requires one “comfort object” (Chair, Throne, Bench, Bed, Toilet) and one “flat surface furniture” (Table, Dresser, Workbench, Tub, Bookcase) for a room to be complete before they will make it their home.
+
+
+Items
+
+    New Item : Shadow Key
+    New Item : Golden Key
+    New Item : Shadow Chest (These require the Shadow Key)
+    New Item : Obsidian Background Walls
+    New item : Mud Background Walls
+    New Item : Jungle Spore (Replaces Jungle roses former crafting uses.)
+    New Item : Tattered Cloth
+    New Item : Battle Standard (Allows for manual starting of the Goblin Invasion)
+    New Item : Piano
+    New Item : Loom (Crafting Station, Now required for crafting most clothes from silk.)
+    New Item : Bench
+    New item : Dresser
+    New Item : Bathtub
+    New Item : Red Banner
+    New Item : Green Banner
+    New Item : Blue Banner
+    New Item : Yellow Banner
+    New Item : Lamp Post
+    New Item : Tiki Torch
+    New Item : Barrel
+    New Item : Chinese Lantern
+    New Item : Cooking Pot
+    New Item : Safe (A separate private storage from the Piggy Bank.)
+    New Item : Skull Lantern
+    New Item : Trash Can
+    New Item : Candelabra
+    New Item : Pink Jar
+    New Item : Mug
+    New Item : Beer Keg
+    New Item : Beer
+    New Item : Bookcase
+    New Item : Throne
+    New Item : Bowl
+    New Item : Bowl of Soup
+    New Item : Toilet
+    New Item : Grandfather Clock
+    New Item : Statue
+    Wooden Tables, Doors and Workbenches now have improved looking graphics.
+    Jungle Rose is now a rarer drop and no longer used to craft.
+    Bottled water can no longer be crafted by standing near lava.
+    Suspicious Looking Eyes will now sometimes be found in chests.
+    Several Magic items have been rebalanced.
+    Fire of Flower now does more damage, and costs more mana.
+    Flamelash, Sunfury, and Flower of Fire are no longer dropped, they are now found in shadow chests in the underworld.
+    Band of Star Power now adds 20 mana to your maximum, and no longer adds mana regeneration.
+    Orb of Light now moves slower and is now listed as a buff that you can remove if you so desire and also know its remaining duration.
+    Magic missile is now quicker and is ‘launched’ when you release the mouse button, rather than disappearing.
+    Flamelash is ‘launched’ when you release the mouse button, rather than disappearing.
+    Meteor Armor and Molten Armors no longer glow.
+    Grappling Hooks can no longer be spam shot, you must now wait until your previous shot lands or returns before you can throw another.
+    Starfury now does a bit more damage, requires more mana, and now works underground. If a star is spawned inside a wall, it will be able to travel until it reaches open space and then becomes ‘solid’ colliding with the next wall it hits.
+    Glow sticks price reduced. And are now a bit brighter.
+    Coins now leave a sparkle trail while moving.
+    Night Owl Potion now works correctly.
+    Two of the same type of accessories may no longer be equipped at once.
+    Armors are now more ‘Class Type’ specific and their stats have been set accordingly.
+        Meteor Armor - Buffs Magic Damage and Set Bonus : Space Gun 0 Mana Cost.
+        Molten Armor - Set Bonus : Melee Damage
+        Shadow Armor - Buffs Melee Attack Speed and Set Bonus : Movement Speed.
+        Necro Armor - Buffs ranged damage and Set Bonus : Reduces Ammo Consumption.
+        Jungle Armor - Buffs Max Mana, Magic Crit Chance and Set Bonus : Reduced Mana Usage
+    Potions now offer less HP on use, and their cool-down is now a minute.
+    Placing background walls is more simple, as 1 block holes are automatically filled in.
+    ALL placed background walls are now considered ‘house walls’. (Yes even Dirt and Dungeon walls.)
+    The Mini-shark now has a 33% chance that shooting the weapon will not take ammo. So it does not consume as much ammo to use.
+    Flintlock Pistols and Muskets are now a bit stronger.
+    Flails now have a different mechanic. You can ‘spin’ them by pressing left and right fast over and over after they have been thrown while holding down the mouse button.
+    Piggy Banks should no longer float when the ground beneath the table it is on is removed from beneath them.
+    Fish Bowl’s recipe has been changed to require Bottled Water, rather than just an empty Bottle.
+    Ash and Mud no longer fall due to gravity.
+
+
+Server and Clients
+
+    The IP screen now shows the seven most previous IP’s you’ve joined, to allow you to quick connect to your favorite or commonly played servers.
+    Improved Server Syncing
+
+
+Game Interface
+
+    There is now an option to disable pickup text.
+    When creating a character, there is now an option for ‘Male/Female’, this is used to change the characters voice. This way, any hairstyle can be used for either gender.
+    When choosing your hairstyle, you may now right click to cycle through the hair selections backwards.
+    New Hot-key for grappling hooks. (Defaults to E)
+    Hot-bar Slots now show their Hot-key number.
+    The Mana Bar is now Blue, and text for gaining health is now green.
+    Interface Boxes are now colored differently. Inventory is Blue, Equip is Green, Craft is Purple.
+    Hot-keys for Mana and Healing Potions now work correctly with Rejuvenation potions.
+    Some tool-tips now have more specific details about item uses.
+    Right clicking on an accessory or a piece of armor in your inventory will auto-equip it.
+    Newly obtained items will now be placed starting in the bottom right of your inventory rather than the previous top left.
+    There is now a Trash Can slot in the inventory. Placing an item here will destroy it. However the item will be saved in memory until another item is destroyed, allowing you to retrieve it if you wish. Holding Shift and Clicking and Item will move it to your trashcan.
+    When at a chest or piggy bank, there is now an option to loot all. This will take all items inside the chest/bank if there is room, If not it will take all items starting from top left.There is also a Quick Stack option for the reverse effect. If the chest you are viewing has items stored in it that you are also carrying, this option will stack those items into the chest combining stored and carried stacks.
+    When at a chest or piggy bank, there is now an option to Deposit all. This will take all items not in your hot bars and starting from the bottom right slot, place each item that will fit into the chest or bank. It will stop when space runs out.
+    It is no longer possible to drop items through the spaces between boxes in the inventory
+    Some Tools now give you an idea in their tool-tip of what they can mine. Example -  “Can mine Meteorite”.
+    There are now four ammo slots. Ammo may be placed here to de-clutter your inventory. Weapons will take ammo from these slots first, and will then take from any in the inventory after they are empty.
+    Hot-Bar slots that have a ranged weapon on them will show the current used ammo count on them.
+    There is now a toggle in your inventory, that when clicked, will LOCK your hot-bar and not allow you to change your currently used hot-bar item by clicking it with the mouse, only the 1 - 9 hot -keys and mouse-wheel will scroll them at that point.
+    Hotkeys can now be used to change selected item when the inventory is open.
+    Shops now sell items back to you. Holding Shift and Clicking and Item while at a shop will quick-sell it.
+    You can now quickly clear and cancel your chat message by hitting escape.
+    ‘Misc’ in Character Creation color selection, has been renamed “Shoes”.
+
+
+Misc
+
+    New Feature : Critical Hits. There is now a small chance you will do more damage to an enemy
+    New Feature : Damage Types. Damage is now separated into Melee, Ranged and Magic damages. These will be used going forward for a few different systems, such as buffs, de-buffs. Items will list what kind of damage they do in their tool-tip so you know what will be effected by what buff.
+    New Music : Corruption.
+    Added 19 new hairstyles.
+
+    There are now 3 difficulty modes that are set when creating a character.
+        Softcore - Drop coins on death, keep max hp and mana values.
+        Mediumcore - Drop all items on death, keep max hp and mana values.
+        Hardcore - Drops all Items and deletes your character on death, requiring you to start a new character. On death you will become a ghost that can not interact with the world until you log out.
+
+    Players now heal automatically when ‘not in combat’. You are flagged as in combat when you are damaged by anything. The longer you have spent after getting hurt will increase your hp regen speed slightly.
+    Mana now recharges on its own when you are not casting. Slowly if you are moving, and fast if you stand still.
+
+    Hellstone no longer produces light and is more rare.
+    Hellstone now spawns lava when it is mined, but only in the underworld.
+    Cacti no longer cause knock-back making running through a desert less of a hassle.
+    Cacti no longer destroy blocks as they grow.
+    Some sounds have a randomizing pitch change (like sword swinging), to make them have more variance.
+    Optimized “Finding Tile Frames”, so worlds should load faster
+    There are new sounds for the following actions/events
+        Talking to an NPC
+        Mana Becoming Full (also shows a purple sparkle on player)
+        Using Water Bolt, Flamelash, and Flower of Fire
+        Starting to Drown.
+
+    Melee speed increase items are now calculated correctly.
+    Thorns are now destroyed after you touch them and receive damage.
+    Corrected some spelling errors and also the placement of ‘%’ in some potion tool-tips.
+    Added a bunch of new randomized game subtitle captions.
+
+
+World Gen
+
+    More Gems spawn in the jungle.
+    Hell Houses now spawn differently. A worlds Hell Houses can rarely spawn as all obsidian, and they can now get really tall.
+    Underground Jungles now have a Mud Background
+    Dungeons should no longer spawn in the ocean.
+    Deserts now spawn slightly further away from spawn.
+    Dungeons now spawn with more spikes and less lighting.
+    Underworld Ash is now filled with more lava pockets, making mining Hellstone more of a challenge.
+    Some items no longer spawn in Dungeon, these were meant for non-dungeon areas.
+
+
+Version 1.0.5 Changes-----------------------------------------------------------------------------------------
+
+NPCs
+
+    * New Enemy - Lava slime, this enemy leaves behind lava on death
+    * New Enemy - Hellbat
+    * New Enemy - Demon
+    * New Enemy - Jellyfish (Two variations, Pink and Blue)
+    * New Enemy - Shark
+    * New Enemy - Vulture
+    * New Enemy - Crab
+    * New Enemy - Antlion
+    * Changed the way worm enemies spawn.
+    * Bats, Hornets, and Eyeballs no longer enter water.
+    * Slimes now float in water.
+    * Only one giant slime will appear at a time.
+    * The Guide now seems quite knowledgeable in what an item can be made into if you show it to him.
+    * NPC shops now sell some items on certain nights, or after certain events.
+    * Devourers should no longer gain random other enemies as its head.
+    * The Nurse now charges the correct amount for healing.
+    * Bats now have a death sound effect.
+    * Talking to the old man at night will give the player a warning now before summoning the dungeon boss.
+    * Entering the dungeon before defeating Skeletron now spawns a new NPC instead of Skeletron’s head. This should fix several issues with that event.
+    * Enemy coin drops have been adjusted.
+    * Man Eaters and Snatchers are no longer effected by knockback and can attack through walls.
+    * Eater of Souls’ and Hornet AI has been improved.
+    * Enemies now take up different amount of *slots* depending on AI style and strength.  This will help balance conditions when there are lots of strong monsters spawned at once, such as Imps and Bone Serpents.
+    * Fish are no longer upside-down when out of water.
+    * Green slimes have been weekend so that start players can deal with them more easily.
+    * Slimes and Flying enemies no longer make a splash sound when hitting water.
+    * Items of “Blue Rarity” or higher no longer burn up in lava.
+    * Burning Skull has been renamed to Cursed Skull, and given different AI.
+    * Enemy caster’s have had their rate of fire slowed down.
+    * Meteor heads have less health, do more damage, and move slower.
+    * There are now slight size variations to the Eater of Souls and the Angry Bones.
+    * Skeletron has less defense and health.
+
+
+Items
+
+    * New Feature : Buffs activated by Using Potions. Right click a buff to remove it from yourself.
+    * New Item : Hellfire Arrow.
+    * New Item : Sandgun.
+    * New Item : Guide Voodoo Doll.
+    * New Vanity Items : Familiar Wig, Shirt, Pants to be worn in Social slots to “Hide your Armor”.
+    * New Vanity Items : Doctors Shirt and Pants.
+    * New Item : Diving Helmet.
+    * New Item : Night’s Edge
+    * New Item : Dark Lance
+    * New Item : Demon Scythe
+    * New Item : Trident
+    * New Item : Coral
+    * New Item : Cactus
+    * New Item : Spear
+    * New Item : Glowstick
+    * New Item : Sticky Glowstick
+    * New Item : Throwing Knife
+    * New Item : Poison Knife
+    * New Item : Silver Bullet
+    * New Item : Wooden Boomerang
+    * New Item : Blowpipe
+    * New Item : Seed (Ammo for Blowpipe)
+    * New Item : Obsidian Skin Potion
+    * New Item : Regeneration Potion
+    * New Item : Swiftness Potion
+    * New Item : Gills Potion
+    * New Item : Defense Potion
+    * New Item : Mana Regeneration Potion
+    * New Item : Magic Power Potion
+    * New Item : Featherfall potion
+    * New Item : Spelunker Potion
+    * New Item : Invisibility Potion
+    * New Item : Shine Potion
+    * New Item : Night Owl Potion
+    * New Item : Battle Potion
+    * New Item : Thorns Potion
+    * New Item : Archery Potion
+    * New Item : Water Walking Potion
+    * New Item : Hunter Potion
+    * New Item : Gravitation Potion
+    * New Item : Daybloom
+    * New Item : Daybloom Seeds
+    * New Item : Moonglow
+    * New Item : Moonglow Seeds
+    * New Item : Blinkroot
+    * New Item : Blinkroot Seeds
+    * New Item : Deathweed
+    * New Item : Deathweed Seeds
+    * New Item : Waterleaf
+    * New Item : Waterleaf Seeds
+    * New Item : Fireblossom
+    * New Item : Fireblossom Seeds
+    * New Item : Shark Fin
+    * New Item : Feather
+    * New Item : Gold Chest
+    * New Item : Bottled Water
+    * New Item : Tombstone
+    * New Item : Illegal Gun Parts
+    * New Item : Antlion Mandable
+    * The Silver Short swords recipe has been corrected, it is now craftable.
+    * Torches and candles no longer work when wet.
+    * Destroying a placed sign while you are reading it will no longer cause your character to become frozen.
+    * Rocket boots no longer require mana.  They will provide lift for 1 second and recharge every time the player touches the ground or uses grapple. Lift speed has been slightly increased to offset loss of long flights. This makes the boots more viable for caster Characters.
+    * The explosion animation for bombs is now correctly displayed in multiplayer.
+    * There is now a message pop-up when the player receives an item.
+    * Filled Buckets may no longer be emptied into solid ground.
+    * Pots in the underworld now have a chance to drop hellfire arrows.
+    * Handgun and Phoenix Blaster have been reduced in size.
+    * Lowered the knockback of Muramasa.
+    * Reduced the damage of the Blue Moon.
+    * Flintlock Pistol and Musket have increased damage.
+    * Only normal trees drop acorns.
+    * Falling sand clumps are no longer carried by magic missiles/flamelash.
+    * Jungle armor is no longer a drop.  It is a craftable set.
+    * Magic Mirror now requires mana to be used.
+    * Harpoon and Maces now correctly show the player’s arm animation.
+    * The arms dealer will sell unholy arrows at night after the Eater of Worlds has been defeated.
+    * Space Gun does more damage, but only penetrates 2 enemies.
+
+
+Server
+
+    * Spam detection is less aggressive.
+    * Increase multiplayer security.
+    * Fixed a bug that could crash the server when the max amount of clients are connected.
+    * Added an option to enable additional cheat protection for servers.
+    * Servers now hibernate when no players are connected.
+    * Blood Moons now stop correctly if time is changed to day by the server.
+
+
+Misc
+
+    * Corrected some spelling and grammar mistakes.
+    * Lighting code has been optimized to increase performance.
+    * Mud and ash now have a chance to fall like sand when struck.
+    * World update rate has been reduced slightly.
+    * Water now evaporates when it reaches the underworld.
+    * Slowed the rate of plant growth.
+    * Hardcore is now an option when creating a new player.  Hardcore players are gone for good after dying.
+    * The Jungle now has its own music track.
+    * Vines that refused to grow longer than 1 tile in length while underwater, will now grow correctly.
+    * Pot graphic was brightened to make it more visible.
+    * Plants growing out of a clay pot can no longer be cut with a weapon. The new alchemy plants can be grown in these pots.
+    * Gems, ore, and gold chests now have a sparkle effect.
+    * Giant glowing mushrooms will now grow back over time.
+    * The player now starts out with a copper shortsword.
+    * Dungeon bricks and walls have had their brightness reduced.
+
+
+Game Interface
+
+    * Upon death, A more specific death message will appear for other players, so they know how you died.
+    * The crafting and armor interface text will fade out when an item tooltip is in front of it.
+    * The Hot Bar now shows the name of the selected item.
+    * PVP now requires 5 seconds between Activation and Deactivation and visa versa to prevent PVP spam. The same cooldown is in effect for Team Changing as well.
+    * Added hotkeys for quickly drinking healing, mana, and buff potions.The healing/mana potion you use is based on the same principle arrows are. Top-Left most item first. The buff potions are all used at once.
+    * Holding right click on an empty space in the inventory will no longer make a sound effect as if something was there to be picked up.
+    * Defense totals are now shown in your inventory.
+
+
+World Gen
+
+    * Tweaked the way sand is created during world gen. (Requires new world.)
+    * Oceans are now slightly larger and generation layout has been improved. (Requires new world.)
+    * Cactus now grow on sand.
+    * Coral now grows in the ocean.
+    * Chests can now spawn near the surface of the world. They will contain treasure that new players may find useful.  (Requires new world.)
+    * Chests and pots now contain loot based on the level they spawn in. (Requires new world.)
+    * Gold chests will now spawn in some parts of the world. (Requires new world.)
+    * Corrupt chasms have less of a chance to spawn on jungles.  They also now have a cave connecting most of the chasms. (Requires new world.
+    * Traces of demonite are created during world gen. (Requires new world.
+    * Surface jungles have been enlarged, and will override deserts. (Requires new world.
+
+
+Version 1.0.4 Changes-----------------------------------------------------------------------------------------
+
+Items
+
+    * Added Feature! - Social Slots. All normal armor and vanity items can be placed here to use their graphical appearance in place of equipped gear without overriding their stat gains.
+    * New Vanity Items - Tuxedo Shirt and Pants
+    * New Vanity Items - Plumber Outfit and Hat
+    * New Vanity Items - Hero Outfit and Hat
+    * New Vanity Item - Bunny Hood
+    * New Vanity Item - Fish Bowl
+    * New Vanity Item - Top Hat
+    * New Vanity Items - Archaeologist's Outfit and Hat
+    * New Vanity Item - Ninja Outfit.
+    * New Vanity Item - Red Hat.
+    * New Vanity Item - Summer Hat
+    * New Vanity Item - Robe
+    * New Vanity Item - Robot Hat
+    * New Vanity Item - Gold Crown
+    * New Item - Leather
+    * New Item - Green Dye
+    * New Item - Black Dye
+    * You can now wear the Jungle Rose in your hair
+    * The Water Candle’s enemy spawn rate increase effect now works correctly when held
+    * Some items that were missing ‘lore text’ in their tool-tips now have them.(Breathing Reed,Grappling Hook Jungle Rose.)
+    * Ammo items are now listed as Ammo in their tool-tip and Equipable Items that offer no stat bonus list as Vanity Items in their tool-tip. Items used in any recipe now list as Materials, in their tool-tip.
+    * The Magic Hat now offers 2 Defense to its wearer and the Empty Bucket now offers 1 Defense to its wearer.
+    * Dungeon Blocks now require at least a Nightmare Pick to mine, unless they are near the spawn location, where they can be mined by any pick.
+    * Phoenix Blaster has had a reduction of stats to balance better with other items of its tier.
+    * Gem, Mushroom and Bottle sell values have been reduced.
+    * Hell Forges above the rock layer can be moved with any hammer, but below require a 60% power hammer or stronger.
+    * Angel Statues are now more rare of a find.
+
+
+NPCs
+
+    * New NPC - Bunny
+    * New NPC - Goldfish (Is also an Item)
+    * New Enemy - Corrupt Bunny
+    * New Enemy - Corrupt Goldfish
+    * New Enemy - Piranha
+    * New Enemy - Harpy
+    * New Random Mini- Boss - King Slime
+    * New Enemy - Bat
+    * New Enemy - Jungle Bat
+    * New Enemy - Jungle Slime
+    * New Enemy - Snatcher
+    * New Rare Enemy - Dr. Bones
+    * New Rare Enemy - The Groom
+    * New NPC - A Clothier will now move into your town when the conditions are met.
+    * Enemy spawn distance has been pushed back to the maximum resolution to ensure that they will never spawn on the screen.
+    * Enemy spawn rates have been adjusted to account for the increased spawn distance.
+    * Enemy projectiles no longer drop hearts or stars when killed by the player.
+    * The Eater of Worlds now has Higher HP, Def and Dmg, making battling him more difficult.
+    * Hornets no longer appear as if they are about to flip over while flying.
+    * The Dead Miner is now a bit stronger.
+    * Tim’s spawn chance has been reduced.
+
+
+Player
+
+    * Players now have 1 second of invulnerability after they spawn.
+    * The eat/drink animation now plays correctly.
+
+
+World-Gen
+
+    * Surface Jungle’s are now possible on mud that is on the surface. Jungle trees will auto-grow on their own, as acorns are not usable on the jungle grass.
+    * Chasms are now less frequent to appear, but always have an orb.
+    * Mud now ‘blends’ graphically with dirt, rather than stone to add for a more crisp look in Jungles.
+    * Jungle plants now grow underwater.
+
+
+Multiplayer
+
+    * Increased client side security.
+    * Selecting summon items will no longer cause monsters to summon.
+    * Players with a name over 20 characters will now get booted from the server.
+    * Added some minor anti-grief protection.
+    * Fixed a bug that would cause the client to attempt to summon an NPC during a multiplayer game and crash.
+    * Added the -host command line parameter to the client.
+
+
+Server
+
+    * Improved server timing, which should help reduce lag.
+    * Added several new command line and config options. These are listed in serverconfig.txt
+    * Servers will now output to crashlog.txt before crashing, allowing for more specific bug reporting.
+    * Clients will now output to client-crashlog.txt before crashing, allowing for more specific bug reporting.
+
+
+Misc.
+
+    * Screen resolutions now have limits of 800x600 minimum and 1920x1200 maximum.
+    * Added an option that will pause the game while talking to an NPC or opening your inventory in single player.  It defaults to off.
+    * Added an option to automatically save the world every 10 minutes.  Defaults to on.
+    * Added a prompt to load a world backup if the current world is corrupt.
+    * Added a check to determine if a world file was loaded successfully.
+    * Attempting to Launch the game from the Terraria.exe, will now inform you to launch via Steam rather then doing nothing at all with no indication of why.
+    * Backing out of the port selection screen now plays the correct sound.
+    * Setting options now correctly align with the center of the screen in all resolutions.
+    * The settings menu has been reorganized.  All video related options have their own menu
+    * The “Tink” sound now has a more dull sound.
+    * The Re-Logic splash screen, now scales correctly in other resolutions.
+
+
+Version 1.0.3 Changes-----------------------------------------------------------------------------------------
+
+Player
+
+    * Players can no longer repeatedly double jump after touching the top of the world.
+
+
+Items
+
+    * NEW ITEM - Black Lens.
+    * NEW ITEM - Sunglasses.
+    * NEW ITEM - Jungle Armor (This has replaced Cobalt Armor.)
+    * NEW ITEM - (RARE and SECRET Item for casters) Go on! Find it!
+    * Fixed a bug that prevented Underground Jungle Seeds from spawning.
+    * Using the Cloud in a Bottle will now correctly reset fall distance.
+    * Set bonuses that provide more defense, now correctly match their tool-tip.
+    * All armor inventory icons have been improved.
+    * All player armor graphics have been improved.
+    * Iron, gold, meteor, and bone helmets have been changed graphically.
+    * Molten armor’s overall defense has been reduced.
+    * Meteor armor’s set bonus now reduces Space Gun mana cost to 0.
+    * Several magic items have had their damage increased.
+
+
+NPCs
+
+    * Added two new rare enemies that can both be found underground.
+    * The Demolitionist is now also triggered to arrive when the players have Sticky Bombs and Grenades in their inventory.
+    * All Skeleton graphics have been changed.
+    * The Guide now has hit and death effects.
+    * The Guide can now be killed by hostile NPCs.
+
+
+World
+
+    * Trees now become corrupt instead of being destroyed when touching the corruption. And the new corrupt trees become un-corrupted upon purification.
+
+
+Server / Multiplayer
+
+    * Created a console server with no video card requirement. Type help in the console for a full list of server commands.
+    * Increased client side multi-player security, this should help in the battle against broken character files.
+    * There is now a host and play option in the client, that will auto connect you to your own server world upon its creation.
+    * Corrected a bug that was causing the Server to send out liquid as water when it should have been lava.
+    * Clients are now able to connect to ports other than 7777.
+    * Slimes are synced better on multiplayer games.
+    * Accessories now correctly sync between players.
+    * Fixed a bug that would cause the player to get stuck on "Receiving Tile Data" when their spawn is placed near the world edge.
+    * Added -join <ip>, -port <port>, and -pass <password> command line parameters to the client to enable auto-join of servers.
+
+
+Misc.
+
+    * The game window is now re-sizable while in windowed mode.
+    * Full-screen resolution can now be changed in the options menu.
+    * Pressing alt+enter to toggle full-screen mode will no longer bring up the chat window.
+    * Fixed several bugs that would crash the game during world generation.
+
+
+
+Version 1.0.2 Changes-----------------------------------------------------------------------------------------
+
+Controls
+
+    * Right clicking and holding on a crafting recipe will craft multiple of the same item to a max of the stack and/or until you run out of materials.
+
+
+Items
+
+    * NEW ITEM : Sticky Bombs, Requires 5 Gel and a Bomb.
+    * Sand Duping bug fixed.
+    * Placing a bed far from the spawn no longer causes a player who has set their spawn there to crash on join.
+    * Mining stone and other hard ores make a 'tink' noise now.
+    * Hellstone and Obsidian now require at least a Demonite pick to gather.
+    * Sand no longer spawns within a certain distance of the spawn location, This should remove the chance of spawning in a desert with no wood to use.
+    * Hellstone now correctly takes as long to dig as meteor does.
+    * The clay pot item now has the correct size.
+
+
+Performance
+
+    * Frame-skip is now correctly ON by default for new players.
+    * Increased Client Side Multiplayer stability. Should resolve many crash causes.
+    * Corrected a bug where players would intermittently not take falling damage.
+    * The world file is now saved to a temporary file that is copied over to the actual save file. This prevents world corruption when saving is interrupted.
+    * Fixed a bug that disabled some error handling. Overall game stability should be improved.
+
+
+GUI
+
+    * The version number of the game now shows on the title screen.
+    * Typing numbers in chat no longer changes your selected item in your hotbar.
+
+
+Server
+
+    * Servers now listen to all IP addresses on the hosting PC, regardless of how many network connections are active.
+    * Typing "localhost" instead of your own local IP address will connect to your own same-PC server.
+    * The games default port is no longer ELEET (31337) it is now 7777.
+    * Client will now resolve a hostname into its IP address, for example, if randomsite.org ran a server, you could type randomsite.org as the IP address and be able to connect.
+
+
+
+Version 1.0.1 Changes-----------------------------------------------------------------------------------------
+
+Items
+
+    * Cobwebs now prevent falling damage correctly.
+    * Certain 'Dev only' items were removed, as they were for testing only.
+    * The dark outlines on player and armor sprites have been blended better.
+    * Torches now work correctly when being placed on wooden platforms.
+    * Spawning no longer destroys chests that are placed on ground that is removed due to spawn point clearing.
+    * Sand directly under a chest no longer falls due to gravity.
+
+
+NPCs
+
+    * Guide now explains the use of a hammer and its interactions with walls and placed objects.
+
+
+Crash Fixes
+
+    * Leaving the settings menu via the back button should longer crash.
+
+
+Performance
+
+    * Added a toggle for Frame skip, which can correct some slowdown issues on higher end computers.
+    * Optimized Single Player and Multiplayer.
+    * Players who haven't cheated will no longer be flagged as a cheater.
+
+
+Controls
+
+    * The Inventory button is now re-mappable. 

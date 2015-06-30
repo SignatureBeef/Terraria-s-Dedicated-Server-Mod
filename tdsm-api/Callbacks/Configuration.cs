@@ -26,7 +26,7 @@ namespace tdsm.api.Callbacks
                                 switch (key.ToLower())
                                 {
                                     case "world":
-                                        Terraria.Main.worldPathName = value;
+                                        Terraria.Main.newWorldName = value;
                                         break;
                                     case "port":
                                         int port;
@@ -34,7 +34,7 @@ namespace tdsm.api.Callbacks
                                         {
                                             Tools.WriteLine("Failed to parse config option {0}", key);
                                         }
-                                        else Terraria.Netplay.serverPort = port;
+                                        else Terraria.Netplay.ListenPort = port;
                                         break;
                                     case "maxplayers":
                                         int maxplayers;
@@ -47,7 +47,7 @@ namespace tdsm.api.Callbacks
                                     case "priority":
                                         break;
                                     case "password":
-                                        Terraria.Netplay.password = value;
+                                        Terraria.Netplay.ServerPassword = value;
                                         break;
                                     case "motd":
                                         Terraria.Main.motd = value;
@@ -95,8 +95,8 @@ namespace tdsm.api.Callbacks
                                         Terraria.Netplay.spamCheck = value == "1";
                                         break;
                                     case "upnp":
-                                        Terraria.Netplay.uPNP = value == "1";
-                                        if (Terraria.Netplay.uPNP && Tools.RuntimePlatform == RuntimePlatform.Mono)
+                                        Terraria.Netplay.UseUPNP = value == "1";
+                                        if (Terraria.Netplay.UseUPNP && Tools.RuntimePlatform == RuntimePlatform.Mono)
                                         {
                                             Tools.WriteLine("[Warning] uPNP is only available on Windows platforms.");
                                         }

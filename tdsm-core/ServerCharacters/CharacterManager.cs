@@ -35,21 +35,21 @@ namespace tdsm.core.ServerCharacters
         {
             if ((DateTime.Now - _lastSave).TotalSeconds >= 5)
             {
-                //Don't perform any unnecessary writes
-                var hasPlayers = ServerCore.ClientConnection.All.Count > 0;
-                if (!hasPlayers && !_hadPlayers && !EnsureSave) return;
+                ////Don't perform any unnecessary writes
+                //var hasPlayers = ServerCore.ClientConnection.All.Count > 0;
+                //if (!hasPlayers && !_hadPlayers && !EnsureSave) return;
 
-                EnsureSave = false;
-                foreach (var ply in Terraria.Main.player)
-                {
-                    if (ply != null && ply.active)
-                    {
-                        SavePlayerData(ply);
-                    }
-                }
+                //EnsureSave = false;
+                //foreach (var ply in Terraria.Main.player)
+                //{
+                //    if (ply != null && ply.active)
+                //    {
+                //        SavePlayerData(ply);
+                //    }
+                //}
 
-                _hadPlayers = hasPlayers;
-                _lastSave = DateTime.Now;
+                //_hadPlayers = hasPlayers;
+                //_lastSave = DateTime.Now;
             }
         }
 

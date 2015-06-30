@@ -99,7 +99,7 @@ namespace tdsm.core.Messages.In
                 }
             }
 
-            ServerSlot serverSock = Terraria.Netplay.serverSock[whoAmI] as ServerSlot;
+            ServerSlot serverSock = Terraria.Netplay.Clients[whoAmI] as ServerSlot;
             if (serverSock.state == SlotState.SENDING_WORLD)
             {
                 serverSock.state = SlotState.SENDING_TILES;
@@ -108,8 +108,8 @@ namespace tdsm.core.Messages.In
                 serverSock.Kick("Invalid operation at this state.");
 
             NewNetMessage.SendData(9, whoAmI, -1, Lang.inter[44], num19, 0f, 0f, 0f, 0);
-            Terraria.Netplay.serverSock[whoAmI].statusText2 = "is receiving tile data";
-            Terraria.Netplay.serverSock[whoAmI].statusMax += num19;
+            Terraria.Netplay.Clients[whoAmI].StatusText2 = "is receiving tile data";
+            Terraria.Netplay.Clients[whoAmI].StatusMax += num19;
             for (int num24 = num15; num24 < num17; num24++)
             {
                 for (int num25 = num16; num25 < num18; num25++)

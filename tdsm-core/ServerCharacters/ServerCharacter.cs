@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using tdsm.core.Messages.Out;
 using Terraria;
 
 namespace tdsm.core.ServerCharacters
@@ -27,7 +26,7 @@ namespace tdsm.core.ServerCharacters
         public int Hair { get; set; }
         public byte HairDye { get; set; }
 
-        public byte HideVisual { get; set; }
+        public bool[] HideVisual { get; set; }
         public byte Difficulty { get; set; }
 
         public SimpleColor HairColor { get; set; }
@@ -48,7 +47,7 @@ namespace tdsm.core.ServerCharacters
         /// <param name="player"></param>
         public ServerCharacter(Player player)
         {
-            this.Male = player.male;
+            //this.Male = player.male;
 
             this.Mana = player.statMana;
             this.Health = player.statLife;
@@ -122,7 +121,7 @@ namespace tdsm.core.ServerCharacters
             //I need to test this soon. I'm not sure that the first time a player authenticates whether we use the existing player data (ie male, colours etc)
             //At this stage, it'll clone
 
-            this.Male = player.male;
+            //this.Male = player.male;
 
             this.Mana = info.Mana;
             this.Health = info.Health;
@@ -156,7 +155,7 @@ namespace tdsm.core.ServerCharacters
         /// <param name="player"></param>
         public void ApplyToPlayer(Player player)
         {
-            player.male = this.Male;
+            //player.male = this.Male;
 
             player.statMana = this.Mana;
             player.statLife = this.Health;
@@ -222,10 +221,12 @@ namespace tdsm.core.ServerCharacters
 
         public void Send(Player player)
         {
+#if TDSMServer
             var msg = NewNetMessage.PrepareThreadInstance();
-            msg.PlayerData(player.whoAmi);
-            msg.BuildPlayerUpdate(player.whoAmi);
+            msg.PlayerData(player.whoAmI);
+            msg.BuildPlayerUpdate(player.whoAmI);
             msg.Broadcast();
+#endif
         }
 
         public void Dispose()
@@ -239,7 +240,7 @@ namespace tdsm.core.ServerCharacters
             this.SpawnX = 0;
             this.SpawnY = 0;
 
-            this.HideVisual = 0;
+            this.HideVisual = null;
             this.HairDye = 0;
 
             this.Hair = 0;

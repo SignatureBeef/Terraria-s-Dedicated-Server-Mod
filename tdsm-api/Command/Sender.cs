@@ -7,7 +7,7 @@ namespace tdsm.api.Command
     /// <summary>
     /// Sender class for command sending/parsing
     /// </summary>
-    public abstract class Sender : ISender
+    public abstract class Sender : Terraria.Entity, ISender
     {
         /// <summary>
         /// Get/set method for Sender's Op status

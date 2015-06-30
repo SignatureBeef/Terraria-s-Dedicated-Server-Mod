@@ -21,7 +21,7 @@ namespace tdsm.core.Messages.In
 
 			if (playerIndex != whoAmI && Entry.EnableCheatProtection)
             {
-                Terraria.Netplay.serverSock[whoAmI].Kick("Cheating detected (KILL_PLAYER forgery).");
+                Terraria.Netplay.Clients[whoAmI].Kick("Cheating detected (KILL_PLAYER forgery).");
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace tdsm.core.Messages.In
 
             var ctx = new HookContext
             {
-                Connection = (Terraria.Netplay.serverSock[whoAmI] as ServerSlot).conn,
+                Connection = (Terraria.Netplay.Clients[whoAmI] as ServerSlot).conn,
                 Sender = player,
                 Player = player,
             };

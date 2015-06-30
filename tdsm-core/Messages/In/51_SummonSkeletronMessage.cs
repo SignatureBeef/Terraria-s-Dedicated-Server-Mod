@@ -21,7 +21,7 @@ namespace tdsm.core.Messages.In
 
 			if (playerId != whoAmI && Entry.EnableCheatProtection)
             {
-                Terraria.Netplay.serverSock[whoAmI].Kick("SummonSkeletron Player Forgery.");
+                Terraria.Netplay.Clients[whoAmI].Kick("SummonSkeletron Player Forgery.");
                 return;
             }
 

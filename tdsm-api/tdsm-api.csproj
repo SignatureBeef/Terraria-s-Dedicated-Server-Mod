@@ -80,7 +80,6 @@
     <Compile Include="Callbacks\NAT.cs" />
     <Compile Include="Callbacks\NPCCallback.cs" />
     <Compile Include="Callbacks\NetMessageCallback.cs" />
-    <Compile Include="Callbacks\Tests.cs" />
     <Compile Include="Callbacks\VanillaHooks.cs" />
     <Compile Include="Callbacks\WorldFileCallback.cs" />
     <Compile Include="Command\ArgumentList.cs" />

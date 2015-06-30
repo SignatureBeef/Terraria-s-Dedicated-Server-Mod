@@ -208,11 +208,11 @@ namespace tdsm.core.ServerCore
             //			}
             //Init();
 
-            Netplay.tcpListener = new TcpListener(Netplay.serverListenIP, Netplay.serverPort);
+            Netplay.TcpListener = new TcpListener(Netplay.ServerIP.Address, Netplay.ListenPort);
 
             try
             {
-                Netplay.tcpListener.Start();
+                Netplay.TcpListener..Start();
             }
             catch (Exception exception)
             {
@@ -234,10 +234,10 @@ namespace tdsm.core.ServerCore
 
             SlotManager.Initialize(Main.maxPlayers, OverlimitSlots);
 
-            Netplay.ServerUp = true;
-            var serverSock = Netplay.tcpListener.Server;
+            Netplay.IsServerRunning = true;
+            var serverSock = Netplay.TcpListener.Server;
 
-            if (Netplay.uPNP)
+            if (Netplay.UseUPNP)
             {
                 try
                 {
@@ -305,7 +305,7 @@ namespace tdsm.core.ServerCore
             {
                 try
                 {
-                    (Terraria.Netplay.serverSock[i] as ServerSlot).Kick("Server is shutting down.");
+                    (Terraria.Netplay.Clients[i] as ServerSlot).Kick("Server is shutting down.");
                 }
                 catch { }
             }
@@ -316,7 +316,7 @@ namespace tdsm.core.ServerCore
             {
                 try
                 {
-                    Terraria.Netplay.serverSock[i].Reset();
+                    Terraria.Netplay.Clients[i].Reset();
                 }
                 catch { }
             }
@@ -430,13 +430,13 @@ namespace tdsm.core.ServerCore
             }
 
             Console.Write("Saving world...");
-            WorldFile.saveWorld(false);
+            Terraria.IO.WorldFile.saveWorld(false);
 
             Thread.Sleep(5000);
             ProgramLog.Log("Closing Connections...");
             Netplay.disconnect = disconnect;
 
-            Netplay.ServerUp = false;
+            Netplay.IsServerRunning = false;
         }
 
         private static void ServerLoopLoop()
@@ -459,7 +459,7 @@ namespace tdsm.core.ServerCore
 
         public static void Init()
         {
-            Terraria.Netplay.serverSock = new ServerSlot[256];
+            Terraria.Netplay.Clients = new ServerSlot[256];
             tdsm.api.Callbacks.NetplayCallback.CheckSectionMethod = CheckSection;
             for (int i = 0; i < 256; i++)
             {
@@ -468,7 +468,7 @@ namespace tdsm.core.ServerCore
                     whoAmI = i
                 };
                 slot.Reset();
-                Terraria.Netplay.serverSock[i] = slot;
+                Terraria.Netplay.Clients[i] = slot;
             }
 
             Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
@@ -491,12 +491,12 @@ namespace tdsm.core.ServerCore
                 for (int j = 0; j < Main.maxSectionsX; j++)
                 {
                     for (int k = 0; k < Main.maxSectionsY; k++)
-                        Terraria.Netplay.serverSock[i].tileSection[j, k] = false;
+                        Terraria.Netplay.Clients[i].TileSections[j, k] = false;
                 }
             }
         }
 
-        public static void CheckSection(int who, Vector2 position)
+        public static void CheckSection(int who, Vector2 position, int fluff = 1)
         {
             int sectionX = Netplay.GetSectionX((int)(position.X / 16f));
             int sectionY = Netplay.GetSectionY((int)(position.Y / 16f));
@@ -505,7 +505,7 @@ namespace tdsm.core.ServerCore
             {
                 for (int j = sectionY - 1; j < sectionY + 2; j++)
                 {
-                    if (i >= 0 && i < Main.maxSectionsX && j >= 0 && j < Main.maxSectionsY && !Terraria.Netplay.serverSock[who].tileSection[i, j])
+                    if (i >= 0 && i < Main.maxSectionsX && j >= 0 && j < Main.maxSectionsY && !Terraria.Netplay.Clients[who].TileSections[i, j])
                     {
                         num++;
                     }
@@ -515,13 +515,13 @@ namespace tdsm.core.ServerCore
             {
                 int num2 = num;
                 NewNetMessage.SendData(9, who, -1, Lang.inter[44], num2, 0f, 0f, 0f, 0);
-                Terraria.Netplay.serverSock[who].statusText2 = "is receiving tile data";
-                Terraria.Netplay.serverSock[who].statusMax += num2;
+                Terraria.Netplay.Clients[who].StatusText2 = "is receiving tile data";
+                Terraria.Netplay.Clients[who].StatusMax += num2;
                 for (int k = sectionX - 1; k < sectionX + 2; k++)
                 {
                     for (int l = sectionY - 1; l < sectionY + 2; l++)
                     {
-                        if (k >= 0 && k < Main.maxSectionsX && l >= 0 && l < Main.maxSectionsY && !Terraria.Netplay.serverSock[who].tileSection[k, l])
+                        if (k >= 0 && k < Main.maxSectionsX && l >= 0 && l < Main.maxSectionsY && !Terraria.Netplay.Clients[who].TileSections[k, l])
                         {
                             NewNetMessage.SendSection(who, k, l, false);
                             NewNetMessage.SendData(11, who, -1, String.Empty, k, (float)l, (float)k, (float)l, 0);
@@ -537,7 +537,7 @@ namespace tdsm.core.ServerCore
             Tools.NotifyAllPlayers("Server was requested to restart...", Color.Purple); //Ensure write to console in the case of no players
 
             Server.StopServer(false);
-            while (Netplay.ServerUp) System.Threading.Thread.Sleep(100);
+            while (Netplay.IsServerRunning) System.Threading.Thread.Sleep(100);
 
             ProgramLog.Admin.Log("Clearing the world...");
             WorldGen.clearWorld();
@@ -546,7 +546,7 @@ namespace tdsm.core.ServerCore
             Thread.Sleep(1000);
 
             ProgramLog.Admin.Log("Reloading the world...");
-            WorldFile.loadWorld();
+            Terraria.IO.WorldFile.loadWorld(Main.ActiveWorldFileData.IsCloudSave);
 
             RestartInProgress = false;
 
