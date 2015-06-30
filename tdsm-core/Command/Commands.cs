@@ -667,14 +667,14 @@ namespace tdsm.core
 
             Player player = sender as Player;
             int amount;
-            if (args.Count > 3)
+            if (args.Count > 4)
                 throw new CommandError("Too many arguments");
             else if (sender is ConsoleSender && args.Count <= 2)
             {
                 if (!Netplay.anyClients || !Tools.TryGetFirstOnlinePlayer(out player))
                     throw new CommandError("No players online.");
             }
-            else if (args.Count == 3)
+            else if (args.Count >= 3)
                 player = args.GetOnlinePlayer(2);
 
             var npcName = args.GetString(1).ToLower().Trim();
@@ -682,7 +682,13 @@ namespace tdsm.core
             // Get the class id of the npc
             var npcs = DefinitionManager.FindNPC(npcName);
             if (npcs.Length == 0) throw new CommandError("No npc exists by the name {0}", npcName);
-            else if (npcs.Length > 1) throw new CommandError("Too many results for {0}, total count {1}", npcName, npcs.Length);
+            else if (npcs.Length > 1)
+            {
+                bool first;
+                args.TryGetBool(3, out first);
+
+                if (!first) throw new CommandError("Too many results for {0}, total count {1}", npcName, npcs.Length);
+            }
 
             var npc = npcs[0];
             if (npc.Boss.HasValue && npc.Boss == true) throw new CommandError("This NPC can only be summoned by the SPAWNBOSS command.");

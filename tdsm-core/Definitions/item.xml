@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <DefinitionFileOfItemInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Version>1</Version>
+  <Version>2</Version>
   <Data>
     <ItemInfo>
       <Id>2702</Id>
