@@ -77,8 +77,8 @@ namespace tdsm.core
         {
             base.Enabled();
 
-            //tdsm.api.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
-            //tdsm.api.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
+            tdsm.api.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
+            tdsm.api.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
             EnableCheatProtection = true;
             RunServerCore = true;
         }
