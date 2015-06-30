@@ -1,10 +1,10 @@
 # TDSM supports Terraria 1.3
 Work is still in progress for mono compatability, and there are still quirks in the windows version but you can run a 1.3 compatible server using TDSM.
 
+Use the tdsm.exe in the Binaries folder.
+
 ##Summary [![Build Status](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod.svg?branch=master)](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod)
 TDSM Rebind for Terraria 1.2.4.1 replaces the old TDSM that we stopped supporting a long time ago. It is a completely new approach which does not require us to update all of our code base to match the latest Terraria; rather we patch into the official code.
-
-Use the tdsm.exe in the Binaries folder.
 
 Should you need help the wiki is currently in progress, but you still may view it right [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki) on GitHub.
 
