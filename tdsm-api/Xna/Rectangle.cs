@@ -10,6 +10,26 @@ namespace Microsoft.Xna.Framework
             { return Rectangle._empty; }
         }
 
+        public Point Location
+        {
+            get
+            {
+                return new Point(this.X, this.Y);
+            }
+            set
+            {
+                this.X = value.X;
+                this.Y = value.Y;
+            }
+        }
+        public Point Center
+        {
+            get
+            {
+                return new Point(this.X + this.Width / 2, this.Y + this.Height / 2);
+            }
+        }
+
         public static Rectangle[] Array;
 
         public int X;

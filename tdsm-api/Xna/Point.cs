@@ -23,12 +23,19 @@ namespace Microsoft.Xna.Framework
         }
         public override bool Equals(object obj)
         {
-            bool result = false;
+            //bool result = false;
+            //if (obj is Point)
+            //{
+            //    result = this.Equals((Point)obj);
+            //}
+            //return result;
+
             if (obj is Point)
             {
-                result = this.Equals((Point)obj);
+                var target = (Point)obj;
+                return target.X == this.X && target.Y == this.Y;
             }
-            return result;
+            return false;
         }
         public override int GetHashCode()
         {
