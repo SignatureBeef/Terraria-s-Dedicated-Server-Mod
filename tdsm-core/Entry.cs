@@ -438,6 +438,8 @@ namespace tdsm.core
 #endif
 
             if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
+
+            ProgramLog.Log("TDSM Rebind core enabled");
         }
 
         void ProcessPIDFile(string pidPath)
@@ -852,7 +854,7 @@ namespace tdsm.core
         [Hook(HookOrder.NORMAL)]
         void OnServerStateChange(ref HookContext ctx, ref HookArgs.ServerStateChange args)
         {
-            //ProgramLog.Log("Server state changed to: " + args.ServerChangeState.ToString());
+            ProgramLog.Log("Server state changed to: " + args.ServerChangeState.ToString());
 
             //if (args.ServerChangeState == ServerState.Initialising)
 #if TDSMServer

@@ -279,6 +279,33 @@ namespace tdsm.patcher
             il.InsertBefore(first, ret);
         }
 
+        public void RemoveConsoleHandler()
+        {
+            var method = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main");
+
+            var il = method.Body.GetILProcessor();
+            var target = il.Body.Instructions.Single(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "SetConsoleCtrlHandler");
+
+            il.Remove(target.Previous);
+            il.Remove(target);
+        }
+
+        public void RemoveProcess()
+        {
+            var method = Terraria.ProgramServer.Methods.Single(x => x.Name == "InnerStart");
+
+            var il = method.Body.GetILProcessor();
+            var target = il.Body.Instructions.Single(x => x.OpCode == OpCodes.Callvirt 
+                && x.Operand is MethodReference 
+                && (x.Operand as MethodReference).Name == "set_PriorityClass");
+
+            il.Remove(target.Previous.Previous.Previous.Previous);
+            il.Remove(target.Previous.Previous.Previous);
+            il.Remove(target.Previous.Previous);
+            il.Remove(target.Previous);
+            il.Remove(target);
+        }
+
         public void HookUpdateServer()
         {
             var method = Terraria.Main.Methods.Single(x => x.Name == "UpdateServer");
@@ -396,25 +423,26 @@ namespace tdsm.patcher
             var staticConstructor = Terraria.Netplay.Methods.Single(x => x.Name == ".cctor");
 
             var il = staticConstructor.Body.GetILProcessor();
-            var counting = 0;
-            for (var x = 0; x < staticConstructor.Body.Instructions.Count; x++)
-            {
-                var ins = staticConstructor.Body.Instructions[x];
-                if (ins.OpCode == OpCodes.Ldstr && ins.Operand is String && ins.Operand as String == NATGuid)
-                {
-                    counting = 9;
-                }
+//            var counting = 0;
+//            for (var x = 0; x < staticConstructor.Body.Instructions.Count; x++)
+//            {
+//                var ins = staticConstructor.Body.Instructions[x];
+//                if (ins.OpCode == OpCodes.Ldstr && ins.Operand is String && ins.Operand as String == NATGuid)
+//                {
+//                    counting = 9;
+//                }
+//
+//                if (counting-- > 0)
+//                {
+//                    il.Remove(ins);
+//                    x--;
+//                }
+//            }
 
-                if (counting-- > 0)
-                {
-                    il.Remove(ins);
-                    x--;
-                }
-            }
 
-            var fl = Terraria.Netplay.Fields.SingleOrDefault(x => x.Name == "upnpnat");
-            if (fl != null)
-                Terraria.Netplay.Fields.Remove(fl);
+//            var fl = Terraria.Netplay.Fields.SingleOrDefault(x => x.Name == "upnpnat");
+//            if (fl != null)
+//                Terraria.Netplay.Fields.Remove(fl);
 
             //Clear open and close methods, add reference to the APIs
             var cb = Terraria.Netplay.Methods.Single(x => x.Name == "OpenPort");
@@ -435,9 +463,9 @@ namespace tdsm.patcher
             //close.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Ret));
             Terraria.Netplay.Methods.Remove(close);
 
-            fl = Terraria.Netplay.Fields.SingleOrDefault(x => x.Name == "mappings");
-            if (fl != null)
-                Terraria.Netplay.Fields.Remove(fl);
+//            fl = Terraria.Netplay.Fields.SingleOrDefault(x => x.Name == "mappings");
+//            if (fl != null)
+//                Terraria.Netplay.Fields.Remove(fl);
 
             //use our uPNP (when using native terraria server)
             var openCallback = API.NAT.Methods.First(m => m.Name == "OpenPort");

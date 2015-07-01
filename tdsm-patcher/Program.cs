@@ -198,6 +198,10 @@ namespace tdsm.patcher
             patcher.PatchCommandLine();
             Console.Write("Ok\nHooking players...");
             patcher.PatchPlayer();
+            Console.Write("Ok\nRemoving console handlers...");
+            patcher.RemoveConsoleHandler();
+            Console.Write("Ok\nRemoving mono incompatible code...");
+            patcher.RemoveProcess();
             ////patcher.HookConsoleTitle();
             //Console.Write("Ok\nSkipping sysmenus functions...");
             //patcher.SkipMenu();
@@ -241,7 +245,7 @@ namespace tdsm.patcher
             //Console.Write("Ok\nHooking blood moon...");
             //patcher.HookBloodMoon();
 
-            ////We only need one TDSM.exe if this works...
+            //We only need one TDSM.exe if this works...
             Console.Write("Ok\nRemoving port forwarding functionality...");
             patcher.FixNetplay();
 
