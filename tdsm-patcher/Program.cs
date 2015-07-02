@@ -203,8 +203,8 @@ namespace tdsm.patcher
             Console.Write("Ok\nRemoving mono incompatible code...");
             patcher.RemoveProcess();
             ////patcher.HookConsoleTitle();
-            //Console.Write("Ok\nSkipping sysmenus functions...");
-            //patcher.SkipMenu();
+            Console.Write("Ok\nSkipping sysmenus functions...");
+            patcher.SkipMenu();
             //Console.Write("Ok\nFixing code entry...");
             //patcher.FixEntryPoint();
             //Console.Write("Ok\nPatching save paths...");
@@ -240,14 +240,17 @@ namespace tdsm.patcher
             patcher.FixStatusTexts();
             Console.Write("Ok\nHooking invasions...");
             patcher.HookInvasions();
+            Console.Write("Ok\nEnabling rain...");
+            patcher.EnableRaining();
             //Console.Write("Ok\nHooking eclipse...");
             //patcher.HookEclipse();
             //Console.Write("Ok\nHooking blood moon...");
             //patcher.HookBloodMoon();
 
             //We only need one TDSM.exe if this works...
-            //Console.Write("Ok\nRemoving port forwarding functionality...");
-            //patcher.FixNetplay();
+            Console.Write("Ok\nRemoving port forwarding functionality...");
+            patcher.FixNetplay();
+//            patcher.DetectMissingXNA();
 
             //Console.Write("Ok\n");
             //patcher.InjectHooks();
@@ -434,7 +437,7 @@ namespace tdsm.patcher
                             {
                                 if (File.Exists("serverconfig.txt"))
                                     asm.EntryPoint.Invoke(null, new object[] {
-								new string[] { "-config", "serverconfig.txt" }
+                                        new string[] { "-config", "serverconfig.txt", "-noupnp" }
 							});
                                 else
                                     asm.EntryPoint.Invoke(null, null);

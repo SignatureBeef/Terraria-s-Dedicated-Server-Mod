@@ -344,7 +344,7 @@ namespace tdsm.core
             AddCommand("invasion")
                 .WithDescription("Begins an invasion")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithHelpText("goblin|frost|pirate")
+                .WithHelpText("goblin|frost|pirate|martian")
                 .WithHelpText("-custom <npc id or name> <npc id or name> ...")
                 .WithHelpText("stop|end|cancel")
                 .WithPermissionNode("tdsm.invasion")
@@ -369,16 +369,13 @@ namespace tdsm.core
                 .WithHelpText("<field|exec|prop> <namespace.classname> <fieldname|methodname>")
                 .WithHelpText("field Terraria.Main eclipse          #Get the value")
                 .WithHelpText("field Terraria.Main eclipse false    #Set the value")
-                .WithHelpText("eclipse")
-                .WithHelpText("eclipse")
-                .WithHelpText("eclipse")
                 .WithPermissionNode("tdsm.var")
                 .Calls(this.VariableMan);
 
             AddCommand("worldevent")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Start or stop an event")
-                .WithHelpText("eclipse|bloodmoon|pumpkinmoon|snowmoon")
+                .WithHelpText("eclipse|bloodmoon|pumpkinmoon|snowmoon|slimerain")
                 .WithPermissionNode("tdsm.worldevent")
                 .Calls(this.WorldEvent);
 #if TDSMServer
@@ -527,7 +524,7 @@ namespace tdsm.core
         {
             ctx.SetResult(HookResult.IGNORE);
 
-            (new ProgramThread("Command", ListenForCommands)).Start();
+            (new tdsm.api.ProgramThread("Command", ListenForCommands)).Start();
         }
 
         [Hook(HookOrder.NORMAL)]

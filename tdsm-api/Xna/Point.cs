@@ -8,6 +8,15 @@ namespace Microsoft.Xna.Framework
         public int X;
         public int Y;
 
+        private static readonly Point _zero;
+        public static Point Zero
+        {
+            get
+            {
+                return Point._zero;
+            }
+        }
+
         public Point(int x, int y)
         {
             this.X = x;

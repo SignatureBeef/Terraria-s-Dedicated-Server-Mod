@@ -1,5 +1,9 @@
 ﻿
 namespace Microsoft.Xna.Framework.Graphics
 {
-    public enum BlendState { }
+    public enum BlendState
+    {
+        AlphaBlend,
+        Additive
+    }
 }

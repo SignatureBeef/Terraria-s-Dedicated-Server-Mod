@@ -135,10 +135,22 @@ namespace tdsm.patcher
             { return _asm.MainModule.Types.Single(x => x.Name == "Player"); }
         }
 
-        public TypeDefinition ServerSock
+//        public TypeDefinition ServerSock
+//        {
+//            get
+//            { return _asm.MainModule.Types.Single(x => x.Name == "ServerSock"); }
+//        }
+
+        public TypeDefinition RemoteClient
         {
             get
-            { return _asm.MainModule.Types.Single(x => x.Name == "ServerSock"); }
+            { return _asm.MainModule.Types.Single(x => x.Name == "RemoteClient"); }
+        }
+
+        public TypeDefinition RemoteServer
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "RemoteServer"); }
         }
     }
 
@@ -239,6 +251,12 @@ namespace tdsm.patcher
         {
             get
             { return _asm.MainModule.Types.Single(x => x.Name == "NAT"); }
+        }
+
+        public TypeDefinition ClientConnection
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "TemporarySynchSock"); }
         }
     }
 }

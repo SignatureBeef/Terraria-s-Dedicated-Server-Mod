@@ -1996,6 +1996,39 @@ namespace tdsm.core
                         sender.Message("The blood moon was disabled.");
                     }
                     break;
+                case "slimerain":
+                    if (!Main.slimeRain)
+                    {
+                        _disableActiveEvents(sender);
+                        Main.slimeRain = true;
+                        NetMessage.SendData((int)Packet.WORLD_DATA);
+                        Main.StartSlimeRain();
+
+                        sender.Message("Slime rain was enabled.");
+                    }
+                    else
+                    {
+                        Main.slimeRain = false;
+                        NetMessage.SendData((int)Packet.WORLD_DATA);
+                        sender.Message("The slime rain was disabled.");
+                    }
+                    break;
+                //case "rain":
+                //    if (!Main.raining)
+                //    {
+                //        _disableActiveEvents(sender);
+                //        Main.raining = true;
+                //        NetMessage.SendData((int)Packet.WORLD_DATA);
+
+                //        sender.Message("Rain was enabled.");
+                //    }
+                //    else
+                //    {
+                //        Main.raining = false;
+                //        NetMessage.SendData((int)Packet.WORLD_DATA);
+                //        sender.Message("The rain was disabled.");
+                //    }
+                //    break;
                 default:
                     throw new CommandError("Not a supported event " + first);
             }
@@ -2023,6 +2056,18 @@ namespace tdsm.core
             {
                 Main.pumpkinMoon = false;
                 sender.Message("The pumpkin moon was disabled.");
+            }
+            if (Main.slimeRain)
+            {
+                //Main.StopSlimeRain();
+                Main.slimeRain = false;
+                sender.Message("The slime rain was disabled.");
+            }
+            if (Main.raining)
+            {
+                //Main.StopRain();
+                Main.raining = false;
+                sender.Message("The rain was disabled.");
             }
         }
 

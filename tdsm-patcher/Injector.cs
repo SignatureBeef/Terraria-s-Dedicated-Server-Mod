@@ -117,6 +117,16 @@ namespace tdsm.patcher
             }
         }
 
+        public void EnableRaining()
+        {
+            var mth = Terraria.Main.Methods.Single(x => x.Name == "StartRain" && x.IsStatic);
+            mth.IsPrivate = false;
+            mth.IsPublic = true;
+            mth = Terraria.Main.Methods.Single(x => x.Name == "StopRain" && x.IsStatic);
+            mth.IsPrivate = false;
+            mth.IsPublic = true;
+        }
+
         public void HookInvasions()
         {
             var main = Terraria.NPC.Methods.Single(x => x.Name == "SpawnNPC" && x.IsStatic);
@@ -295,8 +305,8 @@ namespace tdsm.patcher
             var method = Terraria.ProgramServer.Methods.Single(x => x.Name == "InnerStart");
 
             var il = method.Body.GetILProcessor();
-            var target = il.Body.Instructions.Single(x => x.OpCode == OpCodes.Callvirt 
-                && x.Operand is MethodReference 
+            var target = il.Body.Instructions.Single(x => x.OpCode == OpCodes.Callvirt
+                && x.Operand is MethodReference
                 && (x.Operand as MethodReference).Name == "set_PriorityClass");
 
             il.Remove(target.Previous.Previous.Previous.Previous);
@@ -423,27 +433,56 @@ namespace tdsm.patcher
             var staticConstructor = Terraria.Netplay.Methods.Single(x => x.Name == ".cctor");
 
             var il = staticConstructor.Body.GetILProcessor();
-//            var counting = 0;
-//            for (var x = 0; x < staticConstructor.Body.Instructions.Count; x++)
-//            {
-//                var ins = staticConstructor.Body.Instructions[x];
-//                if (ins.OpCode == OpCodes.Ldstr && ins.Operand is String && ins.Operand as String == NATGuid)
-//                {
-//                    counting = 9;
-//                }
-//
-//                if (counting-- > 0)
-//                {
-//                    il.Remove(ins);
-//                    x--;
-//                }
-//            }
+            var counting = 0;
+            for (var x = 0; x < staticConstructor.Body.Instructions.Count; x++)
+            {
+                var ins = staticConstructor.Body.Instructions[x];
+                if (ins.OpCode == OpCodes.Ldstr && ins.Operand is String && ins.Operand as String == NATGuid)
+                {
+                    counting = 9;
+                }
+
+                if (counting-- > 0)
+                {
+                    il.Remove(ins);
+                    x--;
+                }
+            }
+
+            //Descrease the amount of file descriptors for mono.
+            //We'll do this manually
+//            var fd = staticConstructor.Body.Instructions.Single(x => x.Operand is Int32 && (int)x.Operand == 256);
+            //            fd.Operand = 0;
+            var rcCtor = Terraria.RemoteServer.Methods.Single(x => x.Name == ".ctor");
+            var rtsCtor = API.ClientConnection.Methods.Single(x => x.Name == ".ctor" && x.Parameters.Count == (rcCtor.Body.Instructions[1].Operand as MethodReference).Parameters.Count);
+
+            rcCtor.Body.Instructions[1].Operand = _asm.MainModule.Import(rtsCtor);
 
 
-//            var fl = Terraria.Netplay.Fields.SingleOrDefault(x => x.Name == "upnpnat");
-//            if (fl != null)
-//                Terraria.Netplay.Fields.Remove(fl);
+            rcCtor = Terraria.RemoteClient.Methods.Single(x => x.Name == ".ctor");
+            rtsCtor = API.ClientConnection.Methods.Single(x => x.Name == ".ctor" && x.Parameters.Count == (rcCtor.Body.Instructions[1].Operand as MethodReference).Parameters.Count);
 
+            rcCtor.Body.Instructions[1].Operand = _asm.MainModule.Import(rtsCtor);
+
+
+            var serverLoop = Terraria.Netplay.Methods.Single(x => x.Name == "ServerLoop");
+            var target = serverLoop.Body.Instructions.Single(x => x.OpCode == OpCodes.Newobj
+                         && (x.Operand is MethodReference)
+                         && (x.Operand as MethodReference).DeclaringType.Name == "TcpSocket");
+            target.Operand = _asm.MainModule.Import(rtsCtor);
+
+
+////            var tcpSocket = rcCtor.Body.Instructions.Single(x => x.Operand 
+//            rcCtor.Body.Instructions.RemoveAt(0);
+//            rcCtor.Body.Instructions.RemoveAt(0);
+//            rcCtor.Body.Instructions.RemoveAt(0);
+
+//            return;
+            var fl = Terraria.Netplay.Fields.SingleOrDefault(x => x.Name == "upnpnat");
+            if (fl != null)
+                Terraria.Netplay.Fields.Remove(fl);
+
+//            return;
             //Clear open and close methods, add reference to the APIs
             var cb = Terraria.Netplay.Methods.Single(x => x.Name == "OpenPort");
             //    .Body;
@@ -463,15 +502,15 @@ namespace tdsm.patcher
             //close.Instructions.Add(cb.GetILProcessor().Create(OpCodes.Ret));
             Terraria.Netplay.Methods.Remove(close);
 
-//            fl = Terraria.Netplay.Fields.SingleOrDefault(x => x.Name == "mappings");
-//            if (fl != null)
-//                Terraria.Netplay.Fields.Remove(fl);
+            fl = Terraria.Netplay.Fields.SingleOrDefault(x => x.Name == "mappings");
+            if (fl != null)
+                Terraria.Netplay.Fields.Remove(fl);
 
             //use our uPNP (when using native terraria server)
             var openCallback = API.NAT.Methods.First(m => m.Name == "OpenPort");
             var closeCallback = API.NAT.Methods.First(m => m.Name == "ClosePort");
 
-            var serverLoop = Terraria.Netplay.Methods.Single(x => x.Name == "ServerLoop");
+//            var serverLoop = Terraria.Netplay.Methods.Single(x => x.Name == "ServerLoop");
 
             foreach (var ins in serverLoop.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Call
@@ -487,6 +526,60 @@ namespace tdsm.patcher
                 else
                 {
                     ins.Operand = _asm.MainModule.Import(openCallback);
+                }
+            }
+        }
+
+        public void DetectMissingXNA()
+        {
+            foreach (var t in _asm.MainModule.Types)
+            {
+                foreach (var m in t.Methods)
+                {
+                    if (m.Body != null)
+                    {
+                        foreach (var ins in m.Body.Instructions)
+                        {
+                            if (ins.Operand is FieldReference)
+                            {
+                                var fldref = ins.Operand as FieldReference;
+                                var name = fldref.DeclaringType.Name;
+                                if (fldref.DeclaringType.IsArray)
+                                {
+                                    name=(fldref.DeclaringType as ArrayType).ElementType.Name;
+                                }
+                                if (fldref.DeclaringType.Namespace.StartsWith("Microsoft.Xna"))
+                                {
+                                    if (_self.MainModule.Types.Single(x => x.Name == name).Fields.Where(x => x.Name == fldref.Name).Count() == 0)
+                                    {
+                                        Console.WriteLine(name + " " + fldref.Name);
+//                                        throw new NotImplementedException("Missing field for XNA: " + fldref.Name);
+                                    }
+                                }
+                            } else if (ins.Operand is MethodReference)
+                            {
+                                var mthref = ins.Operand as MethodReference;
+                                var name = mthref.DeclaringType.Name;
+                                if (mthref.DeclaringType.IsArray)
+                                {
+                                    name=(mthref.DeclaringType as ArrayType).ElementType.Name;
+                                }
+                                if (mthref.Name == "Get" || mthref.Name == "Set")
+                                    continue;
+                                if (mthref.DeclaringType.Namespace.StartsWith("Microsoft.Xna"))
+                                {
+
+
+                                    if (_self.MainModule.Types.Single(x => x.Name == name)
+                                        .Methods.Where(x => x.Name == mthref.Name).Count() == 0)
+                                    {
+                                        Console.WriteLine(name + " " + mthref.Name);
+//                                        throw new NotImplementedException("Missing method for XNA: " + mthref.Name);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -578,8 +671,8 @@ namespace tdsm.patcher
             ins.Operand = _asm.MainModule.Import(callback);
 
             var ignore = new string[] {
-				"Terraria.Main.DedServ"
-			};
+                "Terraria.Main.DedServ"
+            };
 
             //Patch Console.WriteLines
             var cwi = _asm.MainModule.Types
@@ -983,10 +1076,10 @@ namespace tdsm.patcher
         public void HookSockets()
         {
             //Remove the tcpClient initialisation
-            var cst = Terraria.ServerSock.Methods.Single(x => x.Name == ".ctor");
-            cst.Body.Instructions.RemoveAt(0);
-            cst.Body.Instructions.RemoveAt(0);
-            cst.Body.Instructions.RemoveAt(0);
+//            var cst = Terraria.ServerSock.Methods.Single(x => x.Name == ".ctor");
+//            cst.Body.Instructions.RemoveAt(0);
+//            cst.Body.Instructions.RemoveAt(0);
+//            cst.Body.Instructions.RemoveAt(0);
 
             //Temporary until i get more time
             foreach (var rep in new string[] { /*"SendAnglerQuest,"*/ "sendWater", /*"syncPlayers",*/ "AddBan" })
@@ -1029,407 +1122,407 @@ namespace tdsm.patcher
 
 
             return;
-            var targetField = API.IAPISocket.Fields.Single(x => x.Name == "tileSection");
-            var targetArray = API.NetplayCallback.Fields.Single(x => x.Name == "slots");
-
-            //Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
-            var instructions = _asm.MainModule.Types
-                .SelectMany(x => x.Methods
-                    .Where(y => y.HasBody && y.Body.Instructions != null)
-                )
-                .SelectMany(x => x.Body.Instructions)
-                .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Ldsfld
-                    && x.Operand is FieldReference
-                    && (x.Operand as FieldReference).FieldType.FullName == "Terraria.ServerSock[]"
-                    && x.Next.Next.Next.OpCode == Mono.Cecil.Cil.OpCodes.Ldfld
-                    && x.Next.Next.Next.Operand is FieldReference
-                    && (x.Next.Next.Next.Operand as FieldReference).Name == "tileSection"
-                )
-                .ToArray();
-
-            for (var x = 0; x < instructions.Length; x++)
-            {
-                //                instructions[x].Operand = _asm.MainModule.Import(targetArray);
-                instructions[x].Next.Next.Next.Operand = _asm.MainModule.Import(targetField);
-            }
-
-
-            //TODO BELOW - update ServerSock::announce to IAPISocket::announce (etc)
-#if VanillaSockets
-#else
-            //            Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
-            instructions = _asm.MainModule.Types
-               .SelectMany(x => x.Methods
-                   .Where(y => y.HasBody && y.Body.Instructions != null)
-               )
-               .SelectMany(x => x.Body.Instructions)
-               .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Ldsfld
-                   && x.Operand is FieldReference
-                   && (x.Operand as FieldReference).FieldType.FullName == "Terraria.ServerSock[]"
-               )
-               .ToArray();
-
-            for (var x = 0; x < instructions.Length; x++)
-            {
-                instructions[x].Operand = _asm.MainModule.Import(targetArray);
-
-                //var var = instructions[x].Next.Next.Next;
-                //if (var.OpCode == OpCodes.Ldfld && var.Operand is MemberReference)
-                //{
-                //    var mem = var.Operand as MemberReference;
-                //    if (mem.DeclaringType.Name == "ServerSock")
-                //    {
-                //        var ourVar = sockClass.Fields.Where(j => j.Name == mem.Name).FirstOrDefault();
-                //        if (ourVar != null)
-                //        {
-                //            var.Operand = _asm.MainModule.Import(ourVar);
-                //        }
-                //    }
-                //}
-            }
-#endif
-            //instructions = _asm.MainModule.Types
-            //   .SelectMany(x => x.Methods
-            //       .Where(y => y.HasBody && y.Body.Instructions != null)
-            //   )
-            //   .SelectMany(x => x.Body.Instructions)
-            //   .Where(x => (x.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt)
-            //       &&
-            //       (
-            //            (x.Operand is MemberReference && (x.Operand as MemberReference).DeclaringType.FullName == "Terraria.ServerSock")
-            //            ||
-            //            (x.Operand is MethodDefinition && (x.Operand as MethodDefinition).DeclaringType.FullName == "Terraria.ServerSock")
-            //       )
-            //   )
-            //   .ToArray();
-
-#if VanillaSockets || true
-            var bodies = _asm.MainModule.Types
-               .SelectMany(x => x.Methods
-                   .Where(y => y.HasBody && y.Body.Instructions != null)
-               )
-               .Where(x => x.Body.Instructions.Where(k => (k.OpCode == Mono.Cecil.Cil.OpCodes.Ldfld
-                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Stfld
-                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt
-                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Ldftn)
-                   &&
-                   (
-                        (k.Operand is MemberReference && (k.Operand as MemberReference).DeclaringType.FullName == "Terraria.ServerSock")
-                        ||
-                        (k.Operand is MethodDefinition && (k.Operand as MethodDefinition).DeclaringType.FullName == "Terraria.ServerSock")
-                   )).Count() > 0
-               )
-               .ToArray();
-            foreach (var targetMethod in bodies)
-            {
-                instructions = targetMethod.Body.Instructions.Where(k => (k.OpCode == Mono.Cecil.Cil.OpCodes.Ldfld
-                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Stfld
-                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt
-                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Ldftn)
-                   &&
-                   (
-                        (k.Operand is MemberReference && (k.Operand as MemberReference).DeclaringType.FullName == "Terraria.ServerSock")
-                        ||
-                        (k.Operand is MethodDefinition && (k.Operand as MethodDefinition).DeclaringType.FullName == "Terraria.ServerSock")
-                   )).ToArray();
-
-                for (var x = 0; x < instructions.Length; x++)
-                {
-                    var var = instructions[x];
-                    if (var.Operand is MethodDefinition)
-                    {
-                        var mth = var.Operand as MethodDefinition;
-                        var ourVar = API.IAPISocket.Methods.SingleOrDefault(j => j.Name == mth.Name);
-                        if (ourVar != null)
-                        {
-                            var.Operand = _asm.MainModule.Import(ourVar);
-
-                            if (var.OpCode == OpCodes.Ldftn)
-                            {
-                                var.OpCode = OpCodes.Ldvirtftn;
-
-                                var ilp = targetMethod.Body.GetILProcessor();
-                                ilp.InsertBefore(var, ilp.Create(OpCodes.Dup));
-                            }
-                        }
-                    }
-                    else if (var.Operand is MemberReference)
-                    {
-                        var mem = var.Operand as MemberReference;
-                        var ourVar = API.IAPISocket.Fields.SingleOrDefault(j => j.Name == mem.Name);
-                        if (ourVar != null)
-                        {
-                            var.Operand = _asm.MainModule.Import(ourVar);
-                        }
-                    }
-                }
-            }
-#endif
-
-            foreach (var rep in new string[] { /*"SendAnglerQuest", "sendWater", "syncPlayers",*/ "AddBan" })
-            {
-                var toBeReplaced = _asm.MainModule.Types
-                    .SelectMany(x => x.Methods
-                        .Where(y => y.HasBody)
-                    )
-                    .SelectMany(x => x.Body.Instructions)
-                    .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Call
-                        && x.Operand is MethodReference
-                        && (x.Operand as MethodReference).Name == rep
-                    )
-                    .ToArray();
-
-                var replacement = API.NetplayCallback.Methods.Single(x => x.Name == rep);
-                for (var x = 0; x < toBeReplaced.Length; x++)
-                {
-                    toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
-                }
-            }
-
-            //Inherit
-            Terraria.ServerSock.BaseType = _asm.MainModule.Import(API.IAPISocket);
-
-            //Change to override
-            foreach (var rep in new string[] { "SpamUpdate", "SpamClear", "Reset", "SectionRange", "ServerReadCallBack", "ServerWriteCallBack" })
-            {
-                var mth = Terraria.ServerSock.Methods.Single(x => x.Name == rep);
-                mth.IsVirtual = true;
-
-
-            }
-
-            //Remove variables that are in the base class
-            foreach (var fld in API.IAPISocket.Fields)
-            {
-                var rem = Terraria.ServerSock.Fields.SingleOrDefault(x => x.Name == fld.Name);
-                if (rem != null)
-                {
-                    Terraria.ServerSock.Fields.Remove(rem);
-                }
-            }
-
-#if VanillaSockets
-            //Now change Netplay.serverSock to the IAPISocket type
-            var serverSockArr = Terraria.Netplay.Fields.Single(x => x.Name == "serverSock");
-            var at = new ArrayType(API.IAPISocket);
-            serverSockArr.FieldType = _asm.MainModule.Import(at);
-
-            //By default the constructor calls Object.ctor. This should also be changed to our socket since it now inherits that.
-            var ctor = Terraria.ServerSock.Methods.Single(x => x.Name == ".ctor");
-            var baseCtor = API.IAPISocket.Methods.Single(x => x.Name == ".ctor");
-            ctor.Body.Instructions.RemoveAt(ctor.Body.Instructions.Count - 2);
-            ctor.Body.Instructions.RemoveAt(ctor.Body.Instructions.Count - 2);
-
-            var ctorIl = ctor.Body.GetILProcessor();
-            ctorIl.Body.Instructions.Insert(0, ctorIl.Create(OpCodes.Call, _asm.MainModule.Import(baseCtor)));
-            ctorIl.Body.Instructions.Insert(0, ctorIl.Create(OpCodes.Ldarg_0));
-#endif
-
-            ////DEBUG
-            ////ldstr "Starting server..."
-            ////stsfld string Terraria.Main::statusText
-            //var statusText = Terraria.Main.Fields.Single(x => x.Name == "statusText");
-            //var sl = Terraria.Netplay.Methods.Single(x => x.Name == "ServerLoop");
-            ////var writeLine = API.Tools.Methods.Single(x => x.Name == "WriteLine" && x.Parameters.Count == 1 && x.Parameters[0].ParameterType.Name == "String");
-            ////var writeLine = API.IAPISocket.Methods.Single(x => x.Name == "Debug");
-
-
-            ////sl.Body.Variables.Add(new VariableDefinition(_asm.MainModule.Import(typeof(String))));
-
-            //instructions = sl.Body.Instructions.Where(x => x.OpCode == OpCodes.Newobj).ToArray();
-            //var slIl = sl.Body.GetILProcessor();
-            //var debugKey = 0;
-            //foreach (var ins in instructions)
-            //{
-            //    var insert = false;
-            //    if (ins.Operand is MethodDefinition)
-            //    {
-            //        var md = ins.Operand as MethodDefinition;
-            //        insert = md.DeclaringType.Name == "ServerSock";
-            //    }
-            //    //else if (ins.Operand is FieldReference)
-            //    //{
-            //    //    var fr = ins.Operand as FieldReference;
-            //    //    insert = fr.FieldType.Name.Contains("ServerSock");
-            //    //}
-
-            //    if (insert)
-            //    {
-            //        var target = ins;//.Next.Next.Next;
-
-            //        //target.Operand = _asm.MainModule.Import(ctor);
-            //        //slIl.Replace(target, slIl.Create(OpCodes.Callvirt, _asm.MainModule.Import(writeLine)));
-            //        //slIl.Replace(target, slIl.Create(OpCodes.Callvirt, _asm.MainModule.Import(writeLine)));
-
-            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Pop));
-            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Ret));
-            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Nop));
-            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Call, _asm.MainModule.Import(writeLine)));
-            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Ldstr, (++debugKey).ToString()));
-            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Stsfld, statusText));
-            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Ldstr, (++debugKey).ToString()));
-            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Nop));
-
-            //        break;
-            //    }
-            //}
-
-
-            //var ss1 = Terraria.ServerSock;
-            //var ss2 = _self.MainModule.Types.Single(x => x.Name == "ServerSock2");
-
-            var sendWater = Terraria.NetMessage.Methods.Single(x => x.Name == "sendWater");
-            {
-                var ix = 0;
-                var removing = false;
-                while (sendWater.Body.Instructions.Count > 0 && ix < sendWater.Body.Instructions.Count)
-                {
-                    var first = false;
-                    var ins = sendWater.Body.Instructions[ix];
-                    if (ins.OpCode == OpCodes.Ldsfld && ins.Operand is FieldReference && (ins.Operand as FieldReference).Name == "buffer")
-                    {
-                        removing = true;
-                        first = true;
-                    }
-                    else first = false;
-
-                    if (ins.OpCode == OpCodes.Brfalse_S)
-                    {
-                        //Keep instruction, and replace the first (previous instruction)
-                        var canSendWater = API.IAPISocket.Methods.Single(x => x.Name == "CanSendWater");
-
-                        var il = sendWater.Body.GetILProcessor();
-                        var target = ins.Previous;
-                        var newTarget = il.Create(OpCodes.Nop);
-
-                        il.Replace(target, newTarget);
-
-                        il.InsertAfter(newTarget, il.Create(OpCodes.Callvirt, _asm.MainModule.Import(canSendWater)));
-                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldelem_Ref));
-                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldloc_0));
-#if VanillaSockets
-                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldsfld, _asm.MainModule.Import(serverSockArr)));
-#else
-                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldsfld, _asm.MainModule.Import(targetArray)));
-#endif
-                        removing = false;
-                        break;
-                    }
-
-                    if (removing && !first)
-                    {
-                        sendWater.Body.Instructions.RemoveAt(ix);
-                    }
-
-                    if (!removing || first) ix++;
-                }
-            }
-
-            var syncPlayers = Terraria.NetMessage.Methods.Single(x => x.Name == "syncPlayers");
-            {
-                var ix = 0;
-                var removing = false;
-                var isPlayingComplete = false;
-                while (syncPlayers.Body.Instructions.Count > 0 && ix < syncPlayers.Body.Instructions.Count)
-                {
-                    var first = false;
-                    var ins = syncPlayers.Body.Instructions[ix];
-                    if (ins.OpCode == OpCodes.Ldsfld && ins.Operand is FieldDefinition && (ins.Operand as FieldDefinition).Name == "serverSock")
-                    {
-                        removing = true;
-                        first = true;
-
-                        if (isPlayingComplete)
-                        {
-                            //We'll use the next two instructions because im cheap.
-                            ix += 2;
-                        }
-                    }
-                    else first = false;
-
-                    if (removing && ins.OpCode == OpCodes.Bne_Un)
-                    {
-                        //Keep instruction, and replace the first (previous instruction)
-                        var isPlaying = API.IAPISocket.Methods.Single(x => x.Name == "IsPlaying");
-
-                        var il = syncPlayers.Body.GetILProcessor();
-                        var target = ins.Previous;
-
-                        il.InsertAfter(target, il.Create(OpCodes.Callvirt, _asm.MainModule.Import(isPlaying)));
-                        il.InsertAfter(target, il.Create(OpCodes.Ldelem_Ref));
-                        il.InsertAfter(target, il.Create(OpCodes.Ldloc_1));
-
-                        il.Replace(ins, il.Create(OpCodes.Brfalse, ins.Operand as Instruction));
-
-                        isPlayingComplete = true;
-                        removing = false;
-                        //break;
-
-                        ix += 3;
-                    }
-                    else if (removing && ins.OpCode == OpCodes.Callvirt && isPlayingComplete)
-                    {
-                        if (ins.Operand is MethodReference)
-                        {
-                            var md = ins.Operand as MethodReference;
-                            if (md.DeclaringType.Name == "Object" && md.Name == "ToString")
-                            {
-                                var remoteAddress = API.IAPISocket.Methods.Single(x => x.Name == "RemoteAddress");
-                                ins.Operand = _asm.MainModule.Import(remoteAddress);
-                                break;
-                            }
-                        }
-                    }
-
-                    if (removing && !first)
-                    {
-                        syncPlayers.Body.Instructions.RemoveAt(ix);
-                    }
-
-                    if (!removing || first) ix++;
-                }
-            }
-
-            var sendAngler = Terraria.NetMessage.Methods.Single(x => x.Name == "SendAnglerQuest");
-            {
-                var ix = 0;
-                var removing = false;
-                while (sendAngler.Body.Instructions.Count > 0 && ix < sendAngler.Body.Instructions.Count)
-                {
-                    var first = false;
-                    var ins = sendAngler.Body.Instructions[ix];
-                    if (ins.OpCode == OpCodes.Ldsfld && ins.Operand is FieldDefinition && (ins.Operand as FieldDefinition).Name == "serverSock")
-                    {
-                        removing = true;
-                        first = true;
-
-                        //Reuse the next two as well
-                        ix += 2;
-                    }
-                    else first = false;
-
-                    if (removing && ins.OpCode == OpCodes.Bne_Un_S)
-                    {
-                        //Keep instruction, and replace the first (previous instruction)
-                        var isPlaying = API.IAPISocket.Methods.Single(x => x.Name == "IsPlaying");
-
-                        var il = sendAngler.Body.GetILProcessor();
-
-                        il.InsertBefore(ins, il.Create(OpCodes.Callvirt, _asm.MainModule.Import(isPlaying)));
-                        il.Replace(ins, il.Create(OpCodes.Brfalse, ins.Operand as Instruction));
-
-                        removing = false;
-                        break;
-                    }
-
-                    if (removing && !first)
-                    {
-                        sendAngler.Body.Instructions.RemoveAt(ix);
-                    }
-
-                    if (!removing || first) ix++;
-                }
-            }
+//            var targetField = API.IAPISocket.Fields.Single(x => x.Name == "tileSection");
+//            var targetArray = API.NetplayCallback.Fields.Single(x => x.Name == "slots");
+//
+//            //Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
+//            var instructions = _asm.MainModule.Types
+//                .SelectMany(x => x.Methods
+//                    .Where(y => y.HasBody && y.Body.Instructions != null)
+//                )
+//                .SelectMany(x => x.Body.Instructions)
+//                .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Ldsfld
+//                    && x.Operand is FieldReference
+//                    && (x.Operand as FieldReference).FieldType.FullName == "Terraria.ServerSock[]"
+//                    && x.Next.Next.Next.OpCode == Mono.Cecil.Cil.OpCodes.Ldfld
+//                    && x.Next.Next.Next.Operand is FieldReference
+//                    && (x.Next.Next.Next.Operand as FieldReference).Name == "tileSection"
+//                )
+//                .ToArray();
+//
+//            for (var x = 0; x < instructions.Length; x++)
+//            {
+//                //                instructions[x].Operand = _asm.MainModule.Import(targetArray);
+//                instructions[x].Next.Next.Next.Operand = _asm.MainModule.Import(targetField);
+//            }
+//
+//
+//            //TODO BELOW - update ServerSock::announce to IAPISocket::announce (etc)
+//#if VanillaSockets
+//#else
+//            //            Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
+//            instructions = _asm.MainModule.Types
+//               .SelectMany(x => x.Methods
+//                   .Where(y => y.HasBody && y.Body.Instructions != null)
+//               )
+//               .SelectMany(x => x.Body.Instructions)
+//               .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Ldsfld
+//                   && x.Operand is FieldReference
+//                   && (x.Operand as FieldReference).FieldType.FullName == "Terraria.ServerSock[]"
+//               )
+//               .ToArray();
+//
+//            for (var x = 0; x < instructions.Length; x++)
+//            {
+//                instructions[x].Operand = _asm.MainModule.Import(targetArray);
+//
+//                //var var = instructions[x].Next.Next.Next;
+//                //if (var.OpCode == OpCodes.Ldfld && var.Operand is MemberReference)
+//                //{
+//                //    var mem = var.Operand as MemberReference;
+//                //    if (mem.DeclaringType.Name == "ServerSock")
+//                //    {
+//                //        var ourVar = sockClass.Fields.Where(j => j.Name == mem.Name).FirstOrDefault();
+//                //        if (ourVar != null)
+//                //        {
+//                //            var.Operand = _asm.MainModule.Import(ourVar);
+//                //        }
+//                //    }
+//                //}
+//            }
+//#endif
+//            //instructions = _asm.MainModule.Types
+//            //   .SelectMany(x => x.Methods
+//            //       .Where(y => y.HasBody && y.Body.Instructions != null)
+//            //   )
+//            //   .SelectMany(x => x.Body.Instructions)
+//            //   .Where(x => (x.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt)
+//            //       &&
+//            //       (
+//            //            (x.Operand is MemberReference && (x.Operand as MemberReference).DeclaringType.FullName == "Terraria.ServerSock")
+//            //            ||
+//            //            (x.Operand is MethodDefinition && (x.Operand as MethodDefinition).DeclaringType.FullName == "Terraria.ServerSock")
+//            //       )
+//            //   )
+//            //   .ToArray();
+//
+//#if VanillaSockets || true
+//            var bodies = _asm.MainModule.Types
+//               .SelectMany(x => x.Methods
+//                   .Where(y => y.HasBody && y.Body.Instructions != null)
+//               )
+//               .Where(x => x.Body.Instructions.Where(k => (k.OpCode == Mono.Cecil.Cil.OpCodes.Ldfld
+//                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Stfld
+//                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt
+//                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Ldftn)
+//                   &&
+//                   (
+//                        (k.Operand is MemberReference && (k.Operand as MemberReference).DeclaringType.FullName == "Terraria.ServerSock")
+//                        ||
+//                        (k.Operand is MethodDefinition && (k.Operand as MethodDefinition).DeclaringType.FullName == "Terraria.ServerSock")
+//                   )).Count() > 0
+//               )
+//               .ToArray();
+//            foreach (var targetMethod in bodies)
+//            {
+//                instructions = targetMethod.Body.Instructions.Where(k => (k.OpCode == Mono.Cecil.Cil.OpCodes.Ldfld
+//                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Stfld
+//                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt
+//                   || k.OpCode == Mono.Cecil.Cil.OpCodes.Ldftn)
+//                   &&
+//                   (
+//                        (k.Operand is MemberReference && (k.Operand as MemberReference).DeclaringType.FullName == "Terraria.ServerSock")
+//                        ||
+//                        (k.Operand is MethodDefinition && (k.Operand as MethodDefinition).DeclaringType.FullName == "Terraria.ServerSock")
+//                   )).ToArray();
+//
+//                for (var x = 0; x < instructions.Length; x++)
+//                {
+//                    var var = instructions[x];
+//                    if (var.Operand is MethodDefinition)
+//                    {
+//                        var mth = var.Operand as MethodDefinition;
+//                        var ourVar = API.IAPISocket.Methods.SingleOrDefault(j => j.Name == mth.Name);
+//                        if (ourVar != null)
+//                        {
+//                            var.Operand = _asm.MainModule.Import(ourVar);
+//
+//                            if (var.OpCode == OpCodes.Ldftn)
+//                            {
+//                                var.OpCode = OpCodes.Ldvirtftn;
+//
+//                                var ilp = targetMethod.Body.GetILProcessor();
+//                                ilp.InsertBefore(var, ilp.Create(OpCodes.Dup));
+//                            }
+//                        }
+//                    }
+//                    else if (var.Operand is MemberReference)
+//                    {
+//                        var mem = var.Operand as MemberReference;
+//                        var ourVar = API.IAPISocket.Fields.SingleOrDefault(j => j.Name == mem.Name);
+//                        if (ourVar != null)
+//                        {
+//                            var.Operand = _asm.MainModule.Import(ourVar);
+//                        }
+//                    }
+//                }
+//            }
+//#endif
+//
+//            foreach (var rep in new string[] { /*"SendAnglerQuest", "sendWater", "syncPlayers",*/ "AddBan" })
+//            {
+//                var toBeReplaced = _asm.MainModule.Types
+//                    .SelectMany(x => x.Methods
+//                        .Where(y => y.HasBody)
+//                    )
+//                    .SelectMany(x => x.Body.Instructions)
+//                    .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Call
+//                        && x.Operand is MethodReference
+//                        && (x.Operand as MethodReference).Name == rep
+//                    )
+//                    .ToArray();
+//
+//                var replacement = API.NetplayCallback.Methods.Single(x => x.Name == rep);
+//                for (var x = 0; x < toBeReplaced.Length; x++)
+//                {
+//                    toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
+//                }
+//            }
+//
+//            //Inherit
+//            Terraria.ServerSock.BaseType = _asm.MainModule.Import(API.IAPISocket);
+//
+//            //Change to override
+//            foreach (var rep in new string[] { "SpamUpdate", "SpamClear", "Reset", "SectionRange", "ServerReadCallBack", "ServerWriteCallBack" })
+//            {
+//                var mth = Terraria.ServerSock.Methods.Single(x => x.Name == rep);
+//                mth.IsVirtual = true;
+//
+//
+//            }
+//
+//            //Remove variables that are in the base class
+//            foreach (var fld in API.IAPISocket.Fields)
+//            {
+//                var rem = Terraria.ServerSock.Fields.SingleOrDefault(x => x.Name == fld.Name);
+//                if (rem != null)
+//                {
+//                    Terraria.ServerSock.Fields.Remove(rem);
+//                }
+//            }
+//
+//#if VanillaSockets
+//            //Now change Netplay.serverSock to the IAPISocket type
+//            var serverSockArr = Terraria.Netplay.Fields.Single(x => x.Name == "serverSock");
+//            var at = new ArrayType(API.IAPISocket);
+//            serverSockArr.FieldType = _asm.MainModule.Import(at);
+//
+//            //By default the constructor calls Object.ctor. This should also be changed to our socket since it now inherits that.
+//            var ctor = Terraria.ServerSock.Methods.Single(x => x.Name == ".ctor");
+//            var baseCtor = API.IAPISocket.Methods.Single(x => x.Name == ".ctor");
+//            ctor.Body.Instructions.RemoveAt(ctor.Body.Instructions.Count - 2);
+//            ctor.Body.Instructions.RemoveAt(ctor.Body.Instructions.Count - 2);
+//
+//            var ctorIl = ctor.Body.GetILProcessor();
+//            ctorIl.Body.Instructions.Insert(0, ctorIl.Create(OpCodes.Call, _asm.MainModule.Import(baseCtor)));
+//            ctorIl.Body.Instructions.Insert(0, ctorIl.Create(OpCodes.Ldarg_0));
+//#endif
+//
+//            ////DEBUG
+//            ////ldstr "Starting server..."
+//            ////stsfld string Terraria.Main::statusText
+//            //var statusText = Terraria.Main.Fields.Single(x => x.Name == "statusText");
+//            //var sl = Terraria.Netplay.Methods.Single(x => x.Name == "ServerLoop");
+//            ////var writeLine = API.Tools.Methods.Single(x => x.Name == "WriteLine" && x.Parameters.Count == 1 && x.Parameters[0].ParameterType.Name == "String");
+//            ////var writeLine = API.IAPISocket.Methods.Single(x => x.Name == "Debug");
+//
+//
+//            ////sl.Body.Variables.Add(new VariableDefinition(_asm.MainModule.Import(typeof(String))));
+//
+//            //instructions = sl.Body.Instructions.Where(x => x.OpCode == OpCodes.Newobj).ToArray();
+//            //var slIl = sl.Body.GetILProcessor();
+//            //var debugKey = 0;
+//            //foreach (var ins in instructions)
+//            //{
+//            //    var insert = false;
+//            //    if (ins.Operand is MethodDefinition)
+//            //    {
+//            //        var md = ins.Operand as MethodDefinition;
+//            //        insert = md.DeclaringType.Name == "ServerSock";
+//            //    }
+//            //    //else if (ins.Operand is FieldReference)
+//            //    //{
+//            //    //    var fr = ins.Operand as FieldReference;
+//            //    //    insert = fr.FieldType.Name.Contains("ServerSock");
+//            //    //}
+//
+//            //    if (insert)
+//            //    {
+//            //        var target = ins;//.Next.Next.Next;
+//
+//            //        //target.Operand = _asm.MainModule.Import(ctor);
+//            //        //slIl.Replace(target, slIl.Create(OpCodes.Callvirt, _asm.MainModule.Import(writeLine)));
+//            //        //slIl.Replace(target, slIl.Create(OpCodes.Callvirt, _asm.MainModule.Import(writeLine)));
+//
+//            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Pop));
+//            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Ret));
+//            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Nop));
+//            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Call, _asm.MainModule.Import(writeLine)));
+//            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Ldstr, (++debugKey).ToString()));
+//            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Stsfld, statusText));
+//            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Ldstr, (++debugKey).ToString()));
+//            //        //slIl.InsertAfter(target, slIl.Create(OpCodes.Nop));
+//
+//            //        break;
+//            //    }
+//            //}
+//
+//
+//            //var ss1 = Terraria.ServerSock;
+//            //var ss2 = _self.MainModule.Types.Single(x => x.Name == "ServerSock2");
+//
+//            var sendWater = Terraria.NetMessage.Methods.Single(x => x.Name == "sendWater");
+//            {
+//                var ix = 0;
+//                var removing = false;
+//                while (sendWater.Body.Instructions.Count > 0 && ix < sendWater.Body.Instructions.Count)
+//                {
+//                    var first = false;
+//                    var ins = sendWater.Body.Instructions[ix];
+//                    if (ins.OpCode == OpCodes.Ldsfld && ins.Operand is FieldReference && (ins.Operand as FieldReference).Name == "buffer")
+//                    {
+//                        removing = true;
+//                        first = true;
+//                    }
+//                    else first = false;
+//
+//                    if (ins.OpCode == OpCodes.Brfalse_S)
+//                    {
+//                        //Keep instruction, and replace the first (previous instruction)
+//                        var canSendWater = API.IAPISocket.Methods.Single(x => x.Name == "CanSendWater");
+//
+//                        var il = sendWater.Body.GetILProcessor();
+//                        var target = ins.Previous;
+//                        var newTarget = il.Create(OpCodes.Nop);
+//
+//                        il.Replace(target, newTarget);
+//
+//                        il.InsertAfter(newTarget, il.Create(OpCodes.Callvirt, _asm.MainModule.Import(canSendWater)));
+//                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldelem_Ref));
+//                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldloc_0));
+//#if VanillaSockets
+//                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldsfld, _asm.MainModule.Import(serverSockArr)));
+//#else
+//                        il.InsertAfter(newTarget, il.Create(OpCodes.Ldsfld, _asm.MainModule.Import(targetArray)));
+//#endif
+//                        removing = false;
+//                        break;
+//                    }
+//
+//                    if (removing && !first)
+//                    {
+//                        sendWater.Body.Instructions.RemoveAt(ix);
+//                    }
+//
+//                    if (!removing || first) ix++;
+//                }
+//            }
+//
+//            var syncPlayers = Terraria.NetMessage.Methods.Single(x => x.Name == "syncPlayers");
+//            {
+//                var ix = 0;
+//                var removing = false;
+//                var isPlayingComplete = false;
+//                while (syncPlayers.Body.Instructions.Count > 0 && ix < syncPlayers.Body.Instructions.Count)
+//                {
+//                    var first = false;
+//                    var ins = syncPlayers.Body.Instructions[ix];
+//                    if (ins.OpCode == OpCodes.Ldsfld && ins.Operand is FieldDefinition && (ins.Operand as FieldDefinition).Name == "serverSock")
+//                    {
+//                        removing = true;
+//                        first = true;
+//
+//                        if (isPlayingComplete)
+//                        {
+//                            //We'll use the next two instructions because im cheap.
+//                            ix += 2;
+//                        }
+//                    }
+//                    else first = false;
+//
+//                    if (removing && ins.OpCode == OpCodes.Bne_Un)
+//                    {
+//                        //Keep instruction, and replace the first (previous instruction)
+//                        var isPlaying = API.IAPISocket.Methods.Single(x => x.Name == "IsPlaying");
+//
+//                        var il = syncPlayers.Body.GetILProcessor();
+//                        var target = ins.Previous;
+//
+//                        il.InsertAfter(target, il.Create(OpCodes.Callvirt, _asm.MainModule.Import(isPlaying)));
+//                        il.InsertAfter(target, il.Create(OpCodes.Ldelem_Ref));
+//                        il.InsertAfter(target, il.Create(OpCodes.Ldloc_1));
+//
+//                        il.Replace(ins, il.Create(OpCodes.Brfalse, ins.Operand as Instruction));
+//
+//                        isPlayingComplete = true;
+//                        removing = false;
+//                        //break;
+//
+//                        ix += 3;
+//                    }
+//                    else if (removing && ins.OpCode == OpCodes.Callvirt && isPlayingComplete)
+//                    {
+//                        if (ins.Operand is MethodReference)
+//                        {
+//                            var md = ins.Operand as MethodReference;
+//                            if (md.DeclaringType.Name == "Object" && md.Name == "ToString")
+//                            {
+//                                var remoteAddress = API.IAPISocket.Methods.Single(x => x.Name == "RemoteAddress");
+//                                ins.Operand = _asm.MainModule.Import(remoteAddress);
+//                                break;
+//                            }
+//                        }
+//                    }
+//
+//                    if (removing && !first)
+//                    {
+//                        syncPlayers.Body.Instructions.RemoveAt(ix);
+//                    }
+//
+//                    if (!removing || first) ix++;
+//                }
+//            }
+//
+//            var sendAngler = Terraria.NetMessage.Methods.Single(x => x.Name == "SendAnglerQuest");
+//            {
+//                var ix = 0;
+//                var removing = false;
+//                while (sendAngler.Body.Instructions.Count > 0 && ix < sendAngler.Body.Instructions.Count)
+//                {
+//                    var first = false;
+//                    var ins = sendAngler.Body.Instructions[ix];
+//                    if (ins.OpCode == OpCodes.Ldsfld && ins.Operand is FieldDefinition && (ins.Operand as FieldDefinition).Name == "serverSock")
+//                    {
+//                        removing = true;
+//                        first = true;
+//
+//                        //Reuse the next two as well
+//                        ix += 2;
+//                    }
+//                    else first = false;
+//
+//                    if (removing && ins.OpCode == OpCodes.Bne_Un_S)
+//                    {
+//                        //Keep instruction, and replace the first (previous instruction)
+//                        var isPlaying = API.IAPISocket.Methods.Single(x => x.Name == "IsPlaying");
+//
+//                        var il = sendAngler.Body.GetILProcessor();
+//
+//                        il.InsertBefore(ins, il.Create(OpCodes.Callvirt, _asm.MainModule.Import(isPlaying)));
+//                        il.Replace(ins, il.Create(OpCodes.Brfalse, ins.Operand as Instruction));
+//
+//                        removing = false;
+//                        break;
+//                    }
+//
+//                    if (removing && !first)
+//                    {
+//                        sendAngler.Body.Instructions.RemoveAt(ix);
+//                    }
+//
+//                    if (!removing || first) ix++;
+//                }
+//            }
         }
 
         public void HookNPCSpawning()

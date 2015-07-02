@@ -5,6 +5,7 @@ namespace tdsm.api.Misc
     {
         Goblin = 1,
         Frost = 2,
-        Pirate = 3
+        Pirate = 3,
+        Martian = 4
     }
 }

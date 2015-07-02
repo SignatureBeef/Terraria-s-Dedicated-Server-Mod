@@ -10,8 +10,6 @@
     <RootNamespace>tdsm.api</RootNamespace>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -176,6 +174,11 @@
     <Compile Include="Callbacks\MessageBufferCallback.cs" />
     <Compile Include="Callbacks\MainCallback.cs" />
     <Compile Include="Callbacks\NetplayCallback.cs" />
+    <Compile Include="Sockets\ClientConnection.cs" />
+    <Compile Include="Sockets\Connection.cs" />
+    <Compile Include="Misc\ArrayDequeue.cs" />
+    <Compile Include="Sockets\ServerSlot.cs" />
+    <Compile Include="Misc\ProgramThread.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -187,4 +190,7 @@
   -->
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Sockets\" />
+  </ItemGroup>
 </Project>

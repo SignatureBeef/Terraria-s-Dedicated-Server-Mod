@@ -3,7 +3,9 @@ namespace Microsoft.Xna.Framework.Graphics
 {
     public class RasterizerState
     {
+        public static readonly RasterizerState CullClockwise = null;
         public static readonly RasterizerState CullCounterClockwise = null;
+        public static readonly RasterizerState CullNone = null;
 
         public float SlopeScaleDepthBias
         {
