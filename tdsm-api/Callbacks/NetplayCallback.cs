@@ -10,68 +10,68 @@ using System.Net;
 
 namespace tdsm.api.Callbacks
 {
-//    public abstract class IAPISocket : Terraria.ServerSock
-//    {
-////        public int Id;
-////        public string statusText2;
-////        public int statusCount;
-////        public int statusMax;
-//        public volatile string remoteAddress;
-////        public bool[,] tileSection;
-////        public string statusText = String.Empty;
-////        public bool announced;
-////        public string name = "Anonymous";
-////        public string oldName = String.Empty;
-////        public float spamProjectile;
-////        public float spamAddBlock;
-////        public float spamDelBlock;
-////        public float spamWater;
-////        public float spamProjectileMax = 100f;
-////        public float spamAddBlockMax = 100f;
-////        public float spamDelBlockMax = 500f;
-////        public float spamWaterMax = 50f;
-//
-////        public int state;
-//
-////        //TDSM core doesn't use these - only here for vanilla
-////        public System.Net.Sockets.TcpClient tcpClient;
-////        public System.Net.Sockets.NetworkStream networkStream;
-////        public byte[] readBuffer;
-////        public bool kill;
-////        public bool active;
-////        public bool locked;
-////        public int timeOut;
-////        public byte[] writeBuffer;
-//
-//        public virtual bool IsPlaying()
-//        {
-//            return state == 10;
-//        }
-//        public virtual bool CanSendWater()
-//        {
-//            //return state >= 3;
-//            return (Terraria.NetMessage.buffer[Id].broadcast || state >= 3) && tcpClient.Connected;
-//        }
-//        public virtual string RemoteAddress()
-//        {
-//            return tcpClient.Client.RemoteEndPoint.ToString();
-//        }
-//
-//        //Vanilla fallback
-////        public virtual void ServerReadCallBack(IAsyncResult ar) { }
-////        public virtual void ServerWriteCallBack(IAsyncResult ar) { }
-//
-////        public abstract void SpamUpdate();
-////        public abstract void SpamClear();
-////        public abstract void Reset();
-////        public abstract bool SectionRange(int size, int firstX, int firstY);
-//
-//
-//        //public virtual void Debug()
-//        //{
-//        //    Console.WriteLine("API Socket DEBUG");
-//        //}
-//    }
+    //    public abstract class IAPISocket : Terraria.ServerSock
+    //    {
+    ////        public int Id;
+    ////        public string statusText2;
+    ////        public int statusCount;
+    ////        public int statusMax;
+    //        public volatile string remoteAddress;
+    ////        public bool[,] tileSection;
+    ////        public string statusText = String.Empty;
+    ////        public bool announced;
+    ////        public string name = "Anonymous";
+    ////        public string oldName = String.Empty;
+    ////        public float spamProjectile;
+    ////        public float spamAddBlock;
+    ////        public float spamDelBlock;
+    ////        public float spamWater;
+    ////        public float spamProjectileMax = 100f;
+    ////        public float spamAddBlockMax = 100f;
+    ////        public float spamDelBlockMax = 500f;
+    ////        public float spamWaterMax = 50f;
+    //
+    ////        public int state;
+    //
+    ////        //TDSM core doesn't use these - only here for vanilla
+    ////        public System.Net.Sockets.TcpClient tcpClient;
+    ////        public System.Net.Sockets.NetworkStream networkStream;
+    ////        public byte[] readBuffer;
+    ////        public bool kill;
+    ////        public bool active;
+    ////        public bool locked;
+    ////        public int timeOut;
+    ////        public byte[] writeBuffer;
+    //
+    //        public virtual bool IsPlaying()
+    //        {
+    //            return state == 10;
+    //        }
+    //        public virtual bool CanSendWater()
+    //        {
+    //            //return state >= 3;
+    //            return (Terraria.NetMessage.buffer[Id].broadcast || state >= 3) && tcpClient.Connected;
+    //        }
+    //        public virtual string RemoteAddress()
+    //        {
+    //            return tcpClient.Client.RemoteEndPoint.ToString();
+    //        }
+    //
+    //        //Vanilla fallback
+    ////        public virtual void ServerReadCallBack(IAsyncResult ar) { }
+    ////        public virtual void ServerWriteCallBack(IAsyncResult ar) { }
+    //
+    ////        public abstract void SpamUpdate();
+    ////        public abstract void SpamClear();
+    ////        public abstract void Reset();
+    ////        public abstract bool SectionRange(int size, int firstX, int firstY);
+    //
+    //
+    //        //public virtual void Debug()
+    //        //{
+    //        //    Console.WriteLine("API Socket DEBUG");
+    //        //}
+    //    }
 
     public static class SocketExtensions
     {
@@ -111,15 +111,15 @@ namespace tdsm.api.Callbacks
         //
         // Constructors
         //
-        public TemporarySynchSock (TcpClient tcpClient)
+        public TemporarySynchSock(TcpClient tcpClient)
         {
             this._connection = tcpClient;
             this._connection.NoDelay = true;
             IPEndPoint iPEndPoint = (IPEndPoint)tcpClient.Client.RemoteEndPoint;
-            this._remoteAddress = new TcpAddress (iPEndPoint.Address, iPEndPoint.Port);
+            this._remoteAddress = new TcpAddress(iPEndPoint.Address, iPEndPoint.Port);
         }
 
-        public TemporarySynchSock ()
+        public TemporarySynchSock()
         {
 //            this._connection = new TcpClient ();
 //            this._connection.NoDelay = true;
@@ -137,21 +137,37 @@ namespace tdsm.api.Callbacks
         //
         // Methods
         //
-        void ISocket.AsyncReceive (byte[] data, int offset, int size, SocketReceiveCallback callback, object state)
+        void ISocket.AsyncReceive(byte[] data, int offset, int size, SocketReceiveCallback callback, object state)
         {
-            int len = this._connection.GetStream().Read(data, offset, size);
-            callback(null, len);
+            try
+            {
+                int len = this._connection.GetStream().Read(data, offset, size);
+                if (callback != null)
+                    callback(state, len);
+            }
+            catch (Exception e)
+            {
+                Tools.WriteLine(e);
+            }
 //            this._connection.GetStream ().BeginRead (data, offset, size, new AsyncCallback (this.ReadCallback), new Tuple<SocketReceiveCallback, object> (callback, state));
         }
 
-        void ISocket.AsyncSend (byte[] data, int offset, int size, SocketSendCallback callback, object state)
+        void ISocket.AsyncSend(byte[] data, int offset, int size, SocketSendCallback callback, object state)
         {
-            this._connection.GetStream().Write(data, offset, size);
-            callback(null);
+            try
+            {
+                this._connection.GetStream().Write(data, offset, size);
+                if (callback != null)
+                    callback(state);
+            }
+            catch (Exception e)
+            {
+                Tools.WriteLine(e);
+            }
 //            this._connection.GetStream ().BeginWrite (data, 0, size, new AsyncCallback (this.SendCallback), new Tuple<SocketSendCallback, object> (callback, state));
         }
 
-        void ISocket.Close ()
+        void ISocket.Close()
         {
             this._remoteAddress = null;
             if (this._connection != null)
@@ -160,91 +176,87 @@ namespace tdsm.api.Callbacks
             }
         }
 
-        void ISocket.Connect (RemoteAddress address)
+        void ISocket.Connect(RemoteAddress address)
         {
             CheckSocket();
             TcpAddress tcpAddress = (TcpAddress)address;
-            this._connection.Connect (tcpAddress.Address, tcpAddress.Port);
+            this._connection.Connect(tcpAddress.Address, tcpAddress.Port);
             this._remoteAddress = address;
         }
 
-        RemoteAddress ISocket.GetRemoteAddress ()
+        RemoteAddress ISocket.GetRemoteAddress()
         {
             return this._remoteAddress;
         }
 
-        bool ISocket.IsConnected ()
+        bool ISocket.IsConnected()
         {
-            if (this._connection != null)
-            {
-                var asd = "";
-            }
             return this._connection != null && this._connection.Client != null && this._connection.Connected;
         }
 
-        bool ISocket.IsDataAvailable ()
+        bool ISocket.IsDataAvailable()
         {
-            return this._connection.GetStream ().DataAvailable;
+            return this._connection.GetStream().DataAvailable;
         }
 
-        private void ListenLoop (object unused)
+        private void ListenLoop(object unused)
         {
             while (this._isListening && !Terraria.Netplay.disconnect)
             {
                 try
                 {
-                    ISocket socket = new TemporarySynchSock (this._listener.AcceptTcpClient ());
-                    Tools.WriteLine (socket.GetRemoteAddress () + " is connecting...");
-                    this._listenerCallback (socket);
+                    ISocket socket = new TemporarySynchSock(this._listener.AcceptTcpClient());
+                    Tools.WriteLine(socket.GetRemoteAddress() + " is connecting...");
+                    this._listenerCallback(socket);
                 }
                 catch (Exception)
                 {
                 }
             }
-            this._listener.Stop ();
+            this._listener.Stop();
         }
 
-        private void ReadCallback (IAsyncResult result)
+        private void ReadCallback(IAsyncResult result)
         {
             Tuple<SocketReceiveCallback, object> tuple = (Tuple<SocketReceiveCallback, object>)result.AsyncState;
-            tuple.Item1 (tuple.Item2, this._connection.GetStream ().EndRead (result));
+            tuple.Item1(tuple.Item2, this._connection.GetStream().EndRead(result));
         }
 
-        private void SendCallback (IAsyncResult result)
+        private void SendCallback(IAsyncResult result)
         {
             Tuple<SocketSendCallback, object> tuple = (Tuple<SocketSendCallback, object>)result.AsyncState;
             try
             {
-                this._connection.GetStream ().EndWrite (result);
-                tuple.Item1 (tuple.Item2);
+                this._connection.GetStream().EndWrite(result);
+                tuple.Item1(tuple.Item2);
             }
             catch (Exception)
             {
-                ((ISocket)this).Close ();
+                ((ISocket)this).Close();
             }
         }
 
-        bool ISocket.StartListening (SocketConnectionAccepted callback)
+        bool ISocket.StartListening(SocketConnectionAccepted callback)
         {
             this._isListening = true;
             this._listenerCallback = callback;
             if (this._listener == null)
             {
-                this._listener = new TcpListener (IPAddress.Any, Terraria.Netplay.ListenPort);
+                this._listener = new TcpListener(IPAddress.Any, Terraria.Netplay.ListenPort);
             }
             try
             {
-                this._listener.Start ();
+                this._listener.Start();
             }
             catch (Exception)
             {
                 return false;
             }
-            ThreadPool.QueueUserWorkItem (new WaitCallback (this.ListenLoop));
+            ThreadPool.QueueUserWorkItem(new WaitCallback(this.ListenLoop));
             return true;
         }
 
-        void ISocket.StopListening ()
+        void ISocket.StopListening()
         {
             this._isListening = false;
         }
@@ -252,10 +264,10 @@ namespace tdsm.api.Callbacks
 
     public static class NetplayCallback
     {
-//        public static Terraria.ServerSock[] slots;// = new IAPISocket[256];
-#if Full_API
+        //        public static Terraria.ServerSock[] slots;// = new IAPISocket[256];
+        #if Full_API
         public static Action<Int32, Vector2, Int32> CheckSectionMethod = Terraria.RemoteClient.CheckSection;
-#endif
+        #endif
 
         public static void CheckSection(int slot, Vector2 position, int fluff = 1)
         {
@@ -317,17 +329,17 @@ namespace tdsm.api.Callbacks
 #endif
         }
 
-        public static void sendWater (int x, int y)
+        public static void sendWater(int x, int y)
         {
             if (Terraria.Main.netMode == 1)
             {
-                Terraria.NetMessage.SendData (48, -1, -1, "", x, (float)y, 0f, 0f, 0);
+                Terraria.NetMessage.SendData(48, -1, -1, "", x, (float)y, 0f, 0f, 0);
                 return;
             }
             for (int i = 0; i < 256; i++)
             {
-                if ((Terraria.NetMessage.buffer [i] != null &&
-                     Terraria.NetMessage.buffer[i].broadcast || Terraria.Netplay.Clients[i].State >= 3) &&
+                if ((Terraria.NetMessage.buffer[i] != null &&
+                    Terraria.NetMessage.buffer[i].broadcast || Terraria.Netplay.Clients[i].State >= 3) &&
                     Terraria.Netplay.Clients[i] != null &&
                     Terraria.Netplay.Clients[i].Socket != null && Terraria.Netplay.Clients[i].Socket.IsConnected())
                 {
@@ -335,7 +347,7 @@ namespace tdsm.api.Callbacks
                     int num2 = y / 150;
                     if (Terraria.Netplay.Clients[i].TileSections[num, num2])
                     {
-                        Terraria.NetMessage.SendData (48, i, -1, "", x, (float)y, 0f, 0f, 0);
+                        Terraria.NetMessage.SendData(48, i, -1, "", x, (float)y, 0f, 0f, 0);
                     }
                 }
             }
