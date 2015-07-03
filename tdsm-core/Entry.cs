@@ -12,6 +12,7 @@ using tdsm.api.Plugin;
 using tdsm.core.Definitions;
 using tdsm.core.Logging;
 using tdsm.core.Misc;
+using tdsm.api.Misc;
 
 namespace tdsm.core
 {
@@ -64,6 +65,8 @@ namespace tdsm.core
 
         public bool RestartWhenNoPlayers { get; set; }
 
+        public static DataRegister Ops { get; private set; }
+
         public Entry()
         {
             this.TDSMBuild = CoreBuild;
@@ -100,6 +103,8 @@ namespace tdsm.core
                 //    Console.WriteLine(msg);
                 //});
             }
+
+            Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
 #if WebInterface
             WebInterface.WebPermissions.Load();
 #endif

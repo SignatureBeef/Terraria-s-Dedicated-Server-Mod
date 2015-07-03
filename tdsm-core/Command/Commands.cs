@@ -1721,12 +1721,11 @@ namespace tdsm.core
         /// <param name="args">Arguments sent with command</param>
         public void OpPlayer(ISender sender, ArgumentList args)
         {
-#if TDSMServer
             var playerName = args.GetString(0);
             var password = args.GetString(1);
 
             Tools.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
-            Server.Ops.Add(playerName, password);
+            Ops.Add(playerName, password);
 
             //Player player;
             //if (args.TryGetOnlinePlayer(0, out player))
@@ -1744,12 +1743,11 @@ namespace tdsm.core
                 player.Op = true;
             }
 
-            if (!Server.Ops.Save())
+            if (!Ops.Save())
             {
                 Tools.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
                 return;
             }
-#endif
         }
 
         /// <summary>
@@ -1772,9 +1770,8 @@ namespace tdsm.core
 
             //    player.Op = false;
             //}
-            
-#if TDSMServer
-            if (Server.Ops.Contains(playerName))
+
+            if (Ops.Contains(playerName))
             {
                 var player = Tools.GetPlayerByName(playerName);
                 if (player != null)
@@ -1784,15 +1781,14 @@ namespace tdsm.core
                 }
 
                 Tools.NotifyAllOps("De-Opping " + playerName + " [" + sender.SenderName + "]", true);
-                Server.Ops.Remove(playerName, true);
+                Ops.Remove(playerName, true);
 
-                if (!Server.Ops.Save())
+                if (!Ops.Save())
                 {
                     Tools.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
                 }
             }
             else sender.SendMessage("No user found by " + playerName);
-#endif
         }
 
         /// <summary>
@@ -1802,11 +1798,10 @@ namespace tdsm.core
         /// <param name="password">Password for verification</param>
         public void OpLogin(ISender sender, string password)
         {
-#if TDSMServer
             if (sender is Player)
             {
                 var player = sender as Player;
-                if (Server.Ops.Contains(player.name, password))
+                if (Ops.Contains(player.name, password))
                 {
                     Tools.NotifyAllOps(
                         String.Format("{0} successfully logged in.", player.Name)
@@ -1819,7 +1814,6 @@ namespace tdsm.core
                     player.SendMessage("Login failed", Color.DarkRed);
                 }
             }
-#endif
         }
 
         /// <summary>
