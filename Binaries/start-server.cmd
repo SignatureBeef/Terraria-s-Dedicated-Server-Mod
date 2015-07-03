@@ -8,7 +8,7 @@ set AutoRestart=1
 :: ~~~~ END USER EDIT ~~~~
 
 :start
-tdsm.microsoft.exe -config serverconfig.txt
+tdsm.exe -config serverconfig.txt
 
 if %AutoRestart%==1 (
 	echo.
