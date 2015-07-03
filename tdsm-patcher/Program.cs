@@ -209,8 +209,8 @@ namespace tdsm.patcher
             //patcher.FixEntryPoint();
             //Console.Write("Ok\nPatching save paths...");
             //patcher.FixSavePath();
-            //Console.Write("Ok\nHooking receive buffer...");
-            //patcher.HookMessageBuffer();
+            Console.Write("Ok\nHooking receive buffer...");
+            patcher.HookMessageBuffer();
             //Console.Write("Ok\nAdding the slot manager...");
             //patcher.PatchServer();
             Console.Write("Ok\nPatching XNA...");
