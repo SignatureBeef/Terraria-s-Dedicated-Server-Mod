@@ -10,18 +10,66 @@ namespace Microsoft.Xna.Framework.Graphics
         public int Height { get; set; }
     }
 
+    public enum BufferUsage
+    {
+        WriteOnly,
+        None
+    }
+
     public class DynamicVertexBuffer : VertexBuffer
     {
         public event EventHandler<EventArgs> ContentLost;
+
+        public DynamicVertexBuffer(
+            GraphicsDevice graphicsDevice,
+            VertexDeclaration vertexDeclaration,
+            int vertexCount,
+            BufferUsage usage
+        )
+        {
+        }
+
+        public DynamicVertexBuffer(
+            GraphicsDevice graphicsDevice,
+            Type vertexType,
+            int vertexCount,
+            BufferUsage usage
+        )
+        {
+        }
 
         public void SetData<T>(T value)
         {
         }
     }
 
+    public enum IndexElementSize
+    {
+        ThirtyTwoBits,
+        SixteenBits
+    }
+
     public class DynamicIndexBuffer: IndexBuffer
     {
         public event EventHandler<EventArgs> ContentLost;
+
+        public DynamicIndexBuffer(
+            GraphicsDevice graphicsDevice,
+            IndexElementSize indexElementSize,
+            int indexCount,
+            BufferUsage usage
+        )
+        {
+        }
+
+        public DynamicIndexBuffer(
+            GraphicsDevice graphicsDevice,
+            Type indexType,
+            int indexCount,
+            BufferUsage usage
+        )
+        {
+        }
     }
 
     public interface IVertexType
@@ -42,7 +90,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public static readonly VertexDeclaration VertexDeclaration;
     }
 
-    public class IndexBuffer
+    public class IndexBuffer : GraphicsResource
     {
         public void SetData<T>(
             int offsetInBytes,

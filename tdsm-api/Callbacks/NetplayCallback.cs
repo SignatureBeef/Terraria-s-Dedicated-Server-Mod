@@ -175,6 +175,10 @@ namespace tdsm.api.Callbacks
 
         bool ISocket.IsConnected ()
         {
+            if (this._connection != null)
+            {
+                var asd = "";
+            }
             return this._connection != null && this._connection.Client != null && this._connection.Connected;
         }
 

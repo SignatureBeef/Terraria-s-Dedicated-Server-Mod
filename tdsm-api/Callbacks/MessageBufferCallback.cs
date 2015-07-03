@@ -118,7 +118,7 @@ namespace tdsm.api.Callbacks
                 NetMessage.SendData(25, -1, -1, chatText, bufferId, (float)color.R, (float)color.G, (float)color.B, 0, 0, 0);
                 if (Main.dedServ)
                 {
-                    Tools.WriteLine("[TDSM] <" + Main.player[bufferId].name + "> " + chatText);
+                    Tools.WriteLine("<" + Main.player[bufferId].name + "> " + chatText);
                 }
             }
         }
