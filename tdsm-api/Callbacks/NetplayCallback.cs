@@ -141,30 +141,50 @@ namespace tdsm.api.Callbacks
         {
             try
             {
-                int len = this._connection.GetStream().Read(data, offset, size);
-                if (callback != null)
-                    callback(state, len);
+                if (this._connection != null && this._connection.Client.Poll(-1, SelectMode.SelectRead))
+                {
+                    if (Globals.IsMono)
+                    {
+                        int len = this._connection.GetStream().Read(data, offset, size);
+                        if (callback != null)
+                            callback(state, len);
+                    }
+                    else
+                        this._connection.GetStream().BeginRead(data, offset, size, new AsyncCallback(this.ReadCallback), new Tuple<SocketReceiveCallback, object>(callback, state));
+                }
+            }
+            catch (ObjectDisposedException)
+            {
             }
             catch (Exception e)
             {
                 Tools.WriteLine(e);
             }
-//            this._connection.GetStream ().BeginRead (data, offset, size, new AsyncCallback (this.ReadCallback), new Tuple<SocketReceiveCallback, object> (callback, state));
         }
 
         void ISocket.AsyncSend(byte[] data, int offset, int size, SocketSendCallback callback, object state)
         {
             try
             {
-                this._connection.GetStream().Write(data, offset, size);
-                if (callback != null)
-                    callback(state);
+                if (this._connection != null && this._connection.Client.Poll(-1, SelectMode.SelectWrite))
+                {
+                    if (Globals.IsMono)
+                    {
+                        this._connection.GetStream().Write(data, offset, size);
+                        if (callback != null)
+                            callback(state);
+                    }
+                    else
+                        this._connection.GetStream().BeginWrite(data, 0, size, new AsyncCallback(this.SendCallback), new Tuple<SocketSendCallback, object>(callback, state));
+                }
+            }
+            catch (ObjectDisposedException)
+            {
             }
             catch (Exception e)
             {
                 Tools.WriteLine(e);
             }
-//            this._connection.GetStream ().BeginWrite (data, 0, size, new AsyncCallback (this.SendCallback), new Tuple<SocketSendCallback, object> (callback, state));
         }
 
         void ISocket.Close()

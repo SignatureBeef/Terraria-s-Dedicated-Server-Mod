@@ -74,6 +74,8 @@ namespace tdsm.api
             { return Path.Combine(SavePath, DataDirectory, CharacterData); }
         }
 
+        public static readonly bool IsMono = Type.GetType("Mono.Runtime") != null;
+
         public static void Touch()
         {
             if (!Directory.Exists(SavePath)) Directory.CreateDirectory(SavePath);
