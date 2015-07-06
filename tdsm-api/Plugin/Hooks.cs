@@ -56,6 +56,7 @@ namespace tdsm.api.Plugin
         public static readonly HookPoint<HookArgs.PlayerEnteringGame> PlayerEnteringGame;
         public static readonly HookPoint<HookArgs.PlayerEnteredGame> PlayerEnteredGame;
         public static readonly HookPoint<HookArgs.PlayerLeftGame> PlayerLeftGame;
+        public static readonly HookPoint<HookArgs.PlayerPreGreeting> PlayerPreGreeting;
 
         public static readonly HookPoint<HookArgs.SignTextSet> SignTextSet;
         public static readonly HookPoint<HookArgs.SignTextGet> SignTextGet;
@@ -135,22 +136,12 @@ namespace tdsm.api.Plugin
             AddBan = new HookPoint<HookArgs.AddBan>("add-ban");
             NPCSpawn = new HookPoint<HookArgs.NPCSpawn>("npc-spawn");
             InvasionNPCSpawn = new HookPoint<HookArgs.InvasionNPCSpawn>("invasion-npc-spawn");
-
-            ////Non API - but to seperate from the patcher
-            //PatchServer = new HookPoint<HookArgs.PatchServer>("patch-server");
+            PlayerPreGreeting = new HookPoint<HookArgs.PlayerPreGreeting>("player-pre-greeting");
         }
     }
 
     public static class HookArgs
     {
-        //        public struct PatchServer
-        //        {
-        ////            public Injector Default;
-        //            public byte[] /*AssemblyDefinition*/ Terraria { get; set; }
-        //            public bool IsServer { get; set; }
-        //            public bool IsClient { get; set; }
-        //        }
-
         public struct NPCSpawn
         {
             public int X { get; set; }
@@ -919,6 +910,15 @@ namespace tdsm.api.Plugin
         public struct PlayerEnteringGame
         {
             public int Slot { get; set; }
+        }
+
+        public struct PlayerPreGreeting
+        {
+            public int Slot { get; set; }
+
+            public string Motd { get; set; }
+
+            public Color MotdColour { get; set; }
         }
 
         public struct PlayerEnteredGame

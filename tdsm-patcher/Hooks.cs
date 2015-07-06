@@ -59,11 +59,11 @@ namespace tdsm.patcher
         }
 
         [Hook]
-        private void OnPlayerJoined()
+        private void OnPlayerEntering()
         {
             var getData = Terraria.MessageBuffer.Methods.Single(x => x.Name == "GetData");
             var match = getData.Body.Instructions.First(x => x.Operand is String && x.Operand.Equals("Empty name."));
-            var callback = API.VanillaHooks.Methods.Single(x => x.Name == "OnPlayerJoined");
+            var callback = API.VanillaHooks.Methods.Single(x => x.Name == "OnPlayerEntering");
 
             var il = getData.Body.GetILProcessor();
 
@@ -89,7 +89,21 @@ namespace tdsm.patcher
 
             il.InsertBefore(match, il.Create(OpCodes.Ldloc, playerObject.Operand as VariableDefinition));
             il.InsertBefore(match, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+        }
 
+        [Hook]
+        private void OnGreetPlayer()
+        {
+            var greetPlayer = Terraria.NetMessage.Methods.Single(x => x.Name == "greetPlayer");
+            var callback = API.VanillaHooks.Methods.Single(x => x.Name == "OnGreetPlayer");
+            var il = greetPlayer.Body.GetILProcessor();
+
+            var first = greetPlayer.Body.Instructions.First();
+
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_0));
+            il.InsertBefore(first, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+            il.InsertBefore(first, il.Create(OpCodes.Brtrue_S, first));
+            il.InsertBefore(first, il.Create(OpCodes.Ret));
         }
 
         [Hook]
