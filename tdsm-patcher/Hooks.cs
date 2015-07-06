@@ -71,6 +71,18 @@ namespace tdsm.patcher
             //il.InsertAfter(firstDifficulty, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
             //il.InsertAfter(firstDifficulty, il.Create(OpCodes.Ldloc, playerObject as VariableDefinition));
         }
+
+        [Hook]
+        private void OnConnectionAccepted()
+        {
+            var oca = Terraria.Netplay.Methods.Single(x => x.Name == "OnConnectionAccepted");
+            var callback = API.NetplayCallback.Methods.Single(x => x.Name == "OnNewConnection");
+            var ldsfld = oca.Body.Instructions.First(x => x.OpCode == OpCodes.Ldsfld);
+
+            var il = oca.Body.GetILProcessor();
+            il.InsertBefore(ldsfld, il.Create(OpCodes.Ldloc_0));
+            il.InsertBefore(ldsfld, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+        }
     }
 
     public class TerrariaOrganiser

@@ -73,24 +73,6 @@ namespace tdsm.api.Callbacks
     //        //}
     //    }
 
-    public static class SocketExtensions
-    {
-        public static bool IsPlaying(this Terraria.RemoteClient sock)
-        {
-            return sock.State == 10;
-        }
-
-        public static bool CanSendWater(this Terraria.RemoteClient sock)
-        {
-            //return state >= 3;
-            return (Terraria.NetMessage.buffer[sock.Id].broadcast || sock.State >= 3) && sock.Socket.IsConnected();
-        }
-
-        public static string RemoteAddress(this Terraria.RemoteClient sock)
-        {
-            return sock.Socket.GetRemoteAddress().ToString();
-        }
-    }
 
     public class TemporarySynchSock : ISocket /* Whoever done this, I love you. */
     {
@@ -370,6 +352,17 @@ namespace tdsm.api.Callbacks
                         Terraria.NetMessage.SendData(48, i, -1, "", x, (float)y, 0f, 0f, 0);
                     }
                 }
+            }
+        }
+
+        public static int LastSlot;
+        public static void OnNewConnection(int slot)
+        {
+            LastSlot = slot;
+            //OnConnectionAccepted
+            if (Terraria.Netplay.Clients[slot].Socket is ClientConnection)
+            {
+                ((ClientConnection)Terraria.Netplay.Clients[slot].Socket).Set(slot);
             }
         }
     }

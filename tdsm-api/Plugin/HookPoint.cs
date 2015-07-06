@@ -1,4 +1,5 @@
 ﻿using System;
+using tdsm.api;
 using tdsm.api.Command;
 #if Full_API
 using Terraria;
@@ -11,7 +12,17 @@ namespace tdsm.api.Plugin
 
     public struct HookContext
     {
-        public IPlayerConnection Connection { get; set; }
+        public Terraria.Net.Sockets.ISocket Connection { get; set; }
+
+//        public RemoteClient Client { get; set; }
+
+        public int SlotId { get; set; }
+
+        public RemoteClient Client
+        {
+            get { return Terraria.Netplay.Clients[SlotId]; }
+        }
+
         public ISender Sender { get; set; }
 #if Full_API
         public Player Player { get; set; }
@@ -30,10 +41,11 @@ namespace tdsm.api.Plugin
                 if (Result == HookResult.KICK)
                 {
                     var reason = ResultParam as string;
-                    Connection.Kick(reason ?? "Connection closed by plugin.");
+                    Client.Kick(reason ?? "Connection closed by plugin.");
                     return true;
                 }
-                else if (Connection.DisconnectInProgress())
+//                else if (Connection.DisconnectInProgress())
+                else if(Client.PendingTermination)
                 {
                     return true;
                 }

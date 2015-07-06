@@ -1021,9 +1021,12 @@ namespace tdsm.patcher
             var il = getData.Body.GetILProcessor();
             il.InsertAfter(insertionPoint, il.Create(OpCodes.Stloc_0));
             il.InsertAfter(insertionPoint, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+//            il.InsertAfter(insertionPoint, il.Create(OpCodes.Ldarg_2));
+//            il.InsertAfter(insertionPoint, il.Create(OpCodes.Ldloc_1));
             il.InsertAfter(insertionPoint, il.Create(OpCodes.Ldloc_0));
             il.InsertAfter(insertionPoint, il.Create(OpCodes.Ldfld, whoAmI));
             il.InsertAfter(insertionPoint, il.Create(OpCodes.Ldarg_0));
+
         }
 
         public void RemoveClientCode()

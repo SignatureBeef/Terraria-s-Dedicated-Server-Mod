@@ -35,7 +35,7 @@
         OPEN_CHEST = 31,
         CHEST_ITEM = 32,
         PLAYER_CHEST_UPDATE = 33,
-        KILL_TILE = 34,
+        CHEST = 34,
         HEAL_PLAYER = 35,
         ENTER_ZONE = 36,
         PASSWORD_REQUEST = 37,

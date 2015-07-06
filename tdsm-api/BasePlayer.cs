@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Concurrent;
+using tdsm.api;
 using tdsm.api.Command;
+using Terraria.Net.Sockets;
 
 namespace tdsm.api
 {
@@ -10,6 +12,7 @@ namespace tdsm.api
         public string ClientUUId { get; set; }
 
         public string AuthenticatedAs { get; set; }
+
         public string AuthenticatedBy { get; set; }
 
         public ConcurrentDictionary<String, Object> PluginData = new ConcurrentDictionary<String, Object>();
@@ -19,7 +22,7 @@ namespace tdsm.api
             var ctx = new Plugin.HookContext()
             {
                 Player = this as Terraria.Player,
-                Connection = this.Connection
+                Connection = this.Connection.Socket
             };
             var changing = new Plugin.HookArgs.PlayerAuthenticationChanging()
             {
@@ -28,7 +31,8 @@ namespace tdsm.api
             };
 
             Plugin.HookPoints.PlayerAuthenticationChanging.Invoke(ref ctx, ref changing);
-            if (ctx.Result != Plugin.HookResult.CONTINUE) return;
+            if (ctx.Result != Plugin.HookResult.CONTINUE)
+                return;
 
             this.AuthenticatedAs = auth;
             this.AuthenticatedBy = by;
@@ -36,7 +40,7 @@ namespace tdsm.api
             ctx = new Plugin.HookContext()
             {
                 Player = this as Terraria.Player,
-                Connection = this.Connection
+                Connection = this.Connection.Socket
             };
             var changed = new Plugin.HookArgs.PlayerAuthenticationChanged()
             {
@@ -74,11 +78,16 @@ namespace tdsm.api
             SendMessage(message, 255, color.R, color.G, color.B);
         }
 
-        public IPlayerConnection Connection;
+        //        public ClientConnection Connection;
+        public Terraria.RemoteClient Connection
+        {
+            get { return Terraria.Netplay.Clients[this.whoAmI]; }
+        }
+
         public string IPAddress;
         public string DisconnectReason;
 
-#if Full_API
+        #if Full_API
         /// <summary>
         /// Teleports a player to another player
         /// </summary>
@@ -120,9 +129,9 @@ namespace tdsm.api
         /// </summary>
         /// <param name="reason"></param>
         /// <param name="announce"></param>
-        public void Kick(string reason, bool announce = true)
+        public void Kick(string reason)
         {
-            Connection.Kick(reason, announce);
+            Connection.Kick(reason);
         }
 
         /// <summary>
@@ -146,7 +155,8 @@ namespace tdsm.api
                 if (netId < 0)
                     Terraria.Main.item[index].netDefaults(netId);
 
-                if (prefix > 0) Terraria.Main.item[index].Prefix(prefix);
+                if (prefix > 0)
+                    Terraria.Main.item[index].Prefix(prefix);
 
                 if (notifyOps)
                     Tools.NotifyAllOps("Giving " + this.Name + " some " + Terraria.Main.item[index].name + " (" + itemId.ToString() + ") [" + sender.SenderName + "]", true);
@@ -155,6 +165,6 @@ namespace tdsm.api
             }
             return -1;
         }
-#endif
+        #endif
     }
 }

@@ -252,8 +252,8 @@ namespace tdsm.patcher
             patcher.FixNetplay();
 //            patcher.DetectMissingXNA();
 
-            //Console.Write("Ok\n");
-            //patcher.InjectHooks();
+            Console.Write("Ok\n");
+            patcher.InjectHooks();
 
             //            Console.Write("Ok\nPutting Terraria on a diet...");
             //            patcher.ChangeTileToStruct();

@@ -9,7 +9,6 @@ namespace tdsm.api.Callbacks
         {
             var ctx = new HookContext
             {
-                Connection = player.Connection,
                 Player = player,
                 Sender = player
             };

@@ -21,7 +21,8 @@ namespace tdsm.api.Plugin
         public static readonly HookPoint<HookArgs.PluginLoadRequest> PluginLoadRequest;
         //public static readonly HookPoint<HookArgs.UnkownSendPacket> UnkownSendPacket;
         //public static readonly HookPoint<HookArgs.UnkownReceivedPacket> UnkownReceivedPacket;
-        public static readonly HookPoint<HookArgs.SendNetData> SendNetData; //[TODO] determine if this should be a Action<...>
+        public static readonly HookPoint<HookArgs.SendNetData> SendNetData;
+        //[TODO] determine if this should be a Action<...>
 
         public static readonly HookPoint<HookArgs.ConnectionRequestReceived> ConnectionRequestReceived;
         public static readonly HookPoint<HookArgs.DisconnectReceived> DisconnectReceived;
@@ -153,26 +154,32 @@ namespace tdsm.api.Plugin
         public struct NPCSpawn
         {
             public int X { get; set; }
+
             public int Y { get; set; }
+
             public int Type { get; set; }
+
             public int Start { get; set; }
         }
 
         public struct PlayerAuthenticationChanging
         {
             public string AuthenticatedAs { get; set; }
+
             public string AuthenticatedBy { get; set; }
         }
 
         public struct PlayerAuthenticationChanged
         {
             public string AuthenticatedAs { get; set; }
+
             public string AuthenticatedBy { get; set; }
         }
 
         public struct InvasionNPCSpawn
         {
             public int X { get; set; }
+
             public int Y { get; set; }
         }
 
@@ -184,19 +191,28 @@ namespace tdsm.api.Plugin
         public struct ConfigurationLine
         {
             public string Key { get; set; }
+
             public string Value { get; set; }
         }
 
         public struct SendNetData
         {
             public int MsgType { get; set; }
+
             public int RemoteClient { get; set; }
+
             public int IgnoreClient { get; set; }
+
             public string Text { get; set; }
+
             public int Number { get; set; }
+
             public float Number2 { get; set; }
+
             public float Number3 { get; set; }
+
             public float Number4 { get; set; }
+
             public int Number5 { get; set; }
         }
         //public struct StatusTextChanged { }
@@ -204,40 +220,62 @@ namespace tdsm.api.Plugin
         //    public string Old { get; set; }
         //    public string New { get; set; }
         //}
-        public struct StartDefaultServer { }
-        public struct StartCommandProcessing { }
+        public struct StartDefaultServer
+        {
+
+        }
+
+        public struct StartCommandProcessing
+        {
+
+        }
 
         public struct WorldRequestMessage
         {
             public int SpawnX { get; set; }
+
             public int SpawnY { get; set; }
         }
 
         public struct UnkownReceivedPacket
         {
-            public IPlayerConnection Connection { get; set; }
+            public ClientConnection Connection { get; set; }
+
             public byte[] ReadBuffer { get; set; }
+
             public int Start { get; set; }
+
             public int Length { get; set; }
         }
 
         public struct UnkownSendPacket
         {
-#if Full_API
+            #if Full_API
             public NetMessage Message { get; set; }
-#endif
+            #endif
             public int PacketId { get; set; }
+
             public int RemoteClient { get; set; }
+
             public int IgnoreClient { get; set; }
+
             public string Text { get; set; }
+
             public int Number { get; set; }
+
             public float Number2 { get; set; }
+
             public float Number3 { get; set; }
+
             public float Number4 { get; set; }
+
             public int Number5 { get; set; }
         }
 
-        public struct WorldGeneration { }
+        public struct WorldGeneration
+        {
+
+        }
 
         public struct NewConnection
         {
@@ -263,6 +301,7 @@ namespace tdsm.api.Plugin
         public struct PluginLoadRequest
         {
             public string Path { get; set; }
+
             public BasePlugin LoadedPlugin { get; set; }
         }
 
@@ -274,6 +313,7 @@ namespace tdsm.api.Plugin
         public struct DisconnectReceived
         {
             public string Content { get; set; }
+
             public string[] Lines { get; set; }
         }
 
@@ -290,87 +330,135 @@ namespace tdsm.api.Plugin
         public struct PlayerDataReceived
         {
             public bool IsConnecting { get; set; }
+
             public string Name { get; set; }
 
-            public byte Hair { get; set; }
+            public int SkinVariant { get; set; }
+
+            public int Hair { get; set; }
+
             public byte HairDye { get; set; }
-            public byte HideVisual { get; set; }
-            public bool Male { get; set; }
+
+            public bool[] HideVisual { get; set; }
+
+            public byte HideMisc { get; set; }
+
             public byte Difficulty { get; set; }
 
+            public bool ExtraAccessory { get; set; }
+
+
             public Color HairColor { get; set; }
+
             public Color SkinColor { get; set; }
+
             public Color EyeColor { get; set; }
+
             public Color ShirtColor { get; set; }
-            public Color UndershirtColor { get; set; }
+
+            public Color UnderShirtColor { get; set; }
+
             public Color PantsColor { get; set; }
+
             public Color ShoeColor { get; set; }
 
+
             public bool NameChecked { get; set; }
+
             public bool BansChecked { get; set; }
+
             public bool WhitelistChecked { get; set; }
 
             public int Parse(byte[] buf, int at, int length)
             {
-                int start = at - 2;
+                var start = at + 1;
 
-                Male = buf[at++] != 1;
-                Hair = buf[at++];
+//                var playerId = (int)buf[at++];
+                //            if (Main.netMode == 2)
+                //            {
+                //                num6 = bufferId;
+                //            }
 
-                if (Hair >= 123)
-                {
+                SkinVariant = (int)MathHelper.Clamp((float)buf[at++], 0, 7);
+                Hair = (int)buf[at++];
+                if (Hair >= 134)
                     Hair = 0;
-                }
-
+                
                 int len = 0;
                 while (true)
                 {
                     len += buf[at] & 0x7F;
                     if (buf[at++] > 127)
                         len <<= 7;
-                    else break;
+                    else
+                        break;
                 }
 
-                Name = System.Text.Encoding.UTF8.GetString(buf, at, len);
-                at += len;
+                Name = System.Text.Encoding.UTF8.GetString(buf, at, len).Trim();
 
                 HairDye = buf[at++];
-                HideVisual = buf[at++];
+                BitsByte bitsByte = buf[at++];
+                HideVisual = new bool[8 * 2];
+                for (int num7 = 0; num7 < 8; num7++)
+                {
+                    HideVisual[num7] = bitsByte[num7];
+                }
+                bitsByte = buf[at++];
+                for (int num8 = 0; num8 < 2; num8++)
+                {
+                    HideVisual[num8 + 8] = bitsByte[num8];
+                }
+                HideMisc = buf[at++];
+                HairColor = ParseColor(buf, ref at);
+                SkinColor = ParseColor(buf, ref at);
+                EyeColor = ParseColor(buf, ref at);
+                ShirtColor = ParseColor(buf, ref at);
+                UnderShirtColor = ParseColor(buf, ref at);
+                PantsColor = ParseColor(buf, ref at);
+                ShoeColor = ParseColor(buf, ref at);
+                BitsByte bitsByte2 = buf[at++];
+                Difficulty = 0;
+                if (bitsByte2[0])
+                {
+                    Difficulty += 1;
+                }
+                if (bitsByte2[1])
+                {
+                    Difficulty += 2;
+                }
+                if (Difficulty > 2)
+                {
+                    Difficulty = 2;
+                }
+                ExtraAccessory = bitsByte2[2];
 
-                HairColor = ParseColor(buf, at); at += 3;
-                SkinColor = ParseColor(buf, at); at += 3;
-                EyeColor = ParseColor(buf, at); at += 3;
-                ShirtColor = ParseColor(buf, at); at += 3;
-                UndershirtColor = ParseColor(buf, at); at += 3;
-                PantsColor = ParseColor(buf, at); at += 3;
-                ShoeColor = ParseColor(buf, at); at += 3;
-
-                Difficulty = buf[at++];
-
-                //Name = System.Text.Encoding.ASCII.GetString(buf, at, length - at + start).Trim();
-
-                return at - (start + 2);
+                return at - (start + 1);
             }
 
-#if Full_API
+            #if Full_API
             public void Apply(Player player)
             {
-                player.hair = Hair;
-                //player.male = Male;
                 player.difficulty = Difficulty;
                 player.name = Name;
+
+                player.skinVariant = SkinVariant;
+                player.hair = Hair;
+                player.hairDye = HairDye;
+                player.hideVisual = HideVisual;
+                player.hideMisc = HideMisc;
 
                 player.hairColor = HairColor;
                 player.skinColor = SkinColor;
                 player.eyeColor = EyeColor;
                 player.shirtColor = ShirtColor;
-                player.underShirtColor = UndershirtColor;
-                player.shoeColor = ShoeColor;
+                player.underShirtColor = UnderShirtColor;
                 player.pantsColor = PantsColor;
+                player.shoeColor = ShoeColor;
+                player.extraAccessory = ExtraAccessory;
             }
-#endif
+            #endif
 
-            public static Color ParseColor(byte[] buf, int at)
+            public static Color ParseColor(byte[] buf, ref int at)
             {
                 return new Color(buf[at++], buf[at++], buf[at++]);
             }
@@ -416,14 +504,17 @@ namespace tdsm.api.Plugin
         public struct StateUpdateReceived
         {
             public byte FlagsA { get; set; }
+
             public byte FlagsB { get; set; }
 
             public byte SelectedItemIndex { get; set; }
 
             public float X { get; set; }
+
             public float Y { get; set; }
 
             public float VX { get; set; }
+
             public float VY { get; set; }
 
             public bool ControlUp
@@ -502,7 +593,7 @@ namespace tdsm.api.Plugin
                     FlagsB &= (byte)~f;
             }
 
-#if Full_API
+            #if Full_API
             public void ApplyKeys(Player player)
             {
                 player.controlUp = ControlUp;
@@ -525,7 +616,7 @@ namespace tdsm.api.Plugin
                 player.pulley = Pulley;
                 player.pulleyDir = PulleyDirection;
             }
-#endif
+            #endif
 
             public void Parse(byte[] buf, int at)
             {
@@ -534,9 +625,12 @@ namespace tdsm.api.Plugin
 
                 SelectedItemIndex = buf[at++];
 
-                X = BitConverter.ToSingle(buf, at); at += 4;
-                Y = BitConverter.ToSingle(buf, at); at += 4;
-                VX = BitConverter.ToSingle(buf, at); at += 4;
+                X = BitConverter.ToSingle(buf, at);
+                at += 4;
+                Y = BitConverter.ToSingle(buf, at);
+                at += 4;
+                VX = BitConverter.ToSingle(buf, at);
+                at += 4;
                 VY = BitConverter.ToSingle(buf, at);
             }
         }
@@ -544,14 +638,18 @@ namespace tdsm.api.Plugin
         public struct InventoryItemReceived
         {
             public int InventorySlot { get; set; }
+
             public int Amount { get; set; }
+
             public string Name { get; set; }
+
             public int Prefix { get; set; }
+
             public int NetID { get; set; }
 
-#if Full_API
+            #if Full_API
             public Item Item { get; set; }
-#endif
+            #endif
 
             public void SetItem()
             {
@@ -567,8 +665,11 @@ namespace tdsm.api.Plugin
         public struct ObituaryReceived
         {
             public int Direction { get; set; }
+
             public int Damage { get; set; }
+
             public byte PvpFlag { get; set; }
+
             public string Obituary { get; set; }
         }
 
@@ -585,9 +686,13 @@ namespace tdsm.api.Plugin
         public struct PlayerWorldAlteration
         {
             public int X { get; set; }
+
             public int Y { get; set; }
+
             public byte Action { get; set; }
+
             public short Type { get; set; }
+
             public int Style { get; set; }
 
             public bool TypeChecked { get; set; }
@@ -606,13 +711,17 @@ namespace tdsm.api.Plugin
                 {
                     if (value)
                     {
-                        if (Action == 0) Action = 4;
-                        else if (Action == 100) Action = 101;
+                        if (Action == 0)
+                            Action = 4;
+                        else if (Action == 100)
+                            Action = 101;
                     }
                     else
                     {
-                        if (Action == 4) Action = 0;
-                        else if (Action == 101) Action = 100;
+                        if (Action == 4)
+                            Action = 0;
+                        else if (Action == 101)
+                            Action = 100;
                     }
                 }
             }
@@ -635,25 +744,32 @@ namespace tdsm.api.Plugin
             public bool RemovalFailed
             {
                 get { return Type == 1 && (Action == 0 || Action == 2 || Action == 4); }
-                set { if (Action == 0 || Action == 2 || Action == 4) Type = value ? (byte)1 : (byte)0; }
+                set
+                {
+                    if (Action == 0 || Action == 2 || Action == 4)
+                        Type = value ? (byte)1 : (byte)0;
+                }
             }
 
-#if Full_API
+            #if Full_API
             public Terraria.Tile Tile
             {
                 get
                 { return Main.tile[X, Y]; }
             }
-#endif
+            #endif
         }
 
         public struct DoorStateChanged
         {
             public int X { get; set; }
+
             public int Y { get; set; }
+
             public int Direction { get; set; }
 
             public bool Open { get; set; }
+
             public bool Close
             {
                 get { return !Open; }
@@ -664,10 +780,13 @@ namespace tdsm.api.Plugin
         public struct LiquidFlowReceived
         {
             public int X { get; set; }
+
             public int Y { get; set; }
+
             public byte Amount { get; set; }
 
             public bool Lava { get; set; }
+
             public bool Water
             {
                 get { return !Lava; }
@@ -678,16 +797,22 @@ namespace tdsm.api.Plugin
         public struct ProjectileReceived
         {
             public int Id { get; set; }
+
             public Vector2 Position { get; set; }
+
             public Vector2 Velocity { get; set; }
             //public float X { get; set; }
             //public float Y { get; set; }
             //public float VX { get; set; }
             //public float VY { get; set; }
             public float Knockback { get; set; }
+
             public int Damage { get; set; }
+
             public int Owner { get; set; }
+
             public int Type { get; set; }
+
             public float[] AI { get; set; }
 
             public float AI_0
@@ -704,12 +829,13 @@ namespace tdsm.api.Plugin
 
             public int ExistingIndex { get; set; }
 
-#if Full_API
+            #if Full_API
             internal Projectile projectile;
 
             public Projectile CreateProjectile()
             {
-                if (projectile != null) return projectile;
+                if (projectile != null)
+                    return projectile;
 
                 //                var index = Projectile.ReserveSlot(Id, Owner);
                 //
@@ -755,33 +881,38 @@ namespace tdsm.api.Plugin
             {
                 get { return Main.projectile[Id]; }
             }
-#endif
+            #endif
         }
 
         public struct KillProjectileReceived
         {
             public int Index { get; set; }
+
             public int Id { get; set; }
+
             public int Owner { get; set; }
         }
 
         public struct Explosion
         {
-#if Full_API
+            #if Full_API
             public Projectile Source { get; set; }
-#endif
+            #endif
         }
 
         public struct ChestBreakReceived
         {
             public int X { get; set; }
+
             public int Y { get; set; }
         }
 
         public struct ChestOpenReceived
         {
             public int X { get; set; }
+
             public int Y { get; set; }
+
             public int ChestIndex { get; set; }
         }
 
@@ -803,20 +934,26 @@ namespace tdsm.api.Plugin
         public struct SignTextGet
         {
             public int X { get; set; }
+
             public int Y { get; set; }
+
             public short SignIndex { get; set; }
+
             public string Text { get; set; }
         }
 
         public struct SignTextSet
         {
             public int X { get; set; }
+
             public int Y { get; set; }
+
             public short SignIndex { get; set; }
+
             public string Text { get; set; }
-#if Full_API
+            #if Full_API
             public Sign OldSign { get; set; }
-#endif
+            #endif
         }
 
         public struct PluginsLoaded
@@ -826,70 +963,88 @@ namespace tdsm.api.Plugin
         public struct WorldLoaded
         {
             public int Width { get; set; }
+
             public int Height { get; set; }
         }
 
         public struct PlayerHurt
         {
-#if Full_API
+            #if Full_API
             public Player Victim { get; internal set; }
-#endif
+            #endif
             public int Damage { get; set; }
+
             public int HitDirection { get; set; }
+
             public bool Pvp { get; set; }
+
             public bool Quiet { get; set; }
+
             public string Obituary { get; set; }
+
             public bool Critical { get; set; }
         }
 
         public struct NpcHurt
         {
-#if Full_API
+            #if Full_API
             public NPC Victim { get; set; }
-#endif
+            #endif
             public int Damage { get; set; }
+
             public int HitDirection { get; set; }
+
             public float Knockback { get; set; }
+
             public bool Critical { get; set; }
         }
 
         public struct NpcCreation
         {
             public int X { get; set; }
+
             public int Y { get; set; }
+
             public string Name { get; set; }
 
-#if Full_API
+            #if Full_API
             public NPC CreatedNpc { get; set; }
-#endif
+            #endif
         }
 
         public struct PlayerTriggeredEvent
         {
             public int X { get; set; }
+
             public int Y { get; set; }
 
             public WorldEventType Type { get; set; }
+
             public string Name { get; set; }
         }
 
         public struct PlayerChat
         {
             public string Message { get; set; }
+
             public Color Color { get; set; }
         }
 
         public struct Command
         {
             public string Prefix { get; internal set; }
+
             public ArgumentList Arguments { get; set; }
+
             public string ArgumentString { get; set; }
         }
 
         public struct TileSquareReceived
         {
             public int X { get; set; }
+
             public int Y { get; set; }
+
             public int Size { get; set; }
 
             public byte[] readBuffer;

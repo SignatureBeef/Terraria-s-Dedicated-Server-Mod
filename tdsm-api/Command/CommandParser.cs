@@ -538,7 +538,7 @@ namespace tdsm.api.Command
             };
 
 #if Full_API
-            ctx.Connection = ctx.Player != null ? ctx.Player.Connection : null;
+            ctx.Connection = ctx.Player != null ? ctx.Player.Connection.Socket : null;
 #endif
 
             var hargs = new HookArgs.Command();

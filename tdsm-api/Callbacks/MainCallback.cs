@@ -185,6 +185,18 @@ namespace tdsm.api.Callbacks
             if (UpdateServer != null)
                 UpdateServer();
 
+
+            for (var i = 0; i < Terraria.Netplay.Clients.Length; i++)
+            {
+                var client = Terraria.Netplay.Clients[i];
+//                if (player.active)
+                if(client != null && client.Socket != null && client.Socket is ClientConnection)
+                {
+                    var conn = (client.Socket as ClientConnection);
+                    if (conn != null)
+                        conn.Flush();
+                }
+            }
             //var ctx = new HookContext()
             //{
             //    Sender = HookContext.ConsoleSender
