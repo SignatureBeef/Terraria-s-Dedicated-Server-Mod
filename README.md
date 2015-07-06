@@ -9,7 +9,7 @@ TDSM Rebind for Terraria 1.2.4.1 replaces the old TDSM that we stopped supportin
 Should you need help the wiki is currently in progress, but you still may view it right [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki) on GitHub.
 
 ## Live Chat
-You can chat with the team live or among other TDSM users from the community live! All are welcome to join the chat, hang out, arrange games, ask questions, and chat with the team. Join us on [Slack](http://tdsm.sithous.com/slack).
+You can chat with the team live or among others TDSM users from the community live! All are welcome to join the chat, hang out, arrange games, ask questions, and chat with the team. Join us on [Slack](http://tdsm.sithous.com/slack).
 
 ##Getting the new TDSM Rebind:
 You can either compile from source or grab the latest release located [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases).
