@@ -62,14 +62,34 @@ namespace tdsm.patcher
         private void OnPlayerJoined()
         {
             var getData = Terraria.MessageBuffer.Methods.Single(x => x.Name == "GetData");
-            var firstDifficulty = getData.Body.Instructions.First(x => x.Operand is FieldReference && (x.Operand as FieldReference).Name == "difficulty");
+            var match = getData.Body.Instructions.First(x => x.Operand is String && x.Operand.Equals("Empty name."));
             var callback = API.VanillaHooks.Methods.Single(x => x.Name == "OnPlayerJoined");
 
             var il = getData.Body.GetILProcessor();
-            var playerObject = firstDifficulty.Previous.Previous.Previous.Previous.Operand;
 
-            //il.InsertAfter(firstDifficulty, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
-            //il.InsertAfter(firstDifficulty, il.Create(OpCodes.Ldloc, playerObject as VariableDefinition));
+            //Find the second RETURN and insert our callback just before.
+            int count = 0;
+            while (count < 2)
+            {
+                match = match.Next;
+
+                if (match.OpCode == OpCodes.Ret)
+                    count++;
+            }
+
+            var playerObject = match.Previous;
+            count = 0;
+            while (count < 2)
+            {
+                playerObject = playerObject.Previous;
+
+                if (playerObject.OpCode == OpCodes.Ldloc_S)
+                    count++;
+            }
+
+            il.InsertBefore(match, il.Create(OpCodes.Ldloc, playerObject.Operand as VariableDefinition));
+            il.InsertBefore(match, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+
         }
 
         [Hook]
