@@ -36,7 +36,7 @@ namespace tdsm.api.Callbacks
                     ProcessChestOpen(bufferId);
                     return 0;
                 case Packet.TILE_SQUARE:
-
+                    ProcessTileSquare(bufferId);
                     return 0;
             }
 
