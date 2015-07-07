@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using tdsm.api;
-using tdsm.core.Logging;
+using tdsm.api.Logging;
 
 namespace tdsm.core.Definitions
 {

@@ -6,8 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using tdsm.api;
-using tdsm.core.Logging;
-using tdsm.core.Misc;
+using tdsm.api.Logging;
 using tdsm.api.Misc;
 
 

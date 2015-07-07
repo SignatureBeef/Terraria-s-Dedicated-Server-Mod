@@ -7,7 +7,7 @@ using tdsm.api;
 using tdsm.api.Command;
 using tdsm.api.Misc;
 using tdsm.core.Definitions;
-using tdsm.core.Logging;
+using tdsm.api.Logging;
 //using tdsm.core.Messages.Out;
 //using tdsm.core.ServerCore;
 using Terraria;

@@ -148,7 +148,7 @@ namespace tdsm.api.Plugin
         {
             public string Message { get; set; }
 
-            public tdsm.core.Logging.SendingLogger Logger { get; set; }
+            public tdsm.api.Logging.SendingLogger Logger { get; set; }
         }
 
         public struct NPCSpawn

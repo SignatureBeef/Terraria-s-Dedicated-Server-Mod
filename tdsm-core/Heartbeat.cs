@@ -7,7 +7,7 @@ using System.Net;
 using System.Text;
 using tdsm.api;
 using tdsm.api.Misc;
-using tdsm.core.Logging;
+using tdsm.api.Logging;
 
 namespace tdsm.core
 {

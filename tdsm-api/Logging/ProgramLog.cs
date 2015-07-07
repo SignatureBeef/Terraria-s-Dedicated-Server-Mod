@@ -6,7 +6,7 @@ using tdsm.core.Misc;
 using System.IO;
 using tdsm.api.Misc;
 
-namespace tdsm.core.Logging
+namespace tdsm.api.Logging
 {
     public static class ProgramLog
     {

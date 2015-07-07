@@ -5,7 +5,7 @@ using tdsm.api.Plugin;
 using tdsm.core.Misc;
 using tdsm.api.Misc;
 
-namespace tdsm.core.Logging
+namespace tdsm.api.Logging
 {
 	public struct OutputEntry
 	{

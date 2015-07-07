@@ -1,6 +1,6 @@
 using System;
 
-namespace tdsm.core.Logging
+namespace tdsm.api.Logging
 {
 	public class LogChannel
 	{

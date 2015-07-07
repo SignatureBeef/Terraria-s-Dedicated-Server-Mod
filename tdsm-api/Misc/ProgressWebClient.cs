@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using tdsm.core.Logging;
+using tdsm.api.Logging;
 
 namespace tdsm.api.Misc
 {

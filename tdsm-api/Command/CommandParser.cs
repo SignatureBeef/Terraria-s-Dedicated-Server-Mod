@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using tdsm.api.Plugin;
+using tdsm.api.Misc;
+
+
 #if Full_API
 using Terraria;
 #endif
