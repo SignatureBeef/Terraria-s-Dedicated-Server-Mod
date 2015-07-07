@@ -937,7 +937,7 @@ namespace tdsm.api.Plugin
 
             public int Y { get; set; }
 
-            public short SignIndex { get; set; }
+            public int SignIndex { get; set; }
 
             public string Text { get; set; }
         }
@@ -948,7 +948,7 @@ namespace tdsm.api.Plugin
 
             public int Y { get; set; }
 
-            public short SignIndex { get; set; }
+            public int SignIndex { get; set; }
 
             public string Text { get; set; }
             #if Full_API

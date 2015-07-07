@@ -38,9 +38,121 @@ namespace tdsm.api.Callbacks
                 case Packet.TILE_SQUARE:
                     ProcessTileSquare(bufferId);
                     return 0;
+                case Packet.READ_SIGN:
+                    ProcessReadSign(bufferId);
+                    return 0;
+                case Packet.WRITE_SIGN:
+                    ProcessWriteSign(bufferId);
+                    return 0;
             }
 
             return packetId;
+        }
+
+        private static void ProcessReadSign(int bufferId)
+        {
+            var buffer = NetMessage.buffer[bufferId];
+            var player = Main.player[bufferId];
+
+            if (Main.netMode != 2)
+            {
+                return;
+            }
+            int x = (int)buffer.reader.ReadInt16();
+            int y = (int)buffer.reader.ReadInt16();
+            int id = Sign.ReadSign(x, y, true);
+
+            if (id >= 0)
+            {
+                var ctx = new HookContext
+                {
+                    Connection = player.Connection.Socket,
+                    Sender = player,
+                    Player = player
+                };
+
+                var args = new HookArgs.SignTextGet
+                {
+                    X = x,
+                    Y = y,
+                    SignIndex = (short)id,
+                    Text = (id >= 0 && Main.sign[id] != null) ? Main.sign[id].text : null,
+                };
+
+                HookPoints.SignTextGet.Invoke(ref ctx, ref args);
+
+                if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
+                    return;
+
+                if (args.Text != null)
+                {
+                    NetMessage.SendData(47, bufferId, -1, "", id, (float)bufferId, 0, 0, 0, 0, 0);
+                    return;
+                }
+            }
+        }
+
+        private static void ProcessWriteSign(int bufferId)
+        {
+            var buffer = NetMessage.buffer[bufferId];
+            var player = Main.player[bufferId];
+
+            int signId = (int)buffer.reader.ReadInt16();
+            int x = (int)buffer.reader.ReadInt16();
+            int y = (int)buffer.reader.ReadInt16();
+            string text = buffer.reader.ReadString();
+
+            string existing = null;
+            if (Main.sign[signId] != null)
+            {
+                existing = Main.sign[signId].text;
+            }
+
+            Main.sign[signId] = new Sign();
+            Main.sign[signId].x = x;
+            Main.sign[signId].y = y;
+
+            Sign.TextSign(signId, text);
+            int ply = (int)buffer.reader.ReadByte();
+
+
+            var ctx = new HookContext
+            {
+                Connection = player.Connection.Socket,
+                Sender = player,
+                Player = player,
+            };
+
+            var args = new HookArgs.SignTextSet
+            {
+                X = x,
+                Y = y,
+                SignIndex = signId,
+                Text = text,
+                OldSign = Main.sign[signId],
+            };
+
+            HookPoints.SignTextSet.Invoke(ref ctx, ref args);
+
+            if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
+                return;
+            
+            if (Main.netMode == 2 && existing != text)
+            {
+                ply = bufferId;
+                NetMessage.SendData(47, -1, bufferId, "", signId, (float)ply, 0, 0, 0, 0, 0);
+            }
+
+            if (Main.netMode == 1 && ply == Main.myPlayer && Main.sign[signId] != null)
+            {
+                Main.playerInventory = false;
+                Main.player[Main.myPlayer].talkNPC = -1;
+                Main.npcChatCornerItem = 0;
+                Main.editSign = false;
+                Main.PlaySound(10, -1, -1, 1);
+                Main.player[Main.myPlayer].sign = signId;
+                Main.npcChatText = Main.sign[signId].text;
+            }
         }
 
         private static void ProcessTileSquare(int bufferId)

@@ -140,7 +140,8 @@ namespace tdsm.api.Callbacks
             }
             catch (Exception e)
             {
-                Tools.WriteLine(e);
+//                Tools.WriteLine(e);
+                throw e;
             }
         }
 
@@ -165,7 +166,8 @@ namespace tdsm.api.Callbacks
             }
             catch (Exception e)
             {
-                Tools.WriteLine(e);
+//                Tools.WriteLine(e);
+                throw e;
             }
         }
 
