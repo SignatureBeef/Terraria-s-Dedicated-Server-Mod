@@ -8,6 +8,9 @@ using System.Net;
 using tdsm.api;
 using tdsm.core.Logging;
 using tdsm.core.Misc;
+using tdsm.api.Misc;
+
+
 namespace tdsm.core
 {
     public class RepositoryError : Exception

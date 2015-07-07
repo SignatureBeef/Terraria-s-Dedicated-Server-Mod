@@ -10,6 +10,7 @@ namespace tdsm.api.Plugin
 {
     public static class HookPoints
     {
+        public static readonly HookPoint<HookArgs.ConsoleMessageReceived> ConsoleMessageReceived;
         public static readonly HookPoint<HookArgs.ConfigurationLine> ConfigurationLine;
         public static readonly HookPoint<HookArgs.StartDefaultServer> StartDefaultServer;
         //public static readonly HookPoint<HookArgs.StatusTextChanged> StatusTextChanged;
@@ -84,6 +85,7 @@ namespace tdsm.api.Plugin
 
         static HookPoints()
         {
+            ConsoleMessageReceived = new HookPoint<HookArgs.ConsoleMessageReceived>("console-message-received");
             //UnkownReceivedPacket = new HookPoint<HookArgs.UnkownReceivedPacket>("unkown-receive-packet");
             //UnkownSendPacket = new HookPoint<HookArgs.UnkownSendPacket>("unkown-send-packet");
             //PlayerTeleport = new HookPoint<HookArgs.PlayerTeleport>("player-teleport");
@@ -142,6 +144,13 @@ namespace tdsm.api.Plugin
 
     public static class HookArgs
     {
+        public struct ConsoleMessageReceived
+        {
+            public string Message { get; set; }
+
+            public tdsm.core.Logging.SendingLogger Logger { get; set; }
+        }
+
         public struct NPCSpawn
         {
             public int X { get; set; }

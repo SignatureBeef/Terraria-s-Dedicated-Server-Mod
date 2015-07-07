@@ -13,6 +13,7 @@ using tdsm.core.Definitions;
 using tdsm.core.Logging;
 using tdsm.core.Misc;
 using tdsm.api.Misc;
+using tdsm.core.RemoteConsole;
 
 namespace tdsm.core
 {
@@ -21,6 +22,7 @@ namespace tdsm.core
         public const Int32 CoreBuild = 2;
 
         private bool _useTimeLock;
+
         public bool UseTimeLock
         {
             get
@@ -32,12 +34,17 @@ namespace tdsm.core
                 TimelockTime = Terraria.Main.time;
             }
         }
+
         public double TimelockTime { get; set; }
+
         public bool TimelockRain { get; set; }
+
         public bool TimelockSlimeRain { get; set; }
 
         public static string RConHashNonce { get; set; }
+
         public static string RConBindAddress { get; set; }
+
         public static bool EnableCheatProtection { get; set; }
 
         private bool VanillaOnly
@@ -50,19 +57,23 @@ namespace tdsm.core
             {
                 if (value)
                 {
-                    if (IsEnabled) PluginManager.DisablePlugin(this);
+                    if (IsEnabled)
+                        PluginManager.DisablePlugin(this);
                 }
                 else
                 {
-                    if (!IsEnabled) PluginManager.EnablePlugin(this);
+                    if (!IsEnabled)
+                        PluginManager.EnablePlugin(this);
                 }
             }
         }
 
         public bool StopNPCSpawning { get; set; }
+
         public bool RunServerCore { get; set; }
 
         private string _webServerAddress { get; set; }
+
         private string _webServerProvider { get; set; }
 
         public bool RestartWhenNoPlayers { get; set; }
@@ -241,7 +252,7 @@ namespace tdsm.core
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("3rd person talk")
                 .WithHelpText("<message> - Message to display in third person.")
-                //.SetDefaultUsage() //This was causing an additional "me" to be displayed in the help commmand syntax.
+            //.SetDefaultUsage() //This was causing an additional "me" to be displayed in the help commmand syntax.
                 .WithPermissionNode("tdsm.me")
                 .Calls(this.Action);
 
@@ -328,7 +339,6 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.hardmode")
                 .Calls(this.HardMode);
             
-#if TDSMServer
             AddCommand("rcon")
                 .WithDescription("Manage remote console access.")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
@@ -339,7 +349,6 @@ namespace tdsm.core
                 .WithHelpText("add <name> <password> - add an rcon user")
                 .WithPermissionNode("tdsm.rcon")
                 .Calls(RConServer.RConCommand);
-#endif
 
             AddCommand("npcspawning")
                 .WithDescription("Turn NPC spawning on or off.")
@@ -441,7 +450,8 @@ namespace tdsm.core
             //    .Calls(this.Repository);
 #endif
 
-            if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
+            if (!DefinitionManager.Initialise())
+                ProgramLog.Log("Failed to initialise definitions.");
 
             ProgramLog.Log("TDSM Rebind core enabled");
         }
@@ -531,7 +541,7 @@ namespace tdsm.core
         {
             ctx.SetResult(HookResult.IGNORE);
 
-            (new tdsm.api.ProgramThread("Command", ListenForCommands)).Start();
+            (new tdsm.api.Misc.ProgramThread("Command", ListenForCommands)).Start();
         }
 
         [Hook(HookOrder.NORMAL)]
@@ -564,7 +574,9 @@ namespace tdsm.core
                     var ln = Console.ReadLine();
                     UserInput.CommandParser.ParseConsoleCommand(ln);
                 }
-                catch (ExitException) { }
+                catch (ExitException)
+                {
+                }
                 catch (Exception e)
                 {
                     ProgramLog.Log("Exception from command");
@@ -733,7 +745,7 @@ namespace tdsm.core
         //    }
         //}
         
-#if TDSMServer
+        #if TDSMServer
         [Hook(HookOrder.NORMAL)]
         void OnDefaultServerStart(ref HookContext ctx, ref HookArgs.StartDefaultServer args)
         {
@@ -865,6 +877,19 @@ namespace tdsm.core
         void OnServerStateChange(ref HookContext ctx, ref HookArgs.ServerStateChange args)
         {
             ProgramLog.Log("Server state changed to: " + args.ServerChangeState.ToString());
+
+            if (args.ServerChangeState == ServerState.Initialising)
+            {
+                if (!String.IsNullOrEmpty(RConBindAddress))
+                {
+                    ProgramLog.Log("Starting RCON Server");
+                    RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"));
+                }
+            }
+            if (args.ServerChangeState == ServerState.Stopping)
+            {
+                RemoteConsole.RConServer.Stop();
+            }
 
             //if (args.ServerChangeState == ServerState.Initialising)
 #if TDSMServer

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 
 namespace tdsm.api
 {
@@ -23,6 +24,30 @@ namespace tdsm.api
         public static void Kick(this Terraria.RemoteClient sock, string reason)
         {
             Terraria.NetMessage.SendData((int)Packet.DISCONNECT, sock.Id, -1, reason);
+        }
+
+        public static void SafeClose(this Socket socket)
+        {
+            if (socket == null) return;
+
+            try
+            {
+                socket.Close();
+            }
+            catch (SocketException) { }
+            catch (ObjectDisposedException) { }
+        }
+
+        public static void SafeShutdown(this Socket socket)
+        {
+            if (socket == null) return;
+
+            try
+            {
+                socket.Shutdown(SocketShutdown.Both);
+            }
+            catch (SocketException) { }
+            catch (ObjectDisposedException) { }
         }
     }
 }

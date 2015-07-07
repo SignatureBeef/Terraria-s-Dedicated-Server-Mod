@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using tdsm.core.Logging;
+using tdsm.api;
 
 //using tdsm.core.ServerCore;
 

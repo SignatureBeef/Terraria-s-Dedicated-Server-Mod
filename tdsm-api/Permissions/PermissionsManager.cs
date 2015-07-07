@@ -72,8 +72,8 @@ namespace tdsm.api.Permissions
         Permission IsPermitted(string node, BasePlayer player);
         Permission IsPermittedForGroup(string node, Func<System.Collections.Generic.Dictionary<String, String>, Boolean> includeGroupsWith = null);
 
-        XmlNode[] ParseNodes(System.Xml.XmlNode node);
-        string[] ParseArray(System.Xml.XmlNode node);
+//        XmlNode[] ParseNodes(System.Xml.XmlNode node);
+//        string[] ParseArray(System.Xml.XmlNode node);
     }
 
     //public abstract class PermissionsHandler

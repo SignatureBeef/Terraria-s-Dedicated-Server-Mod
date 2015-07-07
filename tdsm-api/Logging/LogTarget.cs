@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using tdsm.api.Plugin;
 using tdsm.core.Misc;
+using tdsm.api.Misc;
 
 namespace tdsm.core.Logging
 {
@@ -235,13 +236,13 @@ namespace tdsm.core.Logging
                 Sender = HookContext.ConsoleSender				
             };
 
-            var args = new Events.HookArgs.ConsoleMessageReceived()
+            var args = new HookArgs.ConsoleMessageReceived()
             {
                 Message = ConsoleText,
 				Logger = SendingLogger
             };
 
-            Events.HookPoints.ConsoleMessageReceived.Invoke(ref ctx, ref args);
+            HookPoints.ConsoleMessageReceived.Invoke(ref ctx, ref args);
         }
 	}
 	
