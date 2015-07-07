@@ -1,5 +1,5 @@
 # TDSM supports Terraria 1.3
-Work is still in progress for mono compatability, and there are still quirks in the windows version but you can run a 1.3 compatible server using TDSM.
+Work is still in progress for mono compatibility, and there are still quirks in the windows version but you can run a 1.3 compatible server using TDSM.
 
 Use the tdsm.exe in the Binaries folder.
 
