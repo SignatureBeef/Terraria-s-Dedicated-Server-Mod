@@ -1695,8 +1695,10 @@ namespace tdsm.core
                 double time;
                 if (args.TryParseOne<Double>(out time))
                 {
-                    (args.Plugin as Entry).TimelockTime = time;
-                    (args.Plugin as Entry).UseTimeLock = true;
+                    this.TimelockTime = time;
+                    this.TimelockRain = Main.raining;
+                    this.TimelockSlimeRain = Main.slimeRain;
+                    this.UseTimeLock = true;
                 }
                 else throw new CommandError("Double expected.");
             }

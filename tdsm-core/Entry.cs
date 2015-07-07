@@ -33,6 +33,8 @@ namespace tdsm.core
             }
         }
         public double TimelockTime { get; set; }
+        public bool TimelockRain { get; set; }
+        public bool TimelockSlimeRain { get; set; }
 
         public static string RConHashNonce { get; set; }
         public static string RConBindAddress { get; set; }
@@ -615,7 +617,13 @@ namespace tdsm.core
             //    //}
             //}
 
-            if (_useTimeLock) Terraria.Main.time = TimelockTime;
+            if (_useTimeLock)
+            {
+                Terraria.Main.time = TimelockTime;
+                Terraria.Main.raining = TimelockRain;
+                Terraria.Main.slimeRain = TimelockSlimeRain;
+                //TODO: verify
+            }
 
             //if (Terraria.Main.ServerSideCharacter)
             //{
