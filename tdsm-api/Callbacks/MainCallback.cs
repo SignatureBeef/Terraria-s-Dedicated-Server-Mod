@@ -284,7 +284,7 @@ namespace tdsm.api.Callbacks
             Tasks.CheckTasks();
 
 #if Full_API
-            if (Terraria.Main.oldStatusText != Terraria.Main.statusText)
+//            if (Terraria.Main.oldStatusText != Terraria.Main.statusText)
             {
                 if (StatusTextChange != null)
                     StatusTextChange();

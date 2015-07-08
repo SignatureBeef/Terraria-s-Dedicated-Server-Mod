@@ -221,8 +221,8 @@ namespace tdsm.patcher
             patcher.HookInitialise();
             Console.Write("Ok\nHooking into world events...");
             patcher.HookWorldEvents();
-            //Console.Write("Ok\nHooking statusText...");
-            //patcher.HookStatusText();
+            Console.Write("Ok\nHooking statusText...");
+            patcher.HookStatusText();
             //Console.Write("Ok\nHooking NetMessage...");
             //patcher.HookNetMessage();
             ////Console.Write("Ok\nRemoving client code...");

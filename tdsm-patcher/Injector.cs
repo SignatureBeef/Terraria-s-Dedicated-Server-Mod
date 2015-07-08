@@ -199,33 +199,54 @@ namespace tdsm.patcher
             var callback = API.MainCallback.Methods.Single(x => x.Name == "OnStatusTextChange");
 
             var startInstructions = dedServ.Body.Instructions
-                .Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "oldStatusText")
-                .Reverse() //Remove desc
-                .ToArray();
+                    .Where(x => x.OpCode == OpCodes.Ldsfld
+                                        && x.Operand is FieldReference
+                                        && (x.Operand as FieldReference).Name == "statusText"
+                                        && x.Next.OpCode == OpCodes.Call
+                                        && x.Next.Operand is MethodReference
+                                        && (x.Next.Operand as MethodReference).Name == "WriteLine")
+                    .Reverse() //Remove desc
+                    .ToArray();
 
             var il = dedServ.Body.GetILProcessor();
+            var insCallback = il.Create(OpCodes.Call, _asm.MainModule.Import(callback));
             foreach (var ins in startInstructions)
             {
-                var end = ins.Operand as Instruction;
-                var ix = il.Body.Instructions.IndexOf(ins);
+                il.InsertBefore(ins.Previous.Previous, insCallback);
 
-                var inLoop = il.Body.Instructions[ix].Previous.OpCode == OpCodes.Br_S;
-
-                while (!(il.Body.Instructions[ix].OpCode == OpCodes.Call && il.Body.Instructions[ix].Operand is MethodReference && ((MethodReference)il.Body.Instructions[ix].Operand).Name == "WriteLine"))
-                {
-                    il.Remove(il.Body.Instructions[ix]);
-                }
-                il.Remove(il.Body.Instructions[ix]); //Remove the Console.WriteLine
-
-                var insCallback = il.Create(OpCodes.Call, _asm.MainModule.Import(callback));
-                il.InsertBefore(il.Body.Instructions[ix], insCallback);
-
-                //Fix the loop back to the start
-                if (inLoop && il.Body.Instructions[ix + 2].OpCode == OpCodes.Brfalse_S)
-                {
-                    il.Body.Instructions[ix + 2].Operand = insCallback;
-                }
+                il.Remove(ins.Next);
+                il.Remove(ins);
             }
+
+            return;
+            //            var startInstructions = dedServ.Body.Instructions
+            //                .Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "oldStatusText")
+            //                .Reverse() //Remove desc
+            //                .ToArray();
+//
+//            var il = dedServ.Body.GetILProcessor();
+//            foreach (var ins in startInstructions)
+//            {
+//                var end = ins.Operand as Instruction;
+//                var ix = il.Body.Instructions.IndexOf(ins);
+//
+//                var inLoop = il.Body.Instructions[ix].Previous.OpCode == OpCodes.Br_S;
+//
+//                while (!(il.Body.Instructions[ix].OpCode == OpCodes.Call && il.Body.Instructions[ix].Operand is MethodReference && ((MethodReference)il.Body.Instructions[ix].Operand).Name == "WriteLine"))
+//                {
+//                    il.Remove(il.Body.Instructions[ix]);
+//                }
+//                il.Remove(il.Body.Instructions[ix]); //Remove the Console.WriteLine
+//
+//                var insCallback = il.Create(OpCodes.Call, _asm.MainModule.Import(callback));
+//                il.InsertBefore(il.Body.Instructions[ix], insCallback);
+//
+//                //Fix the loop back to the start
+//                if (inLoop && il.Body.Instructions[ix + 2].OpCode == OpCodes.Brfalse_S)
+//                {
+//                    il.Body.Instructions[ix + 2].Operand = insCallback;
+//                }
+//            }
         }
 
         public void HookNetMessage()
