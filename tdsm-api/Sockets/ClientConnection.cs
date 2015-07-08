@@ -37,6 +37,19 @@ namespace tdsm.api
             var thread = new ProgramThread("TmoL", TimeoutLoop);
             thread.IsBackground = true;
             thread.Start();
+
+            Main.ActiveWorldFileData = new Terraria.IO.WorldFileData ();
+            Main.SavePath = string.Concat (new object[] {
+                Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments),
+                System.IO.Path.DirectorySeparatorChar,
+                "My Games",
+                System.IO.Path.DirectorySeparatorChar,
+                "Terraria"
+            });
+            Main.WorldPath = Main.SavePath + System.IO.Path.DirectorySeparatorChar + "Worlds";
+            Main.ActiveWorldFileData = new Terraria.IO.WorldFileData ();
+            Main.SavePath = tdsm.api.Callbacks.Patches.GetCurrentDirectory();
+            Main.WorldPath = Main.SavePath + System.IO.Path.DirectorySeparatorChar + "Worlds";
         }
 
         public ClientConnection() 

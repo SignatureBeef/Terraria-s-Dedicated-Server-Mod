@@ -100,9 +100,9 @@ namespace tdsm.patcher
             //Grab all occurances of "LoadDedConfig" and route it to ours
             var toBeReplaced = main.Body.Instructions
                 .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt
-                    && x.Operand is MethodReference
-                    && (x.Operand as MethodReference).Name == "LoadDedConfig"
-                )
+                                   && x.Operand is MethodReference
+                                   && (x.Operand as MethodReference).Name == "LoadDedConfig"
+                               )
                 .ToArray();
 
             for (var x = 0; x < toBeReplaced.Length; x++)
@@ -136,8 +136,8 @@ namespace tdsm.patcher
 
             var ins = main.Body.Instructions.Where(x =>
                 x.OpCode == OpCodes.Ldsfld
-                && x.Operand is FieldReference
-                && (x.Operand as FieldReference).Name == "invasionType").ToArray()[1];
+                          && x.Operand is FieldReference
+                          && (x.Operand as FieldReference).Name == "invasionType").ToArray()[1];
 
             il.InsertBefore(ins, il.Create(OpCodes.Ldloc_2));
             il.InsertBefore(ins, il.Create(OpCodes.Ldc_I4, 16));
@@ -182,9 +182,9 @@ namespace tdsm.patcher
 
             var toBeReplaced = mth.Body.Instructions
                 .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Call
-                    && x.Operand is MethodReference
-                    && (x.Operand as MethodReference).Name == "loadWorld"
-                )
+                                   && x.Operand is MethodReference
+                                   && (x.Operand as MethodReference).Name == "loadWorld"
+                               )
                 .ToArray();
 
             for (var x = 0; x < toBeReplaced.Length; x++)
@@ -306,8 +306,8 @@ namespace tdsm.patcher
 
             var il = method.Body.GetILProcessor();
             var target = il.Body.Instructions.Single(x => x.OpCode == OpCodes.Callvirt
-                && x.Operand is MethodReference
-                && (x.Operand as MethodReference).Name == "set_PriorityClass");
+                             && x.Operand is MethodReference
+                             && (x.Operand as MethodReference).Name == "set_PriorityClass");
 
             il.Remove(target.Previous.Previous.Previous.Previous);
             il.Remove(target.Previous.Previous.Previous);
@@ -467,8 +467,8 @@ namespace tdsm.patcher
 
             var serverLoop = Terraria.Netplay.Methods.Single(x => x.Name == "ServerLoop");
             var target = serverLoop.Body.Instructions.Single(x => x.OpCode == OpCodes.Newobj
-                         && (x.Operand is MethodReference)
-                         && (x.Operand as MethodReference).DeclaringType.Name == "TcpSocket");
+                             && (x.Operand is MethodReference)
+                             && (x.Operand as MethodReference).DeclaringType.Name == "TcpSocket");
             target.Operand = _asm.MainModule.Import(rtsCtor);
 
 
@@ -515,8 +515,7 @@ namespace tdsm.patcher
             foreach (var ins in serverLoop.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Call
                     && x.Operand is MethodReference
-                    && new string[] { "OpenPort", "closePort" }.Contains((x.Operand as MethodReference).Name))
-                )
+                    && new string[] { "OpenPort", "closePort" }.Contains((x.Operand as MethodReference).Name)))
             {
                 var mr = ins.Operand as MemberReference;
                 if (mr.Name == "closePort")
@@ -546,7 +545,7 @@ namespace tdsm.patcher
                                 var name = fldref.DeclaringType.Name;
                                 if (fldref.DeclaringType.IsArray)
                                 {
-                                    name=(fldref.DeclaringType as ArrayType).ElementType.Name;
+                                    name = (fldref.DeclaringType as ArrayType).ElementType.Name;
                                 }
                                 if (fldref.DeclaringType.Namespace.StartsWith("Microsoft.Xna"))
                                 {
@@ -556,13 +555,14 @@ namespace tdsm.patcher
 //                                        throw new NotImplementedException("Missing field for XNA: " + fldref.Name);
                                     }
                                 }
-                            } else if (ins.Operand is MethodReference)
+                            }
+                            else if (ins.Operand is MethodReference)
                             {
                                 var mthref = ins.Operand as MethodReference;
                                 var name = mthref.DeclaringType.Name;
                                 if (mthref.DeclaringType.IsArray)
                                 {
-                                    name=(mthref.DeclaringType as ArrayType).ElementType.Name;
+                                    name = (mthref.DeclaringType as ArrayType).ElementType.Name;
                                 }
                                 if (mthref.Name == "Get" || mthref.Name == "Set")
                                     continue;
@@ -609,40 +609,31 @@ namespace tdsm.patcher
         public void FixSavePath()
         {
             var staticConstructor = Terraria.Main.Methods.Single(x => x.Name == ".cctor");
-
             var il = staticConstructor.Body.GetILProcessor();
-            var removing = false;
-            for (var x = 0; x < staticConstructor.Body.Instructions.Count; x++)
+            //            var ins = staticConstructor.Body.Instructions.First(x => x.OpCode == OpCodes.Stsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "SavePath");ActiveWorldFileData
+            var ins = staticConstructor.Body.Instructions.First(x => x.OpCode == OpCodes.Stsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "ActiveWorldFileData");
+            var ix = staticConstructor.Body.Instructions.IndexOf(ins);
+
+//            var dir = _asm.MainModule.Import(API.Patches.Methods.Single(k => k.Name == "ActiveWorldFileData"));
+
+//            il.Replace(ins, il.Create(OpCodes.Call, dir));
+
+
+
+//            var dir = _asm.MainModule.Import(API.Patches.Methods.Single(k => k.Name == "GetCurrentDirectory"));
+//
+//            il.InsertBefore(ins, il.Create(OpCodes.Call, dir));
+
+            var i = 0;
+            while (i < 28)
             {
-                var ins = staticConstructor.Body.Instructions[x];
-                if (ins.OpCode == OpCodes.Call && ins.Operand is MethodReference && (ins.Operand as MethodReference).Name == "GetFolderPath")
-                {
-                    //Remove parameters for this
-                    for (var y = 0; y < 8; y++)
-                    {
-                        il.Remove(staticConstructor.Body.Instructions[x - 1]);
-                        x--;
-                    }
-
-                    removing = true;
-                }
-
-                if (ins.OpCode == OpCodes.Stsfld && ins.Operand is FieldDefinition && (ins.Operand as FieldDefinition).Name == "SavePath")
-                {
-                    //Insert the new value
-                    var dir = _asm.MainModule.Import(API.Patches.Methods.Single(k => k.Name == "GetCurrentDirectory"));
-
-                    il.InsertBefore(ins, il.Create(OpCodes.Call, dir));
-                    removing = false;
-                    return;
-                }
-
-                if (removing)
-                {
-                    il.Remove(ins);
-                    x--;
-                }
+                staticConstructor.Body.Instructions.RemoveAt(ix + 1);
+                i++;
             }
+
+            var dir = _asm.MainModule.Import(API.Patches.Methods.Single(k => k.Name == "GetCurrentDirectory"));
+            
+            il.InsertAfter(ins, il.Create(OpCodes.Call, dir));
         }
 
         public void SkipMenu()
@@ -650,7 +641,7 @@ namespace tdsm.patcher
             var initialise = Terraria.Main.Methods.Single(x => x.Name == "Initialize");
             var loc = initialise.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldDefinition)
-                //.Select(x => x.Operand as FieldDefinition)
+                      //.Select(x => x.Operand as FieldDefinition)
                 .Single(x => (x.Operand as FieldDefinition).Name == "skipMenu");
             var il = initialise.Body.GetILProcessor();
             il.InsertBefore(loc, il.Create(OpCodes.Ret));
@@ -670,7 +661,8 @@ namespace tdsm.patcher
                 .Single(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "startDedInput");
             ins.Operand = _asm.MainModule.Import(callback);
 
-            var ignore = new string[] {
+            var ignore = new string[]
+            {
                 "Terraria.Main.DedServ"
             };
 
@@ -680,15 +672,15 @@ namespace tdsm.patcher
                 .Where(x => x.HasBody && x.Body.Instructions.Count > 0 && !ignore.Contains(x.DeclaringType.FullName + "." + x.Name))
                 .SelectMany(x => x.Body.Instructions)
                 .Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference
-                    && (x.Operand as MethodReference).Name == "WriteLine"
-                    && (x.Operand as MethodReference).DeclaringType.FullName == "System.Console")
+                          && (x.Operand as MethodReference).Name == "WriteLine"
+                          && (x.Operand as MethodReference).DeclaringType.FullName == "System.Console")
                 .ToArray();
 
             foreach (var oci in cwi)
             {
                 var mr = oci.Operand as MethodReference;
                 var writeline = API.Tools.Methods.First(m => m.Name == "WriteLine"
-                    && CompareParameters(m.Parameters, mr.Parameters));
+                                    && CompareParameters(m.Parameters, mr.Parameters));
                 oci.Operand = _asm.MainModule.Import(writeline);
             }
         }
@@ -700,7 +692,8 @@ namespace tdsm.patcher
 
                 for (var x = 0; x < a.Count; x++)
                 {
-                    if (a[x].ParameterType.FullName != b[x].ParameterType.FullName) return false;
+                    if (a[x].ParameterType.FullName != b[x].ParameterType.FullName)
+                        return false;
                 }
                 return true;
             }
@@ -774,10 +767,10 @@ namespace tdsm.patcher
                 .SelectMany(x => x.Methods
 
                     .Where(k => k.Body != null && k.Body.GetILProcessor().Body != null && k.Body.GetILProcessor().Body.Instructions.Where(i => i.OpCode == OpCodes.Ldsfld
-                        && ((FieldReference)i.Operand).DeclaringType.FullName == Terraria.Main.FullName
-                        && ((FieldReference)i.Operand).Name == "tile"
-                        && i.Next.Next.Next.OpCode == OpCodes.Call).Count() > 0)
-                )
+                                  && ((FieldReference)i.Operand).DeclaringType.FullName == Terraria.Main.FullName
+                                  && ((FieldReference)i.Operand).Name == "tile"
+                                  && i.Next.Next.Next.OpCode == OpCodes.Call).Count() > 0)
+                      )
                 .ToArray();
             foreach (var item in mth)
             {
@@ -786,15 +779,17 @@ namespace tdsm.patcher
                     var proc = item.Body.GetILProcessor();
                     var iuns = proc.Body.Instructions
                             .Where(k => k.OpCode == OpCodes.Ldsfld
-                                && ((FieldReference)k.Operand).DeclaringType.FullName == Terraria.Main.FullName
-                                && ((FieldReference)k.Operand).Name == "tile"
-                                && k.Next.Next.Next.OpCode == OpCodes.Call)
+                                   && ((FieldReference)k.Operand).DeclaringType.FullName == Terraria.Main.FullName
+                                   && ((FieldReference)k.Operand).Name == "tile"
+                                   && k.Next.Next.Next.OpCode == OpCodes.Call)
                             .ToArray();
                     var itm = iuns[0].Next.Next.Next;
                     proc.InsertAfter(itm, proc.Create(OpCodes.Ceq));
                     proc.InsertAfter(itm, proc.Create(OpCodes.Ldsfld, defaultTile));
                 }
-                catch { }
+                catch
+                {
+                }
             }
 
             //Replace = null
@@ -802,11 +797,11 @@ namespace tdsm.patcher
                 .SelectMany(x => x.Methods
 
                     .Where(k => k.Body != null && k.Body.GetILProcessor().Body != null && k.Body.GetILProcessor().Body.Instructions.Where(i => i.OpCode == OpCodes.Ldsfld
-                        && ((FieldReference)i.Operand).DeclaringType.FullName == Terraria.Main.FullName
-                        && ((FieldReference)i.Operand).Name == "tile"
-                        && i.OpCode == OpCodes.Ldsfld
-                        && i.Next.Next.Next.OpCode == OpCodes.Ldnull).Count() > 0)
-                )
+                                        && ((FieldReference)i.Operand).DeclaringType.FullName == Terraria.Main.FullName
+                                        && ((FieldReference)i.Operand).Name == "tile"
+                                        && i.OpCode == OpCodes.Ldsfld
+                                        && i.Next.Next.Next.OpCode == OpCodes.Ldnull).Count() > 0)
+                            )
                 .ToArray();
             foreach (var item in setToNull)
             {
@@ -815,15 +810,17 @@ namespace tdsm.patcher
                     var proc = item.Body.GetILProcessor();
                     var iuns = proc.Body.Instructions
                             .Where(k => k.OpCode == OpCodes.Ldsfld
-                                && ((FieldReference)k.Operand).DeclaringType.FullName == Terraria.Main.FullName
-                                && ((FieldReference)k.Operand).Name == "tile"
-                                && k.Next.Next.Next.OpCode == OpCodes.Ldnull)
+                                   && ((FieldReference)k.Operand).DeclaringType.FullName == Terraria.Main.FullName
+                                   && ((FieldReference)k.Operand).Name == "tile"
+                                   && k.Next.Next.Next.OpCode == OpCodes.Ldnull)
                             .ToArray();
                     var itm = iuns[0].Next.Next.Next;
                     proc.InsertBefore(itm, proc.Create(OpCodes.Ldsfld, defaultTile));
                     proc.Remove(itm);
                 }
-                catch { }
+                catch
+                {
+                }
             }
 
 
@@ -837,10 +834,10 @@ namespace tdsm.patcher
             var boolType = _asm.MainModule.Import(typeof(Boolean));
             //var ui = _self.MainModule.Types.Single(x => x.Name == "UserInput");
             var method = new MethodDefinition("op_Equality",
-                                                  MethodAttributes.Public |
-                                                  MethodAttributes.Static |
-                                                  MethodAttributes.HideBySig |
-                                                  MethodAttributes.SpecialName, boolType);
+                             MethodAttributes.Public |
+                             MethodAttributes.Static |
+                             MethodAttributes.HideBySig |
+                             MethodAttributes.SpecialName, boolType);
 
             method.Parameters.Add(new ParameterDefinition("t1", ParameterAttributes.None, tl));
             method.Parameters.Add(new ParameterDefinition("t2", ParameterAttributes.None, tl));
@@ -871,10 +868,10 @@ namespace tdsm.patcher
 
             //Do != operator
             method = new MethodDefinition("op_Inequality",
-                                                  MethodAttributes.Public |
-                                                  MethodAttributes.Static |
-                                                  MethodAttributes.HideBySig |
-                                                  MethodAttributes.SpecialName, boolType);
+                MethodAttributes.Public |
+                MethodAttributes.Static |
+                MethodAttributes.HideBySig |
+                MethodAttributes.SpecialName, boolType);
 
             method.Parameters.Add(new ParameterDefinition("t1", ParameterAttributes.None, tl));
             method.Parameters.Add(new ParameterDefinition("t2", ParameterAttributes.None, tl));
@@ -934,9 +931,9 @@ namespace tdsm.patcher
             {
                 var instructions = mtd.Body.Instructions.Where(z =>
                                                              z.OpCode == OpCodes.Call
-                                                             && z.Operand is MethodReference
+                                       && z.Operand is MethodReference
 
-                                                               && (z.Operand as MethodReference).DeclaringType.FullName.Contains("Terraria.Tile")).ToArray();
+                                       && (z.Operand as MethodReference).DeclaringType.FullName.Contains("Terraria.Tile")).ToArray();
                 var mil = mtd.Body.GetILProcessor();
                 foreach (var ins in instructions)
                 {
@@ -964,9 +961,9 @@ namespace tdsm.patcher
             {
                 var instructions = mtd.Body.Instructions.Where(z =>
                                                                z.OpCode == OpCodes.Newobj
-                                                               && z.Operand is MethodReference
-                                                               && (z.Operand as MethodReference).DeclaringType.FullName == ("Terraria.Tile")
-                                                               ).ToArray();
+                                       && z.Operand is MethodReference
+                                       && (z.Operand as MethodReference).DeclaringType.FullName == ("Terraria.Tile")
+                                   ).ToArray();
                 var mil = mtd.Body.GetILProcessor();
                 foreach (var ins in instructions)
                 {
@@ -1013,8 +1010,8 @@ namespace tdsm.patcher
 
             var insertionPoint = getData.Body.Instructions
                 .Single(x => x.OpCode == OpCodes.Callvirt
-                    && x.Operand is MethodReference
-                    && (x.Operand as MethodReference).Name == "set_Position");
+                                     && x.Operand is MethodReference
+                                     && (x.Operand as MethodReference).Name == "set_Position");
 
             var callback = API.MessageBufferCallback.Methods.First(m => m.Name == "ProcessPacket");
 
@@ -1043,12 +1040,12 @@ namespace tdsm.patcher
                 {
                     var match = mth.Body.Instructions
                         .SingleOrDefault(x => x.OpCode == OpCodes.Ldsfld
-                            && x.Operand is FieldReference
-                            && (x.Operand as FieldReference).Name == "netMode"
-                            && x.Next.OpCode == OpCodes.Ldc_I4_1
-                            && (x.Next.Next.OpCode == OpCodes.Bne_Un_S) // || x.Next.Next.OpCode == OpCodes.Bne_Un)
-                            && !offsets.Contains(x)
-                            && (x.Previous == null || x.Previous.OpCode != OpCodes.Bne_Un_S));
+                                    && x.Operand is FieldReference
+                                    && (x.Operand as FieldReference).Name == "netMode"
+                                    && x.Next.OpCode == OpCodes.Ldc_I4_1
+                                    && (x.Next.Next.OpCode == OpCodes.Bne_Un_S)// || x.Next.Next.OpCode == OpCodes.Bne_Un)
+                                    && !offsets.Contains(x)
+                                    && (x.Previous == null || x.Previous.OpCode != OpCodes.Bne_Un_S));
 
                     hasMatch = match != null;
                     if (hasMatch)
@@ -1090,12 +1087,12 @@ namespace tdsm.patcher
                 var toBeReplaced = _asm.MainModule.Types
                     .SelectMany(x => x.Methods
                                 .Where(y => y.HasBody)
-                                )
+                                   )
                         .SelectMany(x => x.Body.Instructions)
                         .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Call
-                               && x.Operand is MethodReference
-                               && (x.Operand as MethodReference).Name == rep
-                               )
+                                       && x.Operand is MethodReference
+                                       && (x.Operand as MethodReference).Name == rep
+                                   )
                         .ToArray();
 
                 var replacement = API.NetplayCallback.Methods.Single(x => x.Name == rep);
@@ -1555,12 +1552,12 @@ namespace tdsm.patcher
             var il = mth.Body.GetILProcessor();
             var start = il.Body.Instructions.Single(x =>
                 x.OpCode == OpCodes.Ldsfld
-                && x.Operand is FieldReference
-                && (x.Operand as FieldReference).Name == "hardMode"
-                && x.Previous.OpCode == OpCodes.Call
-                && x.Previous.Operand is MethodReference
-                && (x.Previous.Operand as MethodReference).Name == "StartInvasion"
-            );
+                            && x.Operand is FieldReference
+                            && (x.Operand as FieldReference).Name == "hardMode"
+                            && x.Previous.OpCode == OpCodes.Call
+                            && x.Previous.Operand is MethodReference
+                            && (x.Previous.Operand as MethodReference).Name == "StartInvasion"
+                        );
 
             //Preserve
             var old = start.Operand as FieldReference;
@@ -1573,12 +1570,12 @@ namespace tdsm.patcher
             //Now find the target instruction if the value is true
             var startEclipse = il.Body.Instructions.Single(x =>
                 x.OpCode == OpCodes.Stsfld
-                && x.Operand is FieldReference
-                && (x.Operand as FieldReference).Name == "eclipse"
-                && x.Next.OpCode == OpCodes.Ldsfld
-                && x.Next.Operand is FieldReference
-                && (x.Next.Operand as FieldReference).Name == "eclipse"
-            ).Previous;
+                                   && x.Operand is FieldReference
+                                   && (x.Operand as FieldReference).Name == "eclipse"
+                                   && x.Next.OpCode == OpCodes.Ldsfld
+                                   && x.Next.Operand is FieldReference
+                                   && (x.Next.Operand as FieldReference).Name == "eclipse"
+                               ).Previous;
             il.InsertAfter(start, il.Create(OpCodes.Brtrue, startEclipse));
 
             //Since all we care about is setting the StartEclipse to TRUE; we need to be able to disable once done.
@@ -1594,12 +1591,12 @@ namespace tdsm.patcher
             var il = mth.Body.GetILProcessor();
             var start = il.Body.Instructions.Single(x =>
                 x.OpCode == OpCodes.Ldsfld
-                && x.Operand is FieldReference
-                && (x.Operand as FieldReference).Name == "spawnEye"
-                && x.Next.Next.OpCode == OpCodes.Ldsfld
-                && x.Next.Next.Operand is FieldReference
-                && (x.Next.Next.Operand as FieldReference).Name == "moonPhase"
-            );
+                            && x.Operand is FieldReference
+                            && (x.Operand as FieldReference).Name == "spawnEye"
+                            && x.Next.Next.OpCode == OpCodes.Ldsfld
+                            && x.Next.Next.Operand is FieldReference
+                            && (x.Next.Next.Operand as FieldReference).Name == "moonPhase"
+                        );
 
             //Preserve
             var old = start.Operand as FieldReference;
@@ -1623,12 +1620,12 @@ namespace tdsm.patcher
             //Since all we care about is setting the StartBloodMoon to TRUE; we need to be able to disable once done.
             var startBloodMoon = il.Body.Instructions.Single(x =>
                 x.OpCode == OpCodes.Ldsfld
-                && x.Operand is FieldReference
-                && (x.Operand as FieldReference).Name == "bloodMoon"
-                && x.Next.Next.OpCode == OpCodes.Ldsfld
-                && x.Next.Next.Operand is FieldReference
-                && (x.Next.Next.Operand as FieldReference).Name == "netMode"
-            );
+                                     && x.Operand is FieldReference
+                                     && (x.Operand as FieldReference).Name == "bloodMoon"
+                                     && x.Next.Next.OpCode == OpCodes.Ldsfld
+                                     && x.Next.Next.Operand is FieldReference
+                                     && (x.Next.Next.Operand as FieldReference).Name == "netMode"
+                                 );
             il.InsertAfter(startBloodMoon.Next, il.Create(OpCodes.Stsfld, start.Operand as FieldReference));
             il.InsertAfter(startBloodMoon.Next, il.Create(OpCodes.Ldc_I4_0));
         }
