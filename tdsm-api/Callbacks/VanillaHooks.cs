@@ -39,7 +39,7 @@ namespace tdsm.api.Callbacks
             var args = new HookArgs.PlayerPreGreeting
             {
                 Slot = playerId,
-                Motd = String.IsNullOrEmpty(Main.motd) ? Lang.mp[18] : Main.motd,
+                Motd = String.IsNullOrEmpty(Main.motd) ? (Lang.mp[18] + " " + Main.worldName) : Main.motd,
                 MotdColour = new Microsoft.Xna.Framework.Color(255, 240, 20)
             };
 
