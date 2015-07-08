@@ -200,7 +200,8 @@ namespace tdsm.core
 
             Tools.NotifyAllOps("Exiting on request.");
             //ServerCore.Server.StopServer();
-            Terraria.Netplay.TcpListener.StopListening();
+            //            Terraria.Netplay.TcpListener.StopListening();
+            Terraria.IO.WorldFile.saveWorld ();
             Terraria.Netplay.disconnect = true;
 
             throw new ExitException(sender.SenderName + " requested that TDSM is to shutdown.");
