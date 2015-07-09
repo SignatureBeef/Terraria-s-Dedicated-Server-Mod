@@ -9,7 +9,7 @@ We have now also started including the generated tdsm.exe. The minimalistic inst
 ```
 \tdsm\
   tdsm.api.dll
-  tdsm.microsoft.exe *OR* tdsm.mono.exe
+  tdsm.exe
 \tdsm\Plugins\
   tdsm.core.dll
 \tdsm\Data\
