@@ -274,6 +274,7 @@ namespace tdsm.api
         protected override void HandleClosure(SocketError err)
         {
             Tools.WriteLine("{0}: connection closed ({1}).", RemoteAddress, err);
+            _isReceiving = false;
 
             //Issue a 0 byte response, Terraria will close the connection :)
             test.Callback(null, 0);
@@ -302,7 +303,8 @@ namespace tdsm.api
         void ISocket.Close()
         {
             //            CloseSocket();
-          if(_isReceiving)  Close();
+            if (_isReceiving) Close();
+            _isReceiving = false;
         }
 
         void ISocket.Connect(RemoteAddress address)
