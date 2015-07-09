@@ -15,7 +15,7 @@ namespace tdsm.api.Callbacks
 
         public static byte ProcessPacket(int bufferId, byte packetId) //, int start, int length)
         {
-            Console.WriteLine("Slot/Packet: {0}/{1}", bufferId, packetId);
+            //Console.WriteLine("Slot/Packet: {0}/{1}", bufferId, packetId);
             //Console.WriteLine("Trace: {0}", Environment.StackTrace);
             switch ((Packet)packetId)
             {

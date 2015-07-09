@@ -110,7 +110,6 @@ namespace tdsm.api
                         {
                             try
                             {
-                                Console.Error.WriteLine("Time out");
                                 client.Kick("Timed out.");
                                 client.TimeOutTimer = 0;
                             }
@@ -154,7 +153,7 @@ namespace tdsm.api
 
         void ISocket.AsyncReceive(byte[] data, int offset, int size, SocketReceiveCallback callback, object state)
         {
-            Console.WriteLine("Receive requested");
+            //Console.WriteLine("Receive requested");
             if (test == null)
             {
                 test = new AsyncCallback()
@@ -207,8 +206,8 @@ namespace tdsm.api
             //Reset read position
             recvBytes = 0;
 
-            Console.WriteLine("Received: " + local.Length);
-            Console.WriteLine("Length: " + local[0] + "," + local[1]);
+            //Console.WriteLine("Received: " + local.Length);
+            //Console.WriteLine("Length: " + local[0] + "," + local[1]);
 
             DespatchData(local);
 
@@ -242,7 +241,7 @@ namespace tdsm.api
                             if (len > test.Size)
                                 len = test.Size;
 
-                            Console.WriteLine("Length: " + len);
+                            //Console.WriteLine("Length: " + len);
                             if (len > 0)
                             {
                                 Buffer.BlockCopy(buff, processed, test.Buffer, test.Offset, len);
@@ -255,7 +254,7 @@ namespace tdsm.api
                         }
                         else
                         {
-                            Console.WriteLine("test null");
+                            //Console.WriteLine("test null");
                             break;
                         }
                     }

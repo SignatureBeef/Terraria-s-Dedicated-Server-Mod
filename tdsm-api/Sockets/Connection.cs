@@ -50,7 +50,7 @@ namespace tdsm.api
         {
             protected override void OnCompleted(SocketAsyncEventArgs args)
             {
-                Console.WriteLine("Received data from client");
+                //Console.WriteLine("Received data from client");
                 var c = conn;
                 if (c != null)
                     c.ReceiveCompleted(this);
@@ -275,7 +275,7 @@ namespace tdsm.api
             if (kicking)
                 return;
 
-            Console.WriteLine("CLose requested");
+            //Console.WriteLine("CLose requested");
             kicking = true;
 
             timeout = new Timer(Timeout, null, 15000, 0);
