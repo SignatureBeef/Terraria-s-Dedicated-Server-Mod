@@ -109,27 +109,33 @@ namespace tdsm.patcher
 
         public void HookConfig()
         {
-            var main = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main" && x.IsStatic);
+            var main = Terraria.Main.Methods.Single(x => x.Name == "LoadDedConfig" && !x.IsStatic);
             var replacement = API.Configuration.Methods.Single(x => x.Name == "Load" && x.IsStatic);
+            var first = main.Body.Instructions.First();
+
+            var il = main.Body.GetILProcessor();
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_0));
+            il.InsertBefore(first, il.Create(OpCodes.Call, _asm.MainModule.Import(replacement)));
+            il.InsertBefore(first, il.Create(OpCodes.Ret));
 
             //Grab all occurances of "LoadDedConfig" and route it to ours
-            var toBeReplaced = main.Body.Instructions
-                .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt
-                                   && x.Operand is MethodReference
-                                   && (x.Operand as MethodReference).Name == "LoadDedConfig"
-                               )
-                .ToArray();
+//            var toBeReplaced = main.Body.Instructions
+//                .Where(x => x.OpCode == Mono.Cecil.Cil.OpCodes.Callvirt
+//                                   && x.Operand is MethodReference
+//                                   && (x.Operand as MethodReference).Name == "LoadDedConfig"
+//                               )
+//                .ToArray();
 
-            for (var x = 0; x < toBeReplaced.Length; x++)
-            {
-                toBeReplaced[x].OpCode = OpCodes.Call;
-                toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
-            }
-            var il = main.Body.GetILProcessor();
-            for (var x = toBeReplaced.Length - 1; x > -1; x--)
-            {
-                il.Remove(toBeReplaced[x].Previous.Previous.Previous.Previous);
-            }
+//            for (var x = 0; x < toBeReplaced.Length; x++)
+//            {
+//                toBeReplaced[x].OpCode = OpCodes.Call;
+//                toBeReplaced[x].Operand = _asm.MainModule.Import(replacement);
+//            }
+//            var il = main.Body.GetILProcessor();
+//            for (var x = toBeReplaced.Length - 1; x > -1; x--)
+//            {
+//                il.Remove(toBeReplaced[x].Previous.Previous.Previous.Previous);
+//            }
         }
 
         public void EnableRaining()
@@ -313,7 +319,7 @@ namespace tdsm.patcher
 
         public void HookProgramStart()
         {
-            var method = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main");
+            var method = Terraria.WindowsLaunch.Methods.Single(x => x.Name == "Main");
             var callback = API.MainCallback.Methods.First(m => m.Name == "OnProgramStarted");
 
             var il = method.Body.GetILProcessor();
@@ -330,7 +336,7 @@ namespace tdsm.patcher
 
         public void RemoveConsoleHandler()
         {
-            var method = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main");
+            var method = Terraria.WindowsLaunch.Methods.Single(x => x.Name == "Main");
 
             var il = method.Body.GetILProcessor();
             var target = il.Body.Instructions.Single(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "SetConsoleCtrlHandler");
@@ -339,21 +345,21 @@ namespace tdsm.patcher
             il.Remove(target);
         }
 
-        public void RemoveProcess()
-        {
-            var method = Terraria.ProgramServer.Methods.Single(x => x.Name == "InnerStart");
-
-            var il = method.Body.GetILProcessor();
-            var target = il.Body.Instructions.Single(x => x.OpCode == OpCodes.Callvirt
-                             && x.Operand is MethodReference
-                             && (x.Operand as MethodReference).Name == "set_PriorityClass");
-
-            il.Remove(target.Previous.Previous.Previous.Previous);
-            il.Remove(target.Previous.Previous.Previous);
-            il.Remove(target.Previous.Previous);
-            il.Remove(target.Previous);
-            il.Remove(target);
-        }
+//        public void RemoveProcess()
+//        {
+//            var method = Terraria.ProgramServer.Methods.Single(x => x.Name == "InnerStart");
+//
+//            var il = method.Body.GetILProcessor();
+//            var target = il.Body.Instructions.Single(x => x.OpCode == OpCodes.Callvirt
+//                             && x.Operand is MethodReference
+//                             && (x.Operand as MethodReference).Name == "set_PriorityClass");
+//
+//            il.Remove(target.Previous.Previous.Previous.Previous);
+//            il.Remove(target.Previous.Previous.Previous);
+//            il.Remove(target.Previous.Previous);
+//            il.Remove(target.Previous);
+//            il.Remove(target);
+//        }
 
         public void HookUpdateServer()
         {
@@ -623,27 +629,27 @@ namespace tdsm.patcher
             }
         }
 
-        public void FixEntryPoint()
-        {
-            var staticConstructor = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main");
-
-            var il = staticConstructor.Body.GetILProcessor();
-            var counting = 0;
-            for (var x = 0; x < staticConstructor.Body.Instructions.Count; x++)
-            {
-                var ins = staticConstructor.Body.Instructions[x];
-                if (ins.OpCode == OpCodes.Call && ins.Operand is MethodReference && (ins.Operand as MethodReference).Name == "GetCurrentProcess")
-                {
-                    counting = 5;
-                }
-
-                if (counting-- > 0)
-                {
-                    il.Remove(ins);
-                    x--;
-                }
-            }
-        }
+//        public void FixEntryPoint()
+//        {
+//            var staticConstructor = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main");
+//
+//            var il = staticConstructor.Body.GetILProcessor();
+//            var counting = 0;
+//            for (var x = 0; x < staticConstructor.Body.Instructions.Count; x++)
+//            {
+//                var ins = staticConstructor.Body.Instructions[x];
+//                if (ins.OpCode == OpCodes.Call && ins.Operand is MethodReference && (ins.Operand as MethodReference).Name == "GetCurrentProcess")
+//                {
+//                    counting = 5;
+//                }
+//
+//                if (counting-- > 0)
+//                {
+//                    il.Remove(ins);
+//                    x--;
+//                }
+//            }
+//        }
 
         public void FixSavePath()
         {
@@ -762,12 +768,12 @@ namespace tdsm.patcher
 
             if (server)
             {
-                sd = Terraria.ProgramServer.Fields
-                    .Where(x => x.Name == "Game")
-                    .Select(x => x)
-                    .First();
-                sd.IsPrivate = false;
-                sd.IsPublic = true;
+//                sd = Terraria.ProgramServer.Fields
+//                    .Where(x => x.Name == "Game")
+//                    .Select(x => x)
+//                    .First();
+//                sd.IsPrivate = false;
+//                sd.IsPublic = true;
 
                 var main = Terraria.Main.Methods
                     .Where(x => x.Name == "Update")

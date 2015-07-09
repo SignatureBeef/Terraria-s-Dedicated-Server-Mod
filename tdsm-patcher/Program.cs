@@ -200,8 +200,8 @@ namespace tdsm.patcher
             patcher.PatchPlayer();
             Console.Write("Ok\nRemoving console handlers...");
             patcher.RemoveConsoleHandler();
-            Console.Write("Ok\nRemoving mono incompatible code...");
-            patcher.RemoveProcess();
+//            Console.Write("Ok\nRemoving mono incompatible code...");
+//            patcher.RemoveProcess();
             ////patcher.HookConsoleTitle();
             Console.Write("Ok\nSkipping sysmenus functions...");
             patcher.SkipMenu();
