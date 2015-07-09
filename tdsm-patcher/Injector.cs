@@ -114,7 +114,7 @@ namespace tdsm.patcher
             var first = main.Body.Instructions.First();
 
             var il = main.Body.GetILProcessor();
-            il.InsertBefore(first, il.Create(OpCodes.Ldarg_0));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_1));
             il.InsertBefore(first, il.Create(OpCodes.Call, _asm.MainModule.Import(replacement)));
             il.InsertBefore(first, il.Create(OpCodes.Ret));
 
