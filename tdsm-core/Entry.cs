@@ -663,12 +663,12 @@ namespace tdsm.core
             ProgramLog.Close();
         }
 
-        //[Hook(HookOrder.NORMAL)]
-        //void OnNPCSpawned(ref HookContext ctx, ref HookArgs.NPCSpawn args)
-        //{
-        //    if (StopNPCSpawning)
-        //        ctx.SetResult(HookResult.IGNORE);
-        //}
+        [Hook(HookOrder.NORMAL)]
+        void OnNPCSpawned(ref HookContext ctx, ref HookArgs.NPCSpawn args)
+        {
+            if (StopNPCSpawning)
+                ctx.SetResult(HookResult.IGNORE);
+        }
 
         /////Avoid using this as much as possible (this goes for plugin developers too).
         /////The idea is to be able to add/remove a plugin from the installation without issues.
