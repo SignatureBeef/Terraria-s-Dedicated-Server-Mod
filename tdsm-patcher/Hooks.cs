@@ -305,5 +305,11 @@ namespace tdsm.patcher
             { return _asm.MainModule.Types.Single(x => x.Name == "ClientConnection"); }
             //{ return _asm.MainModule.Types.Single(x => x.Name == "TemporarySynchSock"); }
         }
+
+        public TypeDefinition Utilities
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "Utilities"); }
+        }
     }
 }

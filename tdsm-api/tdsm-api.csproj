@@ -188,6 +188,7 @@
     <Compile Include="Misc\ProgressWebClient.cs" />
     <Compile Include="Misc\PropertiesFile.cs" />
     <Compile Include="Misc\Tasks.cs" />
+    <Compile Include="Callbacks\Utilities.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

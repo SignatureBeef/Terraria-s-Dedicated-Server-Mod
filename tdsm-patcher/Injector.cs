@@ -81,6 +81,21 @@ namespace tdsm.patcher
                 .Value as string;
         }
 
+        public void PathFileIO()
+        {
+            var erase = Terraria.Main.Methods.Single(x => x.Name == "EraseWorld");
+            var repl = _asm.MainModule.Import(API.Utilities.Methods.Single(x => x.Name == "RemoveFile"));
+
+            var il = erase.Body.GetILProcessor();
+            foreach (var item in erase.Body.Instructions.Where(x => 
+                x.OpCode == OpCodes.Call 
+                && x.Operand is MethodReference
+                && (x.Operand as MethodReference).Name == "MoveToRecycleBin").ToArray())
+            {
+                il.Replace(item, il.Create(OpCodes.Call, repl));
+            }
+        }
+
         public void HookDedServEnd()
         {
             var method = Terraria.Main.Methods.Single(x => x.Name == "DedServ");

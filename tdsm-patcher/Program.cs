@@ -247,6 +247,9 @@ namespace tdsm.patcher
             //Console.Write("Ok\nHooking blood moon...");
             //patcher.HookBloodMoon();
 
+            Console.Write("Ok\nFixing world removal...");
+            patcher.PathFileIO();
+
             //We only need one TDSM.exe if this works...
             Console.Write("Ok\nRemoving port forwarding functionality...");
             patcher.FixNetplay();
@@ -336,55 +339,55 @@ namespace tdsm.patcher
             //            Console.WriteLine("Ok");
 
             Console.ForegroundColor = ConsoleColor.White;
-            //if (!isMono)
-            //{
-            //    Console.Write("Ok\nUpdating icons...");
-            //    var res = new Vestris.ResourceLib.IconDirectoryResource(new Vestris.ResourceLib.IconFile("tdsm.ico"));
-            //    foreach (var fl in new string[] { output }) //outFileMS, outFileMN })
-            //    {
-            //        try
-            //        {
-            //            System.Threading.Thread.Sleep(1000);
-            //            res.SaveTo(fl);
-            //        }
-            //        catch
-            //        {
-            //            Console.Write("Failed to write icon for: " + fl);
-            //        }
-            //    }
+            if (!isMono)
+            {
+                Console.Write("Ok\nUpdating icons...");
+                var res = new Vestris.ResourceLib.IconDirectoryResource(new Vestris.ResourceLib.IconFile("tdsm.ico"));
+                foreach (var fl in new string[] { output }) //outFileMS, outFileMN })
+                {
+                    try
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                        res.SaveTo(fl);
+                    }
+                    catch
+                    {
+                        Console.Write("Failed to write icon for: " + fl);
+                    }
+                }
 
-            //    Console.Write("Ok\nUpdating headers...");
-            //    foreach (var fl in new string[] { output }) //outFileMS, outFileMN })
-            //    {
-            //        try
-            //        {
-            //            using (var ri = new Vestris.ResourceLib.ResourceInfo())
-            //            {
-            //                System.Threading.Thread.Sleep(1000);
-            //                ri.Load(fl);
+                Console.Write("Ok\nUpdating headers...");
+                foreach (var fl in new string[] { output }) //outFileMS, outFileMN })
+                {
+                    try
+                    {
+                        using (var ri = new Vestris.ResourceLib.ResourceInfo())
+                        {
+                            System.Threading.Thread.Sleep(1000);
+                            ri.Load(fl);
 
-            //                var ver = (Vestris.ResourceLib.VersionResource)ri[Vestris.ResourceLib.Kernel32.ResourceTypes.RT_VERSION].First();
+                            var ver = (Vestris.ResourceLib.VersionResource)ri[Vestris.ResourceLib.Kernel32.ResourceTypes.RT_VERSION].First();
 
-            //                var inf = (Vestris.ResourceLib.StringFileInfo)ver["StringFileInfo"];
-            //                inf["OriginalFilename"] = fileName + ".exe" + '\0';
-            //                inf["InternalName"] = fileName + ".exe" + '\0';
-            //                inf["ProductName"] = fileName + '\0';
-            //                inf["FileDescription"] = fileName + '\0';
+                            var inf = (Vestris.ResourceLib.StringFileInfo)ver["StringFileInfo"];
+                            inf["OriginalFilename"] = fileName + ".exe" + '\0';
+                            inf["InternalName"] = fileName + ".exe" + '\0';
+                            inf["ProductName"] = fileName + '\0';
+                            inf["FileDescription"] = fileName + '\0';
 
-            //                ri.Unload();
-            //                ver.SaveTo(fl);
-            //            }
-            //        }
-            //        catch
-            //        {
-            //            Console.WriteLine("Failed to write header for: " + fl);
-            //        }
-            //    }
-            //}
+                            ri.Unload();
+                            ver.SaveTo(fl);
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Failed to write header for: " + fl);
+                    }
+                }
+            }
 
 #if DEBUG
             Console.Write("Ok\nUpdating Binaries folder...");
-            try { UpdateBinaries(); } catch { }
+            UpdateBinaries();
 #endif
 
 #if Release || true
