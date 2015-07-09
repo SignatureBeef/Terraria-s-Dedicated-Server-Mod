@@ -745,7 +745,7 @@ namespace tdsm.core
         //    }
         //}
 
-#if TDSMServer
+        #if TDSMServer
         [Hook(HookOrder.NORMAL)]
         void OnDefaultServerStart(ref HookContext ctx, ref HookArgs.StartDefaultServer args)
         {
@@ -934,6 +934,62 @@ namespace tdsm.core
         //        args.Number2, args.Number3, args.Number4, args.Number5);
         //}
 
+//        string GetProgressKey(string input, out int length, out string progress)
+//        {
+//            length = 0;
+//            string key = null;
+//
+//            //Determine format
+//            int progTypeStart = input.IndexOf('-');
+//            int progTypeEnd = input.LastIndexOf('-');
+//
+//            if (progTypeStart > -1 && progTypeEnd > -1)
+//            {
+//                progTypeStart++;
+//                progTypeEnd--;
+//
+//                key = input.Substring(progTypeStart, progTypeEnd - 1);
+//
+//                //                length = input.Length - (progTypeEnd + 1);
+//                //This format does need
+//            }
+//            else
+//            {
+//
+//            }
+//
+//            return key;
+//        }
+
+        static readonly System.Text.RegularExpressions.Regex _fmtGeneration = new System.Text.RegularExpressions.Regex(".* - (.*) - (.*)");
+        static readonly System.Text.RegularExpressions.Regex _fmtSemi = new System.Text.RegularExpressions.Regex("(.*): (.*)");
+        static readonly System.Text.RegularExpressions.Regex _fmtDefault = new System.Text.RegularExpressions.Regex("(.*) (.*)");
+        string GetProgressKey(string input, out string progress)
+        {
+            progress = null;
+
+            var gen = _fmtGeneration.Matches(input);
+            if (gen != null && gen.Count == 1 && gen[0].Groups.Count == 3)
+            {
+                progress = gen[0].Groups[2].Value;
+                return gen[0].Groups[1].Value;
+            }
+            gen = _fmtSemi.Matches(input);
+            if (gen != null && gen.Count == 1 && gen[0].Groups.Count == 3)
+            {
+                progress = gen[0].Groups[2].Value;
+                return gen[0].Groups[1].Value;
+            }
+            gen = _fmtDefault.Matches(input);
+            if (gen != null && gen.Count == 1 && gen[0].Groups.Count == 3)
+            {
+                progress = gen[0].Groups[2].Value;
+                return gen[0].Groups[1].Value;
+            }
+
+            return null;
+        }
+
         private int lastWritten = 0;
         //[Hook(HookOrder.NORMAL)]
         void OnStatusTextChanged() //ref HookContext ctx, ref HookArgs.StatusTextChanged args)
@@ -947,68 +1003,48 @@ namespace tdsm.core
             {
                 if (!String.IsNullOrEmpty(statusText))
                 {
-                    string keyA = null, keyB = null;
-                    int progressLengthST = 0, progressLengthOST = 0;
-                    if (Terraria.Main.AutogenProgress.TotalProgress != 0f)
-                    {
-                        int ixAA = oldStatusText.IndexOf('-'), ixAB = oldStatusText.LastIndexOf('-');
-                        int ixBA = statusText.IndexOf('-'), ixBB = statusText.LastIndexOf('-');
-                        if (ixAA > -1 && ixAB > -1 && ixBA > -1 && ixBB > -1)
-                        {
-                            keyA = oldStatusText.Substring(ixAA, ixAB);
-                            keyB = statusText.Substring(ixBA, ixBB);
+                    string previousProgress, currentProgress;
 
-                            progressLengthST = oldStatusText.Length - ixAB;
-                            progressLengthOST = statusText.Length - ixBB;
-                        }
-                    }
-                    else
-                    {
-                        int ixAA = oldStatusText.LastIndexOf(' ');
-                        int ixBA = statusText.LastIndexOf(' ');
-                        if (ixAA > -1 && ixBA > -1)
-                        {
-                            keyA = oldStatusText.Substring(0, ixAA);
-                            keyB = statusText.Substring(0, ixBA);
+                    string keyA = GetProgressKey(oldStatusText, out previousProgress);
+                    string keyB = GetProgressKey(statusText, out currentProgress);
 
-                            progressLengthST = oldStatusText.Length - ixAA;
-                            progressLengthOST = statusText.Length - ixBA;
-                        }
-                    }
                     if (keyA != null && keyB != null)
                     {
-                        if (keyA == keyB)
+                        keyA = keyA.Trim();
+                        keyB = keyB.Trim();
+                        if (keyA.Length > 0 && keyB.Length > 0)
                         {
-                            if (lastWritten > 0)
+                            if (keyA == keyB)
                             {
-                                var moveBack = oldStatusText.Length - progressLengthST;
-                                for (var x = 0; x < moveBack; x++)
-                                    Console.Write("\b");
-                            }
+                                if (lastWritten > 0)
+                                {
+                                    for (var x = 0; x < lastWritten; x++)
+                                        Console.Write("\b");
+                                }
 
-                            var len = statusText.Length - progressLengthST;
-                            Console.Write(statusText.Substring(progressLengthST, len));
-                            lastWritten += len;
+                                Console.Write(currentProgress);
+                                lastWritten += currentProgress.Length - lastWritten;
+                            }
+                            else
+                            {
+                                Console.WriteLine();
+                                lastWritten = 0;
+                                Console.Write(statusText);
+
+                                lastWritten += currentProgress.Length;
+                            }
                         }
                         else
                         {
-                            Console.WriteLine();
-                            lastWritten = 0;
+                            if (lastWritten > 0)//!String.IsNullOrEmpty(oldStatusText)) //There was existing text
+                            {
+                                Console.WriteLine();
+                                lastWritten = 0;
+                            }
+
                             Console.Write(statusText);
-
-                            lastWritten += statusText.Length;
+                            lastWritten += currentProgress.Length;
                         }
-                    }
-                    else
-                    {
-                        if (lastWritten > 0)//!String.IsNullOrEmpty(oldStatusText)) //There was existing text
-                        {
-                            Console.WriteLine();
-                            lastWritten = 0;
-                        }
-
-                        Console.Write(statusText);
-                        lastWritten += statusText.Length;
                     }
                 }
                 else

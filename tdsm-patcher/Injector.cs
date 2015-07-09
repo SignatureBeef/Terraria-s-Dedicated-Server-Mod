@@ -229,6 +229,9 @@ namespace tdsm.patcher
             {
                 il.InsertBefore(ins.Previous.Previous, insCallback);
 
+                il.Remove(ins.Previous);
+                il.Remove(ins.Previous);
+
                 il.Remove(ins.Next);
                 il.Remove(ins);
             }
