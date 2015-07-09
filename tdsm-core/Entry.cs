@@ -338,7 +338,7 @@ namespace tdsm.core
                 .WithDescription("Enables hard mode.")
                 .WithPermissionNode("tdsm.hardmode")
                 .Calls(this.HardMode);
-            
+
             AddCommand("rcon")
                 .WithDescription("Manage remote console access.")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
@@ -744,8 +744,8 @@ namespace tdsm.core
         //        }
         //    }
         //}
-        
-        #if TDSMServer
+
+#if TDSMServer
         [Hook(HookOrder.NORMAL)]
         void OnDefaultServerStart(ref HookContext ctx, ref HookArgs.StartDefaultServer args)
         {
@@ -947,23 +947,47 @@ namespace tdsm.core
             {
                 if (!String.IsNullOrEmpty(statusText))
                 {
-                    var ixA = oldStatusText.LastIndexOf(":");
-                    var ixB = statusText.LastIndexOf(":");
-                    if (ixA > -1 && ixB > -1)
+                    string keyA = null, keyB = null;
+                    int progressLengthST = 0, progressLengthOST = 0;
+                    if (Terraria.Main.AutogenProgress.TotalProgress != 0f)
                     {
-                        var keyA = oldStatusText.Substring(0, ixA);
-                        var keyB = statusText.Substring(0, ixB);
+                        int ixAA = oldStatusText.IndexOf('-'), ixAB = oldStatusText.LastIndexOf('-');
+                        int ixBA = statusText.IndexOf('-'), ixBB = statusText.LastIndexOf('-');
+                        if (ixAA > -1 && ixAB > -1 && ixBA > -1 && ixBB > -1)
+                        {
+                            keyA = oldStatusText.Substring(ixAA, ixAB);
+                            keyB = statusText.Substring(ixBA, ixBB);
+
+                            progressLengthST = oldStatusText.Length - ixAB;
+                            progressLengthOST = statusText.Length - ixBB;
+                        }
+                    }
+                    else
+                    {
+                        int ixAA = oldStatusText.LastIndexOf(' ');
+                        int ixBA = statusText.LastIndexOf(' ');
+                        if (ixAA > -1 && ixBA > -1)
+                        {
+                            keyA = oldStatusText.Substring(0, ixAA);
+                            keyB = statusText.Substring(0, ixBA);
+
+                            progressLengthST = oldStatusText.Length - ixAA;
+                            progressLengthOST = statusText.Length - ixBA;
+                        }
+                    }
+                    if (keyA != null && keyB != null)
+                    {
                         if (keyA == keyB)
                         {
                             if (lastWritten > 0)
                             {
-                                var moveBack = oldStatusText.Length - ixA;
+                                var moveBack = oldStatusText.Length - progressLengthST;
                                 for (var x = 0; x < moveBack; x++)
                                     Console.Write("\b");
                             }
 
-                            var len = statusText.Length - ixB;
-                            Console.Write(statusText.Substring(ixB, len));
+                            var len = statusText.Length - progressLengthST;
+                            Console.Write(statusText.Substring(progressLengthST, len));
                             lastWritten += len;
                         }
                         else
