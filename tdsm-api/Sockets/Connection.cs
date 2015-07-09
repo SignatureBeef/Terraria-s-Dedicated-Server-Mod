@@ -50,6 +50,7 @@ namespace tdsm.api
         {
             protected override void OnCompleted(SocketAsyncEventArgs args)
             {
+                Console.WriteLine("Received data from client");
                 var c = conn;
                 if (c != null)
                     c.ReceiveCompleted(this);
@@ -267,6 +268,18 @@ namespace tdsm.api
                     sending = SendMore(null);
                 }
             }
+        }
+
+        public void Close()
+        {
+            if (kicking)
+                return;
+
+            Console.WriteLine("CLose requested");
+            kicking = true;
+
+            timeout = new Timer(Timeout, null, 15000, 0);
+            Close(SocketError.ConnectionAborted);
         }
 
         //      protected int flushCounter = 0;
@@ -676,10 +689,10 @@ namespace tdsm.api
                 }
             }
 
-            #pragma warning disable 420
+#pragma warning disable 420
             if (Interlocked.CompareExchange(ref this.error, (int)err, (int)SocketError.Success) != (int)SocketError.Success)
                 return;
-            #pragma warning restore 420
+#pragma warning restore 420
 
             Close(err);
 
@@ -702,10 +715,10 @@ namespace tdsm.api
         {
             kicking = true;
 
-            #pragma warning disable 420
+#pragma warning disable 420
             if (Interlocked.CompareExchange(ref this.closed, 1, 0) != 0)
                 return;
-            #pragma warning restore 420
+#pragma warning restore 420
 
             try
             {

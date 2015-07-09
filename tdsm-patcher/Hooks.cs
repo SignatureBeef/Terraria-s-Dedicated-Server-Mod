@@ -302,8 +302,8 @@ namespace tdsm.patcher
         public TypeDefinition ClientConnection
         {
             get
-//            { return _asm.MainModule.Types.Single(x => x.Name == "ClientConnection"); }
-            { return _asm.MainModule.Types.Single(x => x.Name == "TemporarySynchSock"); }
+            { return _asm.MainModule.Types.Single(x => x.Name == "ClientConnection"); }
+            //{ return _asm.MainModule.Types.Single(x => x.Name == "TemporarySynchSock"); }
         }
     }
 }

@@ -15,6 +15,8 @@ namespace tdsm.api.Callbacks
 
         public static byte ProcessPacket(int bufferId, byte packetId) //, int start, int length)
         {
+            Console.WriteLine("Slot/Packet: {0}/{1}", bufferId, packetId);
+            //Console.WriteLine("Trace: {0}", Environment.StackTrace);
             switch ((Packet)packetId)
             {
                 case Packet.PLAYER_CHAT:
@@ -26,9 +28,9 @@ namespace tdsm.api.Callbacks
                 case Packet.PROJECTILE:
                     ProcessProjectile(bufferId);
                     return 0;
-//                case Packet.PLAYER_DATA:
-//                    ProcessPlayerData(bufferId, start, length);
-            //                    return 0;
+                //                case Packet.PLAYER_DATA:
+                //                    ProcessPlayerData(bufferId, start, length);
+                //                    return 0;
                 case Packet.CHEST:
                     ProcessChest(bufferId);
                     return 0;
@@ -136,7 +138,7 @@ namespace tdsm.api.Callbacks
 
             if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
                 return;
-            
+
             if (Main.netMode == 2 && existing != text)
             {
                 ply = bufferId;
@@ -181,16 +183,16 @@ namespace tdsm.api.Callbacks
                 Y = startY,
                 Size = size,
                 readBuffer = buffer.readBuffer
-//                start = num
+                //                start = num
             };
 
             HookPoints.TileSquareReceived.Invoke(ref ctx, ref args);
 
-//            if (args.applied > 0)
-//            {
-//                WorldGen.RangeFrame(startX, startY, startX + (int)size, startY + (int)size);
-//                NetMessage.SendData((int)Packet.TILE_SQUARE, -1, bufferId, String.Empty, (int)size, (float)startX, (float)startY, 0f, 0);
-//            }
+            //            if (args.applied > 0)
+            //            {
+            //                WorldGen.RangeFrame(startX, startY, startX + (int)size, startY + (int)size);
+            //                NetMessage.SendData((int)Packet.TILE_SQUARE, -1, bufferId, String.Empty, (int)size, (float)startX, (float)startY, 0f, 0);
+            //            }
 
             if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
                 return;
@@ -332,9 +334,9 @@ namespace tdsm.api.Callbacks
 
             if (ctx.Result == HookResult.RECTIFY)
             {
-//                var msg = NewNetMessage.PrepareThreadInstance();
-//                msg.FlowLiquid(x, y);
-//                msg.Send(whoAmI);
+                //                var msg = NewNetMessage.PrepareThreadInstance();
+                //                msg.FlowLiquid(x, y);
+                //                msg.Send(whoAmI);
                 Terraria.NetMessage.SendData((int)Packet.FLOW_LIQUID, bufferId, -1, String.Empty, x, y);
                 return;
             }
@@ -343,7 +345,7 @@ namespace tdsm.api.Callbacks
             {
                 Main.tile[x, y] = new Tile();
             }
-            lock (Main.tile [x, y])
+            lock (Main.tile[x, y])
             {
                 Main.tile[x, y].liquid = liquid;
                 Main.tile[x, y].liquidType((int)liquidType);
@@ -599,22 +601,22 @@ namespace tdsm.api.Callbacks
             };
 
             data.Parse(buffer.readBuffer, start, length);
-//            Skip(read);
-//
-//            if (data.Hair >= MAX_HAIR_ID)
-//            {
-//                data.Hair = 0;
-//            }
-//
+            //            Skip(read);
+            //
+            //            if (data.Hair >= MAX_HAIR_ID)
+            //            {
+            //                data.Hair = 0;
+            //            }
+            //
             var ctx = new HookContext
             {
                 Connection = player.Connection.Socket,
                 Player = player,
                 Sender = player,
             };
-//
+            //
             HookPoints.PlayerDataReceived.Invoke(ref ctx, ref data);
-//
+            //
             if (ctx.CheckForKick())
                 return;
 
@@ -629,25 +631,25 @@ namespace tdsm.api.Callbacks
             }
 
             string address = player.IPAddress.Split(':')[0];
-//            if (!data.BansChecked)
-//            {
-//                if (Server.Bans.Contains(address) || Server.Bans.Contains(data.Name))
-//                {
-//                    ProgramLog.Admin.Log("Prevented banned user {0} from accessing the server.", data.Name);
-//                    conn.Kick("You are banned from this server.");
-//                    return;
-//                }
-//            }
-//
-//            if (!data.WhitelistChecked && Server.WhitelistEnabled)
-//            {
-//                if (!Server.Whitelist.Contains(address) && !Server.Whitelist.Contains(data.Name))
-//                {
-//                    ProgramLog.Admin.Log("Prevented non whitelisted user {0} from accessing the server.", data.Name);
-//                    conn.Kick("You do not have access to this server.");
-//                    return;
-//                }
-//            }
+            //            if (!data.BansChecked)
+            //            {
+            //                if (Server.Bans.Contains(address) || Server.Bans.Contains(data.Name))
+            //                {
+            //                    ProgramLog.Admin.Log("Prevented banned user {0} from accessing the server.", data.Name);
+            //                    conn.Kick("You are banned from this server.");
+            //                    return;
+            //                }
+            //            }
+            //
+            //            if (!data.WhitelistChecked && Server.WhitelistEnabled)
+            //            {
+            //                if (!Server.Whitelist.Contains(address) && !Server.Whitelist.Contains(data.Name))
+            //                {
+            //                    ProgramLog.Admin.Log("Prevented non whitelisted user {0} from accessing the server.", data.Name);
+            //                    conn.Kick("You do not have access to this server.");
+            //                    return;
+            //                }
+            //            }
 
             data.Apply(player);
 
@@ -655,11 +657,11 @@ namespace tdsm.api.Callbacks
             {
                 if (ctx.Result == HookResult.ASK_PASS)
                 {
-//                    conn.State = SlotState.PLAYER_AUTH;
+                    //                    conn.State = SlotState.PLAYER_AUTH;
 
-//                    var msg = NewNetMessage.PrepareThreadInstance();
-//                    msg.PasswordRequest();
-//                    conn.Send(msg.Output);
+                    //                    var msg = NewNetMessage.PrepareThreadInstance();
+                    //                    msg.PasswordRequest();
+                    //                    conn.Send(msg.Output);
                     NetMessage.SendData((int)Packet.PASSWORD_REQUEST, bufferId);
 
                     return;
@@ -667,13 +669,13 @@ namespace tdsm.api.Callbacks
                 else // HookResult.DEFAULT
                 {
                     // don't allow replacing connections for guests, but do for registered users
-//                    if (conn.State < SlotState.PLAYING)
+                    //                    if (conn.State < SlotState.PLAYING)
                     {
                         var lname = player.Name.ToLower();
 
                         foreach (var otherPlayer in Main.player)
                         {
-//                            var otherSlot = Terraria.Netplay.Clients[otherPlayer.whoAmI];
+                            //                            var otherSlot = Terraria.Netplay.Clients[otherPlayer.whoAmI];
                             if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower()) // && otherSlot.State >= SlotState.CONNECTED)
                             {
                                 player.Kick("A \"" + otherPlayer.Name + "\" is already on this server.");
@@ -693,166 +695,166 @@ namespace tdsm.api.Callbacks
 
             return;
 
-//            int num6 = (int)buffer.reader.ReadByte();
-//            if (Main.netMode == 2)
-//            {
-//                num6 = bufferId;
-//            }
-//            if (num6 == Main.myPlayer && !Main.ServerSideCharacter)
-//            {
-//                return;
-//            }
-//            Player player = Main.player[num6];
-//            player.whoAmI = num6;
-//            player.skinVariant = (int)buffer.reader.ReadByte();
-//            player.skinVariant = (int)MathHelper.Clamp((float)player.skinVariant, 0, 7);
-//            player.hair = (int)buffer.reader.ReadByte();
-//            if (player.hair >= 134)
-//            {
-//                player.hair = 0;
-//            }
-//            player.name = buffer.reader.ReadString().Trim().Trim();
-//            player.hairDye = buffer.reader.ReadByte();
-//            BitsByte bitsByte = buffer.reader.ReadByte();
-//            for (int num7 = 0; num7 < 8; num7++)
-//            {
-//                player.hideVisual[num7] = bitsByte[num7];
-//            }
-//            bitsByte = buffer.reader.ReadByte();
-//            for (int num8 = 0; num8 < 2; num8++)
-//            {
-//                player.hideVisual[num8 + 8] = bitsByte[num8];
-//            }
-//            player.hideMisc = buffer.reader.ReadByte();
-//            player.hairColor = buffer.reader.ReadRGB();
-//            player.skinColor = buffer.reader.ReadRGB();
-//            player.eyeColor = buffer.reader.ReadRGB();
-//            player.shirtColor = buffer.reader.ReadRGB();
-//            player.underShirtColor = buffer.reader.ReadRGB();
-//            player.pantsColor = buffer.reader.ReadRGB();
-//            player.shoeColor = buffer.reader.ReadRGB();
-//            BitsByte bitsByte2 = buffer.reader.ReadByte();
-//            player.difficulty = 0;
-//            if (bitsByte2[0])
-//            {
-//                Player expr_B25 = player;
-//                expr_B25.difficulty += 1;
-//            }
-//            if (bitsByte2[1])
-//            {
-//                Player expr_B3F = player;
-//                expr_B3F.difficulty += 2;
-//            }
-//            if (player.difficulty > 2)
-//            {
-//                player.difficulty = 2;
-//            }
-//            player.extraAccessory = bitsByte2[2];
-//            if (Main.netMode != 2)
-//            {
-//                return;
-//            }
-//            bool flag = false;
-//            if (Netplay.Clients[bufferId].State < 10)
-//            {
-//                for (int num9 = 0; num9 < 255; num9++)
-//                {
-//                    if (num9 != num6 && player.name == Main.player[num9].name && Netplay.Clients[num9].IsActive)
-//                    {
-//                        flag = true;
-//                    }
-//                }
-//            }
-//            if (flag)
-//            {
-//                NetMessage.SendData(2, bufferId, -1, player.name + " " + Lang.mp[5], 0, 0, 0, 0, 0, 0, 0);
-//                return;
-//            }
-//            if (player.name.Length > Player.nameLen)
-//            {
-//                NetMessage.SendData(2, bufferId, -1, "Name is too long.", 0, 0, 0, 0, 0, 0, 0);
-//                return;
-//            }
-//            if (player.name == "")
-//            {
-//                NetMessage.SendData(2, bufferId, -1, "Empty name.", 0, 0, 0, 0, 0, 0, 0);
-//                return;
-//            }
-//
-//            var ctx = new HookContext
-//                {
-//                    Connection = player.conn,
-//                    Player = player,
-//                    Sender = player,
-//                };
-//
-//            HookPoints.PlayerDataReceived.Invoke (ref ctx, ref data);
-//
-//            if (ctx.CheckForKick ())
-//                return;
-//
-//            if (! data.NameChecked)
-//            {
-//                string error;
-//                if (! data.CheckName (out error))
-//                {
-//                    conn.Kick (error);
-//                    return;
-//                }
-//            }
-//
-//            if (! data.BansChecked)
-//            {
-//                string address = conn.RemoteAddress.Split(':')[0];
-//
-//                if (Server.BanList.containsException (address) || Server.BanList.containsException (data.Name))
-//                {
-//                    ProgramLog.Admin.Log ("Prevented user {0} from accessing the server.", data.Name);
-//                    conn.Kick ("You are banned from this server.");
-//                    return;
-//                }
-//            }
-//
-//            data.Apply (player);
-//
-//            if (ctx.Result == HookResult.ASK_PASS)
-//            {
-//                conn.State = SlotState.PLAYER_AUTH;
-//
-//                var msg = NetMessage.PrepareThreadInstance ();
-//                msg.PasswordRequest ();
-//                conn.Send (msg.Output);
-//
-//                return;
-//            }
-//            else // HookResult.DEFAULT
-//            {
-//                // don't allow replacing connections for guests, but do for registered users
-//                if (conn.State < SlotState.PLAYING)
-//                {
-//                    var lname = player.Name.ToLower();
-//
-//                    foreach (var otherPlayer in Main.players)
-//                    {
-//                        var otherSlot = NetPlay.slots[otherPlayer.whoAmi];
-//                        if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherSlot.state >= SlotState.CONNECTED)
-//                        {
-//                            conn.Kick ("A \"" + otherPlayer.Name + "\" is already on this server.");
-//                            return;
-//                        }
-//                    }
-//                }
-//
-//                //conn.Queue = (int)loginEvent.Priority; // actual queueing done on world request message
-//
-//                // and now decide whether to queue the connection
-//                //SlotManager.Schedule (conn, (int)loginEvent.Priority);
-//
-//                //NetMessage.SendData (4, -1, -1, player.Name, whoAmI);
-//            }
-//
-//            Netplay.Clients[bufferId].Name = player.name;
-//            NetMessage.SendData(4, -1, bufferId, player.name, num6, 0, 0, 0, 0, 0, 0);
+            //            int num6 = (int)buffer.reader.ReadByte();
+            //            if (Main.netMode == 2)
+            //            {
+            //                num6 = bufferId;
+            //            }
+            //            if (num6 == Main.myPlayer && !Main.ServerSideCharacter)
+            //            {
+            //                return;
+            //            }
+            //            Player player = Main.player[num6];
+            //            player.whoAmI = num6;
+            //            player.skinVariant = (int)buffer.reader.ReadByte();
+            //            player.skinVariant = (int)MathHelper.Clamp((float)player.skinVariant, 0, 7);
+            //            player.hair = (int)buffer.reader.ReadByte();
+            //            if (player.hair >= 134)
+            //            {
+            //                player.hair = 0;
+            //            }
+            //            player.name = buffer.reader.ReadString().Trim().Trim();
+            //            player.hairDye = buffer.reader.ReadByte();
+            //            BitsByte bitsByte = buffer.reader.ReadByte();
+            //            for (int num7 = 0; num7 < 8; num7++)
+            //            {
+            //                player.hideVisual[num7] = bitsByte[num7];
+            //            }
+            //            bitsByte = buffer.reader.ReadByte();
+            //            for (int num8 = 0; num8 < 2; num8++)
+            //            {
+            //                player.hideVisual[num8 + 8] = bitsByte[num8];
+            //            }
+            //            player.hideMisc = buffer.reader.ReadByte();
+            //            player.hairColor = buffer.reader.ReadRGB();
+            //            player.skinColor = buffer.reader.ReadRGB();
+            //            player.eyeColor = buffer.reader.ReadRGB();
+            //            player.shirtColor = buffer.reader.ReadRGB();
+            //            player.underShirtColor = buffer.reader.ReadRGB();
+            //            player.pantsColor = buffer.reader.ReadRGB();
+            //            player.shoeColor = buffer.reader.ReadRGB();
+            //            BitsByte bitsByte2 = buffer.reader.ReadByte();
+            //            player.difficulty = 0;
+            //            if (bitsByte2[0])
+            //            {
+            //                Player expr_B25 = player;
+            //                expr_B25.difficulty += 1;
+            //            }
+            //            if (bitsByte2[1])
+            //            {
+            //                Player expr_B3F = player;
+            //                expr_B3F.difficulty += 2;
+            //            }
+            //            if (player.difficulty > 2)
+            //            {
+            //                player.difficulty = 2;
+            //            }
+            //            player.extraAccessory = bitsByte2[2];
+            //            if (Main.netMode != 2)
+            //            {
+            //                return;
+            //            }
+            //            bool flag = false;
+            //            if (Netplay.Clients[bufferId].State < 10)
+            //            {
+            //                for (int num9 = 0; num9 < 255; num9++)
+            //                {
+            //                    if (num9 != num6 && player.name == Main.player[num9].name && Netplay.Clients[num9].IsActive)
+            //                    {
+            //                        flag = true;
+            //                    }
+            //                }
+            //            }
+            //            if (flag)
+            //            {
+            //                NetMessage.SendData(2, bufferId, -1, player.name + " " + Lang.mp[5], 0, 0, 0, 0, 0, 0, 0);
+            //                return;
+            //            }
+            //            if (player.name.Length > Player.nameLen)
+            //            {
+            //                NetMessage.SendData(2, bufferId, -1, "Name is too long.", 0, 0, 0, 0, 0, 0, 0);
+            //                return;
+            //            }
+            //            if (player.name == "")
+            //            {
+            //                NetMessage.SendData(2, bufferId, -1, "Empty name.", 0, 0, 0, 0, 0, 0, 0);
+            //                return;
+            //            }
+            //
+            //            var ctx = new HookContext
+            //                {
+            //                    Connection = player.conn,
+            //                    Player = player,
+            //                    Sender = player,
+            //                };
+            //
+            //            HookPoints.PlayerDataReceived.Invoke (ref ctx, ref data);
+            //
+            //            if (ctx.CheckForKick ())
+            //                return;
+            //
+            //            if (! data.NameChecked)
+            //            {
+            //                string error;
+            //                if (! data.CheckName (out error))
+            //                {
+            //                    conn.Kick (error);
+            //                    return;
+            //                }
+            //            }
+            //
+            //            if (! data.BansChecked)
+            //            {
+            //                string address = conn.RemoteAddress.Split(':')[0];
+            //
+            //                if (Server.BanList.containsException (address) || Server.BanList.containsException (data.Name))
+            //                {
+            //                    ProgramLog.Admin.Log ("Prevented user {0} from accessing the server.", data.Name);
+            //                    conn.Kick ("You are banned from this server.");
+            //                    return;
+            //                }
+            //            }
+            //
+            //            data.Apply (player);
+            //
+            //            if (ctx.Result == HookResult.ASK_PASS)
+            //            {
+            //                conn.State = SlotState.PLAYER_AUTH;
+            //
+            //                var msg = NetMessage.PrepareThreadInstance ();
+            //                msg.PasswordRequest ();
+            //                conn.Send (msg.Output);
+            //
+            //                return;
+            //            }
+            //            else // HookResult.DEFAULT
+            //            {
+            //                // don't allow replacing connections for guests, but do for registered users
+            //                if (conn.State < SlotState.PLAYING)
+            //                {
+            //                    var lname = player.Name.ToLower();
+            //
+            //                    foreach (var otherPlayer in Main.players)
+            //                    {
+            //                        var otherSlot = NetPlay.slots[otherPlayer.whoAmi];
+            //                        if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherSlot.state >= SlotState.CONNECTED)
+            //                        {
+            //                            conn.Kick ("A \"" + otherPlayer.Name + "\" is already on this server.");
+            //                            return;
+            //                        }
+            //                    }
+            //                }
+            //
+            //                //conn.Queue = (int)loginEvent.Priority; // actual queueing done on world request message
+            //
+            //                // and now decide whether to queue the connection
+            //                //SlotManager.Schedule (conn, (int)loginEvent.Priority);
+            //
+            //                //NetMessage.SendData (4, -1, -1, player.Name, whoAmI);
+            //            }
+            //
+            //            Netplay.Clients[bufferId].Name = player.name;
+            //            NetMessage.SendData(4, -1, bufferId, player.name, num6, 0, 0, 0, 0, 0, 0);
         }
 
         private static void ProcessProjectile(int bufferId)
@@ -1205,7 +1207,7 @@ namespace tdsm.api.Callbacks
 
                 if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
                     return;
-                
+
                 NetMessage.SendData(25, -1, -1, chatText, bufferId, (float)color.R, (float)color.G, (float)color.B, 0, 0, 0);
                 if (Main.dedServ)
                 {
