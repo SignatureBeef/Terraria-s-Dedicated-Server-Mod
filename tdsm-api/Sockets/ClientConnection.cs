@@ -210,7 +210,6 @@ namespace tdsm.api
             //Console.WriteLine("Length: " + local[0] + "," + local[1]);
 
             DespatchData(local);
-
         }
 
         object sync = new object();
@@ -237,13 +236,14 @@ namespace tdsm.api
                         //                if (readQueue.TryDequeue(out cb))
                         if (test != null)
                         {
-                            var len = buff.Length;
+                            var len = buff.Length - processed;
                             if (len > test.Size)
                                 len = test.Size;
 
                             //Console.WriteLine("Length: " + len);
                             if (len > 0)
                             {
+                                //No point shifting the target buffer as they always read from index 0
                                 Buffer.BlockCopy(buff, processed, test.Buffer, test.Offset, len);
                                 test.Callback(test.State, len);
 
