@@ -12,7 +12,7 @@ namespace tdsm.api.Callbacks
     {
         public static void StartupConfig(Main game)
         {
-            if (!Globals.IsMono)
+            if (Tools.RuntimePlatform != RuntimePlatform.Mono)
             {
                 try
                 {
@@ -110,7 +110,7 @@ namespace tdsm.api.Callbacks
                                     case "priority":
                                         if (!Program.LaunchParameters.ContainsKey("-forcepriority"))
                                         {
-                                            if (!Globals.IsMono)
+                                            if (Tools.RuntimePlatform != RuntimePlatform.Mono)
                                             {
                                                 try
                                                 {
@@ -160,12 +160,25 @@ namespace tdsm.api.Callbacks
                                         Terraria.Main.motd = value;
                                         break;
                                     case "lang":
+                                        int lang;
+                                        if (!Int32.TryParse(value, out lang))
+                                        {
+                                            Tools.WriteLine("Failed to parse config option {0}", key);
+                                        }
+                                        else
+                                            Lang.lang = lang;
                                         break;
                                     case "worldpath":
                                         Terraria.Main.WorldPath = value;
                                         break;
                                     case "worldname":
                                         Terraria.Main.worldName = value;
+                                        break;
+                                    case "banlist":
+                                        Netplay.BanFilePath = value;
+                                        break;
+                                    case "difficulty":
+                                        Main.expertMode = value == "1";
                                         break;
                                     case "autocreate":
                                         int autocreate;

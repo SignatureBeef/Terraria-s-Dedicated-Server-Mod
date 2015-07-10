@@ -125,7 +125,7 @@ namespace tdsm.api.Callbacks
             {
                 if (this._connection != null && this._connection.Client.Poll(-1, SelectMode.SelectRead))
                 {
-                    if (Globals.IsMono)
+                    if (Tools.RuntimePlatform == RuntimePlatform.Mono)
                     {
                         int len = this._connection.GetStream().Read(data, offset, size);
                         if (callback != null)
@@ -151,7 +151,7 @@ namespace tdsm.api.Callbacks
             {
                 if (this._connection != null && this._connection.Client.Poll(-1, SelectMode.SelectWrite))
                 {
-                    if (Globals.IsMono)
+                    if (Tools.RuntimePlatform == RuntimePlatform.Mono)
                     {
                         this._connection.GetStream().Write(data, offset, size);
                         if (callback != null)

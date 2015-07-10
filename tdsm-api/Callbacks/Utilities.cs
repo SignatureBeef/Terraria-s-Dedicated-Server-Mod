@@ -6,7 +6,7 @@ namespace tdsm.api.Callbacks
     {
         public static bool RemoveFile(string path)
         {
-            if (Globals.IsMono)
+            if (Tools.RuntimePlatform == RuntimePlatform.Mono)
             {
                 try
                 {

@@ -427,8 +427,8 @@ namespace tdsm.patcher
                 {
                     if (!isMono)
                     {
-                        if (File.Exists("serverconfig.txt"))
-                            System.Diagnostics.Process.Start(output, "-config serverconfig.txt");
+                        if (File.Exists("server.config"))
+                            System.Diagnostics.Process.Start(output, "-config server.config");
                         else
                             System.Diagnostics.Process.Start(output);
                     }
@@ -452,10 +452,10 @@ namespace tdsm.patcher
                             var asm = System.Reflection.Assembly.Load(ms.ToArray());
                             try
                             {
-                                if (File.Exists("serverconfig.txt"))
+                                if (File.Exists("server.config"))
                                     asm.EntryPoint.Invoke(null, new object[]
                                         {
-                                            new string[] { "-config", "serverconfig.txt", "-noupnp" }
+                                            new string[] { "-config", "server.config", "-noupnp" }
                                         });
                                 else
                                     asm.EntryPoint.Invoke(null, null);
@@ -505,6 +505,7 @@ namespace tdsm.patcher
                 File.Delete(outputPath);
 
             var contents = File.ReadAllText(official);
+            contents += Environment.NewLine;
             contents += File.ReadAllText(additional);
 
             File.WriteAllText(output, contents);
