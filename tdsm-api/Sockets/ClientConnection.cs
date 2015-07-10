@@ -91,31 +91,38 @@ namespace tdsm.api
                     //                lock (All)
                     //clients.AddRange(Netplay.Clients);
 
-                    foreach (var client in Netplay.Clients)
+                    if (Netplay.Clients != null)
                     {
-                        client.TimeOutTimer += 5;
+                        for (var i = 0; i < Netplay.Clients.Length; i++)
+                        {
+                            var client = Netplay.Clients[i];
+                            if (client != null)
+                            {
+                                client.TimeOutTimer += 5;
 
-                        if (client.State >= 0) //== SlotState.QUEUED)
-                        {
-                            if (client.TimeOutTimer >= Main.MaxTimeout / 2)
-                            {
-                                //                            msg.Clear();
-                                //                            msg.SendTileLoading(1, SlotManager.WaitingMessage(conn));
-                                //                            client.Send(msg.Output);
-                                NetMessage.SendData((int)Packet.SEND_TILE_LOADING, client.Id);
-                                client.TimeOutTimer = 0;
-                            }
-                        }
-                        else if (client.TimeOutTimer >= Main.MaxTimeout)
-                        {
-                            try
-                            {
-                                client.Kick("Timed out.");
-                                client.TimeOutTimer = 0;
-                            }
-                            catch (Exception e)
-                            {
-                                Tools.WriteLine("Exception in timeout thread: {0}", e);
+                                if (client.State >= 0) //== SlotState.QUEUED)
+                                {
+                                    if (client.TimeOutTimer >= Main.MaxTimeout / 2)
+                                    {
+                                        //                            msg.Clear();
+                                        //                            msg.SendTileLoading(1, SlotManager.WaitingMessage(conn));
+                                        //                            client.Send(msg.Output);
+                                        NetMessage.SendData((int)Packet.SEND_TILE_LOADING, client.Id);
+                                        client.TimeOutTimer = 0;
+                                    }
+                                }
+                                else if (client.TimeOutTimer >= Main.MaxTimeout)
+                                {
+                                    try
+                                    {
+                                        client.Kick("Timed out.");
+                                        client.TimeOutTimer = 0;
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Tools.WriteLine("Exception in timeout thread: {0}", e);
+                                    }
+                                }
                             }
                         }
                     }
@@ -302,7 +309,8 @@ namespace tdsm.api
         void ISocket.Close()
         {
             //            CloseSocket();
-            if (_isReceiving) Close();
+            if (_isReceiving)
+                Close();
             _isReceiving = false;
         }
 
