@@ -38,6 +38,8 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Exit(ISender sender, ArgumentList args)
         {
+            Tools.NotifyAllOps("Exiting...");
+
             Terraria.IO.WorldFile.saveWorld(false);
             Netplay.disconnect = true;
         }
@@ -49,6 +51,7 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void ExitNoSave(ISender sender, ArgumentList args)
         {
+            Tools.NotifyAllOps("Exiting without saving...");
             Netplay.disconnect = true;
         }
 
@@ -63,11 +66,11 @@ namespace tdsm.api.Command
             {
                 if (Main.motd == String.Empty)
                 {
-                    Tools.WriteLine("Welcome to " + Main.worldName + "!");
+                    sender.Message("Welcome to " + Main.worldName + "!");
                 }
                 else
                 {
-                    Tools.WriteLine("MOTD: " + Main.motd);
+                    sender.Message("MOTD: " + Main.motd);
                 }
             }
             else
@@ -89,15 +92,15 @@ namespace tdsm.api.Command
                 if (Main.player[i].active)
                 {
                     count++;
-                    Tools.WriteLine("{0} ({1})", Main.player[i].name, Netplay.Clients[i].RemoteAddress());
+                    sender.Message("{0} ({1})", Main.player[i].name, Netplay.Clients[i].RemoteAddress());
                 }
             }
             if (count == 0)
-                Tools.WriteLine("No players connected.");
+                sender.Message("No players connected.");
             else if (count == 1)
-                Tools.WriteLine("1 player connected.");
+                sender.Message("1 player connected.");
             else
-                Tools.WriteLine(count + " players connected.");
+                sender.Message(count + " players connected.");
         }
 
         /// <summary>
@@ -144,7 +147,7 @@ namespace tdsm.api.Command
         {
             if (String.IsNullOrEmpty(player))
             {
-                Tools.WriteLine("Usage: kick <player>");
+                sender.Message("Usage: kick <player>");
             }
             else
             {
@@ -172,7 +175,7 @@ namespace tdsm.api.Command
         {
             if (String.IsNullOrEmpty(player))
             {
-                Tools.WriteLine("Usage: ban <player>");
+                sender.Message("Usage: ban <player>");
             }
             else
             {
@@ -203,12 +206,12 @@ namespace tdsm.api.Command
             {
                 if (String.IsNullOrEmpty(password))
                 {
-                    Tools.WriteLine("No password set.");
+                    sender.Message("No password set.");
                 }
                 else
                 {
                     Netplay.ServerPassword = password;
-                    Tools.WriteLine("Password: " + Netplay.ServerPassword);
+                    sender.Message("Password: " + Netplay.ServerPassword);
                 }
             }
             else
@@ -216,12 +219,12 @@ namespace tdsm.api.Command
                 if (String.IsNullOrEmpty(password))
                 {
                     Netplay.ServerPassword = String.Empty;
-                    Tools.WriteLine("Password disabled.");
+                    sender.Message("Password disabled.");
                 }
                 else
                 {
                     Netplay.ServerPassword = password;
-                    Tools.WriteLine("Password: " + Netplay.ServerPassword);
+                    sender.Message("Password: " + Netplay.ServerPassword);
                 }
             }
         }
@@ -233,8 +236,8 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Version(ISender sender, ArgumentList args)
         {
-            Tools.WriteLine("Terraria Server " + Main.versionNumber);
-            Tools.WriteLine("TDSM API Version " + Globals.Build + Globals.PhaseToSuffix(Globals.BuildPhase));
+            sender.Message("Terraria Server " + Main.versionNumber);
+            sender.Message("TDSM API Version " + Globals.Build + Globals.PhaseToSuffix(Globals.BuildPhase));
         }
 
         /// <summary>
@@ -244,7 +247,7 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void MaxPlayers(ISender sender, ArgumentList args)
         {
-            Tools.WriteLine("Player limit: " + Main.maxNetPlayers);
+            sender.Message("Player limit: " + Main.maxNetPlayers);
         }
 
         /// <summary>
@@ -287,7 +290,7 @@ namespace tdsm.api.Command
             {
                 num3 = 12;
             }
-            Tools.WriteLine(string.Concat(new object[]
+            sender.Message(string.Concat(new object[]
                     {
                         "Time: ",
                         num3,
@@ -305,7 +308,7 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Port(ISender sender, ArgumentList args)
         {
-            Tools.WriteLine("Port: " + Netplay.ListenPort);
+            sender.Message("Port: " + Netplay.ListenPort);
         }
 
         /// <summary>
@@ -319,7 +322,7 @@ namespace tdsm.api.Command
             Main.time = 0.0;
             NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
-            Tools.WriteLine("Time set to dawn");
+            sender.Message("Time set to dawn");
         }
 
         /// <summary>
@@ -333,7 +336,7 @@ namespace tdsm.api.Command
             Main.time = 27000.0;
             NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
-            Tools.WriteLine("Time set to noon");
+            sender.Message("Time set to noon");
         }
 
         /// <summary>
@@ -347,7 +350,7 @@ namespace tdsm.api.Command
             Main.time = 0.0;
             NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
-            Tools.WriteLine("Time set to dusk");
+            sender.Message("Time set to dusk");
         }
 
         /// <summary>
@@ -361,7 +364,7 @@ namespace tdsm.api.Command
             Main.time = 16200.0;
             NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
-            Tools.WriteLine("Time set to midnight");
+            sender.Message("Time set to midnight");
         }
 
         /// <summary>
@@ -377,7 +380,7 @@ namespace tdsm.api.Command
             }
             else
             {
-                Tools.WriteLine("Water is already settling");
+                sender.Message("Water is already settling");
             }
         }
 

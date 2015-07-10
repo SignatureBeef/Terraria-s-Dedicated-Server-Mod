@@ -37,7 +37,7 @@
 #maxplayers=8
 
 #Set the port number
-#port=7777
+port=7778
 
 #Set the server password
 #password=p@55w0rd

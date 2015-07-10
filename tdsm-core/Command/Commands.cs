@@ -444,7 +444,7 @@ namespace tdsm.core
             while (WorldGen.saveLock)
                 Thread.Sleep(100);
 
-            Tools.NotifyAllOps("Saving data...", true);
+//            Tools.NotifyAllOps("Saving data...", true);
 
             //Server.BanList.Save();
             //Server.WhiteList.Save();

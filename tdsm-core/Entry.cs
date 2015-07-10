@@ -184,6 +184,13 @@ namespace tdsm.core
                 .WithPermissionNode("tdsm.tphere")
                 .Calls(this.TeleportHere);
 
+            AddCommand("save")
+                .WithDescription("Save world and configuration data")
+                .WithAccessLevel(AccessLevel.OP)
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.admin")
+                .Calls(this.SaveAll);
+
             AddCommand("save-all")
                 .WithDescription("Save world and configuration data")
                 .WithAccessLevel(AccessLevel.OP)
@@ -417,13 +424,13 @@ namespace tdsm.core
                 .SetDefaultUsage()
                 .Calls(Server.Command_AcceptConnections);
 #endif
-            AddCommand("restart")
-                .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Restart the server.")
-                .WithHelpText("<no parameters>    - Restart immediately.")
-                .WithHelpText("--wait             - Wait for users to disconnect and then restart.")
-                .WithPermissionNode("tdsm.restart")
-                .Calls(this.Restart);
+//            AddCommand("restart")
+//                .WithAccessLevel(AccessLevel.OP)
+//                .WithDescription("Restart the server.")
+//                .WithHelpText("<no parameters>    - Restart immediately.")
+//                .WithHelpText("--wait             - Wait for users to disconnect and then restart.")
+//                .WithPermissionNode("tdsm.restart")
+//                .Calls(this.Restart);
 
 #if DEBUG
             AddCommand("repo")

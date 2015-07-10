@@ -4,6 +4,7 @@ using tdsm.api.Plugin;
 using Terraria;
 using Terraria.Initializers;
 using System.Diagnostics;
+using Terraria.IO;
 
 namespace tdsm.api.Callbacks
 {
@@ -86,7 +87,7 @@ namespace tdsm.api.Callbacks
                                 switch (key.ToLower())
                                 {
                                     case "world":
-                                        Terraria.Main.newWorldName = value;
+                                        Main.ActiveWorldFileData = WorldFile.GetAllMetadata(value, false);
                                         break;
                                     case "port":
                                         int port;
@@ -107,6 +108,50 @@ namespace tdsm.api.Callbacks
                                             Terraria.Main.maxNetPlayers = maxplayers;
                                         break;
                                     case "priority":
+                                        if (!Program.LaunchParameters.ContainsKey("-forcepriority"))
+                                        {
+                                            if (!Globals.IsMono)
+                                            {
+                                                try
+                                                {
+                                                    int priority = Convert.ToInt32(value);
+                                                    if (priority >= 0 && priority <= 5)
+                                                    {
+                                                        Process currentProcess = Process.GetCurrentProcess();
+                                                        if (priority == 0)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.RealTime;
+                                                        }
+                                                        else if (priority == 1)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.High;
+                                                        }
+                                                        else if (priority == 2)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+                                                        }
+                                                        else if (priority == 3)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.Normal;
+                                                        }
+                                                        else if (priority == 4)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.BelowNormal;
+                                                        }
+                                                        else if (priority == 5)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.Idle;
+                                                        }
+                                                    }
+                                                    else Tools.WriteLine("Invalid priority value: " + priority);
+                                                }
+                                                catch
+                                                {
+                                                }
+                                            }
+                                            else
+                                                Tools.WriteLine("Skipped setting process priority on mono");
+                                        }
                                         break;
                                     case "password":
                                         Terraria.Netplay.ServerPassword = value;
