@@ -200,8 +200,8 @@ namespace tdsm.patcher
             patcher.PatchPlayer();
             Console.Write("Ok\nRemoving console handlers...");
             patcher.RemoveConsoleHandler();
-//            Console.Write("Ok\nRemoving mono incompatible code...");
-//            patcher.RemoveProcess();
+            Console.Write("Ok\nRemoving mono incompatible code...");
+            patcher.SwapProcessPriority();
             ////patcher.HookConsoleTitle();
             Console.Write("Ok\nSkipping sysmenus functions...");
             patcher.SkipMenu();
@@ -253,7 +253,7 @@ namespace tdsm.patcher
             //We only need one TDSM.exe if this works...
             Console.Write("Ok\nRemoving port forwarding functionality...");
             patcher.FixNetplay();
-//            patcher.DetectMissingXNA();
+            //            patcher.DetectMissingXNA();
 
             Console.Write("Ok\n");
             patcher.InjectHooks();

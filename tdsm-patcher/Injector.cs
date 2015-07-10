@@ -345,21 +345,21 @@ namespace tdsm.patcher
             il.Remove(target);
         }
 
-//        public void RemoveProcess()
-//        {
-//            var method = Terraria.ProgramServer.Methods.Single(x => x.Name == "InnerStart");
-//
-//            var il = method.Body.GetILProcessor();
-//            var target = il.Body.Instructions.Single(x => x.OpCode == OpCodes.Callvirt
-//                             && x.Operand is MethodReference
-//                             && (x.Operand as MethodReference).Name == "set_PriorityClass");
-//
-//            il.Remove(target.Previous.Previous.Previous.Previous);
-//            il.Remove(target.Previous.Previous.Previous);
-//            il.Remove(target.Previous.Previous);
-//            il.Remove(target.Previous);
-//            il.Remove(target);
-//        }
+        //        public void RemoveProcess()
+        //        {
+        //            var method = Terraria.ProgramServer.Methods.Single(x => x.Name == "InnerStart");
+        //
+        //            var il = method.Body.GetILProcessor();
+        //            var target = il.Body.Instructions.Single(x => x.OpCode == OpCodes.Callvirt
+        //                             && x.Operand is MethodReference
+        //                             && (x.Operand as MethodReference).Name == "set_PriorityClass");
+        //
+        //            il.Remove(target.Previous.Previous.Previous.Previous);
+        //            il.Remove(target.Previous.Previous.Previous);
+        //            il.Remove(target.Previous.Previous);
+        //            il.Remove(target.Previous);
+        //            il.Remove(target);
+        //        }
 
         public void HookUpdateServer()
         {
@@ -629,27 +629,27 @@ namespace tdsm.patcher
             }
         }
 
-//        public void FixEntryPoint()
-//        {
-//            var staticConstructor = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main");
-//
-//            var il = staticConstructor.Body.GetILProcessor();
-//            var counting = 0;
-//            for (var x = 0; x < staticConstructor.Body.Instructions.Count; x++)
-//            {
-//                var ins = staticConstructor.Body.Instructions[x];
-//                if (ins.OpCode == OpCodes.Call && ins.Operand is MethodReference && (ins.Operand as MethodReference).Name == "GetCurrentProcess")
-//                {
-//                    counting = 5;
-//                }
-//
-//                if (counting-- > 0)
-//                {
-//                    il.Remove(ins);
-//                    x--;
-//                }
-//            }
-//        }
+        //        public void FixEntryPoint()
+        //        {
+        //            var staticConstructor = Terraria.ProgramServer.Methods.Single(x => x.Name == "Main");
+        //
+        //            var il = staticConstructor.Body.GetILProcessor();
+        //            var counting = 0;
+        //            for (var x = 0; x < staticConstructor.Body.Instructions.Count; x++)
+        //            {
+        //                var ins = staticConstructor.Body.Instructions[x];
+        //                if (ins.OpCode == OpCodes.Call && ins.Operand is MethodReference && (ins.Operand as MethodReference).Name == "GetCurrentProcess")
+        //                {
+        //                    counting = 5;
+        //                }
+        //
+        //                if (counting-- > 0)
+        //                {
+        //                    il.Remove(ins);
+        //                    x--;
+        //                }
+        //            }
+        //        }
 
         public void FixSavePath()
         {
@@ -746,6 +746,35 @@ namespace tdsm.patcher
             return false;
         }
 
+        public void SwapProcessPriority()
+        {
+            var lsp = Terraria.LaunchInitializer.Methods.Single(x => x.Name == "LoadServerParameters");
+
+            var il = lsp.Body.GetILProcessor();
+            while (true)
+            {
+                il.Remove(lsp.Body.Instructions[0]);
+                if (lsp.Body.Instructions[0].OpCode == OpCodes.Leave_S)
+                {
+                    il.Remove(lsp.Body.Instructions[0]);
+                    il.Remove(lsp.Body.Instructions[0]);
+                    il.Remove(lsp.Body.Instructions[0]);
+
+                    break;
+                }
+            }
+
+            lsp.Body.Variables.RemoveAt(0);
+            lsp.Body.Variables.RemoveAt(0);
+            lsp.Body.Variables.RemoveAt(0);
+
+            lsp.Body.ExceptionHandlers.RemoveAt(0);
+
+            var callback = _asm.MainModule.Import(API.Configuration.Methods.Single(x => x.Name == "StartupConfig"));
+            il.InsertBefore(lsp.Body.Instructions[0], il.Create(OpCodes.Call, callback));
+            il.InsertBefore(lsp.Body.Instructions[0], il.Create(OpCodes.Ldarg_0));
+        }
+
         /// <summary>
         /// Makes the types public.
         /// </summary>
@@ -781,6 +810,10 @@ namespace tdsm.patcher
                     .First();
                 main.IsFamily = false;
                 main.IsPublic = true;
+
+                var tp = Terraria.LaunchInitializer.Methods.Single(x => x.Name == "TryParameter");
+                tp.IsFamily = false;
+                tp.IsPublic = true;
             }
         }
 

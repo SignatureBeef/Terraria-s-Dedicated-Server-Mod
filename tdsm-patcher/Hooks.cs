@@ -210,6 +210,12 @@ namespace tdsm.patcher
             get
             { return _asm.MainModule.Types.Single(x => x.Name == "RemoteServer"); }
         }
+
+        public TypeDefinition LaunchInitializer
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "LaunchInitializer"); }
+        }
     }
 
     public class APIOrganiser

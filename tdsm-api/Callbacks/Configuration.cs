@@ -1,11 +1,71 @@
 ﻿using System;
 using System.IO;
 using tdsm.api.Plugin;
+using Terraria;
+using Terraria.Initializers;
+using System.Diagnostics;
 
 namespace tdsm.api.Callbacks
 {
     public static class Configuration
     {
+        public static void StartupConfig(Main game)
+        {
+            if (!Globals.IsMono)
+            {
+                try
+                {
+                    string s;
+                    if ((s = LaunchInitializer.TryParameter(new string[]
+                        {
+                            "-forcepriority"
+                        })) != null)
+                    {
+                        Process currentProcess = Process.GetCurrentProcess();
+                        int num;
+                        if (int.TryParse(s, out num))
+                        {
+                            switch (num)
+                            {
+                                case 0:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.RealTime;
+                                    break;
+                                case 1:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.High;
+                                    break;
+                                case 2:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+                                    break;
+                                case 3:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.Normal;
+                                    break;
+                                case 4:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.BelowNormal;
+                                    break;
+                                case 5:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.Idle;
+                                    break;
+                                default:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.High;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            currentProcess.PriorityClass = ProcessPriorityClass.High;
+                        }
+                    }
+                    else
+                    {
+                        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
+                    }
+                }
+                catch
+                {
+                }
+            }
+        }
+
         public static void Load(string file)
         {
             if (File.Exists(file))
@@ -34,7 +94,8 @@ namespace tdsm.api.Callbacks
                                         {
                                             Tools.WriteLine("Failed to parse config option {0}", key);
                                         }
-                                        else Terraria.Netplay.ListenPort = port;
+                                        else
+                                            Terraria.Netplay.ListenPort = port;
                                         break;
                                     case "maxplayers":
                                         int maxplayers;
@@ -42,7 +103,8 @@ namespace tdsm.api.Callbacks
                                         {
                                             Tools.WriteLine("Failed to parse config option {0}", key);
                                         }
-                                        else Terraria.Main.maxNetPlayers = maxplayers;
+                                        else
+                                            Terraria.Main.maxNetPlayers = maxplayers;
                                         break;
                                     case "priority":
                                         break;
@@ -107,7 +169,8 @@ namespace tdsm.api.Callbacks
                                         {
                                             Tools.WriteLine("Failed to parse config option {0}", key);
                                         }
-                                        else Terraria.Main.npcStreamSpeed = npcstream;
+                                        else
+                                            Terraria.Main.npcStreamSpeed = npcstream;
                                         break;
                                     default:
                                         var ctx = new HookContext()
@@ -126,10 +189,12 @@ namespace tdsm.api.Callbacks
 #endif
                             }
                         }
-                        else break;
+                        else
+                            break;
                     }
                 }
-            else Tools.WriteLine("Configuration was specified but does not exist.");
+            else
+                Tools.WriteLine("Configuration was specified but does not exist.");
         }
     }
 }
