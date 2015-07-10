@@ -29,7 +29,7 @@ namespace tdsm.patcher
         //            };
         //        }
 
-#if DEV
+        #if DEV
         static void Copy(DirectoryInfo root, string project, string to, string pluginName = null, bool debugFolder = true)
         {
             var projectBinary = pluginName ?? project.Replace("-", ".");
@@ -45,20 +45,27 @@ namespace tdsm.patcher
             var ddbT = Path.Combine(to, projectBinary + ".dll.mdb");
             var pdbT = Path.Combine(to, projectBinary + ".pdb");
 
-            if (File.Exists(dllT)) File.Delete(dllT);
+            if (File.Exists(dllT))
+                File.Delete(dllT);
             //			if (File.Exists (mdbT)) File.Delete (mdbT);
-            if (File.Exists(ddbT)) File.Delete(ddbT);
-            if (File.Exists(pdbT)) File.Delete(pdbT);
+            if (File.Exists(ddbT))
+                File.Delete(ddbT);
+            if (File.Exists(pdbT))
+                File.Delete(pdbT);
 
-            if (!Directory.Exists(to)) Directory.CreateDirectory(to);
+            if (!Directory.Exists(to))
+                Directory.CreateDirectory(to);
 
-            if (File.Exists(dllF)) File.Copy(dllF, dllT);
+            if (File.Exists(dllF))
+                File.Copy(dllF, dllT);
             //			if (File.Exists (mdbF)) File.Copy (mdbF, mdbT);
-            if (File.Exists(ddbF)) File.Copy(ddbF, ddbT);
-            if (File.Exists(pdbF)) File.Copy(pdbF, pdbT);
+            if (File.Exists(ddbF))
+                File.Copy(ddbF, ddbT);
+            if (File.Exists(pdbF))
+                File.Copy(pdbF, pdbT);
 
         }
-#endif
+        #endif
 
         static void Main(string[] args)
         {
@@ -96,12 +103,14 @@ namespace tdsm.patcher
             if (!File.Exists(inFile))
             {
                 var bin = Path.Combine(Environment.CurrentDirectory, "bin", "x86", "Debug", inFile);
-                if (File.Exists(bin)) inFile = bin;
+                if (File.Exists(bin))
+                    inFile = bin;
             }
             if (!File.Exists(patchFile))
             {
                 var bin = Path.Combine(Environment.CurrentDirectory, "bin", "x86", "Debug", patchFile);
-                if (File.Exists(bin)) patchFile = bin;
+                if (File.Exists(bin))
+                    patchFile = bin;
             }
 
             var resourceLib = "Vestris.ResourceLib.dll";
@@ -117,7 +126,8 @@ namespace tdsm.patcher
 #if DEV
             //            if (File.Exists(outFileMS)) File.Delete(outFileMS);
             //            if (File.Exists(outFileMN)) File.Delete(outFileMN);
-            if (File.Exists(output)) File.Delete(output);
+            if (File.Exists(output))
+                File.Delete(output);
 
             var root = new DirectoryInfo(Environment.CurrentDirectory);
             while (root.GetDirectories().Where(x => x.Name == "tdsm-patcher").Count() == 0)
@@ -174,7 +184,8 @@ namespace tdsm.patcher
                         Console.WriteLine("Download completed in {0:c}", duration);
                     }
                 }
-                else return;
+                else
+                    return;
             }
 
             var patcher = new Injector(inFile, patchFile);
@@ -187,7 +198,8 @@ namespace tdsm.patcher
                 {
                     Console.WriteLine("This patcher only supports Terraria {0}, but we have detected something else {1}.", APIWrapper.TerrariaVersion, vers);
                     Console.Write("There's a high chance this will fail, continue? (y/n)");
-                    if (Console.ReadKey(true).Key != ConsoleKey.Y) return;
+                    if (Console.ReadKey(true).Key != ConsoleKey.Y)
+                        return;
                     Console.WriteLine();
                 }
             }
@@ -385,9 +397,11 @@ namespace tdsm.patcher
                 }
             }
 
-#if DEBUG
+            #if DEBUG
             Console.Write("Ok\nUpdating Binaries folder...");
             UpdateBinaries();
+            Console.Write("Ok\nGenerating serverconfig.txt...");
+            GenerateConfig();
 #endif
 
 #if Release || true
@@ -439,9 +453,10 @@ namespace tdsm.patcher
                             try
                             {
                                 if (File.Exists("serverconfig.txt"))
-                                    asm.EntryPoint.Invoke(null, new object[] {
-                                        new string[] { "-config", "serverconfig.txt", "-noupnp" }
-							});
+                                    asm.EntryPoint.Invoke(null, new object[]
+                                        {
+                                            new string[] { "-config", "serverconfig.txt", "-noupnp" }
+                                        });
                                 else
                                     asm.EntryPoint.Invoke(null, null);
                             }
@@ -460,15 +475,45 @@ namespace tdsm.patcher
 #endif
         }
 
-        static void UpdateBinaries()
+        static DirectoryInfo GetBinariesFolder()
         {
             var pathToBinaries = new DirectoryInfo(Environment.CurrentDirectory);
             while (!Directory.Exists(Path.Combine(pathToBinaries.FullName, "Binaries")))
             {
                 pathToBinaries = pathToBinaries.Parent;
             }
-            pathToBinaries = new DirectoryInfo(Path.Combine(pathToBinaries.FullName, "Binaries"));
+            return new DirectoryInfo(Path.Combine(pathToBinaries.FullName, "Binaries"));
+        }
 
+        static void GenerateConfig()
+        {
+            var pathToBinaries = GetBinariesFolder();
+            if (!pathToBinaries.Exists)
+            {
+                Console.WriteLine("Failed to copy to binaries.");
+                return;
+            }
+
+            var official = "serverconfig.txt";
+            var additional = "additional.config";
+            var output = "server.config";
+            var outputPath = Path.Combine(pathToBinaries.FullName, output);
+
+            if (File.Exists(output))
+                File.Delete(output);
+            if (File.Exists(outputPath))
+                File.Delete(outputPath);
+
+            var contents = File.ReadAllText(official);
+            contents += File.ReadAllText(additional);
+
+            File.WriteAllText(output, contents);
+            File.WriteAllText(outputPath, contents);
+        }
+
+        static void UpdateBinaries()
+        {
+            var pathToBinaries = GetBinariesFolder();
             if (!pathToBinaries.Exists)
             {
                 Console.WriteLine("Failed to copy to binaries.");
@@ -503,8 +548,10 @@ namespace tdsm.patcher
                     var pth = Path.Combine(pathToBinaries.FullName, rel);
 
                     var inf = new FileInfo(pth);
-                    if (!inf.Directory.Exists) inf.Directory.Create();
-                    if (inf.Exists) inf.Delete();
+                    if (!inf.Directory.Exists)
+                        inf.Directory.Create();
+                    if (inf.Exists)
+                        inf.Delete();
 
                     File.Copy(rel, pth);
                 }
