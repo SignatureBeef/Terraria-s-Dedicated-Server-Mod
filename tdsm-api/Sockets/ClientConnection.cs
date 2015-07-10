@@ -11,6 +11,7 @@ using System.Net;
 using System.Linq;
 using System.Collections.Concurrent;
 using tdsm.api.Misc;
+using tdsm.api.Logging;
 
 namespace tdsm.api
 {
@@ -54,42 +55,35 @@ namespace tdsm.api
             var remoteEndPoint = (IPEndPoint)sock.RemoteEndPoint;
             _remoteAddress = new TcpAddress(remoteEndPoint.Address, remoteEndPoint.Port);
 
-            //            sock.LingerState = new LingerOption(true, 10);
+            sock.LingerState = new LingerOption(true, 10);
 
-            //            var ctx = new HookContext
-            //            {
-            //                Connection = this
-            //            };
-            //
-            //            var args = new HookArgs.NewConnection();
-            //
-            //            HookPoints.NewConnection.Invoke(ref ctx, ref args);
-            //
-            //            if (ctx.CheckForKick())
-            //                return;
+            var ctx = new HookContext
+            {
+                Connection = this
+            };
+            
+            var args = new HookArgs.NewConnection();
+            
+            HookPoints.NewConnection.Invoke(ref ctx, ref args);
+            
+            if (ctx.CheckForKick())
+                return;
 
             _isReceiving = true; //The connection was established, so we can begin reading
         }
 
-
         //        public void ResetTimeout()
         //        {
-        ////            timeout = 0;
+        //            timeout = 0;
         //        }
-        //
+
         static void TimeoutLoop()
         {
-            //var clients = new List<RemoteClient>();
-            //            var msg = NewNetMessage.PrepareThreadInstance();
-
             try
             {
                 while (true)
                 {
                     Thread.Sleep(5000);
-
-                    //                lock (All)
-                    //clients.AddRange(Netplay.Clients);
 
                     if (Netplay.Clients != null)
                     {
@@ -104,9 +98,6 @@ namespace tdsm.api
                                 {
                                     if (client.TimeOutTimer >= Main.MaxTimeout / 2)
                                     {
-                                        //                            msg.Clear();
-                                        //                            msg.SendTileLoading(1, SlotManager.WaitingMessage(conn));
-                                        //                            client.Send(msg.Output);
                                         NetMessage.SendData((int)Packet.SEND_TILE_LOADING, client.Id);
                                         client.TimeOutTimer = 0;
                                     }
@@ -120,23 +111,19 @@ namespace tdsm.api
                                     }
                                     catch (Exception e)
                                     {
-                                        Tools.WriteLine("Exception in timeout thread: {0}", e);
+                                        Tools.WriteLine("Exception timing out client @{1}: {0}", e, i);
                                     }
                                 }
                             }
                         }
                     }
-
-                    //clients.Clear();
                 }
             }
             catch (Exception e)
             {
-                Tools.WriteLine(e);
+                ProgramLog.Error.Log("Exception in timeout thread: {0}", e);
             }
         }
-
-        ConcurrentQueue<AsyncCallback> readQueue = new ConcurrentQueue<AsyncCallback>();
 
         class AsyncCallback //: IDisposable
         {
@@ -156,14 +143,13 @@ namespace tdsm.api
             }
         }
 
-        AsyncCallback test;
+        AsyncCallback _callback;
 
         void ISocket.AsyncReceive(byte[] data, int offset, int size, SocketReceiveCallback callback, object state)
         {
-            //Console.WriteLine("Receive requested");
-            if (test == null)
+            if (_callback == null)
             {
-                test = new AsyncCallback()
+                _callback = new AsyncCallback()
                 {
                     Callback = callback,
                     Buffer = data,
@@ -175,19 +161,8 @@ namespace tdsm.api
             }
             else
             {
-                //                test.Data = data;
-                test.Offset = offset;
-                //                test.Data = data;
+                _callback.Offset = offset;
             }
-            //            readQueue.Enqueue(new AsyncCallback()
-            //                {
-            //                    Callback = callback,
-            //                    Buffer = data,
-            //                    Offset = offset,
-            //                    Size = size,
-            //                    State = state
-            //                });
-            //            Flush();
         }
 
         void ISocket.AsyncSend(byte[] data, int offset, int size, SocketSendCallback callback, object state)
@@ -196,12 +171,11 @@ namespace tdsm.api
             var bt = new byte[size];
             Buffer.BlockCopy(data, offset, bt, 0, size);
             this.Send(bt);
-            //bt = null;
+            bt = null;
 
             if (callback != null)
                 callback(state);
-
-            //DespatchData();
+            
             this.Flush();
         }
 
@@ -213,67 +187,43 @@ namespace tdsm.api
             //Reset read position
             recvBytes = 0;
 
-            //Console.WriteLine("Received: " + local.Length);
-            //Console.WriteLine("Length: " + local[0] + "," + local[1]);
-
             DespatchData(local);
         }
 
-        object sync = new object();
-
         void DespatchData(byte[] buff)
         {
-            //Tools.WriteLine("IsActive: " + Netplay.Clients[tdsm.api.Callbacks.NetplayCallback.LastSlot].IsActive);
-            //Tools.WriteLine("Active: " + this.Active);
-            //Tools.WriteLine("receiving: " + receiving);
-            //Tools.WriteLine("PendingTermination: " + Netplay.Clients[tdsm.api.Callbacks.NetplayCallback.LastSlot].PendingTermination);
-            //Tools.WriteLine("State: " + Netplay.Clients[tdsm.api.Callbacks.NetplayCallback.LastSlot].State);
-            //Tools.WriteLine("anyClients: " + Netplay.anyClients);
-            //Tools.WriteLine("active: " + Main.player[tdsm.api.Callbacks.NetplayCallback.LastSlot].active);
-
-
+            if (_callback == null)
+                throw new InvalidOperationException("No callback to read data to");
             try
             {
                 int processed = 0;
-                //lock (sync)
+                while (processed < buff.Length)
                 {
-                    while (processed < buff.Length)
+                    var len = buff.Length - processed;
+                    if (len > _callback.Size)
+                        len = _callback.Size;
+                        
+                    if (len > 0)
                     {
-                        //                AsyncCallback cb;
-                        //                if (readQueue.TryDequeue(out cb))
-                        if (test != null)
-                        {
-                            var len = buff.Length - processed;
-                            if (len > test.Size)
-                                len = test.Size;
+                        //No point shifting the target buffer as they always read from index 0
+                        Buffer.BlockCopy(buff, processed, _callback.Buffer, _callback.Offset, len);
+                        _callback.Callback(_callback.State, len);
 
-                            //Console.WriteLine("Length: " + len);
-                            if (len > 0)
-                            {
-                                //No point shifting the target buffer as they always read from index 0
-                                Buffer.BlockCopy(buff, processed, test.Buffer, test.Offset, len);
-                                test.Callback(test.State, len);
-
-                                //                    cb.Dispose();
-
-                                processed += len;
-                            }
-                        }
-                        else
-                        {
-                            //Console.WriteLine("test null");
-                            break;
-                        }
+                        processed += len;
                     }
                 }
             }
             catch (Exception e)
             {
-                Tools.WriteLine("buff: {0}", buff.Length);
-                Tools.WriteLine("test.Buffer.Length: {0}", test.Buffer.Length);
-                Tools.WriteLine("test.Offset: {0}", test.Offset);
-                Tools.WriteLine("test.Size: {0}", test.Size);
-                Tools.WriteLine("SOCK: {0}", e);
+                var buffLength = buff == null ? "<null>" : buff.Length.ToString();
+                var callbackExists = _callback == null ? "<null>" : "yes";
+                var cbBufferExists = _callback == null || _callback.Buffer == null ? "<null>" : "Nope";
+                var cbOffset = _callback == null ? "<null>" : _callback.Offset.ToString();
+                var cbSize = _callback == null ? "<null>" : _callback.Size.ToString();
+
+                ProgramLog.Error.Log("Read exception caught.");
+                ProgramLog.Error.Log("Debug Values: {0},{1},{2},{3},{4}", buffLength, callbackExists, cbBufferExists, cbOffset, cbSize);
+                ProgramLog.Error.Log("Error: {0}", e);
             }
         }
 
@@ -283,18 +233,7 @@ namespace tdsm.api
             _isReceiving = false;
 
             //Issue a 0 byte response, Terraria will close the connection :)
-            test.Callback(null, 0);
-
-            //throw new SocketException((int)err);
-            //if (SlotId > 0 && SlotId < 255)
-            //{
-            //    var player = Main.player[SlotId];
-            //    if (player != null)
-            //    {
-            //        //                    player.Connection = null;
-            //        //                    player.active = false;
-            //    }
-            //}
+            _callback.Callback(null, 0);
         }
 
         public void StartReading()
@@ -308,7 +247,6 @@ namespace tdsm.api
 
         void ISocket.Close()
         {
-            //            CloseSocket();
             if (_isReceiving)
                 Close();
             _isReceiving = false;
@@ -389,7 +327,7 @@ namespace tdsm.api
                     Tools.WriteLine(socket.GetRemoteAddress() + " is connecting...");
                     this._listenerCallback(socket);
                 }
-                catch (Exception)
+                catch
                 {
                 }
             }

@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Collections.Generic;
 using tdsm.api.Misc;
+using tdsm.api.Logging;
 
 namespace tdsm.api
 {
@@ -184,7 +185,7 @@ namespace tdsm.api
                     {
                         Array.Copy(segment.Array, segment.Offset + first, txBuffer, 0, segment.Count - first);
                     }
-                    //Tools.WriteLine ("Using {0}, {1}", offset, segment.Count);
+                    //ProgramLog.Log ("Using {0}, {1}", offset, segment.Count);
 
                     if (sendQueue.Count > 0 && sendQueue.PeekBack().kind == Message.SEGMENT)
                     {
@@ -210,7 +211,7 @@ namespace tdsm.api
 
         protected void Send(Message message, bool flush = false)
         {
-            //Logging.Tools.WriteLine ("Queue {0}.", bytes.Length);
+            //ProgramLog.Debug.Log ("Queue {0}.", bytes.Length);
             if (CheckQuota() == false)
                 return;
 
@@ -231,7 +232,7 @@ namespace tdsm.api
                     sending = SendMore(null, flush);
                 }
             }
-            //Logging.Tools.WriteLine ("End queue.", bytes.Length);
+            //ProgramLog.Debug.Log ("End queue.", bytes.Length);
         }
 
         bool CheckQuota()
@@ -274,8 +275,7 @@ namespace tdsm.api
         {
             if (kicking)
                 return;
-
-            //Console.WriteLine("CLose requested");
+            
             kicking = true;
 
             timeout = new Timer(Timeout, null, 15000, 0);
@@ -323,7 +323,7 @@ namespace tdsm.api
                                 txList.Add(new ArraySegment<byte>(data));
                                 txListBytes += data.Length;
                                 queueSize -= data.Length + ARRAY_OBJECT_OVERHEAD;
-                                //Tools.WriteLine ("{1}: Adding bytes {0}", data.Length, Thread.CurrentThread.IsThreadPoolThread);
+                                //ProgramLog.Debug.Log ("{1}: Adding bytes {0}", data.Length, Thread.CurrentThread.IsThreadPoolThread);
                                 break;
                             }
 
@@ -339,7 +339,7 @@ namespace tdsm.api
                                     var nlen = seg.Count + len;
                                     var nseg = new ArraySegment<byte>(txBuffer, seg.Offset, Math.Min(nlen, txBuffer.Length - seg.Offset));
 
-                                    //Tools.WriteLine ("{5}: Coalescing {0}, {1} and {2}, {3} [{4}]", seg.Offset, seg.Count, (txHead + txPrepared) % txBuffer.Length, len, nseg.Count, Thread.CurrentThread.IsThreadPoolThread);
+                                    //ProgramLog.Debug.Log ("{5}: Coalescing {0}, {1} and {2}, {3} [{4}]", seg.Offset, seg.Count, (txHead + txPrepared) % txBuffer.Length, len, nseg.Count, Thread.CurrentThread.IsThreadPoolThread);
 
                                     txList[txc - 1] = nseg;
 
@@ -349,7 +349,7 @@ namespace tdsm.api
                                 {
                                     var offset = (txHead + txPrepared) % txBuffer.Length;
 
-                                    //Tools.WriteLine ("{2}: Adding segment {0}, {1}", offset, len, Thread.CurrentThread.IsThreadPoolThread);
+                                    //ProgramLog.Debug.Log ("{2}: Adding segment {0}, {1}", offset, len, Thread.CurrentThread.IsThreadPoolThread);
 
                                     var nseg = new ArraySegment<byte>(txBuffer, offset, Math.Min(len, txBuffer.Length - offset));
                                     txList.Add(nseg);
@@ -374,7 +374,7 @@ namespace tdsm.api
                                 var data = SerializeMessage(msg);
                                 txList.Add(data);
                                 txListBytes += data.Count;
-                                //Tools.WriteLine ("{1}: Adding custom {0}", data.Count, Thread.CurrentThread.IsThreadPoolThread);
+                                //ProgramLog.Debug.Log ("{1}: Adding custom {0}", data.Count, Thread.CurrentThread.IsThreadPoolThread);
                                 escape = true;
                                 break;
                             }
@@ -465,14 +465,14 @@ namespace tdsm.api
 
         protected void TxListClear()
         {
-            //Tools.WriteLine ("Cleaning up txList of {0} ({1} bytes)", txList.Count, txListBytes);
+            //ProgramLog.Debug.Log ("Cleaning up txList of {0} ({1} bytes)", txList.Count, txListBytes);
             for (int i = 0; i < txList.Count; i++)
             {
                 var seg = txList[i];
                 if (seg.Array == txBuffer)
                 {
                     var count = seg.Count;
-                    //Tools.WriteLine ("Freeing {0} ({2}), {1}", txHead, count, txList[i].Offset);
+                    //ProgramLog.Debug.Log ("Freeing {0} ({2}), {1}", txHead, count, txList[i].Offset);
                     txHead = (txHead + count) % txBuffer.Length;
                     txCount -= count;
                     txPrepared -= count;
@@ -510,7 +510,6 @@ namespace tdsm.api
 
             try
             {
-                //Tools.WriteLine ("SendCompleted [");
                 if (argz.SocketError != SocketError.Success)
                 {
                     HandleError(argz.SocketError);
@@ -534,11 +533,10 @@ namespace tdsm.api
                             sendPool.Put(argz);
                     }
                 }
-                //Tools.WriteLine ("} SendCompleted " + sending);
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Exception in connection send callback: {0}", e);
+                ProgramLog.Error.Log("Exception in connection send callback: {0}", e);
             }
         }
 
@@ -559,7 +557,7 @@ namespace tdsm.api
             {
                 if (argz.SocketError != SocketError.Success)
                 {
-                    //Tools.WriteLine ("Bytes received: {0}", argz.BytesTransferred);
+                    //ProgramLog.Debug.Log ("Bytes received: {0}", argz.BytesTransferred);
                     var err = argz.SocketError;
                     receiving = false;
                     recvPool.Put(argz);
@@ -567,7 +565,7 @@ namespace tdsm.api
                 }
                 else if (argz.BytesTransferred == 0)
                 {
-                    //Tools.WriteLine ("Clean connection shutdown. {0}", socket.Connected);
+                    //ProgramLog.Debug.Log ("Clean connection shutdown. {0}", socket.Connected);
                     receiving = false;
                     recvPool.Put(argz);
                     HandleError(SocketError.Disconnecting);
@@ -621,7 +619,7 @@ namespace tdsm.api
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Exception in connection receive callback: {0}", e);
+                ProgramLog.Error.Log("Exception in connection receive callback: {0}", e);
             }
         }
 
@@ -671,7 +669,7 @@ namespace tdsm.api
 
         protected void HandleError(SocketError err)
         {
-            //          Tools.WriteLine ("HandleError {0}", err);
+            //          ProgramLog.Debug.Log ("HandleError {0}", err);
 
             if (timeout != null)
             {
@@ -738,7 +736,7 @@ namespace tdsm.api
 
             public T Take(Connection conn)
             {
-                //              Tools.WriteLine ("Take");
+                //              ProgramLog.Debug.Log ("Take");
                 T args;
                 lock (this)
                 {
@@ -757,7 +755,7 @@ namespace tdsm.api
 
             public void Put(SocketAsyncEventArgsExt args)
             {
-                //              Tools.WriteLine ("Put");
+                //              ProgramLog.Debug.Log ("Put");
                 if (!(args is T))
                 {
                     Tools.WriteLine("ArgsPool type mismatch.");
@@ -786,4 +784,3 @@ namespace tdsm.api
         static ArgsPool<RecvArgs> recvPool = new ArgsPool<RecvArgs>();
     }
 }
-
