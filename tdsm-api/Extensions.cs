@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace tdsm.api
 {
@@ -28,26 +30,50 @@ namespace tdsm.api
 
         public static void SafeClose(this Socket socket)
         {
-            if (socket == null) return;
+            if (socket == null)
+                return;
 
             try
             {
                 socket.Close();
             }
-            catch (SocketException) { }
-            catch (ObjectDisposedException) { }
+            catch (SocketException)
+            {
+            }
+            catch (ObjectDisposedException)
+            {
+            }
         }
 
         public static void SafeShutdown(this Socket socket)
         {
-            if (socket == null) return;
+            if (socket == null)
+                return;
 
             try
             {
                 socket.Shutdown(SocketShutdown.Both);
             }
-            catch (SocketException) { }
-            catch (ObjectDisposedException) { }
+            catch (SocketException)
+            {
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+        }
+    }
+
+    public static class LinqExtensions
+    {
+        static readonly Random _rand = new Random();
+
+        public static T Random<T>(this IEnumerable<T> enumerable)
+        {
+            var list = enumerable as IList<T> ?? enumerable.ToList();
+            var count = list.Count;
+            if (count == 0)
+                return default(T);
+            return list.ElementAt(_rand.Next(0, count));
         }
     }
 }
