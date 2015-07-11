@@ -33,7 +33,7 @@ namespace tdsm.api.Callbacks
             {
                 Connection = player.Connection.Socket,
                 Player = player,
-                Sender = player,
+                Sender = player
             };
 
             var args = new HookArgs.PlayerPreGreeting

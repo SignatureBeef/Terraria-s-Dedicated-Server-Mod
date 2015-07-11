@@ -261,6 +261,8 @@ namespace tdsm.patcher
 
             Console.Write("Ok\nFixing world removal...");
             patcher.PathFileIO();
+            Console.Write("Ok\nRouting network message validity...");
+            patcher.HookValidPacketState();
 
             //We only need one TDSM.exe if this works...
             Console.Write("Ok\nRemoving port forwarding functionality...");
@@ -400,7 +402,7 @@ namespace tdsm.patcher
             #if DEBUG
             Console.Write("Ok\nUpdating Binaries folder...");
             UpdateBinaries();
-            Console.Write("Ok\nGenerating serverconfig.txt...");
+            Console.Write("Ok\nGenerating server.config...");
             GenerateConfig();
 #endif
 

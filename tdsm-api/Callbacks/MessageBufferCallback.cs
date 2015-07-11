@@ -1,6 +1,7 @@
 ﻿using Terraria;
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Chat;
+using tdsm.api.Logging;
 using tdsm.api.Plugin;
 using Terraria.Net;
 using System;
@@ -10,45 +11,159 @@ namespace tdsm.api.Callbacks
 {
     public static class MessageBufferCallback
     {
+        //TODO Put these in a Messages folder as like in the old system.
+        //When adding a packet ensure the section in the case ends with returning. These packets are safe to filter
+        //Ones without a return statement will mean the code at the end of GetData doesnt get called;
+
         //        public static string PlayerNameFormatForChat = "<{0}> {1}";
         //        public static string PlayerNameFormatForConsole = PlayerNameFormatForChat;
 
-        public static byte ProcessPacket(int bufferId, byte packetId) //, int start, int length)
+        public static byte ProcessPacket(int bufferId, byte packetId, int start, int length)
         {
-            //Console.WriteLine("Slot/Packet: {0}/{1}", bufferId, packetId);
+            //ProgramLog.Debug.Log("Slot/Packet: {0}/{1}", bufferId, packetId);
             //Console.WriteLine("Trace: {0}", Environment.StackTrace);
             switch ((Packet)packetId)
             {
+                /* Misc / Command */
                 case Packet.PLAYER_CHAT:
-                    ProcessChat(bufferId);
+                    ProcessChat(bufferId); //Returns
                     return 0;
+
+                /* Cheat protection */
                 case Packet.TILE_BREAK:
-                    ProcessTileBreak(bufferId);
+                    ProcessTileBreak(bufferId); //Returns
                     return 0;
                 case Packet.PROJECTILE:
-                    ProcessProjectile(bufferId);
+                    ProcessProjectile(bufferId); //Returns
                     return 0;
-                //                case Packet.PLAYER_DATA:
-                //                    ProcessPlayerData(bufferId, start, length);
-                //                    return 0;
                 case Packet.CHEST:
-                    ProcessChest(bufferId);
+                    ProcessChest(bufferId); //Client continues, server returns
                     return 0;
                 case Packet.OPEN_CHEST:
-                    ProcessChestOpen(bufferId);
+                    ProcessChestOpen(bufferId); //Returns
                     return 0;
                 case Packet.TILE_SQUARE:
-                    ProcessTileSquare(bufferId);
+                    ProcessTileSquare(bufferId); //Returns
                     return 0;
                 case Packet.READ_SIGN:
-                    ProcessReadSign(bufferId);
+                    ProcessReadSign(bufferId); //Returns
                     return 0;
                 case Packet.WRITE_SIGN:
-                    ProcessWriteSign(bufferId);
+                    ProcessWriteSign(bufferId); //Returns
                     return 0;
+
+                /* Password handling */
+                case Packet.PASSWORD_RESPONSE: //Returns
+                    ProcessPassword(bufferId);
+                    return 0;
+                case Packet.PLAYER_DATA:
+                    ProcessPlayerData(bufferId, start, length); //Returns
+                    return 0;
+                case Packet.WORLD_REQUEST:
+                    if (Netplay.Clients[bufferId].State == -2) return 0; //Ignore
+                    break;
             }
 
             return packetId;
+        }
+
+        /// <summary>
+        /// CHeck to see if a client sent a wrong message at the wrong state
+        /// </summary>
+        /// <param name="bufferId"></param>
+        /// <param name="packetId"></param>
+        /// <returns></returns>
+        public static bool CheckForInvalidState(int bufferId, byte packetId)
+        {
+            var res = Main.netMode == 2 && Netplay.Clients[bufferId].State < 10
+                && packetId > 12 && packetId != 93 && packetId != 16 && packetId != 42
+                && packetId != 50 && packetId != 38 && packetId != 68;
+            if (Netplay.Clients[bufferId].State == -2) return false;
+
+            return res;
+        }
+
+        private static void ProcessPassword(int bufferId)
+        {
+            var buffer = NetMessage.buffer[bufferId];
+            var player = Main.player[bufferId];
+            var conn = Netplay.Clients[bufferId];
+
+            if (Main.netMode != 2)
+            {
+                return;
+            }
+            var clientPassword = buffer.reader.ReadString();
+            if (conn.State == -1)
+            {
+                var ctx = new HookContext
+                {
+                    Connection = conn.Socket
+                };
+
+                var args = new HookArgs.ServerPassReceived
+                {
+                    Password = clientPassword,
+                };
+
+                HookPoints.ServerPassReceived.Invoke(ref ctx, ref args);
+
+                if (ctx.CheckForKick())
+                    return;
+
+                if (ctx.Result == HookResult.ASK_PASS)
+                {
+                    NetMessage.SendData((int)Packet.PASSWORD_REQUEST, bufferId);
+                    return;
+                }
+                else if (ctx.Result == HookResult.CONTINUE || clientPassword == Netplay.ServerPassword)
+                {
+                    Netplay.Clients[bufferId].State = 1;
+                    NetMessage.SendData((int)Packet.CONNECTION_RESPONSE, bufferId, -1, "", 0, 0f, 0f, 0f, 0, 0, 0);
+                    return;
+                }
+
+                conn.Kick("Incorrect server password.");
+            }
+            else if (conn.State == -2)
+            {
+                //var name = player.name ?? "";
+
+                var ctx = new HookContext
+                {
+                    Connection = conn.Socket,
+                    Player = player,
+                    Sender = player
+                };
+
+                var args = new HookArgs.PlayerPassReceived
+                {
+                    Password = clientPassword
+                };
+
+                HookPoints.PlayerPassReceived.Invoke(ref ctx, ref args);
+                
+                if (ctx.CheckForKick())
+                    return;
+                
+                if (ctx.Result == HookResult.ASK_PASS)
+                {
+                    NetMessage.SendData((int)Packet.PASSWORD_REQUEST, bufferId);
+                    return;
+                }
+                else // HookResult.DEFAULT
+                {
+                    //ProgramLog.Error.Log("Accepted player: " + player.name + "/" + (player.AuthenticatedAs ?? "null"));
+
+                    //Continue with world request
+                    Netplay.Clients[bufferId].State = 2;
+                    Netplay.Clients[bufferId].ResetSections();
+                    NetMessage.SendData(7, bufferId, -1, "", 0, 0f, 0f, 0f, 0, 0, 0);
+                    Main.SyncAnInvasion(bufferId);
+
+                    return;
+                }
+            }
         }
 
         private static void ProcessReadSign(int bufferId)
@@ -580,15 +695,15 @@ namespace tdsm.api.Callbacks
         private static void ProcessPlayerData(int bufferId, int start, int length)
         {
             var buffer = NetMessage.buffer[bufferId];
-
             var player = Main.player[bufferId];
-            var isConnection = player == null || player.Connection == null;
+
+            var isConnection = player == null || player.Connection == null || !player.active;
             if (isConnection)
             {
-                player = new Player();
-                player.IPAddress = Netplay.Clients[bufferId].Socket.GetRemoteAddress().GetIdentifier();
+                //player = new Player();
             }
             player.whoAmI = bufferId;
+            player.IPAddress = Netplay.Clients[bufferId].Socket.GetRemoteAddress().GetIdentifier();
 
             if (bufferId == Main.myPlayer && !Main.ServerSideCharacter)
             {
@@ -652,12 +767,14 @@ namespace tdsm.api.Callbacks
             //            }
 
             data.Apply(player);
-
+            
             if (isConnection)
             {
                 if (ctx.Result == HookResult.ASK_PASS)
                 {
+                    Netplay.Clients[bufferId].State = -2;
                     //                    conn.State = SlotState.PLAYER_AUTH;
+
 
                     //                    var msg = NewNetMessage.PrepareThreadInstance();
                     //                    msg.PasswordRequest();
@@ -676,7 +793,7 @@ namespace tdsm.api.Callbacks
                         foreach (var otherPlayer in Main.player)
                         {
                             //                            var otherSlot = Terraria.Netplay.Clients[otherPlayer.whoAmI];
-                            if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower()) // && otherSlot.State >= SlotState.CONNECTED)
+                            if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherPlayer.whoAmI != bufferId) // && otherSlot.State >= SlotState.CONNECTED)
                             {
                                 player.Kick("A \"" + otherPlayer.Name + "\" is already on this server.");
                                 return;
@@ -689,10 +806,20 @@ namespace tdsm.api.Callbacks
                     // and now decide whether to queue the connection
                     //SlotManager.Schedule (conn, (int)loginEvent.Priority);
 
-                    NetMessage.SendData(4, -1, -1, player.Name, bufferId);
+                    //if (Netplay.Clients[bufferId].State == -2)
+                    //{
+                    //    //Netplay.Clients[bufferId].State = 1;
+                    //    ProgramLog.Error.Log("User password accepted, send world");
+                    //}
+                    //else
+                    //{
+                        Netplay.Clients[bufferId].State = 1;
+                        NetMessage.SendData((int)Packet.CONNECTION_RESPONSE, bufferId, -1, "", 0, 0f, 0f, 0f, 0, 0, 0);
+                    //}
                 }
             }
-
+            Netplay.Clients[bufferId].Name = player.name;
+            tdsm.api.Callbacks.VanillaHooks.OnPlayerEntering(player);
             return;
 
             //            int num6 = (int)buffer.reader.ReadByte();

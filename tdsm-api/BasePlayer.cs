@@ -11,7 +11,7 @@ namespace tdsm.api
     {
         public string ClientUUId { get; set; }
 
-        public string AuthenticatedAs { get; set; }
+        public string AuthenticatedAs { get; private set; }
 
         public string AuthenticatedBy { get; set; }
 
@@ -26,12 +26,12 @@ namespace tdsm.api
             };
             var changing = new Plugin.HookArgs.PlayerAuthenticationChanging()
             {
-                AuthenticatedAs = this.AuthenticatedAs,
-                AuthenticatedBy = this.AuthenticatedBy
+                AuthenticatedAs = auth,
+                AuthenticatedBy = by
             };
 
             Plugin.HookPoints.PlayerAuthenticationChanging.Invoke(ref ctx, ref changing);
-            if (ctx.Result != Plugin.HookResult.CONTINUE)
+            if (ctx.Result != Plugin.HookResult.DEFAULT)
                 return;
 
             this.AuthenticatedAs = auth;

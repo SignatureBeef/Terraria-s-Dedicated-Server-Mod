@@ -87,6 +87,7 @@
     <Compile Include="Command\Sender.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="ID\Lookup.cs" />
+    <Compile Include="Misc\StringCache.cs" />
     <Compile Include="Permissions\PermissionsManager.cs" />
     <Compile Include="Permissions\XmlSupplier.cs" />
     <Compile Include="Plugin\HookAttribute.cs" />
@@ -201,10 +202,5 @@
   -->
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Sockets\" />
-    <Folder Include="Logging\" />
-    <Folder Include="Misc\" />
-    <Folder Include="Data\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

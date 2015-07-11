@@ -250,9 +250,9 @@ namespace tdsm.api.Plugin
 
         public struct UnkownSendPacket
         {
-            #if Full_API
+#if Full_API
             public NetMessage Message { get; set; }
-            #endif
+#endif
             public int PacketId { get; set; }
 
             public int RemoteClient { get; set; }
@@ -371,52 +371,52 @@ namespace tdsm.api.Plugin
 
             public int Parse(byte[] buf, int at, int length)
             {
-                var start = at + 1;
+                var start = at + 1 /*Skip player id */;
 
-//                var playerId = (int)buf[at++];
+                //                var playerId = (int)buf[at++];
                 //            if (Main.netMode == 2)
                 //            {
                 //                num6 = bufferId;
                 //            }
 
-                SkinVariant = (int)MathHelper.Clamp((float)buf[at++], 0, 7);
-                Hair = (int)buf[at++];
+                SkinVariant = (int)MathHelper.Clamp((float)buf[start++], 0, 7);
+                Hair = (int)buf[start++];
                 if (Hair >= 134)
                     Hair = 0;
-                
+
                 int len = 0;
                 while (true)
                 {
-                    len += buf[at] & 0x7F;
-                    if (buf[at++] > 127)
+                    len += buf[start] & 0x7F;
+                    if (buf[start++] > 127)
                         len <<= 7;
                     else
                         break;
                 }
 
-                Name = System.Text.Encoding.UTF8.GetString(buf, at, len).Trim();
+                Name = System.Text.Encoding.UTF8.GetString(buf, start, len).Trim();
 
-                HairDye = buf[at++];
-                BitsByte bitsByte = buf[at++];
+                HairDye = buf[start++];
+                BitsByte bitsByte = buf[start++];
                 HideVisual = new bool[8 * 2];
                 for (int num7 = 0; num7 < 8; num7++)
                 {
                     HideVisual[num7] = bitsByte[num7];
                 }
-                bitsByte = buf[at++];
+                bitsByte = buf[start++];
                 for (int num8 = 0; num8 < 2; num8++)
                 {
                     HideVisual[num8 + 8] = bitsByte[num8];
                 }
-                HideMisc = buf[at++];
-                HairColor = ParseColor(buf, ref at);
-                SkinColor = ParseColor(buf, ref at);
-                EyeColor = ParseColor(buf, ref at);
-                ShirtColor = ParseColor(buf, ref at);
-                UnderShirtColor = ParseColor(buf, ref at);
-                PantsColor = ParseColor(buf, ref at);
-                ShoeColor = ParseColor(buf, ref at);
-                BitsByte bitsByte2 = buf[at++];
+                HideMisc = buf[start++];
+                HairColor = ParseColor(buf, ref start);
+                SkinColor = ParseColor(buf, ref start);
+                EyeColor = ParseColor(buf, ref start);
+                ShirtColor = ParseColor(buf, ref start);
+                UnderShirtColor = ParseColor(buf, ref start);
+                PantsColor = ParseColor(buf, ref start);
+                ShoeColor = ParseColor(buf, ref start);
+                BitsByte bitsByte2 = buf[start++];
                 Difficulty = 0;
                 if (bitsByte2[0])
                 {
@@ -432,10 +432,10 @@ namespace tdsm.api.Plugin
                 }
                 ExtraAccessory = bitsByte2[2];
 
-                return at - (start + 1);
+                return start - at;
             }
 
-            #if Full_API
+#if Full_API
             public void Apply(Player player)
             {
                 player.difficulty = Difficulty;
@@ -456,7 +456,7 @@ namespace tdsm.api.Plugin
                 player.shoeColor = ShoeColor;
                 player.extraAccessory = ExtraAccessory;
             }
-            #endif
+#endif
 
             public static Color ParseColor(byte[] buf, ref int at)
             {
@@ -593,7 +593,7 @@ namespace tdsm.api.Plugin
                     FlagsB &= (byte)~f;
             }
 
-            #if Full_API
+#if Full_API
             public void ApplyKeys(Player player)
             {
                 player.controlUp = ControlUp;
@@ -616,7 +616,7 @@ namespace tdsm.api.Plugin
                 player.pulley = Pulley;
                 player.pulleyDir = PulleyDirection;
             }
-            #endif
+#endif
 
             public void Parse(byte[] buf, int at)
             {
@@ -647,9 +647,9 @@ namespace tdsm.api.Plugin
 
             public int NetID { get; set; }
 
-            #if Full_API
+#if Full_API
             public Item Item { get; set; }
-            #endif
+#endif
 
             public void SetItem()
             {
@@ -751,13 +751,13 @@ namespace tdsm.api.Plugin
                 }
             }
 
-            #if Full_API
+#if Full_API
             public Terraria.Tile Tile
             {
                 get
                 { return Main.tile[X, Y]; }
             }
-            #endif
+#endif
         }
 
         public struct DoorStateChanged
@@ -829,7 +829,7 @@ namespace tdsm.api.Plugin
 
             public int ExistingIndex { get; set; }
 
-            #if Full_API
+#if Full_API
             internal Projectile projectile;
 
             public Projectile CreateProjectile()
@@ -881,7 +881,7 @@ namespace tdsm.api.Plugin
             {
                 get { return Main.projectile[Id]; }
             }
-            #endif
+#endif
         }
 
         public struct KillProjectileReceived
@@ -895,9 +895,9 @@ namespace tdsm.api.Plugin
 
         public struct Explosion
         {
-            #if Full_API
+#if Full_API
             public Projectile Source { get; set; }
-            #endif
+#endif
         }
 
         public struct ChestBreakReceived
@@ -960,9 +960,9 @@ namespace tdsm.api.Plugin
             public int SignIndex { get; set; }
 
             public string Text { get; set; }
-            #if Full_API
+#if Full_API
             public Sign OldSign { get; set; }
-            #endif
+#endif
         }
 
         public struct PluginsLoaded
@@ -978,9 +978,9 @@ namespace tdsm.api.Plugin
 
         public struct PlayerHurt
         {
-            #if Full_API
+#if Full_API
             public Player Victim { get; internal set; }
-            #endif
+#endif
             public int Damage { get; set; }
 
             public int HitDirection { get; set; }
@@ -996,9 +996,9 @@ namespace tdsm.api.Plugin
 
         public struct NpcHurt
         {
-            #if Full_API
+#if Full_API
             public NPC Victim { get; set; }
-            #endif
+#endif
             public int Damage { get; set; }
 
             public int HitDirection { get; set; }
@@ -1016,9 +1016,9 @@ namespace tdsm.api.Plugin
 
             public string Name { get; set; }
 
-            #if Full_API
+#if Full_API
             public NPC CreatedNpc { get; set; }
-            #endif
+#endif
         }
 
         public struct PlayerTriggeredEvent
