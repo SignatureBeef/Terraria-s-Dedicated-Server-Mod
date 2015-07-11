@@ -376,6 +376,8 @@ namespace tdsm.api.Command
         {
             if (!Liquid.panicMode)
             {
+                if (sender is Player)
+                    sender.Message("Forcing water to settle.");
                 Liquid.StartPanic();
             }
             else
