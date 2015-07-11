@@ -941,60 +941,61 @@ namespace tdsm.core
         //        args.Number2, args.Number3, args.Number4, args.Number5);
         //}
 
-//        string GetProgressKey(string input, out int length, out string progress)
-//        {
-//            length = 0;
-//            string key = null;
-//
-//            //Determine format
-//            int progTypeStart = input.IndexOf('-');
-//            int progTypeEnd = input.LastIndexOf('-');
-//
-//            if (progTypeStart > -1 && progTypeEnd > -1)
-//            {
-//                progTypeStart++;
-//                progTypeEnd--;
-//
-//                key = input.Substring(progTypeStart, progTypeEnd - 1);
-//
-//                //                length = input.Length - (progTypeEnd + 1);
-//                //This format does need
-//            }
-//            else
-//            {
-//
-//            }
-//
-//            return key;
-//        }
+        //        string GetProgressKey(string input, out int length, out string progress)
+        //        {
+        //            length = 0;
+        //            string key = null;
+        //
+        //            //Determine format
+        //            int progTypeStart = input.IndexOf('-');
+        //            int progTypeEnd = input.LastIndexOf('-');
+        //
+        //            if (progTypeStart > -1 && progTypeEnd > -1)
+        //            {
+        //                progTypeStart++;
+        //                progTypeEnd--;
+        //
+        //                key = input.Substring(progTypeStart, progTypeEnd - 1);
+        //
+        //                //                length = input.Length - (progTypeEnd + 1);
+        //                //This format does need
+        //            }
+        //            else
+        //            {
+        //
+        //            }
+        //
+        //            return key;
+        //        }
 
-        static readonly System.Text.RegularExpressions.Regex _fmtGeneration = new System.Text.RegularExpressions.Regex(".* - (.*) - (.*)");
-        static readonly System.Text.RegularExpressions.Regex _fmtSemi = new System.Text.RegularExpressions.Regex("(.*): (.*)");
-        static readonly System.Text.RegularExpressions.Regex _fmtDefault = new System.Text.RegularExpressions.Regex("(.*) (.*)");
+        static readonly System.Text.RegularExpressions.Regex _fmtGeneration = new System.Text.RegularExpressions.Regex(".* - (.*) - (.*)%");
+        static readonly System.Text.RegularExpressions.Regex _fmtSemi = new System.Text.RegularExpressions.Regex("(.*): (.*)%");
+        static readonly System.Text.RegularExpressions.Regex _fmtDefault = new System.Text.RegularExpressions.Regex("(.*) (.*)%");
+
         string GetProgressKey(string input, out string progress)
         {
-            progress = null;
+            progress = String.Empty;
 
             var gen = _fmtGeneration.Matches(input);
             if (gen != null && gen.Count == 1 && gen[0].Groups.Count == 3)
             {
-                progress = gen[0].Groups[2].Value;
+                progress = gen[0].Groups[2].Value + '%';
                 return gen[0].Groups[1].Value;
             }
             gen = _fmtSemi.Matches(input);
             if (gen != null && gen.Count == 1 && gen[0].Groups.Count == 3)
             {
-                progress = gen[0].Groups[2].Value;
+                progress = gen[0].Groups[2].Value + '%';
                 return gen[0].Groups[1].Value;
             }
             gen = _fmtDefault.Matches(input);
             if (gen != null && gen.Count == 1 && gen[0].Groups.Count == 3)
             {
-                progress = gen[0].Groups[2].Value;
+                progress = gen[0].Groups[2].Value + '%';
                 return gen[0].Groups[1].Value;
             }
 
-            return null;
+            return input;
         }
 
         private int lastWritten = 0;
@@ -1039,6 +1040,9 @@ namespace tdsm.core
                                 Console.Write(statusText);
 
                                 lastWritten += currentProgress.Length;
+
+                                if (currentProgress.Length == 0)
+                                    Console.WriteLine();
                             }
                         }
                         else
@@ -1052,6 +1056,11 @@ namespace tdsm.core
                             Console.Write(statusText);
                             lastWritten += currentProgress.Length;
                         }
+                    }
+                    else if (keyA == null && keyB != null)
+                    {
+                        Console.Write(statusText);
+                        lastWritten += currentProgress.Length;
                     }
                 }
                 else

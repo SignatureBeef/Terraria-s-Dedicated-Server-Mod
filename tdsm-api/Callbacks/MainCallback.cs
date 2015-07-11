@@ -39,90 +39,6 @@ namespace tdsm.api.Callbacks
                     if (handler.Load())
                         Permissions.PermissionsManager.SetHandler(handler);
                 }
-                //else
-                //{
-                //    var test = new Permissions.XmlReflect()
-                //    {
-                //        Groups = new Permissions.XmlGroup[]
-                //        { 
-                //            new Permissions.XmlGroup()
-                //            {
-                //                Nodes = new Permissions.XmlNode[]
-                //                {
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Deny = true,
-                //                        Key = "tdsm.testa"
-                //                    },
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Key = "tdsm.testb"
-                //                    }
-                //                },
-                //                Name = "groupA"
-                //            },
-                //            new Permissions.XmlGroup()
-                //            {
-                //                Nodes = new Permissions.XmlNode[]
-                //                {
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Deny = true,
-                //                        Key = "tdsm.testm"
-                //                    },
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Deny = true,
-                //                        Key = "tdsm.testp"
-                //                    }
-                //                },
-                //                Name = "groupb"
-                //            }
-                //        },
-                //        Players = new Permissions.XmlPlayer[]
-                //        { 
-                //            new Permissions.XmlPlayer()
-                //            {
-                //                Nodes = new Permissions.XmlNode[]
-                //                {
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Key = "tdsm.testc"
-                //                    },
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Deny = true,
-                //                        Key = "tdsm.testd"
-                //                    }
-                //                },
-                //                Name = "playerA",
-                //                Groups = new string[] {"groupa","groupb"}
-                //            },
-                //            new Permissions.XmlPlayer()
-                //            {
-                //                Nodes = new Permissions.XmlNode[]
-                //                {
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Key = "tdsm.testcbbb"
-                //                    },
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Deny = true,
-                //                        Key = "tdsm.testd"
-                //                    }
-                //                },
-                //                Name = "playerb"
-                //            }
-                //        }
-                //    };
-                //    var slz = new System.Xml.Serialization.XmlSerializer(typeof(Permissions.XmlReflect));
-                //    using (var fs = System.IO.File.OpenWrite(file))
-                //    {
-                //        slz.Serialize(fs, test);
-                //        fs.Flush();
-                //    }
-                //}
             }
         }
 
@@ -156,7 +72,8 @@ namespace tdsm.api.Callbacks
         public static void OnProgramFinished()
         {
             //Close the logging if set
-            if (Tools.WriteClose != null) Tools.WriteClose.Invoke();
+            if (Tools.WriteClose != null)
+                Tools.WriteClose.Invoke();
         }
 
         public static bool Initialise()
@@ -194,7 +111,7 @@ namespace tdsm.api.Callbacks
             {
                 var client = Terraria.Netplay.Clients[i];
 //                if (player.active)
-                if(client != null && client.Socket != null && client.Socket is ClientConnection)
+                if (client != null && client.Socket != null && client.Socket is ClientConnection)
                 {
                     var conn = (client.Socket as ClientConnection);
                     if (conn != null)

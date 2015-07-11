@@ -189,6 +189,7 @@
     <Compile Include="Misc\PropertiesFile.cs" />
     <Compile Include="Misc\Tasks.cs" />
     <Compile Include="Callbacks\Utilities.cs" />
+    <Compile Include="Data\IDataConnector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -204,5 +205,6 @@
     <Folder Include="Sockets\" />
     <Folder Include="Logging\" />
     <Folder Include="Misc\" />
+    <Folder Include="Data\" />
   </ItemGroup>
 </Project>
