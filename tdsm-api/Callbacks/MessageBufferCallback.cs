@@ -813,8 +813,8 @@ namespace tdsm.api.Callbacks
                     //}
                     //else
                     //{
-                        Netplay.Clients[bufferId].State = 1;
-                        NetMessage.SendData((int)Packet.CONNECTION_RESPONSE, bufferId, -1, "", 0, 0f, 0f, 0f, 0, 0, 0);
+                        //Netplay.Clients[bufferId].State = 1;
+                        //NetMessage.SendData((int)Packet.CONNECTION_RESPONSE, bufferId, -1, "", 0, 0f, 0f, 0f, 0, 0, 0);
                     //}
                 }
             }
