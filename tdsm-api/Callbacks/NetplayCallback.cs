@@ -358,6 +358,7 @@ namespace tdsm.api.Callbacks
         }
 
         public static int LastSlot;
+
         public static void OnNewConnection(int slot)
         {
             LastSlot = slot;
@@ -366,6 +367,28 @@ namespace tdsm.api.Callbacks
             {
                 ((ClientConnection)Terraria.Netplay.Clients[slot].Socket).Set(slot);
             }
+        }
+
+        public static bool Initialise()
+        {
+            #if Full_API
+            if (Terraria.Main.dedServ)
+            {
+                var ctx = new HookContext()
+                {
+                    Sender = HookContext.ConsoleSender
+                };
+                var args = new HookArgs.ServerStateChange()
+                {
+                    ServerChangeState = ServerState.Starting
+                };
+                HookPoints.ServerStateChange.Invoke(ref ctx, ref args);
+
+                return ctx.Result != HookResult.IGNORE;
+            }
+            #endif
+
+            return true; //Allow continue
         }
     }
 }

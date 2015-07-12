@@ -76,9 +76,9 @@ namespace tdsm.api.Callbacks
                 Tools.WriteClose.Invoke();
         }
 
-        public static bool Initialise()
+        public static void Initialise()
         {
-#if Full_API
+            #if Full_API
             if (Terraria.Main.dedServ)
             {
                 var ctx = new HookContext()
@@ -90,12 +90,8 @@ namespace tdsm.api.Callbacks
                     ServerChangeState = ServerState.Initialising
                 };
                 HookPoints.ServerStateChange.Invoke(ref ctx, ref args);
-
-                return ctx.Result != HookResult.IGNORE;
             }
-#endif
-
-            return true; //Allow continue
+            #endif
         }
 
         public static void UpdateServerEnd()

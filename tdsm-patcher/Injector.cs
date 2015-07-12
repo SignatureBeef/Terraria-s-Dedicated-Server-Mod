@@ -401,10 +401,23 @@ namespace tdsm.patcher
             il.InsertBefore(method.Body.Instructions.Last(), il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
         }
 
+        //Initialising
         public void HookInitialise()
         {
-            var method = Terraria.Netplay.Methods.Single(x => x.Name == "Initialize");
+            var method = Terraria.Main.Methods.Single(x => x.Name == "Initialize");
             var callback = API.MainCallback.Methods.First(m => m.Name == "Initialise");
+
+            var il = method.Body.GetILProcessor();
+            var first = method.Body.Instructions.First();
+
+            il.InsertBefore(first, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+        }
+
+        //Server starting
+        public void HookNetplayInitialise()
+        {
+            var method = Terraria.Netplay.Methods.Single(x => x.Name == "Initialize");
+            var callback = API.NetplayCallback.Methods.First(m => m.Name == "Initialise");
 
             var il = method.Body.GetILProcessor();
             var first = method.Body.Instructions.First();

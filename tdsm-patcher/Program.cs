@@ -34,6 +34,8 @@ namespace tdsm.patcher
         {
             var projectBinary = pluginName ?? project.Replace("-", ".");
             var p = debugFolder ? Path.Combine(root.FullName, project, "bin", "x86", "Debug") : Path.Combine(root.FullName, project);
+            if (!Directory.Exists(p))
+                p = debugFolder ? Path.Combine(root.FullName, project, "bin", "Debug") : Path.Combine(root.FullName, project);
 
             var dllF = Path.Combine(p, projectBinary + ".dll");
             //			var mdbF = Path.Combine (p, projectBinary + ".mdb");
@@ -149,6 +151,7 @@ namespace tdsm.patcher
             Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "ICSharpCode.SharpZipLib", false);
             Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "Mono.Nat", false);
             Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Libraries"), "Newtonsoft.Json", true);
+            Copy(root, "tdsm-sqlite-connector", Path.Combine(Environment.CurrentDirectory, "Plugins"), "tdsm-sqlite-connector", true);
 
 #endif
 #elif CLIENT
@@ -231,6 +234,7 @@ namespace tdsm.patcher
             patcher.HookProgramStart();
             Console.Write("Ok\nHooking initialise...");
             patcher.HookInitialise();
+            patcher.HookNetplayInitialise();
             Console.Write("Ok\nHooking into world events...");
             patcher.HookWorldEvents();
             Console.Write("Ok\nHooking statusText...");
