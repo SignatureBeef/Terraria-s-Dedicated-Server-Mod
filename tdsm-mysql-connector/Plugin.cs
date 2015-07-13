@@ -43,9 +43,7 @@ namespace TDSM.Data.MySQL
                             ProgramLog.Error.Log("Exception connecting to MySQL database: {0}", e);
                             return;
                         }
-                        Storage.SetConnector(cn);
-
-                        _connector = cn;
+                        Storage.SetConnector(_connector = cn);
                     }
                     break;
             }
