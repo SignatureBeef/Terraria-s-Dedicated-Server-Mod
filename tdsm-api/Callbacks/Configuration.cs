@@ -81,7 +81,7 @@ namespace tdsm.api.Callbacks
                             var ix = line.IndexOf("=");
                             if (ix > -1)
                             {
-                                var key = line.Substring(0, ix);
+                                var key = line.Substring(0, ix).Trim();
                                 var value = line.Substring(ix + 1, line.Length - (ix + 1));
 #if Full_API
                                 switch (key.ToLower())

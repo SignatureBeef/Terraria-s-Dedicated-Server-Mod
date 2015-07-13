@@ -22,7 +22,8 @@ namespace tdsm.api.Misc
             _data = new string[0];
             _lowerKeys = lowerKeys;
 
-            if (autoLoad) Load();
+            if (autoLoad)
+                Load();
         }
 
         public int Count
@@ -36,11 +37,32 @@ namespace tdsm.api.Misc
             lock (_data)
             {
                 if (System.IO.File.Exists(_path))
+                {
                     _data = System.IO.File.ReadAllLines(_path)
-                        .Select(x => x.Trim())
-                        .Distinct()
-                        .ToArray();
-                else System.IO.File.WriteAllText(_path, System.String.Empty);
+                            .Select(x => x.Trim())
+                            .Distinct()
+                            .ToArray();
+
+                    //Some lines may have the key separate.
+                    for (var i = 0; i < _data.Length; i++)
+                    {
+                        var ix = _data[i].IndexOf(PrefixKey);
+                        if (ix > -1)
+                        {
+                            var key = _data[i].Substring(0, ix).Trim();
+                            //Don't trim the value, as it may be a string
+                            var value = _data[i].Remove(0, ix + 1);
+                            _data[i] = key + PrefixKey + value;
+                        }
+                        else
+                        {
+                            //Leave line alone.
+                            continue;
+                        }
+                    }
+                }
+                else
+                    System.IO.File.WriteAllText(_path, System.String.Empty);
             }
         }
 
@@ -71,7 +93,8 @@ namespace tdsm.api.Misc
                 _data = new string[] { };
             }
 
-            if (autoSave) return Save();
+            if (autoSave)
+                return Save();
             return true;
         }
 
@@ -84,7 +107,8 @@ namespace tdsm.api.Misc
                 _data[_data.Length - 1] = item.ToLower().Trim();
             }
 
-            if (autoSave) return Save();
+            if (autoSave)
+                return Save();
             return true;
         }
 
@@ -96,7 +120,8 @@ namespace tdsm.api.Misc
                 _data[_data.Length - 1] = (_lowerKeys ? key.ToLower() : key).Trim() + PrefixKey + value;
             }
 
-            if (autoSave) return Save();
+            if (autoSave)
+                return Save();
             return true;
         }
 
@@ -121,7 +146,8 @@ namespace tdsm.api.Misc
                 updated = Add(cleaned, value, autoSave);
             }
 
-            if (autoSave) return Save() && updated;
+            if (autoSave)
+                return Save() && updated;
             return updated;
         }
 
@@ -136,7 +162,8 @@ namespace tdsm.api.Misc
                     _data = _data.Where(x => x != cleaned).ToArray();
             }
 
-            if (autoSave) return Save();
+            if (autoSave)
+                return Save();
             return true;
         }
 
@@ -175,19 +202,21 @@ namespace tdsm.api.Misc
             if (item.Length == 1)
             {
                 var v = item[0].Remove(0, item[0].IndexOf(PrefixKey) + 1);
-                if (!String.IsNullOrEmpty(v)) return v;
+                if (!String.IsNullOrEmpty(v))
+                    return v;
             }
 
             return null;
         }
 
-        public string this[int index]
+        public string this [int index]
         {
             get
             { return _data[index]; }
         }
 
         private int _index;
+
         public string Current
         {
             get { return _data[_index]; }
