@@ -1085,7 +1085,7 @@ namespace tdsm.api.Callbacks
                     {
                         projectile.ai[num85] = ai[num85];
                     }
-                    projectile.ProjectileFixDesperation(owner);
+                    projectile.ProjectileFixDesperation();
                     if (Main.netMode == 2)
                     {
                         NetMessage.SendData(27, -1, bufferId, "", index, 0, 0, 0, 0, 0, 0);
