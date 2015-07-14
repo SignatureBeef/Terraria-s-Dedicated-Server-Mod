@@ -27,9 +27,13 @@ namespace tdsm.core
         private static int _coreBuild;
 
         public static bool Enabled { get; private set; }
+
         public static bool PublishToList { get; set; }
+
         public static string ServerName { get; set; }
+
         public static string ServerDescription { get; set; }
+
         public static string ServerDomain { get; set; }
 
         private static DateTime? _lastUpdateNotice;
@@ -55,16 +59,19 @@ namespace tdsm.core
         }
 
         private static string _serverKey = GetServerKey();
+
         static string GetServerKey()
         {
             var file = Path.Combine(Globals.DataPath, "server.key");
             if (File.Exists(file))
             {
                 var key = File.ReadAllText(file);
-                if (key.Length == 36) return key;
+                if (key.Length == 36)
+                    return key;
             }
             return null;
         }
+
         static void SetServerKey(string key)
         {
             var file = Path.Combine(Globals.DataPath, "server.key");
@@ -138,7 +145,8 @@ namespace tdsm.core
                     req.Add("Core", _coreBuild.ToString());
                     req.Add("Platform", ((int)Platform.Type).ToString());
                     req.Add("OSPlatform", ((int)Environment.OSVersion.Platform).ToString());
-                    if (!String.IsNullOrEmpty(_serverKey)) req.Add("UUID", _serverKey);
+                    if (!String.IsNullOrEmpty(_serverKey))
+                        req.Add("UUID", _serverKey);
                     req.Add("NPCDef", Definitions.DefinitionManager.NPCVersion.ToString());
                     req.Add("ItemDef", Definitions.DefinitionManager.ItemVersion.ToString());
                     //req.Add("ServiceTo", ServerCore.Server.UniqueConnections.ToString());
@@ -149,9 +157,12 @@ namespace tdsm.core
                         req.Add("MaxPlayers", Terraria.Main.maxNetPlayers.ToString());
                         //req.Add("ConnectedPlayers", ServerCore.ClientConnection.All.Count.ToString());
 
-                        if (!String.IsNullOrEmpty(ServerName)) req.Add("Name", ServerName);
-                        if (!String.IsNullOrEmpty(ServerDescription)) req.Add("Desc", ServerDescription);
-                        if (!String.IsNullOrEmpty(ServerDomain)) req.Add("Domain", ServerDomain);
+                        if (!String.IsNullOrEmpty(ServerName))
+                            req.Add("Name", ServerName);
+                        if (!String.IsNullOrEmpty(ServerDescription))
+                            req.Add("Desc", ServerDescription);
+                        if (!String.IsNullOrEmpty(ServerDomain))
+                            req.Add("Domain", ServerDomain);
                     }
 
                     //TODO; Maybe plugin versions
@@ -181,10 +192,14 @@ namespace tdsm.core
                                 var flag = reader.ReadUpdateReady();
 
                                 var updates = String.Empty;
-                                if ((flag & UpdateReady.API) != 0) updates += "API";
-                                if ((flag & UpdateReady.Core) != 0) updates += (updates.Length > 0 ? ", " : String.Empty) + "Core";
-                                if ((flag & UpdateReady.NPCDefinitions) != 0) updates += (updates.Length > 0 ? ", " : String.Empty) + "NPC definitions";
-                                if ((flag & UpdateReady.ItemDefinitions) != 0) updates += (updates.Length > 0 ? ", " : String.Empty) + "Item definitions";
+                                if ((flag & UpdateReady.API) != 0)
+                                    updates += "API";
+                                if ((flag & UpdateReady.Core) != 0)
+                                    updates += (updates.Length > 0 ? ", " : String.Empty) + "Core";
+                                if ((flag & UpdateReady.NPCDefinitions) != 0)
+                                    updates += (updates.Length > 0 ? ", " : String.Empty) + "NPC definitions";
+                                if ((flag & UpdateReady.ItemDefinitions) != 0)
+                                    updates += (updates.Length > 0 ? ", " : String.Empty) + "Item definitions";
 
                                 if ((flag & UpdateReady.PluginOutOfDate) != 0)
                                 {
@@ -216,7 +231,9 @@ namespace tdsm.core
                                         Beat();
                                     }
                                 }
-                                catch { }
+                                catch
+                                {
+                                }
                                 break;
                             case ResponseCode.StringResponse:
                                 try
@@ -228,27 +245,30 @@ namespace tdsm.core
                                         ProgramLog.Log("Heartbeat Sent: " + str);
                                     }
                                 }
-                                catch { }
+                                catch
+                                {
+                                }
                                 break;
-                            //default:
-                            //    ProgramLog.Log("Invalid heartbeat response.");
-                            //    try
-                            //    {
-                            //        var str = reader.ReadString();
-                            //        if (!String.IsNullOrEmpty(str))
-                            //        {
-                            //            ProgramLog.Log("Heartbeat Sent: " + str);
-                            //        }
-                            //    }
-                            //    catch { }
-                            //    break;
+                        //default:
+                        //    ProgramLog.Log("Invalid heartbeat response.");
+                        //    try
+                        //    {
+                        //        var str = reader.ReadString();
+                        //        if (!String.IsNullOrEmpty(str))
+                        //        {
+                        //            ProgramLog.Log("Heartbeat Sent: " + str);
+                        //        }
+                        //    }
+                        //    catch { }
+                        //    break;
                         }
                     }
-                    else ProgramLog.Log("Failed get a heartbeat response.");
+                    else
+                        ProgramLog.Log("Failed get a heartbeat response.");
                 }
             }
 #if DEBUG
-            catch(Exception e)
+            catch (Exception e)
             {
                 ProgramLog.Log("Heartbeat failed, are we online or is the tdsm server down?");
                 ProgramLog.Log(e);
@@ -287,25 +307,33 @@ namespace tdsm.core
                 _coreBuild = coreBuild;
                 _timer = new System.Timers.Timer(1000 * 60 * MinuteInterval);
                 var callback = new System.Timers.ElapsedEventHandler((e, a) =>
-                {
-                    if (Enabled) Beat();
-                });
+                    {
+                        if (Enabled)
+                            Beat();
+                    });
                 _timer.Elapsed += callback;
                 _timer.Start();
                 callback.BeginInvoke(null, null, new AsyncCallback((result) =>
-                {
-                    (result.AsyncState as System.Timers.ElapsedEventHandler).EndInvoke(result);
-                }), callback);
+                        {
+                            (result.AsyncState as System.Timers.ElapsedEventHandler).EndInvoke(result);
+                        }), callback);
                 Enabled = true;
+
+                if (PublishToList && String.IsNullOrEmpty(ServerName))
+                {
+                    ProgramLog.Error.Log("The server was instructed to be published but no server name was specified");
+                }
             }
-            else if (!_timer.Enabled) _timer.Enabled = true;
+            else if (!_timer.Enabled)
+                _timer.Enabled = true;
 #endif
         }
 
         public static void End()
         {
 #if ENABLED
-            if (_timer != null) _timer.Enabled = false;
+            if (_timer != null)
+                _timer.Enabled = false;
             Enabled = false;
 #endif
         }
