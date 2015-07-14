@@ -30,6 +30,11 @@ namespace TDSM.Data.MySQL
             _connection.Open();
         }
 
+        bool IDataConnector.Execute(QueryBuilder builder)
+        {
+            return false;
+        }
+
         T IDataConnector.ExecuteScalar<T>(QueryBuilder builder)
         {
             return default(T);
