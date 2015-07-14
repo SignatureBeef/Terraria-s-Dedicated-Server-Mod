@@ -58,12 +58,12 @@ namespace TDSM.Data.MySQL
 
     public class MySQLQueryBuilder : QueryBuilder
     {
-        public   MySQLQueryBuilder(string pluginName)
+        public MySQLQueryBuilder(string pluginName)
             : base(pluginName)
         {
         }
 
-        public   MySQLQueryBuilder(string pluginName, string command, System.Data.CommandType type)
+        public MySQLQueryBuilder(string pluginName, string command, System.Data.CommandType type)
             : base(pluginName, command, type)
         {
 
@@ -107,6 +107,7 @@ namespace TDSM.Data.MySQL
 
         public override QueryBuilder SelectAll(string tableName, params WhereFilter[] clause)
         {
+            Append("SELECT * FROM {0}", base.GetTableName(tableName));
             return this;
         }
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data;
+using System.Text;
+using System.Collections.Generic;
 
 namespace tdsm.api.Data
 {
@@ -17,32 +19,48 @@ namespace tdsm.api.Data
 
         DataSet ExecuteDataSet(QueryBuilder builder);
 
-        T[] ExecuteArray<T>(QueryBuilder builder); //where T : new();
+        T[] ExecuteArray<T>(QueryBuilder builder);
+        //where T : new();
     }
 
     public abstract class QueryBuilder : IDisposable
     {
         private string _plugin;
-        private string _command;
+        private StringBuilder _sb;
         private System.Data.CommandType _type;
 
         //Simple builder
         public QueryBuilder(string pluginName)
         {
+            _sb = new StringBuilder();
+
             _plugin = pluginName;
+            _type = CommandType.Text;
         }
 
         //Command builder, essentially just for parameterised queries
         public QueryBuilder(string pluginName, string command, System.Data.CommandType type)
         {
+            _sb = new StringBuilder();
+
+            _sb.Append(command);
             _plugin = pluginName;
-            _command = command;
             System.Data.CommandType _type = type;
+        }
+
+        protected void Append(string fmt, params object[] args)
+        {
+            if (args == null || args.Length == 0)
+                _sb.Append(fmt);
+            else
+                _sb.Append(args);
         }
 
         void IDisposable.Dispose()
         {
-
+            _sb.Clear();
+            _sb = null;
+            _plugin = null;
         }
 
         public abstract QueryBuilder AddParam(string name, object value);
@@ -70,6 +88,22 @@ namespace tdsm.api.Data
         public abstract QueryBuilder InsertInto(string tableName, params DataParameter[] values);
 
         public abstract QueryBuilder Update(string tableName, DataParameter[] values, params WhereFilter[] clause);
+
+        protected string GetTableName(string tableName)
+        {
+            return _plugin + '_' + tableName;
+        }
+
+        public CommandType CommandType
+        {
+            get
+            { return _type; }
+        }
+
+        public string BuildCommand()
+        {
+            return null;
+        }
     }
 
     public struct DataParameter

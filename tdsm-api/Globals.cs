@@ -79,7 +79,7 @@ namespace tdsm.api
         public static void Touch()
         {
             if (!Directory.Exists(SavePath)) Directory.CreateDirectory(SavePath);
-            if (!Directory.Exists(WorldPath)) Directory.CreateDirectory(WorldPath);
+//            if (!Directory.Exists(WorldPath)) Directory.CreateDirectory(WorldPath);
             //if (!Directory.Exists(WorldBackupPath)) Directory.CreateDirectory(WorldBackupPath);
             if (!Directory.Exists(PluginPath)) Directory.CreateDirectory(PluginPath);
             if (!Directory.Exists(LibrariesPath)) Directory.CreateDirectory(LibrariesPath);
