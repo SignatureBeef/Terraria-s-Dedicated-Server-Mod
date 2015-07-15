@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using tdsm.api.Command;
+using TDSM.API.Command;
 
-namespace tdsm.api.Plugin
+namespace TDSM.API.Plugin
 {
     /// <summary>
     /// Plugin class, used as base for plugin extensions

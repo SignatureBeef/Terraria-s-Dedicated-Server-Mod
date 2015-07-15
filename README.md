@@ -18,7 +18,7 @@ Alternatively you can get one of the latest pre-release binaries [here](https://
 See [this wiki page](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server) for how to run the new TDSM.
 	
 ##Plugin Development
-Plugins are supported via the tdsm-api project. This DLL is hooked into the vanilla server using the tdsm-patcher project. However you must reference both the tdsm.api.dll as well as the patched tdsm.exe.
+Plugins are supported via the tdsm-api project. This DLL is hooked into the vanilla server using the tdsm-patcher project. However you must reference both the TDSM.API.dll as well as the patched tdsm.exe.
 
 The Plugin API is essentially the same as the old TDSM, so you can go about creating your plugin as you normally would.
 In addition to the old .NET plugins we now also support LUA. They function in the same manner as if it was a standard .NET plugin. I do suggest that if you need a high performance plugin/event that you use .NET.
@@ -35,9 +35,9 @@ The wiki and API documentation will be created very soon, and as a priority.
 ##Core Development
 There are three core components of a TDSM server.
 <br/>
- 1. The API surrounding the official server code (tdsm.api.dll)
+ 1. The API surrounding the official server code (TDSM.API.dll)
  2. The TDSM patcher that hooks the API into the official code (tdsm.patcher.exe)
- 3. The TDSM core plugin that consumes the API and provides the additional features (tdsm.core.dll)
+ 3. The TDSM core plugin that consumes the API and provides the additional features (TDSM.Core.dll)
 
 ######Why do we not use our existing code base?
 For the core developers updating our previous codebase to match the official code each update takes by far too long and to be brutally honest, it is mind numbing.

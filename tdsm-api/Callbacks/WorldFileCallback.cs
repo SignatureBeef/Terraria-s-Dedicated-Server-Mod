@@ -7,7 +7,7 @@
 //using Terraria;
 //#endif
 
-//namespace tdsm.api.Callbacks
+//namespace TDSM.API.Callbacks
 //{
 //    public static class WorldFileCallback
 //    {

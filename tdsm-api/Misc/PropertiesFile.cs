@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace tdsm.api.Misc
+namespace TDSM.API.Misc
 {
     public class PropertiesFile : DataRegister
     {

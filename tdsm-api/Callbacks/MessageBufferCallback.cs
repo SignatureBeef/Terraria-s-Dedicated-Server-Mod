@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using tdsm.api.Plugin;
+using TDSM.API.Plugin;
+#if Full_API
 using Terraria;
-
-namespace tdsm.api.Callbacks
+#endif
+namespace TDSM.API.Callbacks
 {
     public static class MessageBufferCallback
     {
@@ -16,6 +17,7 @@ namespace tdsm.api.Callbacks
 
         public static byte ProcessPacket(int bufferId, byte packetId, int start, int length)
         {
+            #if Full_API
             //ProgramLog.Debug.Log("Slot/Packet: {0}/{1}", bufferId, packetId);
             //Console.WriteLine("Trace: {0}", Environment.StackTrace);
             switch ((Packet)packetId)
@@ -60,18 +62,20 @@ namespace tdsm.api.Callbacks
                         return 0; //Ignore
                     break;
             }
+            #endif
 
             return packetId;
         }
 
         /// <summary>
-        /// CHeck to see if a client sent a wrong message at the wrong state
+        /// Check to see if a client sent a wrong message at the wrong state
         /// </summary>
         /// <param name="bufferId"></param>
         /// <param name="packetId"></param>
         /// <returns></returns>
         public static bool CheckForInvalidState(int bufferId, byte packetId)
         {
+            #if Full_API
             var res = Main.netMode == 2 && Netplay.Clients[bufferId].State < 10
                       && packetId > 12 && packetId != 93 && packetId != 16 && packetId != 42
                       && packetId != 50 && packetId != 38 && packetId != 68;
@@ -79,8 +83,12 @@ namespace tdsm.api.Callbacks
                 return false;
 
             return res;
+            #else
+            return false;
+            #endif
         }
 
+        #if Full_API
         private static void ProcessPassword(int bufferId)
         {
             var buffer = NetMessage.buffer[bufferId];
@@ -814,7 +822,7 @@ namespace tdsm.api.Callbacks
                 }
             }
             Netplay.Clients[bufferId].Name = player.name;
-            tdsm.api.Callbacks.VanillaHooks.OnPlayerEntering(player);
+            TDSM.API.Callbacks.VanillaHooks.OnPlayerEntering(player);
             return;
 
             //            int num6 = (int)buffer.reader.ReadByte();
@@ -1347,5 +1355,6 @@ namespace tdsm.api.Callbacks
                 }
             }
         }
+        #endif
     }
 }

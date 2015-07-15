@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using tdsm.api;
-using tdsm.api.Logging;
+using TDSM.API;
+using TDSM.API.Logging;
 
-namespace tdsm.core.Definitions
+namespace TDSM.Core.Definitions
 {
     public static class DefinitionManager
     {
@@ -136,7 +136,7 @@ namespace tdsm.core.Definitions
 
         static Stream GetInternalDefinition(string file)
         {
-            return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("tdsm.core.Definitions." + file);
+            return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("TDSM.Core.Definitions." + file);
         }
         #endregion
     }

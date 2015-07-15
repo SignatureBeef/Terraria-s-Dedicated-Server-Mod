@@ -1,5 +1,5 @@
 ﻿using System;
-namespace tdsm.api.Command
+namespace TDSM.API.Command
 {
     /// <summary>
     /// ConsoleSender extension of Sender.  Allows for new ConsoleCommandEvents

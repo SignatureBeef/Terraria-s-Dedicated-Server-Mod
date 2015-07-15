@@ -1,7 +1,7 @@
 ﻿//#define ENABLE_NAT
 
 
-namespace tdsm.api.Callbacks
+namespace TDSM.API.Callbacks
 {
     //https://github.com/mono/Mono.Nat/releases
     public static class NAT

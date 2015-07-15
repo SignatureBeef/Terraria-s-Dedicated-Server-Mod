@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Diagnostics;
-using Terraria;
 using System.Net.Sockets;
-using tdsm.api.Plugin;
+using TDSM.API.Plugin;
 using System.Threading;
 using System.Collections.Generic;
-using Terraria.Net.Sockets;
-using Terraria.Net;
 using System.Net;
 using System.Linq;
 using System.Collections.Concurrent;
-using tdsm.api.Misc;
-using tdsm.api.Logging;
+using TDSM.API.Misc;
+using TDSM.API.Logging;
 
-namespace tdsm.api
+#if Full_API
+using Terraria;
+using Terraria.Net.Sockets;
+using Terraria.Net;
+#else
+using TDSM.API.Callbacks;
+#endif
+namespace TDSM.API.Sockets
 {
     public class ClientConnection : Connection, ISocket
     {
@@ -167,6 +171,7 @@ namespace tdsm.api
 
         void ISocket.AsyncSend(byte[] data, int offset, int size, SocketSendCallback callback, object state)
         {
+            #if Full_API
             Main.ignoreErrors = false;
             var bt = new byte[size];
             Buffer.BlockCopy(data, offset, bt, 0, size);
@@ -177,6 +182,7 @@ namespace tdsm.api
                 callback(state);
             
             this.Flush();
+            #endif
         }
 
         protected override void ProcessRead()
@@ -238,7 +244,7 @@ namespace tdsm.api
 
         public void StartReading()
         {
-#if DEBUG
+#if DEBUG && Full_API
             Main.ignoreErrors = false;
 #endif
             StartReceiving(new byte[4192]);
@@ -284,6 +290,7 @@ namespace tdsm.api
 
         bool ISocket.StartListening(SocketConnectionAccepted callback)
         {
+            #if Full_API
             this._isListening = true;
             this._listenerCallback = callback;
             if (this._listener == null)
@@ -299,6 +306,7 @@ namespace tdsm.api
                 return false;
             }
             ThreadPool.QueueUserWorkItem(new WaitCallback(this.ListenLoop));
+            #endif
             return true;
         }
 
@@ -319,6 +327,7 @@ namespace tdsm.api
 
         private void ListenLoop(object unused)
         {
+            #if Full_API
             while (this._isListening && !Terraria.Netplay.disconnect)
             {
                 try
@@ -332,6 +341,7 @@ namespace tdsm.api
                 }
             }
             this._listener.Stop();
+            #endif
         }
     }
 }

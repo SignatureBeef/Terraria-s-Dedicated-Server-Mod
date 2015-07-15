@@ -1,7 +1,7 @@
 using System;
-using tdsm.api.Command;
+using TDSM.API.Command;
 
-namespace tdsm.core.RemoteConsole
+namespace TDSM.Core.RemoteConsole
 {
     public class RConSender : ConsoleSender
     {

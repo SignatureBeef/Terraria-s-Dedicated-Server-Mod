@@ -3,12 +3,12 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using tdsm.api.Logging;
-using tdsm.api;
+using TDSM.API.Logging;
+using TDSM.API;
 
-//using tdsm.core.ServerCore;
+//using TDSM.Core.ServerCore;
 
-namespace tdsm.core.RemoteConsole
+namespace TDSM.Core.RemoteConsole
 {
     public class RConClient : InteractiveLogTarget
     {
@@ -193,7 +193,7 @@ namespace tdsm.core.RemoteConsole
         {
             writer.WriteLine(ASCIIArt);
             writer.WriteLine("");
-            writer.WriteLine("\x1b[1;37mTerraria {0} dedicated server remote console, running TDSM #{1}.\x1b[0m", tdsm.api.Globals.TerrariaVersion, _tdsmBuild);
+            writer.WriteLine("\x1b[1;37mTerraria {0} dedicated server remote console, running TDSM #{1}.\x1b[0m", TDSM.API.Globals.TerrariaVersion, _tdsmBuild);
             writer.WriteLine("\x1b[1;37mYou have 20 seconds to log in.\x1b[0m");
             writer.Flush();
         }
@@ -312,7 +312,7 @@ namespace tdsm.core.RemoteConsole
 
             try
             {
-                tdsm.api.Callbacks.UserInput.CommandParser.ParseConsoleCommand(line, this.sender);
+                TDSM.API.Callbacks.UserInput.CommandParser.ParseConsoleCommand(line, this.sender);
             }
             catch (Exception e)
             {

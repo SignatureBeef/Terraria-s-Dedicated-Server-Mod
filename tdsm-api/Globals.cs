@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace tdsm.api
+namespace TDSM.API
 {
     public enum ReleasePhase : ushort
     {

@@ -71,21 +71,21 @@ namespace tdsm.patcher
 
         static void Main(string[] args)
         {
-            //if (!tdsm.api.Command.WorldTime.Test())
+            //if (!TDSM.API.Command.WorldTime.Test())
             //{
             //    Console.WriteLine("Time test failed");
             //    Console.ReadKey(true);
             //}
 
-            //if (!tdsm.api.Permissions.PermissionsManager.IsSet)
+            //if (!TDSM.API.Permissions.PermissionsManager.IsSet)
             //{
-            //    var file = System.IO.Path.Combine(tdsm.api.Globals.DataPath, "permissions.xml");
+            //    var file = System.IO.Path.Combine(TDSM.API.Globals.DataPath, "permissions.xml");
             //    //if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
             //    if (System.IO.File.Exists(file))
             //    {
-            //        var handler = new tdsm.api.Permissions.XmlSupplier(file);
+            //        var handler = new TDSM.API.Permissions.XmlSupplier(file);
             //        if (handler.Load())
-            //            tdsm.api.Permissions.PermissionsManager.SetHandler(handler);
+            //            TDSM.API.Permissions.PermissionsManager.SetHandler(handler);
             //    }
             //}
 
@@ -100,7 +100,7 @@ namespace tdsm.patcher
             //            var outFileMS = fileName + ".microsoft.exe";
             //            var outFileMN = fileName + ".mono.exe";
             var output = fileName + ".exe";
-            var patchFile = "tdsm.api.dll";
+            var patchFile = "TDSM.API.dll";
 
             if (!File.Exists(inFile))
             {
@@ -142,7 +142,7 @@ namespace tdsm.patcher
                 root = root.Parent;
             }
 
-            Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "tdsm.api");
+            Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "TDSM.API");
             Copy(root, "tdsm-api", Environment.CurrentDirectory);
             Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
             //Copy (root, "Restrict", Path.Combine (Environment.CurrentDirectory, "Plugins"), "RestrictPlugin");
@@ -306,15 +306,15 @@ namespace tdsm.patcher
             //                data = ms.ToArray();
             //            }
             //            data = APIWrapper.InvokeEvent(data, true);
-            ////            tdsm.api.Globals.Touch();
+            ////            TDSM.API.Globals.Touch();
             ////
-            ////            tdsm.api.PluginManager.SetHookSource(typeof(HookPoints));
-            ////            tdsm.api.PluginManager.Initialize(tdsm.api.Globals.PluginPath, tdsm.api.Globals.LibrariesPath);
-            ////            tdsm.api.PluginManager.LoadPlugins();
+            ////            TDSM.API.PluginManager.SetHookSource(typeof(HookPoints));
+            ////            TDSM.API.PluginManager.Initialize(TDSM.API.Globals.PluginPath, TDSM.API.Globals.LibrariesPath);
+            ////            TDSM.API.PluginManager.LoadPlugins();
             ////
-            ////            var ctx = new tdsm.api.Plugin.HookContext
+            ////            var ctx = new TDSM.API.Plugin.HookContext
             ////            {
-            ////                Sender = tdsm.api.Plugin.HookContext.ConsoleSender
+            ////                Sender = TDSM.API.Plugin.HookContext.ConsoleSender
             ////            };
             ////
             ////            var hookArgs = new HookArgs.PatchServer
@@ -530,13 +530,13 @@ namespace tdsm.patcher
 
             foreach (var rel in new string[]
             { 
-                "tdsm.api.dll",
-                "tdsm.api.pdb",
+                "TDSM.API.dll",
+                "TDSM.API.pdb",
                 "Libraries" + Path.DirectorySeparatorChar + "Newtonsoft.Json.dll",
                 "Libraries" + Path.DirectorySeparatorChar + "Newtonsoft.Json.pdb",
                 "Libraries" + Path.DirectorySeparatorChar + "NLua.dll",
-                "Plugins" + Path.DirectorySeparatorChar + "tdsm.core.dll",
-                "Plugins" + Path.DirectorySeparatorChar + "tdsm.core.pdb",
+                "Plugins" + Path.DirectorySeparatorChar + "TDSM.Core.dll",
+                "Plugins" + Path.DirectorySeparatorChar + "TDSM.Core.pdb",
                 "Plugins" + Path.DirectorySeparatorChar + "RestrictPlugin.dll",
                 "Plugins" + Path.DirectorySeparatorChar + "RestrictPlugin.pdb",
                 "tdsm-patcher.exe",

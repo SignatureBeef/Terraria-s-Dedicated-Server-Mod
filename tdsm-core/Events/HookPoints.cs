@@ -1,7 +1,7 @@
-﻿//using tdsm.api.Plugin;
-//using tdsm.core.Logging;
+﻿//using TDSM.API.Plugin;
+//using TDSM.Core.Logging;
 //
-//namespace tdsm.core.Events
+//namespace TDSM.Core.Events
 //{
 //    public static class HookPoints
 //    {

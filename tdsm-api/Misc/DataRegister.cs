@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace tdsm.api.Misc
+namespace TDSM.API.Misc
 {
     /// <summary>
     /// Low use data storage

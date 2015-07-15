@@ -1,7 +1,10 @@
-﻿using tdsm.api.Plugin;
-using Terraria;
+﻿using TDSM.API.Plugin;
 
-namespace tdsm.api.Callbacks
+#if Full_API
+using Terraria;
+#endif
+
+namespace TDSM.API.Callbacks
 {
     public static class NetMessageCallback
     {
@@ -12,6 +15,7 @@ namespace tdsm.api.Callbacks
 
         public static bool SendData(int msgType, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
         {
+            #if Full_API
             var ctx = new HookContext()
             {
                 Sender = HookContext.ConsoleSender
@@ -30,6 +34,9 @@ namespace tdsm.api.Callbacks
             };
             HookPoints.SendNetData.Invoke(ref ctx, ref args);
             return ctx.Result == HookResult.DEFAULT;
+            #else
+            return false;
+            #endif
         }
     }
 }

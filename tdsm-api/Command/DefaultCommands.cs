@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 #if Full_API
 using Terraria;
-using tdsm.api.Callbacks;
+using TDSM.API.Callbacks;
 
-namespace tdsm.api.Command
+namespace TDSM.API.Command
 {
     /// <summary>
     /// Contains the default command implementation that can be overidden by plugins

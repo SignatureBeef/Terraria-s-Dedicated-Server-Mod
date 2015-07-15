@@ -1,14 +1,23 @@
-﻿
-using tdsm.api.Plugin;
-using Terraria;
+﻿using TDSM.API.Plugin;
 using System;
-
-namespace tdsm.api.Callbacks
+#if Full_API
+using Terraria;
+#endif
+namespace TDSM.API.Callbacks
 {
+    #if !Full_API
+    public class Player
+    {
+
+    }
+    #endif
+
     public static class VanillaHooks
     {
+
         public static void OnPlayerEntering(Player player)
         {
+            #if Full_API
             var ctx = new HookContext
             {
                 Player = player,
@@ -26,10 +35,12 @@ namespace tdsm.api.Callbacks
             {
                 NetMessage.SendData(4, -1, player.whoAmI, player.name, player.whoAmI, 0f, 0f, 0f, 0, 0, 0);
             }
+            #endif
         }
 
         public static bool OnGreetPlayer(int playerId)
         {
+            #if Full_API
             var player = Main.player[playerId];
 
             var ctx = new HookContext
@@ -79,6 +90,7 @@ namespace tdsm.api.Callbacks
             ctx.SetResult(HookResult.DEFAULT, false);
             HookPoints.PlayerEnteredGame.Invoke(ref ctx, ref args2);
             ctx.CheckForKick();
+            #endif
 
             return false; //We implemented our own, so do not continue on with vanilla
         }

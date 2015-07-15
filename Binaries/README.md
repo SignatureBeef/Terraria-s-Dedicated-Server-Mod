@@ -8,10 +8,10 @@ We have now also started including the generated tdsm.exe. The minimalistic inst
 ### Directory Structure:
 ```
 \tdsm\
-  tdsm.api.dll
+  TDSM.API.dll
   tdsm.exe
 \tdsm\Plugins\
-  tdsm.core.dll
+  TDSM.Core.dll
 \tdsm\Data\
   permissions.xml
 \tdsm\Libraries\

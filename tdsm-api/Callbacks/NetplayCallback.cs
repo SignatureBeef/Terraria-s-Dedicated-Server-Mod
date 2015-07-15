@@ -2,13 +2,17 @@
 using System;
 using System.IO;
 using System.Threading;
-using tdsm.api.Plugin;
+using TDSM.API.Plugin;
 using System.Net.Sockets;
+using System.Net;
+using TDSM.API.Sockets;
+
+#if Full_API
 using Terraria.Net.Sockets;
 using Terraria.Net;
-using System.Net;
+#endif
 
-namespace tdsm.api.Callbacks
+namespace TDSM.API.Callbacks
 {
     //    public abstract class IAPISocket : Terraria.ServerSock
     //    {
@@ -73,6 +77,49 @@ namespace tdsm.api.Callbacks
     //        //}
     //    }
 
+
+    #if !Full_API
+    public interface ISocket
+    {
+        void AsyncReceive(byte[] data, int offset, int size, SocketReceiveCallback callback, object state);
+
+        void AsyncSend(byte[] data, int offset, int size, SocketSendCallback callback, object state);
+
+        void Close();
+
+        void Connect(RemoteAddress address);
+
+        RemoteAddress GetRemoteAddress();
+
+        bool IsConnected();
+
+        bool IsDataAvailable();
+
+        bool StartListening(SocketConnectionAccepted callback);
+
+        void StopListening();
+    }
+
+    public delegate void SocketReceiveCallback (object state, int size);
+    public delegate void SocketSendCallback (object state);
+    public delegate void SocketConnectionAccepted (ISocket client);
+
+    public class RemoteAddress
+    {
+
+    }
+
+    public class TcpAddress : RemoteAddress
+    {
+        public IPAddress Address;
+
+        public int Port;
+
+        public TcpAddress(IPAddress addr, int port)
+        {
+        }
+    }
+    #endif
 
     public class TemporarySynchSock : ISocket /* Whoever done this, I love you. */
     {
@@ -205,6 +252,7 @@ namespace tdsm.api.Callbacks
 
         private void ListenLoop(object unused)
         {
+            #if Full_API
             while (this._isListening && !Terraria.Netplay.disconnect)
             {
                 try
@@ -218,6 +266,7 @@ namespace tdsm.api.Callbacks
                 }
             }
             this._listener.Stop();
+            #endif
         }
 
         private void ReadCallback(IAsyncResult result)
@@ -242,6 +291,7 @@ namespace tdsm.api.Callbacks
 
         bool ISocket.StartListening(SocketConnectionAccepted callback)
         {
+            #if Full_API
             this._isListening = true;
             this._listenerCallback = callback;
             if (this._listener == null)
@@ -257,6 +307,7 @@ namespace tdsm.api.Callbacks
                 return false;
             }
             ThreadPool.QueueUserWorkItem(new WaitCallback(this.ListenLoop));
+            #endif
             return true;
         }
 
@@ -335,6 +386,7 @@ namespace tdsm.api.Callbacks
 
         public static void sendWater(int x, int y)
         {
+            #if Full_API
             if (Terraria.Main.netMode == 1)
             {
                 Terraria.NetMessage.SendData(48, -1, -1, "", x, (float)y, 0f, 0f, 0);
@@ -355,18 +407,21 @@ namespace tdsm.api.Callbacks
                     }
                 }
             }
+            #endif
         }
 
         public static int LastSlot;
 
         public static void OnNewConnection(int slot)
         {
+            #if Full_API
             LastSlot = slot;
             //OnConnectionAccepted
             if (Terraria.Netplay.Clients[slot].Socket is ClientConnection)
             {
                 ((ClientConnection)Terraria.Netplay.Clients[slot].Socket).Set(slot);
             }
+            #endif
         }
 
         public static bool Initialise()

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace tdsm.api.Permissions
+namespace TDSM.API.Permissions
 {
     public class XmlSupplier : IPermissionHandler
     {

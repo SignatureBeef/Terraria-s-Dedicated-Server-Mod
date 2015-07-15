@@ -3,17 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using tdsm.api;
-using tdsm.api.Command;
-using tdsm.api.Misc;
-using tdsm.core.Definitions;
-using tdsm.api.Logging;
+using TDSM.API;
+using TDSM.API.Command;
+using TDSM.API.Misc;
+using TDSM.Core.Definitions;
+using TDSM.API.Logging;
 
-//using tdsm.core.Messages.Out;
-//using tdsm.core.ServerCore;
+//using TDSM.Core.Messages.Out;
+//using TDSM.Core.ServerCore;
 using Terraria;
 
-namespace tdsm.core
+namespace TDSM.Core
 {
     public partial class Entry
     {
@@ -1289,7 +1289,7 @@ namespace tdsm.core
 
         //        msg.PlayerChat(255, "<Server> " + Languages.PurgingItems, 255, 180, 100);
 
-        //        lock (tdsm.api.Callbacks.Main.updatingItems)
+        //        lock (TDSM.API.Callbacks.Main.updatingItems)
         //        {
         //            for (int i = 0; i < 200; i++)
         //            {
@@ -1975,7 +1975,7 @@ namespace tdsm.core
                         _disableActiveEvents(sender);
 
                         World.SetTime(0);
-                        //tdsm.api.Callbacks.MainCallback.StartEclipse = true;
+                        //TDSM.API.Callbacks.MainCallback.StartEclipse = true;
                         Main.eclipse = true;
 
                         NetMessage.SendData(25, -1, -1, Lang.misc[20], 255, 50f, 255f, 130f, 0);
@@ -2030,7 +2030,7 @@ namespace tdsm.core
                     {
                         _disableActiveEvents(sender);
                         World.SetTime(0, false);
-                        //tdsm.api.Callbacks.MainCallback.StartEclipse = true;
+                        //TDSM.API.Callbacks.MainCallback.StartEclipse = true;
                         Main.bloodMoon = true;
                         NetMessage.SendData((int)Packet.WORLD_DATA);
                         NetMessage.SendData(25, -1, -1, Lang.misc[8], 255, 50f, 255f, 130f, 0);

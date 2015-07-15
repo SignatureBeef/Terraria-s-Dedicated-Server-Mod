@@ -1420,7 +1420,7 @@ namespace tdsm.patcher
             //            var targetField = API.IAPISocket.Fields.Single(x => x.Name == "tileSection");
             //            var targetArray = API.NetplayCallback.Fields.Single(x => x.Name == "slots");
             //
-            //            //Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
+            //            //Replace Terraria.Netplay.serverSock references with TDSM.Core.Server.slots
             //            var instructions = _asm.MainModule.Types
             //                .SelectMany(x => x.Methods
             //                    .Where(y => y.HasBody && y.Body.Instructions != null)
@@ -1445,7 +1445,7 @@ namespace tdsm.patcher
             //            //TODO BELOW - update ServerSock::announce to IAPISocket::announce (etc)
             //#if VanillaSockets
             //#else
-            //            //            Replace Terraria.Netplay.serverSock references with tdsm.core.Server.slots
+            //            //            Replace Terraria.Netplay.serverSock references with TDSM.Core.Server.slots
             //            instructions = _asm.MainModule.Types
             //               .SelectMany(x => x.Methods
             //                   .Where(y => y.HasBody && y.Body.Instructions != null)

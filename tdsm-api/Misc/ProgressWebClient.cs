@@ -1,7 +1,7 @@
 ﻿using System.Net;
-using tdsm.api.Logging;
+using TDSM.API.Logging;
 
-namespace tdsm.api.Misc
+namespace TDSM.API.Misc
 {
     public class ProgressWebClient : WebClient
     {

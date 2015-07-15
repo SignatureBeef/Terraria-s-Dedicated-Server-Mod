@@ -1,8 +1,9 @@
 ﻿using System;
-using tdsm.api.Misc;
-using tdsm.api.Plugin;
+using TDSM.API.Misc;
+using TDSM.API.Plugin;
+using TDSM.API.Sockets;
 
-namespace tdsm.api.Callbacks
+namespace TDSM.API.Callbacks
 {
     public static class MainCallback
     {
@@ -51,7 +52,7 @@ namespace tdsm.api.Callbacks
 #pragma warning disable 0162
             if (!Globals.FullAPIDefined)
             {
-                Console.WriteLine("Your tdsm.api.dll is incorrect, and does not expose all methods.");
+                Console.WriteLine("Your TDSM.API.dll is incorrect, and does not expose all methods.");
                 return false;
             }
 #pragma warning restore 0162
@@ -102,7 +103,7 @@ namespace tdsm.api.Callbacks
             if (UpdateServer != null)
                 UpdateServer();
 
-
+            #if Full_API
             for (var i = 0; i < Terraria.Netplay.Clients.Length; i++)
             {
                 var client = Terraria.Netplay.Clients[i];
@@ -114,6 +115,7 @@ namespace tdsm.api.Callbacks
                         conn.Flush();
                 }
             }
+            #endif
             //var ctx = new HookContext()
             //{
             //    Sender = HookContext.ConsoleSender

@@ -2,7 +2,7 @@
 using System;
 using Terraria;
 
-namespace tdsm.core
+namespace TDSM.Core
 {
     public static class PlayerExtensions
     {

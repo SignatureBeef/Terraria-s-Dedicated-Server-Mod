@@ -3,7 +3,7 @@ using System.Data;
 using System.Text;
 using System.Collections.Generic;
 
-namespace tdsm.api.Data
+namespace TDSM.API.Data
 {
     public interface IDataConnector
     {

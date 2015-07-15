@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace tdsm.api.Callbacks
+namespace TDSM.API.Callbacks
 {
     public static class Utilities
     {
@@ -18,7 +18,11 @@ namespace tdsm.api.Callbacks
                     return false;
                 }
             }
+            #if Full_API
             return Terraria.Utilities.FileOperationAPIWrapper.MoveToRecycleBin(path);
+            #else
+            return false;
+            #endif
         }
     }
 }

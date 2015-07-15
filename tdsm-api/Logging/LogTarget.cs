@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using tdsm.api.Plugin;
-using tdsm.core.Misc;
-using tdsm.api.Misc;
+using TDSM.API.Plugin;
+using TDSM.Core.Misc;
+using TDSM.API.Misc;
 
-namespace tdsm.api.Logging
+namespace TDSM.API.Logging
 {
 	public struct OutputEntry
 	{

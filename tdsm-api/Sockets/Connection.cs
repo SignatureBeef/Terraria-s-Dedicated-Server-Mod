@@ -3,10 +3,10 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using System.Collections.Generic;
-using tdsm.api.Misc;
-using tdsm.api.Logging;
+using TDSM.API.Misc;
+using TDSM.API.Logging;
 
-namespace tdsm.api
+namespace TDSM.API.Sockets
 {
     public abstract class Connection
     {

@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Concurrent;
-using tdsm.api;
-using tdsm.api.Command;
-using Terraria.Net.Sockets;
+using TDSM.API;
+using TDSM.API.Command;
 
-namespace tdsm.api
+#if Full_API
+using Terraria.Net.Sockets;
+#endif
+
+namespace TDSM.API
 {
     public partial class BasePlayer : Sender
     {
@@ -19,6 +22,7 @@ namespace tdsm.api
 
         public void SetAuthentication(string auth, string by)
         {
+            #if Full_API
             var ctx = new Plugin.HookContext()
             {
                 Player = this as Terraria.Player,
@@ -49,6 +53,7 @@ namespace tdsm.api
             };
 
             Plugin.HookPoints.PlayerAuthenticationChanged.Invoke(ref ctx, ref changed);
+            #endif
         }
 
         public override string Name
@@ -78,11 +83,12 @@ namespace tdsm.api
             SendMessage(message, 255, color.R, color.G, color.B);
         }
 
-        //        public ClientConnection Connection;
+        #if Full_API
         public Terraria.RemoteClient Connection
         {
             get { return Terraria.Netplay.Clients[this.whoAmI]; }
         }
+        #endif
 
         public string IPAddress;
         public string DisconnectReason;

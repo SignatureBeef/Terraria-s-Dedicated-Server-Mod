@@ -1,5 +1,5 @@
 ﻿using System;
-using tdsm.api.Data;
+using TDSM.API.Data;
 using MySql.Data.MySqlClient;
 using System.Data;
 

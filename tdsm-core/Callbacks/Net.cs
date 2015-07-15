@@ -1,9 +1,9 @@
-﻿//using tdsm.core.Logging;
-//using tdsm.core.Messages.Out;
-//using tdsm.core.ServerCore;
+﻿//using TDSM.Core.Logging;
+//using TDSM.Core.Messages.Out;
+//using TDSM.Core.ServerCore;
 //using Terraria;
 
-//namespace tdsm.core.Callbacks
+//namespace TDSM.Core.Callbacks
 //{
 //    public static class Net
 //    {
@@ -11,7 +11,7 @@
 //        {
 //            for (int i = 0; i < 255; i++)
 //            {
-//                if (tdsm.api.Callbacks.Netplay.slots[i].state == SlotState.PLAYING)
+//                if (TDSM.API.Callbacks.Netplay.slots[i].state == SlotState.PLAYING)
 //                {
 //                    NewNetMessage.SendData(74, i, -1, Main.player[i].name, Main.anglerQuest, 0f, 0f, 0f, 0);
 //                }
@@ -22,11 +22,11 @@
 //        {
 //            for (int i = 0; i < 256; i++)
 //            {
-//                if ((/*NewNetMessage.buffer[i].broadcast ||*/ tdsm.api.Callbacks.Netplay.slots[i].state >= SlotState.SENDING_TILES) && tdsm.api.Callbacks.Netplay.slots[i].Connected)
+//                if ((/*NewNetMessage.buffer[i].broadcast ||*/ TDSM.API.Callbacks.Netplay.slots[i].state >= SlotState.SENDING_TILES) && TDSM.API.Callbacks.Netplay.slots[i].Connected)
 //                {
 //                    int num = x / 200;
 //                    int num2 = y / 150;
-//                    if (tdsm.api.Callbacks.Netplay.slots[i].TileSections[num, num2])
+//                    if (TDSM.API.Callbacks.Netplay.slots[i].TileSections[num, num2])
 //                    {
 //                        NewNetMessage.SendData(48, i, -1, "", x, (float)y, 0f, 0f, 0);
 //                    }
@@ -44,11 +44,11 @@
 //                {
 //                    num = 1;
 //                }
-//                if (tdsm.api.Callbacks.Netplay.slots[i].state == SlotState.PLAYING)
+//                if (TDSM.API.Callbacks.Netplay.slots[i].state == SlotState.PLAYING)
 //                {
 //                    if (Main.autoShutdown && !flag)
 //                    {
-//                        string text = tdsm.api.Callbacks.Netplay.slots[i].conn.RemoteAddress;
+//                        string text = TDSM.API.Callbacks.Netplay.slots[i].conn.RemoteAddress;
 //                        string a = text;
 //                        for (int j = 0; j < text.Length; j++)
 //                        {
@@ -98,9 +98,9 @@
 //                    NewNetMessage.SendData(5, -1, i, Main.player[i].dye[5].name, i, 80f, (float)Main.player[i].dye[5].prefix, 0f, 0);
 //                    NewNetMessage.SendData(5, -1, i, Main.player[i].dye[6].name, i, 81f, (float)Main.player[i].dye[6].prefix, 0f, 0);
 //                    NewNetMessage.SendData(5, -1, i, Main.player[i].dye[7].name, i, 82f, (float)Main.player[i].dye[7].prefix, 0f, 0);
-//                    if (!tdsm.api.Callbacks.Netplay.slots[i].announced)
+//                    if (!TDSM.API.Callbacks.Netplay.slots[i].announced)
 //                    {
-//                        tdsm.api.Callbacks.Netplay.slots[i].announced = true;
+//                        TDSM.API.Callbacks.Netplay.slots[i].announced = true;
 //                        NewNetMessage.SendData(25, -1, i, Main.player[i].name + " " + Lang.mp[19], 255, 255f, 240f, 20f, 0);
 //                        if (Main.dedServ)
 //                        {
@@ -112,13 +112,13 @@
 //                {
 //                    num = 0;
 //                    NewNetMessage.SendData(14, -1, i, "", i, (float)num, 0f, 0f, 0);
-//                    if (tdsm.api.Callbacks.Netplay.slots[i].announced)
+//                    if (TDSM.API.Callbacks.Netplay.slots[i].announced)
 //                    {
-//                        tdsm.api.Callbacks.Netplay.slots[i].announced = false;
-//                        NewNetMessage.SendData(25, -1, i, tdsm.api.Callbacks.Netplay.slots[i].oldName + " " + Lang.mp[20], 255, 255f, 240f, 20f, 0);
+//                        TDSM.API.Callbacks.Netplay.slots[i].announced = false;
+//                        NewNetMessage.SendData(25, -1, i, TDSM.API.Callbacks.Netplay.slots[i].oldName + " " + Lang.mp[20], 255, 255f, 240f, 20f, 0);
 //                        if (Main.dedServ)
 //                        {
-//                            ProgramLog.Log(tdsm.api.Callbacks.Netplay.slots[i].oldName + " " + Lang.mp[20]);
+//                            ProgramLog.Log(TDSM.API.Callbacks.Netplay.slots[i].oldName + " " + Lang.mp[20]);
 //                        }
 //                    }
 //                }
@@ -154,8 +154,8 @@
 
 //        public static void AddBan(int plr)
 //        {
-//            Server.Bans.Add(tdsm.api.Callbacks.Netplay.slots[plr].conn.RemoteAddress);
-//            //string text = tdsm.api.Callbacks.Netplay.slots[plr].conn.RemoteAddress;
+//            Server.Bans.Add(TDSM.API.Callbacks.Netplay.slots[plr].conn.RemoteAddress);
+//            //string text = TDSM.API.Callbacks.Netplay.slots[plr].conn.RemoteAddress;
 //            //string value = text;
 //            //for (int i = 0; i < text.Length; i++)
 //            //{

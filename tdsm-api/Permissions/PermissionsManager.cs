@@ -1,6 +1,6 @@
 ﻿
 using System;
-namespace tdsm.api.Permissions
+namespace TDSM.API.Permissions
 {
     public static class PermissionsManager
     {

@@ -5,11 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using tdsm.api;
-using tdsm.api.Misc;
-using tdsm.api.Logging;
+using TDSM.API;
+using TDSM.API.Misc;
+using TDSM.API.Logging;
 
-namespace tdsm.core
+namespace TDSM.Core
 {
     /// <summary>
     /// This is a multi purpose class.

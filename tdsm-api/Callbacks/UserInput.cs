@@ -1,9 +1,9 @@
 ﻿using System;
-using tdsm.api.Command;
-using tdsm.api.Plugin;
-using tdsm.api.Misc;
+using TDSM.API.Command;
+using TDSM.API.Plugin;
+using TDSM.API.Misc;
 
-namespace tdsm.api.Callbacks
+namespace TDSM.API.Callbacks
 {
     public static class Patches
     {
@@ -142,6 +142,7 @@ namespace tdsm.api.Callbacks
             //            return t;
         }
 
+        #if Full_API
         public static readonly Terraria.Tile DefaultTile = default(Terraria.Tile);
         public static Terraria.Tile GetTile()
         {
@@ -157,6 +158,7 @@ namespace tdsm.api.Callbacks
         {
             return !t1.isTheSameAs(t2);
         }
+        #endif
 
         //public static bool TileEquals2(TileData t1, TileData t2)
         //{

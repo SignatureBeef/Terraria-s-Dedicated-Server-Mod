@@ -12,8 +12,8 @@ cecil
 
 /tdsm-patcher/KopiLua.dll
 /tdsm-patcher/NLua.dll
-/tdsm-patcher/tdsm.api.dll
-/tdsm-patcher/tdsm.api.pdb
+/tdsm-patcher/TDSM.API.dll
+/tdsm-patcher/TDSM.API.pdb
 /tdsm-patcher/tdsm.microsoft.exe
 /tdsm-patcher/tdsm.mono.exe
 /tdsm-patcher/corenet

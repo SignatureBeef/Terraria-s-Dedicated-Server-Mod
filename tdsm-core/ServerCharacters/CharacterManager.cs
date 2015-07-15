@@ -1,9 +1,9 @@
 ﻿
 using System;
 using System.IO;
-using tdsm.api;
+using TDSM.API;
 using Terraria;
-namespace tdsm.core.ServerCharacters
+namespace TDSM.Core.ServerCharacters
 {
     public static class CharacterManager
     {

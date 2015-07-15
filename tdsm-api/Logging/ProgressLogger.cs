@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace tdsm.api.Logging
+namespace TDSM.API.Logging
 {
     // TODO: refactor and add a throbber too
     public class ProgressLogger : IDisposable

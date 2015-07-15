@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace tdsm.api.Misc
+namespace TDSM.API.Misc
 {
     public static class Platform
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using tdsm.api.Plugin;
-using tdsm.api.Data;
-using tdsm.api.Logging;
+using TDSM.API.Plugin;
+using TDSM.API.Data;
+using TDSM.API.Logging;
 
 namespace TDSM.Data.MySQL
 {
@@ -57,7 +57,7 @@ namespace TDSM.Data.MySQL
         [Hook]
         void OnStateChange(ref HookContext ctx, ref HookArgs.ServerStateChange args)
         {
-            if (args.ServerChangeState == tdsm.api.ServerState.Initialising)
+            if (args.ServerChangeState == TDSM.API.ServerState.Initialising)
             {
                 ProgramLog.Plugin.Log("MySQL connector is: " + (_connector == null ? "disabled" : "enabled"));
             }

@@ -3,10 +3,11 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace tdsm.api
+namespace TDSM.API
 {
     public static class SocketExtensions
     {
+        #if Full_API
         public static bool IsPlaying(this Terraria.RemoteClient sock)
         {
             return sock.State == 10;
@@ -27,6 +28,7 @@ namespace tdsm.api
         {
             Terraria.NetMessage.SendData((int)Packet.DISCONNECT, sock.Id, -1, reason);
         }
+        #endif
 
         public static void SafeClose(this Socket socket)
         {

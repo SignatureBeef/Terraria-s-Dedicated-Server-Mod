@@ -5,12 +5,12 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
-using tdsm.api;
-using tdsm.api.Logging;
-using tdsm.api.Misc;
+using TDSM.API;
+using TDSM.API.Logging;
+using TDSM.API.Misc;
 
 
-namespace tdsm.core
+namespace TDSM.Core
 {
     public class RepositoryError : Exception
     {

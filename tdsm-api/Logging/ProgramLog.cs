@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-using tdsm.core.Misc;
+using TDSM.Core.Misc;
 using System.IO;
-using tdsm.api.Misc;
+using TDSM.API.Misc;
 
-namespace tdsm.api.Logging
+namespace TDSM.API.Logging
 {
     public static class ProgramLog
     {
@@ -428,8 +428,10 @@ namespace tdsm.api.Logging
                     tar.Close();
                 }
 
+            #if Full_API
             //Statics.IsActive = false;
             Terraria.Netplay.disconnect = true;
+            #endif
         }
     }
 }

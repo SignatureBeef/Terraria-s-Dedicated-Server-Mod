@@ -1,17 +1,20 @@
 ﻿using System;
 using System.IO;
-using tdsm.api.Plugin;
+using TDSM.API.Plugin;
+using System.Diagnostics;
+#if Full_API
 using Terraria;
 using Terraria.Initializers;
-using System.Diagnostics;
 using Terraria.IO;
+#endif
 
-namespace tdsm.api.Callbacks
+namespace TDSM.API.Callbacks
 {
     public static class Configuration
     {
-        public static void StartupConfig(Main game)
+        public static void StartupConfig(Microsoft.Xna.Framework.Game game)
         {
+            #if Full_API
             if (Tools.RuntimePlatform != RuntimePlatform.Mono)
             {
                 try
@@ -65,6 +68,7 @@ namespace tdsm.api.Callbacks
                 {
                 }
             }
+            #endif
         }
 
         public static void Load(string file)

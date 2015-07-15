@@ -1,12 +1,13 @@
 ﻿using System;
+using TDSM.API.Sockets;
 
 #if Full_API
 using Terraria;
 #endif
 using Microsoft.Xna.Framework;
-using tdsm.api.Command;
+using TDSM.API.Command;
 
-namespace tdsm.api.Plugin
+namespace TDSM.API.Plugin
 {
     public static class HookPoints
     {
@@ -148,7 +149,7 @@ namespace tdsm.api.Plugin
         {
             public string Message { get; set; }
 
-            public tdsm.api.Logging.SendingLogger Logger { get; set; }
+            public TDSM.API.Logging.SendingLogger Logger { get; set; }
         }
 
         public struct NPCSpawn
@@ -239,8 +240,9 @@ namespace tdsm.api.Plugin
 
         public struct UnkownReceivedPacket
         {
+            #if Full_API
             public ClientConnection Connection { get; set; }
-
+            #endif
             public byte[] ReadBuffer { get; set; }
 
             public int Start { get; set; }
@@ -250,7 +252,7 @@ namespace tdsm.api.Plugin
 
         public struct UnkownSendPacket
         {
-#if Full_API
+            #if Full_API
             public NetMessage Message { get; set; }
 #endif
             public int PacketId { get; set; }
@@ -371,6 +373,7 @@ namespace tdsm.api.Plugin
 
             public int Parse(byte[] buf, int at, int length)
             {
+                #if Full_API
                 var start = at + 1 /*Skip player id */;
 
                 //                var playerId = (int)buf[at++];
@@ -433,9 +436,12 @@ namespace tdsm.api.Plugin
                 ExtraAccessory = bitsByte2[2];
 
                 return start - at;
+                #else
+                return 0;
+                #endif
             }
 
-#if Full_API
+            #if Full_API
             public void Apply(Player player)
             {
                 player.difficulty = Difficulty;
@@ -593,7 +599,7 @@ namespace tdsm.api.Plugin
                     FlagsB &= (byte)~f;
             }
 
-#if Full_API
+            #if Full_API
             public void ApplyKeys(Player player)
             {
                 player.controlUp = ControlUp;
@@ -647,7 +653,7 @@ namespace tdsm.api.Plugin
 
             public int NetID { get; set; }
 
-#if Full_API
+            #if Full_API
             public Item Item { get; set; }
 #endif
 
@@ -751,7 +757,7 @@ namespace tdsm.api.Plugin
                 }
             }
 
-#if Full_API
+            #if Full_API
             public Terraria.Tile Tile
             {
                 get
@@ -829,7 +835,7 @@ namespace tdsm.api.Plugin
 
             public int ExistingIndex { get; set; }
 
-#if Full_API
+            #if Full_API
             internal Projectile projectile;
 
             public Projectile CreateProjectile()
@@ -895,7 +901,7 @@ namespace tdsm.api.Plugin
 
         public struct Explosion
         {
-#if Full_API
+            #if Full_API
             public Projectile Source { get; set; }
 #endif
         }
@@ -960,7 +966,7 @@ namespace tdsm.api.Plugin
             public int SignIndex { get; set; }
 
             public string Text { get; set; }
-#if Full_API
+            #if Full_API
             public Sign OldSign { get; set; }
 #endif
         }
@@ -978,7 +984,7 @@ namespace tdsm.api.Plugin
 
         public struct PlayerHurt
         {
-#if Full_API
+            #if Full_API
             public Player Victim { get; internal set; }
 #endif
             public int Damage { get; set; }
@@ -996,7 +1002,7 @@ namespace tdsm.api.Plugin
 
         public struct NpcHurt
         {
-#if Full_API
+            #if Full_API
             public NPC Victim { get; set; }
 #endif
             public int Damage { get; set; }
@@ -1016,7 +1022,7 @@ namespace tdsm.api.Plugin
 
             public string Name { get; set; }
 
-#if Full_API
+            #if Full_API
             public NPC CreatedNpc { get; set; }
 #endif
         }

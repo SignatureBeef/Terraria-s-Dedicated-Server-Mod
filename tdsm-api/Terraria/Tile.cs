@@ -21,6 +21,8 @@ namespace TDSM.API.Memory
     }
 
     
+
+
 #if TESTING
     static MemTile()
     {
@@ -1464,6 +1466,8 @@ namespace TDSM.API.Memory
     //    }
     //}
     
+
+
 #elif VANILLACOMPAT
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
     public class VanillaTile
@@ -1521,10 +1525,12 @@ namespace TDSM.API.Memory
                 {
                     return (int)(2 + this.slope());
                 }
+                #if Full_API
                 if (Terraria.Main.tileSolid[(int)this.type] && !Terraria.Main.tileSolidTop[(int)this.type])
                 {
                     return 1;
                 }
+                #endif
                 return -1;
             }
         }
@@ -1622,10 +1628,12 @@ namespace TDSM.API.Memory
                 {
                     return false;
                 }
+                #if Full_API
                 if (Terraria.Main.tileFrameImportant[(int)this.type] && (this.frameX != compTile.frameX || this.frameY != compTile.frameY))
                 {
                     return false;
                 }
+                #endif
             }
             if (this.wall != compTile.wall || this.liquid != compTile.liquid)
             {
@@ -1992,6 +2000,7 @@ namespace TDSM.API.Memory
                 VanillaTile.SmoothSlope(x, y - 1, false);
             }
 
+            #if Full_API
             var tile = Terraria.Main.tile[x, y];
             if (!Terraria.WorldGen.SolidOrSlopedTile(x, y))
             {
@@ -2035,6 +2044,7 @@ namespace TDSM.API.Memory
             }
             tile.halfBrick(false);
             tile.slope(0);
+            #endif
         }
 
         public void ClearMetadata()

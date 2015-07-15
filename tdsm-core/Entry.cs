@@ -5,17 +5,17 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using tdsm.api;
-using tdsm.api.Callbacks;
-using tdsm.api.Command;
-using tdsm.api.Plugin;
-using tdsm.core.Definitions;
-using tdsm.api.Logging;
-using tdsm.core.Misc;
-using tdsm.api.Misc;
-using tdsm.core.RemoteConsole;
+using TDSM.API;
+using TDSM.API.Callbacks;
+using TDSM.API.Command;
+using TDSM.API.Plugin;
+using TDSM.Core.Definitions;
+using TDSM.API.Logging;
+using TDSM.Core.Misc;
+using TDSM.API.Misc;
+using TDSM.Core.RemoteConsole;
 
-namespace tdsm.core
+namespace TDSM.Core
 {
     public partial class Entry : BasePlugin
     {
@@ -93,8 +93,8 @@ namespace tdsm.core
         {
             base.Enabled();
 
-            tdsm.api.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
-            tdsm.api.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
+            TDSM.API.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
+            TDSM.API.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
             EnableCheatProtection = true;
             RunServerCore = true;
         }
@@ -548,7 +548,7 @@ namespace tdsm.core
         {
             ctx.SetResult(HookResult.IGNORE);
 
-            (new tdsm.api.Misc.ProgramThread("Command", ListenForCommands)).Start();
+            (new TDSM.API.Misc.ProgramThread("Command", ListenForCommands)).Start();
         }
 
         [Hook(HookOrder.NORMAL)]
@@ -631,8 +631,8 @@ namespace tdsm.core
             //    //    Server.CheckSection(i, Terraria.Main.player[i].position);
 
             //    //    //TODO SpamUpdate
-            //    //    //if(tdsm.api.Callbacks.Netplay.slots[i].conn != null && tdsm.api.Callbacks.Netplay.slots[i].conn.Active )
-            //    //    //    tdsm.api.Callbacks.Netplay.slots[i].conn.s
+            //    //    //if(TDSM.API.Callbacks.Netplay.slots[i].conn != null && TDSM.API.Callbacks.Netplay.slots[i].conn.Active )
+            //    //    //    TDSM.API.Callbacks.Netplay.slots[i].conn.s
             //    //}
             //}
 
@@ -685,7 +685,7 @@ namespace tdsm.core
         //{
         //    if (args.IsServer)
         //    {
-        //        var _self = AssemblyDefinition.ReadAssembly("Plugins/tdsm.core.dll");
+        //        var _self = AssemblyDefinition.ReadAssembly("Plugins/TDSM.Core.dll");
 
         //        Console.WriteLine("Routing socket implementations...");
         //        var serverClass = _self.MainModule.Types.Where(x => x.Name == "Server").First();
@@ -698,7 +698,7 @@ namespace tdsm.core
         //        var terraria = AssemblyDefinition.ReadAssembly(msa);
         //        //var terraria = args.Terraria as AssemblyDefinition;
 
-        //        //Replace Terraria.Netplay.Clients references with tdsm.core.tdsm.api.Callbacks.Netplay.slots
+        //        //Replace Terraria.Netplay.Clients references with TDSM.Core.TDSM.API.Callbacks.Netplay.slots
         //        var instructions = terraria.MainModule.Types
         //            .SelectMany(x => x.Methods
         //                .Where(y => y.HasBody && y.Body.Instructions != null)

@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // Information about this assembly is defined by the following attributes.
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("tdsm.core")]
+[assembly: AssemblyTitle("TDSM.Core")]
 [assembly: AssemblyDescription("TDSM Core API Consumer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("tdsm")]
-[assembly: AssemblyProduct("tdsm.core")]
+[assembly: AssemblyProduct("TDSM.Core")]
 [assembly: AssemblyCopyright("Copyright © TDSM 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
