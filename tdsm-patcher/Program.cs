@@ -275,6 +275,7 @@ namespace tdsm.patcher
 
             Console.Write("Ok\n");
             patcher.InjectHooks();
+//            patcher.SwapToVanillaTile(); //Holy shit batman! it works
 
             //            Console.Write("Ok\nPutting Terraria on a diet...");
             //            patcher.ChangeTileToStruct();

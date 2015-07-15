@@ -398,7 +398,7 @@ namespace tdsm.api.Plugin
 
                 HairDye = buf[start++];
                 BitsByte bitsByte = buf[start++];
-                HideVisual = new bool[8 * 2];
+                HideVisual = new bool[10];
                 for (int num7 = 0; num7 < 8; num7++)
                 {
                     HideVisual[num7] = bitsByte[num7];

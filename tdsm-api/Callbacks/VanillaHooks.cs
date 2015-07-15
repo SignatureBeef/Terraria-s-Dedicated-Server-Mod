@@ -22,7 +22,10 @@ namespace tdsm.api.Callbacks
 
             ctx.SetResult(HookResult.DEFAULT, false);
             HookPoints.PlayerEnteringGame.Invoke(ref ctx, ref args);
-            ctx.CheckForKick();
+            if (!ctx.CheckForKick())
+            {
+                NetMessage.SendData(4, -1, player.whoAmI, player.name, player.whoAmI, 0f, 0f, 0f, 0, 0, 0);
+            }
         }
 
         public static bool OnGreetPlayer(int playerId)

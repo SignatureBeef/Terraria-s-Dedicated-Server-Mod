@@ -1,11 +1,7 @@
-﻿using Terraria;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.UI.Chat;
-using tdsm.api.Logging;
-using tdsm.api.Plugin;
-using Terraria.Net;
+﻿using Microsoft.Xna.Framework;
 using System;
-using Terraria.GameContent.Achievements;
+using tdsm.api.Plugin;
+using Terraria;
 
 namespace tdsm.api.Callbacks
 {
@@ -24,12 +20,12 @@ namespace tdsm.api.Callbacks
             //Console.WriteLine("Trace: {0}", Environment.StackTrace);
             switch ((Packet)packetId)
             {
-                /* Misc / Command */
+            /* Misc / Command */
                 case Packet.PLAYER_CHAT:
                     ProcessChat(bufferId); //Returns
                     return 0;
 
-                /* Cheat protection */
+            /* Cheat protection */
                 case Packet.TILE_BREAK:
                     ProcessTileBreak(bufferId); //Returns
                     return 0;
@@ -52,7 +48,7 @@ namespace tdsm.api.Callbacks
                     ProcessWriteSign(bufferId); //Returns
                     return 0;
 
-                /* Password handling */
+            /* Password handling */
                 case Packet.PASSWORD_RESPONSE: //Returns
                     ProcessPassword(bufferId);
                     return 0;
@@ -60,7 +56,8 @@ namespace tdsm.api.Callbacks
                     ProcessPlayerData(bufferId, start, length); //Returns
                     return 0;
                 case Packet.WORLD_REQUEST:
-                    if (Netplay.Clients[bufferId].State == -2) return 0; //Ignore
+                    if (Netplay.Clients[bufferId].State == -2)
+                        return 0; //Ignore
                     break;
             }
 
@@ -76,9 +73,10 @@ namespace tdsm.api.Callbacks
         public static bool CheckForInvalidState(int bufferId, byte packetId)
         {
             var res = Main.netMode == 2 && Netplay.Clients[bufferId].State < 10
-                && packetId > 12 && packetId != 93 && packetId != 16 && packetId != 42
-                && packetId != 50 && packetId != 38 && packetId != 68;
-            if (Netplay.Clients[bufferId].State == -2) return false;
+                      && packetId > 12 && packetId != 93 && packetId != 16 && packetId != 42
+                      && packetId != 50 && packetId != 38 && packetId != 68;
+            if (Netplay.Clients[bufferId].State == -2)
+                return false;
 
             return res;
         }
@@ -142,10 +140,10 @@ namespace tdsm.api.Callbacks
                 };
 
                 HookPoints.PlayerPassReceived.Invoke(ref ctx, ref args);
-                
+
                 if (ctx.CheckForKick())
                     return;
-                
+
                 if (ctx.Result == HookResult.ASK_PASS)
                 {
                     NetMessage.SendData((int)Packet.PASSWORD_REQUEST, bufferId);
@@ -322,7 +320,7 @@ namespace tdsm.api.Callbacks
                     {
                         Main.tile[x, y] = new Tile();
                     }
-                    Tile tile = Main.tile[x, y];
+                    var tile = Main.tile[x, y];
                     bool flag7 = tile.active();
                     bitsByte10 = buffer.reader.ReadByte();
                     bitsByte11 = buffer.reader.ReadByte();
@@ -522,9 +520,9 @@ namespace tdsm.api.Callbacks
 
             if (ctx.Result == HookResult.DEFAULT && chestIndex > -1)
             {
-                for (int num97 = 0; num97 < 40; num97++)
+                for (int i = 0; i < 40; i++)
                 {
-                    NetMessage.SendData(32, bufferId, -1, "", chestIndex, (float)num97, 0, 0, 0, 0, 0);
+                    NetMessage.SendData(32, bufferId, -1, "", chestIndex, (float)i, 0, 0, 0, 0, 0);
                 }
                 NetMessage.SendData(33, bufferId, -1, "", chestIndex, 0, 0, 0, 0, 0, 0);
                 Main.player[bufferId].chest = chestIndex;
@@ -532,12 +530,12 @@ namespace tdsm.api.Callbacks
                 {
                     Main.recBigList = false;
                 }
-                Recipe.FindRecipes();
+                //Recipe.FindRecipes();
                 NetMessage.SendData(80, -1, bufferId, "", bufferId, (float)chestIndex, 0, 0, 0, 0, 0);
-                if (Main.tile[x, y].frameX >= 36 && Main.tile[x, y].frameX < 72)
-                {
-                    AchievementsHelper.HandleSpecialEvent(Main.player[bufferId], 16);
-                }
+                //if (Main.tile[x, y].frameX >= 36 && Main.tile[x, y].frameX < 72)
+                //{
+                //    AchievementsHelper.HandleSpecialEvent(Main.player[bufferId], 16);
+                //}
             }
         }
 
@@ -549,7 +547,7 @@ namespace tdsm.api.Callbacks
             byte b7 = buffer.reader.ReadByte();
             int x = (int)buffer.reader.ReadInt16();
             int y = (int)buffer.reader.ReadInt16();
-            int style = (int)buffer.reader.ReadInt16();
+            int type = (int)buffer.reader.ReadInt16();
 
             if (Math.Abs(player.position.X / 16 - x) >= 7 || Math.Abs(player.position.Y / 16 - y) >= 7)
             {
@@ -591,102 +589,99 @@ namespace tdsm.api.Callbacks
             {
                 if (b7 == 0)
                 {
-                    int num105 = WorldGen.PlaceChest(x, y, 21, false, style);
-                    if (num105 == -1)
+                    int num107 = WorldGen.PlaceChest(x, y, 21, false, type);
+                    if (num107 == -1)
                     {
-                        NetMessage.SendData(34, bufferId, -1, "", (int)b7, (float)x, (float)y, (float)style, num105, 0, 0);
-                        Item.NewItem(x * 16, y * 16, 32, 32, Chest.chestItemSpawn[style], 1, true, 0, false);
+                        NetMessage.SendData(34, bufferId, -1, "", (int)b7, (float)x, (float)y, (float)type, num107, 0, 0);
+                        Item.NewItem(x * 16, y * 16, 32, 32, Chest.chestItemSpawn[type], 1, true, 0, false, false);
                         return;
                     }
-                    NetMessage.SendData(34, -1, -1, "", (int)b7, (float)x, (float)y, (float)style, num105, 0, 0);
+                    NetMessage.SendData(34, -1, -1, "", (int)b7, (float)x, (float)y, (float)type, num107, 0, 0);
+                    return;
+                }
+                else if (b7 == 2)
+                {
+                    int num108 = WorldGen.PlaceChest(x, y, 88, false, type);
+                    if (num108 == -1)
+                    {
+                        NetMessage.SendData(34, bufferId, -1, "", (int)b7, (float)x, (float)y, (float)type, num108, 0, 0);
+                        Item.NewItem(x * 16, y * 16, 32, 32, Chest.dresserItemSpawn[type], 1, true, 0, false, false);
+                        return;
+                    }
+                    NetMessage.SendData(34, -1, -1, "", (int)b7, (float)x, (float)y, (float)type, num108, 0, 0);
                     return;
                 }
                 else
                 {
-                    if (b7 == 2)
+                    var tile2 = Main.tile[x, y];
+                    if (tile2.type == 21 && b7 == 1)
                     {
-                        int num106 = WorldGen.PlaceChest(x, y, 88, false, style);
-                        if (num106 == -1)
+                        if (tile2.frameX % 36 != 0)
                         {
-                            NetMessage.SendData(34, bufferId, -1, "", (int)b7, (float)x, (float)y, (float)style, num106, 0, 0);
-                            Item.NewItem(x * 16, y * 16, 32, 32, Chest.dresserItemSpawn[style], 1, true, 0, false);
+                            x--;
+                        }
+                        if (tile2.frameY % 36 != 0)
+                        {
+                            y--;
+                        }
+                        int number = Chest.FindChest(x, y);
+                        WorldGen.KillTile(x, y, false, false, false);
+                        if (!tile2.active())
+                        {
+                            NetMessage.SendData(34, -1, -1, "", (int)b7, (float)x, (float)y, 0f, number, 0, 0);
                             return;
                         }
-                        NetMessage.SendData(34, -1, -1, "", (int)b7, (float)x, (float)y, (float)style, num106, 0, 0);
                         return;
                     }
                     else
                     {
-                        Tile tile2 = Main.tile[x, y];
-                        if (tile2.type == 21 && b7 == 1)
+                        if (tile2.type != 88 || b7 != 3)
                         {
-                            if (tile2.frameX % 36 != 0)
-                            {
-                                x--;
-                            }
-                            if (tile2.frameY % 36 != 0)
-                            {
-                                y--;
-                            }
-                            int number = Chest.FindChest(x, y);
-                            WorldGen.KillTile(x, y, false, false, false);
-                            if (!tile2.active())
-                            {
-                                NetMessage.SendData(34, -1, -1, "", (int)b7, (float)x, (float)y, 0, number, 0, 0);
-                                return;
-                            }
                             return;
                         }
-                        else
+                        x -= (int)(tile2.frameX % 54 / 18);
+                        if (tile2.frameY % 36 != 0)
                         {
-                            if (tile2.type != 88 || b7 != 3)
-                            {
-                                return;
-                            }
-                            x -= (int)(tile2.frameX % 54 / 18);
-                            if (tile2.frameY % 36 != 0)
-                            {
-                                y--;
-                            }
-                            int number2 = Chest.FindChest(x, y);
-                            WorldGen.KillTile(x, y, false, false, false);
-                            if (!tile2.active())
-                            {
-                                NetMessage.SendData(34, -1, -1, "", (int)b7, (float)x, (float)y, 0, number2, 0, 0);
-                                return;
-                            }
+                            y--;
+                        }
+                        int number2 = Chest.FindChest(x, y);
+                        WorldGen.KillTile(x, y, false, false, false);
+                        if (!tile2.active())
+                        {
+                            NetMessage.SendData(34, -1, -1, "", (int)b7, (float)x, (float)y, 0f, number2, 0, 0);
                             return;
                         }
+                        return;
                     }
                 }
             }
             else
             {
-                int num107 = (int)buffer.reader.ReadInt16();
+                int id = (int)buffer.reader.ReadInt16();
                 if (b7 == 0)
                 {
-                    if (num107 == -1)
+                    if (id == -1)
                     {
                         WorldGen.KillTile(x, y, false, false, false);
                         return;
                     }
-                    WorldGen.PlaceChestDirect(x, y, 21, style, num107);
+                    WorldGen.PlaceChestDirect(x, y, 21, type, id);
                     return;
                 }
                 else
                 {
                     if (b7 != 2)
                     {
-                        Chest.DestroyChestDirect(x, y, num107);
+                        Chest.DestroyChestDirect(x, y, id);
                         WorldGen.KillTile(x, y, false, false, false);
                         return;
                     }
-                    if (num107 == -1)
+                    if (id == -1)
                     {
                         WorldGen.KillTile(x, y, false, false, false);
                         return;
                     }
-                    WorldGen.PlaceDresserDirect(x, y, 88, style, num107);
+                    WorldGen.PlaceDresserDirect(x, y, 88, type, id);
                     return;
                 }
             }
@@ -767,7 +762,7 @@ namespace tdsm.api.Callbacks
             //            }
 
             data.Apply(player);
-            
+
             if (isConnection)
             {
                 if (ctx.Result == HookResult.ASK_PASS)
@@ -813,8 +808,8 @@ namespace tdsm.api.Callbacks
                     //}
                     //else
                     //{
-                        //Netplay.Clients[bufferId].State = 1;
-                        //NetMessage.SendData((int)Packet.CONNECTION_RESPONSE, bufferId, -1, "", 0, 0f, 0f, 0f, 0, 0, 0);
+                    //Netplay.Clients[bufferId].State = 1;
+                    //NetMessage.SendData((int)Packet.CONNECTION_RESPONSE, bufferId, -1, "", 0, 0f, 0f, 0f, 0, 0, 0);
                     //}
                 }
             }
@@ -1009,6 +1004,11 @@ namespace tdsm.api.Callbacks
                     ai[i] = 0;
                 }
             }
+            int uuid = (int)(flags[Projectile.maxAI] ? buffer.reader.ReadInt16() : -1);
+            if (uuid >= 1000)
+            {
+                uuid = -1;
+            }
             if (Main.netMode == 2)
             {
                 owner = bufferId;
@@ -1081,9 +1081,14 @@ namespace tdsm.api.Callbacks
                     projectile.damage = damage;
                     projectile.knockBack = knockBack;
                     projectile.owner = owner;
-                    for (int num85 = 0; num85 < Projectile.maxAI; num85++)
+                    for (int i = 0; i < Projectile.maxAI; i++)
                     {
-                        projectile.ai[num85] = ai[num85];
+                        projectile.ai[i] = ai[i];
+                    }
+                    if (uuid >= 0)
+                    {
+                        projectile.projUUID = uuid;
+                        Main.projectileIdentity[owner, uuid] = index;
                     }
                     projectile.ProjectileFixDesperation();
                     if (Main.netMode == 2)

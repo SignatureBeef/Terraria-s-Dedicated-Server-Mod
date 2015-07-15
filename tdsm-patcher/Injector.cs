@@ -81,6 +81,179 @@ namespace tdsm.patcher
                 .Value as string;
         }
 
+        #region "Memory"
+        private TypeReference SwapToVanillaReference(TypeReference input, TypeReference replacement)
+        {
+            if (input.FullName == "Terraria.Tile")
+            {
+                return replacement;
+            }
+            else if (input is ArrayType)
+            {
+                var at = input as ArrayType;
+                if (at.ElementType.FullName == "Terraria.Tile")
+                {
+                    var nt = new ArrayType(replacement);
+                    nt.Dimensions.Clear();
+                    //foreach (var dm in at.Dimensions.Reverse().ToArray())
+                    //{
+                    //    //nt.Dimensions.Add(dm);
+                    //    nt.Dimensions.Insert(0, dm);
+                    //}
+                    foreach (var dm in at.Dimensions)
+                    {
+                        nt.Dimensions.Add(dm);
+                    }
+
+                    return _asm.MainModule.Import(nt);
+                }
+            }
+
+            return input;
+        }
+
+        private void SwapVanillaType(TypeDefinition ty)
+        {
+            var vt = _asm.MainModule.Import(_self.MainModule.Types.Single(x => x.Name == "VanillaTile"));
+
+            if (ty.Name != "Tile")
+            {
+                if (ty.HasFields)
+                    foreach (var fld in ty.Fields)
+                    {
+                        fld.FieldType = SwapToVanillaReference(fld.FieldType, vt);
+                    }
+
+                if (ty.HasProperties)
+                    foreach (var prop in ty.Properties)
+                    {
+                        prop.PropertyType = SwapToVanillaReference(prop.PropertyType, vt);
+                    }
+
+                foreach (var mth in ty.Methods)
+                {
+                    //if (ty.Name != "HalfBlock" || mth.Name != "Apply") continue;
+                    if (mth.HasParameters)
+                    {
+                        foreach (var prm in mth.Parameters)
+                        {
+                            prm.ParameterType = SwapToVanillaReference(prm.ParameterType, vt);
+                        }
+                    }
+
+                    if (mth.HasBody)
+                    {
+                        if (mth.Body.HasVariables)
+                        {
+                            foreach (var vrb in mth.Body.Variables)
+                            {
+                                vrb.VariableType = SwapToVanillaReference(vrb.VariableType, vt);
+                            }
+                        }
+
+                        if (mth.Body.Instructions != null)
+                        {
+                            foreach (var ins in mth.Body.Instructions)
+                            {
+                                if (ins.Operand is MethodReference)
+                                {
+                                    var meth = ins.Operand as MethodReference;
+                                    if (meth.DeclaringType.Name == "Tile")
+                                    {
+                                        ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == meth.Parameters.Count));
+                                        continue;
+                                    }
+                                    else if (meth.DeclaringType is ArrayType)
+                                    {
+                                        var at = meth.DeclaringType as ArrayType;
+                                        if (at.ElementType.Name == "Tile")
+                                        {
+                                            meth.DeclaringType = SwapToVanillaReference(meth.DeclaringType, vt);
+                                            //ins.Operand = _asm.MainModule.Import(tp.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == meth.Parameters.Count));
+                                        }
+                                    }
+
+                                    if (meth.HasParameters)
+                                        foreach (var prm in meth.Parameters)
+                                        {
+                                            prm.ParameterType = SwapToVanillaReference(prm.ParameterType, vt);
+                                        }
+
+                                    meth.ReturnType = SwapToVanillaReference(meth.ReturnType, vt);
+                                    meth.MethodReturnType.ReturnType = SwapToVanillaReference(meth.MethodReturnType.ReturnType, vt);
+                                }
+                                else if (ins.Operand is TypeReference)
+                                {
+                                    var typ = ins.Operand as TypeReference;
+                                    if (typ.Name == "Tile")
+                                    {
+
+                                    }
+                                    else if (typ is ArrayType)
+                                    {
+                                        var at = typ as ArrayType;
+                                        if (at.ElementType.Name == "Tile")
+                                        {
+
+                                        }
+                                    }
+                                }
+                                else if (ins.Operand is FieldReference)
+                                {
+                                    var fld = ins.Operand as FieldReference;
+                                    if (fld.DeclaringType.Name == "Tile")
+                                    {
+                                        ins.Operand = _asm.MainModule.Import(vt.Resolve().Fields.Single(x => x.Name == fld.Name));
+                                    }
+                                    else if (fld.DeclaringType is ArrayType)
+                                    {
+                                        var at = fld.DeclaringType as ArrayType;
+                                        if (at.ElementType.Name == "Tile")
+                                        {
+
+                                        }
+                                    }
+                                }
+                                else if (ins.Operand is PropertyReference)
+                                {
+                                    //var pro = ins.Operand as PropertyReference;
+                                    //var np = new PropertyReference( vt.Resolve().Properties.Single(x => x.Name == pro.Name));
+                                    //ins.Operand = _asm.MainModule.Import();
+                                }
+                                else if (ins.Operand is VariableReference)
+                                {
+                                    var vrb = ins.Operand as VariableReference;
+                                    vrb.VariableType = SwapToVanillaReference(vrb.VariableType, vt);
+                                }
+                                else if (ins.Operand is MemberReference)
+                                {
+                                    var mem = ins.Operand as MemberReference;
+                                    //if (mem..Name == "Tile")
+                                    //{
+                                    //    vrb.VariableType = SwapToVanillaReference(vrb.VariableType, vt);
+                                    //}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (ty.HasNestedTypes)
+                foreach (var nt in ty.NestedTypes)
+                    SwapVanillaType(nt);
+        }
+
+        //Testing
+        public void SwapToVanillaTile()
+        {
+            foreach (var ty in _asm.MainModule.Types)
+            {
+                SwapVanillaType(ty);
+            }
+        }
+        #endregion
+
         public void HookValidPacketState()
         {
             var getData = Terraria.MessageBuffer.Methods.Single(x => x.Name == "GetData");
