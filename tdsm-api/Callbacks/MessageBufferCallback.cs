@@ -326,7 +326,11 @@ namespace TDSM.API.Callbacks
                 {
                     if (Main.tile[x, y] == null)
                     {
+                        #if Full_API && !MemTile
                         Main.tile[x, y] = new Tile();
+                        #elif Full_API && MemTile
+                        Main.tile[x, y] = new TDSM.API.Memory.MemTile(x, y);
+                        #endif
                     }
                     var tile = Main.tile[x, y];
                     bool flag7 = tile.active();
@@ -464,7 +468,11 @@ namespace TDSM.API.Callbacks
 
             if (Main.tile[x, y] == null)
             {
+                #if Full_API && !MemTile
                 Main.tile[x, y] = new Tile();
+                #elif Full_API && MemTile
+                Main.tile[x, y] = new TDSM.API.Memory.MemTile(x, y);
+                #endif
             }
             lock (Main.tile[x, y])
             {
@@ -1159,7 +1167,11 @@ namespace TDSM.API.Callbacks
 
             if (Main.tile[x, y] == null)
             {
+                #if Full_API && !MemTile
                 Main.tile[x, y] = new Tile();
+                #elif Full_API && MemTile
+                Main.tile[x, y] = new TDSM.API.Memory.MemTile(x, y);
+                #endif
             }
 
             if (Main.netMode == 2)

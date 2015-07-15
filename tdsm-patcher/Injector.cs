@@ -82,6 +82,7 @@ namespace tdsm.patcher
         }
 
         #region "Memory"
+
         private TypeReference SwapToVanillaReference(TypeReference input, TypeReference replacement)
         {
             if (input.FullName == "Terraria.Tile")
@@ -112,9 +113,41 @@ namespace tdsm.patcher
             return input;
         }
 
+        private int FindTileArray(int x, MethodDefinition mth)
+        {
+            if (x < 0 || x >= mth.Body.Instructions.Count)
+                return -1;
+            if (
+                mth.Body.Instructions[x].OpCode == OpCodes.Ldsfld
+                && mth.Body.Instructions[x].Operand is FieldDefinition
+                && ((mth.Body.Instructions[x].Operand as FieldDefinition).FieldType is ArrayType))
+            {
+
+                var et = ((mth.Body.Instructions[x].Operand as FieldDefinition).FieldType as ArrayType).ElementType;
+                if (et.Name == "MemTile" || et.Name == "Tile")
+                {
+                    return x;
+                }
+            }
+            else if (
+                mth.Body.Instructions[x].OpCode == OpCodes.Call
+                && mth.Body.Instructions[x].Operand is MethodReference
+                && ((mth.Body.Instructions[x].Operand as MethodReference).ReturnType is ArrayType))
+            {
+                var et = ((mth.Body.Instructions[x].Operand as MethodReference).ReturnType as ArrayType).ElementType;
+                if (et.Name == "MemTile" || et.Name == "Tile")
+                {
+                    return x;
+                }
+            }
+
+            return -1;
+        }
+
         private void SwapVanillaType(TypeDefinition ty)
         {
-            var vt = _asm.MainModule.Import(_self.MainModule.Types.Single(x => x.Name == "VanillaTile"));
+            var vt = _asm.MainModule.Import(_self.MainModule.Types.Single(x => x.Name == "MemTile"));
+            //var vt = _asm.MainModule.Import(_self.MainModule.Types.Single(x => x.Name == "VanillaTile"));
 
             if (ty.Name != "Tile")
             {
@@ -132,7 +165,7 @@ namespace tdsm.patcher
 
                 foreach (var mth in ty.Methods)
                 {
-                    //if (ty.Name != "HalfBlock" || mth.Name != "Apply") continue;
+                    //if (ty.Name != "Liquid" || mth.Name != "DelWater") continue;
                     if (mth.HasParameters)
                     {
                         foreach (var prm in mth.Parameters)
@@ -153,13 +186,71 @@ namespace tdsm.patcher
 
                         if (mth.Body.Instructions != null)
                         {
-                            foreach (var ins in mth.Body.Instructions)
+                            //foreach (var ins in mth.Body.Instructions)
+                            for (var i = 0; i < mth.Body.Instructions.Count; i++)
                             {
+                                var ins = mth.Body.Instructions[i];
                                 if (ins.Operand is MethodReference)
                                 {
                                     var meth = ins.Operand as MethodReference;
                                     if (meth.DeclaringType.Name == "Tile")
                                     {
+                                        if (meth.Name == ".ctor")
+                                        {
+                                            //Find "ldsfld class Terraria.Tile[0..., 0...] Terraria.Main::tile"
+                                            //Copy instructions afterwards/beforehand until "ins"
+
+                                            const int MaxRange = 10; //Searching is probably not required. But I'm tired and this will do for now.
+
+                                            int top = -1, bottom = -1;
+
+                                            for (var x = i - 1; x > (i - MaxRange) - 1; x--)
+                                            {
+                                                top = FindTileArray(x, mth);
+                                                if (top > 0)
+                                                    break;
+                                            }
+
+                                            for (var x = i + 1; x < (i + MaxRange) + 1; x++)
+                                            {
+                                                bottom = FindTileArray(x, mth);
+                                                if (bottom > 0)
+                                                    break;
+                                            }
+
+                                            var topDiffToCurrent = top == -1 ? -1 : i - top;
+                                            var btmDiffToCurrent = bottom == -1 ? -1 : bottom - i;
+
+                                            int index = -1;
+                                            if (topDiffToCurrent > 0 && btmDiffToCurrent > 0)
+                                            {
+                                                index = topDiffToCurrent < btmDiffToCurrent ? topDiffToCurrent : btmDiffToCurrent;
+                                            }
+                                            else if (topDiffToCurrent > 0)
+                                            {
+                                                index = topDiffToCurrent;
+                                            }
+                                            else if (btmDiffToCurrent > 0)
+                                            {
+                                                index = btmDiffToCurrent;
+                                            }
+
+                                            if (index != -1)
+                                            {
+
+                                            }
+                                            else
+                                            {
+                                                if (ty.Name == "LiquidRenderer" && mth.Name == ".cctor")
+                                                    continue;
+
+
+
+                                                throw new InvalidDataException(String.Format("Failed to grab MemTile constructor in method {0}, instruction offset {1}", mth.FullName, i));
+                                            }
+                                            continue;
+                                        }
+
                                         ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == meth.Parameters.Count));
                                         continue;
                                     }
@@ -203,7 +294,30 @@ namespace tdsm.patcher
                                     var fld = ins.Operand as FieldReference;
                                     if (fld.DeclaringType.Name == "Tile")
                                     {
-                                        ins.Operand = _asm.MainModule.Import(vt.Resolve().Fields.Single(x => x.Name == fld.Name));
+                                        //Vanilla 
+                                        //ins.Operand = _asm.MainModule.Import(vt.Resolve().Fields.Single(x => x.Name == fld.Name));
+
+                                        //Now, instead map to our property methods
+
+                                        var il = mth.Body.GetILProcessor();
+                                        if (ins.OpCode == OpCodes.Ldfld)
+                                        {
+                                            //Get
+                                            var prop = _asm.MainModule.Import(vt.Resolve().Properties.Single(x => x.Name == fld.Name).GetMethod);
+
+                                            il.Replace(ins, il.Create(OpCodes.Callvirt, prop));
+                                        }
+                                        else if (ins.OpCode == OpCodes.Stfld)
+                                        {
+                                            //Set
+                                            var prop = _asm.MainModule.Import(vt.Resolve().Properties.Single(x => x.Name == fld.Name).SetMethod);
+
+                                            il.Replace(ins, il.Create(OpCodes.Callvirt, prop));
+                                        }
+                                        else
+                                        {
+
+                                        }
                                     }
                                     else if (fld.DeclaringType is ArrayType)
                                     {
@@ -252,6 +366,7 @@ namespace tdsm.patcher
                 SwapVanillaType(ty);
             }
         }
+
         #endregion
 
         public void HookValidPacketState()
@@ -260,7 +375,7 @@ namespace tdsm.patcher
             var callback = _asm.MainModule.Import(API.MessageBufferCallback.Methods.Single(x => x.Name == "CheckForInvalidState"));
 
             var netMode = getData.Body.Instructions.Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldReference
-           && (x.Operand as FieldReference).Name == "netMode").ToArray()[2];
+                              && (x.Operand as FieldReference).Name == "netMode").ToArray()[2];
 
             var il = getData.Body.GetILProcessor();
             Instruction call;
@@ -903,7 +1018,7 @@ namespace tdsm.patcher
             var initialise = Terraria.Main.Methods.Single(x => x.Name == "Initialize");
             var loc = initialise.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldDefinition)
-                //.Select(x => x.Operand as FieldDefinition)
+                      //.Select(x => x.Operand as FieldDefinition)
                 .Single(x => (x.Operand as FieldDefinition).Name == "skipMenu");
             var il = initialise.Body.GetILProcessor();
             il.InsertBefore(loc, il.Create(OpCodes.Ret));

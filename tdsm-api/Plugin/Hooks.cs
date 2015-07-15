@@ -254,7 +254,7 @@ namespace TDSM.API.Plugin
         {
             #if Full_API
             public NetMessage Message { get; set; }
-#endif
+            #endif
             public int PacketId { get; set; }
 
             public int RemoteClient { get; set; }
@@ -462,7 +462,7 @@ namespace TDSM.API.Plugin
                 player.shoeColor = ShoeColor;
                 player.extraAccessory = ExtraAccessory;
             }
-#endif
+            #endif
 
             public static Color ParseColor(byte[] buf, ref int at)
             {
@@ -622,7 +622,7 @@ namespace TDSM.API.Plugin
                 player.pulley = Pulley;
                 player.pulleyDir = PulleyDirection;
             }
-#endif
+            #endif
 
             public void Parse(byte[] buf, int at)
             {
@@ -655,7 +655,7 @@ namespace TDSM.API.Plugin
 
             #if Full_API
             public Item Item { get; set; }
-#endif
+            #endif
 
             public void SetItem()
             {
@@ -757,13 +757,19 @@ namespace TDSM.API.Plugin
                 }
             }
 
-            #if Full_API
+            #if Full_API && !MemTile
             public Terraria.Tile Tile
             {
                 get
                 { return Main.tile[X, Y]; }
             }
-#endif
+            #elif Full_API && MemTile
+            public TDSM.API.Memory.MemTile Tile
+            {
+                get
+                { return Main.tile[X, Y]; }
+            }
+            #endif
         }
 
         public struct DoorStateChanged
@@ -887,7 +893,7 @@ namespace TDSM.API.Plugin
             {
                 get { return Main.projectile[Id]; }
             }
-#endif
+            #endif
         }
 
         public struct KillProjectileReceived
@@ -903,7 +909,7 @@ namespace TDSM.API.Plugin
         {
             #if Full_API
             public Projectile Source { get; set; }
-#endif
+            #endif
         }
 
         public struct ChestBreakReceived
@@ -968,7 +974,7 @@ namespace TDSM.API.Plugin
             public string Text { get; set; }
             #if Full_API
             public Sign OldSign { get; set; }
-#endif
+            #endif
         }
 
         public struct PluginsLoaded
@@ -986,7 +992,7 @@ namespace TDSM.API.Plugin
         {
             #if Full_API
             public Player Victim { get; internal set; }
-#endif
+            #endif
             public int Damage { get; set; }
 
             public int HitDirection { get; set; }
@@ -1004,7 +1010,7 @@ namespace TDSM.API.Plugin
         {
             #if Full_API
             public NPC Victim { get; set; }
-#endif
+            #endif
             public int Damage { get; set; }
 
             public int HitDirection { get; set; }
@@ -1024,7 +1030,7 @@ namespace TDSM.API.Plugin
 
             #if Full_API
             public NPC CreatedNpc { get; set; }
-#endif
+            #endif
         }
 
         public struct PlayerTriggeredEvent
