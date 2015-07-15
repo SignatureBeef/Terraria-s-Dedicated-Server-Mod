@@ -34,12 +34,12 @@ namespace tdsm.api
 
         private SocketConnectionAccepted _listenerCallback;
 
-        static ClientConnection()
+        /*static ClientConnection()
         {
             var thread = new ProgramThread("TmoL", TimeoutLoop);
             thread.IsBackground = true;
             thread.Start();
-        }
+        }*/
 
         public ClientConnection()
         {
@@ -77,7 +77,7 @@ namespace tdsm.api
         //            timeout = 0;
         //        }
 
-        static void TimeoutLoop()
+        /*static void TimeoutLoop()
         {
             try
             {
@@ -123,7 +123,7 @@ namespace tdsm.api
             {
                 ProgramLog.Error.Log("Exception in timeout thread: {0}", e);
             }
-        }
+        }*/
 
         class AsyncCallback //: IDisposable
         {
