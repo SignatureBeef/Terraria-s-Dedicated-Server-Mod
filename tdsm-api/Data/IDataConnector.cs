@@ -77,17 +77,41 @@ namespace TDSM.API.Data
 
         public abstract QueryBuilder ProcedureDrop(string name);
 
-        public abstract QueryBuilder SelectAll(string tableName, params WhereFilter[] clause);
+        public abstract QueryBuilder Select(params string[] expression);
 
-        public abstract QueryBuilder SelectFrom(string tableName, string[] expression = null, params WhereFilter[] clause);
+        public abstract QueryBuilder All();
 
-        public abstract QueryBuilder Count();
+        public abstract QueryBuilder From(string tableName);
 
-        public abstract QueryBuilder DeleteFrom(string tableName, params WhereFilter[] clause);
+        public abstract QueryBuilder Where(params WhereFilter[] clause);
+
+        public abstract QueryBuilder Count(string expression = null);
+
+        public abstract QueryBuilder Delete();
+
+        public virtual QueryBuilder Delete(string tableName, params WhereFilter[] clause)
+        {
+            return this.Delete(tableName).Where(clause);
+        }
 
         public abstract QueryBuilder InsertInto(string tableName, params DataParameter[] values);
 
-        public abstract QueryBuilder Update(string tableName, DataParameter[] values, params WhereFilter[] clause);
+        public abstract QueryBuilder Update(string tableName, DataParameter[] values);
+
+        public virtual QueryBuilder Update(string tableName, DataParameter[] values, params WhereFilter[] clause)
+        {
+            return this.Update(tableName, values).Where(clause);
+        }
+
+        public virtual QueryBuilder SelectAll(string tableName, params WhereFilter[] clause)
+        {
+            return this.Select().All().From(tableName).Where(clause);
+        }
+
+        public virtual QueryBuilder SelectFrom(string tableName, string[] expression = null, params WhereFilter[] clause)
+        {
+            return this.Select(expression).From(tableName).Where(clause);
+        }
 
         protected string GetTableName(string tableName)
         {
@@ -108,17 +132,57 @@ namespace TDSM.API.Data
 
     public struct DataParameter
     {
+        public string Name { get; set; }
 
+        public string Value { get; set; }
+
+        public DataParameter(string name, string value)
+        {
+            this.Name = name;
+            this.Value = value;
+        }
     }
 
     public struct TableColumn
     {
+        public string Name { get; set; }
 
+        public object DefaultValue { get; set; }
+
+        public Type DataType { get; set; }
+
+        public bool AutoIncrement { get; set; }
+
+        public bool PrimaryKey { get; set; }
+
+        public bool Nullable { get; set; }
+
+        public int? MinScale { get; set; }
+
+        public int? MaxScale { get; set; }
     }
 
     public struct WhereFilter
     {
+        public string Column { get; set; }
 
+        public string Value { get; set; }
+
+        public WhereExpression Expression { get; set; }
+
+        public WhereFilter(string column, string value, WhereExpression expression = WhereExpression.EqualTo)
+        {
+            this.Expression = expression;
+            this.Column = column;
+            this.Value = value;
+        }
+    }
+
+    public enum WhereExpression : byte
+    {
+        EqualTo,
+        Like,
+        NotEqualTo
     }
 
     public static class Storage
