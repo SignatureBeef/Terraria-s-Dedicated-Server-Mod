@@ -13,7 +13,9 @@ namespace TDSM.API.Data
 
         void Open();
 
-        int Execute(QueryBuilder builder);
+        bool Execute(QueryBuilder builder);
+
+        int ExecuteNonQuery(QueryBuilder builder);
 
         T ExecuteScalar<T>(QueryBuilder builder);
 
@@ -26,13 +28,13 @@ namespace TDSM.API.Data
     public abstract class QueryBuilder : IDisposable
     {
         private string _plugin;
-        private StringBuilder _sb;
+        private System.Text.StringBuilder _sb;
         private System.Data.CommandType _type;
 
         //Simple builder
         public QueryBuilder(string pluginName)
         {
-            _sb = new StringBuilder();
+            _sb = new System.Text.StringBuilder();
 
             _plugin = pluginName;
             _type = CommandType.Text;
@@ -41,7 +43,7 @@ namespace TDSM.API.Data
         //Command builder, essentially just for parameterised queries
         public QueryBuilder(string pluginName, string command, System.Data.CommandType type)
         {
-            _sb = new StringBuilder();
+            _sb = new System.Text.StringBuilder();
 
             _sb.Append(command);
             _plugin = pluginName;
@@ -53,7 +55,7 @@ namespace TDSM.API.Data
             if (args == null || args.Length == 0)
                 _sb.Append(fmt);
             else
-                _sb.Append(args);
+                _sb.Append(String.Format(fmt, args));
         }
 
         void IDisposable.Dispose()
@@ -127,9 +129,8 @@ namespace TDSM.API.Data
             { return _type; }
         }
 
-        public string BuildCommand()
+        public virtual string BuildCommand()
         {
-            Logging.ProgramLog.Error.Log(_sb.ToString());
             return _sb.ToString();
         }
     }
@@ -262,11 +263,18 @@ namespace TDSM.API.Data
             return _connector.GetBuilder(pluginName, command, type);
         }
 
-        public static int Execute(QueryBuilder builder)
+        public static bool Execute(QueryBuilder builder)
         {
             if (_connector == null)
                 throw new InvalidOperationException("No connector attached");
             return _connector.Execute(builder);
+        }
+
+        public static int ExecuteNonQuery(QueryBuilder builder)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.ExecuteNonQuery(builder);
         }
 
         public static T ExecuteScalar<T>(QueryBuilder builder)

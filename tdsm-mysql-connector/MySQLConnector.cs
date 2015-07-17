@@ -3,6 +3,7 @@ using TDSM.API.Data;
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Collections.Generic;
+using TDSM.API.Logging;
 
 namespace TDSM.Data.MySQL
 {
@@ -31,7 +32,7 @@ namespace TDSM.Data.MySQL
             _connection.Open();
         }
 
-        int IDataConnector.Execute(QueryBuilder builder)
+        bool IDataConnector.Execute(QueryBuilder builder)
         {
             if (!(builder is MySQLQueryBuilder))
                 throw new InvalidOperationException("MySQLQueryBuilder expected");
@@ -42,9 +43,39 @@ namespace TDSM.Data.MySQL
             using (var cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = builder.BuildCommand();
+                cmd.CommandType = builder.CommandType;
                 cmd.Parameters.AddRange(ms.Parameters.ToArray());
 
-                return cmd.ExecuteNonQuery();
+                ProgramLog.Error.Log("Running MySQL command: " + cmd.CommandText);
+
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    return rdr.HasRows;
+                }
+            }
+        }
+
+        int IDataConnector.ExecuteNonQuery(QueryBuilder builder)
+        {
+            if (!(builder is MySQLQueryBuilder))
+                throw new InvalidOperationException("MySQLQueryBuilder expected");
+
+            var ms = builder as MySQLQueryBuilder;
+
+            using (builder)
+            using (var cmd = _connection.CreateCommand())
+            {
+                cmd.CommandText = builder.BuildCommand();
+                cmd.CommandType = builder.CommandType;
+                cmd.Parameters.AddRange(ms.Parameters.ToArray());
+
+                ProgramLog.Error.Log("Running MySQL command: " + cmd.CommandText);
+
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    ProgramLog.Error.Log("RecordsAffected: " + rdr.RecordsAffected);
+                    return rdr.RecordsAffected;
+                }
             }
         }
 
@@ -59,7 +90,10 @@ namespace TDSM.Data.MySQL
             using (var cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = builder.BuildCommand();
+                cmd.CommandType = builder.CommandType;
                 cmd.Parameters.AddRange(ms.Parameters.ToArray());
+
+                ProgramLog.Error.Log("Running MySQL command: " + cmd.CommandText);
 
                 return (T)cmd.ExecuteScalar();
             }
@@ -119,7 +153,7 @@ namespace TDSM.Data.MySQL
 
         public override QueryBuilder TableCreate(string name, params TableColumn[] columns)
         {
-            Append("CREATE TABLE '{0}' (", base.GetTableName(name));
+            Append("CREATE TABLE {0} (", base.GetTableName(name));
 
             if (columns != null && columns.Length > 0)
             {
@@ -127,7 +161,9 @@ namespace TDSM.Data.MySQL
                 {
                     var col = columns[x];
 
+                    Append("`");
                     Append(col.Name);
+                    Append("`");
 
                     if (col.DataType == typeof(Int16))
                     {
@@ -184,7 +220,7 @@ namespace TDSM.Data.MySQL
 
         public  override QueryBuilder TableDrop(string name)
         {
-            Append("DROP TABLE IF EXISTS {0}", base.GetTableName(name));
+            Append("DROP TABLE IF EXISTS '{0}'", base.GetTableName(name));
             return this;
         }
 
