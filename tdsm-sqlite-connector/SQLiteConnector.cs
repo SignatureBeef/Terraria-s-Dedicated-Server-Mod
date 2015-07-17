@@ -26,10 +26,15 @@ namespace TDSM.Data.SQLite
 
         public void Open()
         {
-            
+
         }
 
-        int IDataConnector.Execute(QueryBuilder builder)
+        bool IDataConnector.Execute(QueryBuilder builder)
+        {
+            return false;
+        }
+
+        int IDataConnector.ExecuteNonQuery(QueryBuilder builder)
         {
             return 0;
         }

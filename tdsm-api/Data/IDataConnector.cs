@@ -21,8 +21,7 @@ namespace TDSM.API.Data
 
         DataSet ExecuteDataSet(QueryBuilder builder);
 
-        T[] ExecuteArray<T>(QueryBuilder builder);
-        //where T : new();
+        T[] ExecuteArray<T>(QueryBuilder builder) where T : new();
     }
 
     public abstract class QueryBuilder : IDisposable
@@ -50,12 +49,14 @@ namespace TDSM.API.Data
             System.Data.CommandType _type = type;
         }
 
-        protected void Append(string fmt, params object[] args)
+        protected QueryBuilder Append(string fmt, params object[] args)
         {
             if (args == null || args.Length == 0)
                 _sb.Append(fmt);
             else
                 _sb.Append(String.Format(fmt, args));
+
+            return this;
         }
 
         void IDisposable.Dispose()
@@ -118,6 +119,35 @@ namespace TDSM.API.Data
             return this.Select(expression).From(tableName).Where(clause);
         }
 
+        //public virtual QueryBuilder If()
+        //{
+        //    return this.Append("IF ");
+        //}
+        //public virtual QueryBuilder Not()
+        //{
+        //    return this.Append("NOT ");
+        //}
+
+        //public virtual QueryBuilder Exists()
+        //{
+        //    return this.Append("EXISTS ");
+        //}
+
+        //public virtual QueryBuilder Else()
+        //{
+        //    return this.Append("ELSE ");
+        //}
+
+        //public virtual QueryBuilder OpenBracket()
+        //{
+        //    return this.Append("( ");
+        //}
+
+        //public virtual QueryBuilder CloseBracket()
+        //{
+        //    return this.Append(") ");
+        //}
+
         protected string GetTableName(string tableName)
         {
             return _plugin + '_' + tableName;
@@ -139,9 +169,9 @@ namespace TDSM.API.Data
     {
         public string Name { get; set; }
 
-        public string Value { get; set; }
+        public object Value { get; set; }
 
-        public DataParameter(string name, string value)
+        public DataParameter(string name, object value)
         {
             this.Name = name;
             this.Value = value;
@@ -291,7 +321,7 @@ namespace TDSM.API.Data
             return _connector.ExecuteDataSet(builder);
         }
 
-        public static T[] ExecuteArray<T>(QueryBuilder builder) //where T : new()
+        public static T[] ExecuteArray<T>(QueryBuilder builder) where T : new()
         {
             if (_connector == null)
                 throw new InvalidOperationException("No connector attached");
