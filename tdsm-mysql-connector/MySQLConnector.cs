@@ -199,9 +199,13 @@ namespace TDSM.Data.MySQL
                     Append(col.Name);
                     Append("`");
 
-                    if (col.DataType == typeof(Int16))
+                    if (col.DataType == typeof(Byte))
                     {
                         Append(" TINYINT");
+                    }
+                    else if (col.DataType == typeof(Int32))
+                    {
+                        Append(" SMALLINT");
                     }
                     else if (col.DataType == typeof(Int32))
                     {
@@ -284,9 +288,11 @@ namespace TDSM.Data.MySQL
             if (expression != null && expression.Length > 0)
             {
                 Append(String.Join(",", expression));
+
+                return this.Append(" ");
             }
 
-            return this.Append(" ");
+            return this;
         }
 
         public override QueryBuilder All()
