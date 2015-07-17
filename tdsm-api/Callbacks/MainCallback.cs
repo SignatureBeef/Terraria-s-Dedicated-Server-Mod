@@ -72,6 +72,7 @@ namespace TDSM.API.Callbacks
 
         public static void OnProgramFinished()
         {
+            PluginManager.DisablePlugins();
             //Close the logging if set
             if (Tools.WriteClose != null)
                 Tools.WriteClose.Invoke();
