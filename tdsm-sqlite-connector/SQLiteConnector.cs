@@ -29,9 +29,9 @@ namespace TDSM.Data.SQLite
             
         }
 
-        bool IDataConnector.Execute(QueryBuilder builder)
+        int IDataConnector.Execute(QueryBuilder builder)
         {
-            return false;
+            return 0;
         }
 
         T IDataConnector.ExecuteScalar<T>(QueryBuilder builder)
@@ -57,20 +57,23 @@ namespace TDSM.Data.SQLite
 
     public class SQLiteQueryBuilder : QueryBuilder
     {
-        public   SQLiteQueryBuilder(string pluginName)
+        public SQLiteQueryBuilder(string pluginName)
             : base(pluginName)
         {
+            
         }
 
-        public   SQLiteQueryBuilder(string pluginName, string command, System.Data.CommandType type)
+        public SQLiteQueryBuilder(string pluginName, string command, System.Data.CommandType type)
             : base(pluginName, command, type)
         {
-
+            
         }
 
 
         public override QueryBuilder AddParam(string name, object value)
         {
+            var paramKey = "prm" + name;
+
             return this;
         }
 
@@ -104,22 +107,32 @@ namespace TDSM.Data.SQLite
             return this;
         }
 
-        public override QueryBuilder SelectAll(string tableName, params WhereFilter[] clause)
+        public override QueryBuilder Select(params string[] expression)
         {
             return this;
         }
 
-        public override QueryBuilder SelectFrom(string tableName, string[] expression = null, params WhereFilter[] clause)
+        public override QueryBuilder All()
         {
             return this;
         }
 
-        public override QueryBuilder Count()
+        public override QueryBuilder From(string tableName)
         {
             return this;
         }
 
-        public override QueryBuilder DeleteFrom(string tableName, params WhereFilter[] clause)
+        public override QueryBuilder Where(params WhereFilter[] clause)
+        {
+            return this;
+        }
+
+        public override QueryBuilder Count(string expression = null)
+        {
+            return this;
+        }
+
+        public override QueryBuilder Delete()
         {
             return this;
         }
@@ -129,7 +142,7 @@ namespace TDSM.Data.SQLite
             return this;
         }
 
-        public override QueryBuilder Update(string tableName, DataParameter[] values, params WhereFilter[] clause)
+        public override QueryBuilder Update(string tableName, DataParameter[] values)
         {
             return this;
         }

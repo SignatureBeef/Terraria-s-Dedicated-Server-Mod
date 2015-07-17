@@ -31,14 +31,38 @@ namespace TDSM.Data.MySQL
             _connection.Open();
         }
 
-        bool IDataConnector.Execute(QueryBuilder builder)
+        int IDataConnector.Execute(QueryBuilder builder)
         {
-            return false;
+            if (!(builder is MySQLQueryBuilder))
+                throw new InvalidOperationException("MySQLQueryBuilder expected");
+
+            var ms = builder as MySQLQueryBuilder;
+
+            using (builder)
+            using (var cmd = _connection.CreateCommand())
+            {
+                cmd.CommandText = builder.BuildCommand();
+                cmd.Parameters.AddRange(ms.Parameters.ToArray());
+
+                return cmd.ExecuteNonQuery();
+            }
         }
 
         T IDataConnector.ExecuteScalar<T>(QueryBuilder builder)
         {
-            return default(T);
+            if (!(builder is MySQLQueryBuilder))
+                throw new InvalidOperationException("MySQLQueryBuilder expected");
+            
+            var ms = builder as MySQLQueryBuilder;
+
+            using (builder)
+            using (var cmd = _connection.CreateCommand())
+            {
+                cmd.CommandText = builder.BuildCommand();
+                cmd.Parameters.AddRange(ms.Parameters.ToArray());
+
+                return (T)cmd.ExecuteScalar();
+            }
         }
 
         DataSet IDataConnector.ExecuteDataSet(QueryBuilder builder)
@@ -60,6 +84,12 @@ namespace TDSM.Data.MySQL
     public class MySQLQueryBuilder : QueryBuilder
     {
         private List<MySql.Data.MySqlClient.MySqlParameter> _params;
+
+        public List<MySql.Data.MySqlClient.MySqlParameter> Parameters
+        {
+            get
+            { return _params; }
+        }
 
         public MySQLQueryBuilder(string pluginName)
             : base(pluginName)
@@ -89,7 +119,7 @@ namespace TDSM.Data.MySQL
 
         public override QueryBuilder TableCreate(string name, params TableColumn[] columns)
         {
-            Append("CREATE TABLE '{0}' ", base.GetTableName(name));
+            Append("CREATE TABLE '{0}' (", base.GetTableName(name));
 
             if (columns != null && columns.Length > 0)
             {
@@ -97,31 +127,57 @@ namespace TDSM.Data.MySQL
                 {
                     var col = columns[x];
 
-                    if (col.DataType is Int16)
-                    {
+                    Append(col.Name);
 
-                    }
-                    else if (col.DataType is Int32)
+                    if (col.DataType == typeof(Int16))
                     {
-
+                        Append(" TINYINT");
                     }
-                    else if (col.DataType is Int64)
+                    else if (col.DataType == typeof(Int32))
                     {
-
+                        Append(" INT");
                     }
-                    else if (col.DataType is String)
+                    else if (col.DataType == typeof(Int64))
                     {
-                        var isVarChar = col.MinScale.HasValue && col.MaxScale.HasValue;
+                        Append(" BIGINT");
+                    }
+                    else if (col.DataType == typeof(String))
+                    {
+                        var isVarChar = col.MinScale.HasValue && !col.MaxScale.HasValue;
+                        if (isVarChar)
+                        {
+                            Append(" VARCHAR(");
+                            Append(col.MinScale.Value.ToString());
+                            Append(")");
+                        }
+                        else
+                        {
+                            Append(" TEXT");
+                        }
+                    }
+                    else if (col.DataType == typeof(DateTime))
+                    {
+                        Append(" TIMESTAMP");
                     }
                     else
                     {
                         throw new NotSupportedException(String.Format("Data type for column '{0}' is not supported", col.Name));
                     }
 
+                    if (col.AutoIncrement) //TODO check for numerics
+                    {
+                        Append(" AUTO_INCREMENT");
+                    }
+                    if (col.PrimaryKey) //TODO check for numerics
+                    {
+                        Append(" PRIMARY KEY");
+                    }
+
                     if (x + 1 < columns.Length)
                         Append(",");
                 }
             }
+            Append(")");
 
             return this;
         }
@@ -146,7 +202,6 @@ namespace TDSM.Data.MySQL
         {
             return this;
         }
-
 
         public override QueryBuilder Select(params string[] expression)
         {
@@ -292,7 +347,6 @@ namespace TDSM.Data.MySQL
 
             return this;
         }
-
     }
 }
 

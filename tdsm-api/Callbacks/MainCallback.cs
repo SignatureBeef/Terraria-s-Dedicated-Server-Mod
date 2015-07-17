@@ -2,6 +2,7 @@
 using TDSM.API.Misc;
 using TDSM.API.Plugin;
 using TDSM.API.Sockets;
+using TDSM.API.Logging;
 
 namespace TDSM.API.Callbacks
 {
@@ -200,20 +201,22 @@ namespace TDSM.API.Callbacks
         //private static int _textTimeout = 0;
         public static void OnStatusTextChange()
         {
-            /* Check tolled tasks - OnStatusTextChanged is called without clients connected */
-            Tasks.CheckTasks();
+            try
+            {
+                /* Check tolled tasks - OnStatusTextChanged is called without clients connected */
+                Tasks.CheckTasks(); //This still may not be the best place for this.
 
 #if Full_API
-            if (Terraria.Main.oldStatusText != Terraria.Main.statusText)
-            {
-                if (StatusTextChange != null)
-                    StatusTextChange();
-                else
+                if (Terraria.Main.oldStatusText != Terraria.Main.statusText)
                 {
-                    Terraria.Main.oldStatusText = Terraria.Main.statusText;
-                    Tools.WriteLine(Terraria.Main.statusText);
-                }
-                /*var ctx = new HookContext()
+                    if (StatusTextChange != null)
+                        StatusTextChange();
+                    else
+                    {
+                        Terraria.Main.oldStatusText = Terraria.Main.statusText;
+                        Tools.WriteLine(Terraria.Main.statusText);
+                    }
+                    /*var ctx = new HookContext()
                 {
                     Sender = HookContext.ConsoleSender
                 };
@@ -225,17 +228,23 @@ namespace TDSM.API.Callbacks
                     Terraria.Main.oldStatusText = Terraria.Main.statusText;
                     Tools.WriteLine(Terraria.Main.statusText);
                 }*/
-                //_textTimeout = 0;
+                    //_textTimeout = 0;
+                }
+            
+                //else if (Terraria.Main.oldStatusText == String.Empty && Terraria.Main.statusText == String.Empty)
+                //{
+                //    if (_textTimeout++ > 1000)
+                //    {
+                //        _textTimeout = 0;
+                //        Terraria.Main.statusText = String.Empty;
+                //    }
+                //}
+                #endif
             }
-            //else if (Terraria.Main.oldStatusText == String.Empty && Terraria.Main.statusText == String.Empty)
-            //{
-            //    if (_textTimeout++ > 1000)
-            //    {
-            //        _textTimeout = 0;
-            //        Terraria.Main.statusText = String.Empty;
-            //    }
-            //}
-#endif
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "OnStatusTextChange error");
+            }
         }
     }
 }
