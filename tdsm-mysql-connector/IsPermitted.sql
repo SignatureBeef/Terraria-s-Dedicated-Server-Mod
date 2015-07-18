@@ -11,7 +11,6 @@ BEGIN
 	declare vGroupId int default 0;
 	declare vPrevGroupId int default 0;
 	declare vNodeFound int default 0;
-	declare vPermissionSet int default 0;
 	/*
 		PermissionEnum values:
 			0	= Denied
@@ -53,10 +52,10 @@ BEGIN
 						and nd.Deny = 0
 				) then
 					set vPermissionValue = 1;
-					set vPermissionSet = 1;
+					set vNodeFound = 1;
 				else
 					set vPermissionValue = 0;
-					set vPermissionSet = 1;
+					set vNodeFound = 1;
 				end if;
 			else
 				/*
@@ -75,7 +74,7 @@ BEGIN
 				set vPrevGroupId = vGroupId;
 				set vNodeFound = 0;
 
-				while (vGroupId is not null and vGroupId > 0) do
+				while (vGroupId is not null and vGroupId > 0 and vNodeFound = 0) do
 					/* Check group permissions */
 					select vGroupId;
 					if exists
@@ -89,7 +88,7 @@ BEGIN
 					) then
 						set vPermissionValue = 1;
 						set vGroupId = 0;
-						set vPermissionSet = 1;
+						set vNodeFound = 1;
 					elseif exists
 					(
 						select 1
@@ -101,7 +100,7 @@ BEGIN
 					) then
 						set vPermissionValue = 0;
 						set vGroupId = 0;
-						set vPermissionSet = 1;
+						set vNodeFound = 1;
 					else
 						select Id
 						from SqlPermissions_Groups g
