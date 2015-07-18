@@ -4,10 +4,11 @@ using MySql.Data.MySqlClient;
 using System.Data;
 using System.Collections.Generic;
 using TDSM.API.Logging;
+using TDSM.API;
 
 namespace TDSM.Data.MySQL
 {
-    public class MySQLConnector : IDataConnector
+    public partial class MySQLConnector : IDataConnector
     {
         private MySqlConnection _connection;
 
@@ -30,6 +31,8 @@ namespace TDSM.Data.MySQL
         public void Open()
         {
             _connection.Open();
+
+            InitialisePermissions();
         }
 
         bool IDataConnector.Execute(QueryBuilder builder)

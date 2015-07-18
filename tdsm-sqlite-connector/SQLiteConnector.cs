@@ -2,6 +2,7 @@
 using TDSM.API.Data;
 using SQLite;
 using System.Data;
+using TDSM.API;
 
 namespace TDSM.Data.SQLite
 {
@@ -29,7 +30,12 @@ namespace TDSM.Data.SQLite
             
         }
 
-        int IDataConnector.Execute(QueryBuilder builder)
+        bool IDataConnector.Execute(QueryBuilder builder)
+        {
+            return false;
+        }
+
+        int IDataConnector.ExecuteNonQuery(QueryBuilder builder)
         {
             return 0;
         }
@@ -47,6 +53,11 @@ namespace TDSM.Data.SQLite
         T[] IDataConnector.ExecuteArray<T>(QueryBuilder builder)
         {
             return null;
+        }
+
+        Permission IPermissionHandler.IsPermitted(string node, BasePlayer player)
+        {
+            return Permission.Denied;
         }
 
         public override string ToString()

@@ -446,7 +446,9 @@ namespace TDSM.API.Command
         public static bool CheckAccessLevel(CommandInfo cmd, ISender sender)
         {
             var perms = CheckPermissions(sender, cmd);
-            if (Permissions.PermissionsManager.IsSet && perms == Permissions.Permission.Denied)
+//            if (Permissions.PermissionsManager.IsSet && perms == Permissions.Permission.Denied)
+//                return false;
+            if (Data.Storage.IsAvailable && perms == Data.Permission.Denied)
                 return false;
 
             return CheckAccessLevel(cmd.accessLevel, sender);
@@ -468,6 +470,7 @@ namespace TDSM.API.Command
             throw new NotImplementedException("Unexpected ISender implementation");
         }
 
+        /* Old permissions
         /// <summary>
         /// Permissions checking for registered commands.
         /// </summary>
@@ -476,10 +479,10 @@ namespace TDSM.API.Command
         /// <returns>True if entity can use command.  False if not.</returns>
         public static Permissions.Permission CheckPermissions(ISender sender, CommandInfo cmd)
         {
-            /*
+            / *
              *  [TODO] Should a node return false, Since there is three possibilites, should it return false if permissions 
              *  is enabled and allow the normal OP system work or no access at all?
-             */
+             * /
             if (cmd.node == null || sender is ConsoleSender || sender.Op)
                 return Permissions.Permission.Permitted;
 
@@ -487,7 +490,28 @@ namespace TDSM.API.Command
                 return Permissions.PermissionsManager.IsPermitted(cmd.node, sender as BasePlayer);
 
             return Permissions.Permission.Denied;
-        }
+        }*/
+
+    /// <summary>
+    /// Permissions checking for registered commands.
+    /// </summary>
+    /// <param name="sender">Entity to check permissions for</param>
+    /// <param name="cmd">Command to check for permissions on</param>
+    /// <returns>True if entity can use command.  False if not.</returns>
+    public static Data.Permission CheckPermissions(ISender sender, CommandInfo cmd)
+    {
+        /*
+             *  [TODO] Should a node return false, Since there is three possibilites, should it return false if permissions 
+             *  is enabled and allow the normal OP system work or no access at all?
+             */
+        if (cmd.node == null || sender is ConsoleSender || sender.Op)
+            return Data.Permission.Permitted;
+
+        if (sender is BasePlayer && Data.Storage.IsAvailable)
+            return Data.Storage.IsPermitted(cmd.node, sender as BasePlayer);
+
+        return Data.Permission.Denied;
+    }
 
         bool FindStringCommand(string prefix, out CommandInfo info)
         {

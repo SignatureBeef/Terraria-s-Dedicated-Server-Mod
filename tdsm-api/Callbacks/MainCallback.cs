@@ -31,17 +31,18 @@ namespace TDSM.API.Callbacks
             PluginManager.Initialize(Globals.PluginPath);
             PluginManager.LoadPlugins();
 
-            if (!Permissions.PermissionsManager.IsSet)
-            {
-                var file = System.IO.Path.Combine(Globals.DataPath, "permissions.xml");
-                //if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
-                if (System.IO.File.Exists(file))
-                {
-                    var handler = new Permissions.XmlSupplier(file);
-                    if (handler.Load())
-                        Permissions.PermissionsManager.SetHandler(handler);
-                }
-            }
+            //SQLite here
+//            if (!Permissions.PermissionsManager.IsSet)
+//            {
+//                var file = System.IO.Path.Combine(Globals.DataPath, "permissions.xml");
+//                //if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
+//                if (System.IO.File.Exists(file))
+//                {
+//                    var handler = new Permissions.XmlSupplier(file);
+//                    if (handler.Load())
+//                        Permissions.PermissionsManager.SetHandler(handler);
+//                }
+//            }
         }
 
         public static bool OnProgramStarted(string[] cmd)

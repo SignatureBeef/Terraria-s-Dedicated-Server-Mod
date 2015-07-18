@@ -5,7 +5,21 @@ using System.Collections.Generic;
 
 namespace TDSM.API.Data
 {
-    public interface IDataConnector
+    /// <summary>
+    /// The interface behind custom permissions handlers
+    /// </summary>
+    public interface IPermissionHandler
+    {
+        Permission IsPermitted(string node, BasePlayer player);
+    }
+
+    public enum Permission : byte
+    {
+        Denied = 0,
+        Permitted
+    }
+
+    public interface IDataConnector : IPermissionHandler
     {
         QueryBuilder GetBuilder(string pluginName);
 
@@ -22,7 +36,6 @@ namespace TDSM.API.Data
         DataSet ExecuteDataSet(QueryBuilder builder);
 
         T[] ExecuteArray<T>(QueryBuilder builder);
-        //where T : new();
     }
 
     public abstract class QueryBuilder : IDisposable
@@ -139,9 +152,9 @@ namespace TDSM.API.Data
     {
         public string Name { get; set; }
 
-        public string Value { get; set; }
+        public object Value { get; set; }
 
-        public DataParameter(string name, string value)
+        public DataParameter(string name, object value)
         {
             this.Name = name;
             this.Value = value;
@@ -247,6 +260,8 @@ namespace TDSM.API.Data
                 }
                 _connector = connector;
             }
+
+            AuthenticatedUsers.Initialise();
         }
 
         public static QueryBuilder GetBuilder(string pluginName)
@@ -296,6 +311,13 @@ namespace TDSM.API.Data
             if (_connector == null)
                 throw new InvalidOperationException("No connector attached");
             return _connector.ExecuteArray<T>(builder);
+        }
+
+        public static Permission IsPermitted(string node, BasePlayer player)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.IsPermitted(node, player);
         }
     }
 }
