@@ -131,7 +131,7 @@ BEGIN
 		end if;
 	end if;
 
-	if vPermissionSet = 0 and prmIsGuest = 1 then
+	if vNodeFound = 0 and prmIsGuest = 1 then
 		select 'Guest';
 	end if;
 
