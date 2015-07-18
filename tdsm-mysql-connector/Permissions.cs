@@ -8,7 +8,10 @@ namespace TDSM.Data.MySQL
     public partial class MySQLConnector
     {
         private GroupTable _groups;
-        private NodeTable _nodes;
+        private PermissionTable _nodes;
+        private GroupPermissions _groupPerms;
+        private UserPermissions _userPerms;
+        private UsersTable _users;
 
         Permission IPermissionHandler.IsPermitted(string node, BasePlayer player)
         {
@@ -26,15 +29,21 @@ namespace TDSM.Data.MySQL
         void InitialisePermissions()
         {
             _groups = new GroupTable();
-            _nodes = new NodeTable();
+            _nodes = new PermissionTable();
+            _userPerms = new UserPermissions();
+            _groupPerms = new GroupPermissions();
+            _users = new UsersTable();
 
             _groups.Initialise(this);
             _nodes.Initialise(this);
+            _userPerms.Initialise(this);
+            _groupPerms.Initialise(this);
+            _users.Initialise(this);
         }
 
         private Permission IsPermitted(string node, bool isGuest, string authentication = null)
         {
-            //Login in a sql routine
+            //sql routine
             return Permission.Denied;
         }
     }

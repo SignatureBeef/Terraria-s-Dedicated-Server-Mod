@@ -14,6 +14,7 @@ namespace TDSM.Data.MySQL.Tables
             {
                 public const String Id = "Id";
                 public const String Name = "Name";
+                public const String ApplyToGuests = "ApplyToGuests";
                 public const String Parent = "Parent";
                 public const String Chat_Red = "Chat_Red";
                 public const String Chat_Green = "Chat_Green";
@@ -37,12 +38,13 @@ namespace TDSM.Data.MySQL.Tables
             {
                 new TableColumn(ColumnNames.Id, typeof(Int32), true, true),
                 new TableColumn(ColumnNames.Name, typeof(String), 255),
-                new TableColumn(ColumnNames.Parent, typeof(String), 255),
+                new TableColumn(ColumnNames.ApplyToGuests, typeof(Boolean)),
+                new TableColumn(ColumnNames.Parent, typeof(String), 255, true),
                 new TableColumn(ColumnNames.Chat_Red, typeof(Byte)),
                 new TableColumn(ColumnNames.Chat_Green, typeof(Byte)),
                 new TableColumn(ColumnNames.Chat_Blue, typeof(Byte)),
-                new TableColumn(ColumnNames.Chat_Prefix, typeof(Byte)),
-                new TableColumn(ColumnNames.Chat_Suffix, typeof(Byte))
+                new TableColumn(ColumnNames.Chat_Prefix, typeof(String), 10, true),
+                new TableColumn(ColumnNames.Chat_Suffix, typeof(String), 10, true)
             };
 
             public static bool Exists(MySQLConnector conn)

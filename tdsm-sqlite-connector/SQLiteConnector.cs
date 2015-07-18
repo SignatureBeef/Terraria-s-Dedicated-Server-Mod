@@ -27,7 +27,7 @@ namespace TDSM.Data.SQLite
 
         public void Open()
         {
-            
+
         }
 
         bool IDataConnector.Execute(QueryBuilder builder)

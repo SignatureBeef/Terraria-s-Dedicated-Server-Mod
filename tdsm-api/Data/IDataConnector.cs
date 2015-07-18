@@ -35,7 +35,7 @@ namespace TDSM.API.Data
 
         DataSet ExecuteDataSet(QueryBuilder builder);
 
-        T[] ExecuteArray<T>(QueryBuilder builder);
+        T[] ExecuteArray<T>(QueryBuilder builder) where T : new();
     }
 
     public abstract class QueryBuilder : IDisposable
@@ -63,12 +63,14 @@ namespace TDSM.API.Data
             System.Data.CommandType _type = type;
         }
 
-        protected void Append(string fmt, params object[] args)
+        protected QueryBuilder Append(string fmt, params object[] args)
         {
             if (args == null || args.Length == 0)
                 _sb.Append(fmt);
             else
                 _sb.Append(String.Format(fmt, args));
+
+            return this;
         }
 
         void IDisposable.Dispose()
@@ -131,6 +133,35 @@ namespace TDSM.API.Data
             return this.Select(expression).From(tableName).Where(clause);
         }
 
+        //public virtual QueryBuilder If()
+        //{
+        //    return this.Append("IF ");
+        //}
+        //public virtual QueryBuilder Not()
+        //{
+        //    return this.Append("NOT ");
+        //}
+
+        //public virtual QueryBuilder Exists()
+        //{
+        //    return this.Append("EXISTS ");
+        //}
+
+        //public virtual QueryBuilder Else()
+        //{
+        //    return this.Append("ELSE ");
+        //}
+
+        //public virtual QueryBuilder OpenBracket()
+        //{
+        //    return this.Append("( ");
+        //}
+
+        //public virtual QueryBuilder CloseBracket()
+        //{
+        //    return this.Append(") ");
+        //}
+
         protected string GetTableName(string tableName)
         {
             return _plugin + '_' + tableName;
@@ -179,38 +210,38 @@ namespace TDSM.API.Data
 
         public int? MaxScale { get; set; }
 
-        public TableColumn(string name, Type dataType, bool autoIncrement, bool primaryKey)
+        public TableColumn(string name, Type dataType, bool autoIncrement, bool primaryKey, bool allowNulls = false)
         {
             this.Name = name;
             this.DefaultValue = null;
             this.DataType = dataType;
             this.AutoIncrement = autoIncrement;
             this.PrimaryKey = primaryKey;
-            this.Nullable = false;
+            this.Nullable = allowNulls;
             this.MinScale = null;
             this.MaxScale = null;
         }
 
-        public TableColumn(string name, Type dataType)
+        public TableColumn(string name, Type dataType, bool allowNulls = false)
         {
             this.Name = name;
             this.DefaultValue = null;
             this.DataType = dataType;
             this.AutoIncrement = false;
             this.PrimaryKey = false;
-            this.Nullable = false;
+            this.Nullable = allowNulls;
             this.MinScale = null;
             this.MaxScale = null;
         }
 
-        public TableColumn(string name, Type dataType, int scale)
+        public TableColumn(string name, Type dataType, int scale, bool allowNulls = false)
         {
             this.Name = name;
             this.DefaultValue = null;
             this.DataType = dataType;
             this.AutoIncrement = false;
             this.PrimaryKey = false;
-            this.Nullable = false;
+            this.Nullable = allowNulls;
             this.MinScale = scale;
             this.MaxScale = null;
         }
@@ -306,7 +337,7 @@ namespace TDSM.API.Data
             return _connector.ExecuteDataSet(builder);
         }
 
-        public static T[] ExecuteArray<T>(QueryBuilder builder) //where T : new()
+        public static T[] ExecuteArray<T>(QueryBuilder builder) where T : new()
         {
             if (_connector == null)
                 throw new InvalidOperationException("No connector attached");

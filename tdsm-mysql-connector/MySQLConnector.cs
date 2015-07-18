@@ -86,7 +86,7 @@ namespace TDSM.Data.MySQL
         {
             if (!(builder is MySQLQueryBuilder))
                 throw new InvalidOperationException("MySQLQueryBuilder expected");
-            
+
             var ms = builder as MySQLQueryBuilder;
 
             using (builder)
@@ -98,17 +98,51 @@ namespace TDSM.Data.MySQL
 
                 ProgramLog.Error.Log("Running MySQL command: " + cmd.CommandText);
 
-                return (T)cmd.ExecuteScalar();
+                var res = cmd.ExecuteScalar();
+
+                ProgramLog.Error.Log("Scalar: " + res ?? "<null>");
+                if (res != null) ProgramLog.Error.Log("ST: " + res.GetType());
+
+                return (T)res;
             }
         }
 
         DataSet IDataConnector.ExecuteDataSet(QueryBuilder builder)
         {
-            return null;
+            if (!(builder is MySQLQueryBuilder))
+                throw new InvalidOperationException("MySQLQueryBuilder expected");
+
+            var ms = builder as MySQLQueryBuilder;
+
+            using (builder)
+            using (var cmd = _connection.CreateCommand())
+            {
+                cmd.CommandText = builder.BuildCommand();
+                cmd.CommandType = builder.CommandType;
+                cmd.Parameters.AddRange(ms.Parameters.ToArray());
+
+                ProgramLog.Error.Log("Running MySQL command: " + cmd.CommandText);
+
+                using (var da = new MySqlDataAdapter(cmd))
+                {
+                    var ds = new DataSet();
+
+                    da.Fill(ds);
+
+                    return ds;
+                }
+            }
         }
 
         T[] IDataConnector.ExecuteArray<T>(QueryBuilder builder)
         {
+            var ds = (this as IDataConnector).ExecuteDataSet(builder);
+
+            if (ds != null)
+            {
+
+            }
+
             return null;
         }
 
@@ -131,13 +165,13 @@ namespace TDSM.Data.MySQL
         public MySQLQueryBuilder(string pluginName)
             : base(pluginName)
         {
-            _params = new  List<MySql.Data.MySqlClient.MySqlParameter>();
+            _params = new List<MySql.Data.MySqlClient.MySqlParameter>();
         }
 
         public MySQLQueryBuilder(string pluginName, string command, System.Data.CommandType type)
             : base(pluginName, command, type)
         {
-            _params = new  List<MySql.Data.MySqlClient.MySqlParameter>();
+            _params = new List<MySql.Data.MySqlClient.MySqlParameter>();
         }
 
 
@@ -168,9 +202,13 @@ namespace TDSM.Data.MySQL
                     Append(col.Name);
                     Append("`");
 
-                    if (col.DataType == typeof(Int16))
+                    if (col.DataType == typeof(Byte))
                     {
                         Append(" TINYINT");
+                    }
+                    else if (col.DataType == typeof(Int16))
+                    {
+                        Append(" SMALLINT");
                     }
                     else if (col.DataType == typeof(Int32))
                     {
@@ -198,6 +236,10 @@ namespace TDSM.Data.MySQL
                     {
                         Append(" TIMESTAMP");
                     }
+                    else if (col.DataType == typeof(Boolean))
+                    {
+                        Append(" BIT");
+                    }
                     else
                     {
                         throw new NotSupportedException(String.Format("Data type for column '{0}' is not supported", col.Name));
@@ -211,6 +253,14 @@ namespace TDSM.Data.MySQL
                     {
                         Append(" PRIMARY KEY");
                     }
+                    if (col.Nullable)
+                    {
+                        Append(" NULL");
+                    }
+                    else
+                    {
+                        Append(" NOT NULL");
+                    }
 
                     if (x + 1 < columns.Length)
                         Append(",");
@@ -221,7 +271,7 @@ namespace TDSM.Data.MySQL
             return this;
         }
 
-        public  override QueryBuilder TableDrop(string name)
+        public override QueryBuilder TableDrop(string name)
         {
             Append("DROP TABLE IF EXISTS '{0}'", base.GetTableName(name));
             return this;
@@ -249,7 +299,10 @@ namespace TDSM.Data.MySQL
             if (expression != null && expression.Length > 0)
             {
                 Append(String.Join(",", expression));
+
+                return this.Append(" ");
             }
+
             return this;
         }
 
@@ -297,7 +350,7 @@ namespace TDSM.Data.MySQL
 
                     var paramKey = "prm" + xp.Column;
                     _params.Add(new MySqlParameter(paramKey, xp.Value));
-                    Append(paramKey);
+                    Append("?");
                     Append(" ");
                 }
             }
@@ -307,10 +360,10 @@ namespace TDSM.Data.MySQL
 
         public override QueryBuilder Count(string expression = null)
         {
-            Append("COUNT (");
+            Append("COUNT(");
             Append(expression ?? "*");
-            Append(") ");
-            return this;
+            return Append(") ");
+            //return this.Append(fmt, String.Format("COUNT({0})", expression ?? "*"));
         }
 
         public override QueryBuilder Delete()
@@ -344,12 +397,11 @@ namespace TDSM.Data.MySQL
                     var prm = values[x];
                     var paramKey = "prm" + prm.Name;
 
-                    Append(paramKey);
+                    Append("?");
                     if (x + 1 < values.Length)
                         Append(",");
 
                     _params.Add(new MySqlParameter(paramKey, prm.Value));
-                    Append(paramKey);
                 }
                 Append(" ) ");
             }
@@ -372,15 +424,13 @@ namespace TDSM.Data.MySQL
 
                     Append(prm.Name);
                     Append("=");
-                    Append(paramKey);
+                    Append("?");
                     Append(" ");
-
-
+                    
                     if (x + 1 < values.Length)
                         Append(",");
 
                     _params.Add(new MySqlParameter(paramKey, prm.Value));
-                    Append(paramKey);
                 }
             }
 

@@ -43,8 +43,11 @@
     <Compile Include="MySQLConnector.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Tables\Groups.cs" />
-    <Compile Include="Tables\Nodes.cs" />
     <Compile Include="SqlPermissions.cs" />
+    <Compile Include="Tables\GroupPermissions.cs" />
+    <Compile Include="Tables\UserPermissions.cs" />
+    <Compile Include="Tables\Permission.cs" />
+    <Compile Include="Tables\Users.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -55,5 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tables\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="IsPermitted.sql" />
   </ItemGroup>
 </Project>
