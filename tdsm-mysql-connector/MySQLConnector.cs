@@ -17,10 +17,10 @@ namespace TDSM.Data.MySQL
             return new MySQLQueryBuilder(pluginName);
         }
 
-        public QueryBuilder GetBuilder(string pluginName, string command, System.Data.CommandType type)
-        {
-            return new MySQLQueryBuilder(pluginName, command, type);
-        }
+        //        public QueryBuilder GetBuilder(string pluginName, string command, System.Data.CommandType type)
+        //        {
+        //            return new MySQLQueryBuilder(pluginName, command, type);
+        //        }
 
         public MySQLConnector(string connectionString)
         {
@@ -49,8 +49,6 @@ namespace TDSM.Data.MySQL
                 cmd.CommandType = builder.CommandType;
                 cmd.Parameters.AddRange(ms.Parameters.ToArray());
 
-                ProgramLog.Error.Log("Running MySQL command: " + cmd.CommandText);
-
                 using (var rdr = cmd.ExecuteReader())
                 {
                     return rdr.HasRows;
@@ -72,11 +70,8 @@ namespace TDSM.Data.MySQL
                 cmd.CommandType = builder.CommandType;
                 cmd.Parameters.AddRange(ms.Parameters.ToArray());
 
-                ProgramLog.Error.Log("Running MySQL command: " + cmd.CommandText);
-
                 using (var rdr = cmd.ExecuteReader())
                 {
-                    ProgramLog.Error.Log("RecordsAffected: " + rdr.RecordsAffected);
                     return rdr.RecordsAffected;
                 }
             }
@@ -96,14 +91,7 @@ namespace TDSM.Data.MySQL
                 cmd.CommandType = builder.CommandType;
                 cmd.Parameters.AddRange(ms.Parameters.ToArray());
 
-                ProgramLog.Error.Log("Running MySQL command: " + cmd.CommandText);
-
-                var res = cmd.ExecuteScalar();
-
-                ProgramLog.Error.Log("Scalar: " + res ?? "<null>");
-                if (res != null) ProgramLog.Error.Log("ST: " + res.GetType());
-
-                return (T)res;
+                return (T)cmd.ExecuteScalar();
             }
         }
 
@@ -120,8 +108,6 @@ namespace TDSM.Data.MySQL
                 cmd.CommandText = builder.BuildCommand();
                 cmd.CommandType = builder.CommandType;
                 cmd.Parameters.AddRange(ms.Parameters.ToArray());
-
-                ProgramLog.Error.Log("Running MySQL command: " + cmd.CommandText);
 
                 using (var da = new MySqlDataAdapter(cmd))
                 {
@@ -168,16 +154,32 @@ namespace TDSM.Data.MySQL
             _params = new List<MySql.Data.MySqlClient.MySqlParameter>();
         }
 
-        public MySQLQueryBuilder(string pluginName, string command, System.Data.CommandType type)
-            : base(pluginName, command, type)
+        public override QueryBuilder ExecuteProcedure(string name, string prefix = "prm", params DataParameter[] parameters)
         {
-            _params = new List<MySql.Data.MySqlClient.MySqlParameter>();
+            Append("CALL `{0}`(", name);
+
+            if (parameters != null && parameters.Length > 0)
+            {
+                for (var x = 0; x < parameters.Length; x++)
+                {
+                    var xp = parameters[x];
+
+                    var paramKey = prefix + xp.Name;
+                    _params.Add(new MySqlParameter(paramKey, xp.Value));
+                    Append("?");
+
+                    if (x + 1 < parameters.Length)
+                        Append(",");
+                }
+            }
+
+            Append(");");
+            return this;
         }
 
-
-        public override QueryBuilder AddParam(string name, object value)
+        public override QueryBuilder AddParam(string name, object value, string prefix = "prm")
         {
-            var paramKey = "prm" + name;
+            var paramKey = prefix + name;
             _params.Add(new MySqlParameter(paramKey, value));
             return this;
         }

@@ -23,7 +23,7 @@ namespace TDSM.API.Data
     {
         QueryBuilder GetBuilder(string pluginName);
 
-        QueryBuilder GetBuilder(string pluginName, string command, System.Data.CommandType type);
+        //        QueryBuilder GetBuilder(string pluginName, string command, System.Data.CommandType type);
 
         void Open();
 
@@ -53,15 +53,15 @@ namespace TDSM.API.Data
             _type = CommandType.Text;
         }
 
-        //Command builder, essentially just for parameterised queries
-        public QueryBuilder(string pluginName, string command, System.Data.CommandType type)
-        {
-            _sb = new System.Text.StringBuilder();
-
-            _sb.Append(command);
-            _plugin = pluginName;
-            System.Data.CommandType _type = type;
-        }
+        //        //Command builder, essentially just for parameterised queries
+        //        public QueryBuilder(string pluginName, string command, System.Data.CommandType type)
+        //        {
+        //            _sb = new System.Text.StringBuilder();
+        //
+        //            _sb.Append(command);
+        //            _plugin = pluginName;
+        //            System.Data.CommandType _type = type;
+        //        }
 
         protected QueryBuilder Append(string fmt, params object[] args)
         {
@@ -83,7 +83,7 @@ namespace TDSM.API.Data
             _plugin = null;
         }
 
-        public abstract QueryBuilder AddParam(string name, object value);
+        public abstract QueryBuilder AddParam(string name, object value, string prefix = "prm");
 
         public abstract QueryBuilder TableExists(string name);
 
@@ -96,6 +96,8 @@ namespace TDSM.API.Data
         public abstract QueryBuilder ProcedureCreate(string name, string contents, params DataParameter[] parameters);
 
         public abstract QueryBuilder ProcedureDrop(string name);
+
+        public abstract QueryBuilder ExecuteProcedure(string name, string prefix = "prm", params DataParameter[] parameters);
 
         public abstract QueryBuilder Select(params string[] expression);
 
@@ -302,12 +304,12 @@ namespace TDSM.API.Data
             return _connector.GetBuilder(pluginName);
         }
 
-        public static QueryBuilder GetBuilder(string pluginName, string command, System.Data.CommandType type)
-        {
-            if (_connector == null)
-                throw new InvalidOperationException("No connector attached");
-            return _connector.GetBuilder(pluginName, command, type);
-        }
+        //        public static QueryBuilder GetBuilder(string pluginName, string command, System.Data.CommandType type)
+        //        {
+        //            if (_connector == null)
+        //                throw new InvalidOperationException("No connector attached");
+        //            return _connector.GetBuilder(pluginName, command, type);
+        //        }
 
         public static bool Execute(QueryBuilder builder)
         {

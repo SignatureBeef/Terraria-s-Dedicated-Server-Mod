@@ -15,10 +15,10 @@ namespace TDSM.Data.SQLite
             return new SQLiteQueryBuilder(pluginName);
         }
 
-        public QueryBuilder GetBuilder(string pluginName, string command, System.Data.CommandType type)
-        {
-            return new SQLiteQueryBuilder(pluginName, command, type);
-        }
+//        public QueryBuilder GetBuilder(string pluginName, string command, System.Data.CommandType type)
+//        {
+//            return new SQLiteQueryBuilder(pluginName, command, type);
+//        }
 
         public SQLiteConnector(string connectionString)
         {
@@ -74,16 +74,15 @@ namespace TDSM.Data.SQLite
             
         }
 
-        public SQLiteQueryBuilder(string pluginName, string command, System.Data.CommandType type)
-            : base(pluginName, command, type)
+        public override QueryBuilder ExecuteProcedure(string name, string prefix = "prm", params DataParameter[] parameters)
         {
             
+            return this;
         }
 
-
-        public override QueryBuilder AddParam(string name, object value)
+        public override QueryBuilder AddParam(string name, object value, string prefix = "prm")
         {
-            var paramKey = "prm" + name;
+            var paramKey = prefix + name;
 
             return this;
         }

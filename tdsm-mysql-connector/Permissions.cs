@@ -43,8 +43,16 @@ namespace TDSM.Data.MySQL
 
         private Permission IsPermitted(string node, bool isGuest, string authentication = null)
         {
-            //sql routine
-            return Permission.Denied;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure("SqlPermissions_IsPermitted", "prm", 
+                    new DataParameter("Node", node),
+                    new DataParameter("IsGuest", isGuest),
+                    new DataParameter("Authentication", authentication)
+                );
+
+                return (Permission)Storage.ExecuteScalar<Int32>(sb);
+            }
         }
     }
 }

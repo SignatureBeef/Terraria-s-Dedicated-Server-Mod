@@ -10,11 +10,14 @@ namespace TDSM.API.Callbacks
         public static void OpenPort()
         {
 #if ENABLE_NAT
-            Terraria.Netplay.portForwardIP = Terraria.Netplay.GetLocalIPAddress ();
-            Terraria.Netplay.portForwardPort = Terraria.Netplay.ListenPort;
+            if (Terraria.Netplay.UseUPNP)
+            {
+                Terraria.Netplay.portForwardIP = Terraria.Netplay.GetLocalIPAddress();
+                Terraria.Netplay.portForwardPort = Terraria.Netplay.ListenPort;
 
-            Mono.Nat.NatUtility.DeviceFound += NatUtility_DeviceFound;
-            Mono.Nat.NatUtility.StartDiscovery();
+                Mono.Nat.NatUtility.DeviceFound += NatUtility_DeviceFound;
+                Mono.Nat.NatUtility.StartDiscovery();
+            }
 #endif
 
             //if (Netplay.mappings != null)
@@ -39,7 +42,7 @@ namespace TDSM.API.Callbacks
 #if ENABLE_NAT
             try
             {
-                if(e.Device is Mono.Nat.Upnp.UpnpNatDevice) //TODO, see if Pmp should work as well
+                if (e.Device is Mono.Nat.Upnp.UpnpNatDevice) //TODO, see if Pmp should work as well
                 {
                     var current = e.Device.GetAllMappings();
                     if (current != null)
@@ -69,7 +72,7 @@ namespace TDSM.API.Callbacks
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ProgramLog.Log(ex, "Failed to create NAT device mapping");
             }
@@ -89,10 +92,10 @@ namespace TDSM.API.Callbacks
         //        {
         //            private static bool _discovering;
         //            private static Socket _discoverer;
-        //            
+        //
         //            public delegate void DiscoveryError(DiscoverError err);
         //            public static DiscoveryError OnDiscoveryError;
-        //            
+        //
         //            public enum DiscoverResult
         //            {
         //                Started,
@@ -112,10 +115,10 @@ namespace TDSM.API.Callbacks
         //                } else
         //                    return DiscoverResult.InProcess;
         //            }
-        //            
+        //
         //            private static string GetLocalIP()
         //            {
-        //                
+        //
         //                var itfs = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
         //                foreach (var itf in itfs)
         //                {
@@ -130,13 +133,13 @@ namespace TDSM.API.Callbacks
         //                            {
         //                                if (add.AddressPreferredLifetime != UInt32.MaxValue)
         //                                {
-        //                                    
+        //
         //                                }
         //                            }
         //                        }
         //                    }
         //                }
-        //                
+        //
         //                var entry = Dns.GetHostEntry(Dns.GetHostName());
         //                foreach (var ip in entry.AddressList)
         //                {
@@ -145,10 +148,10 @@ namespace TDSM.API.Callbacks
         //                        return ip.ToString();
         //                    }
         //                }
-        //                
+        //
         //                return null;
         //            }
-        //            
+        //
         //            private static void ClearSock()
         //            {
         //                if (_discoverer != null)
@@ -159,12 +162,12 @@ namespace TDSM.API.Callbacks
         //                    _discoverer = null;
         //                }
         //            }
-        //            
+        //
         //            private static void Discovery(object broadcastPort)
         //            {
         //                _discoverer = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         //                _discoverer.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
-        //                
+        //
         //                var ip = GetLocalIP();
         //                if (String.IsNullOrEmpty(ip))
         //                {
@@ -172,7 +175,7 @@ namespace TDSM.API.Callbacks
         //                    ClearSock();
         //                    return;
         //                }
-        //                
+        //
         //                var request = new StringBuilder();
         //                request.Append("M-SEARCH * HTTP/1.1\r\n");
         //                request.Append("HOST: ");

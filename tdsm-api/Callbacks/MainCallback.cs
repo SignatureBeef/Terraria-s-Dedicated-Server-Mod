@@ -27,6 +27,12 @@ namespace TDSM.API.Callbacks
             Globals.Touch();
             ID.Lookup.Initialise();
 
+            var lis = new Logging.LogTraceListener();
+            System.Diagnostics.Trace.Listeners.Clear();
+            System.Diagnostics.Trace.Listeners.Add(lis);
+            System.Diagnostics.Debug.Listeners.Clear();
+            System.Diagnostics.Debug.Listeners.Add(lis);
+
             PluginManager.SetHookSource(typeof(HookPoints));
             PluginManager.Initialize(Globals.PluginPath);
             PluginManager.LoadPlugins();
