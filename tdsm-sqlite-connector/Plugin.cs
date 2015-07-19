@@ -2,11 +2,15 @@
 using TDSM.API.Plugin;
 using TDSM.API.Data;
 using TDSM.API.Logging;
+using TDSM.API;
+using System.IO;
 
 namespace TDSM.Data.SQLite
 {
     public class Plugin : BasePlugin
     {
+        public const String SQLSafeName = "SqlPermissions";
+
         public Plugin()
         {
             this.TDSMBuild = 2;
@@ -18,9 +22,39 @@ namespace TDSM.Data.SQLite
 
         private SQLiteConnector _connector;
 
+//        static bool Is64Bit
+//        {
+//            get
+//            { return IntPtr.Size == 8; }
+//        }
+
         protected override void Initialized(object state)
         {
             base.Initialized(state);
+
+//            //We need to move the appropriate interop dll
+//            string pathToInterop;
+//            if (Is64Bit)
+//            {
+//                pathToInterop = Path.Combine(Globals.LibrariesPath, "x64", "SQLite.Interop.dll");
+//            }
+//            else
+//            {
+//                pathToInterop = Path.Combine(Globals.LibrariesPath, "x86", "SQLite.Interop.dll");
+//            }
+//
+//            if (File.Exists(pathToInterop))
+//            {
+//                var destination = Path.Combine(Environment.CurrentDirectory, "SQLite.Interop.dll");
+//                if (File.Exists(destination))
+//                    File.Delete(destination);
+//
+//                File.Copy(pathToInterop, destination);
+//            }
+//            else
+//            {
+//                throw new DllNotFoundException("Cannot find " + pathToInterop);
+//            }
         }
 
         [Hook]

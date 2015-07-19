@@ -8,6 +8,27 @@ using TDSM.API;
 
 namespace TDSM.Data.MySQL
 {
+    public struct ProcedureParameter
+    {
+        public string Name { get; set; }
+
+        public Type DataType { get; set; }
+
+        public int? MinScale { get; set; }
+
+        public int? MaxScale { get; set; }
+
+        public ProcedureParameter(string name, Type dataType, int? minScale = null, int? maxScale = null)
+        {
+            this.Name = name;
+
+            this.DataType = dataType;
+
+            this.MinScale = minScale;
+            this.MaxScale = maxScale;
+        }
+    }
+
     public partial class MySQLConnector : IDataConnector
     {
         private MySqlConnection _connection;
@@ -16,11 +37,6 @@ namespace TDSM.Data.MySQL
         {
             return new MySQLQueryBuilder(pluginName);
         }
-
-        //        public QueryBuilder GetBuilder(string pluginName, string command, System.Data.CommandType type)
-        //        {
-        //            return new MySQLQueryBuilder(pluginName, command, type);
-        //        }
 
         public MySQLConnector(string connectionString)
         {
@@ -72,6 +88,7 @@ namespace TDSM.Data.MySQL
 
                 using (var rdr = cmd.ExecuteReader())
                 {
+                    ProgramLog.Error.Log("rdr.RecordsAffected: " + rdr.RecordsAffected);
                     return rdr.RecordsAffected;
                 }
             }
@@ -154,7 +171,7 @@ namespace TDSM.Data.MySQL
             _params = new List<MySql.Data.MySqlClient.MySqlParameter>();
         }
 
-        public override QueryBuilder ExecuteProcedure(string name, string prefix = "prm", params DataParameter[] parameters)
+        public QueryBuilder ExecuteProcedure(string name, string prefix = "prm", params DataParameter[] parameters)
         {
             Append("CALL `{0}`(", name);
 
@@ -279,17 +296,81 @@ namespace TDSM.Data.MySQL
             return this;
         }
 
-        public override QueryBuilder ProcedureExists(string name)
+        public QueryBuilder ProcedureExists(string name)
         {
+            const String Fmt = "select 1 from information_schema.routines where routine_type='procedure' and routine_schema = DATABASE() and routine_name = '{0}';";
+            return this.Append(Fmt, name);
+        }
+
+        public QueryBuilder ProcedureCreate(string name, string contents, params ProcedureParameter[] parameters)
+        {
+            Append("CREATE PROCEDURE {0} (", base.GetTableName(name));
+
+            if (parameters != null && parameters.Length > 0)
+            {
+                for (var x = 0; x < parameters.Length; x++)
+                {
+                    var prm = parameters[x];
+
+                    Append("IN `");
+                    Append(prm.Name);
+                    Append("`");
+
+                    if (prm.DataType == typeof(Byte))
+                    {
+                        Append(" TINYINT");
+                    }
+                    else if (prm.DataType == typeof(Int16))
+                    {
+                        Append(" SMALLINT");
+                    }
+                    else if (prm.DataType == typeof(Int32))
+                    {
+                        Append(" INT");
+                    }
+                    else if (prm.DataType == typeof(Int64))
+                    {
+                        Append(" BIGINT");
+                    }
+                    else if (prm.DataType == typeof(String))
+                    {
+                        var isVarChar = prm.MinScale.HasValue && !prm.MaxScale.HasValue;
+                        if (isVarChar)
+                        {
+                            Append(" VARCHAR(");
+                            Append(prm.MinScale.Value.ToString());
+                            Append(")");
+                        }
+                        else
+                        {
+                            Append(" TEXT");
+                        }
+                    }
+                    else if (prm.DataType == typeof(DateTime))
+                    {
+                        Append(" TIMESTAMP");
+                    }
+                    else if (prm.DataType == typeof(Boolean))
+                    {
+                        Append(" BIT");
+                    }
+                    else
+                    {
+                        throw new NotSupportedException(String.Format("Data type for parameter '{0}' is not supported", prm.Name));
+                    }
+
+                    if (x + 1 < parameters.Length)
+                        Append(",");
+                }
+            }
+            Append(")");
+
+            Append(contents);
+
             return this;
         }
 
-        public override QueryBuilder ProcedureCreate(string name, string contents, params DataParameter[] parameters)
-        {
-            return this;
-        }
-
-        public override QueryBuilder ProcedureDrop(string name)
+        public QueryBuilder ProcedureDrop(string name)
         {
             return this;
         }

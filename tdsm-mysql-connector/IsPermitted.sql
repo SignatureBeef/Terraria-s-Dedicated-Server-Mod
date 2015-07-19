@@ -1,10 +1,4 @@
-﻿-- --------------------------------------------------------------------------------
--- Routine DDL
--- Note: comments before and after the routine body will not be stored by the server
--- --------------------------------------------------------------------------------
-DELIMITER $$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SqlPermissions_IsPermitted`(in prmNode varchar(50), in prmIsGuest bit, in prmAuthentication varchar(50))
+﻿CREATE PROCEDURE `SqlPermissions_IsPermitted`(in prmNode varchar(50), in prmIsGuest bit, in prmAuthentication varchar(50))
 BEGIN
 	declare vPermissionValue int default 0;
 	declare vUserId int default 0;
@@ -132,7 +126,19 @@ BEGIN
 	end if;
 
 	if vNodeFound = 0 and prmIsGuest = 1 then
-		select 'Guest';
+		if exists
+		(
+			select 1
+			from SqlPermissions_Groups gr
+				left join SqlPermissions_GroupPermissions gp on gr.Id = gp.GroupId
+				left join SqlPermissions_Permissions nd on gp.PermissionId = nd.Id
+			where gr.ApplyToGuests = 1
+				and nd.Node = prmNode
+				and nd.Deny = 0
+		) then
+			set vPermissionValue = 1;
+			set vNodeFound = 1;
+		end if;
 	end if;
 
 	select vPermissionValue PermissionEnum;

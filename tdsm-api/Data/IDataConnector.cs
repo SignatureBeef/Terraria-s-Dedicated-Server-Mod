@@ -91,13 +91,15 @@ namespace TDSM.API.Data
 
         public abstract QueryBuilder TableDrop(string name);
 
-        public abstract QueryBuilder ProcedureExists(string name);
+        //        public virtual QueryBuilder ProcedureExists(string name){
+        //            return this.Append("select 1 from information_schema.routines where routine_type='procedure' and
+        //        }
+        //
+        //        public abstract QueryBuilder ProcedureCreate(string name, string contents, params DataParameter[] parameters);
+        //
+        //        public abstract QueryBuilder ProcedureDrop(string name);
 
-        public abstract QueryBuilder ProcedureCreate(string name, string contents, params DataParameter[] parameters);
-
-        public abstract QueryBuilder ProcedureDrop(string name);
-
-        public abstract QueryBuilder ExecuteProcedure(string name, string prefix = "prm", params DataParameter[] parameters);
+        //        public abstract QueryBuilder ExecuteProcedure(string name, string prefix = "prm", params DataParameter[] parameters);
 
         public abstract QueryBuilder Select(params string[] expression);
 
@@ -173,6 +175,19 @@ namespace TDSM.API.Data
         {
             get
             { return _type; }
+            set
+            { _type = value; }
+        }
+
+        public string CommandText
+        {
+            get
+            { return _sb.ToString(); }
+            set
+            {
+                _sb.Clear();
+                _sb.Append(value);
+            }
         }
 
         public virtual string BuildCommand()
