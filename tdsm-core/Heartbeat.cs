@@ -178,15 +178,15 @@ namespace TDSM.Core
                         {
                             case ResponseCode.UpToDate:
                                 //We're online - all up to date
-                                //try
-                                //{
-                                //    var str = reader.ReadString();
-                                //    if (!String.IsNullOrEmpty(str))
-                                //    {
-                                //        ProgramLog.Log("Heartbeat Sent: " + str);
-                                //    }
-                                //}
-                                //catch { }
+                                try
+                                {
+                                    var str = reader.ReadString();
+                                    if (!String.IsNullOrEmpty(str))
+                                    {
+                                        ProgramLog.Log("Heartbeat Sent: " + str);
+                                    }
+                                }
+                                catch { }
                                 break;
                             case ResponseCode.UpdateReady:
                                 var flag = reader.ReadUpdateReady();
@@ -241,7 +241,6 @@ namespace TDSM.Core
                                     var str = reader.ReadString();
                                     if (!String.IsNullOrEmpty(str))
                                     {
-
                                         ProgramLog.Log("Heartbeat Sent: " + str);
                                     }
                                 }

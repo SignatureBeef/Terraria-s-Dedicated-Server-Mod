@@ -51,7 +51,7 @@ namespace TDSM.Data.SQLite
         {
             if (!TableDefinition.Exists(conn))
             {
-                ProgramLog.Admin.Log("Permission node table does not exist and will now be created");
+                ProgramLog.Admin.Log("Permission user table does not exist and will now be created");
                 TableDefinition.Create(conn);
             }
         }

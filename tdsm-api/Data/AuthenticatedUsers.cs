@@ -3,6 +3,18 @@ using TDSM.API.Logging;
 
 namespace TDSM.API.Data
 {
+    public class UserDetails
+    {
+        public string Password;
+        public string Username;
+        public bool Operator;
+
+        public override string ToString()
+        {
+            return String.Format("[UserDetails: Username: '{0}', Password: '{1}', Operator: {2}]", Username, Password, Operator);
+        }
+    }
+
     /// <summary>
     /// Authenticated users.
     /// </summary>
@@ -58,7 +70,7 @@ namespace TDSM.API.Data
         {
             if (!UserTable.Exists())
             {
-                ProgramLog.Admin.Log("User table does not exist and will now be created");
+                ProgramLog.Admin.Log("Common user table does not exist and will now be created");
                 UserTable.Create();
             }
         }
@@ -96,6 +108,24 @@ namespace TDSM.API.Data
                 bl.SelectFrom(UserTable.TableName, new string[] { UserTable.ColumnNames.Password }, new WhereFilter(UserTable.ColumnNames.Username, username));
 
                 return Storage.ExecuteScalar<String>(bl);
+            }
+        }
+
+        public static UserDetails GetUser(string username)
+        {
+            using (var bl = Storage.GetBuilder(SQLSafeName))
+            {
+                bl.SelectFrom(UserTable.TableName, new string[] {
+                    UserTable.ColumnNames.Username,
+                    UserTable.ColumnNames.Password, 
+                    UserTable.ColumnNames.Operator 
+                }, new WhereFilter(UserTable.ColumnNames.Username, username));
+
+                var res = Storage.ExecuteArray<UserDetails>(bl);
+                if (res != null && res.Length > 0)
+                    return res[0];
+
+                return null;
             }
         }
 

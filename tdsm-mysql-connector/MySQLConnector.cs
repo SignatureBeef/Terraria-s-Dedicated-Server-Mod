@@ -88,7 +88,6 @@ namespace TDSM.Data.MySQL
 
                 using (var rdr = cmd.ExecuteReader())
                 {
-                    ProgramLog.Error.Log("rdr.RecordsAffected: " + rdr.RecordsAffected);
                     return rdr.RecordsAffected;
                 }
             }
@@ -141,9 +140,32 @@ namespace TDSM.Data.MySQL
         {
             var ds = (this as IDataConnector).ExecuteDataSet(builder);
 
-            if (ds != null)
+            if (ds != null && ds.Tables.Count > 0)
             {
+                var records = new T[ds.Tables[0].Rows.Count];
+                var tp = typeof(T);
 
+                for (var x = 0; x < ds.Tables[0].Rows.Count; x++)
+                {
+                    var rec = new T();
+                    for (var cx = 0; cx < ds.Tables[0].Columns.Count; cx++)
+                    {
+                        var col = ds.Tables[0].Columns[cx];
+
+                        var fld = tp.GetField(col.ColumnName);
+                        if (fld != null)
+                            fld.SetValue(rec, ds.Tables[0].Rows[x].ItemArray[cx]);
+                        else
+                        {
+                            var prop = tp.GetProperty(col.ColumnName);
+                            if (prop != null)
+                                prop.SetValue(rec, ds.Tables[0].Rows[x].ItemArray[cx]);
+                        }
+                    }
+                    records[x] = rec;
+                }
+
+                return records;
             }
 
             return null;
@@ -223,7 +245,7 @@ namespace TDSM.Data.MySQL
 
                     if (col.DataType == typeof(Byte))
                     {
-                        Append(" TINYINT");
+                        Append(" TINYINT UNSIGNED");
                     }
                     else if (col.DataType == typeof(Int16))
                     {
@@ -257,7 +279,7 @@ namespace TDSM.Data.MySQL
                     }
                     else if (col.DataType == typeof(Boolean))
                     {
-                        Append(" BIT");
+                        Append(" BOOLEAN");
                     }
                     else
                     {

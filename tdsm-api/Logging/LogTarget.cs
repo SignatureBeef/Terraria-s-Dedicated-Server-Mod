@@ -149,7 +149,7 @@ namespace TDSM.API.Logging
 						
 						if (entry.prefix != null)
 						{
-							SetColor (ConsoleColor.DarkGray);
+                            SetColor (ConsoleColor.Gray);
 							writer.Write (entry.prefix);
 							backspace -= entry.prefix.Length;
 						}

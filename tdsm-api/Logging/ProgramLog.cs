@@ -42,7 +42,7 @@ namespace TDSM.API.Logging
         public static readonly LogChannel Death = new LogChannel("DTH", ConsoleColor.Green);
         public static readonly LogChannel Admin = new LogChannel("ADM", ConsoleColor.Yellow);
         public static readonly LogChannel Error = new LogChannel("ERR", ConsoleColor.Red);
-        public static readonly LogChannel Debug = new LogChannel("DBG", ConsoleColor.DarkGray);
+        public static readonly LogChannel Debug = new LogChannel("DBG", ConsoleColor.Gray);
         public static readonly LogChannel Plugin = new LogChannel("PGN", ConsoleColor.Blue);
 
         struct LogEntry

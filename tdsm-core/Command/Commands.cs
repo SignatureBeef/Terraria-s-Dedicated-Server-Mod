@@ -222,9 +222,21 @@ namespace TDSM.Core
                 return;
             }
 
-            args.ParseNone();
+            string message;
+            args.TryGetString(0, out message);
+
+            if (String.IsNullOrEmpty(message))
+                message = "Server is going down";
+
+//            args.ParseNone();
 
             Tools.NotifyAllOps("Exiting on request.");
+
+            if (Netplay.anyClients)
+            {
+                NetMessage.SendData((int)Packet.DISCONNECT, -1, -1, message);
+            }
+
             Terraria.IO.WorldFile.saveWorld(false);
             Terraria.Netplay.disconnect = true;
 

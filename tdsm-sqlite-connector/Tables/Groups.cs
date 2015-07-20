@@ -72,7 +72,7 @@ namespace TDSM.Data.SQLite
         {
             if (!TableDefinition.Exists(conn))
             {
-                ProgramLog.Admin.Log("Permission group table does not exist and will now be created");
+                ProgramLog.Admin.Log("Group table does not exist and will now be created");
                 TableDefinition.Create(conn);
             }
         }
