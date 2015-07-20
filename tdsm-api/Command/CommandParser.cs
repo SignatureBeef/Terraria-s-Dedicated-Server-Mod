@@ -688,7 +688,7 @@ namespace TDSM.API.Command
                     }
                     else
                     {
-                        sender.SendMessage(String.Format("No such command `{0}`.", command));
+                        sender.SendMessage(String.Format("No such command '{0}'.", command));
                     }
                 }
             }
