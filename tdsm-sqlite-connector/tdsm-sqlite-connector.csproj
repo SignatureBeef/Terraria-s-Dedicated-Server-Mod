@@ -47,8 +47,8 @@
     <Compile Include="Tables\GroupPermissions.cs" />
     <Compile Include="Tables\Groups.cs" />
     <Compile Include="Tables\UserPermissions.cs" />
-    <Compile Include="Tables\Users.cs" />
     <Compile Include="Tables\Permissions.cs" />
+    <Compile Include="Tables\UserGroups.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

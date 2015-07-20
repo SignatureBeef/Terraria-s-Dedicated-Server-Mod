@@ -13,7 +13,7 @@ namespace TDSM.Data.MySQL
         private PermissionTable _nodes;
         private GroupPermissions _groupPerms;
         private UserPermissions _userPerms;
-        private UsersTable _users;
+        private UserGroupsTable _users;
 
         Permission IPermissionHandler.IsPermitted(string node, BasePlayer player)
         {
@@ -34,7 +34,7 @@ namespace TDSM.Data.MySQL
             _nodes = new PermissionTable();
             _userPerms = new UserPermissions();
             _groupPerms = new GroupPermissions();
-            _users = new UsersTable();
+            _users = new UserGroupsTable();
 
             _groups.Initialise(this);
             _nodes.Initialise(this);

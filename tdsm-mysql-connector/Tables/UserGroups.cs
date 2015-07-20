@@ -4,13 +4,13 @@ using TDSM.API.Logging;
 
 namespace TDSM.Data.MySQL
 {
-    public class UsersTable
+    public class UserGroupsTable
     //Essentially an extension to the tdsm_user table
     //However, it's not tied into tdsm, rather it's specific to this plugin
     {
         private class TableDefinition
         {
-            public const String TableName = "Users";
+            public const String TableName = "UserGroups";
 
             public static class ColumnNames
             {
