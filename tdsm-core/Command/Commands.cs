@@ -12,6 +12,7 @@ using TDSM.API.Logging;
 //using TDSM.Core.Messages.Out;
 //using TDSM.Core.ServerCore;
 using Terraria;
+using TDSM.API.Sockets;
 
 namespace TDSM.Core
 {
@@ -234,7 +235,24 @@ namespace TDSM.Core
 
             if (Netplay.anyClients)
             {
-                NetMessage.SendData((int)Packet.DISCONNECT, -1, -1, message);
+                for (var x = 0; x < Main.player.Length; x++)
+                {
+                    if (Main.player[x].active)
+                    {
+                        NetMessage.SendData((int)Packet.DISCONNECT, x, -1, message);
+
+                        var rc = Netplay.Clients[x];
+                        if (rc != null && rc.Socket != null && rc.Socket is ClientConnection)
+                        {
+                            (rc.Socket as ClientConnection).Flush();
+                        }
+                    }
+                }
+
+                while (Netplay.anyClients)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
             }
 
             Terraria.IO.WorldFile.saveWorld(false);

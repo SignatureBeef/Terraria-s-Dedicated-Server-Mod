@@ -829,8 +829,21 @@ namespace TDSM.API.Callbacks
                     //}
                 }
             }
+
+            if (player.name.Length > Player.nameLen)
+            {
+                NetMessage.SendData (2, bufferId, -1, "Name is too long.");
+                return;
+            }
+            if (player.name == "")
+            {
+                NetMessage.SendData (2, bufferId, -1, "Empty name.");
+                return;
+            }
+
             Netplay.Clients[bufferId].Name = player.name;
             TDSM.API.Callbacks.VanillaHooks.OnPlayerEntering(player);
+
             return;
 
             //            int num6 = (int)buffer.reader.ReadByte();
