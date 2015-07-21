@@ -141,12 +141,12 @@ namespace TDSM.Data.SQLite
 
                         var fld = tp.GetField(col.ColumnName);
                         if (fld != null)
-                            fld.SetValue(boxed, GetTypeValue(fld.FieldType, ds.Tables[0].Rows[x].ItemArray[cx]));
+                            fld.SetValue(boxed, GetTypeValue(fld.FieldType, val));
                         else
                         {
                             var prop = tp.GetProperty(col.ColumnName);
                             if (prop != null)
-                                prop.SetValue(boxed, GetTypeValue(prop.PropertyType, ds.Tables[0].Rows[x].ItemArray[cx]));
+                                prop.SetValue(boxed, GetTypeValue(prop.PropertyType, val));
                         }
                     }
                     records[x] = (T)boxed;
@@ -160,11 +160,9 @@ namespace TDSM.Data.SQLite
 
         static object GetTypeValue(Type type, object value)
         {
-            //Wtf
             if (type == typeof(Byte))
-            {
                 return Convert.ToByte(value);
-            }
+
             return value;
         }
 

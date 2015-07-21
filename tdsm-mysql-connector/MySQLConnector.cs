@@ -152,14 +152,20 @@ namespace TDSM.Data.MySQL
                     {
                         var col = ds.Tables[0].Columns[cx];
 
+                        var val = ds.Tables[0].Rows[x].ItemArray[cx];
+                        if (DBNull.Value == val)
+                        {
+                            continue;
+                        }
+
                         var fld = tp.GetField(col.ColumnName);
                         if (fld != null)
-                            fld.SetValue(boxed, ds.Tables[0].Rows[x].ItemArray[cx]);
+                            fld.SetValue(boxed, val);
                         else
                         {
                             var prop = tp.GetProperty(col.ColumnName);
                             if (prop != null)
-                                prop.SetValue(boxed, ds.Tables[0].Rows[x].ItemArray[cx]);
+                                prop.SetValue(boxed, val);
                         }
                     }
                     records[x] = (T)boxed;
