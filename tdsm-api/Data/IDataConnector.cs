@@ -203,6 +203,7 @@ namespace TDSM.API.Data
         public object Value { get; set; }
 
         public DataParameter(string name, object value)
+            : this()
         {
             this.Name = name;
             this.Value = value;
@@ -228,6 +229,7 @@ namespace TDSM.API.Data
         public int? MaxScale { get; set; }
 
         public TableColumn(string name, Type dataType, bool autoIncrement, bool primaryKey, bool allowNulls = false)
+            : this()
         {
             this.Name = name;
             this.DefaultValue = null;
@@ -240,6 +242,7 @@ namespace TDSM.API.Data
         }
 
         public TableColumn(string name, Type dataType, bool allowNulls = false)
+            : this()
         {
             this.Name = name;
             this.DefaultValue = null;
@@ -252,6 +255,7 @@ namespace TDSM.API.Data
         }
 
         public TableColumn(string name, Type dataType, int scale, bool allowNulls = false)
+            : this()
         {
             this.Name = name;
             this.DefaultValue = null;
@@ -273,6 +277,7 @@ namespace TDSM.API.Data
         public WhereExpression Expression { get; set; }
 
         public WhereFilter(string column, string value, WhereExpression expression = WhereExpression.EqualTo)
+            : this()
         {
             this.Expression = expression;
             this.Column = column;

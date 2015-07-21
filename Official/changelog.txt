@@ -1,3 +1,36 @@
+Version 1.3.0.6 Changes-----------------------------------------------------------------------------------------------
+
+
+Changes:
+  Solar Flare armor set Dash ability now only consumes flares when it hits an enemy, and any hit enemy will result in a Solar Radiance explosion!
+  Party Girl's spawning chance has been increased
+  You can now take camera mode pictures of wiring if you hold a mechanical item while taking the pictures
+  Fixed certain issues with stardust dragon's damage and rebalanced him to be more in line with other minions
+  You can now hide moon charm and neptune shell's effects, or put them in vanity!
+  The final boss's attacks now use their own cooldown for immunity due to how naughty some of our players have been
+
+
+Fixes:
+  Potentially fixed lag issues when using Steam multiplayer
+  Potentially fixed invasions not trigerring when they should (martian probes)
+  Fixed Money Trough turning 'Quick Stack to All Chests' button invisible
+  Fixed javelins drawing behind doors on all cases
+  Fixed Keys of Light / Night not working through autopause
+  Fixed nearby crafting stations not updating when you open inventory in autopause
+  Fixed 'allow mounting' check not taking player's velocity into account (mounting into ceiling exploit)
+  Fixed breathing meter appearing when hanging on to a ceiling that has water in it
+  Fixed content files not being compressed
+  Fixed umbrella art not being consistent
+  Fixed solar eruption item stray pixel
+  Fixed jellyfish expert mode counter hitting you when you can't hit the jellyfish
+  Fixed drill containment unit being able to mine demon altars before hardmode
+  Fixed centain penguins not counting tally
+  Fixed dryad not selling vicious powder on bloodmoon in crimtane worlds
+  Fixed issue where shroomite and psycho knife stealth would work on mounts
+  Fixed issue where martian probe would trigger martian invasion clientside
+  Fixed cultist boss summoning spells badly in multiplayer
+
+
 Version 1.3.0.5 Changes-----------------------------------------------------------------------------------------------
 
 
@@ -11,8 +44,6 @@ Changes:
   Eater of Worlds expert mode vile spit damage nerfed heavily
   Damage from hurting tiles now has checks for immunity separately from other effects
 
-New config options:
-	Added Config.json setting "ReverseUpDownForArmorSetBonuses", off by default, if you set it on: stardust and vortex armors will use the UP key instead of DOWN key to trigger set bonuses
 
 Fixes:
   Fixed Quickstack to all chests not updating recipes list
