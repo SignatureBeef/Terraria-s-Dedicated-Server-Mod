@@ -249,6 +249,10 @@ namespace TDSM.Core
                     }
                 }
 
+                //Prevent further connections
+                Terraria.Netplay.Connection.Socket.StopListening();
+
+                //Wait for total disconnection
                 while (Netplay.anyClients)
                 {
                     System.Threading.Thread.Sleep(100);

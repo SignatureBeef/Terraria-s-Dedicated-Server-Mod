@@ -35,16 +35,14 @@ namespace TDSM.Data.SQLite
             if (!(builder is SQLiteQueryBuilder))
                 throw new InvalidOperationException("SQLiteQueryBuilder expected");
 
-            var ms = builder as SQLiteQueryBuilder;
+            var sb = builder as SQLiteQueryBuilder;
 
             using (builder)
             using (var cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = builder.BuildCommand();
                 cmd.CommandType = builder.CommandType;
-                cmd.Parameters.AddRange(ms.Parameters.ToArray());
-
-                ProgramLog.Error.Log(cmd.CommandText);
+                cmd.Parameters.AddRange(sb.Parameters.ToArray());
 
                 using (var rdr = cmd.ExecuteReader())
                 {
@@ -58,16 +56,14 @@ namespace TDSM.Data.SQLite
             if (!(builder is SQLiteQueryBuilder))
                 throw new InvalidOperationException("SQLiteQueryBuilder expected");
 
-            var ms = builder as SQLiteQueryBuilder;
+            var sb = builder as SQLiteQueryBuilder;
 
             using (builder)
             using (var cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = builder.BuildCommand();
                 cmd.CommandType = builder.CommandType;
-                cmd.Parameters.AddRange(ms.Parameters.ToArray());
-
-                ProgramLog.Error.Log(cmd.CommandText);
+                cmd.Parameters.AddRange(sb.Parameters.ToArray());
 
                 using (var rdr = cmd.ExecuteReader())
                 {
@@ -81,16 +77,14 @@ namespace TDSM.Data.SQLite
             if (!(builder is SQLiteQueryBuilder))
                 throw new InvalidOperationException("SQLiteQueryBuilder expected");
 
-            var ms = builder as SQLiteQueryBuilder;
+            var sb = builder as SQLiteQueryBuilder;
 
             using (builder)
             using (var cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = builder.BuildCommand();
                 cmd.CommandType = builder.CommandType;
-                cmd.Parameters.AddRange(ms.Parameters.ToArray());
-
-                ProgramLog.Error.Log(cmd.CommandText);
+                cmd.Parameters.AddRange(sb.Parameters.ToArray());
 
                 return (T)cmd.ExecuteScalar();
             }
@@ -101,14 +95,14 @@ namespace TDSM.Data.SQLite
             if (!(builder is SQLiteQueryBuilder))
                 throw new InvalidOperationException("SQLiteQueryBuilder expected");
 
-            var ms = builder as SQLiteQueryBuilder;
+            var sb = builder as SQLiteQueryBuilder;
 
             using (builder)
             using (var cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = builder.BuildCommand();
                 cmd.CommandType = builder.CommandType;
-                cmd.Parameters.AddRange(ms.Parameters.ToArray());
+                cmd.Parameters.AddRange(sb.Parameters.ToArray());
 
                 ProgramLog.Error.Log(cmd.CommandText);
 
@@ -127,12 +121,51 @@ namespace TDSM.Data.SQLite
         {
             var ds = (this as IDataConnector).ExecuteDataSet(builder);
 
-            if (ds != null)
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
+                var records = new T[ds.Tables[0].Rows.Count];
+                var tp = typeof(T);
 
+                for (var x = 0; x < ds.Tables[0].Rows.Count; x++)
+                {
+                    object boxed = new T();
+                    for (var cx = 0; cx < ds.Tables[0].Columns.Count; cx++)
+                    {
+                        var col = ds.Tables[0].Columns[cx];
+
+                        var val = ds.Tables[0].Rows[x].ItemArray[cx];
+                        if (DBNull.Value == val)
+                        {
+                            continue;
+                        }
+
+                        var fld = tp.GetField(col.ColumnName);
+                        if (fld != null)
+                            fld.SetValue(boxed, GetTypeValue(fld.FieldType, ds.Tables[0].Rows[x].ItemArray[cx]));
+                        else
+                        {
+                            var prop = tp.GetProperty(col.ColumnName);
+                            if (prop != null)
+                                prop.SetValue(boxed, GetTypeValue(prop.PropertyType, ds.Tables[0].Rows[x].ItemArray[cx]));
+                        }
+                    }
+                    records[x] = (T)boxed;
+                }
+
+                return records;
             }
 
             return null;
+        }
+
+        static object GetTypeValue(Type type, object value)
+        {
+            //Wtf
+            if (type == typeof(Byte))
+            {
+                return Convert.ToByte(value);
+            }
+            return value;
         }
 
         public override string ToString()
@@ -180,7 +213,7 @@ namespace TDSM.Data.SQLite
         //            return this;
         //        }
 
-        public override QueryBuilder AddParam(string name, object value, string prefix = "prm")
+        public override QueryBuilder AddParam(string name, object value, string prefix = "@")
         {
             var paramKey = prefix + name;
             _params.Add(new SqliteParameter(paramKey, value));
@@ -209,15 +242,15 @@ namespace TDSM.Data.SQLite
 
                     if (col.DataType == typeof(Byte))
                     {
-                        Append(" INT");
+                        Append(" INTEGER");
                     }
                     else if (col.DataType == typeof(Int16))
                     {
-                        Append(" INT");
+                        Append(" INTEGER");
                     }
                     else if (col.DataType == typeof(Int32))
                     {
-                        Append(" INT");
+                        Append(" INTEGER");
                     }
                     else if (col.DataType == typeof(Int64))
                     {
@@ -254,13 +287,20 @@ namespace TDSM.Data.SQLite
                     {
                         Append(" PRIMARY KEY");
                     }
-                    if (col.Nullable)
+                    if (col.AutoIncrement)
                     {
+                        Append(" AUTOINCREMENT");
+                        //                        Append(" DEFAULT ROWID");
                     }
-                    else
-                    {
-                        Append(" NOT NULL");
-                    }
+//                    if (col.Nullable)
+//                    {
+//                    }
+//                    else
+//                    {
+//                        Append(" NOT NULL");
+//                    }
+
+                    Append(" COLLATE NOCASE");
 
                     if (x + 1 < columns.Length)
                         Append(",");
@@ -277,20 +317,20 @@ namespace TDSM.Data.SQLite
             return this;
         }
 
-//        public override QueryBuilder ProcedureExists(string name)
-//        {
-//            return this;
-//        }
-//
-//        public override QueryBuilder ProcedureCreate(string name, string contents, params DataParameter[] parameters)
-//        {
-//            return this;
-//        }
-//
-//        public override QueryBuilder ProcedureDrop(string name)
-//        {
-//            return this;
-//        }
+        //        public override QueryBuilder ProcedureExists(string name)
+        //        {
+        //            return this;
+        //        }
+        //
+        //        public override QueryBuilder ProcedureCreate(string name, string contents, params DataParameter[] parameters)
+        //        {
+        //            return this;
+        //        }
+        //
+        //        public override QueryBuilder ProcedureDrop(string name)
+        //        {
+        //            return this;
+        //        }
 
         public override QueryBuilder Select(params string[] expression)
         {
@@ -348,9 +388,9 @@ namespace TDSM.Data.SQLite
                             break;
                     }
 
-                    var paramKey = "prm" + xp.Column;
+                    var paramKey = "@" + xp.Column;
                     _params.Add(new SqliteParameter(paramKey, xp.Value));
-                    Append("?");
+                    Append(paramKey);
                     Append(" ");
                 }
             }
@@ -395,9 +435,9 @@ namespace TDSM.Data.SQLite
                 for (var x = 0; x < values.Length; x++)
                 {
                     var prm = values[x];
-                    var paramKey = "prm" + prm.Name;
+                    var paramKey = "@" + prm.Name;
 
-                    Append("?");
+                    Append(paramKey);
                     if (x + 1 < values.Length)
                         Append(",");
 
@@ -420,11 +460,11 @@ namespace TDSM.Data.SQLite
                 for (var x = 0; x < values.Length; x++)
                 {
                     var prm = values[x];
-                    var paramKey = "prm" + prm.Name;
+                    var paramKey = "@" + prm.Name;
 
                     Append(prm.Name);
                     Append("=");
-                    Append("?");
+                    Append(paramKey);
                     Append(" ");
 
                     if (x + 1 < values.Length)
@@ -436,6 +476,11 @@ namespace TDSM.Data.SQLite
 
             return this;
         }
+
+        //        public override string BuildCommand()
+        //        {
+        //            return base.BuildCommand() + " COLLATE NOCASE";
+        //        }
     }
 }
 

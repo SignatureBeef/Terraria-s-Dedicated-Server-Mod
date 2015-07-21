@@ -140,29 +140,29 @@ namespace TDSM.Data.MySQL
         {
             var ds = (this as IDataConnector).ExecuteDataSet(builder);
 
-            if (ds != null && ds.Tables.Count > 0)
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 var records = new T[ds.Tables[0].Rows.Count];
                 var tp = typeof(T);
 
                 for (var x = 0; x < ds.Tables[0].Rows.Count; x++)
                 {
-                    var rec = new T();
+                    object boxed = new T();
                     for (var cx = 0; cx < ds.Tables[0].Columns.Count; cx++)
                     {
                         var col = ds.Tables[0].Columns[cx];
 
                         var fld = tp.GetField(col.ColumnName);
                         if (fld != null)
-                            fld.SetValue(rec, ds.Tables[0].Rows[x].ItemArray[cx]);
+                            fld.SetValue(boxed, ds.Tables[0].Rows[x].ItemArray[cx]);
                         else
                         {
                             var prop = tp.GetProperty(col.ColumnName);
                             if (prop != null)
-                                prop.SetValue(rec, ds.Tables[0].Rows[x].ItemArray[cx]);
+                                prop.SetValue(boxed, ds.Tables[0].Rows[x].ItemArray[cx]);
                         }
                     }
-                    records[x] = rec;
+                    records[x] = (T)boxed;
                 }
 
                 return records;

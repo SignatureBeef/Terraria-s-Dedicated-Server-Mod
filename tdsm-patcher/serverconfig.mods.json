@@ -1,0 +1,9 @@
+﻿[
+	{
+		"OfficialLinePrefix": "#world=C:",
+		"Offset": 1,
+		"Modifications": [
+			"#world=Worlds/world.wld"
+		]
+	}
+]

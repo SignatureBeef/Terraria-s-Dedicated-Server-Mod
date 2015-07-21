@@ -115,6 +115,8 @@ namespace TDSM.API.Data
 
         public virtual QueryBuilder Delete(string tableName, params WhereFilter[] clause)
         {
+            if (null == clause || clause.Length == 0)
+                return this.Delete(tableName);
             return this.Delete(tableName).Where(clause);
         }
 
@@ -124,16 +126,22 @@ namespace TDSM.API.Data
 
         public virtual QueryBuilder Update(string tableName, DataParameter[] values, params WhereFilter[] clause)
         {
+            if (null == clause || clause.Length == 0)
+                return this.Update(tableName, values);
             return this.Update(tableName, values).Where(clause);
         }
 
         public virtual QueryBuilder SelectAll(string tableName, params WhereFilter[] clause)
         {
+            if (null == clause || clause.Length == 0)
+                return this.Select().All().From(tableName);
             return this.Select().All().From(tableName).Where(clause);
         }
 
         public virtual QueryBuilder SelectFrom(string tableName, string[] expression = null, params WhereFilter[] clause)
         {
+            if (null == clause || clause.Length == 0)
+                return this.Select(expression).From(tableName);
             return this.Select(expression).From(tableName).Where(clause);
         }
 

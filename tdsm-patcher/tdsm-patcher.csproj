@@ -86,6 +86,7 @@
     <None Include="additional.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="serverconfig.mods.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Official\start-server.bat">

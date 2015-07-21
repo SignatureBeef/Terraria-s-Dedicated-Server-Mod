@@ -4,10 +4,21 @@ using TDSM.API.Logging;
 
 namespace TDSM.Data.SQLite
 {
-    public class UserGroupsTable
+    public struct UserGroup
+    {
+        public long Id { get; set; }
+
+        public long UserId { get; set; }
+
+        public long GroupId { get; set; }
+    }
+
+    public class UserGroupsTable : CacheTable
     //Essentially an extension to the tdsm_user table
     //However, it's not tied into tdsm, rather it's specific to this plugin
     {
+        private UserGroup[] _data;
+
         private class TableDefinition
         {
             public const String TableName = "UserGroups";
@@ -21,9 +32,9 @@ namespace TDSM.Data.SQLite
 
             public static readonly TableColumn[] Columns = new TableColumn[]
             {
-                new TableColumn(ColumnNames.Id, typeof(Int32), true, true),
-                new TableColumn(ColumnNames.UserId, typeof(Int32)),
-                new TableColumn(ColumnNames.GroupId, typeof(Int32))
+                new TableColumn(ColumnNames.Id, typeof(Int64), true, true),
+                new TableColumn(ColumnNames.UserId, typeof(Int64)),
+                new TableColumn(ColumnNames.GroupId, typeof(Int64))
             };
 
             public static bool Exists(SQLiteConnector conn)
@@ -54,6 +65,25 @@ namespace TDSM.Data.SQLite
                 ProgramLog.Admin.Log("Permission user table does not exist and will now be created");
                 TableDefinition.Create(conn);
             }
+
+            this.Load(conn);
+        }
+
+        public override void Load(IDataConnector conn)
+        {
+            using (var sb = new SQLiteQueryBuilder(Plugin.SQLSafeName))
+            {
+                sb.SelectAll(TableDefinition.TableName);
+
+                _data = conn.ExecuteArray<UserGroup>(sb);
+            }
+
+            ProgramLog.Error.Log(this.GetType().Name + ": " + (_data == null ? "NULL" : _data.Length.ToString()));
+        }
+
+        public override void Save(IDataConnector conn)
+        {
+            throw new NotImplementedException();
         }
     }
 }

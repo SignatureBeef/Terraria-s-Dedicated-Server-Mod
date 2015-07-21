@@ -3,7 +3,7 @@ using TDSM.API.Logging;
 
 namespace TDSM.API.Data
 {
-    public class UserDetails
+    public struct UserDetails
     {
         public string Password;
         public string Username;
@@ -111,7 +111,7 @@ namespace TDSM.API.Data
             }
         }
 
-        public static UserDetails GetUser(string username)
+        public static UserDetails? GetUser(string username)
         {
             using (var bl = Storage.GetBuilder(SQLSafeName))
             {

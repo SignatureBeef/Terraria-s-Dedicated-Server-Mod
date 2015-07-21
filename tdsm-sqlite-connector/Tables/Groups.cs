@@ -4,8 +4,31 @@ using TDSM.API.Logging;
 
 namespace TDSM.Data.SQLite
 {
-    public class GroupTable
+    public class Group
     {
+        public long Id { get; set; }
+
+        public string Name { get; set; }
+
+        public bool ApplyToGuests { get; set; }
+
+        public string Parent { get; set; }
+
+        public byte Chat_Red { get; set; }
+
+        public byte Chat_Green { get; set; }
+
+        public byte Chat_Blue { get; set; }
+
+        public string Chat_Prefix { get; set; }
+
+        public string Chat_Suffix { get; set; }
+    }
+
+    public class GroupTable : CacheTable
+    {
+        private Group[] _data;
+
         private class TableDefinition
         {
             public const String TableName = "Groups";
@@ -36,7 +59,7 @@ namespace TDSM.Data.SQLite
 
             public static readonly TableColumn[] Columns = new TableColumn[]
             {
-                new TableColumn(ColumnNames.Id, typeof(Int32), true, true),
+                new TableColumn(ColumnNames.Id, typeof(Int64), true, true),
                 new TableColumn(ColumnNames.Name, typeof(String), 255),
                 new TableColumn(ColumnNames.ApplyToGuests, typeof(Boolean)),
                 new TableColumn(ColumnNames.Parent, typeof(String), 255, true),
@@ -68,6 +91,7 @@ namespace TDSM.Data.SQLite
             }
         }
 
+
         public void Initialise(SQLiteConnector conn)
         {
             if (!TableDefinition.Exists(conn))
@@ -75,6 +99,25 @@ namespace TDSM.Data.SQLite
                 ProgramLog.Admin.Log("Group table does not exist and will now be created");
                 TableDefinition.Create(conn);
             }
+
+            this.Load(conn);
+        }
+
+        public override void Load(IDataConnector conn)
+        {
+            using (var sb = new SQLiteQueryBuilder(Plugin.SQLSafeName))
+            {
+                sb.SelectAll(TableDefinition.TableName);
+
+                _data = conn.ExecuteArray<Group>(sb);
+            }
+
+            ProgramLog.Error.Log(this.GetType().Name + ": " + (_data == null ? "NULL" : _data.Length.ToString()));
+        }
+
+        public override void Save(IDataConnector conn)
+        {
+            throw new NotImplementedException();
         }
     }
 }
