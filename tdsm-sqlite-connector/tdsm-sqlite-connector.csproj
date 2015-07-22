@@ -38,6 +38,8 @@
     <Reference Include="Mono.Data.Sqlite">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

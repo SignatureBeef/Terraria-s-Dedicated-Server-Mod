@@ -17,6 +17,12 @@ namespace TDSM.Data.SQLite
     {
         private PermissionNode[] _data;
 
+        internal PermissionNode[] Nodes
+        {
+            get
+            { return _data; }
+        }
+
         private class TableDefinition
         {
             public const String TableName = "Permissions";

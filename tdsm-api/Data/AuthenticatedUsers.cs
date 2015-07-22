@@ -5,13 +5,14 @@ namespace TDSM.API.Data
 {
     public struct UserDetails
     {
+        public int Id;
         public string Password;
         public string Username;
         public bool Operator;
 
         public override string ToString()
         {
-            return String.Format("[UserDetails: Username: '{0}', Password: '{1}', Operator: {2}]", Username, Password, Operator);
+            return String.Format("[UserDetails: Id {3}, Username: '{0}', Password: '{1}', Operator: {2}]", Username, Password, Operator, Id);
         }
     }
 
@@ -116,6 +117,7 @@ namespace TDSM.API.Data
             using (var bl = Storage.GetBuilder(SQLSafeName))
             {
                 bl.SelectFrom(UserTable.TableName, new string[] {
+                    UserTable.ColumnNames.Id,
                     UserTable.ColumnNames.Username,
                     UserTable.ColumnNames.Password, 
                     UserTable.ColumnNames.Operator 

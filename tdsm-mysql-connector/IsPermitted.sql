@@ -78,9 +78,9 @@ BEGIN
 							left join SqlPermissions_Permissions pm on gp.PermissionId = pm.Id
 						where gp.GroupId = vGroupId
 							and pm.Node = prmNode
-							and pm.Deny = 0
+							and pm.Deny = 1
 					) then
-						set vPermissionValue = 1;
+						set vPermissionValue = 0;
 						set vGroupId = 0;
 						set vNodeFound = 1;
 					elseif exists
@@ -90,9 +90,9 @@ BEGIN
 							left join SqlPermissions_Permissions pm on gp.PermissionId = pm.Id
 						where gp.GroupId = vGroupId
 							and pm.Node = prmNode
-							and pm.Deny = 1
+							and pm.Deny = 0
 					) then
-						set vPermissionValue = 0;
+						set vPermissionValue = 1;
 						set vGroupId = 0;
 						set vNodeFound = 1;
 					else

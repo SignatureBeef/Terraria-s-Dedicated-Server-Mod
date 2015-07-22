@@ -17,6 +17,12 @@ namespace TDSM.Data.SQLite
     {
         private GroupPermission[] _data;
 
+        internal GroupPermission[] GroupPermissions
+        {
+            get
+            { return _data; }
+        }
+
         private class TableDefinition
         {
             public const String TableName = "GroupPermissions";

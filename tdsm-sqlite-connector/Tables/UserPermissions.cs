@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Linq;
 using TDSM.API.Data;
 using TDSM.API.Logging;
 
-namespace TDSM.Data.SQLite
+namespace TDSM.Data.SQLite  
 {
     public struct UserPermisison
     {
@@ -16,6 +17,12 @@ namespace TDSM.Data.SQLite
     public class UserPermissionsTable : CacheTable
     {
         private UserPermisison[] _data;
+
+        internal UserPermisison[] UserNodes
+        {
+            get
+            { return _data; }
+        }
 
         private class TableDefinition
         {

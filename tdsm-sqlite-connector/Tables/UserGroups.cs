@@ -19,6 +19,12 @@ namespace TDSM.Data.SQLite
     {
         private UserGroup[] _data;
 
+        internal UserGroup[] UserGroup
+        {
+            get
+            { return _data; }
+        }
+
         private class TableDefinition
         {
             public const String TableName = "UserGroups";
