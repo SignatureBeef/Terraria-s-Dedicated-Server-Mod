@@ -1415,148 +1415,59 @@ namespace TDSM.Core
         /// <param name="args">Arguments sent with command</param>
         public void SummonBoss(ISender sender, ArgumentList args)
         {
-            bool EoW = args.TryPop("eater");
-            bool EyeOC = args.TryPop("eye");
-            bool Skeletron = args.TryPop("skeletron");
-            bool KingSlime = args.TryPop("kingslime");
-            bool Twins = args.TryPop("twins");
-            bool Wof = args.TryPop("wof");
-            bool Destroyer = args.TryPop("destroyer");
-            bool Prime = args.TryPop("prime");
-            bool Golem = args.TryPop("golem");
-            bool Plantera = args.TryPop("plantera");
-            bool Retinazer = args.TryPop("retinazer");
-            bool Spazmatism = args.TryPop("spazmatism");
-            //bool All = args.TryPop("-all");
-            bool NightOverride = args.TryPop("-night"); // || All;
+            //New syntax
+            // spawnboss "name" amount player
 
-            //Player player = null;
-            //if (sender is Player) player = sender as Player;
-            //else if (Netplay.anyClients)
-            //{
-            //    string PlayerName;
-            //    if (args.TryParseOne<String>("-player", out PlayerName))
-            //        player = Tools.GetPlayerByName(PlayerName);
-            //    else
-            //    {
-            //        if (Main.rand == null) Main.rand = new Random((new Random()).Next());
+            var bossName = args.GetString(0).ToLower();
+            var count = args.GetInt(1);
+            Player target;
 
-            //        var matches = 
-            //        //Find Random
-            //        int plr = Main.rand.Next(0, ServerCore.ClientConnection.All.Count - 1); //Get Random PLayer
-            //        player = Main.player[plr];
-            //    }
-
-            //    if (player == null)
-            //        throw new CommandError("Cannot find player");
-            //}
-            //else
-            if (!Netplay.anyClients)
-                throw new CommandError("No online players to spawn near.");
-
-            var bosses = new Dictionary<Int32, object[]>();
-
-            if (EyeOC || Twins || Spazmatism || Retinazer || Prime || Skeletron || Destroyer)
+            if (!args.TryGetOnlinePlayer(2, out target))
             {
-                if (Main.dayTime && !NightOverride)
-                    throw new CommandError("The specified boss requires it to be night.");
-            }
-
-            var wofSummoned = Tools.IsNPCSummoned(113);
-            if (Wof && wofSummoned)
-                sender.Message("Wall of Flesh already summoned, Ignoring.");
-
-            if (EyeOC)
-                bosses.Add(4, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            if (Skeletron)
-                bosses.Add(35, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            if (KingSlime)
-                bosses.Add(50, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            if (EoW)
-                bosses.Add(13, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            if (Twins)
-            {
-                bosses.Add(125, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-                bosses.Add(126, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            }
-            if (Retinazer)
-                bosses.Add(125, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            if (Spazmatism)
-                bosses.Add(126, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            if ((Wof) && !wofSummoned)
-                bosses.Add(113, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            if (Destroyer)
-                bosses.Add(134, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            if (Prime)
-                bosses.Add(127, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            if (Golem)
-                bosses.Add(245, new object[] { FindPlayerWithOptions(WorldZone.Any), WorldZone.Any });
-            if (Plantera)
-                bosses.Add(262, new object[] { FindPlayerWithOptions(WorldZone.ZoneJungle), WorldZone.ZoneJungle });
-
-            if (bosses.Where(x => x.Value == null).Count() > 0)
-            {
-                var first = bosses.Where(x => x.Value == null).First();
-                throw new CommandError("A player must be in the zone:  " + first.Value[0].ToString());
-            }
-
-            if (bosses.Count > 0)
-            {
-                if (NightOverride)
+                if (sender is Player)
                 {
-                    World.SetTime(16200.0, false);
-                    NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
+                    target = sender as Player;
+                }
+                else
+                    throw new CommandError("Expected a player");
+            }
+
+            var position = World.GetRandomClearTile(target.position.X / 16f, target.position.X / 16f);
+            int type = -1;
+            string name = null;
+
+            switch (bossName)
+            {
+                case "king":
+                case "king slime":
+                    const Int32 KingSlimeId = 50;
+                    type = KingSlimeId;
+                    break;
+                case "eater":
+                case "eater of worlds":
+                    
+                    break;
+                default:
+                    throw new CommandError("Unknown boss: " + bossName);
+            }
+
+            while (count-- > 0)
+            {
+                var id = NPC.NewNPC((int)position.X, (int)position.Y, type);
+                if (name != null)
+                {
+                    Main.npc[id].SetDefaults(name);
                 }
 
-                foreach (var def in bosses)
+                if (count == 0)
                 {
-                    var name = String.Empty;
-                    switch (def.Key)
+                    var tms = String.Empty;
+                    if (count > 1)
                     {
-                        case 4:
-                            name = "Eye of Cthulu was";
-                            break;
-                        case 13:
-                            name = "Eater of Worlds was";
-                            break;
-                        case 35:
-                            name = "Skeletron was";
-                            break;
-                        case 50:
-                            name = "King Slime was";
-                            break;
-                        case 113:
-                            name = "Wall of Flesh was";
-                            break;
-                        case 125:
-                            name = "The Twins were";
-                            break;
-                        case 127:
-                            name = "Skeletron Prime was";
-                            break;
-                        case 134:
-                            name = "The Destroyer was";
-                            break;
-                        case 245:
-                            name = "Golem was";
-                            break;
-                        case 242:
-                            name = "Plantera was";
-                            break;
-
+                        tms = " " + count + " times";
                     }
-                    if (!String.IsNullOrEmpty(name))
-                        Tools.NotifyAllPlayers(name + " summoned by " + sender.SenderName, Color.Purple, true);
-
-                    //if (!(sender is ConsoleSender))
-                    //    ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.SenderName, name, BossSlot);
-
-                    NPC.SpawnOnPlayer((def.Value[0] as Player).whoAmI, def.Key);
+                    Tools.NotifyAllPlayers(Main.npc[id].displayName + " summoned by " + sender.SenderName + tms, Color.Purple, true);
                 }
-            }
-            else
-            {
-                throw new CommandError("Boss not specified");
             }
         }
 

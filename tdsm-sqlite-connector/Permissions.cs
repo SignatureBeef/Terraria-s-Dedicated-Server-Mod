@@ -49,6 +49,8 @@ namespace TDSM.Data.SQLite
 
         PermissionNode[] GetPermissionByNodeForUser(long userId, string node)
         {
+            if (null == _userPerms.UserNodes || null == _nodes.Nodes)
+                return null;
             return (from un in _userPerms.UserNodes
                              join nd in _nodes.Nodes on un.PermissionId equals nd.Id
                              where un.UserId == userId
@@ -64,6 +66,8 @@ namespace TDSM.Data.SQLite
 
         PermissionNode[] GetPermissionByNodeForGroup(long groupId, string node)
         {
+            if (null == _groupPerms.GroupPermissions || null == _nodes.Nodes)
+                return null;
             return (from gp in _groupPerms.GroupPermissions
                              join nd in _nodes.Nodes on gp.PermissionId equals nd.Id
                              where gp.GroupId == groupId
@@ -77,25 +81,29 @@ namespace TDSM.Data.SQLite
 //                and pm.Deny = 0
         }
 
-        long[] GetGroupsForUser(long userId)
+        long GetUsersGroup(long userId)
         {
+            if (null == _users.UserGroup)
+                return 0L;
             return (from ug in _users.UserGroup
                              where ug.UserId == userId
-                             select ug.GroupId).ToArray();
+                             select ug.GroupId).FirstOrDefault();
         }
 
         long? GetParentForGroup(long groupId)
         {
+            if (null == _groups.Groups)
+                return null;
             string parentName = (from grp in _groups.Groups
-                where grp.Id == groupId
-                select grp.Parent).FirstOrDefault();
+                                          where grp.Id == groupId
+                                          select grp.Parent).FirstOrDefault();
 
             if (String.IsNullOrEmpty(parentName))
                 return null;
 
             var matches = (from grp in _groups.Groups
-                where grp.Name == parentName
-                select grp.Id).ToArray();
+                                    where grp.Name == parentName
+                                    select grp.Id).ToArray();
 
             if (matches != null && matches.Length > 0)
                 return matches[0];
@@ -105,11 +113,13 @@ namespace TDSM.Data.SQLite
 
         bool GuestGroupsHasNode(string node)
         {
+            if (null == _groups.Groups || null == _groupPerms.GroupPermissions || null == _nodes.Nodes)
+                return false;
             return (from grp in _groups.Groups
-                join gp in _groupPerms.GroupPermissions on grp.Id equals gp.GroupId
-                join nd in _nodes.Nodes on gp.PermissionId equals nd.Id
-                where (grp.ApplyToGuests && nd.Node == node && !nd.Deny)
-                select 1
+                             join gp in _groupPerms.GroupPermissions on grp.Id equals gp.GroupId
+                             join nd in _nodes.Nodes on gp.PermissionId equals nd.Id
+                             where (grp.ApplyToGuests && nd.Node == node && !nd.Deny)
+                             select 1
             ).Count() > 0;
         }
 
@@ -120,15 +130,9 @@ namespace TDSM.Data.SQLite
             var vGroupId = 0L;
             var vPrevGroupId = 0L;
             var vNodeFound = false;
-            /*
-                PermissionEnum values:
-                    0   = Denied
-                    1   = Permitted
-            */
 
             if (prmIsGuest == false && prmAuthentication != null && prmAuthentication.Length > 0)
             {
-                //vUserId = GetUserIfByAuth(prmAuthentication)
                 var user = AuthenticatedUsers.GetUser(prmAuthentication);
                 if (user != null)
                 {
@@ -166,55 +170,48 @@ namespace TDSM.Data.SQLite
                             Else guestMode
                         */
 
-                        var groupsForUser = GetGroupsForUser(vUserId);
-                        if (groupsForUser != null)
+                        vGroupId = GetUsersGroup(vUserId);
+                        if (vGroupId > 0)
                         {
-                            foreach (var groupId in groupsForUser)
+                            vPrevGroupId = vGroupId;
+                            vNodeFound = false;
+
+                            while (vGroupId > 0 && !vNodeFound)
                             {
-                                vGroupId = groupId;
-                                vPrevGroupId = groupId;
-                                vNodeFound = false;
+                                /* Check group permissions */
 
-                                while (vGroupId > 0 && !vNodeFound)
+                                var groupPermissions = GetPermissionByNodeForGroup(vGroupId, prmNode);
+
+                                if (groupPermissions.Where(x => x.Deny).Count() > 0)
                                 {
-                                    /* Check group permissions */
-
-                                    var groupPermissions = GetPermissionByNodeForGroup(groupId, prmNode);
-
-                                    if (groupPermissions.Where(x => x.Deny).Count() > 0)
+                                    vPermissionValue = Permission.Denied;
+                                    vGroupId = 0;
+                                    vNodeFound = true;
+                                }
+                                else if (groupPermissions.Where(x => x.Deny).Count() > 0)
+                                {
+                                    vPermissionValue = Permission.Permitted;
+                                    vGroupId = 0;
+                                    vNodeFound = true;
+                                }
+                                else
+                                {
+                                    var par = GetParentForGroup(vGroupId);
+                                    if (par.HasValue)
                                     {
-                                        vPermissionValue = Permission.Denied;
-                                        vGroupId = 0;
-                                        vNodeFound = true;
-                                    }
-                                    else if (groupPermissions.Where(x => x.Deny).Count() > 0)
-                                    {
-                                        vPermissionValue = Permission.Permitted;
-                                        vGroupId = 0;
-                                        vNodeFound = true;
-                                    }
-                                    else
-                                    {
-                                        var par = GetParentForGroup(vGroupId);
-                                        if (par.HasValue)
-                                        {
-                                            vGroupId = par.Value;
-                                            if (vPrevGroupId == vGroupId)
-                                            {
-                                                vGroupId = 0;
-                                            }
-
-                                            vPrevGroupId = vGroupId;
-                                        }
-                                        else
+                                        vGroupId = par.Value;
+                                        if (vPrevGroupId == vGroupId)
                                         {
                                             vGroupId = 0;
                                         }
+
+                                        vPrevGroupId = vGroupId;
+                                    }
+                                    else
+                                    {
+                                        vGroupId = 0;
                                     }
                                 }
-
-                                if (vNodeFound)
-                                    break;
                             }
                         }
                         if (!vNodeFound)
