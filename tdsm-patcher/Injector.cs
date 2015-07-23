@@ -187,7 +187,7 @@ namespace tdsm.patcher
                         if (mth.Body.Instructions != null)
                         {
                             //foreach (var ins in mth.Body.Instructions)
-                            for (var i = 0; i < mth.Body.Instructions.Count; i++)
+                            for (var i = mth.Body.Instructions.Count - 1; i > 0; i--)
                             {
                                 var ins = mth.Body.Instructions[i];
                                 if (ins.Operand is MethodReference)
@@ -252,15 +252,32 @@ namespace tdsm.patcher
                                                 throw new InvalidDataException(String.Format("Failed to grab MemTile constructor in method {0}, instruction offset {1}", mth.FullName, i));
                                             }*/
 
-                                            if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Call)
+                                            var twoFrom = -1;
+                                            var insertTo = 0;
+
+                                            if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Call
+                                                && ins.Previous.OpCode == OpCodes.Ldloc_S
+                                                && ins.Previous.Previous.OpCode == OpCodes.Ldloc_S)
                                             {
                                                 //Direct array assign
+                                                twoFrom = i - 2;
+                                                insertTo = i - 1;
+
+
+//                                                var first = ins.Previous.Previous;
+//                                                var second = ins.Previous;
+//
+//                                                var il = mth.Body.GetILProcessor();
+//                                                il.InsertAfter(second, second);
+//                                                il.InsertAfter(second, first);
                                             }
                                             else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_S && ins.Next.Next.OpCode == OpCodes.Ldsfld)
                                             {
                                                 //Assigned after
                                                 //Skip 2
                                                 //
+                                                twoFrom = i + 3;
+                                                insertTo = i - 1;
                                             }
                                             else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_0 && ins.Next.Next.OpCode == OpCodes.Ldsfld)
                                             {
@@ -292,6 +309,22 @@ namespace tdsm.patcher
                                             else
                                             {
 
+                                            }
+
+                                            if (twoFrom > 0)
+                                            {
+                                                var first = mth.Body.Instructions[
+                                                    twoFrom];
+                                                var second = first.Next;
+
+                                                var il = mth.Body.GetILProcessor();
+                                                il.InsertBefore(ins, first);
+                                                il.InsertBefore(ins, second);
+
+                                                i -= 2;
+
+                                                ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == 2 && x.Parameters[0].ParameterType.Name == "Int32"));
+                                                continue;
                                             }
 
                                             ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == meth.Parameters.Count));

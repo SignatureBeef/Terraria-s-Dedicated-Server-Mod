@@ -1404,8 +1404,6 @@ namespace TDSM.Core
                 default:
                     return Main.player.Where(x => x.active).Random();
             }
-
-            return null;
         }
 
         /// <summary>
@@ -1415,9 +1413,6 @@ namespace TDSM.Core
         /// <param name="args">Arguments sent with command</param>
         public void SummonBoss(ISender sender, ArgumentList args)
         {
-            //New syntax
-            // spawnboss "name" amount player
-
             var bossName = args.GetString(0).ToLower();
             var count = args.GetInt(1);
             Player target;
@@ -1433,19 +1428,176 @@ namespace TDSM.Core
             }
 
             var position = World.GetRandomClearTile(target.position.X / 16f, target.position.X / 16f);
-            int type = -1;
+            int type = -1, type1 = -1;
             string name = null;
 
             switch (bossName)
             {
+                case "wyvern":
+                    type = 87;
+                    break;
+
+                case "brain":
+                case "brain of cthulhu":
+                    type = 266;
+                    break;
+
+                case "crimson mimic":
+                    type = 474;
+                    break;
+                case "corrupt mimic":
+                    type = 473;
+                    break;
+                case "hallowed mimic":
+                    type = 475;
+                    break;
+
+                case "duke fishron":
+                case "duke":
+                case "fishron":
+                    type = 370;
+                    break;
+
+                case "everscream":
+                    type = 344;
+                    break;
+
+                case "eye of cthulhu":
+                    type = 4;
+                    break;
+
+                case "dutchman":
+                case "flying dutchman":
+                    type = 491;
+                    break;
+
+                case "golem":
+                    type = 245;
+                    break;
+
+                case "gobin summoner":
+                    type = 471;
+                    break;
+
                 case "king":
                 case "king slime":
-                    const Int32 KingSlimeId = 50;
-                    type = KingSlimeId;
+                    type = 50;
                     break;
+
+                case "ice golem":
+                    type = 243;
+                    break;
+
+                case "ice queen":
+                    type = 345;
+                    break;
+
+                case "lunatic":
+                case "cultist":
+                case "lunatic cultist":
+                    type = 439;
+                    break;
+
+                case "saucer":
+                case "martian saucer":
+                    type = 395;
+                    break;
+
+                case "moon":
+                case "moon lord":
+                    type = 398;
+                    break;
+
+                case "mothron":
+                    type = 477;
+                    break;
+
+                case "wood":
+                case "mourning wood":
+                    type = 325;
+                    break;
+
+                case "paladin":
+                    type = 290;
+                    break;
+
+                case "captain":
+                case "pirate":
+                case "pirate captain":
+                    type = 216;
+                    break;
+
+                case "plantera":
+                    type = 262;
+                    break;
+
+                case "pumpking":
+                    type = 327;
+                    break;
+
+                case "queen":
+                case "queen bee":
+                    type = 222;
+                    break;
+
+                case "santa":
+                case "santa nk1":
+                case "santa-nk1":
+                    type = 346;
+                    break;
+
+                case "skeletron":
+                    type = 35;
+                    break;
+
+                case "prime":
+                case "skeletron prime":
+                    type = 127;
+                    break;
+
+                case "nebula":
+                case "nebula pillar":
+                    type = 507;
+                    break;
+                case "solar":
+                case "solar pillar":
+                    type = 517;
+                    break;
+                case "stardust":
+                case "stardust pillar":
+                    type = 493;
+                    break;
+                case "vortex":
+                case "vortex pillar":
+                    type = 422;
+                    break;
+
+                case "destroyer":
+                case "the destroyer":
+                    type = 134;
+                    break;
+
+                case "twins":
+                case "the twins":
+                    type = 125;
+                    type1 = 126;
+                    break;
+
                 case "eater":
                 case "eater of worlds":
-                    
+                    type = 13;
+                    break;
+
+                case "wall":
+                case "flesh":
+                case "wall of flesh":
+                    if (Main.wof > 0 && Main.npc[Main.wof].active)
+                        throw new CommandError("The Wall Of Flesh is already active");
+
+                    if (target.position.Y / 16 < (float)(Main.maxTilesY - 205)) //As per NPC.SpawnWOF
+                        throw new CommandError("Player must be in The Underworld to spawn the Eater Of Worlds");
+
+                    type = 113;
                     break;
                 default:
                     throw new CommandError("Unknown boss: " + bossName);
@@ -1457,6 +1609,11 @@ namespace TDSM.Core
                 if (name != null)
                 {
                     Main.npc[id].SetDefaults(name);
+                }
+
+                if (type1 > 0)
+                {
+                    id = NPC.NewNPC((int)position.X, (int)position.Y, type1);
                 }
 
                 if (count == 0)

@@ -13,6 +13,30 @@ namespace TDSM.Core
 
     public static class World
     {
+        public static bool IsLarge(this WorldSize size)
+        {
+            return size == WorldSize.Large;
+        }
+
+        public static bool IsMedium(this WorldSize size)
+        {
+            return size == WorldSize.Medium;
+        }
+
+        public static bool IsSmall(this WorldSize size)
+        {
+            return size == WorldSize.Small;
+        }
+
+        public static WorldSize GetWorldSize()
+        {
+            if (Terraria.Main.maxTilesY <= 1200)
+                return WorldSize.Small;
+            if (Terraria.Main.maxTilesY <= 1800)
+                return WorldSize.Medium;
+            return WorldSize.Large;
+        }
+
         public static void SetParsedTime(double time)
         {
             var dayTime = time >= 0.0 && time <= 54000.0;

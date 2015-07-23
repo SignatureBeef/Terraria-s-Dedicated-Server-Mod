@@ -45,6 +45,7 @@ namespace TDSM.API.Memory
 
         private void testingggg()
         {
+//            Terraria.Main.tile[1234, 1111] = new MemTile(1234, 1111);
             var mt = new MemTile(1234, 4321);
             mt.liquid = 1;
             var gg = "start";
@@ -1557,6 +1558,7 @@ namespace TDSM.API.Memory
     
 
 
+
 #if Full_API
     if (Terraria.Main.tileSolid[(int)this.type] && !Terraria.Main.tileSolidTop[(int)this.type])
     {
@@ -1661,6 +1663,7 @@ public bool isTheSameAs(VanillaTile compTile)
             return false;
         }
     
+
 
 
 #if Full_API
@@ -2038,6 +2041,7 @@ public static void SmoothSlope(int x, int y, bool applyToNeighbors = true)
     
 
 
+
 #if Full_API
     var tile = Terraria.Main.tile[x, y];
     if (!Terraria.WorldGen.SolidOrSlopedTile(x, y))
@@ -2097,6 +2101,7 @@ public void ClearMetadata()
 }
 }
     
+
 
 
 #else
