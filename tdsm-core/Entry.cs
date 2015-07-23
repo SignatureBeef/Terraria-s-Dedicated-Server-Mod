@@ -155,7 +155,7 @@ namespace TDSM.Core
             AddCommand("give")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Give a player items")
-                .WithHelpText("<player> <amount> <itemname:itemid> [-prefix]")
+                .WithHelpText("<player> <amount> <itemname:itemid> [prefix]")
                 .WithPermissionNode("tdsm.give")
                 .Calls(this.Give);
 
