@@ -200,7 +200,7 @@ namespace tdsm.patcher
                                             //Find "ldsfld class Terraria.Tile[0..., 0...] Terraria.Main::tile"
                                             //Copy instructions afterwards/beforehand until "ins"
 
-                                            const int MaxRange = 10; //Searching is probably not required. But I'm tired and this will do for now.
+                                            /*const int MaxRange = 10; //Searching is probably not required. But I'm tired and this will do for now.
 
                                             int top = -1, bottom = -1;
 
@@ -237,7 +237,10 @@ namespace tdsm.patcher
 
                                             if (index != -1)
                                             {
+                                                var total = i - index;
+                                                if (total < 0) total *= -1;
 
+                                                var c = 0;
                                             }
                                             else
                                             {
@@ -247,7 +250,51 @@ namespace tdsm.patcher
 
 
                                                 throw new InvalidDataException(String.Format("Failed to grab MemTile constructor in method {0}, instruction offset {1}", mth.FullName, i));
+                                            }*/
+
+                                            if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Call)
+                                            {
+                                                //Direct array assign
                                             }
+                                            else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_S && ins.Next.Next.OpCode == OpCodes.Ldsfld)
+                                            {
+                                                //Assigned after
+                                                //Skip 2
+                                                //
+                                            }
+                                            else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_0 && ins.Next.Next.OpCode == OpCodes.Ldsfld)
+                                            {
+                                                //Assigned after
+                                                //Skip 2
+                                            }
+                                            else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_1 && ins.Next.Next.OpCode == OpCodes.Ldsfld)
+                                            {
+                                                //Assigned after
+                                                //Skip 2
+                                                //
+                                            }
+                                            else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_3 && ins.Next.Next.OpCode == OpCodes.Ldsfld)
+                                            {
+                                                //Assigned after
+                                                //Skip 2
+                                                //
+                                            }
+                                            else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Dup && ins.Next.Next.OpCode == OpCodes.Stloc_S && ins.Next.Next.Next.OpCode == OpCodes.Call)
+                                            {
+                                                //Assigned after
+                                                //Skip 3
+                                                //
+                                            }
+                                            else if (ty.Name == "LiquidRenderer" && mth.Name == ".cctor")
+                                            {
+                                                //Add 0,0 or replace with EMPTY_TILE
+                                            }
+                                            else
+                                            {
+
+                                            }
+
+                                            ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == meth.Parameters.Count));
                                             continue;
                                         }
 

@@ -22,9 +22,9 @@ namespace TDSM.API.Data
     /// <remarks></remarks>
     public static class AuthenticatedUsers
     {
-        const String SQLSafeName = "tdsm";
+        public const String SQLSafeName = "tdsm";
 
-        private class UserTable
+        public class UserTable
         {
             public const String TableName = "users";
 

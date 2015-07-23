@@ -33,7 +33,7 @@ BEGIN
 					left join SqlPermissions_UserPermissions up on u.Id = up.UserId
 					left join SqlPermissions_Permissions nd on up.PermissionId = nd.Id
 				where u.Id = vUserId
-					and nd.Node = prmNode
+					and (nd.Node = prmNode or nd.Node = "*")
 			) then
 				if exists
 				(
@@ -42,7 +42,7 @@ BEGIN
 						left join SqlPermissions_UserPermissions up on u.Id = up.UserId
 						left join SqlPermissions_Permissions nd on up.PermissionId = nd.Id
 					where u.Id = vUserId
-						and nd.Node = prmNode
+						and (nd.Node = prmNode or nd.Node = "*")
 						and nd.Deny = 0
 				) then
 					set vPermissionValue = 1;
@@ -77,7 +77,7 @@ BEGIN
 						from SqlPermissions_GroupPermissions gp
 							left join SqlPermissions_Permissions pm on gp.PermissionId = pm.Id
 						where gp.GroupId = vGroupId
-							and pm.Node = prmNode
+							and (pm.Node = prmNode or pn.Node = "*")
 							and pm.Deny = 1
 					) then
 						set vPermissionValue = 0;
@@ -89,7 +89,7 @@ BEGIN
 						from SqlPermissions_GroupPermissions gp
 							left join SqlPermissions_Permissions pm on gp.PermissionId = pm.Id
 						where gp.GroupId = vGroupId
-							and pm.Node = prmNode
+							and (pm.Node = prmNode or pn.Node = "*")
 							and pm.Deny = 0
 					) then
 						set vPermissionValue = 1;
@@ -133,7 +133,7 @@ BEGIN
 				left join SqlPermissions_GroupPermissions gp on gr.Id = gp.GroupId
 				left join SqlPermissions_Permissions nd on gp.PermissionId = nd.Id
 			where gr.ApplyToGuests = 1
-				and nd.Node = prmNode
+				and (nd.Node = prmNode or nd.Node = "*")
 				and nd.Deny = 0
 		) then
 			set vPermissionValue = 1;

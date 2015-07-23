@@ -53,7 +53,7 @@ namespace TDSM.Data.SQLite
                 return null;
             return (from un in _userPerms.UserNodes
                              join nd in _nodes.Nodes on un.PermissionId equals nd.Id
-                             where un.UserId == userId
+                             where un.UserId == userId && (nd.Node == node || nd.Node == "*")
                              select nd).ToArray();
 
             //            select 1
@@ -70,7 +70,7 @@ namespace TDSM.Data.SQLite
                 return null;
             return (from gp in _groupPerms.GroupPermissions
                              join nd in _nodes.Nodes on gp.PermissionId equals nd.Id
-                             where gp.GroupId == groupId
+                             where gp.GroupId == groupId && (nd.Node == node || nd.Node == "*")
                              select nd).ToArray();
 
 //            select 1
@@ -123,6 +123,26 @@ namespace TDSM.Data.SQLite
             ).Count() > 0;
         }
 
+        UserDetails? GetUser(string username)
+        {
+            using (var bl = this.GetBuilder(AuthenticatedUsers.SQLSafeName))
+            {
+                bl.SelectFrom(AuthenticatedUsers.UserTable.TableName, new string[]
+                    {
+                        AuthenticatedUsers.UserTable.ColumnNames.Id,
+                        AuthenticatedUsers.UserTable.ColumnNames.Username,
+                        AuthenticatedUsers.UserTable.ColumnNames.Password, 
+                        AuthenticatedUsers.UserTable.ColumnNames.Operator 
+                    }, new WhereFilter(AuthenticatedUsers.UserTable.ColumnNames.Username, username));
+
+                var res = ((IDataConnector)this).ExecuteArray<UserDetails>(bl);
+                if (res != null && res.Length > 0)
+                    return res[0];
+
+                return null;
+            }
+        }
+
         private Permission IsPermitted(string prmNode, bool prmIsGuest, string prmAuthentication = null)
         {
             var vPermissionValue = Permission.Denied;
@@ -133,10 +153,13 @@ namespace TDSM.Data.SQLite
 
             if (prmIsGuest == false && prmAuthentication != null && prmAuthentication.Length > 0)
             {
-                var user = AuthenticatedUsers.GetUser(prmAuthentication);
+                var user = GetUser(prmAuthentication);
                 if (user != null)
                 {
                     vUserId = user.Value.Id;
+
+                    if (user.Value.Operator)
+                        return  Permission.Permitted;
                 }
 
                 if (vUserId > 0)

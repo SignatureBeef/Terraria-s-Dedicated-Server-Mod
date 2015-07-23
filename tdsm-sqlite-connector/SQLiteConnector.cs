@@ -162,6 +162,8 @@ namespace TDSM.Data.SQLite
         {
             if (type == typeof(Byte))
                 return Convert.ToByte(value);
+            if (type == typeof(Int32))
+                return Convert.ToInt32(value);
 
             return value;
         }
