@@ -905,6 +905,8 @@ namespace tdsm.patcher
                     x--;
                 }
             }
+            return;
+
 
             //Descrease the amount of file descriptors for mono.
             //We'll do this manually
