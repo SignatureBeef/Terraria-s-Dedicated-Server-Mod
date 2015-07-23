@@ -1136,7 +1136,7 @@ namespace tdsm.patcher
             foreach (var oci in cwi)
             {
                 var mr = oci.Operand as MethodReference;
-                var writeline = API.Tools.Methods.First(m => m.Name == "WriteLine"
+                var writeline = API.ProgramLog.Methods.First(m => m.Name == "BareLog"
                                     && CompareParameters(m.Parameters, mr.Parameters));
                 oci.Operand = _asm.MainModule.Import(writeline);
             }

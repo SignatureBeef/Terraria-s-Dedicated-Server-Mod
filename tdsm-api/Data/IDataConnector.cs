@@ -377,7 +377,7 @@ namespace TDSM.API.Data
         public static Permission IsPermitted(string node, BasePlayer player)
         {
             if (_connector == null)
-                throw new InvalidOperationException("No connector attached");
+                return player.Op;
             return _connector.IsPermitted(node, player);
         }
     }

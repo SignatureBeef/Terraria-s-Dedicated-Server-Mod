@@ -117,6 +117,11 @@ namespace TDSM.API.Logging
             logSignal.Signal();
         }
 
+        public static void BareLog(object obj)
+        {
+            Write(new LogEntry { message = obj.ToString(), thread = Thread.CurrentThread });
+        }
+
         public static void BareLog(string text)
         {
             Write(new LogEntry { message = text, thread = Thread.CurrentThread });

@@ -295,6 +295,12 @@ namespace tdsm.patcher
             { return _asm.MainModule.Types.Single(x => x.Name == "Tools"); }
         }
 
+        public TypeDefinition ProgramLog
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "ProgramLog"); }
+        }
+
         public TypeDefinition UserInput
         {
             get
