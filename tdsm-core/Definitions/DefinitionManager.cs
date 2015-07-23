@@ -99,6 +99,13 @@ namespace TDSM.Core.Definitions
                 .ToArray();
         }
 
+        public static ItemInfo[] FindItem(int id)
+        {
+            return _item.Data
+                .Where(x => x.Id == id)
+                .ToArray();
+        }
+
         #region "IO"
         static void Save<T>(FileInfo info, DefinitionFile<T> definition) where T : class
         {

@@ -699,19 +699,31 @@ namespace TDSM.Core
             Player receiver = args.GetOnlinePlayer(0);
             int stack = args.GetInt(1);
             string name = args.GetString(2);
-
+ 
             var max = Tools.AvailableItemSlots; //Perhaps remove a few incase of new drops
             if (stack > max)
             {
                 stack = max; // Set to Tools.AvailableItemSlots because number given was larger than this.
             }
-            var results = DefinitionManager.FindItem(name);
+            int id;
+            var results = int.TryParse(name, out id) ? DefinitionManager.FindItem(id) : DefinitionManager.FindItem(name);
             if (results != null && results.Length > 0)
             {
                 if (results.Length > 1)
                     throw new CommandError(String.Format("More than 1 item found, total is: {0}", results.Length));
 
                 var item = results[0];
+                try {
+                    item.Prefix = (int)(Affix)Enum.Parse(typeof(Affix), args.GetString(3), true);
+                }
+                catch (CommandError)
+                {
+
+                }catch (ArgumentException)
+                {
+                    throw new CommandError(String.Format("Error, the Prefix you entered was not found: {0}", args.GetString(3)));
+                }
+                
 
                 var index = receiver.GiveItem(item.Id, stack, sender, item.NetId, true, item.Prefix);
 
