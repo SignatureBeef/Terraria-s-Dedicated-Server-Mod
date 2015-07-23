@@ -1,7 +1,10 @@
 ﻿#define SERVER
+
+
 #define DEV
 //#define CLIENT
 
+using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Linq;
@@ -484,6 +487,65 @@ namespace tdsm.patcher
 #endif
         }
 
+        class ConfigModification
+        {
+            public string OfficialLinePrefix { get; set; }
+
+            public int Offset { get; set; }
+
+            public string[] Modifications { get; set; }
+        }
+
+        static string PatchConfig(string[] input)
+        {
+            var lines = new List<String>(input);
+
+            try
+            {
+                var mt = File.ReadAllText("serverconfig.mods.json");
+                var mods = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigModification[]>(mt);
+
+                if (mods != null)
+                {
+                    foreach (var mod in mods)
+                    {
+                        //Get indicies
+                        var indicies = new List<Int32>();
+                        for (var x = 0; x < lines.Count; x++)
+                        {
+                            if (lines[x].StartsWith(mod.OfficialLinePrefix))
+                            {
+                                indicies.Add(x);
+                            }
+                        }
+
+                        var extra = String.Join(Environment.NewLine, mod.Modifications);
+                        foreach (var index in indicies)
+                        {
+                            if (mod.Offset == 0)
+                            {
+                                lines[index] = extra;
+                            }
+                            else if (mod.Offset == -1)
+                            {
+                                lines.Insert(index + (mod.Offset + 1), extra);
+                            }
+                            else if (mod.Offset == 1)
+                            {
+                                lines.Insert(index + mod.Offset, extra);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine("Failed to patch config: {0}", e);
+            }
+
+            return String.Join(Environment.NewLine, lines.ToArray());
+        }
+
         static DirectoryInfo GetBinariesFolder()
         {
             var pathToBinaries = new DirectoryInfo(Environment.CurrentDirectory);
@@ -513,7 +575,8 @@ namespace tdsm.patcher
             if (File.Exists(outputPath))
                 File.Delete(outputPath);
 
-            var contents = File.ReadAllText(official);
+            var cfg = File.ReadAllLines(official);
+            var contents = PatchConfig(cfg);
             contents += Environment.NewLine;
             contents += File.ReadAllText(additional);
 
