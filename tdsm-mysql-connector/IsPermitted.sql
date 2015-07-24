@@ -60,7 +60,7 @@ BEGIN
 
 				/* Get the first group */
 				select GroupId
-				from SqlPermissions_Users u
+				from tdsm_users u
 				where u.UserId = vUserId
 				limit 1
 				into vGroupId;
