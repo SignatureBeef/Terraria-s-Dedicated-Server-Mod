@@ -1,8 +1,8 @@
 ﻿using System;
-using tdsm.api;
-using tdsm.api.Command;
+using TDSM.API;
+using TDSM.API.Command;
 
-namespace tdsm.core
+namespace TDSM.Core
 {
     public partial class Entry
     {

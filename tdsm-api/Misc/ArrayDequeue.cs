@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace tdsm.api
+namespace TDSM.API.Misc
 {
     class ArrayDeque<T> : IEnumerable<T>, IEnumerable
     {

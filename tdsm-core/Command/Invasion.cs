@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using tdsm.api.Command;
-using tdsm.api.Misc;
-using tdsm.api.Plugin;
+using TDSM.API.Command;
+using TDSM.API.Misc;
+using TDSM.API.Plugin;
 using Terraria;
 
-namespace tdsm.core
+namespace TDSM.Core
 {
     public partial class Entry
     {
         //private Task _customInvasion;
         private List<Int32> _invasion;
-        private int _assignedInvasionType = tdsm.api.Callbacks.NPCCallback.AssignInvasionType();
+        private int _assignedInvasionType = TDSM.API.Callbacks.NPCCallback.AssignInvasionType();
 
         [Hook(HookOrder.NORMAL)]
         void OnInvasionNPCSpawn(ref HookContext ctx, ref HookArgs.InvasionNPCSpawn args)

@@ -1,3 +1,286 @@
+Version 1.3.0.7 Changes-----------------------------------------------------------------------------------------------
+
+
+Changes:
+  Mac & Linux support.
+  Several internal changes were made to allow for the support of Mac and Linux.
+
+
+Version 1.3.0.6 Changes-----------------------------------------------------------------------------------------------
+
+
+Changes:
+  Solar Flare armor set Dash ability now only consumes flares when it hits an enemy, and any hit enemy will result in a Solar Radiance explosion!
+  Party Girl's spawning chance has been increased
+  You can now take camera mode pictures of wiring if you hold a mechanical item while taking the pictures
+  Fixed certain issues with stardust dragon's damage and rebalanced him to be more in line with other minions
+  You can now hide moon charm and neptune shell's effects, or put them in vanity!
+  The final boss's attacks now use their own cooldown for immunity due to how naughty some of our players have been
+
+
+Fixes:
+  Potentially fixed lag issues when using Steam multiplayer
+  Potentially fixed invasions not trigerring when they should (martian probes)
+  Fixed Money Trough turning 'Quick Stack to All Chests' button invisible
+  Fixed javelins drawing behind doors on all cases
+  Fixed Keys of Light / Night not working through autopause
+  Fixed nearby crafting stations not updating when you open inventory in autopause
+  Fixed 'allow mounting' check not taking player's velocity into account (mounting into ceiling exploit)
+  Fixed breathing meter appearing when hanging on to a ceiling that has water in it
+  Fixed content files not being compressed
+  Fixed umbrella art not being consistent
+  Fixed solar eruption item stray pixel
+  Fixed jellyfish expert mode counter hitting you when you can't hit the jellyfish
+  Fixed drill containment unit being able to mine demon altars before hardmode
+  Fixed centain penguins not counting tally
+  Fixed dryad not selling vicious powder on bloodmoon in crimtane worlds
+  Fixed issue where shroomite and psycho knife stealth would work on mounts
+  Fixed issue where martian probe would trigger martian invasion clientside
+  Fixed cultist boss summoning spells badly in multiplayer
+
+
+Version 1.3.0.5 Changes-----------------------------------------------------------------------------------------------
+
+
+Changes:
+  Living leaf walls now count as safe for housing!
+  Buffed Phantasm a bit (it really was bugged!)
+  Martian drone rarity lowered in sky biome (Still higher than original) , now shows up on rare creature finder info
+  Vortex and Nebula weapons have been rebalanced to fit some bug fixes they went through
+  Added Celestial Sigil, a summoning item for the final boss (craftable)
+  Portal gun bolt speed quadrupled so you can no longer travel faster than your bolt
+  Eater of Worlds expert mode vile spit damage nerfed heavily
+  Damage from hurting tiles now has checks for immunity separately from other effects
+
+
+Fixes:
+  Fixed Quickstack to all chests not updating recipes list
+  Fixed "Distorted" debuff freezing players in place rather than changing their movement pattern (sorry!)
+  Fixed Cute Fishron and Unicorn mounts not having their tooltips
+  Fixed 1.3.0.3 and earlier versions of worlds not loading successfully under certain circumstances (sorry! again!)
+  Fixed issue where you could use items when hovering between the item slots on the bottom row of the inventory
+  Fixed issue where Drill Containment Unit's mining code would cause unnecessary lag in multiplayer
+  Fixed Cultists ritual blocking Martian Probe from spawning
+  Fixed Stardust Dragon desync issue
+  Fixed solar tablet being usable in pre-hardmode, night time or during a solar eclipse under rare circumstances
+  Fixed some banner names
+  Fixed dryad's ward buff reducing npc defense instead of buffing it (and npcs having dryads ward defense when they dont have the buff)
+  Fixed (super rare) bug where hittable projectiles showed HP on mouse hover
+  Fixed portal gun's portals not allowing players to teleport to spots near nonsolid platforms
+  Fixed Cosmic Car shadow trail glows not fading
+  Fixed hades/lokis dyes causing strange behaviors
+  Fixed some oddities about portal gates
+  Fixed a rare lighting crash
+  Fixed goblin scouts dispawning not spawning (or rather, despawning super fast)
+  Fixed vortex weapons not scaling with ranged damage or knockback (or stealth, or anything, sorry!)
+  Fixed bug that let you quick stack coins that were not in coin slot or hotbar to other chests
+  Fixed bug where holding pet items would not bring up the equipment page
+  Fixed torch dupe bug
+  Fixed all the spider hitboxes when on walls
+  Fixed chests which turn into big mimics on multiplayer would no longer allow destroying another chest that would be placed in their position
+  Fixed 'final boss flies to space' bug
+  Fixed Seedler projectiles not counting as melee / not getting flask effects
+  Fixed hoplite enemy javelins showing flask visual effects in singleplayer
+  Fixed issue where WoF's 'The Hungry''s ropes would turn invisible
+  Fixed Lunar Hook not allowing you to use the hooks freely unless at least 1 is placed
+  Fixed being able to open money trough when the game is paused
+
+
+Version 1.3.0.4 Changes-----------------------------------------------------------------------------------------------
+
+
+Changes:
+  Moonbite duration has been reduced by 1 second in expert mode and 3 seconds in normal mode
+  Cactus Dresser and Pumpkin Dresser now both require the Sawmill to craft
+  Skeleton Mage Banner and Spider Banner have been renamed to reflect which enemies they support you against
+  Enemies should no longer count towards tally counters / banners if no player has touched them before they died
+  Enemies will now give the banner to the last player to hit them rather than the nearest player
+  "Dye Hard" now really requires having all of the equipment slots inclue dye, rather than just armor/accessory slots
+  In addition to the fix for Phantasm (see below), it has been slightly nerfed
+  Vortex beater has been slightly buffed
+  Mothron's Wings are now obtainable as a drop from Mothron after Plantera has been defeated
+  In addition to the dye plants spelunking fix (see blow) Strange plants should now be more common
+  Teleportation should no longer black out the screen if the end point is in it.
+  Portal gun's portals now apply portal physics even to players who do not hold it, and are lost when landing or if pressing jump
+  In addition to the fixes to medusa's LOS, she now plays sound and some particles when petrifying players
+  In addition to the martian probe fix (see below) martian probes can no longer spawn near the world center, and their spawn chance has been Reduced
+  Reduced the chance of a natural solar eclipse happening
+  Added Config.json setting "UseSmartAxeAfterSmartPickaxe", off by default, if you set it on: Smart Pickaxe would be prioritzed over Smart Axe for items can mine both
+  Red's yoyo & Valkyrie yoyo are now both obtained from Red's and Lazure's developer sets, and their stats have been rebalanced
+  Yorai's Spell no longer counts as vanity (this was not a bug)
+  Bloody Spine now required 30 Vicious Powder in its recipe
+  Dedicated servers can now be launched with -priority to set process priority
+  Dedicated server can now use -ip again to set their local IP address
+  You can no longer escape from the final boss's wrath
+
+
+Optimizations:
+  Chat text should no longer draw if chat string length is zero
+  Reduced Steam call count. (should solve most multiplayer framedrop issues)
+  Improved cancelling the process of joining games
+  Reduced some packet sizes for multiplayer
+
+
+Bug Fixes:
+  Fixed Pinky not appearing on life form analyzer
+  Fixed banners not applying to melee hits (swords, maces , axes, pickaxes , etc)
+  Fixed Solar Tablet not being consumed when used in multiplayer
+  Fixed minecart generated tracks removing wires they go through
+  Fixed certain banners turning into other banners when placed in multiplayer
+  Fixed (almost unnoticable) bug where if the player comes to a standstill in multiplayer you might see them walking for another bit of time
+  Fixed bug where cultists can respawn while moonlord's countdown happens
+  Fixed sticky dynamite tooltip
+  Fixed Red's wings letting you noclip 
+  Fixed Fireplace not counting as a light source for houses
+  Fixed Invasion progress going negative in fm/pm if you exceed ~32k points in multiplayer
+  Fixed Tax Collector not granting money in multiplayer
+  Fixed Eye of Cthulu dealing WAYYYYY too much damage in normal mode
+  Fixed issue that caused maps to go black along with a handful of related issues
+  Fixed issue where you could get new characters with the 6th accessory slot unlocked
+  Fixed walls not framing properly in camera mode snapshots
+  Fixed electrotion debuff being removable by right clicking
+  Fixed some inconcistencies between minimap heads and character heads 
+  Fixed some typos regarding item tooltips
+  Fixed hittable enemy projectiles not scaling in expert mode
+  Fixed solar shields drawing even when you're dead
+  Fixed certain items continuing their use even if you're under heavy crowd control (petrified , frozen , etc)
+  Fixed sykware sink requiring the Living Loom to craft
+  Fixed bug where worms would leave floating heads around when dying in multiplayer (hopefully!)
+  Fixed 'out of bounds' very rare crash with smart cursor
+  Fixed shadow orbs spawning in crimson worlds by mistake
+  Fixed air items being left over when monsters pick up coins in expert mode
+  Fixed familiar wig requiring a hair dye in order to apply normal dyes to itself
+  Fixed enemies despawning when hit by weak attacks with high armor penetration (bosses not dropping loot bags)
+  Fixed Martian Saucer and Flying Dutchman having invisible, invincinble pieces in multiplayer 
+  Fixed loot from fishing not being highlighted in the highlight system
+  Fixed fireblossoms not fiercly glowing when in bloom
+  Fixed certain achievements not being obtainable in multiplayer (you should now be able to get them all)
+  Fixed beekeeper and beetle offense proccing their effects on dummies
+  Fixed 'quick stack to all chests' potentially eating loot in old/modded worlds
+  Fixed Solar debuff spreading to friendly NPCs, killing them 
+  Fixed high velocity allowing players to travel through blocks
+  Fixed target dummies sometime being invisible in multiplayer
+  Fixed fishing achievements not being counted on Steam / resetting on startup
+  Fixed recalling while renaming a chest would lock your controls out until a restart
+  Fixed weird interactions between dashing and ropes
+  Fixed bug where Phantasm dealt unintentional high damage
+  Fixed dye plants not glowing to spelunking effects
+  Fixed Booster tracks not switching directions in multiplayer
+  Fixed Medusa petrifying players who are out of her vision
+  Fixed Corites not charging at players who are unreachable
+  Fixed Alien Vortexes and Lightning Vortexes spawning in places where they are ineffective
+  Fixed Martian Probe / cultists spawning while important things happen (boss fights, invasions)
+  Fixed a large multitude of variation NPCs not dropping their banners / counting tally
+  Fixed Goblin Archer not counting tally / dropping his banner
+  Fixed controls being reversed for Anti-Gravity hook when used in reverse Gravity
+  Fixed Extractinator drops appearing weirdly when used in reverse Gravity
+  Fixed Moonlord's body parts not showing display names
+  Fixed plantera flag not triggerring for non-english users
+  Fixed being unable to leave settings menu under rare and unfortunate circumstances
+  Fixed parallax not loading correctly
+  Fixed 'falling blocks over door' dupe bug
+  Fixed cultists sinking into the floor in multiplayer rarely
+  Fixed falling blocks not taking actuated tiles into account
+  Fixed boss bags disappearing after death
+  Fixed portal gun right click working in camera mode
+  Fixed thick cursor point being the inner edge's and not the outer's
+  Fixed Stardust Dragon size going bonkers
+  Fixed mobs targetting hardcore player ghosts
+  Fixed Martian Probe detecting players above it
+  Fixed miscellenous chat tag errors
+
+
+Version 1.3.0.3 Changes-----------------------------------------------------------------------------------------------
+
+
+Features:
+	When using leftshift on inventory while in shop, you now have an indicator that you're selling items
+	You can now quickly move items between your chest and the inventory by using leftshift
+	Stardust Guardian is now dyable with your vanity pet dye (have some creative fun!)
+	Areas you have not seen will now be black in camera mode
+	Added 'Highlight New Items' General Settings Option, on by default: Highlights any new item you pick up in your inventory
+	Duct-taped multiplayer for good luck and stability*
+	You should now have an easier time reporting errors if they happen on a server
+	The final bosses leech debuff has been overhauled... (spoilers)
+	You can no longer put torches on tiles you are not supposed to (metal bars, etc)
+	Old and corrupt worlds will now display on the world list marked with a red name.
+	Increased Martian's drone health to 500.
+
+
+New config options:
+	Added Config.json setting "UseSmartWallReplacement", on by default, if you set it off: automatic wall replacement while building will be disabled
+	Added Config.json setting "UseSmartCursorForCommonBlocks", off by default, if you set this on: 1.2.4's smart block placement will be re-enabled
+	Added Config.json setting "DisableLeftShiftTrashCan", off by default, if you set this on: Quicktrash will be ENTIRELY disabled
+	Added Config.json setting "HidePasswords", off by default, if you set this on: all passwords in the client will appear as Asterisks (*)
+	Added Config.json setting "ThickMouseEdges", off by default, if you set this on: your mouse will have thick borders colored by "ThickMouseEdgesPackedCOlor"'s color
+
+
+Bug Fixes:
+	Fixed 'event' achievements not being granted in multiplayer ("You can do it!", "It's Hard!", "No Hobo" and so on)
+	Fixed Truffle worm not spawning
+	Fixed 'Funkytown' achievement will no longer be granted after respawning from death in the glowing mushroom biome.
+	Fixed Gypsy Robe bottoms being genderbent.
+	Fixed Daybreak's, Stardust Dragon and Stardust Cell Staff's gold values
+	Fixed some server crashes (portals, lunar shields)
+	Fixed numerous attack forms not being synced server-side (unicorn mount, slime mount, solar dash, EoC dash, etc)
+	Fixed achievements menu slider bar hanging on top of screen if all filters are disabled
+	Fixed Armed Eskimo Zombies not dropping their proper gore
+	Fixed bug where traps could critically hit
+	Fixed issue where banners could be placed on closed trap doors
+	Fixed Quickstack stacking items of max stack 1 and quick stacking coins from your inventory
+	Fixed Quickstack eating coins
+	Fixed crash in LookForColorTiles
+	Fixed excessive net synchronization on some cases
+	Fixed Team Dye not stacking correctly
+	Fixed crash when saving old worlds
+	Fixed issue where banning was ineffective (including ports...)
+	Fixed Loki's dye missing the common developer's tooltip
+	Fixed Staff of Regrowth Moss growing feature not working in multiplayer
+	Fixed channelled weapons being halted from use when you hover over information icons
+	Fixed Phantasm arrows exploit allowing you to get more arrows than you use
+	Fixed Horseman's blade not summoning pumpkins against Lunar invasion enemies
+	Fixed dupe bug with Item Frames
+	Fixed bug where you couldn't remove an item from the Item Frame if you had a favorite item selected
+	Fixed bug where Config.json's "FrameSkip" was written in reverse compared to ingame
+	Fixed Nymph not having rarity on Lifeform Analyzer
+	Fixed Srollers dealing unintentionally high damage
+	Fixed Developer armor wings gold costs
+	Fixed Frozen Campfire showing Ichor Campfire icon when aimed on the rightmost tile
+	Fixed Bee gun being unable to critically hit
+	Fixed Torch dupe bug
+	Fixed numerous desync issues in multiplayer
+	Fixed an issue where world and player names containing various characters would causes crashes and strange behavior when using cloud saving and favoriting.
+	Fixed an issue where corrupt configuration files would cause crashes.
+	Fixed an issue where you could invite players to your previous game while in single player.
+	Fixed an issue where joining a game from outside of the game would cause an uncancellable joining screen to display.
+	Fixed an issue where the password box would sometimes not show up.
+	Setting your resolution while in fullscreen mode will now apply correctly.
+	Fixed numerous potential multiplayer exploits
+	Fixed issue where players could hack themselves "difficulty 3".
+
+
+Version 1.3.0.2 Changes-----------------------------------------------------------------------------------------------
+
+
+Core Game Fixes:
+  Multicore lighting will now be disabled for everyone, although you may reenable it in the settings. 
+  Fixed issue with bubbles and reversed gravity. 
+  Fixed several crashes.
+  "Star Power" and "Get A Life" achievements will no longer be granted upon entering a world. 
+  Fixed an issue with black squares appearing on backgrounds when using retro lighting. 
+  Capture mode will now disable itself if your computer cannot handle it.
+  Fixed a stacking issue with wires. 
+  Made the "Rock Bottom" achievement slightly easier to get.
+  Various balance tweaks.
+  
+  
+Multiplayer Fixes:
+  You will now be able to enter the password every time when entering or creating a server. 
+  Many issues with the dedicated server and its configurations have been resolved. 
+  Fixed an issue where users would be unable to invite eachother when in "Invite Only" mode.
+  Due to some changes in this hotfix, multiplayer will not be compatable between 1.3.0.2 and previous versions.
+
+
 Version 1.3 Changes-----------------------------------------------------------------------------------------------
 
 

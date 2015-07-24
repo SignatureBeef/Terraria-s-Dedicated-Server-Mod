@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using tdsm.api.Plugin;
+using TDSM.API.Plugin;
+using TDSM.API.Misc;
+
+
 #if Full_API
 using Terraria;
 #endif
 
-namespace tdsm.api.Command
+namespace TDSM.API.Command
 {
     public enum AccessLevel : int
     {
@@ -250,93 +253,93 @@ namespace tdsm.api.Command
             AddCommand("exit")
                 .SetDefaultUsage()
                 .WithDescription("Shutdown the server and save.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Exit);
             AddCommand("exit-nosave")
                 .SetDefaultUsage()
                 .WithDescription("Shutdown the server without saving.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.ExitNoSave);
             AddCommand("clear")
                 .SetDefaultUsage()
                 .WithDescription("Clear the console window.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Clear);
             AddCommand("motd")
                 .WithDescription("Print or change the message of the day.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.MOTD);
             AddCommand("save")
                 .SetDefaultUsage()
                 .WithDescription("Save the game world.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Save);
             AddCommand("playing")
                 .SetDefaultUsage()
                 .WithDescription("Shows the list of players.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Playing);
             AddCommand("kick")
                 .WithDescription("Kicks a player from the server.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Kick);
             AddCommand("ban")
                 .WithDescription("Bans a player from the server.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Ban);
             AddCommand("password")
                 .WithDescription("Shows or changes to password.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Password);
             AddCommand("version")
                 .SetDefaultUsage()
                 .WithDescription("Print version number.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Version);
             AddCommand("maxplayers")
                 .SetDefaultUsage()
                 .WithDescription("Print the max number of players.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.MaxPlayers);
             AddCommand("time")
                 .SetDefaultUsage()
                 .WithDescription("Display game time.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Time);
             AddCommand("port")
                 .SetDefaultUsage()
                 .WithDescription("Print the listening port.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Port);
             AddCommand("dawn")
                 .SetDefaultUsage()
                 .WithDescription("Change time to dawn.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Dawn);
             AddCommand("noon")
                 .SetDefaultUsage()
                 .WithDescription("Change time to noon.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Noon);
             AddCommand("dusk")
                 .SetDefaultUsage()
                 .WithDescription("Change time to dusk.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Dusk);
             AddCommand("midnight")
                 .SetDefaultUsage()
                 .WithDescription("Change time to midnight.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Midnight);
             AddCommand("settle")
                 .SetDefaultUsage()
                 .WithDescription("Settle all water.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.Settle);
             AddCommand("fps")
                 .SetDefaultUsage()
                 .WithDescription("Toggle FPS monitoring.")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
                 .Calls(DefaultCommands.FPS);
 
             AddCommand("help")
@@ -443,7 +446,9 @@ namespace tdsm.api.Command
         public static bool CheckAccessLevel(CommandInfo cmd, ISender sender)
         {
             var perms = CheckPermissions(sender, cmd);
-            if (Permissions.PermissionsManager.IsSet && perms == Permissions.Permission.Denied)
+//            if (Permissions.PermissionsManager.IsSet && perms == Permissions.Permission.Denied)
+//                return false;
+            if (Data.Storage.IsAvailable && perms == Data.Permission.Denied)
                 return false;
 
             return CheckAccessLevel(cmd.accessLevel, sender);
@@ -465,6 +470,7 @@ namespace tdsm.api.Command
             throw new NotImplementedException("Unexpected ISender implementation");
         }
 
+        /* Old permissions
         /// <summary>
         /// Permissions checking for registered commands.
         /// </summary>
@@ -473,10 +479,10 @@ namespace tdsm.api.Command
         /// <returns>True if entity can use command.  False if not.</returns>
         public static Permissions.Permission CheckPermissions(ISender sender, CommandInfo cmd)
         {
-            /*
+            / *
              *  [TODO] Should a node return false, Since there is three possibilites, should it return false if permissions 
              *  is enabled and allow the normal OP system work or no access at all?
-             */
+             * /
             if (cmd.node == null || sender is ConsoleSender || sender.Op)
                 return Permissions.Permission.Permitted;
 
@@ -484,7 +490,28 @@ namespace tdsm.api.Command
                 return Permissions.PermissionsManager.IsPermitted(cmd.node, sender as BasePlayer);
 
             return Permissions.Permission.Denied;
-        }
+        }*/
+
+    /// <summary>
+    /// Permissions checking for registered commands.
+    /// </summary>
+    /// <param name="sender">Entity to check permissions for</param>
+    /// <param name="cmd">Command to check for permissions on</param>
+    /// <returns>True if entity can use command.  False if not.</returns>
+    public static Data.Permission CheckPermissions(ISender sender, CommandInfo cmd)
+    {
+        /*
+             *  [TODO] Should a node return false, Since there is three possibilites, should it return false if permissions 
+             *  is enabled and allow the normal OP system work or no access at all?
+             */
+        if (cmd.node == null || sender is ConsoleSender || sender.Op)
+            return Data.Permission.Permitted;
+
+        if (sender is BasePlayer && Data.Storage.IsAvailable)
+            return Data.Storage.IsPermitted(cmd.node, sender as BasePlayer);
+
+        return Data.Permission.Denied;
+    }
 
         bool FindStringCommand(string prefix, out CommandInfo info)
         {
@@ -661,7 +688,7 @@ namespace tdsm.api.Command
                     }
                     else
                     {
-                        sender.SendMessage(String.Format("No such command `{0}`.", command));
+                        sender.SendMessage(String.Format("No such command '{0}'.", command));
                     }
                 }
             }

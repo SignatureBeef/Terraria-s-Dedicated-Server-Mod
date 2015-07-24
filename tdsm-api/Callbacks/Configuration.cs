@@ -1,11 +1,76 @@
 ﻿using System;
 using System.IO;
-using tdsm.api.Plugin;
+using TDSM.API.Plugin;
+using System.Diagnostics;
+#if Full_API
+using Terraria;
+using Terraria.Initializers;
+using Terraria.IO;
+#endif
 
-namespace tdsm.api.Callbacks
+namespace TDSM.API.Callbacks
 {
     public static class Configuration
     {
+        public static void StartupConfig(Microsoft.Xna.Framework.Game game)
+        {
+            #if Full_API
+            if (Tools.RuntimePlatform != RuntimePlatform.Mono)
+            {
+                try
+                {
+                    string s;
+                    if ((s = LaunchInitializer.TryParameter(new string[]
+                        {
+                            "-forcepriority"
+                        })) != null)
+                    {
+                        Process currentProcess = Process.GetCurrentProcess();
+                        int num;
+                        if (int.TryParse(s, out num))
+                        {
+                            switch (num)
+                            {
+                                case 0:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.RealTime;
+                                    break;
+                                case 1:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.High;
+                                    break;
+                                case 2:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+                                    break;
+                                case 3:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.Normal;
+                                    break;
+                                case 4:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.BelowNormal;
+                                    break;
+                                case 5:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.Idle;
+                                    break;
+                                default:
+                                    currentProcess.PriorityClass = ProcessPriorityClass.High;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            currentProcess.PriorityClass = ProcessPriorityClass.High;
+                        }
+                    }
+                    else
+                    {
+                        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
+                    }
+                }
+                catch
+                {
+                }
+            }
+            #endif
+        }
+
         public static void Load(string file)
         {
             if (File.Exists(file))
@@ -20,13 +85,13 @@ namespace tdsm.api.Callbacks
                             var ix = line.IndexOf("=");
                             if (ix > -1)
                             {
-                                var key = line.Substring(0, ix);
+                                var key = line.Substring(0, ix).Trim();
                                 var value = line.Substring(ix + 1, line.Length - (ix + 1));
 #if Full_API
                                 switch (key.ToLower())
                                 {
                                     case "world":
-                                        Terraria.Main.newWorldName = value;
+                                        Main.ActiveWorldFileData = WorldFile.GetAllMetadata(value, false);
                                         break;
                                     case "port":
                                         int port;
@@ -34,7 +99,8 @@ namespace tdsm.api.Callbacks
                                         {
                                             Tools.WriteLine("Failed to parse config option {0}", key);
                                         }
-                                        else Terraria.Netplay.ListenPort = port;
+                                        else
+                                            Terraria.Netplay.ListenPort = port;
                                         break;
                                     case "maxplayers":
                                         int maxplayers;
@@ -42,9 +108,54 @@ namespace tdsm.api.Callbacks
                                         {
                                             Tools.WriteLine("Failed to parse config option {0}", key);
                                         }
-                                        else Terraria.Main.maxNetPlayers = maxplayers;
+                                        else
+                                            Terraria.Main.maxNetPlayers = maxplayers;
                                         break;
                                     case "priority":
+                                        if (!Program.LaunchParameters.ContainsKey("-forcepriority"))
+                                        {
+                                            if (Tools.RuntimePlatform != RuntimePlatform.Mono)
+                                            {
+                                                try
+                                                {
+                                                    int priority = Convert.ToInt32(value);
+                                                    if (priority >= 0 && priority <= 5)
+                                                    {
+                                                        Process currentProcess = Process.GetCurrentProcess();
+                                                        if (priority == 0)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.RealTime;
+                                                        }
+                                                        else if (priority == 1)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.High;
+                                                        }
+                                                        else if (priority == 2)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+                                                        }
+                                                        else if (priority == 3)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.Normal;
+                                                        }
+                                                        else if (priority == 4)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.BelowNormal;
+                                                        }
+                                                        else if (priority == 5)
+                                                        {
+                                                            currentProcess.PriorityClass = ProcessPriorityClass.Idle;
+                                                        }
+                                                    }
+                                                    else Tools.WriteLine("Invalid priority value: " + priority);
+                                                }
+                                                catch
+                                                {
+                                                }
+                                            }
+                                            else
+                                                Tools.WriteLine("Skipped setting process priority on mono");
+                                        }
                                         break;
                                     case "password":
                                         Terraria.Netplay.ServerPassword = value;
@@ -53,12 +164,25 @@ namespace tdsm.api.Callbacks
                                         Terraria.Main.motd = value;
                                         break;
                                     case "lang":
+                                        int lang;
+                                        if (!Int32.TryParse(value, out lang))
+                                        {
+                                            Tools.WriteLine("Failed to parse config option {0}", key);
+                                        }
+                                        else
+                                            Lang.lang = lang;
                                         break;
                                     case "worldpath":
                                         Terraria.Main.WorldPath = value;
                                         break;
                                     case "worldname":
                                         Terraria.Main.worldName = value;
+                                        break;
+                                    case "banlist":
+                                        Netplay.BanFilePath = value;
+                                        break;
+                                    case "difficulty":
+                                        Main.expertMode = value == "1";
                                         break;
                                     case "autocreate":
                                         int autocreate;
@@ -107,7 +231,8 @@ namespace tdsm.api.Callbacks
                                         {
                                             Tools.WriteLine("Failed to parse config option {0}", key);
                                         }
-                                        else Terraria.Main.npcStreamSpeed = npcstream;
+                                        else
+                                            Terraria.Main.npcStreamSpeed = npcstream;
                                         break;
                                     default:
                                         var ctx = new HookContext()
@@ -126,10 +251,12 @@ namespace tdsm.api.Callbacks
 #endif
                             }
                         }
-                        else break;
+                        else
+                            break;
                     }
                 }
-            else Tools.WriteLine("Configuration was specified but does not exist.");
+            else
+                Tools.WriteLine("Configuration was specified but does not exist.");
         }
     }
 }

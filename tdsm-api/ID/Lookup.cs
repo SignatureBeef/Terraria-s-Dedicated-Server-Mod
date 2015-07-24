@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace tdsm.api.ID
+namespace TDSM.API.ID
 {
     public static class Lookup
     {

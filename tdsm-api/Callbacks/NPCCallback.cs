@@ -1,5 +1,5 @@
-﻿using tdsm.api.Plugin;
-namespace tdsm.api.Callbacks
+﻿using TDSM.API.Plugin;
+namespace TDSM.API.Callbacks
 {
     public static class NPCCallback
     {

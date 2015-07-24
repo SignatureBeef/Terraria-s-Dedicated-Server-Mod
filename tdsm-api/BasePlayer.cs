@@ -1,17 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Concurrent;
-using tdsm.api;
-using tdsm.api.Command;
-using Terraria.Net.Sockets;
+using TDSM.API;
+using TDSM.API.Command;
 
-namespace tdsm.api
+#if Full_API
+using Terraria.Net.Sockets;
+#endif
+
+namespace TDSM.API
 {
     public partial class BasePlayer : Sender
     {
         public string ClientUUId { get; set; }
 
-        public string AuthenticatedAs { get; set; }
+        public string AuthenticatedAs { get; private set; }
 
         public string AuthenticatedBy { get; set; }
 
@@ -19,6 +22,7 @@ namespace tdsm.api
 
         public void SetAuthentication(string auth, string by)
         {
+            #if Full_API
             var ctx = new Plugin.HookContext()
             {
                 Player = this as Terraria.Player,
@@ -26,12 +30,12 @@ namespace tdsm.api
             };
             var changing = new Plugin.HookArgs.PlayerAuthenticationChanging()
             {
-                AuthenticatedAs = this.AuthenticatedAs,
-                AuthenticatedBy = this.AuthenticatedBy
+                AuthenticatedAs = auth,
+                AuthenticatedBy = by
             };
 
             Plugin.HookPoints.PlayerAuthenticationChanging.Invoke(ref ctx, ref changing);
-            if (ctx.Result != Plugin.HookResult.CONTINUE)
+            if (ctx.Result != Plugin.HookResult.DEFAULT)
                 return;
 
             this.AuthenticatedAs = auth;
@@ -49,6 +53,7 @@ namespace tdsm.api
             };
 
             Plugin.HookPoints.PlayerAuthenticationChanged.Invoke(ref ctx, ref changed);
+            #endif
         }
 
         public override string Name
@@ -78,11 +83,12 @@ namespace tdsm.api
             SendMessage(message, 255, color.R, color.G, color.B);
         }
 
-        //        public ClientConnection Connection;
+        #if Full_API
         public Terraria.RemoteClient Connection
         {
             get { return Terraria.Netplay.Clients[this.whoAmI]; }
         }
+        #endif
 
         public string IPAddress;
         public string DisconnectReason;

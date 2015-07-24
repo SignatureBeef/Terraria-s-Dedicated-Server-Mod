@@ -9,6 +9,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public GraphicsDevice GraphicsDevice { get; set; }
 
-        public bool IsDisposed { get; }
+        public bool IsDisposed { get; set; }
     }
 }

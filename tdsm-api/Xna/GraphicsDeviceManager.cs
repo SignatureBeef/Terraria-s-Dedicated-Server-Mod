@@ -14,6 +14,6 @@ namespace Microsoft.Xna.Framework
         public void ToggleFullScreen() { }
         public void ApplyChanges() { }
 
-        public GraphicsDevice GraphicsDevice {get;}
+        public GraphicsDevice GraphicsDevice { get; set; }
     }
 }

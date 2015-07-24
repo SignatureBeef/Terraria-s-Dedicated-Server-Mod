@@ -12,7 +12,7 @@ namespace tdsm.patcher
         {
             get
             {
-                return (int)_api.GetType("tdsm.api.Globals").GetField("Build").GetValue(null);
+                return (int)_api.GetType("TDSM.API.Globals").GetField("Build").GetValue(null);
             }
         }
 
@@ -20,7 +20,7 @@ namespace tdsm.patcher
         {
             get
             {
-                return (string)_api.GetType("tdsm.api.Globals").GetField("TerrariaVersion").GetValue(null);
+                return (string)_api.GetType("TDSM.API.Globals").GetField("TerrariaVersion").GetValue(null);
             }
         }
 
@@ -29,7 +29,7 @@ namespace tdsm.patcher
         {
             get
             {
-                return (string)_api.GetType("tdsm.api.Globals").GetProperty("LibrariesPath").GetValue(null, null);
+                return (string)_api.GetType("TDSM.API.Globals").GetProperty("LibrariesPath").GetValue(null, null);
             }
         }
 
@@ -37,7 +37,7 @@ namespace tdsm.patcher
         {
             get
             {
-                return (string)_api.GetType("tdsm.api.Globals").GetProperty("PluginPath").GetValue(null, null);
+                return (string)_api.GetType("TDSM.API.Globals").GetProperty("PluginPath").GetValue(null, null);
             }
         }
 
@@ -45,11 +45,11 @@ namespace tdsm.patcher
         {
             get
             {
-                return (bool)_api.GetType("tdsm.api.Globals").GetProperty("IsPatching").GetValue(null, null);
+                return (bool)_api.GetType("TDSM.API.Globals").GetProperty("IsPatching").GetValue(null, null);
             }
             set
             {
-                _api.GetType("tdsm.api.Globals").GetProperty("IsPatching").SetValue(null, value, null);
+                _api.GetType("TDSM.API.Globals").GetProperty("IsPatching").SetValue(null, value, null);
             }
         }
 
@@ -57,19 +57,19 @@ namespace tdsm.patcher
         {
             IsPatching = true;
 
-            _api.GetType("tdsm.api.Globals").GetMethod("Touch").Invoke(null, null);
+            _api.GetType("TDSM.API.Globals").GetMethod("Touch").Invoke(null, null);
 
-            var pm = _api.GetType("tdsm.api.PluginManager");
+            var pm = _api.GetType("TDSM.API.PluginManager");
 
-            pm.GetMethod("SetHookSource").Invoke(null, new object[] { _api.GetType("tdsm.api.Plugin.HookPoints") });
+            pm.GetMethod("SetHookSource").Invoke(null, new object[] { _api.GetType("TDSM.API.Plugin.HookPoints") });
             pm.GetMethod("Initialize").Invoke(null, new object[] { PluginPath, LibrariesPath });
             pm.GetMethod("LoadPlugins").Invoke(null, null);
         }
 
         public void InvokeEvent(byte[] terraria, bool isServer)
         {
-            var hct = _api.GetType("tdsm.api.Plugin.HookContext");
-            var hap = _api.GetType("tdsm.api.Plugin.HookArgs").GetNestedType("PatchServer");
+            var hct = _api.GetType("TDSM.API.Plugin.HookContext");
+            var hap = _api.GetType("TDSM.API.Plugin.HookArgs").GetNestedType("PatchServer");
 
             var ctx = Activator.CreateInstance(hct);
             var args = Activator.CreateInstance(hap);
@@ -78,7 +78,7 @@ namespace tdsm.patcher
             hap.GetProperty("IsServer").SetValue(args, isServer, null);
             hap.GetProperty("IsClient").SetValue(args, !isServer, null);
 
-            var pst = _api.GetType("tdsm.api.Plugin.HookPoints")
+            var pst = _api.GetType("TDSM.API.Plugin.HookPoints")
                 .GetField("PatchServer");
             var pse = pst.GetValue(null);
 
@@ -96,7 +96,7 @@ namespace tdsm.patcher
 
     /// <summary>
     /// This class is to isolate and manage the tdsm.exe referenced by the api dll.
-    /// Previously windows would lock the tdsm.exe that was referenced by tdsm.api.dll, which itself was loaded by the patcher.
+    /// Previously windows would lock the tdsm.exe that was referenced by TDSM.API.dll, which itself was loaded by the patcher.
     /// The locking would cause the patcher (if ran a second time) to fail when saving tdsm.exe
     /// </summary>
     public static class APIWrapper
@@ -131,7 +131,7 @@ namespace tdsm.patcher
             //};
 
             var type = typeof(Proxy);
-            foreach (var file in new string[] { "tdsm-patcher.exe", "tdsm.api.dll" })
+            foreach (var file in new string[] { "tdsm-patcher.exe", "TDSM.API.dll" })
             {
                 if (!System.IO.File.Exists(file))
                 {
@@ -148,9 +148,9 @@ namespace tdsm.patcher
             ////var p = r.GetRealObject(new System.Runtime.Serialization.StreamingContext( System.Runtime.Serialization.StreamingContextStates.CrossAppDomain));
             _api = plugin.Unwrap() as Proxy;
 
-            _api.Load(System.IO.Path.Combine(Environment.CurrentDirectory, "tdsm.api.dll"));
+            _api.Load(System.IO.Path.Combine(Environment.CurrentDirectory, "TDSM.API.dll"));
 
-            //var has = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.GetName().Name == "tdsm.api").Count() > 0;
+            //var has = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.GetName().Name == "TDSM.API").Count() > 0;
             //var asm = _domain.GetAssemblies();
         }
 

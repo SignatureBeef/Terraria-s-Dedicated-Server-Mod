@@ -1,7 +1,7 @@
 ﻿#if Full_API
 using Terraria;
 
-namespace tdsm.api
+namespace TDSM.API
 {
     public static class ProjectileExtensions
     {

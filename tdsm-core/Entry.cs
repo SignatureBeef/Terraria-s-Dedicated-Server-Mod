@@ -5,22 +5,24 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using tdsm.api;
-using tdsm.api.Callbacks;
-using tdsm.api.Command;
-using tdsm.api.Plugin;
-using tdsm.core.Definitions;
-using tdsm.core.Logging;
-using tdsm.core.Misc;
-using tdsm.api.Misc;
+using TDSM.API;
+using TDSM.API.Callbacks;
+using TDSM.API.Command;
+using TDSM.API.Plugin;
+using TDSM.Core.Definitions;
+using TDSM.API.Logging;
+using TDSM.Core.Misc;
+using TDSM.API.Misc;
+using TDSM.Core.RemoteConsole;
 
-namespace tdsm.core
+namespace TDSM.Core
 {
     public partial class Entry : BasePlugin
     {
         public const Int32 CoreBuild = 2;
 
         private bool _useTimeLock;
+
         public bool UseTimeLock
         {
             get
@@ -32,12 +34,17 @@ namespace tdsm.core
                 TimelockTime = Terraria.Main.time;
             }
         }
+
         public double TimelockTime { get; set; }
+
         public bool TimelockRain { get; set; }
+
         public bool TimelockSlimeRain { get; set; }
 
         public static string RConHashNonce { get; set; }
+
         public static string RConBindAddress { get; set; }
+
         public static bool EnableCheatProtection { get; set; }
 
         private bool VanillaOnly
@@ -50,19 +57,23 @@ namespace tdsm.core
             {
                 if (value)
                 {
-                    if (IsEnabled) PluginManager.DisablePlugin(this);
+                    if (IsEnabled)
+                        PluginManager.DisablePlugin(this);
                 }
                 else
                 {
-                    if (!IsEnabled) PluginManager.EnablePlugin(this);
+                    if (!IsEnabled)
+                        PluginManager.EnablePlugin(this);
                 }
             }
         }
 
         public bool StopNPCSpawning { get; set; }
+
         public bool RunServerCore { get; set; }
 
         private string _webServerAddress { get; set; }
+
         private string _webServerProvider { get; set; }
 
         public bool RestartWhenNoPlayers { get; set; }
@@ -82,8 +93,8 @@ namespace tdsm.core
         {
             base.Enabled();
 
-            tdsm.api.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
-            tdsm.api.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
+            TDSM.API.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
+            TDSM.API.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
             EnableCheatProtection = true;
             RunServerCore = true;
         }
@@ -144,7 +155,7 @@ namespace tdsm.core
             AddCommand("give")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Give a player items")
-                .WithHelpText("<player> <amount> <itemname:itemid> [-prefix]")
+                .WithHelpText("<player> <amount> <itemname:itemid> [prefix]")
                 .WithPermissionNode("tdsm.give")
                 .Calls(this.Give);
 
@@ -172,6 +183,13 @@ namespace tdsm.core
                 .WithHelpText("<player>")
                 .WithPermissionNode("tdsm.tphere")
                 .Calls(this.TeleportHere);
+
+            AddCommand("save")
+                .WithDescription("Save world and configuration data")
+                .WithAccessLevel(AccessLevel.OP)
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.admin")
+                .Calls(this.SaveAll);
 
             AddCommand("save-all")
                 .WithDescription("Save world and configuration data")
@@ -241,7 +259,7 @@ namespace tdsm.core
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("3rd person talk")
                 .WithHelpText("<message> - Message to display in third person.")
-                //.SetDefaultUsage() //This was causing an additional "me" to be displayed in the help commmand syntax.
+            //.SetDefaultUsage() //This was causing an additional "me" to be displayed in the help commmand syntax.
                 .WithPermissionNode("tdsm.me")
                 .Calls(this.Action);
 
@@ -327,8 +345,7 @@ namespace tdsm.core
                 .WithDescription("Enables hard mode.")
                 .WithPermissionNode("tdsm.hardmode")
                 .Calls(this.HardMode);
-            
-#if TDSMServer
+
             AddCommand("rcon")
                 .WithDescription("Manage remote console access.")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
@@ -339,7 +356,6 @@ namespace tdsm.core
                 .WithHelpText("add <name> <password> - add an rcon user")
                 .WithPermissionNode("tdsm.rcon")
                 .Calls(RConServer.RConCommand);
-#endif
 
             AddCommand("npcspawning")
                 .WithDescription("Turn NPC spawning on or off.")
@@ -408,13 +424,13 @@ namespace tdsm.core
                 .SetDefaultUsage()
                 .Calls(Server.Command_AcceptConnections);
 #endif
-            AddCommand("restart")
-                .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Restart the server.")
-                .WithHelpText("<no parameters>    - Restart immediately.")
-                .WithHelpText("--wait             - Wait for users to disconnect and then restart.")
-                .WithPermissionNode("tdsm.restart")
-                .Calls(this.Restart);
+//            AddCommand("restart")
+//                .WithAccessLevel(AccessLevel.OP)
+//                .WithDescription("Restart the server.")
+//                .WithHelpText("<no parameters>    - Restart immediately.")
+//                .WithHelpText("--wait             - Wait for users to disconnect and then restart.")
+//                .WithPermissionNode("tdsm.restart")
+//                .Calls(this.Restart);
 
 #if DEBUG
             AddCommand("repo")
@@ -441,7 +457,8 @@ namespace tdsm.core
             //    .Calls(this.Repository);
 #endif
 
-            if (!DefinitionManager.Initialise()) ProgramLog.Log("Failed to initialise definitions.");
+            if (!DefinitionManager.Initialise())
+                ProgramLog.Log("Failed to initialise definitions.");
 
             ProgramLog.Log("TDSM Rebind core enabled");
         }
@@ -531,7 +548,7 @@ namespace tdsm.core
         {
             ctx.SetResult(HookResult.IGNORE);
 
-            (new tdsm.api.ProgramThread("Command", ListenForCommands)).Start();
+            (new TDSM.API.Misc.ProgramThread("Command", ListenForCommands)).Start();
         }
 
         [Hook(HookOrder.NORMAL)]
@@ -562,9 +579,17 @@ namespace tdsm.core
                 try
                 {
                     var ln = Console.ReadLine();
-                    UserInput.CommandParser.ParseConsoleCommand(ln);
+                    if (!String.IsNullOrEmpty(ln))
+                        UserInput.CommandParser.ParseConsoleCommand(ln);
+                    else if (null == ln)
+                    {
+                        ProgramLog.Log("No console input available");
+                        break;
+                    }
                 }
-                catch (ExitException) { }
+                catch (ExitException)
+                {
+                }
                 catch (Exception e)
                 {
                     ProgramLog.Log("Exception from command");
@@ -612,8 +637,8 @@ namespace tdsm.core
             //    //    Server.CheckSection(i, Terraria.Main.player[i].position);
 
             //    //    //TODO SpamUpdate
-            //    //    //if(tdsm.api.Callbacks.Netplay.slots[i].conn != null && tdsm.api.Callbacks.Netplay.slots[i].conn.Active )
-            //    //    //    tdsm.api.Callbacks.Netplay.slots[i].conn.s
+            //    //    //if(TDSM.API.Callbacks.Netplay.slots[i].conn != null && TDSM.API.Callbacks.Netplay.slots[i].conn.Active )
+            //    //    //    TDSM.API.Callbacks.Netplay.slots[i].conn.s
             //    //}
             //}
 
@@ -651,12 +676,12 @@ namespace tdsm.core
             ProgramLog.Close();
         }
 
-        //[Hook(HookOrder.NORMAL)]
-        //void OnNPCSpawned(ref HookContext ctx, ref HookArgs.NPCSpawn args)
-        //{
-        //    if (StopNPCSpawning)
-        //        ctx.SetResult(HookResult.IGNORE);
-        //}
+        [Hook(HookOrder.NORMAL)]
+        void OnNPCSpawned(ref HookContext ctx, ref HookArgs.NPCSpawn args)
+        {
+            if (StopNPCSpawning)
+                ctx.SetResult(HookResult.IGNORE);
+        }
 
         /////Avoid using this as much as possible (this goes for plugin developers too).
         /////The idea is to be able to add/remove a plugin from the installation without issues.
@@ -666,7 +691,7 @@ namespace tdsm.core
         //{
         //    if (args.IsServer)
         //    {
-        //        var _self = AssemblyDefinition.ReadAssembly("Plugins/tdsm.core.dll");
+        //        var _self = AssemblyDefinition.ReadAssembly("Plugins/TDSM.Core.dll");
 
         //        Console.WriteLine("Routing socket implementations...");
         //        var serverClass = _self.MainModule.Types.Where(x => x.Name == "Server").First();
@@ -679,7 +704,7 @@ namespace tdsm.core
         //        var terraria = AssemblyDefinition.ReadAssembly(msa);
         //        //var terraria = args.Terraria as AssemblyDefinition;
 
-        //        //Replace Terraria.Netplay.Clients references with tdsm.core.tdsm.api.Callbacks.Netplay.slots
+        //        //Replace Terraria.Netplay.Clients references with TDSM.Core.TDSM.API.Callbacks.Netplay.slots
         //        var instructions = terraria.MainModule.Types
         //            .SelectMany(x => x.Methods
         //                .Where(y => y.HasBody && y.Body.Instructions != null)
@@ -732,8 +757,8 @@ namespace tdsm.core
         //        }
         //    }
         //}
-        
-#if TDSMServer
+
+        #if TDSMServer
         [Hook(HookOrder.NORMAL)]
         void OnDefaultServerStart(ref HookContext ctx, ref HookArgs.StartDefaultServer args)
         {
@@ -866,6 +891,19 @@ namespace tdsm.core
         {
             ProgramLog.Log("Server state changed to: " + args.ServerChangeState.ToString());
 
+            if (args.ServerChangeState == ServerState.Initialising)
+            {
+                if (!String.IsNullOrEmpty(RConBindAddress))
+                {
+                    ProgramLog.Log("Starting RCON Server");
+                    RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"));
+                }
+            }
+            if (args.ServerChangeState == ServerState.Stopping)
+            {
+                RemoteConsole.RConServer.Stop();
+            }
+
             //if (args.ServerChangeState == ServerState.Initialising)
 #if TDSMServer
             if (!Server.IsInitialised)
@@ -909,6 +947,63 @@ namespace tdsm.core
         //        args.Number2, args.Number3, args.Number4, args.Number5);
         //}
 
+        //        string GetProgressKey(string input, out int length, out string progress)
+        //        {
+        //            length = 0;
+        //            string key = null;
+        //
+        //            //Determine format
+        //            int progTypeStart = input.IndexOf('-');
+        //            int progTypeEnd = input.LastIndexOf('-');
+        //
+        //            if (progTypeStart > -1 && progTypeEnd > -1)
+        //            {
+        //                progTypeStart++;
+        //                progTypeEnd--;
+        //
+        //                key = input.Substring(progTypeStart, progTypeEnd - 1);
+        //
+        //                //                length = input.Length - (progTypeEnd + 1);
+        //                //This format does need
+        //            }
+        //            else
+        //            {
+        //
+        //            }
+        //
+        //            return key;
+        //        }
+
+        static readonly System.Text.RegularExpressions.Regex _fmtGeneration = new System.Text.RegularExpressions.Regex(".* - (.*) - (.*)%");
+        static readonly System.Text.RegularExpressions.Regex _fmtSemi = new System.Text.RegularExpressions.Regex("(.*): (.*)%");
+        static readonly System.Text.RegularExpressions.Regex _fmtDefault = new System.Text.RegularExpressions.Regex("(.*) (.*)%");
+
+        string GetProgressKey(string input, out string progress)
+        {
+            progress = String.Empty;
+
+            var gen = _fmtGeneration.Matches(input);
+            if (gen != null && gen.Count == 1 && gen[0].Groups.Count == 3)
+            {
+                progress = gen[0].Groups[2].Value + '%';
+                return gen[0].Groups[1].Value;
+            }
+            gen = _fmtSemi.Matches(input);
+            if (gen != null && gen.Count == 1 && gen[0].Groups.Count == 3)
+            {
+                progress = gen[0].Groups[2].Value + '%';
+                return gen[0].Groups[1].Value;
+            }
+            gen = _fmtDefault.Matches(input);
+            if (gen != null && gen.Count == 1 && gen[0].Groups.Count == 3)
+            {
+                progress = gen[0].Groups[2].Value + '%';
+                return gen[0].Groups[1].Value;
+            }
+
+            return input;
+        }
+
         private int lastWritten = 0;
         //[Hook(HookOrder.NORMAL)]
         void OnStatusTextChanged() //ref HookContext ctx, ref HookArgs.StatusTextChanged args)
@@ -922,44 +1017,56 @@ namespace tdsm.core
             {
                 if (!String.IsNullOrEmpty(statusText))
                 {
-                    var ixA = oldStatusText.LastIndexOf(":");
-                    var ixB = statusText.LastIndexOf(":");
-                    if (ixA > -1 && ixB > -1)
-                    {
-                        var keyA = oldStatusText.Substring(0, ixA);
-                        var keyB = statusText.Substring(0, ixB);
-                        if (keyA == keyB)
-                        {
-                            if (lastWritten > 0)
-                            {
-                                var moveBack = oldStatusText.Length - ixA;
-                                for (var x = 0; x < moveBack; x++)
-                                    Console.Write("\b");
-                            }
+                    string previousProgress, currentProgress;
 
-                            var len = statusText.Length - ixB;
-                            Console.Write(statusText.Substring(ixB, len));
-                            lastWritten += len;
+                    string keyA = GetProgressKey(oldStatusText, out previousProgress);
+                    string keyB = GetProgressKey(statusText, out currentProgress);
+
+                    if (keyA != null && keyB != null)
+                    {
+                        keyA = keyA.Trim();
+                        keyB = keyB.Trim();
+                        if (keyA.Length > 0 && keyB.Length > 0)
+                        {
+                            if (keyA == keyB)
+                            {
+                                if (lastWritten > 0)
+                                {
+                                    for (var x = 0; x < lastWritten; x++)
+                                        Console.Write("\b");
+                                }
+
+                                Console.Write(currentProgress);
+                                lastWritten += currentProgress.Length - lastWritten;
+                            }
+                            else
+                            {
+                                Console.WriteLine();
+                                lastWritten = 0;
+                                Console.Write(statusText);
+
+                                lastWritten += currentProgress.Length;
+
+                                if (currentProgress.Length == 0)
+                                    Console.WriteLine();
+                            }
                         }
                         else
                         {
-                            Console.WriteLine();
-                            lastWritten = 0;
-                            Console.Write(statusText);
+                            if (lastWritten > 0)//!String.IsNullOrEmpty(oldStatusText)) //There was existing text
+                            {
+                                Console.WriteLine();
+                                lastWritten = 0;
+                            }
 
-                            lastWritten += statusText.Length;
+                            Console.Write(statusText);
+                            lastWritten += currentProgress.Length;
                         }
                     }
-                    else
+                    else if (keyA == null && keyB != null)
                     {
-                        if (lastWritten > 0)//!String.IsNullOrEmpty(oldStatusText)) //There was existing text
-                        {
-                            Console.WriteLine();
-                            lastWritten = 0;
-                        }
-
                         Console.Write(statusText);
-                        lastWritten += statusText.Length;
+                        lastWritten += currentProgress.Length;
                     }
                 }
                 else

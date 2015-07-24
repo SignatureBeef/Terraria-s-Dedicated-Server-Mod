@@ -25,9 +25,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public IndexBuffer Indices { get; set; }
 
-        public SamplerStateCollection SamplerStates { get; }
+        public SamplerStateCollection SamplerStates { get; set; }
 
-        public bool IsDisposed { get; }
+        public bool IsDisposed { get; set; }
 
         public void SetVertexBuffer(VertexBuffer vertexBuffer)
         {

@@ -4,22 +4,37 @@
 
 #the following is a list of available command line parameters:
 
-#-config <config file>				Specifies the configuration file to use.
-#-port <port number>				Specifies the port to listen on.
+#-config <config file>				            Specifies the configuration file to use.
+#-port <port number>				              Specifies the port to listen on.
 #-players <number> / -maxplayers <number>	Sets the max number of players
 #-pass <password> / -password <password>	Sets the server password
-#-world <world file>				Load a world and automatically start the server.
-#-autocreate <#>				Creates a world if none is found in the path specified by -world. World size is specified by: 1(small), 2(medium), and 3(large).
-#-banlist <path>				Specifies the location of the banlist. Defaults to "banlist.txt" in the working directory.
-#-worldname <world name>			Sets the name of the world when using -autocreate.
-#-secure					Adds addition cheat protection to the server.
-#-noupnp					Disables automatic port forwarding
+#-world <world file>				              Load a world and automatically start the server.
+#-autocreate <#>			                  	Creates a world if none is found in the path specified by -world. World size is specified by: 1(small), 2(medium), and 3(large).
+#-banlist <path>			                  	Specifies the location of the banlist. Defaults to "banlist.txt" in the working directory.
+#-worldname <world name>             			Sets the name of the world when using -autocreate.
+#-secure			                        		Adds addition cheat protection to the server.
+#-noupnp				                        	Disables automatic port forwarding
+#-steam                         					Enables Steam Support
+#-lobby <friends> or <private>             Allows friends to join the server or sets it to private if Steam is enabled
+#-ip <ip address>	Sets the IP address for the server to listen on
+#-forcepriority <priority>	Sets the process priority for this task. If this is used the "priority" setting below will be ignored.
 
-#Set’s the max number of players allowed on a server.  Value must be between 1 and 255
-maxplayers=8
+#remove the # in front of commands to enable them.
 
 #Load a world and automatically start the server.
-#world=C:\Users\Defaults\My Documents\My Games\Terraria\Worlds\world1.wld
+#world=C:\Users\YOUR_USERNAME_HERE\My Documents\My Games\Terraria\Worlds\world1.wld
+
+#Creates a new world if none is found. World size is specified by: 1(small), 2(medium), and 3(large).
+#autocreate=1
+
+#Sets the name of the world when using autocreate
+#worldname=Terraria
+
+#Sets the difficulty of the world when using autocreate 0(normal), 1(expert)
+#difficulty=1
+
+#Sets the max number of players allowed on a server.  Value must be between 1 and 255
+#maxplayers=8
 
 #Set the port number
 #port=7777
@@ -28,16 +43,10 @@ maxplayers=8
 #password=p@55w0rd
 
 #Set the message of the day
-#motd=Please don’t cut the purple trees!
+#motd=Please don�t cut the purple trees!
 
 #Sets the folder where world files will be stored
 #worldpath=C:\Users\Defaults\My Documents\My Games\Terraria\Worlds\
-
-#Creates a new world if none is found. World size is specified by: 1(small), 2(medium), and 3(large).
-#autocreate=3
-
-#Sets the name of the world when using autocreate
-#worldname=World
 
 #The location of the banlist. Defaults to "banlist.txt" in the working directory.
 #banlist=banlist.txt
@@ -57,64 +66,3 @@ maxplayers=8
 #Default system priority 0:Realtime, 1:High, 2:AboveNormal, 3:Normal, 4:BelowNormal, 5:Idle
 priority=1
 
-#Additional TDSM configuration
-
-#true to enable the whitelist
-usewhitelist=false
-
-#true to enforce the core to only run as a vanilla server under linux
-vanilla-server=false
-
-#Allows communication to the TDSM server
-#heartbeat=true
-
-#true to show on the server list, heartbeat must be enabled.
-#server-list=true
-
-#Name on server list
-server-list-name=TDSM Server
-
-#Description to use on the server list
-server-list-desc=This is an example of the description for use in the TDSM Server List.\n\nHello World!
-
-#Instead of displaying the IP, opt to display your domain
-server-list-domain=tdsm.org
-
-#Address for the Remote Console server to bind to
-rcon-bind-address=127.0.0.1:7023
-
-#Remote console random hashing key, set to something completely random. This is used to hash your user/passwords so if you change it will invalidate all logins.
-#If this is not specified one will be generated and stored in Data\rcon.nonce
-#rcon-hash-nonce=
-
-#The address that the web server should listen on, to disable simply comment the line out.
-#If you change the port please ensure you change the META TAG tdsm:port in /WebInterface/Files/index.html
-#[Notice: Web server is still in development and is disabled in build 2b]
-web-server-bind-address=127.0.0.1:8448
-
-#Set to false if you wish to use another application to serve HTML files (such as nginx or apache)
-web-server-serve-files=true
-
-#The provider/your server name shown to the web user. 
-web-server-provider=TDSM Rebind Server Host
-
-#Max client queue memory size
-send-queue-quota=1024
-
-#Allows bypassing of the slot queue mechanism when the server reaches the player limit.
-#Note: This is typically implemented by a plugins. For example when used in conjunction with restrict it allows operators to bypass the queue.
-overlimit-slots=1
-
-#Location of a pid file to maintain.
-#pid-file=process.pid
-
-#If you are having issues with being kicked with forgery messages and you wish to disable TDSM's cheat detection
-#this will allow you to do so. (This is seperate from the official server's "secure" config property)
-#Enabled by default
-#cheat-detection=true
-
-server-side-characters=true
-
-#DEVELOPER config. This section is to disable TDSM starting it's own custom server implementation.
-#Set to false to use Re-Logic server code
-tdsm-server-core=true

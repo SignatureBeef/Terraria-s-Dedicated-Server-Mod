@@ -1,9 +1,9 @@
 {
 	Instructions: [
-		{ PackageFileName: "Plugins\\tdsm.core.dll" },
-		{ PackageFileName: "Plugins\\tdsm.core.pdb" }
+		{ PackageFileName: "Plugins\\TDSM.Core.dll" },
+		{ PackageFileName: "Plugins\\TDSM.Core.pdb" }
 	],
 	PluginsToLoad: [
-		"Plugins\\tdsm.core.dll"
+		"Plugins\\TDSM.Core.dll"
 	]
 }

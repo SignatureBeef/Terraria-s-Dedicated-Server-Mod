@@ -7,10 +7,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using tdsm.api.Command;
-using tdsm.api.Plugin;
+using TDSM.API.Command;
+using TDSM.API.Plugin;
 
-namespace tdsm.api
+namespace TDSM.API
 {
     /// <summary>
     /// PluginManager class.  Handles all input/output, loading, enabling, disabling, and hook processing for plugins

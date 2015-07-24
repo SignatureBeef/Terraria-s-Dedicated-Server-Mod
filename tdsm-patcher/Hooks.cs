@@ -16,7 +16,10 @@ namespace tdsm.patcher
         }
     }
 
-    public sealed class HookAttribute : Attribute { }
+    public sealed class HookAttribute : Attribute
+    {
+
+    }
 
     /// <summary>
     /// This file is specifically for Vanilla hooks.
@@ -46,7 +49,8 @@ namespace tdsm.patcher
             {
                 const String Fmt = "Patching in hooks - {0}/{1}";
 
-                if (line != null) ConsoleHelper.ClearLine();
+                if (line != null)
+                    ConsoleHelper.ClearLine();
 
                 line = String.Format(Fmt, x + 1, hooks.Length);
                 Console.Write(line);
@@ -54,7 +58,8 @@ namespace tdsm.patcher
             }
 
             //Clear ready for the Ok\n
-            if (line != null) ConsoleHelper.ClearLine();
+            if (line != null)
+                ConsoleHelper.ClearLine();
             Console.Write("Patching in hooks - ");
         }
 
@@ -122,6 +127,7 @@ namespace tdsm.patcher
     public class TerrariaOrganiser
     {
         private AssemblyDefinition _asm;
+
         public TerrariaOrganiser(AssemblyDefinition assembly)
         {
             this._asm = assembly;
@@ -145,10 +151,16 @@ namespace tdsm.patcher
             { return _asm.MainModule.Types.Single(x => x.Name == "Main"); }
         }
 
-        public TypeDefinition ProgramServer
+        //        public TypeDefinition ProgramServer
+        //        {
+        //            get
+        //            { return _asm.MainModule.Types.Single(x => x.Name == "ProgramServer"); }
+        //        }
+
+        public TypeDefinition WindowsLaunch
         {
             get
-            { return _asm.MainModule.Types.Single(x => x.Name == "ProgramServer"); }
+            { return _asm.MainModule.Types.Single(x => x.Name == "WindowsLaunch"); }
         }
 
         public TypeDefinition NPC
@@ -181,11 +193,11 @@ namespace tdsm.patcher
             { return _asm.MainModule.Types.Single(x => x.Name == "Player"); }
         }
 
-//        public TypeDefinition ServerSock
-//        {
-//            get
-//            { return _asm.MainModule.Types.Single(x => x.Name == "ServerSock"); }
-//        }
+        //        public TypeDefinition ServerSock
+        //        {
+        //            get
+        //            { return _asm.MainModule.Types.Single(x => x.Name == "ServerSock"); }
+        //        }
 
         public TypeDefinition RemoteClient
         {
@@ -198,22 +210,31 @@ namespace tdsm.patcher
             get
             { return _asm.MainModule.Types.Single(x => x.Name == "RemoteServer"); }
         }
+
+        public TypeDefinition LaunchInitializer
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "LaunchInitializer"); }
+        }
     }
 
     public class APIOrganiser
     {
         private AssemblyDefinition _asm;
+
         public APIOrganiser(AssemblyDefinition assembly)
         {
             this._asm = assembly;
         }
 
         #region "Callbacks"
+
         public TypeDefinition BasePlayer
         {
             get
             { return _asm.MainModule.Types.Single(x => x.Name == "BasePlayer"); }
         }
+
         public TypeDefinition Configuration
         {
             get
@@ -274,6 +295,12 @@ namespace tdsm.patcher
             { return _asm.MainModule.Types.Single(x => x.Name == "Tools"); }
         }
 
+        public TypeDefinition ProgramLog
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "ProgramLog"); }
+        }
+
         public TypeDefinition UserInput
         {
             get
@@ -291,6 +318,7 @@ namespace tdsm.patcher
             get
             { return _asm.MainModule.Types.Single(x => x.Name == "VanillaHooks"); }
         }
+
         #endregion
 
         public TypeDefinition NAT
@@ -302,7 +330,14 @@ namespace tdsm.patcher
         public TypeDefinition ClientConnection
         {
             get
-            { return _asm.MainModule.Types.Single(x => x.Name == "TemporarySynchSock"); }
+            { return _asm.MainModule.Types.Single(x => x.Name == "ClientConnection"); }
+            //{ return _asm.MainModule.Types.Single(x => x.Name == "TemporarySynchSock"); }
+        }
+
+        public TypeDefinition Utilities
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "Utilities"); }
         }
     }
 }

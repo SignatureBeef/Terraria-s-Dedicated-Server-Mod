@@ -2,10 +2,41 @@
 using System;
 using Terraria;
 
-namespace tdsm.core
+namespace TDSM.Core
 {
+    public enum WorldSize
+    {
+        Small,
+        Medium,
+        Large
+    }
+
     public static class World
     {
+        public static bool IsLarge(this WorldSize size)
+        {
+            return size == WorldSize.Large;
+        }
+
+        public static bool IsMedium(this WorldSize size)
+        {
+            return size == WorldSize.Medium;
+        }
+
+        public static bool IsSmall(this WorldSize size)
+        {
+            return size == WorldSize.Small;
+        }
+
+        public static WorldSize GetWorldSize()
+        {
+            if (Terraria.Main.maxTilesY <= 1200)
+                return WorldSize.Small;
+            if (Terraria.Main.maxTilesY <= 1800)
+                return WorldSize.Medium;
+            return WorldSize.Large;
+        }
+
         public static void SetParsedTime(double time)
         {
             var dayTime = time >= 0.0 && time <= 54000.0;
@@ -24,7 +55,8 @@ namespace tdsm.core
         {
             var time = Terraria.Main.time;
 
-            if (!Terraria.Main.dayTime) time += 54000.0;
+            if (!Terraria.Main.dayTime)
+                time += 54000.0;
 
             return time;
         }
@@ -69,19 +101,24 @@ namespace tdsm.core
             }
             return
                 tile1.wall == tile2.wall
-                &&
-                tile1.liquid == tile2.liquid
-                &&
-                tile1.lava() == tile2.lava()
-                &&
-                tile1.wire() == tile2.wire()
-                &&
-                tile1.wire2() == tile2.wire2()
-                &&
-                tile1.wire3() == tile2.wire3();
+            &&
+            tile1.liquid == tile2.liquid
+            &&
+            tile1.lava() == tile2.lava()
+            &&
+            tile1.wire() == tile2.wire()
+            &&
+            tile1.wire2() == tile2.wire2()
+            &&
+            tile1.wire3() == tile2.wire3();
         }
 
-        public static Vector2 GetRandomClearTile(int x, int y, int Attempts, bool forceRange = false, int RangeX = 0, int RangeY = 0)
+        public static Vector2 GetRandomClearTile(float x, float y, int attempts = 1, bool forceRange = false, int RangeX = 0, int RangeY = 0)
+        {
+            return GetRandomClearTile((int)x, (int)y, attempts, forceRange, RangeX, RangeY);
+        }
+
+        public static Vector2 GetRandomClearTile(int x, int y, int attempts = 1, bool forceRange = false, int RangeX = 0, int RangeY = 0)
         {
             Vector2 tileLocation = new Vector2(0, 0);
             try
@@ -95,7 +132,7 @@ namespace tdsm.core
                     RangeY = (Main.tile.GetLength(1)) - y;
                 }
 
-                for (int i = 0; i < Attempts; i++)
+                for (int i = 0; i < attempts; i++)
                 {
                     tileLocation.X = x + ((Main.rand.Next(RangeX * -1, RangeX)) / 2);
                     tileLocation.Y = y + ((Main.rand.Next(RangeY * -1, RangeY)) / 2);
@@ -106,7 +143,9 @@ namespace tdsm.core
                     }
                 }
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+            }
 
             if (tileLocation.X == 0 && tileLocation.Y == 0)
                 return new Vector2(x, y);

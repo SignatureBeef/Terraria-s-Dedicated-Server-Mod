@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+
 #if Full_API
 using Terraria;
-using tdsm.api.Callbacks;
+using TDSM.API.Callbacks;
 
-namespace tdsm.api.Command
+namespace TDSM.API.Command
 {
     /// <summary>
     /// Contains the default command implementation that can be overidden by plugins
@@ -26,6 +27,8 @@ namespace tdsm.api.Command
             {
                 Console.Clear();
             }
+            else
+                throw new CommandError("This is a console only command");
         }
 
         /// <summary>
@@ -35,11 +38,10 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Exit(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
-            {
-                Terraria.IO.WorldFile.saveWorld(false);
-                Netplay.disconnect = true;
-            }
+            Tools.NotifyAllOps("Exiting...");
+
+            Terraria.IO.WorldFile.saveWorld(false);
+            Netplay.disconnect = true;
         }
 
         /// <summary>
@@ -49,10 +51,8 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void ExitNoSave(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
-            {
-                Netplay.disconnect = true;
-            }
+            Tools.NotifyAllOps("Exiting without saving...");
+            Netplay.disconnect = true;
         }
 
         /// <summary>
@@ -62,23 +62,20 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void MOTD(ISender sender, string message)
         {
-            if (sender is ConsoleSender)
+            if (String.IsNullOrEmpty(message))
             {
-                if (String.IsNullOrEmpty(message))
+                if (Main.motd == String.Empty)
                 {
-                    if (Main.motd == String.Empty)
-                    {
-                        Tools.WriteLine("Welcome to " + Main.worldName + "!");
-                    }
-                    else
-                    {
-                        Tools.WriteLine("MOTD: " + Main.motd);
-                    }
+                    sender.Message("Welcome to " + Main.worldName + "!");
                 }
                 else
                 {
-                    Main.motd = message;
+                    sender.Message("MOTD: " + Main.motd);
                 }
+            }
+            else
+            {
+                Main.motd = message;
             }
         }
 
@@ -89,24 +86,21 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Playing(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
+            var count = 0;
+            for (int i = 0; i < 255; i++)
             {
-                var count = 0;
-                for (int i = 0; i < 255; i++)
+                if (Main.player[i].active)
                 {
-                    if (Main.player[i].active)
-                    {
-                        count++;
-                        Tools.WriteLine("{0} ({1})", Main.player[i].name, Netplay.Clients[i].RemoteAddress());
-                    }
+                    count++;
+                    sender.Message("{0} ({1})", Main.player[i].name, Netplay.Clients[i].RemoteAddress());
                 }
-                if (count == 0)
-                    Tools.WriteLine("No players connected.");
-                else if (count == 1)
-                    Tools.WriteLine("1 player connected.");
-                else
-                    Tools.WriteLine(count + " players connected.");
             }
+            if (count == 0)
+                sender.Message("No players connected.");
+            else if (count == 1)
+                sender.Message("1 player connected.");
+            else
+                sender.Message(count + " players connected.");
         }
 
         /// <summary>
@@ -151,26 +145,24 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Kick(ISender sender, string player)
         {
-            if (sender is ConsoleSender)
+            if (String.IsNullOrEmpty(player))
             {
-                if (String.IsNullOrEmpty(player))
+                sender.Message("Usage: kick <player>");
+            }
+            else
+            {
+                bool found = false;
+                var lowered = player.ToLower();
+                for (int i = 0; i < 255; i++)
                 {
-                    Tools.WriteLine("Usage: kick <player>");
-                }
-                else
-                {
-                    bool found = false;
-                    var lowered = player.ToLower();
-                    for (int i = 0; i < 255; i++)
+                    if (Main.player[i].active && Main.player[i].name.ToLower() == lowered)
                     {
-                        if (Main.player[i].active && Main.player[i].name.ToLower() == lowered)
-                        {
-                            NetMessage.SendData(2, i, -1, "Kicked from server.", 0, 0f, 0f, 0f, 0);
-                            found = true;
-                        }
+                        NetMessage.SendData(2, i, -1, "Kicked from server.", 0, 0f, 0f, 0f, 0);
+                        found = true;
                     }
-                    if (!found) sender.Message("Failed to find a player by the name of {0}", player);
                 }
+                if (!found)
+                    sender.Message("Failed to find a player by the name of {0}", player);
             }
         }
 
@@ -181,27 +173,25 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Ban(ISender sender, string player)
         {
-            if (sender is ConsoleSender)
+            if (String.IsNullOrEmpty(player))
             {
-                if (String.IsNullOrEmpty(player))
+                sender.Message("Usage: ban <player>");
+            }
+            else
+            {
+                bool found = false;
+                var lowered = player.ToLower();
+                for (int i = 0; i < 255; i++)
                 {
-                    Tools.WriteLine("Usage: ban <player>");
-                }
-                else
-                {
-                    bool found = false;
-                    var lowered = player.ToLower();
-                    for (int i = 0; i < 255; i++)
+                    if (Main.player[i].active && Main.player[i].name.ToLower() == lowered)
                     {
-                        if (Main.player[i].active && Main.player[i].name.ToLower() == lowered)
-                        {
-                            Callbacks.NetplayCallback.AddBan(i);
-                            NetMessage.SendData(2, i, -1, "Banned from server.", 0, 0f, 0f, 0f, 0);
-                            found = true;
-                        }
+                        Callbacks.NetplayCallback.AddBan(i);
+                        NetMessage.SendData(2, i, -1, "Banned from server.", 0, 0f, 0f, 0f, 0);
+                        found = true;
                     }
-                    if (!found) sender.Message("Failed to find a player by the name of {0}", player);
                 }
+                if (!found)
+                    sender.Message("Failed to find a player by the name of {0}", player);
             }
         }
 
@@ -212,32 +202,29 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Password(ISender sender, string password)
         {
-            if (sender is ConsoleSender)
+            if (String.IsNullOrEmpty(Netplay.ServerPassword))
             {
-                if (String.IsNullOrEmpty(Netplay.ServerPassword))
+                if (String.IsNullOrEmpty(password))
                 {
-                    if (String.IsNullOrEmpty(password))
-                    {
-                        Tools.WriteLine("No password set.");
-                    }
-                    else
-                    {
-                        Netplay.ServerPassword = password;
-                        Tools.WriteLine("Password: " + Netplay.ServerPassword);
-                    }
+                    sender.Message("No password set.");
                 }
                 else
                 {
-                    if (String.IsNullOrEmpty(password))
-                    {
-                        Netplay.ServerPassword = String.Empty;
-                        Tools.WriteLine("Password disabled.");
-                    }
-                    else
-                    {
-                        Netplay.ServerPassword = password;
-                        Tools.WriteLine("Password: " + Netplay.ServerPassword);
-                    }
+                    Netplay.ServerPassword = password;
+                    sender.Message("Password: " + Netplay.ServerPassword);
+                }
+            }
+            else
+            {
+                if (String.IsNullOrEmpty(password))
+                {
+                    Netplay.ServerPassword = String.Empty;
+                    sender.Message("Password disabled.");
+                }
+                else
+                {
+                    Netplay.ServerPassword = password;
+                    sender.Message("Password: " + Netplay.ServerPassword);
                 }
             }
         }
@@ -249,11 +236,8 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Version(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
-            {
-                Tools.WriteLine("Terraria Server " + Main.versionNumber);
-                Tools.WriteLine("TDSM API Version " + Globals.Build + Globals.PhaseToSuffix(Globals.BuildPhase));
-            }
+            sender.Message("Terraria Server " + Main.versionNumber);
+            sender.Message("TDSM API Version " + Globals.Build + Globals.PhaseToSuffix(Globals.BuildPhase));
         }
 
         /// <summary>
@@ -263,10 +247,7 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void MaxPlayers(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
-            {
-                Tools.WriteLine("Player limit: " + Main.maxNetPlayers);
-            }
+            sender.Message("Player limit: " + Main.maxNetPlayers);
         }
 
         /// <summary>
@@ -276,51 +257,48 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Time(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
+            string text3 = "AM";
+            double num = Main.time;
+            if (!Main.dayTime)
             {
-                string text3 = "AM";
-                double num = Main.time;
-                if (!Main.dayTime)
-                {
-                    num += 54000.0;
-                }
-                num = num / 86400.0 * 24.0;
-                double num2 = 7.5;
-                num = num - num2 - 12.0;
-                if (num < 0.0)
-                {
-                    num += 24.0;
-                }
-                if (num >= 12.0)
-                {
-                    text3 = "PM";
-                }
-                int num3 = (int)num;
-                double num4 = num - (double)num3;
-                num4 = (double)((int)(num4 * 60.0));
-                string text4 = string.Concat(num4);
-                if (num4 < 10.0)
-                {
-                    text4 = "0" + text4;
-                }
-                if (num3 > 12)
-                {
-                    num3 -= 12;
-                }
-                if (num3 == 0)
-                {
-                    num3 = 12;
-                }
-                Tools.WriteLine(string.Concat(new object[]
-				{
-					"Time: ",
-					num3,
-					":",
-					text4,
-					" ",
-					text3
-				}));
+                num += 54000.0;
             }
+            num = num / 86400.0 * 24.0;
+            double num2 = 7.5;
+            num = num - num2 - 12.0;
+            if (num < 0.0)
+            {
+                num += 24.0;
+            }
+            if (num >= 12.0)
+            {
+                text3 = "PM";
+            }
+            int num3 = (int)num;
+            double num4 = num - (double)num3;
+            num4 = (double)((int)(num4 * 60.0));
+            string text4 = string.Concat(num4);
+            if (num4 < 10.0)
+            {
+                text4 = "0" + text4;
+            }
+            if (num3 > 12)
+            {
+                num3 -= 12;
+            }
+            if (num3 == 0)
+            {
+                num3 = 12;
+            }
+            sender.Message(string.Concat(new object[]
+                    {
+                        "Time: ",
+                        num3,
+                        ":",
+                        text4,
+                        " ",
+                        text3
+                    }));
         }
 
         /// <summary>
@@ -330,10 +308,7 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Port(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
-            {
-                Tools.WriteLine("Port: " + Netplay.ListenPort);
-            }
+            sender.Message("Port: " + Netplay.ListenPort);
         }
 
         /// <summary>
@@ -343,14 +318,11 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Dawn(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
-            {
-                Main.dayTime = true;
-                Main.time = 0.0;
-                NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
+            Main.dayTime = true;
+            Main.time = 0.0;
+            NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
-                Tools.WriteLine("Time set to dawn");
-            }
+            sender.Message("Time set to dawn");
         }
 
         /// <summary>
@@ -360,14 +332,11 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Noon(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
-            {
-                Main.dayTime = true;
-                Main.time = 27000.0;
-                NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
+            Main.dayTime = true;
+            Main.time = 27000.0;
+            NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
-                Tools.WriteLine("Time set to noon");
-            }
+            sender.Message("Time set to noon");
         }
 
         /// <summary>
@@ -377,14 +346,11 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Dusk(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
-            {
-                Main.dayTime = false;
-                Main.time = 0.0;
-                NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
+            Main.dayTime = false;
+            Main.time = 0.0;
+            NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
-                Tools.WriteLine("Time set to dusk");
-            }
+            sender.Message("Time set to dusk");
         }
 
         /// <summary>
@@ -394,14 +360,11 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Midnight(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
-            {
-                Main.dayTime = false;
-                Main.time = 16200.0;
-                NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
+            Main.dayTime = false;
+            Main.time = 16200.0;
+            NetMessage.SendData(7, -1, -1, String.Empty, 0, 0f, 0f, 0f, 0);
 
-                Tools.WriteLine("Time set to midnight");
-            }
+            sender.Message("Time set to midnight");
         }
 
         /// <summary>
@@ -411,16 +374,15 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Settle(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
+            if (!Liquid.panicMode)
             {
-                if (!Liquid.panicMode)
-                {
-                    Liquid.StartPanic();
-                }
-                else
-                {
-                    Tools.WriteLine("Water is already settling");
-                }
+                if (sender is Player)
+                    sender.Message("Forcing water to settle.");
+                Liquid.StartPanic();
+            }
+            else
+            {
+                sender.Message("Water is already settling");
             }
         }
 
@@ -445,6 +407,8 @@ namespace tdsm.api.Command
                     Main.dedServFPS = false;
                 }
             }
+            else
+                throw new CommandError("This is a console only command");
         }
 
         /// <summary>
@@ -454,10 +418,7 @@ namespace tdsm.api.Command
         /// <param name="args">Arguments sent with command</param>
         public static void Save(ISender sender, ArgumentList args)
         {
-            if (sender is ConsoleSender)
-            {
-                Terraria.IO.WorldFile.saveWorld(false);
-            }
+            Terraria.IO.WorldFile.saveWorld(false);
         }
 
         /// <summary>
@@ -482,10 +443,12 @@ namespace tdsm.api.Command
                             commands[command].ShowHelp(sender, true);
                             return;
                         }
-                        else throw new CommandError("No such command: " + command);
+                        else
+                            throw new CommandError("No such command: " + command);
                     }
                 }
-                else page--;
+                else
+                    page--;
 
                 //				const Int32 MaxLines = 5;
                 var maxLines = sender is Player ? 5 : 15;
@@ -524,7 +487,8 @@ namespace tdsm.api.Command
                     sender.SendMessage("    help 1");
                 }
             }
-            else sender.SendMessage("You have no available commands.");
+            else
+                sender.SendMessage("You have no available commands.");
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Linq;
 using Terraria;
 
-namespace tdsm.core.ServerCharacters
+namespace TDSM.Core.ServerCharacters
 {
     public class NewPlayerInfo
     {

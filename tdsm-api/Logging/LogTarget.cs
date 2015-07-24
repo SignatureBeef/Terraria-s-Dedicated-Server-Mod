@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using tdsm.api.Plugin;
-using tdsm.core.Misc;
+using TDSM.API.Plugin;
+using TDSM.Core.Misc;
+using TDSM.API.Misc;
 
-namespace tdsm.core.Logging
+namespace TDSM.API.Logging
 {
 	public struct OutputEntry
 	{
@@ -148,7 +149,7 @@ namespace tdsm.core.Logging
 						
 						if (entry.prefix != null)
 						{
-							SetColor (ConsoleColor.DarkGray);
+                            SetColor (ConsoleColor.Gray);
 							writer.Write (entry.prefix);
 							backspace -= entry.prefix.Length;
 						}
@@ -235,13 +236,13 @@ namespace tdsm.core.Logging
                 Sender = HookContext.ConsoleSender				
             };
 
-            var args = new Events.HookArgs.ConsoleMessageReceived()
+            var args = new HookArgs.ConsoleMessageReceived()
             {
                 Message = ConsoleText,
 				Logger = SendingLogger
             };
 
-            Events.HookPoints.ConsoleMessageReceived.Invoke(ref ctx, ref args);
+            HookPoints.ConsoleMessageReceived.Invoke(ref ctx, ref args);
         }
 	}
 	

@@ -1,41 +1,49 @@
 ﻿using System;
-using tdsm.api;
-using tdsm.api.Command;
+using TDSM.API;
+using TDSM.API.Command;
+
 #if Full_API
 using Terraria;
 #endif
 using System.Threading;
 
-namespace tdsm.api.Plugin
+namespace TDSM.API.Plugin
 {
-    public delegate void HookAction<T>(ref HookContext context, ref T argument);
+    public delegate void HookAction<T>(ref HookContext context,ref T argument);
 
     public struct HookContext
     {
-        public Terraria.Net.Sockets.ISocket Connection { get; set; }
 
-//        public RemoteClient Client { get; set; }
+        //        public RemoteClient Client { get; set; }
 
         public int SlotId { get; set; }
 
+        public ISender Sender { get; set; }
+
+        #if Full_API
+        public Terraria.Net.Sockets.ISocket Connection { get; set; }
         public RemoteClient Client
         {
-            get { return Terraria.Netplay.Clients[SlotId]; }
+        get { return Terraria.Netplay.Clients[SlotId]; }
         }
 
-        public ISender Sender { get; set; }
-#if Full_API
         public Player Player { get; set; }
-#endif
+        
+#else
+        public TDSM.API.Callbacks.ISocket Connection { get; set; }
+        #endif
 
         public object ResultParam { get; private set; }
+
         public HookResult Result { get; private set; }
+
         public bool Conclude { get; set; }
 
         public static readonly ConsoleSender ConsoleSender = new ConsoleSender();
 
         public bool CheckForKick()
         {
+            #if Full_API
             if (Connection != null)
             {
                 if (Result == HookResult.KICK)
@@ -45,11 +53,12 @@ namespace tdsm.api.Plugin
                     return true;
                 }
 //                else if (Connection.DisconnectInProgress())
-                else if(Client.PendingTermination)
+                else if (Client.PendingTermination)
                 {
                     return true;
                 }
             }
+            #endif
 
             return false;
         }
@@ -108,7 +117,8 @@ namespace tdsm.api.Plugin
         {
             var plugin = callback.Target as BasePlugin;
 
-            if (plugin == null) throw new ArgumentException("Callback doesn't point to an instance method of class BasePlugin", "callback");
+            if (plugin == null)
+                throw new ArgumentException("Callback doesn't point to an instance method of class BasePlugin", "callback");
 
             HookBase(plugin, callback, order);
         }
@@ -131,7 +141,8 @@ namespace tdsm.api.Plugin
         [ThreadStatic]
         internal static bool threadInHook;
 
-        internal protected static object editLock = new object(); //we use it recursively
+        internal protected static object editLock = new object();
+        //we use it recursively
 
         internal void Pause(ManualResetEvent signal) //.Set() the signal to unpause
         {
@@ -214,7 +225,8 @@ namespace tdsm.api.Plugin
         {
             var plugin = callback.Target as BasePlugin;
 
-            if (plugin == null) throw new ArgumentException("Callback doesn't point to an instance method of class BasePlugin", "callback");
+            if (plugin == null)
+                throw new ArgumentException("Callback doesn't point to an instance method of class BasePlugin", "callback");
 
             Hook(plugin, callback, order);
         }
@@ -223,7 +235,8 @@ namespace tdsm.api.Plugin
         {
             var cb = callback as HookAction<T>;
 
-            if (cb == null) throw new ArgumentException(string.Format("A callback of type HookAction<{0}> expected.", typeof(T).Name), "callback");
+            if (cb == null)
+                throw new ArgumentException(string.Format("A callback of type HookAction<{0}> expected.", typeof(T).Name), "callback");
 
             Hook(plugin, cb, order);
         }
@@ -333,7 +346,8 @@ namespace tdsm.api.Plugin
                                     (hooks[i].plugin as LUAPlugin).Call(ref context, ref o, hooks[i].GetType().GetGenericArguments()[0].Name);
                                 }
                             }
-                            else hooks[i].callback(ref context, ref arg);
+                            else
+                                hooks[i].callback(ref context, ref arg);
 
                             if (context.Conclude)
                             {
@@ -355,7 +369,9 @@ namespace tdsm.api.Plugin
                                     Tools.WriteLine(e);
                                 }
                             }
-                            catch { }
+                            catch
+                            {
+                            }
                         }
                         catch (Exception e)
                         {

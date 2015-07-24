@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace tdsm.api
+namespace TDSM.API.Misc
 {
 	public class ExitException : Exception
 	{

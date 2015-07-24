@@ -4,7 +4,7 @@ using System;
 
 namespace Microsoft.Xna.Framework
 {
-    public class Game
+    public class Game : IDisposable
     {
         public ContentManager Content { get; set; }
         public GameWindow Window { get; set; }
@@ -26,5 +26,6 @@ namespace Microsoft.Xna.Framework
         protected virtual void UnloadContent() { }
 
         public void Exit() { }
+        public void Dispose() { }
     }
 }

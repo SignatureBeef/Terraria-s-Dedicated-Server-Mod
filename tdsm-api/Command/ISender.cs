@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace tdsm.api.Command
+namespace TDSM.API.Command
 {
     public interface ISender
     {

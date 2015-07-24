@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace tdsm.api.Plugin
+namespace TDSM.API.Plugin
 {
     public class LUAPlugin : BasePlugin
     {

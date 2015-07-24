@@ -1,7 +1,7 @@
-﻿
-using System.Net;
-using tdsm.core.Logging;
-namespace tdsm.core.Misc
+﻿using System.Net;
+using TDSM.API.Logging;
+
+namespace TDSM.API.Misc
 {
     public class ProgressWebClient : WebClient
     {
@@ -33,7 +33,8 @@ namespace tdsm.core.Misc
 
             if (disposing)
             {
-                if (_logger != null) _logger.Dispose();
+                if (_logger != null)
+                    _logger.Dispose();
                 _logger = null;
             }
         }

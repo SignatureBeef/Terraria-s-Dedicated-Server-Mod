@@ -5,15 +5,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using tdsm.api;
-using tdsm.api.Command;
-using tdsm.api.Misc;
-using tdsm.core.Logging;
-using tdsm.core.Misc;
-using tdsm.core.ServerCore;
+using TDSM.API;
+using TDSM.API.Command;
+using TDSM.API.Misc;
+using TDSM.API.Logging;
+using TDSM.Core.Misc;
 using Terraria;
 
-namespace tdsm.core.RemoteConsole
+namespace TDSM.Core.RemoteConsole
 {
     public static class RConServer
     {

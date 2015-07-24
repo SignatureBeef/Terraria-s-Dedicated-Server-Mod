@@ -1,5 +1,5 @@
 ﻿
-namespace tdsm.api.Misc
+namespace TDSM.API.Misc
 {
     public enum InvasionType : int
     {

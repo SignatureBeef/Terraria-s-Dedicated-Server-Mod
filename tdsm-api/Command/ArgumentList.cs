@@ -4,7 +4,7 @@ using System.Collections.Generic;
 #if Full_API
 using Terraria;
 #endif
-namespace tdsm.api.Command
+namespace TDSM.API.Command
 {
     public class CommandError : ApplicationException
     {

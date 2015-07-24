@@ -1,6 +1,6 @@
 ﻿
 using System;
-using tdsm.api;
+using TDSM.API;
 namespace Microsoft.Xna.Framework
 {
     public class GameWindow

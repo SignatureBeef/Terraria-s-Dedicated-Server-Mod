@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Text;
 
-namespace tdsm.core.Logging
+namespace TDSM.API.Logging
 {
 	public class LogTraceListener : TraceListener
 	{

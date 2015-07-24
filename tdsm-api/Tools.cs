@@ -6,7 +6,7 @@ using Terraria;
 using System.Collections.Generic;
 #endif
 
-namespace tdsm.api
+namespace TDSM.API
 {
     public static class Tools
     {

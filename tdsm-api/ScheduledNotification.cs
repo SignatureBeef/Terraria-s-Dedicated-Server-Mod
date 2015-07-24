@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using tdsm.api.Misc;
+using TDSM.API.Misc;
 
-namespace tdsm.api
+namespace TDSM.API
 {
     public class ScheduledNotification : Task
     {

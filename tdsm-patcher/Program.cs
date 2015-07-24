@@ -1,7 +1,10 @@
 ﻿#define SERVER
+
+
 #define DEV
 //#define CLIENT
 
+using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Linq;
@@ -29,11 +32,13 @@ namespace tdsm.patcher
         //            };
         //        }
 
-#if DEV
+        #if DEV
         static void Copy(DirectoryInfo root, string project, string to, string pluginName = null, bool debugFolder = true)
         {
             var projectBinary = pluginName ?? project.Replace("-", ".");
             var p = debugFolder ? Path.Combine(root.FullName, project, "bin", "x86", "Debug") : Path.Combine(root.FullName, project);
+            if (!Directory.Exists(p))
+                p = debugFolder ? Path.Combine(root.FullName, project, "bin", "Debug") : Path.Combine(root.FullName, project);
 
             var dllF = Path.Combine(p, projectBinary + ".dll");
             //			var mdbF = Path.Combine (p, projectBinary + ".mdb");
@@ -45,38 +50,45 @@ namespace tdsm.patcher
             var ddbT = Path.Combine(to, projectBinary + ".dll.mdb");
             var pdbT = Path.Combine(to, projectBinary + ".pdb");
 
-            if (File.Exists(dllT)) File.Delete(dllT);
+            if (File.Exists(dllT))
+                File.Delete(dllT);
             //			if (File.Exists (mdbT)) File.Delete (mdbT);
-            if (File.Exists(ddbT)) File.Delete(ddbT);
-            if (File.Exists(pdbT)) File.Delete(pdbT);
+            if (File.Exists(ddbT))
+                File.Delete(ddbT);
+            if (File.Exists(pdbT))
+                File.Delete(pdbT);
 
-            if (!Directory.Exists(to)) Directory.CreateDirectory(to);
+            if (!Directory.Exists(to))
+                Directory.CreateDirectory(to);
 
-            if (File.Exists(dllF)) File.Copy(dllF, dllT);
+            if (File.Exists(dllF))
+                File.Copy(dllF, dllT);
             //			if (File.Exists (mdbF)) File.Copy (mdbF, mdbT);
-            if (File.Exists(ddbF)) File.Copy(ddbF, ddbT);
-            if (File.Exists(pdbF)) File.Copy(pdbF, pdbT);
+            if (File.Exists(ddbF))
+                File.Copy(ddbF, ddbT);
+            if (File.Exists(pdbF))
+                File.Copy(pdbF, pdbT);
 
         }
-#endif
+        #endif
 
         static void Main(string[] args)
         {
-            //if (!tdsm.api.Command.WorldTime.Test())
+            //if (!TDSM.API.Command.WorldTime.Test())
             //{
             //    Console.WriteLine("Time test failed");
             //    Console.ReadKey(true);
             //}
 
-            //if (!tdsm.api.Permissions.PermissionsManager.IsSet)
+            //if (!TDSM.API.Permissions.PermissionsManager.IsSet)
             //{
-            //    var file = System.IO.Path.Combine(tdsm.api.Globals.DataPath, "permissions.xml");
+            //    var file = System.IO.Path.Combine(TDSM.API.Globals.DataPath, "permissions.xml");
             //    //if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
             //    if (System.IO.File.Exists(file))
             //    {
-            //        var handler = new tdsm.api.Permissions.XmlSupplier(file);
+            //        var handler = new TDSM.API.Permissions.XmlSupplier(file);
             //        if (handler.Load())
-            //            tdsm.api.Permissions.PermissionsManager.SetHandler(handler);
+            //            TDSM.API.Permissions.PermissionsManager.SetHandler(handler);
             //    }
             //}
 
@@ -91,17 +103,19 @@ namespace tdsm.patcher
             //            var outFileMS = fileName + ".microsoft.exe";
             //            var outFileMN = fileName + ".mono.exe";
             var output = fileName + ".exe";
-            var patchFile = "tdsm.api.dll";
+            var patchFile = "TDSM.API.dll";
 
             if (!File.Exists(inFile))
             {
                 var bin = Path.Combine(Environment.CurrentDirectory, "bin", "x86", "Debug", inFile);
-                if (File.Exists(bin)) inFile = bin;
+                if (File.Exists(bin))
+                    inFile = bin;
             }
             if (!File.Exists(patchFile))
             {
                 var bin = Path.Combine(Environment.CurrentDirectory, "bin", "x86", "Debug", patchFile);
-                if (File.Exists(bin)) patchFile = bin;
+                if (File.Exists(bin))
+                    patchFile = bin;
             }
 
             var resourceLib = "Vestris.ResourceLib.dll";
@@ -117,7 +131,8 @@ namespace tdsm.patcher
 #if DEV
             //            if (File.Exists(outFileMS)) File.Delete(outFileMS);
             //            if (File.Exists(outFileMN)) File.Delete(outFileMN);
-            if (File.Exists(output)) File.Delete(output);
+            if (File.Exists(output))
+                File.Delete(output);
 
             var root = new DirectoryInfo(Environment.CurrentDirectory);
             while (root.GetDirectories().Where(x => x.Name == "tdsm-patcher").Count() == 0)
@@ -130,7 +145,7 @@ namespace tdsm.patcher
                 root = root.Parent;
             }
 
-            Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "tdsm.api");
+            Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "TDSM.API");
             Copy(root, "tdsm-api", Environment.CurrentDirectory);
             Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
             //Copy (root, "Restrict", Path.Combine (Environment.CurrentDirectory, "Plugins"), "RestrictPlugin");
@@ -139,6 +154,8 @@ namespace tdsm.patcher
             Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "ICSharpCode.SharpZipLib", false);
             Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "Mono.Nat", false);
             Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Libraries"), "Newtonsoft.Json", true);
+            Copy(root, "tdsm-mysql-connector", Path.Combine(Environment.CurrentDirectory, "Plugins"), "tdsm-mysql-connector", true);
+            Copy(root, "tdsm-sqlite-connector", Path.Combine(Environment.CurrentDirectory, "Plugins"), "tdsm-sqlite-connector", true);
 
 #endif
 #elif CLIENT
@@ -174,7 +191,8 @@ namespace tdsm.patcher
                         Console.WriteLine("Download completed in {0:c}", duration);
                     }
                 }
-                else return;
+                else
+                    return;
             }
 
             var patcher = new Injector(inFile, patchFile);
@@ -187,7 +205,8 @@ namespace tdsm.patcher
                 {
                     Console.WriteLine("This patcher only supports Terraria {0}, but we have detected something else {1}.", APIWrapper.TerrariaVersion, vers);
                     Console.Write("There's a high chance this will fail, continue? (y/n)");
-                    if (Console.ReadKey(true).Key != ConsoleKey.Y) return;
+                    if (Console.ReadKey(true).Key != ConsoleKey.Y)
+                        return;
                     Console.WriteLine();
                 }
             }
@@ -201,14 +220,14 @@ namespace tdsm.patcher
             Console.Write("Ok\nRemoving console handlers...");
             patcher.RemoveConsoleHandler();
             Console.Write("Ok\nRemoving mono incompatible code...");
-            patcher.RemoveProcess();
+            patcher.SwapProcessPriority();
             ////patcher.HookConsoleTitle();
             Console.Write("Ok\nSkipping sysmenus functions...");
             patcher.SkipMenu();
             //Console.Write("Ok\nFixing code entry...");
             //patcher.FixEntryPoint();
-            //Console.Write("Ok\nPatching save paths...");
-            //patcher.FixSavePath();
+            Console.Write("Ok\nPatching save paths...");
+            patcher.FixSavePath();
             Console.Write("Ok\nHooking receive buffer...");
             patcher.HookMessageBuffer();
             //Console.Write("Ok\nAdding the slot manager...");
@@ -219,10 +238,11 @@ namespace tdsm.patcher
             patcher.HookProgramStart();
             Console.Write("Ok\nHooking initialise...");
             patcher.HookInitialise();
+            patcher.HookNetplayInitialise();
             Console.Write("Ok\nHooking into world events...");
             patcher.HookWorldEvents();
-            //Console.Write("Ok\nHooking statusText...");
-            //patcher.HookStatusText();
+            Console.Write("Ok\nHooking statusText...");
+            patcher.HookStatusText();
             //Console.Write("Ok\nHooking NetMessage...");
             //patcher.HookNetMessage();
             ////Console.Write("Ok\nRemoving client code...");
@@ -247,13 +267,20 @@ namespace tdsm.patcher
             //Console.Write("Ok\nHooking blood moon...");
             //patcher.HookBloodMoon();
 
+            Console.Write("Ok\nFixing world removal...");
+            patcher.PathFileIO();
+            Console.Write("Ok\nRouting network message validity...");
+            patcher.HookValidPacketState();
+
             //We only need one TDSM.exe if this works...
             Console.Write("Ok\nRemoving port forwarding functionality...");
             patcher.FixNetplay();
-//            patcher.DetectMissingXNA();
+            //            patcher.DetectMissingXNA();
 
             Console.Write("Ok\n");
             patcher.InjectHooks();
+
+//            patcher.SwapToVanillaTile(); //Holy shit batman! it works
 
             //            Console.Write("Ok\nPutting Terraria on a diet...");
             //            patcher.ChangeTileToStruct();
@@ -284,15 +311,15 @@ namespace tdsm.patcher
             //                data = ms.ToArray();
             //            }
             //            data = APIWrapper.InvokeEvent(data, true);
-            ////            tdsm.api.Globals.Touch();
+            ////            TDSM.API.Globals.Touch();
             ////
-            ////            tdsm.api.PluginManager.SetHookSource(typeof(HookPoints));
-            ////            tdsm.api.PluginManager.Initialize(tdsm.api.Globals.PluginPath, tdsm.api.Globals.LibrariesPath);
-            ////            tdsm.api.PluginManager.LoadPlugins();
+            ////            TDSM.API.PluginManager.SetHookSource(typeof(HookPoints));
+            ////            TDSM.API.PluginManager.Initialize(TDSM.API.Globals.PluginPath, TDSM.API.Globals.LibrariesPath);
+            ////            TDSM.API.PluginManager.LoadPlugins();
             ////
-            ////            var ctx = new tdsm.api.Plugin.HookContext
+            ////            var ctx = new TDSM.API.Plugin.HookContext
             ////            {
-            ////                Sender = tdsm.api.Plugin.HookContext.ConsoleSender
+            ////                Sender = TDSM.API.Plugin.HookContext.ConsoleSender
             ////            };
             ////
             ////            var hookArgs = new HookArgs.PatchServer
@@ -382,9 +409,11 @@ namespace tdsm.patcher
                 }
             }
 
-#if DEBUG
+            #if DEBUG
             Console.Write("Ok\nUpdating Binaries folder...");
             UpdateBinaries();
+            Console.Write("Ok\nGenerating server.config...");
+            GenerateConfig();
 #endif
 
 #if Release || true
@@ -410,8 +439,8 @@ namespace tdsm.patcher
                 {
                     if (!isMono)
                     {
-                        if (File.Exists("serverconfig.txt"))
-                            System.Diagnostics.Process.Start(output, "-config serverconfig.txt");
+                        if (File.Exists("server.config"))
+                            System.Diagnostics.Process.Start(output, "-config server.config");
                         else
                             System.Diagnostics.Process.Start(output);
                     }
@@ -435,10 +464,11 @@ namespace tdsm.patcher
                             var asm = System.Reflection.Assembly.Load(ms.ToArray());
                             try
                             {
-                                if (File.Exists("serverconfig.txt"))
-                                    asm.EntryPoint.Invoke(null, new object[] {
-                                        new string[] { "-config", "serverconfig.txt", "-noupnp" }
-							});
+                                if (File.Exists("server.config"))
+                                    asm.EntryPoint.Invoke(null, new object[]
+                                        {
+                                            new string[] { "-config", "server.config", "-noupnp" }
+                                        });
                                 else
                                     asm.EntryPoint.Invoke(null, null);
                             }
@@ -457,15 +487,106 @@ namespace tdsm.patcher
 #endif
         }
 
-        static void UpdateBinaries()
+        class ConfigModification
+        {
+            public string OfficialLinePrefix { get; set; }
+
+            public int Offset { get; set; }
+
+            public string[] Modifications { get; set; }
+        }
+
+        static string PatchConfig(string[] input)
+        {
+            var lines = new List<String>(input);
+
+            try
+            {
+                var mt = File.ReadAllText("serverconfig.mods.json");
+                var mods = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigModification[]>(mt);
+
+                if (mods != null)
+                {
+                    foreach (var mod in mods)
+                    {
+                        //Get indicies
+                        var indicies = new List<Int32>();
+                        for (var x = 0; x < lines.Count; x++)
+                        {
+                            if (lines[x].StartsWith(mod.OfficialLinePrefix))
+                            {
+                                indicies.Add(x);
+                            }
+                        }
+
+                        var extra = String.Join(Environment.NewLine, mod.Modifications);
+                        foreach (var index in indicies)
+                        {
+                            if (mod.Offset == 0)
+                            {
+                                lines[index] = extra;
+                            }
+                            else if (mod.Offset == -1)
+                            {
+                                lines.Insert(index + (mod.Offset + 1), extra);
+                            }
+                            else if (mod.Offset == 1)
+                            {
+                                lines.Insert(index + mod.Offset, extra);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine("Failed to patch config: {0}", e);
+            }
+
+            return String.Join(Environment.NewLine, lines.ToArray());
+        }
+
+        static DirectoryInfo GetBinariesFolder()
         {
             var pathToBinaries = new DirectoryInfo(Environment.CurrentDirectory);
             while (!Directory.Exists(Path.Combine(pathToBinaries.FullName, "Binaries")))
             {
                 pathToBinaries = pathToBinaries.Parent;
             }
-            pathToBinaries = new DirectoryInfo(Path.Combine(pathToBinaries.FullName, "Binaries"));
+            return new DirectoryInfo(Path.Combine(pathToBinaries.FullName, "Binaries"));
+        }
 
+        static void GenerateConfig()
+        {
+            var pathToBinaries = GetBinariesFolder();
+            if (!pathToBinaries.Exists)
+            {
+                Console.WriteLine("Failed to copy to binaries.");
+                return;
+            }
+
+            var official = "serverconfig.txt";
+            var additional = "additional.config";
+            var output = "server.config";
+            var outputPath = Path.Combine(pathToBinaries.FullName, output);
+
+            if (File.Exists(output))
+                File.Delete(output);
+            if (File.Exists(outputPath))
+                File.Delete(outputPath);
+
+            var cfg = File.ReadAllLines(official);
+            var contents = PatchConfig(cfg);
+            contents += Environment.NewLine;
+            contents += File.ReadAllText(additional);
+
+            File.WriteAllText(output, contents);
+            File.WriteAllText(outputPath, contents);
+        }
+
+        static void UpdateBinaries()
+        {
+            var pathToBinaries = GetBinariesFolder();
             if (!pathToBinaries.Exists)
             {
                 Console.WriteLine("Failed to copy to binaries.");
@@ -474,13 +595,13 @@ namespace tdsm.patcher
 
             foreach (var rel in new string[]
             { 
-                "tdsm.api.dll",
-                "tdsm.api.pdb",
+                "TDSM.API.dll",
+                "TDSM.API.pdb",
                 "Libraries" + Path.DirectorySeparatorChar + "Newtonsoft.Json.dll",
                 "Libraries" + Path.DirectorySeparatorChar + "Newtonsoft.Json.pdb",
                 "Libraries" + Path.DirectorySeparatorChar + "NLua.dll",
-                "Plugins" + Path.DirectorySeparatorChar + "tdsm.core.dll",
-                "Plugins" + Path.DirectorySeparatorChar + "tdsm.core.pdb",
+                "Plugins" + Path.DirectorySeparatorChar + "TDSM.Core.dll",
+                "Plugins" + Path.DirectorySeparatorChar + "TDSM.Core.pdb",
                 "Plugins" + Path.DirectorySeparatorChar + "RestrictPlugin.dll",
                 "Plugins" + Path.DirectorySeparatorChar + "RestrictPlugin.pdb",
                 "tdsm-patcher.exe",
@@ -500,8 +621,10 @@ namespace tdsm.patcher
                     var pth = Path.Combine(pathToBinaries.FullName, rel);
 
                     var inf = new FileInfo(pth);
-                    if (!inf.Directory.Exists) inf.Directory.Create();
-                    if (inf.Exists) inf.Delete();
+                    if (!inf.Directory.Exists)
+                        inf.Directory.Create();
+                    if (inf.Exists)
+                        inf.Delete();
 
                     File.Copy(rel, pth);
                 }

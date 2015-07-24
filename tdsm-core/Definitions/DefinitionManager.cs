@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using tdsm.api;
-using tdsm.core.Logging;
+using TDSM.API;
+using TDSM.API.Logging;
 
-namespace tdsm.core.Definitions
+namespace TDSM.Core.Definitions
 {
     public static class DefinitionManager
     {
@@ -99,6 +99,13 @@ namespace tdsm.core.Definitions
                 .ToArray();
         }
 
+        public static ItemInfo[] FindItem(int id)
+        {
+            return _item.Data
+                .Where(x => x.Id == id)
+                .ToArray();
+        }
+
         #region "IO"
         static void Save<T>(FileInfo info, DefinitionFile<T> definition) where T : class
         {
@@ -136,7 +143,7 @@ namespace tdsm.core.Definitions
 
         static Stream GetInternalDefinition(string file)
         {
-            return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("tdsm.core.Definitions." + file);
+            return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("TDSM.Core.Definitions." + file);
         }
         #endregion
     }

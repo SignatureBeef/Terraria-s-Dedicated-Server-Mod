@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using tdsm.api.Callbacks;
+using TDSM.API.Callbacks;
 
-namespace tdsm.api.Command
+namespace TDSM.API.Command
 {
+    #if Full_API
     /// <summary>
     /// Sender class for command sending/parsing
     /// </summary>
     public abstract class Sender : Terraria.Entity, ISender
+    #else
+    public abstract class Sender : ISender
+    #endif
     {
         /// <summary>
         /// Get/set method for Sender's Op status

@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace tdsm.api
+namespace TDSM.API.Misc
 {
     public class ProgramThread
     {

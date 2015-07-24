@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace tdsm.api.Misc
+namespace TDSM.API.Misc
 {
     public class PropertiesFile : DataRegister
     {
@@ -15,7 +15,7 @@ namespace tdsm.api.Misc
 
         }
 
-        public T GetValue<T>(string key, T defaultValue)
+        public T GetValue<T>(string key, T defaultValue, bool autoSave = false)
         {
             var item = base.Find(key);
             if (item != null)
@@ -24,37 +24,47 @@ namespace tdsm.api.Misc
                 if (t.Name == "Int16")
                 {
                     short v = 0;
-                    if (Int16.TryParse(item, out v)) return (T)(object)v;
+                    if (Int16.TryParse(item.Trim(), out v))
+                        return (T)(object)v;
                 }
                 else if (t.Name == "Int32")
                 {
                     int v = 0;
-                    if (Int32.TryParse(item, out v)) return (T)(object)v;
+                    if (Int32.TryParse(item.Trim(), out v))
+                        return (T)(object)v;
                 }
                 else if (t.Name == "Int64")
                 {
                     long v = 0;
-                    if (Int64.TryParse(item, out v)) return (T)(object)v;
+                    if (Int64.TryParse(item.Trim(), out v))
+                        return (T)(object)v;
                 }
                 else if (t.Name == "Double")
                 {
                     double v = 0;
-                    if (Double.TryParse(item, out v)) return (T)(object)v;
+                    if (Double.TryParse(item.Trim(), out v))
+                        return (T)(object)v;
                 }
                 else if (t.Name == "Single")
                 {
                     float v = 0;
-                    if (Single.TryParse(item, out v)) return (T)(object)v;
+                    if (Single.TryParse(item.Trim(), out v))
+                        return (T)(object)v;
                 }
                 else if (t.Name == "Boolean")
                 {
                     bool v = false;
-                    if (Boolean.TryParse(item, out v)) return (T)(object)v;
+                    if (Boolean.TryParse(item.Trim(), out v))
+                        return (T)(object)v;
                 }
                 else if (t.Name == "String")
                 {
                     return (T)(object)item;
                 }
+            }
+            else
+            {
+                base.Update(key, defaultValue.ToString(), autoSave);
             }
             return defaultValue;
         }

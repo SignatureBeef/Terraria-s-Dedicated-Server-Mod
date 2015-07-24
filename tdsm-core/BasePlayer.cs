@@ -1,7 +1,8 @@
 ﻿
 using System;
 using Terraria;
-namespace tdsm.core
+
+namespace TDSM.Core
 {
     public static class PlayerExtensions
     {
@@ -27,15 +28,21 @@ namespace tdsm.core
 
         public static void SetLastCostlyCommand(this Player player, DateTime value)
         {
-            if (player.PluginData == null) player.PluginData = new System.Collections.Concurrent.ConcurrentDictionary<string, object>();
+            if (player.PluginData == null)
+                player.PluginData = new System.Collections.Concurrent.ConcurrentDictionary<string, object>();
             player.PluginData[LastCostlyCommand] = value;
         }
 
         public static DateTime GetLastCostlyCommand(this Player player)
         {
-            if (player.PluginData == null) player.PluginData = new System.Collections.Concurrent.ConcurrentDictionary<string, object>();
+            if (player.PluginData == null)
+                player.PluginData = new System.Collections.Concurrent.ConcurrentDictionary<string, object>();
 
-            return (DateTime)player.PluginData[LastCostlyCommand];
+            if (player.PluginData.ContainsKey(LastCostlyCommand))
+            {
+                return (DateTime)player.PluginData[LastCostlyCommand];
+            }
+            return DateTime.MinValue;
         }
     }
 }

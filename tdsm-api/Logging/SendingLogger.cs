@@ -1,4 +1,5 @@
-﻿namespace tdsm.core.Logging
+﻿
+namespace TDSM.API.Logging
 {
 	public enum SendingLogger : int
 	{

@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-using tdsm.core.Misc;
+using TDSM.Core.Misc;
 using System.IO;
+using TDSM.API.Misc;
 
-namespace tdsm.core.Logging
+namespace TDSM.API.Logging
 {
     public static class ProgramLog
     {
@@ -41,7 +42,7 @@ namespace tdsm.core.Logging
         public static readonly LogChannel Death = new LogChannel("DTH", ConsoleColor.Green);
         public static readonly LogChannel Admin = new LogChannel("ADM", ConsoleColor.Yellow);
         public static readonly LogChannel Error = new LogChannel("ERR", ConsoleColor.Red);
-        public static readonly LogChannel Debug = new LogChannel("DBG", ConsoleColor.DarkGray);
+        public static readonly LogChannel Debug = new LogChannel("DBG", ConsoleColor.Gray);
         public static readonly LogChannel Plugin = new LogChannel("PGN", ConsoleColor.Blue);
 
         struct LogEntry
@@ -114,6 +115,11 @@ namespace tdsm.core.Logging
                 entries.Enqueue(entry);
             }
             logSignal.Signal();
+        }
+
+        public static void BareLog(object obj)
+        {
+            Write(new LogEntry { message = obj.ToString(), thread = Thread.CurrentThread });
         }
 
         public static void BareLog(string text)
@@ -427,8 +433,10 @@ namespace tdsm.core.Logging
                     tar.Close();
                 }
 
+            #if Full_API
             //Statics.IsActive = false;
             Terraria.Netplay.disconnect = true;
+            #endif
         }
     }
 }

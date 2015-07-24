@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace tdsm.core.Misc
+namespace TDSM.Core.Misc
 {
     public struct ProducerConsumerSignal
     // this struct is meant to reduce overhead on mono, where AutoResetEvent.Set()

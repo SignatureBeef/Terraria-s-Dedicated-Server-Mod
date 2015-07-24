@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace tdsm.api.Plugin
+namespace TDSM.API.Plugin
 {
     public class HookAttribute : Attribute
     {

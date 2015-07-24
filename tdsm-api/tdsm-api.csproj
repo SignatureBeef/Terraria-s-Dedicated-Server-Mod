@@ -7,7 +7,7 @@
     <ProjectGuid>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>tdsm.api</RootNamespace>
+    <RootNamespace>TDSM.API</RootNamespace>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -87,12 +87,7 @@
     <Compile Include="Command\Sender.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="ID\Lookup.cs" />
-    <Compile Include="Misc\Affix.cs" />
-    <Compile Include="Misc\DataRegister.cs" />
-    <Compile Include="Misc\InvasionType.cs" />
-    <Compile Include="Misc\Platform.cs" />
-    <Compile Include="Misc\PropertiesFile.cs" />
-    <Compile Include="Misc\Tasks.cs" />
+    <Compile Include="Misc\StringCache.cs" />
     <Compile Include="Permissions\PermissionsManager.cs" />
     <Compile Include="Permissions\XmlSupplier.cs" />
     <Compile Include="Plugin\HookAttribute.cs" />
@@ -165,7 +160,6 @@
     <Compile Include="Xna\Graphics\Texture2D.cs" />
     <Compile Include="Plugin\BasePlugin.cs" />
     <Compile Include="Command\ConsoleSender.cs" />
-    <Compile Include="Misc\ExitException.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="IPlayerConnection.cs" />
@@ -176,10 +170,28 @@
     <Compile Include="Callbacks\NetplayCallback.cs" />
     <Compile Include="Sockets\ClientConnection.cs" />
     <Compile Include="Sockets\Connection.cs" />
-    <Compile Include="Misc\ArrayDequeue.cs" />
     <Compile Include="Sockets\ServerSlot.cs" />
-    <Compile Include="Misc\ProgramThread.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Logging\LogChannel.cs" />
+    <Compile Include="Logging\LogTarget.cs" />
+    <Compile Include="Logging\LogTraceListener.cs" />
+    <Compile Include="Logging\ProgramLog.cs" />
+    <Compile Include="Logging\ProgressLogger.cs" />
+    <Compile Include="Logging\SendingLogger.cs" />
+    <Compile Include="Misc\Affix.cs" />
+    <Compile Include="Misc\ArrayDequeue.cs" />
+    <Compile Include="Misc\DataRegister.cs" />
+    <Compile Include="Misc\ExitException.cs" />
+    <Compile Include="Misc\InvasionType.cs" />
+    <Compile Include="Misc\Platform.cs" />
+    <Compile Include="Misc\ProducerConsumerSignal.cs" />
+    <Compile Include="Misc\ProgramThread.cs" />
+    <Compile Include="Misc\ProgressWebClient.cs" />
+    <Compile Include="Misc\PropertiesFile.cs" />
+    <Compile Include="Misc\Tasks.cs" />
+    <Compile Include="Callbacks\Utilities.cs" />
+    <Compile Include="Data\IDataConnector.cs" />
+    <Compile Include="Data\AuthenticatedUsers.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -191,7 +203,5 @@
   -->
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Sockets\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

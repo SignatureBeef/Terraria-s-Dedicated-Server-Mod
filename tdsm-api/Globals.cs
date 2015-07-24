@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace tdsm.api
+namespace TDSM.API
 {
     public enum ReleasePhase : ushort
     {
@@ -17,7 +17,7 @@ namespace tdsm.api
         public const ReleasePhase BuildPhase = ReleasePhase.Beta;
 
         public const Int32 TerrariaRelease = 146;
-        public const String TerrariaVersion = "1.3.0.3";
+        public const String TerrariaVersion = "1.3.0.7";
 
         private const String WorldDirectory = "Worlds";
         private const String PluginDirectory = "Plugins";
@@ -74,12 +74,12 @@ namespace tdsm.api
             { return Path.Combine(SavePath, DataDirectory, CharacterData); }
         }
 
-        public static readonly bool IsMono = Type.GetType("Mono.Runtime") != null;
+//        public static readonly bool IsMono = Type.GetType("Mono.Runtime") != null;
 
         public static void Touch()
         {
             if (!Directory.Exists(SavePath)) Directory.CreateDirectory(SavePath);
-            if (!Directory.Exists(WorldPath)) Directory.CreateDirectory(WorldPath);
+//            if (!Directory.Exists(WorldPath)) Directory.CreateDirectory(WorldPath);
             //if (!Directory.Exists(WorldBackupPath)) Directory.CreateDirectory(WorldBackupPath);
             if (!Directory.Exists(PluginPath)) Directory.CreateDirectory(PluginPath);
             if (!Directory.Exists(LibrariesPath)) Directory.CreateDirectory(LibrariesPath);

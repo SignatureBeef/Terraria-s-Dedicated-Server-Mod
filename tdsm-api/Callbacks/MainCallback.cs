@@ -1,8 +1,10 @@
 ﻿using System;
-using tdsm.api.Misc;
-using tdsm.api.Plugin;
+using TDSM.API.Misc;
+using TDSM.API.Plugin;
+using TDSM.API.Sockets;
+using TDSM.API.Logging;
 
-namespace tdsm.api.Callbacks
+namespace TDSM.API.Callbacks
 {
     public static class MainCallback
     {
@@ -15,111 +17,38 @@ namespace tdsm.api.Callbacks
         public static void ProgramStart()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Tools.WriteLine("TDSM Rebind API build {0}{1}", Globals.Build, Globals.PhaseToSuffix(Globals.BuildPhase));
+            Tools.WriteLine("TDSM Rebind API build {0}{1} running on {2}", 
+                Globals.Build, 
+                Globals.PhaseToSuffix(Globals.BuildPhase),
+                Tools.RuntimePlatform.ToString()
+            );
             Console.ForegroundColor = Command.ConsoleSender.DefaultColour;
 
             Globals.Touch();
             ID.Lookup.Initialise();
 
+            var lis = new Logging.LogTraceListener();
+            System.Diagnostics.Trace.Listeners.Clear();
+            System.Diagnostics.Trace.Listeners.Add(lis);
+            System.Diagnostics.Debug.Listeners.Clear();
+            System.Diagnostics.Debug.Listeners.Add(lis);
+
             PluginManager.SetHookSource(typeof(HookPoints));
             PluginManager.Initialize(Globals.PluginPath);
             PluginManager.LoadPlugins();
 
-            if (!Permissions.PermissionsManager.IsSet)
-            {
-                var file = System.IO.Path.Combine(Globals.DataPath, "permissions.xml");
-                //if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
-                if (System.IO.File.Exists(file))
-                {
-                    var handler = new Permissions.XmlSupplier(file);
-                    if (handler.Load())
-                        Permissions.PermissionsManager.SetHandler(handler);
-                }
-                //else
-                //{
-                //    var test = new Permissions.XmlReflect()
-                //    {
-                //        Groups = new Permissions.XmlGroup[]
-                //        { 
-                //            new Permissions.XmlGroup()
-                //            {
-                //                Nodes = new Permissions.XmlNode[]
-                //                {
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Deny = true,
-                //                        Key = "tdsm.testa"
-                //                    },
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Key = "tdsm.testb"
-                //                    }
-                //                },
-                //                Name = "groupA"
-                //            },
-                //            new Permissions.XmlGroup()
-                //            {
-                //                Nodes = new Permissions.XmlNode[]
-                //                {
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Deny = true,
-                //                        Key = "tdsm.testm"
-                //                    },
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Deny = true,
-                //                        Key = "tdsm.testp"
-                //                    }
-                //                },
-                //                Name = "groupb"
-                //            }
-                //        },
-                //        Players = new Permissions.XmlPlayer[]
-                //        { 
-                //            new Permissions.XmlPlayer()
-                //            {
-                //                Nodes = new Permissions.XmlNode[]
-                //                {
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Key = "tdsm.testc"
-                //                    },
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Deny = true,
-                //                        Key = "tdsm.testd"
-                //                    }
-                //                },
-                //                Name = "playerA",
-                //                Groups = new string[] {"groupa","groupb"}
-                //            },
-                //            new Permissions.XmlPlayer()
-                //            {
-                //                Nodes = new Permissions.XmlNode[]
-                //                {
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Key = "tdsm.testcbbb"
-                //                    },
-                //                    new Permissions.XmlNode()
-                //                    {
-                //                        Deny = true,
-                //                        Key = "tdsm.testd"
-                //                    }
-                //                },
-                //                Name = "playerb"
-                //            }
-                //        }
-                //    };
-                //    var slz = new System.Xml.Serialization.XmlSerializer(typeof(Permissions.XmlReflect));
-                //    using (var fs = System.IO.File.OpenWrite(file))
-                //    {
-                //        slz.Serialize(fs, test);
-                //        fs.Flush();
-                //    }
-                //}
-            }
+            //SQLite here
+//            if (!Permissions.PermissionsManager.IsSet)
+//            {
+//                var file = System.IO.Path.Combine(Globals.DataPath, "permissions.xml");
+//                //if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
+//                if (System.IO.File.Exists(file))
+//                {
+//                    var handler = new Permissions.XmlSupplier(file);
+//                    if (handler.Load())
+//                        Permissions.PermissionsManager.SetHandler(handler);
+//                }
+//            }
         }
 
         public static bool OnProgramStarted(string[] cmd)
@@ -131,7 +60,7 @@ namespace tdsm.api.Callbacks
 #pragma warning disable 0162
             if (!Globals.FullAPIDefined)
             {
-                Console.WriteLine("Your tdsm.api.dll is incorrect, and does not expose all methods.");
+                Console.WriteLine("Your TDSM.API.dll is incorrect, and does not expose all methods.");
                 return false;
             }
 #pragma warning restore 0162
@@ -151,13 +80,15 @@ namespace tdsm.api.Callbacks
 
         public static void OnProgramFinished()
         {
+            PluginManager.DisablePlugins();
             //Close the logging if set
-            if (Tools.WriteClose != null) Tools.WriteClose.Invoke();
+            if (Tools.WriteClose != null)
+                Tools.WriteClose.Invoke();
         }
 
-        public static bool Initialise()
+        public static void Initialise()
         {
-#if Full_API
+            #if Full_API
             if (Terraria.Main.dedServ)
             {
                 var ctx = new HookContext()
@@ -169,12 +100,8 @@ namespace tdsm.api.Callbacks
                     ServerChangeState = ServerState.Initialising
                 };
                 HookPoints.ServerStateChange.Invoke(ref ctx, ref args);
-
-                return ctx.Result != HookResult.IGNORE;
             }
-#endif
-
-            return true; //Allow continue
+            #endif
         }
 
         public static void UpdateServerEnd()
@@ -185,18 +112,19 @@ namespace tdsm.api.Callbacks
             if (UpdateServer != null)
                 UpdateServer();
 
-
+            #if Full_API
             for (var i = 0; i < Terraria.Netplay.Clients.Length; i++)
             {
                 var client = Terraria.Netplay.Clients[i];
 //                if (player.active)
-                if(client != null && client.Socket != null && client.Socket is ClientConnection)
+                if (client != null && client.Socket != null && client.Socket is ClientConnection)
                 {
                     var conn = (client.Socket as ClientConnection);
                     if (conn != null)
                         conn.Flush();
                 }
             }
+            #endif
             //var ctx = new HookContext()
             //{
             //    Sender = HookContext.ConsoleSender
@@ -280,20 +208,22 @@ namespace tdsm.api.Callbacks
         //private static int _textTimeout = 0;
         public static void OnStatusTextChange()
         {
-            /* Check tolled tasks - OnStatusTextChanged is called without clients connected */
-            Tasks.CheckTasks();
+            try
+            {
+                /* Check tolled tasks - OnStatusTextChanged is called without clients connected */
+                Tasks.CheckTasks(); //This still may not be the best place for this.
 
 #if Full_API
-            if (Terraria.Main.oldStatusText != Terraria.Main.statusText)
-            {
-                if (StatusTextChange != null)
-                    StatusTextChange();
-                else
+                if (Terraria.Main.oldStatusText != Terraria.Main.statusText)
                 {
-                    Terraria.Main.oldStatusText = Terraria.Main.statusText;
-                    Tools.WriteLine(Terraria.Main.statusText);
-                }
-                /*var ctx = new HookContext()
+                    if (StatusTextChange != null)
+                        StatusTextChange();
+                    else
+                    {
+                        Terraria.Main.oldStatusText = Terraria.Main.statusText;
+                        Tools.WriteLine(Terraria.Main.statusText);
+                    }
+                    /*var ctx = new HookContext()
                 {
                     Sender = HookContext.ConsoleSender
                 };
@@ -305,17 +235,23 @@ namespace tdsm.api.Callbacks
                     Terraria.Main.oldStatusText = Terraria.Main.statusText;
                     Tools.WriteLine(Terraria.Main.statusText);
                 }*/
-                //_textTimeout = 0;
+                    //_textTimeout = 0;
+                }
+            
+                //else if (Terraria.Main.oldStatusText == String.Empty && Terraria.Main.statusText == String.Empty)
+                //{
+                //    if (_textTimeout++ > 1000)
+                //    {
+                //        _textTimeout = 0;
+                //        Terraria.Main.statusText = String.Empty;
+                //    }
+                //}
+                #endif
             }
-            //else if (Terraria.Main.oldStatusText == String.Empty && Terraria.Main.statusText == String.Empty)
-            //{
-            //    if (_textTimeout++ > 1000)
-            //    {
-            //        _textTimeout = 0;
-            //        Terraria.Main.statusText = String.Empty;
-            //    }
-            //}
-#endif
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "OnStatusTextChange error");
+            }
         }
     }
 }
