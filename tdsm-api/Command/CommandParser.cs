@@ -507,10 +507,6 @@ namespace TDSM.API.Command
         /// <returns>True if entity can use command.  False if not.</returns>
         public static Data.Permission CheckPermissions(ISender sender, CommandInfo cmd)
         {
-            /*
-             *  [TODO] Should a node return false, Since there is three possibilites, should it return false if permissions 
-             *  is enabled and allow the normal OP system work or no access at all?
-             */
             if (cmd.node == null || sender is ConsoleSender || sender.Op)
                 return Data.Permission.Permitted;
 
