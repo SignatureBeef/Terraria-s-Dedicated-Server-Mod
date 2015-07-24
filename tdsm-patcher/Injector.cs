@@ -905,7 +905,7 @@ namespace tdsm.patcher
                     x--;
                 }
             }
-            return;
+//            return;
 
 
             //Descrease the amount of file descriptors for mono.
@@ -917,11 +917,11 @@ namespace tdsm.patcher
 
             rcCtor.Body.Instructions[1].Operand = _asm.MainModule.Import(rtsCtor);
 
+            //1.3.0.7 doesnt have the TcpSocket constructor :)
+//            rcCtor = Terraria.RemoteClient.Methods.Single(x => x.Name == ".ctor");
+//            rtsCtor = API.ClientConnection.Methods.Single(x => x.Name == ".ctor" && x.Parameters.Count == (rcCtor.Body.Instructions[1].Operand as MethodReference).Parameters.Count);
 
-            rcCtor = Terraria.RemoteClient.Methods.Single(x => x.Name == ".ctor");
-            rtsCtor = API.ClientConnection.Methods.Single(x => x.Name == ".ctor" && x.Parameters.Count == (rcCtor.Body.Instructions[1].Operand as MethodReference).Parameters.Count);
-
-            rcCtor.Body.Instructions[1].Operand = _asm.MainModule.Import(rtsCtor);
+//            rcCtor.Body.Instructions[1].Operand = _asm.MainModule.Import(rtsCtor);
 
 
             var serverLoop = Terraria.Netplay.Methods.Single(x => x.Name == "ServerLoop");
