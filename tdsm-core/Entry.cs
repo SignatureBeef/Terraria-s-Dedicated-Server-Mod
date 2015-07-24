@@ -579,7 +579,13 @@ namespace TDSM.Core
                 try
                 {
                     var ln = Console.ReadLine();
-                    UserInput.CommandParser.ParseConsoleCommand(ln);
+                    if (!String.IsNullOrEmpty(ln))
+                        UserInput.CommandParser.ParseConsoleCommand(ln);
+                    else if (null == ln)
+                    {
+                        ProgramLog.Log("No console input available");
+                        break;
+                    }
                 }
                 catch (ExitException)
                 {

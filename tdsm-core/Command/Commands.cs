@@ -1635,7 +1635,7 @@ namespace TDSM.Core
                     {
                         tms = " " + count + " times";
                     }
-                    Tools.NotifyAllPlayers(Main.npc[id].displayName + " summoned by " + sender.SenderName + tms, Color.Purple, true);
+                    Tools.NotifyAllPlayers(Main.npc[id].name + " summoned by " + sender.SenderName + tms, Color.Purple, true);
                 }
             }
         }
