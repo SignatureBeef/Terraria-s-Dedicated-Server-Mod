@@ -27,6 +27,7 @@ namespace TDSM.API.Command
         internal AccessLevel accessLevel = AccessLevel.OP;
         internal Action<ISender, ArgumentList> tokenCallback;
         internal Action<ISender, string> stringCallback;
+
         internal event Action<CommandInfo> BeforeEvent;
         internal event Action<CommandInfo> AfterEvent;
 
@@ -157,7 +158,8 @@ namespace TDSM.API.Command
                         first = false;
                         sender.SendMessage("Usage: " + command + " " + line);
                     }
-                    else sender.SendMessage(Push + command + " " + line);
+                    else
+                        sender.SendMessage(Push + command + " " + line);
                 }
             }
             else
@@ -172,7 +174,8 @@ namespace TDSM.API.Command
         {
 #if Full_API
             var space = String.Empty;
-            for (var x = 0; x < padd - this._prefix.Length; x++) space += ' ';
+            for (var x = 0; x < padd - this._prefix.Length; x++)
+                space += ' ';
             sender.SendMessage((sender is Player ? "/" : String.Empty) + _prefix +
                 space + " - " + (this.description ?? "No description specified")
             );
@@ -393,7 +396,8 @@ namespace TDSM.API.Command
         /// <returns>CommandInfo for new command</returns>
         public CommandInfo AddCommand(string prefix)
         {
-            if (serverCommands.ContainsKey(prefix)) throw new ApplicationException("AddCommand: duplicate command: " + prefix);
+            if (serverCommands.ContainsKey(prefix))
+                throw new ApplicationException("AddCommand: duplicate command: " + prefix);
 
             var cmd = new CommandInfo(prefix);
             serverCommands[prefix] = cmd;
@@ -403,6 +407,7 @@ namespace TDSM.API.Command
         }
 
         static ConsoleSender consoleSender = new ConsoleSender();
+
         /// <summary>
         /// Parses new console command
         /// </summary>
@@ -420,7 +425,7 @@ namespace TDSM.API.Command
             ParseAndProcess(sender, line);
         }
 
-#if Full_API
+        #if Full_API
         /// <summary>
         /// Parses player commands
         /// </summary>
@@ -435,7 +440,7 @@ namespace TDSM.API.Command
                 ParseAndProcess(player, line);
             }
         }
-#endif
+        #endif
 
         /// <summary>
         /// Determines entity's ability to use command. Used when permissions plugin is running.
@@ -463,10 +468,12 @@ namespace TDSM.API.Command
         public static bool CheckAccessLevel(AccessLevel acc, ISender sender)
         {
 #if Full_API
-            if (sender is Player) return acc == AccessLevel.PLAYER || (acc == AccessLevel.OP && sender.Op);
+            if (sender is Player)
+                return acc == AccessLevel.PLAYER || (acc == AccessLevel.OP && sender.Op);
 #endif
             //            if (sender is RConSender) return acc <= AccessLevel.REMOTE_CONSOLE;
-            if (sender is ConsoleSender) return true;
+            if (sender is ConsoleSender)
+                return true;
             throw new NotImplementedException("Unexpected ISender implementation");
         }
 
@@ -492,26 +499,26 @@ namespace TDSM.API.Command
             return Permissions.Permission.Denied;
         }*/
 
-    /// <summary>
-    /// Permissions checking for registered commands.
-    /// </summary>
-    /// <param name="sender">Entity to check permissions for</param>
-    /// <param name="cmd">Command to check for permissions on</param>
-    /// <returns>True if entity can use command.  False if not.</returns>
-    public static Data.Permission CheckPermissions(ISender sender, CommandInfo cmd)
-    {
-        /*
+        /// <summary>
+        /// Permissions checking for registered commands.
+        /// </summary>
+        /// <param name="sender">Entity to check permissions for</param>
+        /// <param name="cmd">Command to check for permissions on</param>
+        /// <returns>True if entity can use command.  False if not.</returns>
+        public static Data.Permission CheckPermissions(ISender sender, CommandInfo cmd)
+        {
+            /*
              *  [TODO] Should a node return false, Since there is three possibilites, should it return false if permissions 
              *  is enabled and allow the normal OP system work or no access at all?
              */
-        if (cmd.node == null || sender is ConsoleSender || sender.Op)
-            return Data.Permission.Permitted;
+            if (cmd.node == null || sender is ConsoleSender || sender.Op)
+                return Data.Permission.Permitted;
 
-        if (sender is BasePlayer && Data.Storage.IsAvailable)
-            return Data.Storage.IsPermitted(cmd.node, sender as BasePlayer);
+            if (sender is BasePlayer && Data.Storage.IsAvailable)
+                return Data.Storage.IsPermitted(cmd.node, sender as BasePlayer);
 
-        return Data.Permission.Denied;
-    }
+            return Data.Permission.Denied;
+        }
 
         bool FindStringCommand(string prefix, out CommandInfo info)
         {
@@ -576,7 +583,8 @@ namespace TDSM.API.Command
 
                 var firstSpace = line.IndexOf(' ');
 
-                if (firstSpace < 0) firstSpace = line.Length;
+                if (firstSpace < 0)
+                    firstSpace = line.Length;
 
                 var prefix = line.Substring(0, firstSpace);
 
@@ -704,7 +712,10 @@ namespace TDSM.API.Command
 
         class TokenizerException : Exception
         {
-            public TokenizerException(string message) : base(message) { }
+            public TokenizerException(string message)
+                : base(message)
+            {
+            }
         }
 
         /// <summary>

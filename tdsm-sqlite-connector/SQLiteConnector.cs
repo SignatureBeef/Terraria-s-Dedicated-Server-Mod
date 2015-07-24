@@ -477,10 +477,10 @@ namespace TDSM.Data.SQLite
             return this;
         }
 
-        //        public override string BuildCommand()
-        //        {
-        //            return base.BuildCommand() + " COLLATE NOCASE";
-        //        }
+        public override string BuildCommand()
+        {
+            return base.BuildCommand() + " COLLATE NOCASE";
+        }
     }
 }
 

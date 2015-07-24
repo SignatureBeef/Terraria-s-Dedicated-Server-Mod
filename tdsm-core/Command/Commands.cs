@@ -1425,8 +1425,8 @@ namespace TDSM.Core
         /// <param name="args">Arguments sent with command</param>
         public void SummonBoss(ISender sender, ArgumentList args)
         {
-            var bossName = args.GetString(0).ToLower();
-            var count = args.GetInt(1);
+            var count = args.GetInt(0);
+            var bossName = args.GetString(1).ToLower();
             Player target;
 
             if (!args.TryGetOnlinePlayer(2, out target))
@@ -1436,10 +1436,15 @@ namespace TDSM.Core
                     target = sender as Player;
                 }
                 else
-                    throw new CommandError("Expected a player");
+                {
+                    target = Main.player.Where(x => x.active).Random();
+                    if (null == target)
+                    {
+                        throw new CommandError("No players online");
+                    }
+                }
             }
 
-            var position = World.GetRandomClearTile(target.position.X / 16f, target.position.X / 16f);
             int type = -1, type1 = -1;
             string name = null;
 
@@ -1617,15 +1622,20 @@ namespace TDSM.Core
 
             while (count-- > 0)
             {
+                var position = World.GetRandomClearTile(target.position.X / 16f, target.position.X / 16f);
                 var id = NPC.NewNPC((int)position.X, (int)position.Y, type);
-                if (name != null)
-                {
-                    Main.npc[id].SetDefaults(name);
-                }
+                Main.npc[id].SetDefaults(type);
+                Main.npc[id].SetDefaults(Main.npc[id].name);
+//                if (name != null)
+//                {
+//                    Main.npc[id].SetDefaults(name);
+//                }
 
                 if (type1 > 0)
                 {
                     id = NPC.NewNPC((int)position.X, (int)position.Y, type1);
+                    Main.npc[id].SetDefaults(type1);
+                    Main.npc[id].SetDefaults(Main.npc[id].name);
                 }
 
                 if (count == 0)
@@ -1635,7 +1645,7 @@ namespace TDSM.Core
                     {
                         tms = " " + count + " times";
                     }
-                    Tools.NotifyAllPlayers(Main.npc[id].name + " summoned by " + sender.SenderName + tms, Color.Purple, true);
+                    Tools.NotifyAllPlayers(Main.npc[id].name + " [" + type + "]"  + " summoned by " + sender.SenderName + tms, Color.Purple, true);
                 }
             }
         }

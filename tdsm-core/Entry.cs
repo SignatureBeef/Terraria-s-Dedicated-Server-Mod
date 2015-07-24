@@ -313,10 +313,7 @@ namespace TDSM.Core
             AddCommand("spawnboss")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Spawn a boss")
-                .WithHelpText("eye skeletron eater kingslime prime twins destroyer wof plantera golem retinazer spazmatism")
-                .WithHelpText("eye twins -night")
-                .WithHelpText("-all")
-                .WithHelpText("<boss> -player <name>")
+                .WithHelpText("<amount> <boss> <player>")
                 .WithHelpText("(If no player is entered it will be a random online player)")
                 .WithPermissionNode("tdsm.spawnboss")
                 .Calls(this.SummonBoss);
