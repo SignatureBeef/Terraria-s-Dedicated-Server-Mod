@@ -395,7 +395,7 @@ namespace TDSM.Data.SQLite
                 }
             }
 
-            return this;
+            return this.Append("COLLATE NOCASE");
         }
 
         public override QueryBuilder Count(string expression = null)
@@ -477,10 +477,10 @@ namespace TDSM.Data.SQLite
             return this;
         }
 
-        public override string BuildCommand()
-        {
-            return base.BuildCommand() + " COLLATE NOCASE";
-        }
+//        public override string BuildCommand()
+//        {
+//            return base.BuildCommand() + " COLLATE NOCASE";
+//        }
     }
 }
 
