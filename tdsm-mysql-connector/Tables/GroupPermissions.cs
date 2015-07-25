@@ -45,6 +45,19 @@ namespace TDSM.Data.MySQL
             }
         }
 
+        public static long Insert(MySQLConnector conn, long groupId, long permissionId)
+        {
+            using (var bl = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                bl.InsertInto(TableDefinition.TableName, 
+                    new DataParameter(TableDefinition.ColumnNames.GroupId, groupId),
+                    new DataParameter(TableDefinition.ColumnNames.PermissionId, permissionId)
+                );
+
+                return ((IDataConnector)conn).ExecuteInsert(bl);
+            }
+        }
+
         public void Initialise(MySQLConnector conn)
         {
             if (!TableDefinition.Exists(conn))

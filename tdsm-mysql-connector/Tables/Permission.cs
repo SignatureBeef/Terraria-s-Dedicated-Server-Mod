@@ -13,14 +13,14 @@ namespace TDSM.Data.MySQL.Tables
             public static class ColumnNames
             {
                 public const String Id = "Id";
-                public const String Name = "Node";
+                public const String Node = "Node";
                 public const String Deny = "Deny";
             }
 
             public static readonly TableColumn[] Columns = new TableColumn[]
             {
                 new TableColumn(ColumnNames.Id, typeof(Int32), true, true),
-                new TableColumn(ColumnNames.Name, typeof(String), 255),
+                new TableColumn(ColumnNames.Node, typeof(String), 255),
                 new TableColumn(ColumnNames.Deny, typeof(Boolean))
             };
 
@@ -42,6 +42,19 @@ namespace TDSM.Data.MySQL.Tables
 
                     return ((IDataConnector)conn).ExecuteNonQuery(bl) > 0;
                 }
+            }
+        }
+
+        public static long Insert(MySQLConnector conn, string node, bool deny)
+        {
+            using (var bl = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                bl.InsertInto(TableDefinition.TableName, 
+                    new DataParameter(TableDefinition.ColumnNames.Node, node),
+                    new DataParameter(TableDefinition.ColumnNames.Deny, deny)
+                );
+
+                return ((IDataConnector)conn).ExecuteInsert(bl);
             }
         }
 

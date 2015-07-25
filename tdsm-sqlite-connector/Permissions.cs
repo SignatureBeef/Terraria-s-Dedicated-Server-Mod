@@ -40,7 +40,7 @@ namespace TDSM.Data.SQLite
             _groupPerms.Initialise(this);
             _users.Initialise(this);
 
-            //This will then use the above tables
+            //Used to create default permissions
             _groups.Initialise(this);
 
 //            try

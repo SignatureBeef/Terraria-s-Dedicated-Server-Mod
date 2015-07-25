@@ -36,11 +36,13 @@ namespace TDSM.Data.MySQL
             _groupPerms = new GroupPermissions();
             _users = new UserGroupsTable();
 
-            _groups.Initialise(this);
             _nodes.Initialise(this);
             _userPerms.Initialise(this);
             _groupPerms.Initialise(this);
             _users.Initialise(this);
+
+            //Used to create default permissions
+            _groups.Initialise(this);
 
             if (!Procedure_IsPermitted.Exists(this))
             {

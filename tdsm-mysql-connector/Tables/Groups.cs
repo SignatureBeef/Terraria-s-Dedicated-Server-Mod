@@ -1,6 +1,8 @@
 ﻿using System;
 using TDSM.API.Data;
 using TDSM.API.Logging;
+using TDSM.API.Command;
+using System.Linq;
 
 namespace TDSM.Data.MySQL.Tables
 {
@@ -59,11 +61,66 @@ namespace TDSM.Data.MySQL.Tables
 
             public static bool Create(MySQLConnector conn)
             {
+                try
+                {
+                    using (var bl = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+                    {
+                        bl.TableCreate(TableName, Columns);
+
+                        ((IDataConnector)conn).ExecuteNonQuery(bl);
+                    }
+
+                    //Set defaults
+                    var pc = CommandParser.GetAvailableCommands(AccessLevel.PLAYER);
+                    var ad = CommandParser.GetAvailableCommands(AccessLevel.OP);
+                    var op = CommandParser.GetAvailableCommands(AccessLevel.CONSOLE); //Funny how these have now changed
+
+                    CreateGroup("Guest", true, null, 255, 255, 255, pc
+                        .Where(x => !String.IsNullOrEmpty(x.Value.Node))
+                        .Select(x => x.Value.Node)
+                        .Distinct()
+                        .ToArray(), conn);
+                    CreateGroup("Admin", false, "Guest", 240, 131, 77, ad
+                        .Where(x => !String.IsNullOrEmpty(x.Value.Node))
+                        .Select(x => x.Value.Node)
+                        .Distinct()
+                        .ToArray(), conn);
+                    CreateGroup("Operator", false, "Admin", 77, 166, 240, op
+                        .Where(x => !String.IsNullOrEmpty(x.Value.Node))
+                        .Select(x => x.Value.Node)
+                        .Distinct()
+                        .ToArray(), conn);
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    ProgramLog.Log(e);
+                    return false;
+                }
+            }
+
+            static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, MySQLConnector conn)
+            {
+                long id;
                 using (var bl = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
                 {
-                    bl.TableCreate(TableName, Columns);
+                    bl.InsertInto(TableName, 
+                        new DataParameter(ColumnNames.Name, name),
+                        new DataParameter(ColumnNames.ApplyToGuests, guest),
+                        new DataParameter(ColumnNames.Parent, parent),
+                        new DataParameter(ColumnNames.Chat_Red, r),
+                        new DataParameter(ColumnNames.Chat_Green, g),
+                        new DataParameter(ColumnNames.Chat_Blue, b)
+                    );
 
-                    return ((IDataConnector)conn).ExecuteNonQuery(bl) > 0;
+                    id = ((IDataConnector)conn).ExecuteInsert(bl);
+                }
+
+                foreach (var nd in nodes)
+                {
+                    var nodeId = PermissionTable.Insert(conn, nd, false);
+                    GroupPermissions.Insert(conn, id, nodeId);
                 }
             }
         }
