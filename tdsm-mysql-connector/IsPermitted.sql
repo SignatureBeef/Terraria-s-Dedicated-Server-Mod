@@ -1,4 +1,10 @@
-﻿CREATE PROCEDURE `SqlPermissions_IsPermitted`(in prmNode varchar(50), in prmIsGuest bit, in prmAuthentication varchar(50))
+﻿-- --------------------------------------------------------------------------------
+-- Routine DDL
+-- Note: comments before and after the routine body will not be stored by the server
+-- --------------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SqlPermissions_IsPermitted`(in prmNode varchar(50), in prmIsGuest bit, in prmAuthentication varchar(50))
 BEGIN
 	declare vPermissionValue int default 0;
 	declare vUserId int default 0;
@@ -60,7 +66,7 @@ BEGIN
 
 				/* Get the first group */
 				select GroupId
-				from SqlPermissions_Users u
+				from SqlPermissions_UserGroups u
 				where u.UserId = vUserId
 				limit 1
 				into vGroupId;
