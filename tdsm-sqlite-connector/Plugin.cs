@@ -22,11 +22,11 @@ namespace TDSM.Data.SQLite
 
         private SQLiteConnector _connector;
 
-//        static bool Is64Bit
-//        {
-//            get
-//            { return IntPtr.Size == 8; }
-//        }
+        //        static bool Is64Bit
+        //        {
+        //            get
+        //            { return IntPtr.Size == 8; }
+        //        }
 
         protected override void Initialized(object state)
         {
@@ -55,6 +55,11 @@ namespace TDSM.Data.SQLite
 //            {
 //                throw new DllNotFoundException("Cannot find " + pathToInterop);
 //            }
+        }
+
+        void Test(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)
+        {
+
         }
 
         [Hook]

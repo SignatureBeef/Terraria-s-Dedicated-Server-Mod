@@ -35,16 +35,25 @@ namespace TDSM.Data.SQLite
             _groupPerms = new GroupPermissionsTable();
             _users = new UserGroupsTable();
 
-            _groups.Initialise(this);
             _nodes.Initialise(this);
             _userPerms.Initialise(this);
             _groupPerms.Initialise(this);
             _users.Initialise(this);
 
-            ProgramLog.Error.Log("tdsm.help: " + IsPermitted("tdsm.help", true, "DeathCradle"));
-            ProgramLog.Error.Log("tdsm.oplogin: " + IsPermitted("tdsm.oplogin", true, "DeathCradle"));
-            ProgramLog.Error.Log("tdsm.exit: " + IsPermitted("tdsm.exit", true, "DeathCradle"));
-            ProgramLog.Error.Log("tdsm.exit,a: " + IsPermitted("tdsm.exit", false, "DeathCradle"));
+            //This will then use the above tables
+            _groups.Initialise(this);
+
+//            try
+//            {
+//                ProgramLog.Error.Log("tdsm.help: " + IsPermitted("tdsm.help", true, "DeathCradle"));
+//                ProgramLog.Error.Log("tdsm.oplogin: " + IsPermitted("tdsm.oplogin", true, "DeathCradle"));
+//                ProgramLog.Error.Log("tdsm.exit: " + IsPermitted("tdsm.exit", true, "DeathCradle"));
+//                ProgramLog.Error.Log("tdsm.exit,a: " + IsPermitted("tdsm.exit", false, "DeathCradle"));
+//            }
+//            catch (Exception e)
+//            {
+//                ProgramLog.Log(e);
+//            }
         }
 
         PermissionNode[] GetPermissionByNodeForUser(long userId, string node)

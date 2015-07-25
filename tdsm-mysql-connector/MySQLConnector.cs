@@ -93,6 +93,26 @@ namespace TDSM.Data.MySQL
             }
         }
 
+        long IDataConnector.ExecuteInsert(QueryBuilder builder)
+        {
+            if (!(builder is MySQLQueryBuilder))
+                throw new InvalidOperationException("MySQLQueryBuilder expected");
+
+            var ms = builder as MySQLQueryBuilder;
+
+            using (builder)
+            using (var cmd = _connection.CreateCommand())
+            {
+                cmd.CommandText = builder.BuildCommand();
+                cmd.CommandType = builder.CommandType;
+                cmd.Parameters.AddRange(ms.Parameters.ToArray());
+
+                cmd.ExecuteNonQuery();
+
+                return cmd.LastInsertedId;
+            }
+        }
+
         T IDataConnector.ExecuteScalar<T>(QueryBuilder builder)
         {
             if (!(builder is MySQLQueryBuilder))

@@ -50,7 +50,7 @@ namespace TDSM.API.Command
         {
             return this is Terraria.Player;
         }
-#endif
+        #endif
 
         public Dictionary<string, CommandInfo> GetAvailableCommands()
         {
@@ -80,6 +80,13 @@ namespace TDSM.API.Command
         {
             return map
                 .Where(x => CommandParser.CheckAccessLevel(x.Value, sender) && !x.Key.StartsWith("."))
+                .ToDictionary(x => x.Key, y => y.Value);
+        }
+
+        public static Dictionary<string, CommandInfo> GetAvailableCommands(this Dictionary<string, CommandInfo> map, AccessLevel access)
+        {
+            return map
+                .Where(x => x.Value.accessLevel == access && !x.Key.StartsWith("."))
                 .ToDictionary(x => x.Key, y => y.Value);
         }
     }

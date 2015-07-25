@@ -22,10 +22,9 @@ namespace TDSM.API.Permissions
         /// <param name="handler"></param>
         public static void SetHandler(IPermissionHandler handler)
         {
-            var prev = _handler;
+//            var prev = _handler;
             if (_handler == null) _handler = handler;
             else lock (_handler) _handler = handler;
-
         }
 
         /// <summary>

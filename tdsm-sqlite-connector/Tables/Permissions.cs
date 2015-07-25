@@ -62,6 +62,19 @@ namespace TDSM.Data.SQLite
             }
         }
 
+        public static long Insert(SQLiteConnector conn, string node, bool deny)
+        {
+            using (var bl = new SQLiteQueryBuilder(Plugin.SQLSafeName))
+            {
+                bl.InsertInto(TableDefinition.TableName, 
+                    new DataParameter(TableDefinition.ColumnNames.Node, node),
+                    new DataParameter(TableDefinition.ColumnNames.Deny, deny)
+                );
+
+                return ((IDataConnector)conn).ExecuteInsert(bl);
+            }
+        }
+
         public void Initialise(SQLiteConnector conn)
         {
             if (!TableDefinition.Exists(conn))

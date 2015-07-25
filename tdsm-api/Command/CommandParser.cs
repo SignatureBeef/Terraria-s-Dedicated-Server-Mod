@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TDSM.API.Plugin;
 using TDSM.API.Misc;
+using System.Linq;
 
 
 #if Full_API
@@ -47,6 +48,12 @@ namespace TDSM.API.Command
         {
             get
             { return _prefix; }
+        }
+
+        public string Node
+        {
+            get
+            { return node; }
         }
 
         internal CommandInfo(string prefix)
@@ -475,6 +482,28 @@ namespace TDSM.API.Command
             if (sender is ConsoleSender)
                 return true;
             throw new NotImplementedException("Unexpected ISender implementation");
+        }
+
+        public static Dictionary<string, CommandInfo> GetAvailableCommands(AccessLevel access)
+        {
+            var available = TDSM.API.Callbacks.UserInput.CommandParser.serverCommands.GetAvailableCommands(access);
+
+            //We *may* not need this - but let's see how it goes
+            foreach (var plg in PluginManager.EnumeratePlugins)
+            {
+                var additional = plg.commands.GetAvailableCommands(access)
+                    .Where(x => !x.Key.StartsWith(plg.Name.ToLower() + '.'))
+                    .ToArray();
+                foreach (var pair in additional)
+                {
+                    //Override defaults
+                    if (available.ContainsKey(pair.Key))
+                        available[pair.Key] = pair.Value;
+                    else available.Add(pair.Key, pair.Value);
+                }
+            }
+
+            return available;
         }
 
         /* Old permissions

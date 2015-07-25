@@ -37,7 +37,6 @@ namespace TDSM.API.Callbacks
             PluginManager.Initialize(Globals.PluginPath);
             PluginManager.LoadPlugins();
 
-            //SQLite here
 //            if (!Permissions.PermissionsManager.IsSet)
 //            {
 //                var file = System.IO.Path.Combine(Globals.DataPath, "permissions.xml");

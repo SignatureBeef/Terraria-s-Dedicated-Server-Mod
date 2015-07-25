@@ -51,7 +51,7 @@ namespace TDSM.Data.SQLite
             }
         }
 
-        int IDataConnector.ExecuteNonQuery(QueryBuilder builder)
+        long IDataConnector.ExecuteInsert(QueryBuilder builder)
         {
             if (!(builder is SQLiteQueryBuilder))
                 throw new InvalidOperationException("SQLiteQueryBuilder expected");
@@ -65,6 +65,28 @@ namespace TDSM.Data.SQLite
                 cmd.CommandType = builder.CommandType;
                 cmd.Parameters.AddRange(sb.Parameters.ToArray());
 
+                cmd.ExecuteScalar();
+
+                cmd.Parameters.Clear();
+                cmd.CommandText = "select last_insert_rowid()";
+                return (long)cmd.ExecuteScalar();
+            }
+        }
+
+        int IDataConnector.ExecuteNonQuery(QueryBuilder builder)
+        {
+            if (!(builder is SQLiteQueryBuilder))
+                throw new InvalidOperationException("SQLiteQueryBuilder expected");
+
+            var sb = builder as SQLiteQueryBuilder;
+
+            using (builder)
+            using (var cmd = _connection.CreateCommand())
+            {
+                cmd.CommandText = builder.BuildCommand();
+                cmd.CommandType = builder.CommandType;
+                cmd.Parameters.AddRange(sb.Parameters.ToArray());
+//                ProgramLog.Error.Log(cmd.CommandText);
                 using (var rdr = cmd.ExecuteReader())
                 {
                     return rdr.RecordsAffected;
@@ -254,7 +276,7 @@ namespace TDSM.Data.SQLite
                     }
                     else if (col.DataType == typeof(Int64))
                     {
-                        Append(" BIGINT");
+                        Append(" INTEGER");
                     }
                     else if (col.DataType == typeof(String))
                     {
@@ -300,7 +322,7 @@ namespace TDSM.Data.SQLite
 //                        Append(" NOT NULL");
 //                    }
 
-                    Append(" COLLATE NOCASE");
+                    Append(" COLLATE NOCASE"); //Seems this may not work
 
                     if (x + 1 < columns.Length)
                         Append(",");
@@ -395,7 +417,8 @@ namespace TDSM.Data.SQLite
                 }
             }
 
-            return this.Append("COLLATE NOCASE");
+            return this.Append("COLLATE NOCASE")
+                ;
         }
 
         public override QueryBuilder Count(string expression = null)

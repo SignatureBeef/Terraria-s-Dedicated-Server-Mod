@@ -29,6 +29,8 @@ namespace TDSM.API.Data
 
         bool Execute(QueryBuilder builder);
 
+        long ExecuteInsert(QueryBuilder builder);
+
         int ExecuteNonQuery(QueryBuilder builder);
 
         T ExecuteScalar<T>(QueryBuilder builder);
@@ -344,6 +346,13 @@ namespace TDSM.API.Data
             if (_connector == null)
                 throw new InvalidOperationException("No connector attached");
             return _connector.Execute(builder);
+        }
+
+        public static long ExecuteInsert(QueryBuilder builder)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.ExecuteInsert(builder);
         }
 
         public static int ExecuteNonQuery(QueryBuilder builder)
