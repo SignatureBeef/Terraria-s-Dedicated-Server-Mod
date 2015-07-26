@@ -1,8 +1,11 @@
 ﻿using TDSM.API.Plugin;
+
 namespace TDSM.API.Callbacks
 {
     public static class NPCCallback
     {
+        public static Rand CheckedRand = new Rand();
+
         private static int _invasionTypeCounter = 3;
 
         /// <summary>

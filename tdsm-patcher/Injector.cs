@@ -314,7 +314,7 @@ namespace tdsm.patcher
                                             if (twoFrom > 0)
                                             {
                                                 var first = mth.Body.Instructions[
-                                                    twoFrom];
+                                                                twoFrom];
                                                 var second = first.Next;
 
                                                 var il = mth.Body.GetILProcessor();
@@ -831,6 +831,59 @@ namespace tdsm.patcher
                 }
             }
             //TODO work out why it crashes when you replace Ret with Ret
+        }
+
+        public void FixRandomErrors()
+        {
+            var ai = Terraria.NPC.Methods.Where(x => x.Name == "AI").First();
+
+            var fld = _asm.MainModule.Import(API.NPCCallback.Fields.Where(x => x.Name == "CheckedRand").First());
+            var sng = _asm.MainModule.Import(API.Rand.Methods.Where(x => x.Name == "Next" && x.Parameters.Count == 1).First());
+            var dbl = _asm.MainModule.Import(API.Rand.Methods.Where(x => x.Name == "Next" && x.Parameters.Count == 2).First());
+
+//            var il = ai.Body.GetILProcessor();
+
+            for (var i = ai.Body.Instructions.Count - 1; i > 0; i--)
+            {
+                var ins = ai.Body.Instructions[i];
+                if (ins.OpCode == OpCodes.Ldsfld &&
+                    ins.Operand is FieldReference &&
+                    (ins.Operand as FieldReference).Name == "rand")
+                {
+                    if (ins.Next.Next.OpCode == OpCodes.Callvirt
+                        && ins.Next.Next.Operand is MethodReference
+                        && (ins.Next.Next.Operand as MethodReference).Name == "Next")
+                    {
+                        ins.Operand = fld;
+
+                        var mth = ins.Next.Next.Operand as MethodReference;
+                        if (mth.Parameters.Count == 1)
+                        {
+                            ins.Next.Next.Operand = sng;
+                        }
+                        else if (mth.Parameters.Count == 2)
+                        {
+                            ins.Next.Next.Operand = dbl;
+                        }
+                    }
+                    else if (ins.Next.Next.Next.OpCode == OpCodes.Callvirt
+                             && ins.Next.Next.Next.Operand is MethodReference
+                             && (ins.Next.Next.Next.Operand as MethodReference).Name == "Next")
+                    {
+                        ins.Operand = fld;
+
+                        var mth = ins.Next.Next.Next.Operand as MethodReference;
+                        if (mth.Parameters.Count == 1)
+                        {
+                            ins.Next.Next.Next.Operand = sng;
+                        }
+                        else if (mth.Parameters.Count == 2)
+                        {
+                            ins.Next.Next.Next.Operand = dbl;
+                        }
+                    }
+                }
+            }
         }
 
         public void PatchPlayer()

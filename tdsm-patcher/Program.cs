@@ -275,6 +275,8 @@ namespace tdsm.patcher
             //We only need one TDSM.exe if this works...
             Console.Write("Ok\nRemoving port forwarding functionality...");
             patcher.FixNetplay();
+            Console.Write("Ok\nFixing NPC AI crashes...");
+            patcher.FixRandomErrors();
             //            patcher.DetectMissingXNA();
 
             Console.Write("Ok\n");

@@ -25,5 +25,18 @@ namespace TDSM.API.Callbacks
             #endif
         }
     }
+
+    public class Rand : Random
+    {
+        public override int Next(int maxValue)
+        {
+            return base.Next(maxValue);
+        }
+
+        public override int Next(int minValue, int maxValue)
+        {
+            return base.Next(minValue, maxValue);
+        }
+    }
 }
 

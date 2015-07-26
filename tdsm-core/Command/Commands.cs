@@ -713,13 +713,15 @@ namespace TDSM.Core
                     throw new CommandError(String.Format("More than 1 item found, total is: {0}", results.Length));
 
                 var item = results[0];
-                try {
+                try
+                {
                     item.Prefix = (int)(Affix)Enum.Parse(typeof(Affix), args.GetString(3), true);
                 }
                 catch (CommandError)
                 {
 
-                }catch (ArgumentException)
+                }
+                catch (ArgumentException)
                 {
                     throw new CommandError(String.Format("Error, the Prefix you entered was not found: {0}", args.GetString(3)));
                 }
@@ -839,9 +841,10 @@ namespace TDSM.Core
                 if (args.Count == 0)
                 {
                     /*if (*/
-                    subject.Teleport(Main.spawnTileX * 16f, Main.spawnTileY * 16f - subject.height);//)
+//                    subject.Teleport(Main.spawnTileX * 16f, Main.spawnTileY * 16f - subject.height);//)
+                    subject.Teleport(subject.SpawnX * 16f, subject.SpawnY * 16f - subject.height);
                     {
-                        Tools.NotifyAllOps(String.Format("{0} has teleported to spawn", subject.Name), true);
+                        Tools.NotifyAllOps(String.Format("{0} has teleported home", subject.Name), true);
                     }
                     //else
                     //    sender.Message(Languages.TeleportFailed);
@@ -1645,7 +1648,7 @@ namespace TDSM.Core
                     {
                         tms = " " + count + " times";
                     }
-                    Tools.NotifyAllPlayers(Main.npc[id].name + " [" + type + "]"  + " summoned by " + sender.SenderName + tms, Color.Purple, true);
+                    Tools.NotifyAllPlayers(Main.npc[id].name + " [" + type + "]" + " summoned by " + sender.SenderName + tms, Color.Purple, true);
                 }
             }
         }

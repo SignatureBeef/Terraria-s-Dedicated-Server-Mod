@@ -283,6 +283,12 @@ namespace tdsm.patcher
             { return _asm.MainModule.Types.Single(x => x.Name == "NPCCallback"); }
         }
 
+        public TypeDefinition Rand
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "Rand"); }
+        }
+
         public TypeDefinition Patches
         {
             get
