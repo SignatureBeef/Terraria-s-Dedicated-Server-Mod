@@ -30,12 +30,16 @@ namespace TDSM.API.Callbacks
     {
         public override int Next(int maxValue)
         {
+            if (maxValue <= 0)
+                return 0;
             return base.Next(maxValue);
         }
 
         public override int Next(int minValue, int maxValue)
         {
-            return base.Next(minValue, maxValue);
+            if (minValue < maxValue)
+                return base.Next(minValue, maxValue);
+            return 0;
         }
     }
 }
