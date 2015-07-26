@@ -803,7 +803,7 @@ namespace TDSM.Core
             string realNPCName = String.Empty;
             for (int i = 0; i < amount; i++)
             {
-                Vector2 location = World.GetRandomClearTile(((int)player.position.X / 16), ((int)player.position.Y / 16), 100, true, 100, 50);
+                Vector2 location = World.GetRandomClearTile(((int)player.position.X / 16), ((int)player.position.Y / 16), 100, 100, 50);
                 int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), npc.Id, 0);
 
                 //if (customHealth)
@@ -840,14 +840,16 @@ namespace TDSM.Core
 
                 if (args.Count == 0)
                 {
-                    /*if (*/
-//                    subject.Teleport(Main.spawnTileX * 16f, Main.spawnTileY * 16f - subject.height);//)
-                    subject.Teleport(subject.SpawnX * 16f, subject.SpawnY * 16f - subject.height);
+                    if (subject.SpawnX > -1)
                     {
+                        subject.Teleport(subject.SpawnX * 16f, subject.SpawnY * 16f - subject.height);
                         Tools.NotifyAllOps(String.Format("{0} has teleported home", subject.Name), true);
                     }
-                    //else
-                    //    sender.Message(Languages.TeleportFailed);
+                    else
+                    {
+                        subject.Teleport(Main.spawnTileX * 16f, Main.spawnTileY * 16f - subject.height);
+                        Tools.NotifyAllOps(String.Format("{0} has teleported to spawn", subject.Name), true);
+                    }
                     return;
                 }
             }
@@ -865,8 +867,7 @@ namespace TDSM.Core
                 /*if (*/
                 subject.Teleport(target); //)
                 {
-
-                    Tools.NotifyAllOps(string.Concat("Teleported ", subject.Name, " to ",
+                    Tools.NotifyAllOps(String.Concat("Teleported ", subject.Name, " to ",
                             target.Name, ". [", sender.SenderName, "]"), true);
                 }
                 //else
@@ -1462,15 +1463,15 @@ namespace TDSM.Core
                     type = 266;
                     break;
 
-                case "crimson mimic":
-                    type = 474;
-                    break;
+//                case "crimson mimic":
+//                    type = 474;
+//                    break;
                 case "corrupt mimic":
                     type = 473;
                     break;
-                case "hallowed mimic":
-                    type = 475;
-                    break;
+//                case "hallowed mimic":
+//                    type = 475;
+//                    break;
 
                 case "duke fishron":
                 case "duke":
@@ -1479,10 +1480,14 @@ namespace TDSM.Core
                     break;
 
                 case "everscream":
+                    World.SetTime(16200.0, false);
                     type = 344;
                     break;
 
+                case "eye":
+                case "cthulhu":
                 case "eye of cthulhu":
+                    World.SetTime(16200.0, false);
                     type = 4;
                     break;
 
@@ -1495,7 +1500,7 @@ namespace TDSM.Core
                     type = 245;
                     break;
 
-                case "gobin summoner":
+                case "goblin summoner":
                     type = 471;
                     break;
 
@@ -1509,6 +1514,7 @@ namespace TDSM.Core
                     break;
 
                 case "ice queen":
+                    World.SetTime(16200.0, false);
                     type = 345;
                     break;
 
@@ -1529,11 +1535,14 @@ namespace TDSM.Core
                     break;
 
                 case "mothron":
+                    if (!Main.eclipse)
+                        throw new CommandError("Mothron can only be spawned during a solar eclipse. See the worldevent command.");
                     type = 477;
                     break;
 
                 case "wood":
                 case "mourning wood":
+                    World.SetTime(16200.0, false);
                     type = 325;
                     break;
 
@@ -1544,6 +1553,7 @@ namespace TDSM.Core
                 case "captain":
                 case "pirate":
                 case "pirate captain":
+                    World.SetTime(16200.0, false);
                     type = 216;
                     break;
 
@@ -1552,6 +1562,7 @@ namespace TDSM.Core
                     break;
 
                 case "pumpking":
+                    World.SetTime(16200.0, false);
                     type = 327;
                     break;
 
@@ -1563,10 +1574,12 @@ namespace TDSM.Core
                 case "santa":
                 case "santa nk1":
                 case "santa-nk1":
+                    World.SetTime(16200.0, false);
                     type = 346;
                     break;
 
                 case "skeletron":
+                    World.SetTime(16200.0, false);
                     type = 35;
                     break;
 
@@ -1594,11 +1607,13 @@ namespace TDSM.Core
 
                 case "destroyer":
                 case "the destroyer":
+                    World.SetTime(16200.0, false);
                     type = 134;
                     break;
 
                 case "twins":
                 case "the twins":
+                    World.SetTime(16200.0, false);
                     type = 125;
                     type1 = 126;
                     break;
@@ -1625,18 +1640,14 @@ namespace TDSM.Core
 
             while (count-- > 0)
             {
-                var position = World.GetRandomClearTile(target.position.X / 16f, target.position.X / 16f);
-                var id = NPC.NewNPC((int)position.X, (int)position.Y, type);
+                var position = World.GetRandomClearTile(target.position.X / 16f, target.position.Y / 16f);
+                var id = NPC.NewNPC((int)(position.X * 16f), (int)(position.Y * 16f), type);
                 Main.npc[id].SetDefaults(type);
                 Main.npc[id].SetDefaults(Main.npc[id].name);
-//                if (name != null)
-//                {
-//                    Main.npc[id].SetDefaults(name);
-//                }
 
                 if (type1 > 0)
                 {
-                    id = NPC.NewNPC((int)position.X, (int)position.Y, type1);
+                    id = NPC.NewNPC((int)(position.X * 16f), (int)(position.Y * 16f), type1);
                     Main.npc[id].SetDefaults(type1);
                     Main.npc[id].SetDefaults(Main.npc[id].name);
                 }
