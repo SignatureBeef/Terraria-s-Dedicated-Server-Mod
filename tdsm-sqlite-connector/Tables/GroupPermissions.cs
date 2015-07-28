@@ -96,7 +96,7 @@ namespace TDSM.Data.SQLite
             //Alternatively we could reload, but this shouldn't be called often
             if (res)
             {
-                _data = _data.Where(x => x.GroupId != groupId && x.PermissionId != permissionId).ToArray();
+                _data = _data.Where(x => x.GroupId != groupId || x.PermissionId != permissionId).ToArray();
             }
 
             return res;

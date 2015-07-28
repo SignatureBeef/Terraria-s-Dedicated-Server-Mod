@@ -129,7 +129,7 @@ namespace TDSM.Core
                 case "list":
                     //group list
                     var groups = Storage.GroupList();
-                    if (groups != null)
+                    if (groups != null && groups.Length > 0)
                     {
                         ProgramLog.Admin.Log("Current groups:");
                         foreach (var grp in groups)
@@ -154,7 +154,7 @@ namespace TDSM.Core
                         throw new CommandError("Group does not exist: " + groupName);
 
                     var nodes = Storage.GroupNodes(groupName);
-                    if (nodes != null)
+                    if (nodes != null && nodes.Length > 0)
                     {
                         ProgramLog.Admin.Log("Current permissions for group {0}:", grpList.Name);
                         foreach (var nd in nodes)
@@ -289,7 +289,7 @@ namespace TDSM.Core
                         throw new CommandError("No user found by: " + username);
 
                     var groups = Storage.UserGroupList(username);
-                    if (groups != null)
+                    if (groups != null && groups.Length > 0)
                     {
                         ProgramLog.Admin.Log("Current groups:");
                         foreach (var gps in groups)
@@ -313,7 +313,7 @@ namespace TDSM.Core
                         throw new CommandError("No user found by: " + username);
 
                     var nodes = Storage.UserNodes(username);
-                    if (nodes != null)
+                    if (nodes != null && nodes.Length > 0)
                     {
                         ProgramLog.Admin.Log("Current permissions for user {0}:", user.Value.Username);
                         foreach (var nd in nodes)
@@ -324,6 +324,26 @@ namespace TDSM.Core
                     else
                     {
                         ProgramLog.Admin.Log("There are no permissions assigned to user: " + user.Value.Username);
+                    }
+                    break;
+
+                case "search":
+                    //user find "part"
+                    if (!args.TryGetString(a++, out username))
+                        throw new CommandError("Expected part of a users name after [" + cmd + "]");
+
+                    var matches = AuthenticatedUsers.FindUsersByPrefix(username);
+                    if (matches != null && matches.Length > 0)
+                    {
+                        ProgramLog.Admin.Log("Matches:");
+                        foreach (var mth in matches)
+                        {
+                            ProgramLog.Admin.Log("\t" + mth);
+                        }
+                    }
+                    else
+                    {
+                        ProgramLog.Admin.Log("There are no registered users matching " + username);
                     }
                     break;
                 default:

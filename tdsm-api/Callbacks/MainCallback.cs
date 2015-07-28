@@ -16,6 +16,7 @@ namespace TDSM.API.Callbacks
 
         public static void ProgramStart()
         {
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Tools.WriteLine("TDSM Rebind API build {0}{1} running on {2}", 
                 Globals.Build, 

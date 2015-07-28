@@ -345,32 +345,74 @@ namespace TDSM.Data.SQLite
 
         bool IPermissionHandler.AddUserToGroup(string username, string groupName)
         {
+            var grp = PermissionsHandler.FindGroup(groupName);
+            var usr = AuthenticatedUsers.GetUser(username);
+
+            if (usr != null && grp != null)
+            {
+                return _users.Insert(this, usr.Value.Id, grp.Id) > 0L;
+            }
             return false;
         }
 
         bool IPermissionHandler.RemoveUserFromGroup(string username, string groupName)
         {
+            var grp = PermissionsHandler.FindGroup(groupName);
+            var usr = AuthenticatedUsers.GetUser(username);
+
+            if (usr != null && grp != null)
+            {
+                return _users.Delete(this, usr.Value.Id, grp.Id);
+            }
             return false;
         }
 
         bool IPermissionHandler.AddNodeToUser(string username, string node, bool deny = false)
         {
-            return false;
+            var usr = AuthenticatedUsers.GetUser(username);
+            var permissionId = _nodes.FindOrCreate(this, node, deny);
+
+            var id = _userPerms.Insert(this, usr.Value.Id, permissionId);
+
+            return id > 0L;
         }
 
         bool IPermissionHandler.RemoveNodeFromUser(string username, string node, bool deny = false)
         {
+            var usr = AuthenticatedUsers.GetUser(username);
+            var permission = _nodes.Find(node, deny);
+
+            if (permission != null)
+            {
+                return _groupPerms.Delete(this, usr.Value.Id, permission.Value.Id);
+            }
             return false;
         }
 
         string[] IPermissionHandler.UserGroupList(string username)
         {
-            return null;
+            var usr = AuthenticatedUsers.GetUser(username);
+            return (
+                from x in _users.UserGroup
+                join y in _groups.Groups on x.GroupId equals y.Id
+                where x.UserId == usr.Value.Id
+                select y.Name
+            ).ToArray();
         }
 
         TDSM.API.Data.PermissionNode[] IPermissionHandler.UserNodes(string username)
         {
-            return null;
+            var usr = AuthenticatedUsers.GetUser(username);
+            return (
+                from x in _userPerms.UserNodes
+                join y in _nodes.Nodes on x.PermissionId equals y.Id
+                where x.UserId == usr.Value.Id
+                select new TDSM.API.Data.PermissionNode()
+                {
+                    Node = y.Node,
+                    Deny = y.Deny
+                }
+            ).ToArray();
         }
     }
 }

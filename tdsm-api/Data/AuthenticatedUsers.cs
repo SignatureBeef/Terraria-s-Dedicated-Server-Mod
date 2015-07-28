@@ -1,5 +1,6 @@
 ﻿using System;
 using TDSM.API.Logging;
+using System.Linq;
 
 namespace TDSM.API.Data
 {
@@ -116,18 +117,37 @@ namespace TDSM.API.Data
         {
             using (var bl = Storage.GetBuilder(SQLSafeName))
             {
-                bl.SelectFrom(UserTable.TableName, new string[] {
-                    UserTable.ColumnNames.Id,
-                    UserTable.ColumnNames.Username,
-                    UserTable.ColumnNames.Password, 
-                    UserTable.ColumnNames.Operator 
-                }, new WhereFilter(UserTable.ColumnNames.Username, username));
+                bl.SelectFrom(UserTable.TableName, new string[]
+                    {
+                        UserTable.ColumnNames.Id,
+                        UserTable.ColumnNames.Username,
+                        UserTable.ColumnNames.Password, 
+                        UserTable.ColumnNames.Operator 
+                    }, new WhereFilter(UserTable.ColumnNames.Username, username));
 
                 var res = Storage.ExecuteArray<UserDetails>(bl);
                 if (res != null && res.Length > 0)
                     return res[0];
 
                 return null;
+            }
+        }
+
+        private struct FUBP
+        {
+            public string Username;
+        }
+
+        public static string[] FindUsersByPrefix(string search)
+        {
+            using (var bl = Storage.GetBuilder(SQLSafeName))
+            {
+                bl.SelectFrom(UserTable.TableName, new string[]
+                    {
+                        UserTable.ColumnNames.Username,
+                    }, new WhereFilter(UserTable.ColumnNames.Username, search + '%', WhereExpression.Like));
+
+                return Storage.ExecuteArray<FUBP>(bl).Select(x => x.Username).ToArray();
             }
         }
 

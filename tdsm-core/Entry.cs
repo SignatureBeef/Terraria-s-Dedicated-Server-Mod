@@ -455,8 +455,14 @@ namespace TDSM.Core
 
             AddCommand("group")
                 .WithAccessLevel(AccessLevel.CONSOLE)
-                .WithDescription("Manage groups")
+                .WithDescription("Manage groups and permissions")
+                .WithHelpText("<add|remove|addnode|removenode|list|listnodes>")
                 .Calls(this.GroupPermission);
+            AddCommand("user")
+                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithDescription("Manage user permissions")
+                .WithHelpText("<addgroup|removegroup|addnode|removenode|listgroups|listnodes>")
+                .Calls(this.UserPermission);
 #endif
 
             if (!DefinitionManager.Initialise())

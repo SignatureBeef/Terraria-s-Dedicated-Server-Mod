@@ -1,6 +1,7 @@
 ﻿using System;
 using TDSM.API.Data;
 using TDSM.API.Logging;
+using System.Linq;
 
 namespace TDSM.Data.SQLite
 {
@@ -62,6 +63,63 @@ namespace TDSM.Data.SQLite
                     return ((IDataConnector)conn).ExecuteNonQuery(bl) > 0;
                 }
             }
+        }
+
+        public static long CreateLink(SQLiteConnector conn, long userId, long groupId)
+        {
+            using (var bl = new SQLiteQueryBuilder(Plugin.SQLSafeName))
+            {
+                bl.InsertInto(TableDefinition.TableName, 
+                    new DataParameter(TableDefinition.ColumnNames.UserId, userId),
+                    new DataParameter(TableDefinition.ColumnNames.GroupId, groupId)
+                );
+
+                return ((IDataConnector)conn).ExecuteInsert(bl);
+            }
+        }
+
+        public long Insert(SQLiteConnector conn, long userId, long groupId)
+        {
+            var id = CreateLink(conn, userId, groupId);
+
+            //Alternatively we could reload, but this shouldn't be called often
+            if (id > 0L)
+            {
+                Array.Resize(ref _data, _data.Length + 1);
+                _data[_data.Length - 1] = new TDSM.Data.SQLite.UserGroup()
+                {
+                    Id = id,
+                    UserId = userId,
+                    GroupId = groupId
+                };
+            }
+
+            return id;
+        }
+
+        public static bool DeleteLink(SQLiteConnector conn, long userId, long groupId)
+        {
+            using (var bl = new SQLiteQueryBuilder(Plugin.SQLSafeName))
+            {
+                bl.Delete(TableDefinition.TableName, 
+                    new WhereFilter(TableDefinition.ColumnNames.UserId, userId.ToString()), 
+                    new WhereFilter(TableDefinition.ColumnNames.GroupId, groupId.ToString()));
+
+                return ((IDataConnector)conn).ExecuteNonQuery(bl) > 0;
+            }
+        }
+
+        public bool Delete(SQLiteConnector conn, long userId, long groupId)
+        {
+            var res = DeleteLink(conn, userId, groupId);
+
+            //Alternatively we could reload, but this shouldn't be called often
+            if (res)
+            {
+                _data = _data.Where(x => x.UserId != userId || x.GroupId != groupId).ToArray();
+            }
+
+            return res;
         }
 
         public void Initialise(SQLiteConnector conn)
