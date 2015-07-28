@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 
 namespace TDSM.API
 {
@@ -28,7 +29,7 @@ namespace TDSM.API
 
         public static volatile bool Exit = false;
 
-        public static string SavePath = Environment.CurrentDirectory;
+        public static string SavePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
         //public static bool IsPatching { get; set; }
 
