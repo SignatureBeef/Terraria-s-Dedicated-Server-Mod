@@ -452,6 +452,17 @@ namespace TDSM.Core
             //    .WithHelpText("install <plugin name>  - Installs a plugin")
             //    .WithPermissionNode("tdsm.repo")
             //    .Calls(this.Repository);
+
+            AddCommand("group")
+                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithDescription("Manage groups and permissions")
+                .WithHelpText("<add|remove|addnode|removenode|list|listnodes>")
+                .Calls(this.GroupPermission);
+            AddCommand("user")
+                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithDescription("Manage user permissions")
+                .WithHelpText("<addgroup|removegroup|addnode|removenode|listgroups|listnodes>")
+                .Calls(this.UserPermission);
 #endif
 
             if (!DefinitionManager.Initialise())

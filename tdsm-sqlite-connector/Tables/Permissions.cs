@@ -1,6 +1,7 @@
 ﻿using System;
 using TDSM.API.Data;
 using TDSM.API.Logging;
+using System.Linq;
 
 namespace TDSM.Data.SQLite
 {
@@ -62,7 +63,7 @@ namespace TDSM.Data.SQLite
             }
         }
 
-        public static long Insert(SQLiteConnector conn, string node, bool deny)
+        public static long InsertRecord(SQLiteConnector conn, string node, bool deny)
         {
             using (var bl = new SQLiteQueryBuilder(Plugin.SQLSafeName))
             {
@@ -73,6 +74,44 @@ namespace TDSM.Data.SQLite
 
                 return ((IDataConnector)conn).ExecuteInsert(bl);
             }
+        }
+
+        public long Insert(SQLiteConnector conn, string node, bool deny)
+        {
+            var id = InsertRecord(conn, node, deny);
+
+            //Alternatively we could reload, but this shouldn't be called often
+            if (id > 0L)
+            {
+                Array.Resize(ref _data, _data.Length + 1);
+                _data[_data.Length - 1] = new PermissionNode()
+                {
+                    Id = id,
+                    Node = node,
+                    Deny = deny
+                };
+            }
+
+            return id;
+        }
+
+        public PermissionNode? Find(string node, bool deny)
+        {
+            var matches = _data.Where(x => x.Node == node && x.Deny == deny).ToArray();
+            if (matches.Length > 0)
+                return matches[0];
+
+            return null;
+        }
+
+        public long FindOrCreate(SQLiteConnector conn, string node, bool deny)
+        {
+            var existing = Find(node, deny);
+            if (existing == null)
+            {
+                return Insert(conn, node, deny);
+            }
+            return existing.Value.Id;
         }
 
         public void Initialise(SQLiteConnector conn)
@@ -95,7 +134,7 @@ namespace TDSM.Data.SQLite
                 _data = conn.ExecuteArray<PermissionNode>(sb);
             }
 
-            ProgramLog.Error.Log(this.GetType().Name + ": " + (_data == null ? "NULL" : _data.Length.ToString()));
+//            ProgramLog.Error.Log(this.GetType().Name + ": " + (_data == null ? "NULL" : _data.Length.ToString()));
         }
 
         public override void Save(IDataConnector conn)

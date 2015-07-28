@@ -5,12 +5,70 @@ using System.Collections.Generic;
 
 namespace TDSM.API.Data
 {
+    public class Group
+    {
+        public long Id { get; set; }
+
+        public string Name { get; set; }
+
+        public bool ApplyToGuests { get; set; }
+
+        public string Parent { get; set; }
+
+        public byte Chat_Red { get; set; }
+
+        public byte Chat_Green { get; set; }
+
+        public byte Chat_Blue { get; set; }
+
+        public string Chat_Prefix { get; set; }
+
+        public string Chat_Suffix { get; set; }
+    }
+
+    public struct PermissionNode
+    {
+        public string Node{ get; set; }
+
+        public bool Deny { get; set; }
+    }
+
     /// <summary>
     /// The interface behind custom permissions handlers
     /// </summary>
     public interface IPermissionHandler
     {
         Permission IsPermitted(string node, BasePlayer player);
+
+        #region "Management"
+
+        Group FindGroup(string name);
+
+        bool AddOrUpdateGroup(string name, bool applyToGuests = false, string parent = null, byte r = 255, byte g = 255, byte b = 255, string prefix = null, string suffix = null);
+
+        bool RemoveGroup(string name);
+
+        bool AddGroupNode(string groupName, string node, bool deny = false);
+
+        bool RemoveGroupNode(string groupName, string node, bool deny = false);
+
+        string[] GroupList();
+
+        PermissionNode[] GroupNodes(string groupName);
+
+        bool AddUserToGroup(string username, string groupName);
+
+        bool RemoveUserFromGroup(string username, string groupName);
+
+        bool AddNodeToUser(string username, string node, bool deny = false);
+
+        bool RemoveNodeFromUser(string username, string node, bool deny = false);
+
+        string[] UserGroupList(string username);
+
+        PermissionNode[] UserNodes(string username);
+
+        #endregion
     }
 
     public enum Permission : byte
@@ -118,19 +176,19 @@ namespace TDSM.API.Data
         public virtual QueryBuilder Delete(string tableName, params WhereFilter[] clause)
         {
             if (null == clause || clause.Length == 0)
-                return this.Delete(tableName);
-            return this.Delete(tableName).Where(clause);
+                return this.Delete().From(tableName);
+            return this.Delete().From(tableName).Where(clause);
         }
 
         public abstract QueryBuilder InsertInto(string tableName, params DataParameter[] values);
 
-        public abstract QueryBuilder Update(string tableName, DataParameter[] values);
+        public abstract QueryBuilder UpdateValues(string tableName, DataParameter[] values);
 
         public virtual QueryBuilder Update(string tableName, DataParameter[] values, params WhereFilter[] clause)
         {
             if (null == clause || clause.Length == 0)
-                return this.Update(tableName, values);
-            return this.Update(tableName, values).Where(clause);
+                return this.UpdateValues(tableName, values);
+            return this.UpdateValues(tableName, values).Where(clause);
         }
 
         public virtual QueryBuilder SelectAll(string tableName, params WhereFilter[] clause)
@@ -388,6 +446,98 @@ namespace TDSM.API.Data
             if (_connector == null)
                 return player.Op ? Permission.Permitted : Permission.Denied;
             return _connector.IsPermitted(node, player);
+        }
+
+        //Management
+        public static Group FindGroup(string name)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.FindGroup(name);
+        }
+
+        public static bool AddOrUpdateGroup(string name, bool applyToGuests = false, string parent = null, byte r = 255, byte g = 255, byte b = 255, string prefix = null, string suffix = null)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.AddOrUpdateGroup(name, applyToGuests, parent, r, g, b, prefix, suffix);
+        }
+
+        public static bool RemoveGroup(string name)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.RemoveGroup(name);
+        }
+
+        public static bool AddGroupNode(string groupName, string node, bool deny = false)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.AddGroupNode(groupName, node, deny);
+        }
+
+        public static bool RemoveGroupNode(string groupName, string node, bool deny = false)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.RemoveGroupNode(groupName, node);
+        }
+
+        public static string[] GroupList()
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.GroupList();
+        }
+
+        public static PermissionNode[] GroupNodes(string groupName)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.GroupNodes(groupName);
+        }
+
+        public static bool AddUserToGroup(string username, string groupName)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.AddUserToGroup(username, groupName);
+        }
+
+        public static bool RemoveUserFromGroup(string username, string groupName)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.RemoveUserFromGroup(username, groupName);
+        }
+
+        public static bool AddNodeToUser(string username, string node, bool deny = false)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.AddNodeToUser(username, node, deny);
+        }
+
+        public static bool RemoveNodeFromUser(string username, string node, bool deny = false)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.RemoveNodeFromUser(username, node, deny);
+        }
+
+        public static string[] UserGroupList(string username)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.UserGroupList(username);
+        }
+
+        public static PermissionNode[] UserNodes(string username)
+        {
+            if (_connector == null)
+                throw new InvalidOperationException("No connector attached");
+            return _connector.UserNodes(username);
         }
     }
 }

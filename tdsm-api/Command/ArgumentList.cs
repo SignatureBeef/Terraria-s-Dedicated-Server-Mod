@@ -78,6 +78,28 @@ namespace TDSM.API.Command
             return Int32.TryParse(this[at], out val);
         }
 
+        public byte GetByte(int at)
+        {
+            if (at >= Count) throw new CommandError("Too few arguments given.");
+
+            byte val;
+            if (Byte.TryParse(this[at], out val))
+            {
+                return val;
+            }
+
+            throw new CommandError("An byte value [0-255] was expected for argument {0}.", at + 1);
+        }
+
+        public bool TryGetByte(int at, out byte val)
+        {
+            val = 0;
+
+            if (at >= Count) return false;
+
+            return Byte.TryParse(this[at], out val);
+        }
+
         public double GetDouble(int at)
         {
             if (at >= Count) throw new CommandError("Too few arguments given.");
