@@ -83,7 +83,7 @@ namespace TDSM.Data.SQLite
                 _data = conn.ExecuteArray<UserPermisison>(sb);
             }
 
-            ProgramLog.Error.Log(this.GetType().Name + ": " + (_data == null ? "NULL" : _data.Length.ToString()));
+//            ProgramLog.Error.Log(this.GetType().Name + ": " + (_data == null ? "NULL" : _data.Length.ToString()));
         }
 
         public override void Save(IDataConnector conn)

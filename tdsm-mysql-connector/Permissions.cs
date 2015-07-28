@@ -109,6 +109,79 @@ namespace TDSM.Data.MySQL
                 }
             }
         }
+
+        internal IPermissionHandler PermissionsHandler
+        {
+            get
+            {
+                return (IPermissionHandler)this;
+            }
+        }
+
+        Group IPermissionHandler.FindGroup(string name)
+        {
+            return null;
+        }
+
+        bool IPermissionHandler.AddOrUpdateGroup(string name, bool applyToGuests = false, string parent = null, byte r = 255, byte g = 255, byte b = 255, string prefix = null, string suffix = null)
+        {   
+            return false;
+        }
+
+        bool IPermissionHandler.RemoveGroup(string name)
+        {
+            return false;
+        }
+
+        bool IPermissionHandler.AddGroupNode(string groupName, string node, bool deny = false)
+        {
+            return false;
+        }
+
+        bool IPermissionHandler.RemoveGroupNode(string groupName, string node, bool deny = false)
+        {
+            return false;
+        }
+
+        string[] IPermissionHandler.GroupList()
+        {
+            return null;
+        }
+
+        TDSM.API.Data.PermissionNode[] IPermissionHandler.GroupNodes(string groupName)
+        {
+            return null;
+        }
+
+        bool IPermissionHandler.AddUserToGroup(string username, string groupName)
+        {
+            return false;
+        }
+
+        bool IPermissionHandler.RemoveUserFromGroup(string username, string groupName)
+        {
+            return false;
+        }
+
+        bool IPermissionHandler.AddNodeToUser(string username, string node, bool deny = false)
+        {
+            return false;
+        }
+
+        bool IPermissionHandler.RemoveNodeFromUser(string username, string node, bool deny = false)
+        {
+            return false;
+        }
+
+        string[] IPermissionHandler.UserGroupList(string username)
+        {
+            return null;
+        }
+
+        TDSM.API.Data.PermissionNode[] IPermissionHandler.UserNodes(string username)
+        {
+            return null;
+        }
     }
 }
 

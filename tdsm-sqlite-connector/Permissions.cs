@@ -270,6 +270,108 @@ namespace TDSM.Data.SQLite
 
             return vPermissionValue;
         }
+
+        internal IPermissionHandler PermissionsHandler
+        {
+            get
+            {
+                return (IPermissionHandler)this;
+            }
+        }
+
+        Group IPermissionHandler.FindGroup(string name)
+        {
+            return _groups.Groups.Where(x => x.Name == name).Select(x => x).FirstOrDefault();
+        }
+
+        bool IPermissionHandler.AddOrUpdateGroup(string name, bool applyToGuests = false, string parent = null, byte r = 255, byte g = 255, byte b = 255, string prefix = null, string suffix = null)
+        {   
+            if (PermissionsHandler.FindGroup(name) == null)
+            {
+                return _groups.Insert(name, applyToGuests, parent, r, g, b, this, null, prefix, suffix) > 0L;
+            }
+            else
+            {
+                return GroupTable.UpdateGroup(name, applyToGuests, parent, r, g, b, this, prefix, suffix);
+            }
+        }
+
+        bool IPermissionHandler.RemoveGroup(string name)
+        {
+            return _groups.Delete(name, this);
+        }
+
+        bool IPermissionHandler.AddGroupNode(string groupName, string node, bool deny = false)
+        {
+            var grp = PermissionsHandler.FindGroup(groupName);
+            var permissionId = _nodes.FindOrCreate(this, node, deny);
+
+            var groupNodeId = _groupPerms.Insert(this, grp.Id, permissionId);
+
+            return groupNodeId > 0L;
+        }
+
+        bool IPermissionHandler.RemoveGroupNode(string groupName, string node, bool deny = false)
+        {
+            var grp = PermissionsHandler.FindGroup(groupName);
+            var permission = _nodes.Find(node, deny);
+
+            if (permission != null)
+            {
+                return _groupPerms.Delete(this, grp.Id, permission.Value.Id);
+            }
+            return false;
+        }
+
+        string[] IPermissionHandler.GroupList()
+        {
+            return _groups.Groups.Select(x => x.Name).OrderBy(x => x).ToArray();
+        }
+
+        TDSM.API.Data.PermissionNode[] IPermissionHandler.GroupNodes(string groupName)
+        {
+            var grp = PermissionsHandler.FindGroup(groupName);
+            return (
+                from x in _groupPerms.GroupPermissions
+                         join y in _nodes.Nodes on x.PermissionId equals y.Id
+                         where x.GroupId == grp.Id
+                         select new TDSM.API.Data.PermissionNode()
+            {
+                Node = y.Node,
+                Deny = y.Deny
+            }
+            ).ToArray();
+        }
+
+        bool IPermissionHandler.AddUserToGroup(string username, string groupName)
+        {
+            return false;
+        }
+
+        bool IPermissionHandler.RemoveUserFromGroup(string username, string groupName)
+        {
+            return false;
+        }
+
+        bool IPermissionHandler.AddNodeToUser(string username, string node, bool deny = false)
+        {
+            return false;
+        }
+
+        bool IPermissionHandler.RemoveNodeFromUser(string username, string node, bool deny = false)
+        {
+            return false;
+        }
+
+        string[] IPermissionHandler.UserGroupList(string username)
+        {
+            return null;
+        }
+
+        TDSM.API.Data.PermissionNode[] IPermissionHandler.UserNodes(string username)
+        {
+            return null;
+        }
     }
 }
 

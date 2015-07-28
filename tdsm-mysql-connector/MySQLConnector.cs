@@ -539,7 +539,7 @@ namespace TDSM.Data.MySQL
             return this;
         }
 
-        public override QueryBuilder Update(string tableName, DataParameter[] values)
+        public override QueryBuilder UpdateValues(string tableName, DataParameter[] values)
         {
             Append("UPDATE ");
             Append(base.GetTableName(tableName));

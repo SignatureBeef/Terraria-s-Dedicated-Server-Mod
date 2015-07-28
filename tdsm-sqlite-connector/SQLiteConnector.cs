@@ -126,7 +126,7 @@ namespace TDSM.Data.SQLite
                 cmd.CommandType = builder.CommandType;
                 cmd.Parameters.AddRange(sb.Parameters.ToArray());
 
-                ProgramLog.Error.Log(cmd.CommandText);
+//                ProgramLog.Error.Log(cmd.CommandText);
 
                 using (var da = new SqliteDataAdapter(cmd))
                 {
@@ -471,7 +471,7 @@ namespace TDSM.Data.SQLite
             return this;
         }
 
-        public override QueryBuilder Update(string tableName, DataParameter[] values)
+        public override QueryBuilder UpdateValues(string tableName, DataParameter[] values)
         {
             Append("UPDATE ");
             Append(base.GetTableName(tableName));

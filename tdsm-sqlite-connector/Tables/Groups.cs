@@ -6,26 +6,26 @@ using System.Linq;
 
 namespace TDSM.Data.SQLite
 {
-    public class Group
-    {
-        public long Id { get; set; }
-
-        public string Name { get; set; }
-
-        public bool ApplyToGuests { get; set; }
-
-        public string Parent { get; set; }
-
-        public byte Chat_Red { get; set; }
-
-        public byte Chat_Green { get; set; }
-
-        public byte Chat_Blue { get; set; }
-
-        public string Chat_Prefix { get; set; }
-
-        public string Chat_Suffix { get; set; }
-    }
+    //    public class Group
+    //    {
+    //        public long Id { get; set; }
+    //
+    //        public string Name { get; set; }
+    //
+    //        public bool ApplyToGuests { get; set; }
+    //
+    //        public string Parent { get; set; }
+    //
+    //        public byte Chat_Red { get; set; }
+    //
+    //        public byte Chat_Green { get; set; }
+    //
+    //        public byte Chat_Blue { get; set; }
+    //
+    //        public string Chat_Prefix { get; set; }
+    //
+    //        public string Chat_Suffix { get; set; }
+    //    }
 
     public class GroupTable : CacheTable
     {
@@ -104,21 +104,21 @@ namespace TDSM.Data.SQLite
                     var ad = CommandParser.GetAvailableCommands(AccessLevel.OP);
                     var op = CommandParser.GetAvailableCommands(AccessLevel.CONSOLE); //Funny how these have now changed
 
-                    CreateGroup("Guest", true, null, 255, 255, 255, pc
+                    CreateGroup("Guest", true, null, 255, 255, 255, conn, pc
                         .Where(x => !String.IsNullOrEmpty(x.Value.Node))
                         .Select(x => x.Value.Node)
                         .Distinct()
-                        .ToArray(), conn);
-                    CreateGroup("Admin", false, "Guest", 240, 131, 77, ad
+                        .ToArray());
+                    CreateGroup("Admin", false, "Guest", 240, 131, 77, conn, ad
                         .Where(x => !String.IsNullOrEmpty(x.Value.Node))
                         .Select(x => x.Value.Node)
                         .Distinct()
-                        .ToArray(), conn);
-                    CreateGroup("Operator", false, "Admin", 77, 166, 240, op
+                        .ToArray());
+                    CreateGroup("Operator", false, "Admin", 77, 166, 240, conn, op
                         .Where(x => !String.IsNullOrEmpty(x.Value.Node))
                         .Select(x => x.Value.Node)
                         .Distinct()
-                        .ToArray(), conn);
+                        .ToArray());
 
                     return true;
                 }
@@ -128,32 +128,103 @@ namespace TDSM.Data.SQLite
                     return false;
                 }
             }
+        }
 
-            static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, SQLiteConnector conn)
+        public static long CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, SQLiteConnector conn, string[] nodes = null, string prefix = null, string suffix = null)
+        {
+            long id;
+            using (var bl = new SQLiteQueryBuilder(Plugin.SQLSafeName))
             {
-                long id;
-                using (var bl = new SQLiteQueryBuilder(Plugin.SQLSafeName))
-                {
-                    bl.InsertInto(TableName, 
-                        new DataParameter(ColumnNames.Name, name),
-                        new DataParameter(ColumnNames.ApplyToGuests, guest),
-                        new DataParameter(ColumnNames.Parent, parent),
-                        new DataParameter(ColumnNames.Chat_Red, r),
-                        new DataParameter(ColumnNames.Chat_Green, g),
-                        new DataParameter(ColumnNames.Chat_Blue, b)
-                    );
+                bl.InsertInto(TableDefinition.TableName, 
+                    new DataParameter(TableDefinition.ColumnNames.Name, name),
+                    new DataParameter(TableDefinition.ColumnNames.ApplyToGuests, guest),
+                    new DataParameter(TableDefinition.ColumnNames.Parent, parent),
+                    new DataParameter(TableDefinition.ColumnNames.Chat_Red, r),
+                    new DataParameter(TableDefinition.ColumnNames.Chat_Green, g),
+                    new DataParameter(TableDefinition.ColumnNames.Chat_Blue, b),
+                    new DataParameter(TableDefinition.ColumnNames.Chat_Prefix, prefix),
+                    new DataParameter(TableDefinition.ColumnNames.Chat_Suffix, suffix)
+                );
 
-                    id = ((IDataConnector)conn).ExecuteInsert(bl);
-                }
+                id = ((IDataConnector)conn).ExecuteInsert(bl);
+            }
 
+            if (nodes != null)
                 foreach (var nd in nodes)
                 {
-                    var nodeId = PermissionTable.Insert(conn, nd, false);
-                    GroupPermissionsTable.Insert(conn, id, nodeId);
+                    var nodeId = PermissionTable.InsertRecord(conn, nd, false);
+                    GroupPermissionsTable.InsertRecord(conn, id, nodeId);
                 }
+
+            return id;
+        }
+
+        public long Insert(string name, bool guest, string parent, byte r, byte g, byte b, SQLiteConnector conn, string[] nodes = null, string prefix = null, string suffix = null)
+        {
+            var id = CreateGroup(name, guest, parent, r, g, b, conn, nodes, prefix, suffix);
+
+            //Alternatively we could reload, but this shouldn't be called often
+            if (id > 0L)
+            {
+                Array.Resize(ref _data, _data.Length + 1);
+                _data[_data.Length - 1] = new Group()
+                {
+                    Id = id,
+                    Name = name,
+                    ApplyToGuests = guest,
+                    Parent = parent,
+                    Chat_Red = r,
+                    Chat_Green = g,
+                    Chat_Prefix = prefix,
+                    Chat_Suffix = suffix
+                };
+            }
+
+            return id;
+        }
+
+        public static bool UpdateGroup(string name, bool guest, string parent, byte r, byte g, byte b, SQLiteConnector conn, string prefix = null, string suffix = null)
+        {
+            using (var bl = new SQLiteQueryBuilder(Plugin.SQLSafeName))
+            {
+                bl.Update(TableDefinition.TableName, new DataParameter[]
+                    {
+                        new DataParameter(TableDefinition.ColumnNames.Name, name),
+                        new DataParameter(TableDefinition.ColumnNames.ApplyToGuests, guest),
+                        new DataParameter(TableDefinition.ColumnNames.Parent, parent),
+                        new DataParameter(TableDefinition.ColumnNames.Chat_Red, r),
+                        new DataParameter(TableDefinition.ColumnNames.Chat_Green, g),
+                        new DataParameter(TableDefinition.ColumnNames.Chat_Blue, b),
+                        new DataParameter(TableDefinition.ColumnNames.Chat_Prefix, prefix),
+                        new DataParameter(TableDefinition.ColumnNames.Chat_Suffix, suffix)
+                    }, new WhereFilter(TableDefinition.ColumnNames.Name, name));
+
+                return ((IDataConnector)conn).ExecuteNonQuery(bl) > 0;
             }
         }
 
+        public static bool DeleteGroup(string name, SQLiteConnector conn)
+        {
+            using (var bl = new SQLiteQueryBuilder(Plugin.SQLSafeName))
+            {
+                bl.Delete(TableDefinition.TableName, new WhereFilter(TableDefinition.ColumnNames.Name, name));
+
+                return ((IDataConnector)conn).ExecuteNonQuery(bl) > 0;
+            }
+        }
+
+        public bool Delete(string name, SQLiteConnector conn)
+        {
+            var res = DeleteGroup(name, conn);
+
+            //Alternatively we could reload, but this shouldn't be called often
+            if (res)
+            {
+                _data = _data.Where(x => x.Name != name).ToArray();
+            }
+
+            return res;
+        }
 
         public void Initialise(SQLiteConnector conn)
         {
@@ -175,7 +246,7 @@ namespace TDSM.Data.SQLite
                 _data = conn.ExecuteArray<Group>(sb);
             }
 
-            ProgramLog.Error.Log(this.GetType().Name + ": " + (_data == null ? "NULL" : _data.Length.ToString()));
+//            ProgramLog.Error.Log(this.GetType().Name + ": " + (_data == null ? "NULL" : _data.Length.ToString()));
         }
 
         public override void Save(IDataConnector conn)
