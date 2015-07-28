@@ -278,6 +278,54 @@ namespace TDSM.Core
                         sender.Message(String.Format("Failed to remove {0} from user {1} ", node, user.Value.Username), Color.Red);
                     }
                     break;
+
+                case "groups":
+                case "listgroups":
+                    if (!args.TryGetString(a++, out username))
+                        throw new CommandError("Expected username name after [" + cmd + "]");
+
+                    user = AuthenticatedUsers.GetUser(username);
+                    if (null == user)
+                        throw new CommandError("No user found by: " + username);
+
+                    var groups = Storage.UserGroupList(username);
+                    if (groups != null)
+                    {
+                        ProgramLog.Admin.Log("Current groups:");
+                        foreach (var gps in groups)
+                        {
+                            ProgramLog.Admin.Log("\t" + gps);
+                        }
+                    }
+                    else
+                    {
+                        ProgramLog.Admin.Log("There are no registered groups for user " + user.Value.Username);
+                    }
+                    break;
+
+                case "nodes":
+                case "listnodes":
+                    if (!args.TryGetString(a++, out username))
+                        throw new CommandError("Expected username name after [" + cmd + "]");
+
+                    user = AuthenticatedUsers.GetUser(username);
+                    if (null == user)
+                        throw new CommandError("No user found by: " + username);
+
+                    var nodes = Storage.UserNodes(username);
+                    if (nodes != null)
+                    {
+                        ProgramLog.Admin.Log("Current permissions for user {0}:", user.Value.Username);
+                        foreach (var nd in nodes)
+                        {
+                            ProgramLog.Admin.Log("\t{0}\t- {1}", nd.Deny ? "Denied" : "Allowed", nd.Node);
+                        }
+                    }
+                    else
+                    {
+                        ProgramLog.Admin.Log("There are no permissions assigned to user: " + user.Value.Username);
+                    }
+                    break;
                 default:
                     throw new CommandError("Invalid command " + cmd);
             }
