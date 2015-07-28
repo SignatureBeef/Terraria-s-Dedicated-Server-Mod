@@ -85,6 +85,8 @@ namespace TDSM.Data.SQLite
             //Alternatively we could reload, but this shouldn't be called often
             if (id > 0L)
             {
+                if (_data == null)
+                    _data = new TDSM.Data.SQLite.UserGroup[0];
                 Array.Resize(ref _data, _data.Length + 1);
                 _data[_data.Length - 1] = new TDSM.Data.SQLite.UserGroup()
                 {

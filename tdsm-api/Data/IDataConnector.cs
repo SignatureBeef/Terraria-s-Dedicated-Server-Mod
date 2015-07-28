@@ -481,7 +481,7 @@ namespace TDSM.API.Data
         {
             if (_connector == null)
                 throw new InvalidOperationException("No connector attached");
-            return _connector.RemoveGroupNode(groupName, node);
+            return _connector.RemoveGroupNode(groupName, node, deny);
         }
 
         public static string[] GroupList()

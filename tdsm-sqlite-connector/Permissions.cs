@@ -384,7 +384,8 @@ namespace TDSM.Data.SQLite
 
             if (permission != null)
             {
-                return _groupPerms.Delete(this, usr.Value.Id, permission.Value.Id);
+                return _userPerms
+                    .Delete(this, usr.Value.Id, permission.Value.Id);
             }
             return false;
         }
@@ -394,9 +395,9 @@ namespace TDSM.Data.SQLite
             var usr = AuthenticatedUsers.GetUser(username);
             return (
                 from x in _users.UserGroup
-                join y in _groups.Groups on x.GroupId equals y.Id
-                where x.UserId == usr.Value.Id
-                select y.Name
+                         join y in _groups.Groups on x.GroupId equals y.Id
+                         where x.UserId == usr.Value.Id
+                         select y.Name
             ).ToArray();
         }
 
@@ -405,13 +406,13 @@ namespace TDSM.Data.SQLite
             var usr = AuthenticatedUsers.GetUser(username);
             return (
                 from x in _userPerms.UserNodes
-                join y in _nodes.Nodes on x.PermissionId equals y.Id
-                where x.UserId == usr.Value.Id
-                select new TDSM.API.Data.PermissionNode()
-                {
-                    Node = y.Node,
-                    Deny = y.Deny
-                }
+                         join y in _nodes.Nodes on x.PermissionId equals y.Id
+                         where x.UserId == usr.Value.Id
+                         select new TDSM.API.Data.PermissionNode()
+            {
+                Node = y.Node,
+                Deny = y.Deny
+            }
             ).ToArray();
         }
     }

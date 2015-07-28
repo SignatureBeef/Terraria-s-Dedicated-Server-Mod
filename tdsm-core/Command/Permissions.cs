@@ -115,8 +115,11 @@ namespace TDSM.Core
                     if (Storage.FindGroup(groupName) == null)
                         throw new CommandError("Group does not exist: " + groupName);
 
+                    bool denied;
+                    if (!args.TryGetBool(a++, out denied))
+                        denied = false;
 
-                    if (Storage.RemoveGroupNode(groupName, remNode))
+                    if (Storage.RemoveGroupNode(groupName, remNode, denied))
                     {
                         sender.Message(String.Format("Successfully removed node {0} from group {1} ", remNode, groupName), Color.Green);
                     }
@@ -180,7 +183,7 @@ namespace TDSM.Core
             Group grp;
             bool deny;
 
-            var cmd = args.GetString(0);
+            var cmd = args.GetString(a++);
             switch (cmd)
             {
                 case "addgroup":
