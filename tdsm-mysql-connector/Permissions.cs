@@ -44,10 +44,11 @@ namespace TDSM.Data.MySQL
             //Used to create default permissions
             _groups.Initialise(this);
 
-            if (!Procedure_IsPermitted.Exists(this))
+            //Initialise procedures
+            if (!Procedures.IsPermitted.Exists(this))
             {
                 ProgramLog.Admin.Log("Permission procedure does not exist and will now be created");
-                Procedure_IsPermitted.Create(this);
+                Procedures.IsPermitted.Create(this);
             }
         }
 
@@ -62,51 +63,6 @@ namespace TDSM.Data.MySQL
                 );
 
                 return (Permission)Storage.ExecuteScalar<Int32>(sb);
-            }
-        }
-
-        static class PluginContent
-        {
-            public static string GetResource(string name)
-            {
-                var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-
-                using (var stream = assembly.GetManifestResourceStream(name))
-                using (var reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
-
-        static class Procedure_IsPermitted
-        {
-            public static bool Exists(MySQLConnector conn)
-            {
-                using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
-                {
-                    sb.ProcedureExists("SqlPermissions_IsPermitted");
-
-                    return ((IDataConnector)conn).Execute(sb);
-                }
-            }
-
-            public static bool Create(MySQLConnector conn)
-            {
-                using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
-                {
-                    var proc = PluginContent.GetResource("TDSM.Data.MySQL.IsPermitted.sql");
-//                    sb.ProcedureCreate("SqlPermissions_IsPermitted", proc, 
-//                        new ProcedureParameter("prmNode", typeof(String), 50),
-//                        new ProcedureParameter("prmIsGuest", typeof(Boolean)),
-//                        new ProcedureParameter("prmAuthentication", typeof(String), 50)
-//                    );
-
-                    sb.CommandType = System.Data.CommandType.Text;
-                    sb.CommandText = proc;
-
-                    return ((IDataConnector)conn).Execute(sb);
-                }
             }
         }
 

@@ -48,6 +48,8 @@
     <Compile Include="Tables\UserPermissions.cs" />
     <Compile Include="Tables\Permission.cs" />
     <Compile Include="Tables\UserGroups.cs" />
+    <Compile Include="Procedures\IsPermitted.cs" />
+    <Compile Include="Procedures\PluginContent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -58,8 +60,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tables\" />
+    <Folder Include="Procedures\" />
+    <Folder Include="Procedures\Files\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="IsPermitted.sql" />
+    <EmbeddedResource Include="Procedures\Files\IsPermitted.sql" />
   </ItemGroup>
 </Project>

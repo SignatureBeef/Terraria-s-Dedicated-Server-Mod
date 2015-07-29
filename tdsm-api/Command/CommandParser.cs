@@ -14,7 +14,7 @@ namespace TDSM.API.Command
 {
     public enum AccessLevel : int
     {
-        PLAYER,
+        PLAYER = 1,
         OP,
         REMOTE_CONSOLE,
         CONSOLE,
@@ -499,7 +499,8 @@ namespace TDSM.API.Command
                     //Override defaults
                     if (available.ContainsKey(pair.Key))
                         available[pair.Key] = pair.Value;
-                    else available.Add(pair.Key, pair.Value);
+                    else
+                        available.Add(pair.Key, pair.Value);
                 }
             }
 
