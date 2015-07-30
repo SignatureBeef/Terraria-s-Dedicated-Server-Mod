@@ -3,6 +3,9 @@ using TDSM.API.Misc;
 using TDSM.API.Plugin;
 using TDSM.API.Sockets;
 using TDSM.API.Logging;
+using System.Threading;
+using Mono.Unix;
+using TDSM.API.Command;
 
 namespace TDSM.API.Callbacks
 {
@@ -11,6 +14,8 @@ namespace TDSM.API.Callbacks
         public static Action StatusTextChange;
         public static Action UpdateServer;
 
+        private static AutoResetEvent event_quit = new AutoResetEvent(false);
+
         //public static bool StartEclipse;
         //public static bool StartBloodMoon;
 
@@ -18,8 +23,8 @@ namespace TDSM.API.Callbacks
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Tools.WriteLine("TDSM Rebind API build {0}{1} running on {2}", 
-                Globals.Build, 
+            Tools.WriteLine("TDSM Rebind API build {0}{1} running on {2}",
+                Globals.Build,
                 Globals.PhaseToSuffix(Globals.BuildPhase),
                 Tools.RuntimePlatform.ToString()
             );
@@ -38,17 +43,38 @@ namespace TDSM.API.Callbacks
             PluginManager.Initialize(Globals.PluginPath);
             PluginManager.LoadPlugins();
 
-//            if (!Permissions.PermissionsManager.IsSet)
-//            {
-//                var file = System.IO.Path.Combine(Globals.DataPath, "permissions.xml");
-//                //if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
-//                if (System.IO.File.Exists(file))
-//                {
-//                    var handler = new Permissions.XmlSupplier(file);
-//                    if (handler.Load())
-//                        Permissions.PermissionsManager.SetHandler(handler);
-//                }
-//            }
+            //            if (!Permissions.PermissionsManager.IsSet)
+            //            {
+            //                var file = System.IO.Path.Combine(Globals.DataPath, "permissions.xml");
+            //                //if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
+            //                if (System.IO.File.Exists(file))
+            //                {
+            //                    var handler = new Permissions.XmlSupplier(file);
+            //                    if (handler.Load())
+            //                        Permissions.PermissionsManager.SetHandler(handler);
+            //                }
+            //            }
+
+            if (Globals.IsMono)
+            {
+                // Catch SIGINT, SIGUSR1 and SIGTERM
+                UnixSignal[] signals = new UnixSignal[] {
+                    new UnixSignal (Mono.Unix.Native.Signum.SIGINT),
+                    new UnixSignal (Mono.Unix.Native.Signum.SIGUSR1),
+                    new UnixSignal (Mono.Unix.Native.Signum.SIGTERM)
+                };
+
+                Thread signal_thread = new Thread(delegate ()
+                {
+                    while (true)
+                    {
+                    // Wait for a signal to be delivered
+                    int index = UnixSignal.WaitAny(signals, -1);
+                        Mono.Unix.Native.Signum signal = signals[index].Signum;
+                        event_quit.Set();
+                    }
+                });
+            }
         }
 
         public static bool OnProgramStarted(string[] cmd)
@@ -88,7 +114,7 @@ namespace TDSM.API.Callbacks
 
         public static void Initialise()
         {
-            #if Full_API
+#if Full_API
             if (Terraria.Main.dedServ)
             {
                 var ctx = new HookContext()
@@ -101,7 +127,7 @@ namespace TDSM.API.Callbacks
                 };
                 HookPoints.ServerStateChange.Invoke(ref ctx, ref args);
             }
-            #endif
+#endif
         }
 
         public static void UpdateServerEnd()
@@ -112,11 +138,11 @@ namespace TDSM.API.Callbacks
             if (UpdateServer != null)
                 UpdateServer();
 
-            #if Full_API
+#if Full_API
             for (var i = 0; i < Terraria.Netplay.Clients.Length; i++)
             {
                 var client = Terraria.Netplay.Clients[i];
-//                if (player.active)
+                //                if (player.active)
                 if (client != null && client.Socket != null && client.Socket is ClientConnection)
                 {
                     var conn = (client.Socket as ClientConnection);
@@ -124,13 +150,18 @@ namespace TDSM.API.Callbacks
                         conn.Flush();
                 }
             }
-            #endif
+#endif
             //var ctx = new HookContext()
             //{
             //    Sender = HookContext.ConsoleSender
             //};
             //var args = new HookArgs.UpdateServer();
             //HookPoints.UpdateServer.Invoke(ref ctx, ref args);
+            if (event_quit.WaitOne(0))
+            {
+                ProgramLog.Log("Server received Exit Signal");
+                DefaultCommands.Exit(null, null);
+            }
         }
 
         public static void WorldLoadBegin()
@@ -237,7 +268,7 @@ namespace TDSM.API.Callbacks
                 }*/
                     //_textTimeout = 0;
                 }
-            
+
                 //else if (Terraria.Main.oldStatusText == String.Empty && Terraria.Main.statusText == String.Empty)
                 //{
                 //    if (_textTimeout++ > 1000)
@@ -246,7 +277,7 @@ namespace TDSM.API.Callbacks
                 //        Terraria.Main.statusText = String.Empty;
                 //    }
                 //}
-                #endif
+#endif
             }
             catch (Exception e)
             {

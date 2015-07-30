@@ -56,6 +56,9 @@
     <AssemblyName>tdsm.api</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Posix">
+      <HintPath>..\External\Mono.Posix.dll</HintPath>
+    </Reference>
     <Reference Include="NLua">
       <HintPath>..\External\NLua.dll</HintPath>
     </Reference>
@@ -186,7 +189,9 @@
     <Compile Include="Misc\Platform.cs" />
     <Compile Include="Misc\ProducerConsumerSignal.cs" />
     <Compile Include="Misc\ProgramThread.cs" />
-    <Compile Include="Misc\ProgressWebClient.cs" />
+    <Compile Include="Misc\ProgressWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Misc\PropertiesFile.cs" />
     <Compile Include="Misc\Tasks.cs" />
     <Compile Include="Callbacks\Utilities.cs" />
