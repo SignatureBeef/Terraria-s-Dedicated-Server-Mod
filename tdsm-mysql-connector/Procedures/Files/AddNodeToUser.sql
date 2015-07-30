@@ -18,11 +18,11 @@ BEGIN
 	if vNodeId is null or vNodeId = 0 then
 		insert into SqlPermissions_Permissions
 		( Node, Deny )
-		select prnNode, prmDeny;
+		select prmNode, prmDeny;
 		set vNodeId = LAST_INSERT_ID();
 	end if;
 
-	if vNodeId > 0 and vGroupId > 0 then
+	if vNodeId > 0 and vUserId > 0 then
 		if not exists
 		(
 			select 1

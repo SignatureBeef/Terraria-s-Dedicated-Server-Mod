@@ -28,7 +28,7 @@ namespace TDSM.API.Data
 
     public struct PermissionNode
     {
-        public string Node{ get; set; }
+        public string Node { get; set; }
 
         public bool Deny { get; set; }
     }

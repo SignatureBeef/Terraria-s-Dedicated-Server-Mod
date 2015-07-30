@@ -79,8 +79,12 @@ namespace TDSM.Data.MySQL
                     new DataParameter("Name", name)
                 );
 
-                return Storage.ExecuteArray<Group>(sb).FirstOrDefault();
+                var arr = Storage.ExecuteArray<Group>(sb);
+                if (arr != null && arr.Length > 0)
+                    return arr[0];
             }
+
+            return null;
         }
 
         bool IPermissionHandler.AddOrUpdateGroup(string name, bool applyToGuests = false, string parent = null, byte r = 255, byte g = 255, byte b = 255, string prefix = null, string suffix = null)
@@ -110,7 +114,7 @@ namespace TDSM.Data.MySQL
                     new DataParameter("Name", name)
                 );
 
-                return Storage.ExecuteScalar<Int64>(sb) > 0;
+                return Storage.ExecuteNonQuery(sb) > 0;
             }
         }
 
@@ -119,7 +123,7 @@ namespace TDSM.Data.MySQL
             using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
             {
                 sb.ExecuteProcedure(Procedures.AddGroupNode, "prm", 
-                    new DataParameter("Name", groupName), 
+                    new DataParameter("GroupName", groupName), 
                     new DataParameter("Node", node), 
                     new DataParameter("Deny", deny)
                 );
@@ -133,7 +137,7 @@ namespace TDSM.Data.MySQL
             using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
             {
                 sb.ExecuteProcedure(Procedures.RemoveGroupNode, "prm", 
-                    new DataParameter("Name", groupName), 
+                    new DataParameter("GroupName", groupName), 
                     new DataParameter("Node", node), 
                     new DataParameter("Deny", deny)
                 );
@@ -153,8 +157,11 @@ namespace TDSM.Data.MySQL
             {
                 sb.ExecuteProcedure(Procedures.GroupList);
 
-                return Storage.ExecuteArray<GroupList>(sb).Select(x => x.Name).ToArray();
+                var lst = Storage.ExecuteArray<GroupList>(sb);
+                if (lst != null)
+                    return lst.Select(x => x.Name).ToArray();
             }
+            return null;
         }
 
         TDSM.API.Data.PermissionNode[] IPermissionHandler.GroupNodes(string groupName)
@@ -162,7 +169,7 @@ namespace TDSM.Data.MySQL
             using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
             {
                 sb.ExecuteProcedure(Procedures.GroupNodes, "prm", 
-                    new DataParameter("Name", groupName)
+                    new DataParameter("GroupName", groupName)
                 );
 
                 return Storage.ExecuteArray<TDSM.API.Data.PermissionNode>(sb);
@@ -219,7 +226,8 @@ namespace TDSM.Data.MySQL
                     new DataParameter("Deny", deny)
                 );
 
-                return Storage.ExecuteScalar<Int64>(sb) > 0;
+                return Storage.ExecuteScalar<Int64
+                    >(sb) > 0;
             }
         }
 
@@ -236,8 +244,11 @@ namespace TDSM.Data.MySQL
                     new DataParameter("UserName", username)
                 );
 
-                return Storage.ExecuteArray<UserGroupList>(sb).Select(x => x.Name).ToArray();
+                var lst = Storage.ExecuteArray<UserGroupList>(sb);
+                if (lst != null)
+                    return lst.Select(x => x.Name).ToArray();
             }
+            return null;
         }
 
         TDSM.API.Data.PermissionNode[] IPermissionHandler.UserNodes(string username)

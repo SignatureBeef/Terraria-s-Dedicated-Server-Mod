@@ -46,7 +46,8 @@ namespace TDSM.Data.MySQL
             foreach (var proc in _procedures)
             {
                 #if TESTING
-                proc.Drop(conn);
+                if (proc.Exists(conn))
+                    proc.Drop(conn);
                 #endif
                 if (!proc.Exists(conn))
                 {

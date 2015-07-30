@@ -22,9 +22,9 @@ BEGIN
 		where Name = prmName;
 	else
 		insert SqlPermissions_Groups
-		( ApplyToGuests, Parent, Chat_Red, Chat_Green, Chat_Blue, Chat_Prefix, Chat_Suffix )
-		select prmApplyToGuests, prmParent, prmR, prmG, prmB, prmPrefix, prmSuffix;
+		( Name, ApplyToGuests, Parent, Chat_Red, Chat_Green, Chat_Blue, Chat_Prefix, Chat_Suffix )
+		select prmName, prmApplyToGuests, prmParent, prmR, prmG, prmB, prmPrefix, prmSuffix;
 		
-		select LAST_INSERT_ID();
+		select CAST(LAST_INSERT_ID() AS SIGNED);
 	end if;
 END
