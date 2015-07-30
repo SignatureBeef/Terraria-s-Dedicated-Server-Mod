@@ -48,8 +48,8 @@
     <Compile Include="Tables\UserPermissions.cs" />
     <Compile Include="Tables\Permission.cs" />
     <Compile Include="Tables\UserGroups.cs" />
-    <Compile Include="Procedures\IsPermitted.cs" />
-    <Compile Include="Procedures\PluginContent.cs" />
+    <Compile Include="PluginContent.cs" />
+    <Compile Include="Procedures\Procedures.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -65,5 +65,18 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Procedures\Files\IsPermitted.sql" />
+    <EmbeddedResource Include="Procedures\Files\FindGroup.sql" />
+    <EmbeddedResource Include="Procedures\Files\AddOrUpdateGroup.sql" />
+    <EmbeddedResource Include="Procedures\Files\RemoveGroup.sql" />
+    <EmbeddedResource Include="Procedures\Files\AddGroupNode.sql" />
+    <EmbeddedResource Include="Procedures\Files\RemoveGroupNode.sql" />
+    <EmbeddedResource Include="Procedures\Files\GroupList.sql" />
+    <EmbeddedResource Include="Procedures\Files\GroupNodes.sql" />
+    <EmbeddedResource Include="Procedures\Files\AddUserToGroup.sql" />
+    <EmbeddedResource Include="Procedures\Files\RemoveUserFromGroup.sql" />
+    <EmbeddedResource Include="Procedures\Files\AddNodeToUser.sql" />
+    <EmbeddedResource Include="Procedures\Files\RemoveNodeFromUser.sql" />
+    <EmbeddedResource Include="Procedures\Files\UserGroupList.sql" />
+    <EmbeddedResource Include="Procedures\Files\UserNodes.sql" />
   </ItemGroup>
 </Project>

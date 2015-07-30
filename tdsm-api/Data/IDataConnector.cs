@@ -234,9 +234,9 @@ namespace TDSM.API.Data
         //    return this.Append(") ");
         //}
 
-        protected string GetTableName(string tableName)
+        protected string GetObjectName(string name)
         {
-            return _plugin + '_' + tableName;
+            return _plugin + '_' + name;
         }
 
         public CommandType CommandType

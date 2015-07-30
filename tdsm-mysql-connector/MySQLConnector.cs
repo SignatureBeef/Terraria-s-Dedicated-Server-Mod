@@ -221,7 +221,7 @@ namespace TDSM.Data.MySQL
 
         public QueryBuilder ExecuteProcedure(string name, string prefix = "prm", params DataParameter[] parameters)
         {
-            Append("CALL `{0}`(", name);
+            Append("CALL `{0}`(", base.GetObjectName(name));
 
             if (parameters != null && parameters.Length > 0)
             {
@@ -251,13 +251,13 @@ namespace TDSM.Data.MySQL
 
         public override QueryBuilder TableExists(string name)
         {
-            Append("SHOW TABLES LIKE '{0}'", base.GetTableName(name));
+            Append("SHOW TABLES LIKE '{0}'", base.GetObjectName(name));
             return this;
         }
 
         public override QueryBuilder TableCreate(string name, params TableColumn[] columns)
         {
-            Append("CREATE TABLE {0} (", base.GetTableName(name));
+            Append("CREATE TABLE {0} (", base.GetObjectName(name));
 
             if (columns != null && columns.Length > 0)
             {
@@ -340,19 +340,19 @@ namespace TDSM.Data.MySQL
 
         public override QueryBuilder TableDrop(string name)
         {
-            Append("DROP TABLE IF EXISTS '{0}'", base.GetTableName(name));
+            Append("DROP TABLE IF EXISTS '{0}'", base.GetObjectName(name));
             return this;
         }
 
         public QueryBuilder ProcedureExists(string name)
         {
             const String Fmt = "select 1 from information_schema.routines where routine_type='procedure' and routine_schema = DATABASE() and routine_name = '{0}';";
-            return this.Append(Fmt, name);
+            return this.Append(Fmt, base.GetObjectName(name));
         }
 
         public QueryBuilder ProcedureCreate(string name, string contents, params ProcedureParameter[] parameters)
         {
-            Append("CREATE PROCEDURE {0} (", base.GetTableName(name));
+            Append("CREATE PROCEDURE {0} (", base.GetObjectName(name));
 
             if (parameters != null && parameters.Length > 0)
             {
@@ -420,7 +420,7 @@ namespace TDSM.Data.MySQL
 
         public QueryBuilder ProcedureDrop(string name)
         {
-            return this;
+            return this.Append("DROP PROCEDURE `{0}`", base.GetObjectName(name));
         }
 
         public override QueryBuilder Select(params string[] expression)
@@ -446,7 +446,7 @@ namespace TDSM.Data.MySQL
         public override QueryBuilder From(string tableName)
         {
             Append("FROM ");
-            Append(base.GetTableName(tableName));
+            Append(base.GetObjectName(tableName));
             Append(" ");
             return this;
         }
@@ -506,7 +506,7 @@ namespace TDSM.Data.MySQL
         public override QueryBuilder InsertInto(string tableName, params DataParameter[] values)
         {
             Append("INSERT INTO ");
-            Append(base.GetTableName(tableName));
+            Append(base.GetObjectName(tableName));
 
             if (values != null && values.Length > 0)
             {
@@ -542,7 +542,7 @@ namespace TDSM.Data.MySQL
         public override QueryBuilder UpdateValues(string tableName, DataParameter[] values)
         {
             Append("UPDATE ");
-            Append(base.GetTableName(tableName));
+            Append(base.GetObjectName(tableName));
 
             if (values != null && values.Length > 0)
             {

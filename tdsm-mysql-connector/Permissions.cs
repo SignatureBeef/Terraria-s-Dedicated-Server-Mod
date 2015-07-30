@@ -4,6 +4,7 @@ using TDSM.API;
 using TDSM.Data.MySQL.Tables;
 using System.IO;
 using TDSM.API.Logging;
+using System.Linq;
 
 namespace TDSM.Data.MySQL
 {
@@ -45,18 +46,14 @@ namespace TDSM.Data.MySQL
             _groups.Initialise(this);
 
             //Initialise procedures
-            if (!Procedures.IsPermitted.Exists(this))
-            {
-                ProgramLog.Admin.Log("Permission procedure does not exist and will now be created");
-                Procedures.IsPermitted.Create(this);
-            }
+            Procedures.Init(this);
         }
 
         private Permission IsPermitted(string node, bool isGuest, string authentication = null)
         {
             using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
             {
-                sb.ExecuteProcedure("SqlPermissions_IsPermitted", "prm", 
+                sb.ExecuteProcedure(Procedures.IsPermitted, "prm", 
                     new DataParameter("Node", node),
                     new DataParameter("IsGuest", isGuest),
                     new DataParameter("Authentication", authentication)
@@ -76,67 +73,183 @@ namespace TDSM.Data.MySQL
 
         Group IPermissionHandler.FindGroup(string name)
         {
-            return null;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.FindGroup, "prm", 
+                    new DataParameter("Name", name)
+                );
+
+                return Storage.ExecuteArray<Group>(sb).FirstOrDefault();
+            }
         }
 
         bool IPermissionHandler.AddOrUpdateGroup(string name, bool applyToGuests = false, string parent = null, byte r = 255, byte g = 255, byte b = 255, string prefix = null, string suffix = null)
         {   
-            return false;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.AddOrUpdateGroup, "prm", 
+                    new DataParameter("Name", name), 
+                    new DataParameter("ApplyToGuests", applyToGuests), 
+                    new DataParameter("Parent", parent), 
+                    new DataParameter("R", r), 
+                    new DataParameter("G", g), 
+                    new DataParameter("B", b), 
+                    new DataParameter("Prefix", prefix), 
+                    new DataParameter("Suffix", suffix)
+                );
+
+                return Storage.ExecuteScalar<Int64>(sb) > 0;
+            }
         }
 
         bool IPermissionHandler.RemoveGroup(string name)
         {
-            return false;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.RemoveGroup, "prm", 
+                    new DataParameter("Name", name)
+                );
+
+                return Storage.ExecuteScalar<Int64>(sb) > 0;
+            }
         }
 
         bool IPermissionHandler.AddGroupNode(string groupName, string node, bool deny = false)
         {
-            return false;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.AddGroupNode, "prm", 
+                    new DataParameter("Name", groupName), 
+                    new DataParameter("Node", node), 
+                    new DataParameter("Deny", deny)
+                );
+
+                return Storage.ExecuteScalar<Int64>(sb) > 0;
+            }
         }
 
         bool IPermissionHandler.RemoveGroupNode(string groupName, string node, bool deny = false)
         {
-            return false;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.RemoveGroupNode, "prm", 
+                    new DataParameter("Name", groupName), 
+                    new DataParameter("Node", node), 
+                    new DataParameter("Deny", deny)
+                );
+
+                return Storage.ExecuteScalar<Int64>(sb) > 0;
+            }
+        }
+
+        struct GroupList
+        {
+            public string Name { get; set; }
         }
 
         string[] IPermissionHandler.GroupList()
         {
-            return null;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.GroupList);
+
+                return Storage.ExecuteArray<GroupList>(sb).Select(x => x.Name).ToArray();
+            }
         }
 
         TDSM.API.Data.PermissionNode[] IPermissionHandler.GroupNodes(string groupName)
         {
-            return null;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.GroupNodes, "prm", 
+                    new DataParameter("Name", groupName)
+                );
+
+                return Storage.ExecuteArray<TDSM.API.Data.PermissionNode>(sb);
+            }
         }
 
         bool IPermissionHandler.AddUserToGroup(string username, string groupName)
         {
-            return false;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.AddUserToGroup, "prm", 
+                    new DataParameter("UserName", username),
+                    new DataParameter("GroupName", groupName)
+                );
+
+                return Storage.ExecuteScalar<Int64>(sb) > 0;
+            }
         }
 
         bool IPermissionHandler.RemoveUserFromGroup(string username, string groupName)
         {
-            return false;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.RemoveUserFromGroup, "prm", 
+                    new DataParameter("UserName", username),
+                    new DataParameter("GroupName", groupName)
+                );
+
+                return Storage.ExecuteScalar<Int64>(sb) > 0;
+            }
         }
 
         bool IPermissionHandler.AddNodeToUser(string username, string node, bool deny = false)
         {
-            return false;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.AddNodeToUser, "prm", 
+                    new DataParameter("UserName", username),
+                    new DataParameter("Node", node),
+                    new DataParameter("Deny", deny)
+                );
+
+                return Storage.ExecuteScalar<Int64>(sb) > 0;
+            }
         }
 
         bool IPermissionHandler.RemoveNodeFromUser(string username, string node, bool deny = false)
         {
-            return false;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.RemoveNodeFromUser, "prm", 
+                    new DataParameter("UserName", username),
+                    new DataParameter("Node", node),
+                    new DataParameter("Deny", deny)
+                );
+
+                return Storage.ExecuteScalar<Int64>(sb) > 0;
+            }
+        }
+
+        struct UserGroupList
+        {
+            public string Name { get; set; }
         }
 
         string[] IPermissionHandler.UserGroupList(string username)
         {
-            return null;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.UserGroupList, "prm", 
+                    new DataParameter("UserName", username)
+                );
+
+                return Storage.ExecuteArray<UserGroupList>(sb).Select(x => x.Name).ToArray();
+            }
         }
 
         TDSM.API.Data.PermissionNode[] IPermissionHandler.UserNodes(string username)
         {
-            return null;
+            using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
+            {
+                sb.ExecuteProcedure(Procedures.UserNodes, "prm", 
+                    new DataParameter("UserName", username)
+                );
+
+                return Storage.ExecuteArray<TDSM.API.Data.PermissionNode>(sb);
+            }
         }
     }
 }

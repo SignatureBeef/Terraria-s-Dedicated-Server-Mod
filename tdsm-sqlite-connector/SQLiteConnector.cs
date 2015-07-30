@@ -244,13 +244,13 @@ namespace TDSM.Data.SQLite
 
         public override QueryBuilder TableExists(string name)
         {
-            Append("SELECT 1 FROM sqlite_master WHERE type = 'table' and name = '{0}'", base.GetTableName(name));
+            Append("SELECT 1 FROM sqlite_master WHERE type = 'table' and name = '{0}'", base.GetObjectName(name));
             return this;
         }
 
         public override QueryBuilder TableCreate(string name, params TableColumn[] columns)
         {
-            Append("CREATE TABLE {0} (", base.GetTableName(name));
+            Append("CREATE TABLE {0} (", base.GetObjectName(name));
 
             if (columns != null && columns.Length > 0)
             {
@@ -335,7 +335,7 @@ namespace TDSM.Data.SQLite
 
         public override QueryBuilder TableDrop(string name)
         {
-            Append("DROP TABLE '{0}'", base.GetTableName(name));
+            Append("DROP TABLE '{0}'", base.GetObjectName(name));
             return this;
         }
 
@@ -377,7 +377,7 @@ namespace TDSM.Data.SQLite
         public override QueryBuilder From(string tableName)
         {
             Append("FROM ");
-            Append(base.GetTableName(tableName));
+            Append(base.GetObjectName(tableName));
             Append(" ");
             return this;
         }
@@ -438,7 +438,7 @@ namespace TDSM.Data.SQLite
         public override QueryBuilder InsertInto(string tableName, params DataParameter[] values)
         {
             Append("INSERT INTO ");
-            Append(base.GetTableName(tableName));
+            Append(base.GetObjectName(tableName));
 
             if (values != null && values.Length > 0)
             {
@@ -474,7 +474,7 @@ namespace TDSM.Data.SQLite
         public override QueryBuilder UpdateValues(string tableName, DataParameter[] values)
         {
             Append("UPDATE ");
-            Append(base.GetTableName(tableName));
+            Append(base.GetObjectName(tableName));
 
             if (values != null && values.Length > 0)
             {
