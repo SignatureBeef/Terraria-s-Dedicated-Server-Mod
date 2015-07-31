@@ -13,6 +13,7 @@ using TDSM.API.Logging;
 //using TDSM.Core.ServerCore;
 using Terraria;
 using TDSM.API.Sockets;
+using TDSM.API.Data;
 
 namespace TDSM.Core
 {
@@ -1909,31 +1910,66 @@ namespace TDSM.Core
         public void OpPlayer(ISender sender, ArgumentList args)
         {
             var playerName = args.GetString(0);
-            var password = args.GetString(1);
 
-            Tools.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
-            Ops.Add(playerName, password);
-
-            //Player player;
-            //if (args.TryGetOnlinePlayer(0, out player))
-            //{
-            //    playerName = player.Name;
-
-            //    player.SendMessage("You are now a server operator.", Color.Green);
-            //    player.Op = true;
-            //}
-
-            var player = Tools.GetPlayerByName(playerName);
-            if (player != null)
+            if (Storage.IsAvailable)
             {
-                player.SendMessage("You are now a server operator.", Color.Green);
-                player.Op = true;
+                var existing = AuthenticatedUsers.GetUser(playerName);
+                if (existing != null)
+                {
+                    if (existing.Value.Operator)
+                        throw new CommandError("Player is already an operator");
+
+                    if (AuthenticatedUsers.UpdateUser(playerName, true))
+                    {
+                        Tools.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
+                        var player = Tools.GetPlayerByName(playerName);
+                        if (player != null)
+                        {
+                            player.SendMessage("You are now a server operator.", Color.Green);
+                            player.Op = true;
+                        }
+
+                        sender.Message("Op success", Color.DarkGreen);
+                    }
+                    else
+                    {
+                        sender.Message("Failed to op player", Color.DarkRed);
+                    }
+                }
+                else
+                {
+                    sender.Message("No user found by " + playerName, Color.DarkRed);
+                    sender.Message("Please use the `user` command", Color.DarkRed);
+                }
             }
-
-            if (!Ops.Save())
+            else
             {
-                Tools.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
-                return;
+                var password = args.GetString(1);
+
+                Tools.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
+                Ops.Add(playerName, password);
+
+                //Player player;
+                //if (args.TryGetOnlinePlayer(0, out player))
+                //{
+                //    playerName = player.Name;
+
+                //    player.SendMessage("You are now a server operator.", Color.Green);
+                //    player.Op = true;
+                //}
+
+                var player = Tools.GetPlayerByName(playerName);
+                if (player != null)
+                {
+                    player.SendMessage("You are now a server operator.", Color.Green);
+                    player.Op = true;
+                }
+
+                if (!Ops.Save())
+                {
+                    Tools.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
+                    return;
+                }
             }
         }
 
@@ -1958,25 +1994,57 @@ namespace TDSM.Core
             //    player.Op = false;
             //}
 
-            if (Ops.Contains(playerName))
+            if (Storage.IsAvailable)
             {
-                var player = Tools.GetPlayerByName(playerName);
-                if (player != null)
+                var existing = AuthenticatedUsers.GetUser(playerName);
+                if (existing != null)
                 {
-                    player.SendMessage("Your server operator privledges have been revoked.", Color.Green);
-                    player.Op = false;
+                    if (!existing.Value.Operator)
+                        throw new CommandError("Player is not an operator");
+                    
+                    var player = Tools.GetPlayerByName(playerName);
+                    if (player != null)
+                    {
+                        player.SendMessage("Your server operator privledges have been revoked.", Color.DarkRed);
+                        player.Op = false;
+                    }
+
+                    if (AuthenticatedUsers.UpdateUser(playerName, false))
+                    {
+                        sender.Message("Deop success", Color.DarkGreen);
+                    }
+                    else
+                    {
+                        sender.Message("Failed to deop player", Color.DarkRed);
+                    }
                 }
-
-                Tools.NotifyAllOps("De-Opping " + playerName + " [" + sender.SenderName + "]", true);
-                Ops.Remove(playerName, true);
-
-                if (!Ops.Save())
+                else
                 {
-                    Tools.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
+                    sender.SendMessage("No user found by " + playerName);
                 }
             }
             else
-                sender.SendMessage("No user found by " + playerName);
+            {
+                if (Ops.Contains(playerName))
+                {
+                    var player = Tools.GetPlayerByName(playerName);
+                    if (player != null)
+                    {
+                        player.SendMessage("Your server operator privledges have been revoked.", Color.Green);
+                        player.Op = false;
+                    }
+
+                    Tools.NotifyAllOps("De-Opping " + playerName + " [" + sender.SenderName + "]", true);
+                    Ops.Remove(playerName, true);
+
+                    if (!Ops.Save())
+                    {
+                        Tools.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
+                    }
+                }
+                else
+                    sender.SendMessage("No user found by " + playerName);
+            }
         }
 
         /// <summary>
@@ -1989,17 +2057,43 @@ namespace TDSM.Core
             if (sender is Player)
             {
                 var player = sender as Player;
-                if (Ops.Contains(player.name, password))
+                if (Storage.IsAvailable)
                 {
-                    Tools.NotifyAllOps(
-                        String.Format("{0} successfully logged in.", player.Name)
-                    );
-                    player.Op = true;
-                    player.SendMessage("Successfully logged in.", Color.DarkGreen);
+                    var existing = AuthenticatedUsers.GetUser(sender.SenderName);
+                    if (existing != null)
+                    {
+                        if (password == existing.Value.Password && existing.Value.Operator)
+                        {
+                            Tools.NotifyAllOps(
+                                String.Format("{0} successfully logged in.", player.Name)
+                            );
+                            player.Op = true;
+                            player.SendMessage("Successfully logged in.", Color.DarkGreen);
+                        }
+                        else
+                        {
+                            sender.Message("Login failed", Color.DarkRed);
+                        }
+                    }
+                    else
+                    {
+                        sender.Message("Login failed", Color.DarkRed);
+                    }
                 }
                 else
                 {
-                    player.SendMessage("Login failed", Color.DarkRed);
+                    if (Ops.Contains(player.name, password))
+                    {
+                        Tools.NotifyAllOps(
+                            String.Format("{0} successfully logged in.", player.Name)
+                        );
+                        player.Op = true;
+                        player.SendMessage("Successfully logged in.", Color.DarkGreen);
+                    }
+                    else
+                    {
+                        player.SendMessage("Login failed", Color.DarkRed);
+                    }
                 }
             }
         }
@@ -2330,6 +2424,27 @@ namespace TDSM.Core
             }
             else throw new CommandError("No restart command: " + cmd);
 #endif
+        }
+
+        void KillNPC(ISender sender, ArgumentList args)
+        {
+            if (Main.rand == null)
+                Main.rand = new Random();
+            
+            int killed = 0;
+            foreach (var npc in Main.npc)
+            {
+                if (npc != null && npc.active && !npc.townNPC && npc.whoAmI < 255)
+                {
+                    int damage = Int32.MaxValue;
+                    npc.StrikeNPC(damage, 0, 0);
+                    NetMessage.SendData((int)Packet.STRIKE_NPC, -1, -1, "", npc.whoAmI, damage);
+
+                    killed++;
+                }
+            }
+
+            sender.Message("Killed {0} npc(s)", Color.Green, killed);
         }
     }
 }

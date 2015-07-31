@@ -463,6 +463,10 @@ namespace TDSM.Core
                 .WithDescription("Manage user permissions")
                 .WithHelpText("<addgroup|removegroup|addnode|removenode|listgroups|listnodes>")
                 .Calls(this.UserPermission);
+            AddCommand("killnpc")
+                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithDescription("Kill all non town NPC's")
+                .Calls(this.KillNPC);
 #endif
 
             if (!DefinitionManager.Initialise())

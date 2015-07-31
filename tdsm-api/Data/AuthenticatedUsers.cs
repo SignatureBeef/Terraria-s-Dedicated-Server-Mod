@@ -151,6 +151,18 @@ namespace TDSM.API.Data
             }
         }
 
+        public static bool DeleteUser(string username)
+        {
+            using (var bl = Storage.GetBuilder(SQLSafeName))
+            {
+                bl.Delete(UserTable.TableName, new WhereFilter[]
+                    {
+                        new WhereFilter(UserTable.ColumnNames.Username, username)
+                    });
+                return Storage.ExecuteNonQuery(bl) > 0;
+            }
+        }
+
         public static bool CreateUser(string username, string password, bool op = false)
         {
             using (var bl = Storage.GetBuilder(SQLSafeName))
@@ -173,6 +185,34 @@ namespace TDSM.API.Data
                 bl.Update(UserTable.TableName, new DataParameter[]
                     {
                         new DataParameter(UserTable.ColumnNames.Password, password),
+                        new DataParameter(UserTable.ColumnNames.Operator, op)
+                    },
+                    new WhereFilter(UserTable.ColumnNames.Username, username)
+                );
+                return Storage.ExecuteNonQuery(bl) > 0;
+            }
+        }
+
+        public static bool UpdateUser(string username, string password)
+        {
+            using (var bl = Storage.GetBuilder(SQLSafeName))
+            {
+                bl.Update(UserTable.TableName, new DataParameter[]
+                    {
+                        new DataParameter(UserTable.ColumnNames.Password, password)
+                    },
+                    new WhereFilter(UserTable.ColumnNames.Username, username)
+                );
+                return Storage.ExecuteNonQuery(bl) > 0;
+            }
+        }
+
+        public static bool UpdateUser(string username, bool op = false)
+        {
+            using (var bl = Storage.GetBuilder(SQLSafeName))
+            {
+                bl.Update(UserTable.TableName, new DataParameter[]
+                    {
                         new DataParameter(UserTable.ColumnNames.Operator, op)
                     },
                     new WhereFilter(UserTable.ColumnNames.Username, username)

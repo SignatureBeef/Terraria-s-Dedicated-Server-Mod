@@ -331,7 +331,7 @@ namespace TDSM.Core
                     break;
 
                 case "search":
-                    //user find "part"
+                    //user search "part"
                     if (!args.TryGetString(a++, out username))
                         throw new CommandError("Expected part of a users name after [" + cmd + "]");
 
@@ -348,6 +348,50 @@ namespace TDSM.Core
                     {
                         ProgramLog.Admin.Log("There are no registered users matching " + username);
                     }
+                    break;
+
+                case "add":
+                    //user add "username" "password" "op"
+                    if (!args.TryGetString(a++, out username))
+                        throw new CommandError("Expected username name after [" + cmd + "]");
+
+                    string password;
+                    if (!args.TryGetString(a++, out password))
+                        throw new CommandError("Expected password name after username");
+
+                    bool op = args.TryPop("-o");
+
+                    var existing = AuthenticatedUsers.GetUser(username);
+                    if (existing == null)
+                    {
+                        if (AuthenticatedUsers.CreateUser(username, password, op))
+                        {
+                            sender.Message("Successfully created user " + username);
+                        }
+                        else
+                            throw new CommandError("User failed to be created");
+                    }
+                    else
+                        throw new CommandError("A user already exists by the name " + username);
+                    break;
+
+                case "remove":
+                    //user remove "username"
+                    if (!args.TryGetString(a++, out username))
+                        throw new CommandError("Expected username name after [" + cmd + "]");
+
+                    var delUser = AuthenticatedUsers.GetUser(username);
+                    if (delUser != null)
+                    {
+                        if (AuthenticatedUsers.DeleteUser(username))
+                        {
+                            sender.Message("Successfully removed user " + username);
+                        }
+                        else
+                            throw new CommandError("User failed to be removed");
+                    }
+                    else
+                        throw new CommandError("Cannot find user " + username);
                     break;
                 default:
                     throw new CommandError("Invalid command " + cmd);
