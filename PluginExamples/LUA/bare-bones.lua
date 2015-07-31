@@ -1,10 +1,10 @@
 import ('System')
 import ('System.IO')
 import ('tdsm')
-import ('tdsm.api')
-import ('tdsm.api.Misc')
-import ('tdsm.api.Plugin') --HookResult
-import ('tdsm.api.Command') --AccessLevel
+import ('TDSM.API')
+import ('TDSM.API.Misc')
+import ('TDSM.API.Plugin') --HookResult
+import ('TDSM.API.Command') --AccessLevel
 
 YourPlugin = {}
 YourPlugin.__index = YourPlugin
@@ -14,7 +14,7 @@ function YourPlugin.create()
 	setmetatable(plg, YourPlugin)
 
 	--Set the details (TDSM requires this)
-	plg.TDSMBuild = 1
+	plg.TDSMBuild = 3
 	plg.Version = "1"
 	plg.Author = "TDSM"
 	plg.Name = "Simple name"

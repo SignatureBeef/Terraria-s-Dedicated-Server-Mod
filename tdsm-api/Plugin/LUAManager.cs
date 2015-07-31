@@ -28,6 +28,15 @@ namespace TDSM.API.Plugin
             //    .Where(x => x.Name == "HookBase" && x.GetParameters().Last().ParameterType == typeof(NLua.LuaFunction))
             //    .First());
 
+            //Access level enum
+            _ctx.NewTable("AccessLevel");
+            var ac = _ctx.GetTable("AccessLevel");
+            foreach (var val in Enum.GetValues(typeof(TDSM.API.Command.AccessLevel)))
+            {
+                var al = (TDSM.API.Command.AccessLevel)val;
+                ac[al.ToString()] = (int)val;
+            }
+
             _ctx.DoFile(Path);
 
             CallSelf("Initialized");

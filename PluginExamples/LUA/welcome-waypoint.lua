@@ -1,13 +1,11 @@
 import ('System')
 import ('System.IO')
 import ('tdsm')
-import ('tdsm.api')
-import ('tdsm.api.Misc')
-import ('tdsm.api.Plugin') --HookResult
-import ('tdsm.api.Command') --AccessLevel
-import ('tdsm.core.dll')
-import ('tdsm.core')
-import ('tdsm.core.Logging') 
+import ('TDSM.API')
+import ('TDSM.API.Misc')
+import ('TDSM.API.Plugin') --HookResult
+import ('TDSM.API.Command') --AccessLevel
+import ('TDSM.API.Logging') 
 
 WelcomePlugin = {}
 WelcomePlugin.__index = WelcomePlugin
@@ -17,7 +15,7 @@ function WelcomePlugin.create()
 	setmetatable(plg, WelcomePlugin)
 	
 	--Set the details (TDSM requires this)
-	plg.TDSMBuild = 1
+	plg.TDSMBuild = 3
 	plg.Author = "TDSM"
 	plg.Description = "TDSM LUA test plugin example"
 	plg.Name = "TDSM LUA Example"
@@ -39,7 +37,7 @@ function WelcomePlugin:Initialized()
 		Call = export.OnPlayerEnteringGame
 	}
 	--HookBase(HookPoints.PlayerEnteredGame, HookOrder.NORMAL, export.OnPlayerEnteredGame)
-	
+
 	--TODO seperate into seperate commands for adding and removing (permission reasons)
 	AddCommand("wp")
 		:WithAccessLevel(AccessLevel.PLAYER)

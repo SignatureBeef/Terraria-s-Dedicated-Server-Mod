@@ -109,6 +109,12 @@ namespace TDSM.API.Command
             return this;
         }
 
+        public CommandInfo WithAccessLevel(int accessLevel) //LUA...
+        {
+            this.accessLevel = (AccessLevel)accessLevel;
+            return this;
+        }
+
         public CommandInfo WithPermissionNode(string node)
         {
             this.node = node;
