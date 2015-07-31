@@ -212,13 +212,13 @@ namespace TDSM.Core
         /// <param name="args">Arguments sent with command</param>
         public void Exit(ISender sender, ArgumentList args)
         {
-            var accessLevel = AccessLevel.OP; //Program.properties.ExitAccessLevel;
-            if ((int)accessLevel == -1 && sender is Player)
+            var accessLevel = ExitAccessLevel;
+            if (accessLevel == -1 && sender is Player)
             {
                 sender.Message("You cannot perform that action.", 255, 238, 130, 238);
                 return;
             }
-            else if (!CommandParser.CheckAccessLevel(accessLevel, sender))
+            else if (!CommandParser.CheckAccessLevel((AccessLevel)accessLevel, sender))
             {
                 sender.Message("You cannot perform that action.", 255, 238, 130, 238);
                 return;

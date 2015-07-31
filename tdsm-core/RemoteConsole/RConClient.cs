@@ -106,7 +106,8 @@ namespace TDSM.Core.RemoteConsole
                 ProgramLog.Log(e, "Exception within WriteThread of remote console " + Id);
             }
 
-            lock (RConServer.deadClients) RConServer.deadClients.Enqueue(this);
+            lock (RConServer.deadClients)
+                RConServer.deadClients.Enqueue(this);
 
             ProgramLog.RemoveTarget(this);
 
@@ -126,7 +127,8 @@ namespace TDSM.Core.RemoteConsole
                 {
                     case 10:
                         {
-                            if (readBuffer[start] == 13) start += 1;
+                            if (readBuffer[start] == 13)
+                                start += 1;
 
                             if (i > 0 && readBuffer[i - 1] == 13)
                             {
@@ -234,8 +236,10 @@ namespace TDSM.Core.RemoteConsole
                             return;
                         }
 
-                        while (buffer[at + count - 1] == 32) count -= 1;
-                        while (buffer[at] == 32) at += 1;
+                        while (buffer[at + count - 1] == 32)
+                            count -= 1;
+                        while (buffer[at] == 32)
+                            at += 1;
 
                         if (count <= 0)
                         {
@@ -261,8 +265,10 @@ namespace TDSM.Core.RemoteConsole
 
                 case State.PASSWORD_PROMPT:
                     {
-                        while (buffer[at + count - 1] == 32) count -= 1;
-                        while (buffer[at] == 32) at += 1;
+                        while (buffer[at + count - 1] == 32)
+                            count -= 1;
+                        while (buffer[at] == 32)
+                            at += 1;
 
                         if (count <= 0)
                         {
@@ -314,6 +320,9 @@ namespace TDSM.Core.RemoteConsole
             {
                 TDSM.API.Callbacks.UserInput.CommandParser.ParseConsoleCommand(line, this.sender);
             }
+            catch (TDSM.API.Misc.ExitException)
+            {
+            }
             catch (Exception e)
             {
                 ProgramLog.Log(e, "Issue parsing remote command from " + Id);
@@ -321,7 +330,7 @@ namespace TDSM.Core.RemoteConsole
         }
 
         static string[] colors =
-		{
+            {
 			"\x1b[0;30m",
 			"\x1b[0;34m",
 			"\x1b[0;32m",

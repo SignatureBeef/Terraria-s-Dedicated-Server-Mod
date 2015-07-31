@@ -80,6 +80,8 @@ namespace TDSM.Core
 
         public static DataRegister Ops { get; private set; }
 
+        public int ExitAccessLevel { get; set; }
+
         public Entry()
         {
             this.TDSMBuild = CoreBuild;
@@ -95,8 +97,18 @@ namespace TDSM.Core
 
             TDSM.API.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
             TDSM.API.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
+
+            TDSM.API.Command.CommandParser.ExtCheckAccessLevel = (acc, sender) =>
+            {
+                if (sender is RConSender)
+                    return acc <= AccessLevel.REMOTE_CONSOLE;
+
+                return false;
+            };
+
             EnableCheatProtection = true;
             RunServerCore = true;
+            ExitAccessLevel = -1;
         }
 
         protected override void Initialized(object state)
@@ -893,6 +905,13 @@ namespace TDSM.Core
                     if (Boolean.TryParse(args.Value, out runServerCore))
                     {
                         RunServerCore = runServerCore;
+                    }
+                    break;
+                case "exitaccesslevel":
+                    int accessLevel;
+                    if (Int32.TryParse(args.Value, out accessLevel))
+                    {
+                        ExitAccessLevel = accessLevel;
                     }
                     break;
             }

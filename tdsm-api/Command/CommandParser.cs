@@ -466,6 +466,8 @@ namespace TDSM.API.Command
             return CheckAccessLevel(cmd.accessLevel, sender);
         }
 
+        public static Func<AccessLevel, ISender, Boolean> ExtCheckAccessLevel;
+
         /// <summary>
         /// Determines the access level of the sender. Used when no permissions plugin is found.
         /// </summary>
@@ -478,9 +480,15 @@ namespace TDSM.API.Command
             if (sender is Player)
                 return acc == AccessLevel.PLAYER || (acc == AccessLevel.OP && sender.Op);
 #endif
-            //            if (sender is RConSender) return acc <= AccessLevel.REMOTE_CONSOLE;
+//            if (sender is RConSender)
+//                return acc <= AccessLevel.REMOTE_CONSOLE;
+
+            if (ExtCheckAccessLevel != null && ExtCheckAccessLevel(acc, sender))
+                return true;
+
             if (sender is ConsoleSender)
                 return true;
+            
             throw new NotImplementedException("Unexpected ISender implementation");
         }
 
