@@ -278,7 +278,7 @@ namespace TDSM.Core.RemoteConsole
 
                         var pass = Encoding.UTF8.GetString(buffer, at, count);
 
-                        if (RConServer.LoginDatabase.GetValue<String>(Name, null) != RConServer.Hash(Name, pass))
+                        if (RConServer.LoginDatabase.GetValue<String>(Name, String.Empty) != RConServer.Hash(Name, pass))
                         {
                             ProgramLog.Admin.Log("Remote console auth failure for user \"{0}\" from {1}", Name, remoteAddress);
                             writer.WriteLine("\x1b[1;31m... no!\x1b[0m");
