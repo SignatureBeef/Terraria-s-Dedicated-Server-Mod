@@ -19,7 +19,7 @@ namespace TDSM.Core
 {
     public partial class Entry : BasePlugin
     {
-        public const Int32 CoreBuild = 2;
+        public const Int32 CoreBuild = 3;
 
         private bool _useTimeLock;
 

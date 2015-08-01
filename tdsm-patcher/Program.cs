@@ -18,7 +18,7 @@ namespace tdsm.patcher
     public class Program
     {
         public const String TDSMGuid = "9f7bca2e-4d2e-4244-aaae-fa56ca7797ec";
-        public const Int32 Build = 2;
+        public const Int32 Build = 3;
         //        public static bool IsPatching { get; private set; }
 
         //        static Program()

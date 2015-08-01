@@ -14,7 +14,7 @@ namespace TDSM.API
     }
     public static class Globals
     {
-        public const Int32 Build = 2;
+        public const Int32 Build = 3;
         public const ReleasePhase BuildPhase = ReleasePhase.Beta;
 
         public const Int32 TerrariaRelease = 146;
