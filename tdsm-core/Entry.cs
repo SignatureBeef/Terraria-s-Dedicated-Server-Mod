@@ -88,7 +88,7 @@ namespace TDSM.Core
             this.Author = "TDSM";
             this.Description = "TDSM Core";
             this.Name = "TDSM Core Module";
-            this.Version = "2" + Globals.PhaseToSuffix(ReleasePhase.Beta);
+            this.Version = CoreBuild + Globals.PhaseToSuffix(ReleasePhase.LiveRelease);
         }
 
         protected override void Enabled()
