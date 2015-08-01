@@ -71,6 +71,8 @@ namespace TDSM.Core
                 if (at == null)
                     at = System.Reflection.Assembly.GetExecutingAssembly().GetType(type);
                 if (at == null)
+                    at = typeof(Terraria.Main).Assembly.GetType(type);
+                if (at == null)
                     throw new CommandError("Invalid type: " + type);
 
                 //Find the field
@@ -2078,12 +2080,13 @@ namespace TDSM.Core
                     var existing = AuthenticatedUsers.GetUser(sender.SenderName);
                     if (existing != null)
                     {
-                        if (password == existing.Value.Password && existing.Value.Operator)
+                        if (existing.Value.ComparePassword(sender.SenderName, password) && existing.Value.Operator)
                         {
                             Tools.NotifyAllOps(
                                 String.Format("{0} successfully logged in.", player.Name)
                             );
                             player.Op = true;
+                            player.SetAuthentication(sender.SenderName, "tdsm");
                             player.SendMessage("Successfully logged in.", Color.DarkGreen);
                         }
                         else
@@ -2104,6 +2107,7 @@ namespace TDSM.Core
                             String.Format("{0} successfully logged in.", player.Name)
                         );
                         player.Op = true;
+                        player.SetAuthentication(sender.SenderName, "tdsm");
                         player.SendMessage("Successfully logged in.", Color.DarkGreen);
                     }
                     else
@@ -2111,6 +2115,44 @@ namespace TDSM.Core
                         player.SendMessage("Login failed", Color.DarkRed);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Allows users to log in.
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="password">Password for verification</param>
+        public void Auth(ISender sender, string password)
+        {
+            if (sender is Player)
+            {
+                var player = sender as Player;
+                if (Storage.IsAvailable)
+                {
+                    var existing = AuthenticatedUsers.GetUser(sender.SenderName);
+                    if (existing != null)
+                    {
+                        if (existing.Value.ComparePassword(sender.SenderName, password))
+                        {
+                            Tools.NotifyAllOps(
+                                String.Format("{0} successfully logged in.", player.Name)
+                            );
+                            player.SendMessage("Successfully logged in.", Color.DarkGreen);
+                            player.SetAuthentication(sender.SenderName, "tdsm");
+                        }
+                        else
+                        {
+                            sender.Message("Login failed", Color.DarkRed);
+                        }
+                    }
+                    else
+                    {
+                        sender.Message("Login failed", Color.DarkRed);
+                    }
+                }
+                else
+                    sender.Message("This function is unavailable", Color.DarkRed);
             }
         }
 
@@ -2128,6 +2170,7 @@ namespace TDSM.Core
                 {
                     player.Op = false;
                     player.SendMessage("Ssccessfully logged out", Color.DarkRed);
+                    player.SetAuthentication(String.Empty, "tdsm");
 
                     Tools.NotifyAllOps(
                         String.Format("{0} successfully logged out.", player.Name)

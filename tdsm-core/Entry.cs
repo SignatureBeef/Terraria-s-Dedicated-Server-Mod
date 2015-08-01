@@ -466,19 +466,27 @@ namespace TDSM.Core
             //    .Calls(this.Repository);
 
             AddCommand("group")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.group")
                 .WithDescription("Manage groups and permissions")
                 .WithHelpText("<add|remove|addnode|removenode|list|listnodes>")
                 .Calls(this.GroupPermission);
             AddCommand("user")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.user")
                 .WithDescription("Manage user permissions")
                 .WithHelpText("<addgroup|removegroup|addnode|removenode|listgroups|listnodes>")
                 .Calls(this.UserPermission);
             AddCommand("killnpc")
-                .WithAccessLevel(AccessLevel.CONSOLE)
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.killnpc")
                 .WithDescription("Kill all non town NPC's")
                 .Calls(this.KillNPC);
+            AddCommand("auth")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithPermissionNode("tdsm.auth")
+                .WithDescription("Sign in")
+                .Calls(this.Auth);
 #endif
 
             if (!DefinitionManager.Initialise())

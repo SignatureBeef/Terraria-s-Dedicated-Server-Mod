@@ -260,6 +260,15 @@ namespace TDSM.API.Callbacks
                 ProgramLog.Log(e, "OnStatusTextChange error");
             }
         }
+
+        public static bool OnInvasionWarning()
+        {
+            var ctx = new HookContext();
+            var args = new HookArgs.InvasionWarning();
+            
+            HookPoints.InvasionWarning.Invoke(ref ctx, ref args);
+            return ctx.Result == HookResult.DEFAULT; //Continue on
+        }
     }
 }
 

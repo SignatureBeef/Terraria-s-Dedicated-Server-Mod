@@ -6,7 +6,7 @@ namespace TDSM.API.Callbacks
     {
         public static Rand CheckedRand = new Rand();
 
-        private static int _invasionTypeCounter = 3;
+        private static int _invasionTypeCounter = 20;
 
         /// <summary>
         /// Returns a new invasion type that is dedicated for the callee
@@ -43,6 +43,20 @@ namespace TDSM.API.Callbacks
             };
 
             HookPoints.InvasionNPCSpawn.Invoke(ref ctx, ref args);
+
+//            return ctx.Result == HookResult.DEFAULT;
+        }
+
+        public static void OnNPCKilled(Terraria.NPC npc)
+        {
+            var ctx = new HookContext();
+            var args = new HookArgs.NPCKilled()
+                {
+                    Type = npc.type,
+                    NetId = npc.netID
+                };
+
+            HookPoints.NPCKilled.Invoke(ref ctx, ref args);
         }
     }
 }

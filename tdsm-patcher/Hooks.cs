@@ -122,6 +122,24 @@ namespace tdsm.patcher
             il.InsertBefore(ldsfld, il.Create(OpCodes.Ldloc_0));
             il.InsertBefore(ldsfld, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
         }
+
+        [Hook]
+        private void OnNPCKilled()
+        {
+            var oca = Terraria.NPC.Methods.Single(x => x.Name == "checkDead");
+            var callback = API.NPCCallback.Methods.Single(x => x.Name == "OnNPCKilled");
+
+
+            var ins = oca.Body.Instructions.Where(x =>
+                x.OpCode == OpCodes.Stfld
+                          && x.Operand is FieldReference
+                          && (x.Operand as FieldReference).Name == "active").FirstOrDefault().Previous.Previous;
+
+
+            var il = oca.Body.GetILProcessor();
+            il.InsertAfter(ins, il.Create(OpCodes.Ldarg_0));
+            il.InsertAfter(ins, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+        }
     }
 
     public class TerrariaOrganiser

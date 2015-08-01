@@ -466,8 +466,8 @@ namespace TDSM.API.Command
             var perms = CheckPermissions(sender, cmd);
 //            if (Permissions.PermissionsManager.IsSet && perms == Permissions.Permission.Denied)
 //                return false;
-            if (Data.Storage.IsAvailable && perms == Data.Permission.Denied)
-                return false;
+            if (Data.Storage.IsAvailable && perms == Data.Permission.Permitted)
+                return true;
 
             return CheckAccessLevel(cmd.accessLevel, sender);
         }

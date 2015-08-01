@@ -1,6 +1,8 @@
 ﻿using System;
 using TDSM.API.Logging;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace TDSM.API.Data
 {
@@ -15,6 +17,13 @@ namespace TDSM.API.Data
         {
             return String.Format("[UserDetails: Id {3}, Username: '{0}', Password: '{1}', Operator: {2}]", Username, Password, Operator, Id);
         }
+
+        public bool ComparePassword(string username, string password)
+        {
+            var hs = AuthenticatedUsers.Hash(username, password);
+
+            return hs.Equals(Password);
+        }
     }
 
     /// <summary>
@@ -24,6 +33,16 @@ namespace TDSM.API.Data
     public static class AuthenticatedUsers
     {
         public const String SQLSafeName = "tdsm";
+
+        internal static string Hash(string username, string password)
+        {
+            var hash = SHA256.Create();
+            var sb = new StringBuilder(64);
+            var bytes = hash.ComputeHash(Encoding.ASCII.GetBytes(username + ":" + password));
+            foreach (var b in bytes)
+                sb.Append(b.ToString("x2"));
+            return sb.ToString();
+        }
 
         public class UserTable
         {
@@ -167,10 +186,11 @@ namespace TDSM.API.Data
         {
             using (var bl = Storage.GetBuilder(SQLSafeName))
             {
+                var hs = AuthenticatedUsers.Hash(username, password);
                 bl.InsertInto(UserTable.TableName, new DataParameter[]
                     {
                         new DataParameter(UserTable.ColumnNames.Username, username),
-                        new DataParameter(UserTable.ColumnNames.Password, password),
+                        new DataParameter(UserTable.ColumnNames.Password, hs),
                         new DataParameter(UserTable.ColumnNames.Operator, op),
                         new DataParameter(UserTable.ColumnNames.DateAdded, DateTime.Now)
                     });
@@ -182,9 +202,10 @@ namespace TDSM.API.Data
         {
             using (var bl = Storage.GetBuilder(SQLSafeName))
             {
+                var hs = AuthenticatedUsers.Hash(username, password);
                 bl.Update(UserTable.TableName, new DataParameter[]
                     {
-                        new DataParameter(UserTable.ColumnNames.Password, password),
+                        new DataParameter(UserTable.ColumnNames.Password, hs),
                         new DataParameter(UserTable.ColumnNames.Operator, op)
                     },
                     new WhereFilter(UserTable.ColumnNames.Username, username)
@@ -197,9 +218,10 @@ namespace TDSM.API.Data
         {
             using (var bl = Storage.GetBuilder(SQLSafeName))
             {
+                var hs = AuthenticatedUsers.Hash(username, password);
                 bl.Update(UserTable.TableName, new DataParameter[]
                     {
-                        new DataParameter(UserTable.ColumnNames.Password, password)
+                        new DataParameter(UserTable.ColumnNames.Password, hs)
                     },
                     new WhereFilter(UserTable.ColumnNames.Username, username)
                 );

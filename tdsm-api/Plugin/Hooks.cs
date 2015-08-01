@@ -82,6 +82,9 @@ namespace TDSM.API.Plugin
         public static readonly HookPoint<HookArgs.AddBan> AddBan;
         public static readonly HookPoint<HookArgs.NPCSpawn> NPCSpawn;
 
+        public static readonly HookPoint<HookArgs.NPCKilled> NPCKilled;
+        public static readonly HookPoint<HookArgs.InvasionWarning> InvasionWarning;
+
         //public static readonly HookPoint<HookArgs.PatchServer> PatchServer;
 
         static HookPoints()
@@ -140,6 +143,9 @@ namespace TDSM.API.Plugin
             NPCSpawn = new HookPoint<HookArgs.NPCSpawn>("npc-spawn");
             InvasionNPCSpawn = new HookPoint<HookArgs.InvasionNPCSpawn>("invasion-npc-spawn");
             PlayerPreGreeting = new HookPoint<HookArgs.PlayerPreGreeting>("player-pre-greeting");
+
+            NPCKilled = new HookPoint<HookArgs.NPCKilled>("npc-killed");
+            InvasionWarning = new HookPoint<HookArgs.InvasionWarning>("invasion-warning");
         }
     }
 
@@ -163,6 +169,13 @@ namespace TDSM.API.Plugin
             public int Start { get; set; }
         }
 
+        public struct NPCKilled
+        {
+            public int Type { get; set; }
+
+            public int NetId { get; set; }
+        }
+
         public struct PlayerAuthenticationChanging
         {
             public string AuthenticatedAs { get; set; }
@@ -182,6 +195,11 @@ namespace TDSM.API.Plugin
             public int X { get; set; }
 
             public int Y { get; set; }
+        }
+
+        public struct InvasionWarning
+        {
+
         }
 
         public struct AddBan

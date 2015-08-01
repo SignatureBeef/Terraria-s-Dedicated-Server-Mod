@@ -134,15 +134,15 @@ namespace TDSM.Core
                     var groups = Storage.GroupList();
                     if (groups != null && groups.Length > 0)
                     {
-                        ProgramLog.Admin.Log("Current groups:");
+                        sender.Message("Current groups:");
                         foreach (var grp in groups)
                         {
-                            ProgramLog.Admin.Log("\t" + grp);
+                            sender.Message("\t" + grp);
                         }
                     }
                     else
                     {
-                        ProgramLog.Admin.Log("There are no registered groups.");
+                        sender.Message("There are no registered groups.");
                     }
                     break;
 
@@ -159,15 +159,15 @@ namespace TDSM.Core
                     var nodes = Storage.GroupNodes(groupName);
                     if (nodes != null && nodes.Length > 0)
                     {
-                        ProgramLog.Admin.Log("Current permissions for group {0}:", grpList.Name);
+                        sender.Message("Current permissions for group {0}:", grpList.Name);
                         foreach (var nd in nodes)
                         {
-                            ProgramLog.Admin.Log("\t{0}\t- {1}", nd.Deny ? "Denied" : "Allowed", nd.Node);
+                            sender.Message("\t{0}\t- {1}", nd.Deny ? "Denied" : "Allowed", nd.Node);
                         }
                     }
                     else
                     {
-                        ProgramLog.Admin.Log("There are no permissions assigned to group: " + grpList.Name);
+                        sender.Message("There are no permissions assigned to group: " + grpList.Name);
                     }
                     break;
                 default:
@@ -178,10 +178,10 @@ namespace TDSM.Core
         void UserPermission(ISender sender, ArgumentList args)
         {
             int a = 0;
-            string username, groupName, node;
+            string username, groupName, node, password;
             UserDetails? user;
             Group grp;
-            bool deny;
+            bool deny, op;
 
             var cmd = args.GetString(a++);
             switch (cmd)
@@ -297,12 +297,12 @@ namespace TDSM.Core
                         ProgramLog.Admin.Log("Current groups:");
                         foreach (var gps in groups)
                         {
-                            ProgramLog.Admin.Log("\t" + gps);
+                            sender.Message("\t" + gps);
                         }
                     }
                     else
                     {
-                        ProgramLog.Admin.Log("There are no registered groups for user " + user.Value.Username);
+                        sender.Message("There are no registered groups for user " + user.Value.Username);
                     }
                     break;
 
@@ -318,15 +318,15 @@ namespace TDSM.Core
                     var nodes = Storage.UserNodes(username);
                     if (nodes != null && nodes.Length > 0)
                     {
-                        ProgramLog.Admin.Log("Current permissions for user {0}:", user.Value.Username);
+                        sender.Message("Current permissions for user {0}:", user.Value.Username);
                         foreach (var nd in nodes)
                         {
-                            ProgramLog.Admin.Log("\t{0}\t- {1}", nd.Deny ? "Denied" : "Allowed", nd.Node);
+                            sender.Message("\t{0}\t- {1}", nd.Deny ? "Denied" : "Allowed", nd.Node);
                         }
                     }
                     else
                     {
-                        ProgramLog.Admin.Log("There are no permissions assigned to user: " + user.Value.Username);
+                        sender.Message("There are no permissions assigned to user: " + user.Value.Username);
                     }
                     break;
 
@@ -338,15 +338,15 @@ namespace TDSM.Core
                     var matches = AuthenticatedUsers.FindUsersByPrefix(username);
                     if (matches != null && matches.Length > 0)
                     {
-                        ProgramLog.Admin.Log("Matches:");
+                        sender.Message("Matches:");
                         foreach (var mth in matches)
                         {
-                            ProgramLog.Admin.Log("\t" + mth);
+                            sender.Message("\t" + mth);
                         }
                     }
                     else
                     {
-                        ProgramLog.Admin.Log("There are no registered users matching " + username);
+                        sender.Message("There are no registered users matching " + username);
                     }
                     break;
 
@@ -354,12 +354,11 @@ namespace TDSM.Core
                     //user add "username" "password" "op"
                     if (!args.TryGetString(a++, out username))
                         throw new CommandError("Expected username name after [" + cmd + "]");
-
-                    string password;
+                    
                     if (!args.TryGetString(a++, out password))
                         throw new CommandError("Expected password name after username");
 
-                    bool op = args.TryPop("-o");
+                    op = args.TryPop("-o");
 
                     var existing = AuthenticatedUsers.GetUser(username);
                     if (existing == null)
@@ -373,6 +372,30 @@ namespace TDSM.Core
                     }
                     else
                         throw new CommandError("A user already exists by the name " + username);
+                    break;
+
+                case "update":
+                    //user add "username" "password" "op"
+                    if (!args.TryGetString(a++, out username))
+                        throw new CommandError("Expected username name after [" + cmd + "]");
+                    
+                    if (!args.TryGetString(a++, out password))
+                        throw new CommandError("Expected password name after username");
+
+                    op = args.TryPop("-o");
+
+                    var updatee = AuthenticatedUsers.GetUser(username);
+                    if (updatee != null)
+                    {
+                        if (AuthenticatedUsers.UpdateUser(username, password, op))
+                        {
+                            sender.Message("Successfully updated user " + username);
+                        }
+                        else
+                            throw new CommandError("User failed to be updated");
+                    }
+                    else
+                        throw new CommandError("No user exists by the name " + username);
                     break;
 
                 case "remove":

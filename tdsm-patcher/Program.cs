@@ -260,6 +260,7 @@ namespace tdsm.patcher
             patcher.FixStatusTexts();
             Console.Write("Ok\nHooking invasions...");
             patcher.HookInvasions();
+            patcher.HookInvasionWarning();
             Console.Write("Ok\nEnabling rain...");
             patcher.EnableRaining();
             //Console.Write("Ok\nHooking eclipse...");

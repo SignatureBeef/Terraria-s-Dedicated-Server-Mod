@@ -557,7 +557,7 @@ namespace tdsm.patcher
             var ins = main.Body.Instructions.Where(x =>
                 x.OpCode == OpCodes.Ldsfld
                           && x.Operand is FieldReference
-                          && (x.Operand as FieldReference).Name == "invasionType").ToArray()[1];
+                && (x.Operand as FieldReference).Name == "rockLayer").ToArray()[3].Previous.Previous;
 
             il.InsertBefore(ins, il.Create(OpCodes.Ldloc_2));
             il.InsertBefore(ins, il.Create(OpCodes.Ldc_I4, 16));
@@ -2086,6 +2086,20 @@ namespace tdsm.patcher
 
             il.InsertBefore(first, il.Create(OpCodes.Brtrue_S, first));
             il.InsertBefore(first, il.Create(OpCodes.Ldc_I4, 200));
+            il.InsertBefore(first, il.Create(OpCodes.Ret));
+        }
+
+        public void HookInvasionWarning()
+        {
+            var newNPC = Terraria.Main.Methods.Single(x => x.Name == "InvasionWarning");
+            var method = API.MainCallback.Methods.Single(x => x.Name == "OnInvasionWarning");
+
+            var il = newNPC.Body.GetILProcessor();
+            var first = newNPC.Body.Instructions.First();
+
+            il.InsertBefore(first, il.Create(OpCodes.Call, _asm.MainModule.Import(method)));
+
+            il.InsertBefore(first, il.Create(OpCodes.Brtrue_S, first));
             il.InsertBefore(first, il.Create(OpCodes.Ret));
         }
 

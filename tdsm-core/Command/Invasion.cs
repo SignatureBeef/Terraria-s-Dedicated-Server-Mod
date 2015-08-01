@@ -4,62 +4,131 @@ using TDSM.API.Command;
 using TDSM.API.Misc;
 using TDSM.API.Plugin;
 using Terraria;
+using TDSM.API;
 
 namespace TDSM.Core
 {
     public partial class Entry
     {
         //private Task _customInvasion;
-        private List<Int32> _invasion;
+        private Dictionary<Int32,Int32> _invasion;
         private int _assignedInvasionType = TDSM.API.Callbacks.NPCCallback.AssignInvasionType();
 
         [Hook(HookOrder.NORMAL)]
         void OnInvasionNPCSpawn(ref HookContext ctx, ref HookArgs.InvasionNPCSpawn args)
         {
+            if (Main.rand == null)
+                Main.rand = new Random();
+            
             if (Main.invasionType == _assignedInvasionType && _invasion != null)
             {
-                int npcId = 0;
                 lock (_invasion)
                 {
                     if (_invasion.Count > 0)
                     {
-                        var ix = Main.rand.Next(0, _invasion.Count - 1);
-                        npcId = _invasion[ix];
+                        var npc = _invasion.Random();
+
+                        if (npc.Key != 0 && Main.rand.Next(Main.rand.Next(9)) == 0)
+                        {
+                            var id = NPC.NewNPC(args.X, args.Y, npc.Key);
+                            if (npc.Value < 0)
+                            {
+                                Terraria.Main.npc[id].netDefaults(npc.Value);
+                            }
+                        }
                     }
                 }
 
-                if (npcId != 0 && Main.rand.Next(Main.rand.Next(9)) == 0)
+//                ctx.SetResult(HookResult.ERASE);
+            }
+        }
+
+        [Hook]
+        void OnNPCKilled(ref HookContext ctx, ref HookArgs.NPCKilled args)
+        {
+            if (Main.invasionType == _assignedInvasionType && _invasion != null)
+            {
+                lock (_invasion)
                 {
-                    NPC.NewNPC(args.X, args.Y, npcId);
+                    if (_invasion.ContainsKey(args.Type))
+                    {
+                        Main.invasionSize--;
+                        if (Main.invasionSize <= 0)
+                        {
+                            lock (_invasion)
+                                _invasion.Clear();
+                            Main.invasionSize = 0;
+                            Main.invasionType = 0;
+                            NetMessage.SendData(25, -1, -1, "The invasion was defeated!", 255, 175f, 75f, 255f);
+                        }
+                    }
                 }
+            }
+        }
+
+        [Hook]
+        void OnInvasionWarning(ref HookContext ctx, ref HookArgs.InvasionWarning args)
+        {
+            if (Main.invasionType == _assignedInvasionType && _invasion != null)
+            {
+                if (Main.invasionSize > 0)
+                {
+                    string message;
+                    if (Main.invasionX < (double)Main.spawnTileX)
+                    {
+                        //West
+                        message = "An invasion is approaching from the west!";
+                    }
+                    else if (Main.invasionX > (double)Main.spawnTileX)
+                    {
+                        //East
+                        message = "An invasion is approaching from the east!";
+                    }
+                    else
+                    {
+                        //Arrived
+                        message = "The invasion has arrived!";
+                    }
+                    NetMessage.SendData(25, -1, -1, message, 255, 175f, 75f, 255f);
+                }
+
+                ctx.SetResult(HookResult.IGNORE);
             }
         }
 
         public void Invasion(ISender sender, ArgumentList args)
         {
+            if (Main.rand == null)
+                Main.rand = new Random();
+            
             if (Main.invasionType == 0)
             {
                 var custom = args.TryPop("-custom");
+                var first = args.TryPop("-f");
                 if (custom)
                 {
                     if (args.Count > 0)
                     {
+                        if (_invasion == null)
+                            _invasion = new Dictionary<int, int>();
+                        
                         var npcIds = new List<Int32>();
-                        while (args.Count > 0)
+                        var c = 0;
+                        while (c++ < args.Count)
                         {
                             int npcType;
                             string npc;
 
                             if (args.TryGetInt(0, out npcType))
                             {
-                                npcIds.Add(npcType);
+                                _invasion.Add(npcType, 0);
                             }
                             else if (args.TryGetString(0, out npc))
                             {
                                 var match = Definitions.DefinitionManager.FindNPC(npc);
-                                if (match.Length == 1)
+                                if (match.Length == 1 || first)
                                 {
-                                    npcIds.Add(match[0].Id);
+                                    _invasion.Add(match[0].Id, match[0].NetId);
                                 }
                                 else if (match.Length == 0)
                                 {
@@ -101,12 +170,17 @@ namespace TDSM.Core
                         //};
 
 
-                        if (_invasion != null) lock (_invasion) _invasion = npcIds;
-                        else _invasion = npcIds;
+//                        if (_invasion != null)
+//                            lock (_invasion)
+//                                _invasion = npcIds;
+//                        else
+//                            _invasion = npcIds;
 
                         Main.StartInvasion(_assignedInvasionType);
+                        sender.Message("Invasion started");
                     }
-                    else throw new CommandError("Expected npc type or name");
+                    else
+                        throw new CommandError("Expected npc type or name");
                 }
                 else
                 {
@@ -131,10 +205,13 @@ namespace TDSM.Core
                 {
                     //if (!_customInvasion.IsEmpty()) _customInvasion.Enabled = false;
                     Main.invasionType = 0;
-                    if (_invasion != null) lock (_invasion) _invasion.Clear();
+                    if (_invasion != null)
+                        lock (_invasion)
+                            _invasion.Clear();
                     sender.Message("The invasion has now been stopped.");
                 }
-                else sender.Message("An invasion is already under way.");
+                else
+                    sender.Message("An invasion is already under way.");
             }
         }
     }
