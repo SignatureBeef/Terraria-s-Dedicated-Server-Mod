@@ -23,7 +23,8 @@ namespace TDSM.API
             //Resolves external plugin hook assemblies. So there is no need to place the DLL beside tdsm.exe
             AppDomain.CurrentDomain.AssemblyResolve += (s, a) =>
             {
-                if (a.Name == "Terraria") return Assembly.GetEntryAssembly();
+                if (a.Name == "Terraria")
+                    return Assembly.GetEntryAssembly();
                 var items = _plugins.Values
                     .Where(x => x != null && x.Assembly != null && x.Assembly.FullName == a.Name)
                     .Select(x => x.Assembly)
@@ -68,6 +69,7 @@ namespace TDSM.API
         //private static string _libraryPath = String.Empty;
 
         public static Dictionary<String, BasePlugin> _plugins;
+
         public static int PluginCount { get { return _plugins.Count; } }
 
         private static Type _hookPointSource;
@@ -80,7 +82,8 @@ namespace TDSM.API
         public static HookPoint GetHookPoint(string name)
         {
             var fld = _hookPointSource.GetField(name);
-            if (fld != null) return fld.GetValue(null) as HookPoint;
+            if (fld != null)
+                return fld.GetValue(null) as HookPoint;
 
             return null;
         }
@@ -171,7 +174,9 @@ namespace TDSM.API
                 return inner.MoveNext();
             }
 
-            public void Reset() { }
+            public void Reset()
+            {
+            }
         }
 
         private static bool _enableLUA;
@@ -263,7 +268,8 @@ namespace TDSM.API
         {
             var plugin = (BasePlugin)Activator.CreateInstance(type);
 
-            if (plugin == null) return null;
+            if (plugin == null)
+                return null;
 
             SetPluginProperty<string>(plugin, "NAME", "Name");
             SetPluginProperty<string>(plugin, "AUTHOR", "Author");
@@ -313,10 +319,17 @@ namespace TDSM.API
             return null;
         }
 
+        static string[] GetFiles(string directory, string pattern)
+        {
+            return pattern.Split('|')
+                .SelectMany(filter => System.IO.Directory.GetFiles(directory, filter, SearchOption.TopDirectoryOnly))
+                .ToArray();
+        }
+
         static readonly Dictionary<string, string> compilerOptions = new Dictionary<string, string>()
-		{
-			{ "CompilerVersion", "v4.0" },
-		};
+        {
+            { "CompilerVersion", "v4.0" },
+        };
 
         public static BasePlugin LoadSourcePlugin(string path)
         {
@@ -331,9 +344,18 @@ namespace TDSM.API
             var us = Assembly.GetExecutingAssembly();
             par.ReferencedAssemblies.Add(us.Location);
 
+            //Add the libraries path as well as where TDSM is located
+            var directory = Path.GetDirectoryName(us.Location);
+            par.CompilerOptions = String.Format("/lib:{0}", Globals.LibrariesPath, directory);
+
+//            var execs = GetFiles(directory, "*.dll|*.exe");
             foreach (var asn in us.GetReferencedAssemblies())
             {
-                par.ReferencedAssemblies.Add(asn.Name);
+                var name = asn.Name;
+                var execs = GetFiles(directory, name + ".dll|" + name + ".exe");
+                if (execs != null && execs.Length > 0)
+                    name = execs[0];
+                par.ReferencedAssemblies.Add(name);
             }
 
             var result = cp.CompileAssemblyFromFile(par, path);
@@ -391,7 +413,8 @@ namespace TDSM.API
                 }
                 else if (ext == ".lua")
                 {
-                    if (!_enableLUA) _enableLUA = true;
+                    if (!_enableLUA)
+                        _enableLUA = true;
                     Tools.WriteLine("Loading plugin from {0}.", fileInfo.Name);
                     plugin = new LUAPlugin();
                 }
@@ -401,7 +424,8 @@ namespace TDSM.API
             {
                 plugin.Path = file;
                 plugin.PathTimestamp = fileInfo.LastWriteTimeUtc;
-                if (plugin.Name == null) plugin.Name = Path.GetFileNameWithoutExtension(file);
+                if (plugin.Name == null)
+                    plugin.Name = Path.GetFileNameWithoutExtension(file);
             }
 
             return plugin;
@@ -645,7 +669,8 @@ namespace TDSM.API
              *      load
              */
 
-            if (args.Count == 0) throw new CommandError("Subcommand expected.");
+            if (args.Count == 0)
+                throw new CommandError("Subcommand expected.");
 
             string command = args[0];
             args.RemoveAt(0); //Allow the commands to use any additional arguments without also getting the command
@@ -888,7 +913,8 @@ namespace TDSM.API
                             var fname = string.Join(" ", args);
                             string path;
 
-                            if (fname == "") throw new CommandError("File name expected");
+                            if (fname == "")
+                                throw new CommandError("File name expected");
 
                             if (Path.IsPathRooted(fname))
                                 path = Path.GetFullPath(fname);
