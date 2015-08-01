@@ -2,6 +2,7 @@
 using TDSM.API.Command;
 using TDSM.API.Plugin;
 using TDSM.API.Misc;
+using TDSM.API.Logging;
 
 namespace TDSM.API.Callbacks
 {
@@ -15,7 +16,7 @@ namespace TDSM.API.Callbacks
 
     public static class UserInput
     {
-        //        static readonly List<String> _officialCommands = new List<String>() 
+        //        static readonly List<String> _officialCommands = new List<String>()
         //        {
         //            "help",
         //            "playing",
@@ -65,7 +66,7 @@ namespace TDSM.API.Callbacks
         {
             System.Threading.Thread.CurrentThread.Name = "APC";
 
-            Tools.WriteLine("Ready for commands.");
+            ProgramLog.Console.Print("Ready for commands.");
 #if Full_API
             while (!Terraria.Netplay.disconnect)
             {
@@ -75,11 +76,14 @@ namespace TDSM.API.Callbacks
                     var input = Console.ReadLine();
                     _cmdParser.ParseConsoleCommand(input);
                 }
-                catch (ExitException) { }
+                catch (ExitException e)
+                {
+                    ProgramLog.Log(e.Message);
+                    break;
+                }
                 catch (Exception e)
                 {
-                    Tools.WriteLine("Exception from command");
-                    Tools.WriteLine(e);
+                    ProgramLog.Log(e, "Exception from command");
                 }
             }
 #endif
@@ -144,6 +148,7 @@ namespace TDSM.API.Callbacks
 
         #if Full_API
         public static readonly Terraria.Tile DefaultTile = default(Terraria.Tile);
+
         public static Terraria.Tile GetTile()
         {
             return DefaultTile;

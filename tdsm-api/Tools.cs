@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using TDSM.API.Logging;
+
+
 #if Full_API
 using Terraria;
 using System.Collections.Generic;
@@ -10,58 +13,58 @@ namespace TDSM.API
 {
     public static class Tools
     {
-        private static Action<String, ConsoleColor, Object[]> _WriteLineMethod;
-        internal static Action WriteClose;
-
-        public static void WriteLine(string fmt, params object[] args)
-        {
-            WriteLine(fmt, ConsoleColor.White, args);
-        }
-
-        public static void WriteLine(string fmt, ConsoleColor colour = ConsoleColor.White, params object[] args)
-        {
-            if (_WriteLineMethod != null)
-                lock (_WriteLineMethod)
-                    _WriteLineMethod(fmt, colour, args);
-            else
-            {
-                if (Console.ForegroundColor != colour) Console.ForegroundColor = colour;
-                Console.WriteLine(fmt, args);
-            }
-        }
-
-        public static void WriteLine(string fmt)
-        {
-            WriteLine(fmt, null);
-        }
-
-        public static void WriteLine(object arg)
-        {
-            WriteLine("{0}", arg);
-        }
-
-        public static void WriteLine(Exception e)
-        {
-            WriteLine("{0}", e);
-        }
-
-        public static void SetWriteLineMethod(Action<String, ConsoleColor, Object[]> writeMethod, Action closeMethod = null)
-        {
-            if (_WriteLineMethod == null) _WriteLineMethod = writeMethod;
-            else
-                lock (_WriteLineMethod)
-                    _WriteLineMethod = writeMethod;
-
-            if (closeMethod != null) SetWriteLineCloseMethod(closeMethod);
-        }
-
-        public static void SetWriteLineCloseMethod(Action method)
-        {
-            if (WriteClose == null) WriteClose = method;
-            else
-                lock (WriteClose)
-                    WriteClose = method;
-        }
+//        private static Action<String, ConsoleColor, Object[]> _WriteLineMethod;
+//        internal static Action WriteClose;
+//
+//        public static void WriteLine(string fmt, params object[] args)
+//        {
+//            WriteLine(fmt, ConsoleColor.White, args);
+//        }
+//
+//        public static void WriteLine(string fmt, ConsoleColor colour = ConsoleColor.White, params object[] args)
+//        {
+//            if (_WriteLineMethod != null)
+//                lock (_WriteLineMethod)
+//                    _WriteLineMethod(fmt, colour, args);
+//            else
+//            {
+//                if (Console.ForegroundColor != colour) Console.ForegroundColor = colour;
+//                Console.WriteLine(fmt, args);
+//            }
+//        }
+//
+//        public static void WriteLine(string fmt)
+//        {
+//            WriteLine(fmt, null);
+//        }
+//
+//        public static void WriteLine(object arg)
+//        {
+//            WriteLine("{0}", arg);
+//        }
+//
+//        public static void WriteLine(Exception e)
+//        {
+//            WriteLine("{0}", e);
+//        }
+//
+//        public static void SetWriteLineMethod(Action<String, ConsoleColor, Object[]> writeMethod, Action closeMethod = null)
+//        {
+//            if (_WriteLineMethod == null) _WriteLineMethod = writeMethod;
+//            else
+//                lock (_WriteLineMethod)
+//                    _WriteLineMethod = writeMethod;
+//
+//            if (closeMethod != null) SetWriteLineCloseMethod(closeMethod);
+//        }
+//
+//        public static void SetWriteLineCloseMethod(Action method)
+//        {
+//            if (WriteClose == null) WriteClose = method;
+//            else
+//                lock (WriteClose)
+//                    WriteClose = method;
+//        }
 
         public static void NotifyAllPlayers(string message, Color color, bool writeToConsole = true) //, SendingLogger Logger = SendingLogger.CONSOLE)
         {
@@ -72,7 +75,7 @@ namespace TDSM.API
                     NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmI, -1, message, 255 /* PlayerId */, color.R, color.G, color.B);
             }
 
-            if (writeToConsole) Tools.WriteLine(message);
+            if (writeToConsole) ProgramLog.Log(message);
 #endif
         }
 
@@ -85,7 +88,7 @@ namespace TDSM.API
                     NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmI, -1, message, 255 /* PlayerId */, 176f, 196, 222f);
             }
 
-            if (writeToConsole) Tools.WriteLine(message);
+            if (writeToConsole) ProgramLog.Log(message);
 #endif
         }
 #if Full_API

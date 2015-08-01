@@ -113,21 +113,21 @@ namespace TDSM.Core
 
         protected override void Initialized(object state)
         {
-            if (/*!Globals.IsPatching &&*/ !ProgramLog.IsOpen)
-            {
-                var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
-                ProgramLog.OpenLogFile(logFile);
-
-                ProgramLog.Log("TDSM Rebind core build {0}", this.Version);
-
-                Tools.SetWriteLineMethod(ProgramLog.Log, OnLogFinished);
-                ConsoleSender.DefaultColour = ConsoleColor.Gray;
-                //ConsoleSender.SetMethod((msg, r, g, b) =>
-                //{
-                //    Console.ForegroundColor = FromColor((byte)r, (byte)g, (byte)b);
-                //    Console.WriteLine(msg);
-                //});
-            }
+//            if (/*!Globals.IsPatching &&*/ !ProgramLog.IsOpen)
+//            {
+//                var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
+//                ProgramLog.OpenLogFile(logFile);
+//
+            ProgramLog.Log("TDSM Rebind core build {0}", this.Version);
+//
+//                Tools.SetWriteLineMethod(ProgramLog.Log, OnLogFinished);
+//                ConsoleSender.DefaultColour = ConsoleColor.Gray;
+//                //ConsoleSender.SetMethod((msg, r, g, b) =>
+//                //{
+//                //    Console.ForegroundColor = FromColor((byte)r, (byte)g, (byte)b);
+//                //    Console.WriteLine(msg);
+//                //});
+//            }
 
             Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
 #if WebInterface

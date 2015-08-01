@@ -1,5 +1,8 @@
 ﻿using TDSM.API.Plugin;
 using System;
+using TDSM.API.Logging;
+
+
 #if Full_API
 using Terraria;
 #endif
@@ -80,7 +83,7 @@ namespace TDSM.API.Callbacks
 
             player.SendMessage("Current players: " + list + ".", 255, 255, 240, 20);
 
-            Tools.WriteLine("{0} @ {1}: ENTER {2}", Netplay.Clients[playerId].Socket.GetRemoteAddress(), playerId, player.name);
+            ProgramLog.Users.Log("{0} @ {1}: ENTER {2}", Netplay.Clients[playerId].Socket.GetRemoteAddress(), playerId, player.name);
 
             var args2 = new HookArgs.PlayerEnteredGame
             {

@@ -6,6 +6,7 @@ using TDSM.API.Plugin;
 using System.Net.Sockets;
 using System.Net;
 using TDSM.API.Sockets;
+using TDSM.API.Logging;
 
 #if Full_API
 using Terraria.Net.Sockets;
@@ -343,9 +344,9 @@ namespace TDSM.API.Callbacks
 
             if (ctx.Result != HookResult.IGNORE)
             {
-                Console.Write("Starting server...");
+                ProgramLog.Console.Print("Starting server...");
                 ThreadPool.QueueUserWorkItem(new WaitCallback(Terraria.Netplay.ServerLoop), 1);
-                Tools.WriteLine("Ok");
+                ProgramLog.Console.Print("Ok");
             }
 #endif
         }

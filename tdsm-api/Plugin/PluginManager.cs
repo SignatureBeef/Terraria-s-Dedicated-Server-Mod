@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using TDSM.API.Command;
 using TDSM.API.Plugin;
+using TDSM.API.Logging;
 
 namespace TDSM.API
 {
@@ -207,7 +208,7 @@ namespace TDSM.API
                     var plugin = kv.Value;
                     if (plugin.TDSMBuild != Globals.Build)
                     {
-                        Tools.WriteLine("[WARNING] Plugin build incorrect: " + plugin.Name);
+                        ProgramLog.Error.Log("[WARNING] Plugin build incorrect: " + plugin.Name);
                     }
                 }
             }
@@ -242,7 +243,7 @@ namespace TDSM.API
             }
             catch (Exception e)
             {
-                Tools.WriteLine(e);
+                ProgramLog.Log(e);
             }
         }
 
@@ -312,8 +313,7 @@ namespace TDSM.API
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Error loading plugin assembly " + PluginPath);
-                Tools.WriteLine(e);
+                ProgramLog.Log(e, "Error loading plugin assembly " + PluginPath);
             }
 
             return null;
@@ -364,13 +364,13 @@ namespace TDSM.API
             if (errors != null)
             {
                 if (errors.HasErrors)
-                    Tools.WriteLine("Failed to compile source plugin:");
+                    ProgramLog.Error.Log("Failed to compile source plugin:");
                 foreach (System.CodeDom.Compiler.CompilerError error in errors)
                 {
                     if (error.IsWarning)
-                        Tools.WriteLine(error.ToString());
+                        ProgramLog.BareLog(ProgramLog.Debug, error.ToString());
                     else
-                        Tools.WriteLine(error.ToString());
+                        ProgramLog.BareLog(ProgramLog.Error, error.ToString());
                 }
                 if (errors.HasErrors)
                     return null;
@@ -403,19 +403,19 @@ namespace TDSM.API
             {
                 if (ext == ".dll")
                 {
-                    Tools.WriteLine("Loading plugin from {0}.", fileInfo.Name);
+                    ProgramLog.Plugin.Log("Loading plugin from {0}.", fileInfo.Name);
                     plugin = LoadPluginFromDLL(file);
                 }
                 else if (ext == ".cs")
                 {
-                    Tools.WriteLine("Compiling and loading plugin from {0}.", fileInfo.Name);
+                    ProgramLog.Plugin.Log("Compiling and loading plugin from {0}.", fileInfo.Name);
                     plugin = LoadSourcePlugin(file);
                 }
                 else if (ext == ".lua")
                 {
                     if (!_enableLUA)
                         _enableLUA = true;
-                    Tools.WriteLine("Loading plugin from {0}.", fileInfo.Name);
+                    ProgramLog.Plugin.Log("Loading plugin from {0}.", fileInfo.Name);
                     plugin = new LUAPlugin();
                 }
             }
@@ -467,12 +467,12 @@ namespace TDSM.API
             if (fi.LastWriteTimeUtc > oldPlugin.PathTimestamp)
             {
                 // plugin updated
-                Tools.WriteLine("Plugin {0} is being updated from file.", oldPlugin.Name);
+                ProgramLog.Plugin.Log("Plugin {0} is being updated from file.", oldPlugin.Name);
                 newPlugin = LoadPluginFromPath(oldPlugin.Path);
             }
             else
             {
-                Tools.WriteLine("Plugin {0} not updated, reinitializing.", oldPlugin.Name);
+                ProgramLog.Plugin.Log("Plugin {0} not updated, reinitializing.", oldPlugin.Name);
                 newPlugin = CreatePluginInstance(oldPlugin.GetType());
                 newPlugin.Path = oldPlugin.Path;
                 newPlugin.PathTimestamp = oldPlugin.PathTimestamp;
@@ -988,14 +988,14 @@ namespace TDSM.API
         {
             if (!plugin.InitializeAndHookUp())
             {
-                Tools.WriteLine("Failed to initialize new plugin instance.", Color.DodgerBlue);
+                ProgramLog.Plugin.Log("Failed to initialize new plugin instance.", Color.DodgerBlue);
             }
 
             _plugins.Add(plugin.Name.ToLower().Trim(), plugin);
 
             if (!plugin.Enable())
             {
-                Tools.WriteLine("Failed to enable new plugin instance.", Color.DodgerBlue);
+                ProgramLog.Plugin.Log("Failed to enable new plugin instance.", Color.DodgerBlue);
             }
         }
 
@@ -1005,13 +1005,13 @@ namespace TDSM.API
 
             if (rPlg == null)
             {
-                Tools.WriteLine("Plugin failed to load!");
+                ProgramLog.Error.Log("Plugin failed to load!");
                 return PluginLoadStatus.FAIL_LOAD;
             }
 
             if (!rPlg.InitializeAndHookUp())
             {
-                Tools.WriteLine("Failed to initialize plugin.");
+                ProgramLog.Error.Log("Failed to initialize plugin.");
                 return PluginLoadStatus.FAIL_INIT;
             }
 
@@ -1019,7 +1019,7 @@ namespace TDSM.API
 
             if (!rPlg.Enable())
             {
-                Tools.WriteLine("Failed to enable plugin.");
+                ProgramLog.Error.Log("Failed to enable plugin.");
                 return PluginLoadStatus.FAIL_ENABLE;
             }
 

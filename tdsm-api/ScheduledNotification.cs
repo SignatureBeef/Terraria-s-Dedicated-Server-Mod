@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TDSM.API.Misc;
+using TDSM.API.Logging;
 
 namespace TDSM.API
 {
@@ -23,7 +24,7 @@ namespace TDSM.API
             base.Trigger = seconds;
             base.Method = (tsk) =>
             {
-                if (ConsoleOnly) Tools.WriteLine(_message);
+                if (ConsoleOnly) ProgramLog.Log(_message);
                 else Tools.NotifyAllPlayers(_message, _colour);
             };
             Tasks.Schedule(this);

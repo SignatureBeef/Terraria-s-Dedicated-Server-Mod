@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TDSM.API.Logging;
 
 namespace TDSM.API.Misc
 {
@@ -80,8 +81,7 @@ namespace TDSM.API.Misc
             }
             catch (System.Exception e)
             {
-                Tools.WriteLine("Failure saving data list.");
-                Tools.WriteLine(e);
+                ProgramLog.Log(e, "Failure saving data list.");
                 return false;
             }
         }

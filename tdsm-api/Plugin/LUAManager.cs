@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TDSM.API.Logging;
 
 namespace TDSM.API.Plugin
 {
@@ -135,7 +136,8 @@ namespace TDSM.API.Plugin
             foreach (var val in vals)
             {
                 var ho = (HookOrder)val;
-                if (ho.ToString() == text /*|| val.ToString() == text*/) return ho;
+                if (ho.ToString() == text /*|| val.ToString() == text*/)
+                    return ho;
             }
             return HookOrder.NORMAL;
         }
@@ -189,16 +191,16 @@ namespace TDSM.API.Plugin
                 {
                     if (e.IsNetException && e.InnerException != null)
                     {
-                        Tools.WriteLine("Plugin {0} crashed in hook {1}", this.Name, function);
-                        Tools.WriteLine(e.InnerException);
+                        ProgramLog.Log(e.InnerException, String.Format("Plugin {0} crashed in hook {1}", this.Name, function));
                     }
                     else
                     {
-                        Tools.WriteLine("Plugin {0} crashed in hook {1}", this.Name, function);
-                        Tools.WriteLine(e);
+                        ProgramLog.Log(e, String.Format("Plugin {0} crashed in hook {1}", this.Name, function));
                     }
                 }
-                catch { }
+                catch
+                {
+                }
             }
             return null;
         }

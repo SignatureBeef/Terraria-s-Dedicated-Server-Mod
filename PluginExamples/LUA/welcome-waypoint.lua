@@ -56,7 +56,7 @@ end
 
 function WelcomePlugin:Enabled()
 	export.Waypoints:Load();
-	Tools.WriteLine("Loaded " .. export.Waypoints.Count .. " waypoint(s)")
+	ProgramLog.Plugin:Log("Loaded " .. export.Waypoints.Count .. " waypoint(s)")
 end
 
 function WelcomePlugin:Disabled()

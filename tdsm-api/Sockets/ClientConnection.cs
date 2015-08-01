@@ -14,6 +14,7 @@ using TDSM.API.Logging;
 using Terraria;
 using Terraria.Net.Sockets;
 using Terraria.Net;
+
 #else
 using TDSM.API.Callbacks;
 #endif
@@ -235,7 +236,7 @@ namespace TDSM.API.Sockets
 
         protected override void HandleClosure(SocketError err)
         {
-            Tools.WriteLine("{0}: connection closed ({1}).", RemoteAddress, err);
+            ProgramLog.Users.Log("{0}: connection closed ({1}).", RemoteAddress, err);
             _isReceiving = false;
 
             //Issue a 0 byte response, Terraria will close the connection :)
@@ -333,7 +334,7 @@ namespace TDSM.API.Sockets
                 try
                 {
                     ISocket socket = new ClientConnection(this._listener.AcceptSocket());
-                    Tools.WriteLine(socket.GetRemoteAddress() + " is connecting...");
+                    ProgramLog.Users.Log(socket.GetRemoteAddress() + " is connecting...");
                     this._listenerCallback(socket);
                 }
                 catch

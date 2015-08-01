@@ -2,6 +2,9 @@
 using System.IO;
 using TDSM.API.Plugin;
 using System.Diagnostics;
+using TDSM.API.Logging;
+
+
 #if Full_API
 using Terraria;
 using Terraria.Initializers;
@@ -97,7 +100,7 @@ namespace TDSM.API.Callbacks
                                         int port;
                                         if (!Int32.TryParse(value, out port))
                                         {
-                                            Tools.WriteLine("Failed to parse config option {0}", key);
+                                            ProgramLog.Log("Failed to parse config option {0}", key);
                                         }
                                         else
                                             Terraria.Netplay.ListenPort = port;
@@ -106,7 +109,7 @@ namespace TDSM.API.Callbacks
                                         int maxplayers;
                                         if (!Int32.TryParse(value, out maxplayers))
                                         {
-                                            Tools.WriteLine("Failed to parse config option {0}", key);
+                                            ProgramLog.Log("Failed to parse config option {0}", key);
                                         }
                                         else
                                             Terraria.Main.maxNetPlayers = maxplayers;
@@ -147,14 +150,14 @@ namespace TDSM.API.Callbacks
                                                             currentProcess.PriorityClass = ProcessPriorityClass.Idle;
                                                         }
                                                     }
-                                                    else Tools.WriteLine("Invalid priority value: " + priority);
+                                                    else ProgramLog.Log("Invalid priority value: " + priority);
                                                 }
                                                 catch
                                                 {
                                                 }
                                             }
                                             else
-                                                Tools.WriteLine("Skipped setting process priority on mono");
+                                                ProgramLog.Log("Skipped setting process priority on mono");
                                         }
                                         break;
                                     case "password":
@@ -167,7 +170,7 @@ namespace TDSM.API.Callbacks
                                         int lang;
                                         if (!Int32.TryParse(value, out lang))
                                         {
-                                            Tools.WriteLine("Failed to parse config option {0}", key);
+                                            ProgramLog.Log("Failed to parse config option {0}", key);
                                         }
                                         else
                                             Lang.lang = lang;
@@ -188,7 +191,7 @@ namespace TDSM.API.Callbacks
                                         int autocreate;
                                         if (!Int32.TryParse(value, out autocreate))
                                         {
-                                            Tools.WriteLine("Failed to parse config option {0}", key);
+                                            ProgramLog.Log("Failed to parse config option {0}", key);
                                         }
                                         else
                                         {
@@ -222,14 +225,14 @@ namespace TDSM.API.Callbacks
                                         Terraria.Netplay.UseUPNP = value == "1";
                                         if (Terraria.Netplay.UseUPNP && Tools.RuntimePlatform == RuntimePlatform.Mono)
                                         {
-                                            Tools.WriteLine("[Warning] uPNP is only available on Windows platforms.");
+                                            ProgramLog.Log("[Warning] uPNP is only available on Windows platforms.");
                                         }
                                         break;
                                     case "npcstream":
                                         int npcstream;
                                         if (!Int32.TryParse(value, out npcstream))
                                         {
-                                            Tools.WriteLine("Failed to parse config option {0}", key);
+                                            ProgramLog.Log("Failed to parse config option {0}", key);
                                         }
                                         else
                                             Terraria.Main.npcStreamSpeed = npcstream;
@@ -256,7 +259,7 @@ namespace TDSM.API.Callbacks
                     }
                 }
             else
-                Tools.WriteLine("Configuration was specified but does not exist.");
+                ProgramLog.Log("Configuration was specified but does not exist.");
         }
     }
 }

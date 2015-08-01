@@ -1,6 +1,7 @@
 ﻿using System;
 using TDSM.API;
 using TDSM.API.Command;
+using TDSM.API.Logging;
 
 #if Full_API
 using Terraria;
@@ -22,14 +23,15 @@ namespace TDSM.API.Plugin
 
         #if Full_API
         public Terraria.Net.Sockets.ISocket Connection { get; set; }
+
         public RemoteClient Client
         {
-        get { return Terraria.Netplay.Clients[SlotId]; }
+            get { return Terraria.Netplay.Clients[SlotId]; }
         }
 
         public Player Player { get; set; }
         
-#else
+        #else
         public TDSM.API.Callbacks.ISocket Connection { get; set; }
         #endif
 
@@ -168,7 +170,7 @@ namespace TDSM.API.Plugin
             {
                 var num = currentlyExecuting - currentlyPaused;
                 if (num < 0)
-                    Tools.WriteLine("Oops, currentlyExecuting < currentlyPaused!?");
+                    ProgramLog.Debug.Log("Oops, currentlyExecuting < currentlyPaused!?");
                 return num <= 0;
             }
         }
@@ -277,8 +279,7 @@ namespace TDSM.API.Plugin
                     }
                     catch (Exception e)
                     {
-                        Tools.WriteLine("Exception removing hook from plugin's hook list");
-                        Tools.WriteLine(e);
+                        ProgramLog.Log(e, "Exception removing hook from plugin's hook list");
                     }
                 }
             }
@@ -317,13 +318,13 @@ namespace TDSM.API.Plugin
             if (signal != null)
             {
                 pauseSignal = null;
-                Tools.WriteLine("Paused hook point {0}.", Name);
+                ProgramLog.Debug.Log("Paused hook point {0}.", Name);
                 //Interlocked.Decrement (ref currentlyExecuting);
                 Interlocked.Increment(ref currentlyPaused);
                 signal.WaitOne();
                 Interlocked.Decrement(ref currentlyPaused);
                 //Interlocked.Increment (ref currentlyExecuting);
-                Tools.WriteLine("Unpaused hook point {0}.", Name);
+                ProgramLog.Debug.Log("Unpaused hook point {0}.", Name);
             }
 
             try
@@ -360,13 +361,11 @@ namespace TDSM.API.Plugin
                             {
                                 if (e.IsNetException && e.InnerException != null)
                                 {
-                                    Tools.WriteLine("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name);
-                                    Tools.WriteLine(e.InnerException);
+                                    ProgramLog.Log(e.InnerException, String.Format("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name));
                                 }
                                 else
                                 {
-                                    Tools.WriteLine("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name);
-                                    Tools.WriteLine(e);
+                                    ProgramLog.Log(e, String.Format("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name));
                                 }
                             }
                             catch
@@ -375,8 +374,7 @@ namespace TDSM.API.Plugin
                         }
                         catch (Exception e)
                         {
-                            Tools.WriteLine("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name);
-                            Tools.WriteLine(e);
+                            ProgramLog.Log(e, String.Format("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name));
                         }
                     }
                 }

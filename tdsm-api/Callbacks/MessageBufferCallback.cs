@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using TDSM.API.Plugin;
+using TDSM.API.Logging;
+
+
 #if Full_API
 using Terraria;
 #endif
@@ -832,12 +835,12 @@ namespace TDSM.API.Callbacks
 
             if (player.name.Length > Player.nameLen)
             {
-                NetMessage.SendData (2, bufferId, -1, "Name is too long.");
+                NetMessage.SendData(2, bufferId, -1, "Name is too long.");
                 return;
             }
             if (player.name == "")
             {
-                NetMessage.SendData (2, bufferId, -1, "Empty name.");
+                NetMessage.SendData(2, bufferId, -1, "Empty name.");
                 return;
             }
 
@@ -1376,7 +1379,7 @@ namespace TDSM.API.Callbacks
                 NetMessage.SendData(25, -1, -1, chatText, bufferId, (float)color.R, (float)color.G, (float)color.B, 0, 0, 0);
                 if (Main.dedServ)
                 {
-                    Tools.WriteLine("<" + Main.player[bufferId].name + "> " + chatText);
+                    ProgramLog.Chat.Log("<" + Main.player[bufferId].name + "> " + chatText);
                 }
             }
         }

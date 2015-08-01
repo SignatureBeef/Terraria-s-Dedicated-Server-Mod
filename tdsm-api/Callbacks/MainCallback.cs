@@ -3,6 +3,7 @@ using TDSM.API.Misc;
 using TDSM.API.Plugin;
 using TDSM.API.Sockets;
 using TDSM.API.Logging;
+using TDSM.API.Command;
 
 namespace TDSM.API.Callbacks
 {
@@ -17,8 +18,15 @@ namespace TDSM.API.Callbacks
         public static void ProgramStart()
         {
             Console.Clear();
+            if (!ProgramLog.IsOpen)
+            {
+                var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
+                ProgramLog.OpenLogFile(logFile);
+                ConsoleSender.DefaultColour = ConsoleColor.Gray;
+            }
+
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Tools.WriteLine("TDSM Rebind API build {0}{1} running on {2}", 
+            ProgramLog.Log("TDSM Rebind API build {0}{1} running on {2}", 
                 Globals.Build, 
                 Globals.PhaseToSuffix(Globals.BuildPhase),
                 Tools.RuntimePlatform.ToString()
@@ -88,9 +96,11 @@ namespace TDSM.API.Callbacks
         public static void OnProgramFinished()
         {
             PluginManager.DisablePlugins();
+
             //Close the logging if set
-            if (Tools.WriteClose != null)
-                Tools.WriteClose.Invoke();
+            ProgramLog.Close();
+//            if (Tools.WriteClose != null)
+//                Tools.WriteClose.Invoke();
         }
 
         public static void Initialise()
@@ -228,7 +238,7 @@ namespace TDSM.API.Callbacks
                     else
                     {
                         Terraria.Main.oldStatusText = Terraria.Main.statusText;
-                        Tools.WriteLine(Terraria.Main.statusText);
+                        ProgramLog.Log(Terraria.Main.statusText);
                     }
                     /*var ctx = new HookContext()
                 {

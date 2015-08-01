@@ -477,7 +477,7 @@ namespace TDSM.API.Sockets
                     txCount -= count;
                     txPrepared -= count;
                     if (txPrepared < 0 || txCount < 0)
-                        Tools.WriteLine("{0} {1}", txCount, txPrepared);
+                        ProgramLog.Error.Log("{0} {1}", txCount, txPrepared);
                 }
             }
             if (txCount == 0)
@@ -505,7 +505,7 @@ namespace TDSM.API.Sockets
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Exception in connection send callback: {0}", e);
+                ProgramLog.Log(e, "Exception in connection send callback");
             }
 
             try
@@ -536,7 +536,7 @@ namespace TDSM.API.Sockets
             }
             catch (Exception e)
             {
-                ProgramLog.Error.Log("Exception in connection send callback: {0}", e);
+                ProgramLog.Log(e, "Exception in connection send callback");
             }
         }
 
@@ -619,7 +619,7 @@ namespace TDSM.API.Sockets
             }
             catch (Exception e)
             {
-                ProgramLog.Error.Log("Exception in connection receive callback: {0}", e);
+                ProgramLog.Log(e, "Exception in connection receive callback");
             }
         }
 
@@ -656,7 +656,7 @@ namespace TDSM.API.Sockets
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Exception in connection disconnect callback: {0}", e);
+                ProgramLog.Log(e, "Exception in connection disconnect callback");
             }
         }
 
@@ -724,7 +724,7 @@ namespace TDSM.API.Sockets
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Exception while handling connection closure: {0}", e);
+                ProgramLog.Log(e, "Exception while handling connection closure");
             }
         }
 
@@ -745,7 +745,7 @@ namespace TDSM.API.Sockets
                     else
                     {
                         total += 1;
-                        Tools.WriteLine("ArgsPool<{0}> capacity is now: {1}.", typeof(T).Name, total);
+                        ProgramLog.Debug.Log("ArgsPool<{0}> capacity is now: {1}.", typeof(T).Name, total);
                         args = new T();
                     }
                 }
@@ -758,7 +758,7 @@ namespace TDSM.API.Sockets
                 //              ProgramLog.Debug.Log ("Put");
                 if (!(args is T))
                 {
-                    Tools.WriteLine("ArgsPool type mismatch.");
+                    ProgramLog.Error.Log("ArgsPool type mismatch.");
                     return;
                 }
 
@@ -766,7 +766,7 @@ namespace TDSM.API.Sockets
                 {
                     if (args.conn == null)
                     {
-                        Tools.WriteLine("{0} freed twice.", typeof(T).Name);
+                        ProgramLog.Error.Log("{0} freed twice.", typeof(T).Name);
                         return;
                     }
 

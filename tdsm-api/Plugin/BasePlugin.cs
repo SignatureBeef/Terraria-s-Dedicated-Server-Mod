@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using TDSM.API.Command;
+using TDSM.API.Logging;
 
 namespace TDSM.API.Plugin
 {
@@ -17,32 +18,39 @@ namespace TDSM.API.Plugin
         /// Name of the plugin
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
         /// Plugin description
         /// </summary>
         public string Description { get; set; }
+
         /// <summary>
         /// Plugin author
         /// </summary>
         public string Author { get; set; }
+
         /// <summary>
         /// Plugin version
         /// </summary>
         public string Version { get; set; }
+
         /// <summary>
         /// Latest compatible TDSM build
         /// </summary>
         public int TDSMBuild { get; set; }
+
         /// <summary>
         /// Whether to enable the plugin right after loading, so it could intercept the PluginLoadRequest hook for other plugins
         /// </summary>
         public bool EnableEarly { get; set; }
+
         /// <summary>
         /// Status text displayed by some of the /plugin commands
         /// </summary>
         public string Status { get; set; }
 
         internal string Path { get; set; }
+
         internal DateTime PathTimestamp { get; set; }
 
         internal Assembly Assembly { get; set; }
@@ -99,7 +107,9 @@ namespace TDSM.API.Plugin
         /// A state object returned from OnDispose by a previous instance of the plugin, or null otherwise.
         /// </param>
         /// </summary>
-        protected virtual void Initialized(object state) { }
+        protected virtual void Initialized(object state)
+        {
+        }
 
         /// <summary>
         /// A callback for disposing of any resources held by the plugin.
@@ -107,26 +117,36 @@ namespace TDSM.API.Plugin
         /// <param name='state'>
         /// A state object previously returned from SaveState to be disposed of as well.
         /// </param>
-        protected virtual void Disposed(object state) { }
+        protected virtual void Disposed(object state)
+        {
+        }
 
         protected virtual object SuspendedAndSaved()
         {
             return null;
         }
 
-        protected virtual void Resumed(object state) { }
+        protected virtual void Resumed(object state)
+        {
+        }
 
         /// <summary>
         /// Enable routines, usually no more than enabled announcement and registering hooks
         /// </summary>
-        protected virtual void Enabled() { }
+        protected virtual void Enabled()
+        {
+        }
 
         /// <summary>
         /// Disabling the plugin, usually announcement
         /// </summary>
-        protected virtual void Disabled() { }
+        protected virtual void Disabled()
+        {
+        }
 
-        protected virtual void WorldLoaded() { }
+        protected virtual void WorldLoaded()
+        {
+        }
 
         public void Hook<T>(HookPoint<T> hookPoint, HookAction<T> callback)
         {
@@ -201,7 +221,8 @@ namespace TDSM.API.Plugin
         /// <returns>New Command</returns>
         protected CommandInfo AddCommand(string prefix)
         {
-            if (commands.ContainsKey(prefix)) throw new ApplicationException("AddCommand: duplicate command: " + prefix);
+            if (commands.ContainsKey(prefix))
+                throw new ApplicationException("AddCommand: duplicate command: " + prefix);
 
             var cmd = new CommandInfo(prefix);
             cmd.BeforeEvent += NotifyBeforeCommand;
@@ -226,8 +247,7 @@ namespace TDSM.API.Plugin
                 }
                 catch (Exception e)
                 {
-                    Tools.WriteLine("Exception while enabling plugin " + Name);
-                    Tools.WriteLine(e);
+                    ProgramLog.Log(e, "Exception while enabling plugin " + Name);
                     return false;
                 }
             }
@@ -244,8 +264,7 @@ namespace TDSM.API.Plugin
                 }
                 catch (Exception e)
                 {
-                    Tools.WriteLine("Exception while disabling plugin " + Name);
-                    Tools.WriteLine(e);
+                    ProgramLog.Log(e, "Exception while disabling plugin " + Name);
                     return false;
                 }
             }
@@ -254,7 +273,8 @@ namespace TDSM.API.Plugin
 
         internal bool InitializeAndHookUp(object state = null)
         {
-            if (!Initialize(state)) return false;
+            if (!Initialize(state))
+                return false;
 
             foreach (var h in desiredHooks)
             {
@@ -268,7 +288,7 @@ namespace TDSM.API.Plugin
         {
             if (initialized)
             {
-                Tools.WriteLine("Double initialize of plugin {0}.", Name);
+                ProgramLog.Error.Log("Double initialize of plugin {0}.", Name);
                 return true;
             }
 
@@ -278,8 +298,7 @@ namespace TDSM.API.Plugin
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Exception in initialization handler of plugin " + Name);
-                Tools.WriteLine(e);
+                ProgramLog.Log(e, "Exception in initialization handler of plugin " + Name);
                 return false;
             }
 
@@ -325,8 +344,7 @@ namespace TDSM.API.Plugin
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Exception while saving plugin state of " + Name);
-                Tools.WriteLine(e);
+                ProgramLog.Log(e, "Exception while saving plugin state of " + Name);
                 return null;
             }
         }
@@ -340,15 +358,15 @@ namespace TDSM.API.Plugin
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Exception while saving plugin state of " + Name);
-                Tools.WriteLine(e);
+                ProgramLog.Log(e, "Exception while saving plugin state of " + Name);
                 return false;
             }
         }
 
         internal bool Dispose(object state = null)
         {
-            if (Interlocked.CompareExchange(ref disposed, 1, 0) == 1) return true;
+            if (Interlocked.CompareExchange(ref disposed, 1, 0) == 1)
+                return true;
 
             var result = Disable();
 
@@ -358,8 +376,7 @@ namespace TDSM.API.Plugin
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Exception in disposal handler of plugin " + Name);
-                Tools.WriteLine(e);
+                ProgramLog.Log(e, "Exception in disposal handler of plugin " + Name);
                 result = false;
             }
 
@@ -375,7 +392,7 @@ namespace TDSM.API.Plugin
 
             if (this.hooks.Count > 0)
             {
-                Tools.WriteLine("Warning: failed to clean up {0} hooks of plugin {1}.", this.hooks.Count, Name);
+                ProgramLog.Error.Log("Warning: failed to clean up {0} hooks of plugin {1}.", this.hooks.Count, Name);
                 this.hooks.Clear();
             }
 
@@ -396,7 +413,8 @@ namespace TDSM.API.Plugin
 
                 var signal = new ManualResetEvent(false);
 
-                lock (HookPoint.editLock) try
+                lock (HookPoint.editLock)
+                    try
                     {
                         using (this.Pause())
                         {
@@ -404,7 +422,7 @@ namespace TDSM.API.Plugin
                             if (saveState)
                                 savedState = Suspend();
 
-                            Tools.WriteLine("Initializing new plugin instance...");
+                            ProgramLog.Debug.Log("Initializing new plugin instance...");
                             if (!newPlugin.Initialize(savedState))
                             {
                                 if (saveState)
@@ -422,7 +440,7 @@ namespace TDSM.API.Plugin
                             // they run the new plugin's methods
                             lock (commands)
                             {
-                                Tools.WriteLine("Replacing commands...");
+                                ProgramLog.Debug.Log("Replacing commands...");
 
                                 var prefixes = newPlugin.commands.Keys.ToArray();
 
@@ -439,7 +457,8 @@ namespace TDSM.API.Plugin
                                         newPlugin.commands[prefix] = oldCmd;
                                         commands.Remove(prefix);
 
-                                        if (done.Contains(oldCmd)) continue;
+                                        if (done.Contains(oldCmd))
+                                            continue;
 
                                         oldCmd.InitFrom(newCmd);
                                         done.Add(oldCmd);
@@ -456,7 +475,7 @@ namespace TDSM.API.Plugin
                                 foreach (var kv in commands)
                                 {
                                     var cmd = kv.Value;
-                                    Tools.WriteLine("Clearing command {0}.", kv.Key);
+                                    ProgramLog.Debug.Log("Clearing command {0}.", kv.Key);
                                     cmd.ClearCallbacks();
                                 }
                                 commands.Clear();
@@ -466,7 +485,7 @@ namespace TDSM.API.Plugin
                             // in the exact same spots in the invocation chains
                             lock (newPlugin.desiredHooks)
                             {
-                                Tools.WriteLine("Replacing hooks...");
+                                ProgramLog.Debug.Log("Replacing hooks...");
 
                                 foreach (var h in newPlugin.desiredHooks)
                                 {
@@ -484,10 +503,10 @@ namespace TDSM.API.Plugin
                                 }
                             }
 
-                            Tools.WriteLine("Disabling old plugin instance...");
+                            ProgramLog.Debug.Log("Disabling old plugin instance...");
                             Disable();
 
-                            Tools.WriteLine("Enabling new plugin instance...");
+                            ProgramLog.Debug.Log("Enabling new plugin instance...");
                             if (newPlugin.Enable())
                             {
                                 result = true;
@@ -501,7 +520,7 @@ namespace TDSM.API.Plugin
                         // clean up remaining hooks
                         if (noreturn)
                         {
-                            Tools.WriteLine("Disposing of old plugin instance...");
+                            ProgramLog.Debug.Log("Disposing of old plugin instance...");
                             Dispose();
                         }
                     }
@@ -555,7 +574,7 @@ namespace TDSM.API.Plugin
                     Thread.Sleep(10);
                 }
 
-                Tools.WriteLine("Plugin {0} commands paused...", plugin.Name ?? "???");
+                ProgramLog.Debug.Log("Plugin {0} commands paused...", plugin.Name ?? "???");
 
                 // wait for hooks that may have already been running to finish
                 var pausing = new LinkedList<HookPoint>(plugin.hooks);
@@ -584,12 +603,12 @@ namespace TDSM.API.Plugin
                     }
                 }
 
-                Tools.WriteLine("Plugin {0} hooks paused...", plugin.Name ?? "???");
+                ProgramLog.Debug.Log("Plugin {0} hooks paused...", plugin.Name ?? "???");
             }
 
             public void Dispose()
             {
-                Tools.WriteLine("Unpausing everything related to plugin {0}...", plugin.Name ?? "???");
+                ProgramLog.Debug.Log("Unpausing everything related to plugin {0}...", plugin.Name ?? "???");
 
                 plugin.commandPauseSignal = null;
 
@@ -608,7 +627,8 @@ namespace TDSM.API.Plugin
         {
             //if (!Statics.WorldLoaded) return true;
 
-            if (Interlocked.CompareExchange(ref informedOfWorld, 1, 0) != 0) return true;
+            if (Interlocked.CompareExchange(ref informedOfWorld, 1, 0) != 0)
+                return true;
 
             try
             {
@@ -616,8 +636,7 @@ namespace TDSM.API.Plugin
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Exception in world load handler of plugin " + Name);
-                Tools.WriteLine(e);
+                ProgramLog.Log(e, "Exception in world load handler of plugin " + Name);
                 return false;
             }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using TDSM.API.Logging;
 
 namespace TDSM.API.ID
 {
@@ -41,7 +42,7 @@ namespace TDSM.API.ID
             }
             catch (Exception e)
             {
-                Tools.WriteLine(e);
+                ProgramLog.Log(e);
             }
 #endif
         }

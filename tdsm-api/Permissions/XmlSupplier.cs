@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Serialization;
+using TDSM.API.Logging;
 
 namespace TDSM.API.Permissions
 {
@@ -85,8 +86,8 @@ namespace TDSM.API.Permissions
             }
             catch (Exception e)
             {
-                Tools.WriteLine("Failed to load {0}", _path);
-                Tools.WriteLine(e);
+                ProgramLog.Log("Failed to load {0}", _path);
+                ProgramLog.Log(e);
             }
             Console.Read();
             return false;
