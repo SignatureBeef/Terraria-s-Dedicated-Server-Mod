@@ -358,14 +358,21 @@ namespace TDSM.Core
                     if (!args.TryGetString(a++, out password))
                         throw new CommandError("Expected password name after username");
 
-                    op = args.TryPop("-o");
+                    args.TryGetBool(a++, out op);
 
                     var existing = AuthenticatedUsers.GetUser(username);
                     if (existing == null)
                     {
                         if (AuthenticatedUsers.CreateUser(username, password, op))
                         {
-                            sender.Message("Successfully created user " + username);
+                            if (op)
+                            {
+                                sender.Message("Successfully created user as operator: " + username);
+                            }
+                            else
+                            {
+                                sender.Message("Successfully created user " + username);
+                            }
                         }
                         else
                             throw new CommandError("User failed to be created");
@@ -382,14 +389,21 @@ namespace TDSM.Core
                     if (!args.TryGetString(a++, out password))
                         throw new CommandError("Expected password name after username");
 
-                    op = args.TryPop("-o");
+                    args.TryGetBool(a++, out op);
 
                     var updatee = AuthenticatedUsers.GetUser(username);
                     if (updatee != null)
                     {
                         if (AuthenticatedUsers.UpdateUser(username, password, op))
                         {
-                            sender.Message("Successfully updated user " + username);
+                            if (op)
+                            {
+                                sender.Message("Successfully updated user as operator: " + username);
+                            }
+                            else
+                            {
+                                sender.Message("Successfully updated user " + username);
+                            }
                         }
                         else
                             throw new CommandError("User failed to be updated");
