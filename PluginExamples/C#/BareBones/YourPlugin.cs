@@ -1,6 +1,6 @@
-﻿using tdsm.api;
-using tdsm.api.Command;
-using tdsm.api.Plugin;
+using TDSM.API;
+using TDSM.API.Command;
+using TDSM.API.Plugin;
 
 namespace BareBones
 {
