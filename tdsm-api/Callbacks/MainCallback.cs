@@ -27,7 +27,7 @@ namespace TDSM.API.Callbacks
             Console.ForegroundColor = Command.ConsoleSender.DefaultColour;
 
             Globals.Touch();
-            ID.Lookup.Initialise();
+//            ID.Lookup.Initialise();
 
             try
             {
