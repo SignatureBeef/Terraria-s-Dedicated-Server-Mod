@@ -557,7 +557,7 @@ namespace tdsm.patcher
             var ins = main.Body.Instructions.Where(x =>
                 x.OpCode == OpCodes.Ldsfld
                           && x.Operand is FieldReference
-                && (x.Operand as FieldReference).Name == "rockLayer").ToArray()[3].Previous.Previous;
+                          && (x.Operand as FieldReference).Name == "rockLayer").ToArray()[3].Previous.Previous;
 
             il.InsertBefore(ins, il.Create(OpCodes.Ldloc_2));
             il.InsertBefore(ins, il.Create(OpCodes.Ldc_I4, 16));
@@ -1037,6 +1037,15 @@ namespace tdsm.patcher
                 else
                 {
                     ins.Operand = _asm.MainModule.Import(openCallback);
+                }
+            }
+
+            for (var x = _asm.MainModule.Types.Count - 1; x > -1; x--)
+            {
+                var ty = _asm.MainModule.Types[x];
+                if (ty.Namespace == "NATUPNPLib")
+                {
+                    _asm.MainModule.Types.RemoveAt(x);
                 }
             }
         }
@@ -1545,6 +1554,25 @@ namespace tdsm.patcher
                 }
 
                 //Use an NSApplication entry point for MAC
+            }
+        }
+
+        /// <summary>
+        /// Removes the references to the Steam binaries, and replaces them with dummies.
+        /// </summary>
+        public void PatchSteam()
+        {
+            return;
+            var xnaFramework = _asm.MainModule.AssemblyReferences
+                .Where(x => x.Name.StartsWith("Steamworks.NET"))
+                .ToArray();
+            
+            for (var x = 0; x < xnaFramework.Length; x++)
+            {
+                xnaFramework[x].Name = _self.Name.Name;
+                xnaFramework[x].PublicKey = _self.Name.PublicKey;
+                xnaFramework[x].PublicKeyToken = _self.Name.PublicKeyToken;
+                xnaFramework[x].Version = _self.Name.Version;
             }
         }
 

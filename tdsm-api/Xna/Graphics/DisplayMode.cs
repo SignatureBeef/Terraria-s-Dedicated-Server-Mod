@@ -38,6 +38,11 @@ namespace Microsoft.Xna.Framework.Graphics
         {
         }
 
+        public void SetData<T>(int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride, SetDataOptions options) where T : struct
+        {
+            
+        }
+
         public void SetData<T>(T value)
         {
         }

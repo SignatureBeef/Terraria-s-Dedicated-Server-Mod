@@ -1,9 +1,18 @@
 ﻿
 namespace Microsoft.Xna.Framework.Graphics
 {
-    public enum BlendState
+    public partial class BlendState : GraphicsResource
     {
-        AlphaBlend,
-        Additive
+        public static readonly BlendState Additive;
+        public static readonly BlendState AlphaBlend;
+        public static readonly BlendState NonPremultiplied;
+        public static readonly BlendState Opaque;
+    }
+
+    public enum SetDataOptions
+    {
+        None,
+        Discard,
+        NoOverwrite
     }
 }

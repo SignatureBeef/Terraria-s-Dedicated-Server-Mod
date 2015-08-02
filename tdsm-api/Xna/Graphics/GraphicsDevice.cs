@@ -60,7 +60,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
     public class TextureCollection
     {
-        public Texture2D this [int index]
+        public Texture this [int index]
         {
             get
             {
@@ -68,6 +68,7 @@ namespace Microsoft.Xna.Framework.Graphics
             }
             set{ }
         }
+
     }
 
     public class SamplerStateCollection

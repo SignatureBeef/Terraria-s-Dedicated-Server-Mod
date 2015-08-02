@@ -236,6 +236,8 @@ namespace tdsm.patcher
             //patcher.PatchServer();
             Console.Write("Ok\nPatching XNA...");
             patcher.PatchXNA(true);
+            Console.Write("Ok\nPatching Steam...");
+            patcher.PatchSteam();
             Console.Write("Ok\nHooking start...");
             patcher.HookProgramStart();
             Console.Write("Ok\nHooking initialise...");
@@ -280,7 +282,7 @@ namespace tdsm.patcher
             patcher.FixNetplay();
             Console.Write("Ok\nFixing NPC AI crashes...");
             patcher.FixRandomErrors();
-            //            patcher.DetectMissingXNA();
+//            patcher.DetectMissingXNA();
 
             Console.Write("Ok\n");
             patcher.InjectHooks();
