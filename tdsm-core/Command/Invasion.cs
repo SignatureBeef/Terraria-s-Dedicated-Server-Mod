@@ -13,6 +13,7 @@ namespace TDSM.Core
         //private Task _customInvasion;
         private Dictionary<Int32,Int32> _invasion;
         private int _assignedInvasionType = TDSM.API.Callbacks.NPCCallback.AssignInvasionType();
+        private bool _notfInbound;
 
         [Hook(HookOrder.NORMAL)]
         void OnInvasionNPCSpawn(ref HookContext ctx, ref HookArgs.InvasionNPCSpawn args)
@@ -73,23 +74,33 @@ namespace TDSM.Core
             {
                 if (Main.invasionSize > 0)
                 {
-                    string message;
+                    string message = null;
                     if (Main.invasionX < (double)Main.spawnTileX)
                     {
                         //West
-                        message = "An invasion is approaching from the west!";
+                        if (!_notfInbound)
+                        {
+                            _notfInbound = true;
+                            message = "An invasion is approaching from the west!";
+                        }
                     }
                     else if (Main.invasionX > (double)Main.spawnTileX)
                     {
                         //East
-                        message = "An invasion is approaching from the east!";
+                        if (!_notfInbound)
+                        {
+                            _notfInbound = true;
+                            message = "An invasion is approaching from the east!";
+                        }
                     }
                     else
                     {
                         //Arrived
                         message = "The invasion has arrived!";
                     }
-                    NetMessage.SendData(25, -1, -1, message, 255, 175f, 75f, 255f);
+
+                    if (null != message)
+                        NetMessage.SendData(25, -1, -1, message, 255, 175f, 75f, 255f);
                 }
 
                 ctx.SetResult(HookResult.IGNORE);
@@ -114,16 +125,16 @@ namespace TDSM.Core
                         
                         var npcIds = new List<Int32>();
                         var c = 0;
-                        while (c++ < args.Count)
+                        while (c < args.Count)
                         {
                             int npcType;
                             string npc;
 
-                            if (args.TryGetInt(0, out npcType))
+                            if (args.TryGetInt(c, out npcType))
                             {
                                 _invasion.Add(npcType, 0);
                             }
-                            else if (args.TryGetString(0, out npc))
+                            else if (args.TryGetString(c, out npc))
                             {
                                 var match = Definitions.DefinitionManager.FindNPC(npc);
                                 if (match.Length == 1 || first)
@@ -145,6 +156,7 @@ namespace TDSM.Core
                             {
                                 throw new CommandError("Expected a NPC id or name.");
                             }
+                            c++;
                         }
 
                         //Schedule...
@@ -176,6 +188,7 @@ namespace TDSM.Core
 //                        else
 //                            _invasion = npcIds;
 
+                        _notfInbound = false;
                         Main.StartInvasion(_assignedInvasionType);
                         sender.Message("Invasion started");
                     }
