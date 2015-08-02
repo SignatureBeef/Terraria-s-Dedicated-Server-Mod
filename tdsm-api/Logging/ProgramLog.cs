@@ -90,7 +90,6 @@ namespace TDSM.API.Logging
                 logTargets.Add(logFile);
 
             Log("Logging started to file \"{0}\".", newpath);
-            System.Console.WriteLine("COMPLETE");
         }
 
         public static void AddTarget(LogTarget target)

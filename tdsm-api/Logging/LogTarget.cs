@@ -231,6 +231,7 @@ namespace TDSM.API.Logging
 
         void HandleConsoleHook(string ConsoleText, SendingLogger SendingLogger)
 		{
+            System.Console.WriteLine("MESSAGE: " + ConsoleText);
             var ctx = new HookContext()
             {
                 Sender = HookContext.ConsoleSender				
