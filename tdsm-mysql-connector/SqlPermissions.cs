@@ -11,7 +11,7 @@ namespace TDSM.Data.MySQL
         
         public SqlPermissions()
         {
-            this.TDSMBuild = 3;
+            this.TDSMBuild = 4;
             this.Version = "1";
             this.Author = "TDSM";
             this.Name = "MySQL Connector";

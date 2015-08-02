@@ -13,69 +13,17 @@ namespace TDSM.API
 {
     public static class Tools
     {
-//        private static Action<String, ConsoleColor, Object[]> _WriteLineMethod;
-//        internal static Action WriteClose;
-//
-//        public static void WriteLine(string fmt, params object[] args)
-//        {
-//            WriteLine(fmt, ConsoleColor.White, args);
-//        }
-//
-//        public static void WriteLine(string fmt, ConsoleColor colour = ConsoleColor.White, params object[] args)
-//        {
-//            if (_WriteLineMethod != null)
-//                lock (_WriteLineMethod)
-//                    _WriteLineMethod(fmt, colour, args);
-//            else
-//            {
-//                if (Console.ForegroundColor != colour) Console.ForegroundColor = colour;
-//                Console.WriteLine(fmt, args);
-//            }
-//        }
-//
-//        public static void WriteLine(string fmt)
-//        {
-//            WriteLine(fmt, null);
-//        }
-//
-//        public static void WriteLine(object arg)
-//        {
-//            WriteLine("{0}", arg);
-//        }
-//
-//        public static void WriteLine(Exception e)
-//        {
-//            WriteLine("{0}", e);
-//        }
-//
-//        public static void SetWriteLineMethod(Action<String, ConsoleColor, Object[]> writeMethod, Action closeMethod = null)
-//        {
-//            if (_WriteLineMethod == null) _WriteLineMethod = writeMethod;
-//            else
-//                lock (_WriteLineMethod)
-//                    _WriteLineMethod = writeMethod;
-//
-//            if (closeMethod != null) SetWriteLineCloseMethod(closeMethod);
-//        }
-//
-//        public static void SetWriteLineCloseMethod(Action method)
-//        {
-//            if (WriteClose == null) WriteClose = method;
-//            else
-//                lock (WriteClose)
-//                    WriteClose = method;
-//        }
-
         public static void NotifyAllPlayers(string message, Color color, bool writeToConsole = true) //, SendingLogger Logger = SendingLogger.CONSOLE)
         {
 #if Full_API
             foreach (var player in Main.player)
             {
-                if (player.active)
+                if (player != null && player.active)
                     NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmI, -1, message, 255 /* PlayerId */, color.R, color.G, color.B);
             }
 
-            if (writeToConsole) ProgramLog.Log(message);
+            if (writeToConsole)
+                ProgramLog.Log(message);
 #endif
         }
 
@@ -84,14 +32,15 @@ namespace TDSM.API
 #if Full_API
             foreach (var player in Main.player)
             {
-                if (player.active && player.Op)
+                if (player != null && player.active && player.Op)
                     NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmI, -1, message, 255 /* PlayerId */, 176f, 196, 222f);
             }
 
-            if (writeToConsole) ProgramLog.Log(message);
+            if (writeToConsole)
+                ProgramLog.Log(message);
 #endif
         }
-#if Full_API
+        #if Full_API
         /// <summary>
         /// Gets a specified Online Player
         /// Input name must already be cleaned of spaces
@@ -103,7 +52,7 @@ namespace TDSM.API
             string lowercaseName = name.ToLower();
             foreach (Player player in Main.player)
             {
-                if (player.active && player.Name.ToLower().Equals(lowercaseName))
+                if (player != null && player.active && player.Name.ToLower().Equals(lowercaseName))
                     return player;
             }
             return null;
@@ -122,7 +71,9 @@ namespace TDSM.API
 					npcCount++;
             }
             return npcCount;*/
-            return (from x in Main.npc where x.active select x).Count();
+            return (from x in Main.npc
+                             where x != null && x.active
+                             select x).Count();
         }
 
         /// <summary>
@@ -134,11 +85,11 @@ namespace TDSM.API
         public static bool IsValidLocation(Vector2 point, bool defaultResist = true)
         {
             if (point != null && (defaultResist) ? (point != default(Vector2)) : true)
-                if (point.X <= Main.maxTilesX && point.X >= 0)
-                {
-                    if (point.Y <= Main.maxTilesY && point.Y >= 0)
-                        return true;
-                }
+            if (point.X <= Main.maxTilesX && point.X >= 0)
+            {
+                if (point.Y <= Main.maxTilesY && point.Y >= 0)
+                    return true;
+            }
 
             return false;
         }
@@ -173,7 +124,7 @@ namespace TDSM.API
 
             foreach (var player in Main.player)
             {
-                if (player.Name == null)
+                if (player == null || player.Name == null)
                     continue;
 
                 string playerName = player.Name;
@@ -317,14 +268,16 @@ namespace TDSM.API
                 for (var i = 0; i < Main.player.Length; i++)
                 {
                     var ply = Main.player[i];
-                    if (ply.active && ply.Name.Trim() != String.Empty)
+                    if (ply != null && ply.active && ply.Name.Trim() != String.Empty)
                     {
                         player = ply;
                         return true;
                     }
                 }
             }
-            catch { }
+            catch
+            {
+            }
 
             return false;
         }
@@ -382,7 +335,8 @@ namespace TDSM.API
         {
             for (int x = 0; x < 1000; x++)
             {
-                if (Main.projectile[x].owner == playerId && Main.projectile[x].identity == identity && Main.projectile[x].active)
+                var prj = Main.projectile[x];
+                if (prj != null && prj.owner == playerId && prj.identity == identity && prj.active)
                     return x;
             }
             return -1;
@@ -432,7 +386,9 @@ namespace TDSM.API
         {
             get
             {
-                return (from p in Terraria.Main.player where p.active select p.Name).Count();
+                return (from p in Terraria.Main.player
+                                    where p != null && p.active
+                                    select p.Name).Count();
             }
         }
 
@@ -443,7 +399,7 @@ namespace TDSM.API
                 return Main.maxNetPlayers;
             }
         }
-#endif
+        #endif
         public static RuntimePlatform RuntimePlatform
         {
             get
@@ -454,12 +410,14 @@ namespace TDSM.API
     public struct ItemInfo
     {
         public int NetID { get; set; }
+
         public int Type { get; set; }
     }
 
     public enum RuntimePlatform
     {
-        Microsoft = 1, //.net
+        Microsoft = 1,
+        //.net
         Mono
     }
 }
