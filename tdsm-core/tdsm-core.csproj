@@ -6,7 +6,7 @@
     <ProjectGuid>{48477B14-CEAA-47AA-98F1-EF935734DBC5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>TDSM.Core</RootNamespace>
-    <AssemblyName>tdsm.core</AssemblyName>
+    <AssemblyName>TDSM.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -53,11 +53,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="tdsm">
-      <HintPath>..\Binaries\tdsm.exe</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\External\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="tdsm">
+      <HintPath>..\Binaries\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -82,12 +82,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
-      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
-      <Name>tdsm-api</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Definitions\item.xml" />
     <EmbeddedResource Include="Definitions\npc.xml">
       <SubType>Designer</SubType>
@@ -96,5 +90,11 @@
   <ItemGroup />
   <ItemGroup>
     <Folder Include="RemoteConsole\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
+      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
+      <Name>tdsm-api</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

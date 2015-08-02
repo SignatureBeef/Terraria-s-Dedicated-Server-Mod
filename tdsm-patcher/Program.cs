@@ -36,39 +36,41 @@ namespace tdsm.patcher
         static void Copy(DirectoryInfo root, string project, string to, string pluginName = null, bool debugFolder = true)
         {
             var projectBinary = pluginName ?? project.Replace("-", ".");
-            var p = debugFolder ? Path.Combine(root.FullName, project, "bin", "x86", "Debug") : Path.Combine(root.FullName, project);
+            var p = debugFolder ? Path.Combine(root.FullName, project.ToLower(), "bin", "x86", "Debug") : Path.Combine(root.FullName, project);
             if (!Directory.Exists(p))
-                p = debugFolder ? Path.Combine(root.FullName, project, "bin", "Debug") : Path.Combine(root.FullName, project);
+                p = debugFolder ? Path.Combine(root.FullName, project.ToLower(), "bin", "Debug") : Path.Combine(root.FullName, project);
 
-            var dllF = Path.Combine(p, projectBinary + ".dll");
-            //			var mdbF = Path.Combine (p, projectBinary + ".mdb");
-            var ddbF = Path.Combine(p, projectBinary + ".dll.mdb");
-            var pdbF = Path.Combine(p, projectBinary + ".pdb");
+            //From the project
+            var dllFrom = Path.Combine(p, projectBinary + ".dll");
+            var ddbFrom = Path.Combine(p, projectBinary + ".dll.mdb");
+            var pdbFrom = Path.Combine(p, projectBinary + ".pdb");
 
-            var dllT = Path.Combine(to, projectBinary + ".dll");
-            //			var mdbT = Path.Combine (to, projectBinary + ".mdb");
-            var ddbT = Path.Combine(to, projectBinary + ".dll.mdb");
-            var pdbT = Path.Combine(to, projectBinary + ".pdb");
+            //To the patcher
+            var dllTo = Path.Combine(to, projectBinary + ".dll");
+            var ddbTo = Path.Combine(to, projectBinary + ".dll.mdb");
+            var pdbTo = Path.Combine(to, projectBinary + ".pdb");
 
-            if (File.Exists(dllT))
-                File.Delete(dllT);
-            //			if (File.Exists (mdbT)) File.Delete (mdbT);
-            if (File.Exists(ddbT))
-                File.Delete(ddbT);
-            if (File.Exists(pdbT))
-                File.Delete(pdbT);
+            CopyDep(dllFrom, dllTo);
+            CopyDep(ddbFrom, ddbTo);
+            CopyDep(pdbFrom, pdbTo);
+        }
 
-            if (!Directory.Exists(to))
-                Directory.CreateDirectory(to);
+        static void CopyDep(string src, string dest)
+        {
+            //Remove destination
+            if (File.Exists(dest))
+                File.Delete(dest);
+            
+            //Copy new files
 
-            if (File.Exists(dllF))
-                File.Copy(dllF, dllT);
-            //			if (File.Exists (mdbF)) File.Copy (mdbF, mdbT);
-            if (File.Exists(ddbF))
-                File.Copy(ddbF, ddbT);
-            if (File.Exists(pdbF))
-                File.Copy(pdbF, pdbT);
-
+            if (File.Exists(src))
+                File.Copy(src, dest);
+            else
+            {
+                src = src.ToLower();
+                if (File.Exists(src))
+                    File.Copy(src, dest);
+            }
         }
         #endif
 
@@ -145,9 +147,9 @@ namespace tdsm.patcher
                 root = root.Parent;
             }
 
-            Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "TDSM.API");
-            Copy(root, "tdsm-api", Environment.CurrentDirectory);
-            Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
+            Copy(root, "TDSM-API", Environment.CurrentDirectory);
+            Copy(root, "TDSM-Core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
+//            Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "TDSM.API");
             //Copy (root, "Restrict", Path.Combine (Environment.CurrentDirectory, "Plugins"), "RestrictPlugin");
             Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "KopiLua", false);
             Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "NLua", false);
@@ -599,14 +601,14 @@ namespace tdsm.patcher
             foreach (var rel in new string[]
             { 
                 "TDSM.API.dll",
+                "TDSM.API.dll.mdb",
                 "TDSM.API.pdb",
                 "Libraries" + Path.DirectorySeparatorChar + "Newtonsoft.Json.dll",
                 "Libraries" + Path.DirectorySeparatorChar + "Newtonsoft.Json.pdb",
                 "Libraries" + Path.DirectorySeparatorChar + "NLua.dll",
                 "Plugins" + Path.DirectorySeparatorChar + "TDSM.Core.dll",
                 "Plugins" + Path.DirectorySeparatorChar + "TDSM.Core.pdb",
-                "Plugins" + Path.DirectorySeparatorChar + "RestrictPlugin.dll",
-                "Plugins" + Path.DirectorySeparatorChar + "RestrictPlugin.pdb",
+                "Plugins" + Path.DirectorySeparatorChar + "TDSM.Core.dll.mdb",
                 "tdsm-patcher.exe",
                 "tdsm-patcher.pdb",
                 "Vestris.ResourceLib.dll",
