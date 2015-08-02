@@ -18,13 +18,6 @@ namespace TDSM.API.Callbacks
         public static void ProgramStart()
         {
             Console.Clear();
-            if (!ProgramLog.IsOpen)
-            {
-                var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
-                ProgramLog.OpenLogFile(logFile);
-                ConsoleSender.DefaultColour = ConsoleColor.Gray;
-            }
-
             Console.ForegroundColor = ConsoleColor.Yellow;
             ProgramLog.Log("TDSM Rebind API build {0}{1} running on {2}", 
                 Globals.Build, 
@@ -47,6 +40,13 @@ namespace TDSM.API.Callbacks
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+
+            if (!ProgramLog.IsOpen)
+            {
+                var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
+                ProgramLog.OpenLogFile(logFile);
+                ConsoleSender.DefaultColour = ConsoleColor.Gray;
             }
 
             PluginManager.SetHookSource(typeof(HookPoints));
