@@ -31,11 +31,11 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="tdsm">
-      <HintPath>..\Binaries\tdsm.exe</HintPath>
-    </Reference>
     <Reference Include="MySql.Data">
       <HintPath>Libraries\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="tdsm">
+      <HintPath>..\Binaries\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -52,12 +52,6 @@
     <Compile Include="Procedures\Procedures.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
-      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
-      <Name>tdsm-api</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="Tables\" />
     <Folder Include="Procedures\" />
@@ -78,5 +72,11 @@
     <EmbeddedResource Include="Procedures\Files\RemoveNodeFromUser.sql" />
     <EmbeddedResource Include="Procedures\Files\UserGroupList.sql" />
     <EmbeddedResource Include="Procedures\Files\UserNodes.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
+      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
+      <Name>tdsm-api</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
