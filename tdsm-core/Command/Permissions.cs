@@ -177,6 +177,9 @@ namespace TDSM.Core
 
         void UserPermission(ISender sender, ArgumentList args)
         {
+            if (!Storage.IsAvailable)
+                throw new CommandError("No permissions plugin or data plugin is attached");
+            
             int a = 0;
             string username, groupName, node, password;
             UserDetails? user;

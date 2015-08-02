@@ -121,6 +121,12 @@ namespace TDSM.API.Command
             return this;
         }
 
+        public CommandInfo ByPermissionNode(string code)
+        {
+            this.node = code + '.' + this._prefix;
+            return this;
+        }
+
         internal CommandInfo WithPermissionNode()
         {
             const String tdsm = "tdsm.";
@@ -270,92 +276,111 @@ namespace TDSM.API.Command
                 .SetDefaultUsage()
                 .WithDescription("Shutdown the server and save.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Exit);
             AddCommand("exit-nosave")
                 .SetDefaultUsage()
                 .WithDescription("Shutdown the server without saving.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.ExitNoSave);
             AddCommand("clear")
                 .SetDefaultUsage()
                 .WithDescription("Clear the console window.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Clear);
             AddCommand("motd")
                 .WithDescription("Print or change the message of the day.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.MOTD);
             AddCommand("save")
                 .SetDefaultUsage()
                 .WithDescription("Save the game world.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Save);
             AddCommand("playing")
                 .SetDefaultUsage()
                 .WithDescription("Shows the list of players.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Playing);
             AddCommand("kick")
                 .WithDescription("Kicks a player from the server.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Kick);
             AddCommand("ban")
                 .WithDescription("Bans a player from the server.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Ban);
             AddCommand("password")
                 .WithDescription("Shows or changes to password.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Password);
             AddCommand("version")
                 .SetDefaultUsage()
                 .WithDescription("Print version number.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Version);
             AddCommand("maxplayers")
                 .SetDefaultUsage()
                 .WithDescription("Print the max number of players.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.MaxPlayers);
             AddCommand("time")
                 .SetDefaultUsage()
                 .WithDescription("Display game time.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Time);
             AddCommand("port")
                 .SetDefaultUsage()
                 .WithDescription("Print the listening port.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Port);
             AddCommand("dawn")
                 .SetDefaultUsage()
                 .WithDescription("Change time to dawn.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Dawn);
             AddCommand("noon")
                 .SetDefaultUsage()
                 .WithDescription("Change time to noon.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Noon);
             AddCommand("dusk")
                 .SetDefaultUsage()
                 .WithDescription("Change time to dusk.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Dusk);
             AddCommand("midnight")
                 .SetDefaultUsage()
                 .WithDescription("Change time to midnight.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Midnight);
             AddCommand("settle")
                 .SetDefaultUsage()
                 .WithDescription("Settle all water.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.Settle);
             AddCommand("fps")
                 .SetDefaultUsage()
                 .WithDescription("Toggle FPS monitoring.")
                 .WithAccessLevel(AccessLevel.OP)
+                .ByPermissionNode("terraria")
                 .Calls(DefaultCommands.FPS);
 
             AddCommand("help")
