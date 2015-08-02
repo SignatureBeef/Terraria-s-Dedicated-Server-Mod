@@ -4,11 +4,70 @@ using TDSM.API.Plugin;
 using TDSM.API.Sockets;
 using TDSM.API.Logging;
 using TDSM.API.Command;
+using System.Reflection;
+using System.Linq;
+using System.IO;
 
 namespace TDSM.API.Callbacks
 {
     public static class MainCallback
     {
+        static MainCallback()
+        {   
+            //Resolves external plugin hook assemblies. So there is no need to place the DLL beside tdsm.exe
+            AppDomain.CurrentDomain.AssemblyResolve += (s, a) =>
+            {
+                try
+                {
+                    if (a.Name == "Terraria")
+                        return Assembly.GetEntryAssembly();
+                        
+                    if (PluginManager._plugins != null)
+                    {
+                        var items = PluginManager._plugins.Values
+                            .Where(x => x != null && x.Assembly != null && x.Assembly.FullName == a.Name)
+                            .Select(x => x.Assembly)
+                                .FirstOrDefault();
+                        //if (items == null)
+                        //{
+                        //    Tools.WriteLine("[Fatal] Unable to load {0}, was this plugin removed or do you need to repatch?", a.Name);
+                        //}
+
+                        if (items != null)
+                            return items;
+                    }
+
+                    //Look in libraries - assembly name must match filename
+                    var ix = a.Name.IndexOf(',');
+                    if (ix > -1)
+                    {
+                        var loc = Path.Combine(Globals.LibrariesPath, a.Name.Substring(0, ix) + ".dll");
+                        if (File.Exists(loc))
+                        {
+                            using (var ms = new MemoryStream())
+                            {
+                                var buff = new byte[256];
+                                using (var fs = File.OpenRead(loc))
+                                {
+                                    while (fs.Position < fs.Length)
+                                    {
+                                        var read = fs.Read(buff, 0, buff.Length);
+                                        ms.Write(buff, 0, read);
+                                    }
+                                }
+                                return Assembly.Load(ms.ToArray());
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                return null;
+            };
+        }
+
         public static Action StatusTextChange;
         public static Action UpdateServer;
 
@@ -27,7 +86,7 @@ namespace TDSM.API.Callbacks
             Console.ForegroundColor = Command.ConsoleSender.DefaultColour;
 
             Globals.Touch();
-//            ID.Lookup.Initialise();
+            ID.Lookup.Initialise();
 
             try
             {
@@ -42,6 +101,11 @@ namespace TDSM.API.Callbacks
                 Console.WriteLine(e);
             }
 
+            //This will setup the assembly resolves
+            PluginManager.Initialize(Globals.PluginPath);
+            PluginManager.SetHookSource(typeof(HookPoints));
+
+            //Load the logs
             if (!ProgramLog.IsOpen)
             {
                 var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
@@ -49,8 +113,7 @@ namespace TDSM.API.Callbacks
                 ConsoleSender.DefaultColour = ConsoleColor.Gray;
             }
 
-            PluginManager.SetHookSource(typeof(HookPoints));
-            PluginManager.Initialize(Globals.PluginPath);
+            //Load plugins
             PluginManager.LoadPlugins();
 
 //            if (!Permissions.PermissionsManager.IsSet)

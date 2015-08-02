@@ -69,6 +69,9 @@
     <Reference Include="tdsm">
       <HintPath>..\Binaries\tdsm.exe</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\External\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Callbacks\Configuration.cs" />

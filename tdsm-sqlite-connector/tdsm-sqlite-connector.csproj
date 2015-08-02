@@ -37,6 +37,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="TDSM.API">
+      <HintPath>..\Binaries\TDSM.API.dll</HintPath>
+    </Reference>
     <Reference Include="tdsm">
       <HintPath>..\Binaries\tdsm.exe</HintPath>
     </Reference>
@@ -58,10 +61,4 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
-      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
-      <Name>tdsm-api</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>
