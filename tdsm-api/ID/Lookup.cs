@@ -42,7 +42,7 @@ namespace TDSM.API.ID
             }
             catch (Exception e)
             {
-                ProgramLog.Log(e);
+                Console.WriteLine(e);
             }
 #endif
         }
