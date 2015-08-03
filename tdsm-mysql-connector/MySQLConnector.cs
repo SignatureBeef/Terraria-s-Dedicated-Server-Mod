@@ -18,7 +18,7 @@ namespace TDSM.Data.MySQL
 
         public int? MaxScale { get; set; }
 
-        public ProcedureParameter(string name, Type dataType, int? minScale = null, int? maxScale = null)
+        public ProcedureParameter(string name, Type dataType, int? minScale = null, int? maxScale = null) : this()
         {
             this.Name = name;
 
