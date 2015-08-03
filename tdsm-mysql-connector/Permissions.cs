@@ -87,7 +87,7 @@ namespace TDSM.Data.MySQL
             return null;
         }
 
-        bool IPermissionHandler.AddOrUpdateGroup(string name, bool applyToGuests = false, string parent = null, byte r = 255, byte g = 255, byte b = 255, string prefix = null, string suffix = null)
+        bool IPermissionHandler.AddOrUpdateGroup(string name, bool applyToGuests, string parent, byte r, byte g, byte b, string prefix, string suffix)
         {   
             using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
             {
@@ -118,7 +118,7 @@ namespace TDSM.Data.MySQL
             }
         }
 
-        bool IPermissionHandler.AddGroupNode(string groupName, string node, bool deny = false)
+        bool IPermissionHandler.AddGroupNode(string groupName, string node, bool deny)
         {
             using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
             {
@@ -132,7 +132,7 @@ namespace TDSM.Data.MySQL
             }
         }
 
-        bool IPermissionHandler.RemoveGroupNode(string groupName, string node, bool deny = false)
+        bool IPermissionHandler.RemoveGroupNode(string groupName, string node, bool deny)
         {
             using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
             {
@@ -202,7 +202,7 @@ namespace TDSM.Data.MySQL
             }
         }
 
-        bool IPermissionHandler.AddNodeToUser(string username, string node, bool deny = false)
+        bool IPermissionHandler.AddNodeToUser(string username, string node, bool deny)
         {
             using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
             {
@@ -216,7 +216,7 @@ namespace TDSM.Data.MySQL
             }
         }
 
-        bool IPermissionHandler.RemoveNodeFromUser(string username, string node, bool deny = false)
+        bool IPermissionHandler.RemoveNodeFromUser(string username, string node, bool deny)
         {
             using (var sb = new MySQLQueryBuilder(SqlPermissions.SQLSafeName))
             {
