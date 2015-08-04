@@ -45,3 +45,5 @@ A block protection plugin for specific areas designated by a player.
 * Last command, command.  
 For example, be able to issue `/!` command to re-execute the last command that player (or console) has used along with parameters.
 * PVP / Mini-game
+
+Also please take a look at our [DEVELOPMENT.MD](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/blob/master/DEVELOPMENT.MD) file.
