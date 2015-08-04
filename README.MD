@@ -36,10 +36,10 @@ The VPS server we are hosting it on was provided to us by CreeperHost. We want t
 * PORT = **7777**
 
 ## Developers. We Need You!
-If you can help with development, we would be happy to have your help! :) TDSM is written in C#. If you know other languages or would like to develop plugins instead, we need those too. Plugins are writting in C#, Lua, VB, and F#.
+If you can help with development, we would be happy to have your help! :) TDSM is written in C#. If you know other languages or would like to develop plugins instead, we need those too. Plugins can be written in C#, Lua, VB.NET, and F#.
 #### Plugins Wanted
 Here are a few Plugin ideas we would like to see. Of course you may make whatever kind of plugin you like.
-* Regeons / Home Protection  
+* Regions / Home Protection  
 A block protection plugin for specific areas designated by a player.
 * Sort Containers / Inventory
 * Last command, command.  
