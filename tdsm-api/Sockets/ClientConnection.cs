@@ -70,7 +70,7 @@ namespace TDSM.API.Sockets
             var args = new HookArgs.NewConnection();
             
             HookPoints.NewConnection.Invoke(ref ctx, ref args);
-            
+
             if (ctx.CheckForKick())
                 return;
 

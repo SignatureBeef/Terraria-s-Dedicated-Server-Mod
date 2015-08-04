@@ -27,9 +27,13 @@ namespace TDSM.API.Plugin
         public RemoteClient Client
         {
             get
-            { 
-                var slot = Player.whoAmI;
-                return Terraria.Netplay.Clients[slot];
+            {
+                if (Player != null)
+                {
+                    var slot = Player.whoAmI;
+                    return Terraria.Netplay.Clients[slot];
+                }
+                return null;
             }
         }
 
@@ -55,11 +59,18 @@ namespace TDSM.API.Plugin
                 if (Result == HookResult.KICK)
                 {
                     var reason = ResultParam as string;
-                    Client.Kick(reason ?? "Connection closed by plugin.");
+                    if (Client != null)
+                    {
+                        Client.Kick(reason ?? "Connection closed by plugin.");
+                    }
+                    else
+                    {
+                        Connection.Close();
+                    }
                     return true;
                 }
 //                else if (Connection.DisconnectInProgress())
-                else if (Client.PendingTermination)
+                else if (Client != null && Client.PendingTermination)
                 {
                     return true;
                 }

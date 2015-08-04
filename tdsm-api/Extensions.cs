@@ -26,6 +26,10 @@ namespace TDSM.API
 
         public static void Kick(this Terraria.RemoteClient sock, string reason)
         {
+            if (sock != null)
+                Console.WriteLine("KICKING: " + sock.Id);
+            else
+                Console.WriteLine("KICKING: ST");
             Terraria.NetMessage.SendData((int)Packet.DISCONNECT, sock.Id, -1, reason);
         }
         #endif
