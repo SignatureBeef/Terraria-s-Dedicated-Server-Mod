@@ -14,6 +14,8 @@ using TDSM.API.Logging;
 using TDSM.Core.Misc;
 using TDSM.API.Misc;
 using TDSM.Core.RemoteConsole;
+using TDSM.Core.ServerCharacters;
+using Terraria;
 
 namespace TDSM.Core
 {
@@ -81,6 +83,8 @@ namespace TDSM.Core
         public static DataRegister Ops { get; private set; }
 
         public int ExitAccessLevel { get; set; }
+
+        public bool EnableHeartbeat { get; set; }
 
         public Entry()
         {
@@ -573,7 +577,22 @@ namespace TDSM.Core
             //The player may randomly disconnect at any time, and if it's before the point of saving then the data may be lost.
             //So we must ensure the data is saved.
             //ServerCharacters.CharacterManager.EnsureSave = true;
+
+            if (CharacterManager.Mode == CharacterMode.UUID)
+            {
+                CharacterManager.LoadForAuthenticated(ctx.Player);
+            }
         }
+
+        [Hook(HookOrder.NORMAL)]
+        void OnPlayerAuthenticated(ref HookContext ctx, ref HookArgs.PlayerAuthenticationChanged args)
+        {
+            if (CharacterManager.Mode == CharacterMode.AUTH)
+            {
+                CharacterManager.LoadForAuthenticated(ctx.Player);
+            }
+        }
+
 
         [Hook(HookOrder.NORMAL)]
         void OnStartCommandProcessing(ref HookContext ctx, ref HookArgs.StartCommandProcessing args)
@@ -682,10 +701,10 @@ namespace TDSM.Core
                 //TODO: verify
             }
 
-            //if (Terraria.Main.ServerSideCharacter)
-            //{
-            //    ServerCharacters.CharacterManager.SaveAll();
-            //}
+            if (Terraria.Main.ServerSideCharacter)
+            {
+                ServerCharacters.CharacterManager.SaveAll();
+            }
         }
 
         //[Hook(HookOrder.NORMAL)]
@@ -830,7 +849,7 @@ namespace TDSM.Core
                     bool hb;
                     if (Boolean.TryParse(args.Value, out hb) && hb)
                     {
-                        Heartbeat.Begin(CoreBuild);
+                        EnableHeartbeat = true;
                     }
                     break;
                 case "server-list":
@@ -902,11 +921,15 @@ namespace TDSM.Core
                     }
                     break;
                 case "server-side-characters":
-                    bool serverSideCharacters;
-                    if (Boolean.TryParse(args.Value, out serverSideCharacters))
+                    CharacterMode characterMode;
+                    if (CharacterMode.TryParse(args.Value, out characterMode))
                     {
-                        Terraria.Main.ServerSideCharacter = serverSideCharacters;
+                        Terraria.Main.ServerSideCharacter = characterMode != CharacterMode.NONE;
+                        CharacterManager.Mode = characterMode;
+                        ProgramLog.Admin.Log("SSC are enabled with mode " + characterMode);
                     }
+                    else
+                        ProgramLog.Error.Log("Failed to parse line server-side-characters. No SSC will be used.");
                     break;
                 case "tdsm-server-core":
                     bool runServerCore;
@@ -926,6 +949,29 @@ namespace TDSM.Core
         }
 
         [Hook(HookOrder.NORMAL)]
+        void OnGreetPlayer(ref HookContext ctx, ref HookArgs.PlayerPreGreeting args)
+        {
+            ctx.SetResult(HookResult.IGNORE);
+            var lines = args.Motd.Split('\\', 'n');
+            foreach (var lin in lines)
+                ctx.Player.SendMessage(args.Motd, 255, 0, 0, 255);
+
+            string list = "";
+            for (int i = 0; i < 255; i++)
+            {
+                if (Main.player[i].active)
+                {
+                    if (list == "")
+                        list += Main.player[i].name;
+                    else
+                        list = list + ", " + Main.player[i].Name;
+                }
+            }
+
+            ctx.Player.SendMessage("Current players: " + list + ".", 255, 255, 240, 20);
+        }
+
+        [Hook(HookOrder.NORMAL)]
         void OnServerStateChange(ref HookContext ctx, ref HookArgs.ServerStateChange args)
         {
             ProgramLog.Log("Server state changed to: " + args.ServerChangeState.ToString());
@@ -941,6 +987,10 @@ namespace TDSM.Core
             if (args.ServerChangeState == ServerState.Stopping)
             {
                 RemoteConsole.RConServer.Stop();
+            }
+            if (args.ServerChangeState == ServerState.Starting)
+            {
+                Heartbeat.Begin(CoreBuild);
             }
 
             //if (args.ServerChangeState == ServerState.Initialising)

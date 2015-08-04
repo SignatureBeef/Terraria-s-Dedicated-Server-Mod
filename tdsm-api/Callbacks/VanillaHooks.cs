@@ -67,21 +67,24 @@ namespace TDSM.API.Callbacks
                 return false;
             }
 
-            player.SendMessage(args.Motd, 255, args.MotdColour.R, args.MotdColour.G, args.MotdColour.B);
-
-            string list = "";
-            for (int i = 0; i < 255; i++)
+            if (ctx.Result == HookResult.DEFAULT)
             {
-                if (Main.player[i].active)
-                {
-                    if (list == "")
-                        list += Main.player[i].name;
-                    else
-                        list = list + ", " + Main.player[i].Name;
-                }
-            }
+                player.SendMessage(args.Motd, 255, args.MotdColour.R, args.MotdColour.G, args.MotdColour.B);
 
-            player.SendMessage("Current players: " + list + ".", 255, 255, 240, 20);
+                string list = "";
+                for (int i = 0; i < 255; i++)
+                {
+                    if (Main.player[i].active)
+                    {
+                        if (list == "")
+                            list += Main.player[i].name;
+                        else
+                            list = list + ", " + Main.player[i].Name;
+                    }
+                }
+
+                player.SendMessage("Current players: " + list + ".", 255, 255, 240, 20);
+            }
 
             ProgramLog.Users.Log("{0} @ {1}: ENTER {2}", Netplay.Clients[playerId].Socket.GetRemoteAddress(), playerId, player.name);
 

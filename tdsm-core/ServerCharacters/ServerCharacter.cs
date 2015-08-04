@@ -7,6 +7,7 @@ namespace TDSM.Core.ServerCharacters
     public class NewPlayerInfo
     {
         public int Mana { get; set; }
+
         public int Health { get; set; }
 
         public PlayerItem[] Inventory { get; set; }
@@ -17,29 +18,50 @@ namespace TDSM.Core.ServerCharacters
         public bool Male { get; set; }
 
         public int Mana { get; set; }
+
         public int Health { get; set; }
+
         public int MaxHealth { get; set; }
 
         public int SpawnX { get; set; }
+
         public int SpawnY { get; set; }
 
         public int Hair { get; set; }
+
         public byte HairDye { get; set; }
 
         public bool[] HideVisual { get; set; }
+
         public byte Difficulty { get; set; }
 
         public SimpleColor HairColor { get; set; }
+
         public SimpleColor SkinColor { get; set; }
+
         public SimpleColor EyeColor { get; set; }
+
         public SimpleColor ShirtColor { get; set; }
+
         public SimpleColor UnderShirtColor { get; set; }
+
         public SimpleColor PantsColor { get; set; }
+
         public SimpleColor ShoeColor { get; set; }
 
         public System.Collections.Generic.List<SlotItem> Inventory { get; set; }
+
         public System.Collections.Generic.List<SlotItem> Dye { get; set; }
+
         public System.Collections.Generic.List<SlotItem> Armor { get; set; }
+
+        /// <summary>
+        /// NEVER USE THIS - Reflection only
+        /// 
+        /// </summary>
+        public ServerCharacter()
+        {
+        }
 
         /// <summary>
         /// Creates a new server config based off a Terrarian player instance
@@ -254,19 +276,26 @@ namespace TDSM.Core.ServerCharacters
             this.PantsColor = null;
             this.ShoeColor = null;
 
-            this.Inventory.Clear(); this.Inventory = null;
-            this.Dye.Clear(); this.Dye = null;
-            this.Armor.Clear(); this.Armor = null;
+            this.Inventory.Clear();
+            this.Inventory = null;
+            this.Dye.Clear();
+            this.Dye = null;
+            this.Armor.Clear();
+            this.Armor = null;
         }
     }
 
     public class SimpleColor
     {
         public byte R { get; set; }
+
         public byte G { get; set; }
+
         public byte B { get; set; }
 
-        public SimpleColor() { }
+        public SimpleColor()
+        {
+        }
 
         public SimpleColor(Microsoft.Xna.Framework.Color color)
         {
@@ -289,7 +318,9 @@ namespace TDSM.Core.ServerCharacters
     public class PlayerItem
     {
         public int NetId { get; set; }
+
         public int Stack { get; set; }
+
         public byte Prefix { get; set; }
 
         public PlayerItem(int netId, int stack, byte prefix)

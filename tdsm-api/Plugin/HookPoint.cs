@@ -17,7 +17,7 @@ namespace TDSM.API.Plugin
 
         //        public RemoteClient Client { get; set; }
 
-        public int SlotId { get; set; }
+        //        public int SlotId { get; set; }
 
         public ISender Sender { get; set; }
 
@@ -26,7 +26,11 @@ namespace TDSM.API.Plugin
 
         public RemoteClient Client
         {
-            get { return Terraria.Netplay.Clients[SlotId]; }
+            get
+            { 
+                var slot = Player.whoAmI;
+                return Terraria.Netplay.Clients[slot];
+            }
         }
 
         public Player Player { get; set; }

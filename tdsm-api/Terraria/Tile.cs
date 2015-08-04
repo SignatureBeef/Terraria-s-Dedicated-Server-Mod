@@ -1,4 +1,5 @@
-﻿#define STRUCT
+﻿
+#define STRUCT
 //#define VANILLACOMPAT
 #define TESTING
 using Microsoft.Xna.Framework;
@@ -40,21 +41,31 @@ namespace TDSM.API.Memory
         public static void Prepare(int width, int height)
         {
             data = new TileRef[width + 1, height + 1];
-
         }
 
-        private void testingggg()
+        public static void SetTile(int x, int y, MemTile tile)
         {
-//            Terraria.Main.tile[1234, 1111] = new MemTile(1234, 1111);
-            var mt = new MemTile(1234, 4321);
-            mt.liquid = 1;
-            var gg = "start";
-            if (mt.liquid > 0)
+            #if MemTile
+            if (null == data)
             {
-                gg = "middle";
+                Prepare(8400, 2400);
             }
-            gg = "end";
-            System.Console.WriteLine(gg);
+//            System.Console.WriteLine(x + ',' + y);
+            if (null == Terraria.Main.tile[x, y])
+            {
+                Terraria.Main.tile[x, y] = new MemTile(x, y);
+            }
+            else
+            {
+                Terraria.Main.tile[x, y].x = (short)x;
+                Terraria.Main.tile[x, y].y = (short)y;
+            }
+
+            if (tile != null)
+            {
+                data[x, y] = data[tile.x, tile.y];
+            }
+            #endif
         }
 
         #if TESTING
@@ -758,6 +769,12 @@ namespace TDSM.API.Memory
 
         public static bool operator ==(MemTile t1, MemTile t2)
         {
+            if (((object)t1) == null && ((object)t2) == null)
+                return true;
+            if (((object)t1) == null)
+                return false;
+            if (((object)t2) == null)
+                return false;
             return t1.x == t2.x
             && t1.y == t2.y
             && t1.liquid == t2.liquid
@@ -771,6 +788,12 @@ namespace TDSM.API.Memory
 
         public static bool operator !=(MemTile t1, MemTile t2)
         {
+            if (t1 == null && t2 == null)
+                return false;
+            if (t1 == null)
+                return true;
+            if (t2 == null)
+                return true;
             return t1.x != t2.x
             || t1.y != t2.y
             || t1.liquid != t2.liquid
@@ -1559,6 +1582,12 @@ namespace TDSM.API.Memory
 
 
 
+
+
+
+
+
+
 #if Full_API
     if (Terraria.Main.tileSolid[(int)this.type] && !Terraria.Main.tileSolidTop[(int)this.type])
     {
@@ -1663,6 +1692,12 @@ public bool isTheSameAs(VanillaTile compTile)
             return false;
         }
     
+
+
+
+
+
+
 
 
 
@@ -2042,6 +2077,12 @@ public static void SmoothSlope(int x, int y, bool applyToNeighbors = true)
 
 
 
+
+
+
+
+
+
 #if Full_API
     var tile = Terraria.Main.tile[x, y];
     if (!Terraria.WorldGen.SolidOrSlopedTile(x, y))
@@ -2101,6 +2142,12 @@ public void ClearMetadata()
 }
 }
     
+
+
+
+
+
+
 
 
 

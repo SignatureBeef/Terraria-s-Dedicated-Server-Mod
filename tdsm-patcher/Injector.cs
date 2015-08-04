@@ -146,7 +146,10 @@ namespace tdsm.patcher
 
         private void SwapVanillaType(TypeDefinition ty)
         {
-            var vt = _asm.MainModule.Import(_self.MainModule.Types.Single(x => x.Name == "MemTile"));
+            var memTile = _self.MainModule.Types.Single(x => x.Name == "MemTile");
+            var vt = _asm.MainModule.Import(memTile);
+            var setCall = _asm.MainModule.Import(memTile.Methods.Single(x => x.Name == "SetTile"));
+            var emptyTile = _asm.MainModule.Import(memTile.Fields.Single(x => x.Name == "Empty"));
             //var vt = _asm.MainModule.Import(_self.MainModule.Types.Single(x => x.Name == "VanillaTile"));
 
             if (ty.Name != "Tile")
@@ -190,6 +193,52 @@ namespace tdsm.patcher
                             for (var i = mth.Body.Instructions.Count - 1; i > 0; i--)
                             {
                                 var ins = mth.Body.Instructions[i];
+
+
+//                                if (mth.Name == "clearWorld")
+                                {
+                                    var sss = "";
+                                    if (ins.OpCode == OpCodes.Call && ins.Operand is MemberReference)
+                                    {
+                                        var mr = ins.Operand as MemberReference; 
+                                        if (mr.Name == "Set" && mr.DeclaringType is ArrayType && (mr.DeclaringType as ArrayType).ElementType.Name == "MemTile")
+                                        {
+                                            //Swap
+                                            var il = mth.Body.GetILProcessor();
+
+//                                            if (ins.Previous != null && ins.Previous.OpCode == OpCodes.Ldnull)
+//                                            {
+//                                                il.Replace(ins.Previous, il.Create(OpCodes.Ldsfld, emptyTile));
+//                                            }
+
+                                            //Remove previous instructions to remove the array instance
+
+                                            var iii = ins.Previous;
+                                            while (true)
+                                            {
+
+                                                if ((iii.Operand is FieldReference
+                                                    && (iii.Operand as FieldReference).Name == "tile") || 
+                                                    (iii.Operand is MethodReference && (iii.Operand as MethodReference).Name == "get__tiles"))
+                                                {
+                                                    il.Remove(iii);
+                                                    i--;
+                                                    break;
+                                                }
+                                                else
+                                                {
+//                                                    il.Remove(ins.Previous);
+                                                    iii = iii.Previous;
+//                                                    i--;
+                                                }
+                                            }
+
+                                            il.Replace(ins, il.Create(OpCodes.Call, setCall));
+                                        }
+                                    }
+                                }
+
+
                                 if (ins.Operand is MethodReference)
                                 {
                                     var meth = ins.Operand as MethodReference;
@@ -252,80 +301,49 @@ namespace tdsm.patcher
                                                 throw new InvalidDataException(String.Format("Failed to grab MemTile constructor in method {0}, instruction offset {1}", mth.FullName, i));
                                             }*/
 
-                                            var twoFrom = -1;
-                                            var insertTo = 0;
 
-                                            if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Call
-                                                && ins.Previous.OpCode == OpCodes.Ldloc_S
-                                                && ins.Previous.Previous.OpCode == OpCodes.Ldloc_S)
-                                            {
-                                                //Direct array assign
-                                                twoFrom = i - 2;
-                                                insertTo = i - 1;
+//                                            //Determine what initialisation methods are used.
+//
+//                                            //Assigning to an existing MemTile
+//                                            if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_S)
+//                                            {
+////                                                var vbl = mth.Body.Variables[(int)ins.Next.Operand];
+//                                                if (ins.Next.Operand is VariableReference)
+//                                                {
+//                                                    var vr = ins.Next.Operand as VariableReference;
+//                                                    if (vr.VariableType.Name == "MemTile")
+//                                                    {
+//                                                        var asd = "";
+//                                                    }
+//                                                    else
+//                                                    {
+//                                                        var asd = "";
+//                                                    }
+//                                                }
+//                                                else
+//                                                {
+//                                                    var asd = "";
+//                                                }
+//                                            }
 
 
-//                                                var first = ins.Previous.Previous;
-//                                                var second = ins.Previous;
+                                            //INSTEAD OF UPDATING CONSTRUCTORS, REPLACE Main.tile.Set(int, int, tile)! Why did it not do this earlier
+
+
+//                                            if (twoFrom > 0)
+//                                            {
+//                                                var first = mth.Body.Instructions[twoFrom];
+//                                                var second = first.Next;
 //
 //                                                var il = mth.Body.GetILProcessor();
-//                                                il.InsertAfter(second, second);
-//                                                il.InsertAfter(second, first);
-                                            }
-                                            else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_S && ins.Next.Next.OpCode == OpCodes.Ldsfld)
-                                            {
-                                                //Assigned after
-                                                //Skip 2
-                                                //
-                                                twoFrom = i + 3;
-                                                insertTo = i - 1;
-                                            }
-                                            else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_0 && ins.Next.Next.OpCode == OpCodes.Ldsfld)
-                                            {
-                                                //Assigned after
-                                                //Skip 2
-                                            }
-                                            else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_1 && ins.Next.Next.OpCode == OpCodes.Ldsfld)
-                                            {
-                                                //Assigned after
-                                                //Skip 2
-                                                //
-                                            }
-                                            else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_3 && ins.Next.Next.OpCode == OpCodes.Ldsfld)
-                                            {
-                                                //Assigned after
-                                                //Skip 2
-                                                //
-                                            }
-                                            else if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Dup && ins.Next.Next.OpCode == OpCodes.Stloc_S && ins.Next.Next.Next.OpCode == OpCodes.Call)
-                                            {
-                                                //Assigned after
-                                                //Skip 3
-                                                //
-                                            }
-                                            else if (ty.Name == "LiquidRenderer" && mth.Name == ".cctor")
-                                            {
-                                                //Add 0,0 or replace with EMPTY_TILE
-                                            }
-                                            else
-                                            {
-
-                                            }
-
-                                            if (twoFrom > 0)
-                                            {
-                                                var first = mth.Body.Instructions[
-                                                                twoFrom];
-                                                var second = first.Next;
-
-                                                var il = mth.Body.GetILProcessor();
-                                                il.InsertBefore(ins, first);
-                                                il.InsertBefore(ins, second);
-
-                                                i -= 2;
-
-                                                ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == 2 && x.Parameters[0].ParameterType.Name == "Int32"));
-                                                continue;
-                                            }
+//                                                il.InsertBefore(ins, first);
+//                                                il.InsertBefore(ins, second);
+//
+//                                                i -= 2;
+//
+//                                                ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == 2 && x.Parameters[0].ParameterType.Name == "Int32"));
+//                                                continue;
+//                                            }
 
                                             ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == meth.Parameters.Count));
                                             continue;
@@ -341,6 +359,7 @@ namespace tdsm.patcher
                                         {
                                             meth.DeclaringType = SwapToVanillaReference(meth.DeclaringType, vt);
                                             //ins.Operand = _asm.MainModule.Import(tp.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == meth.Parameters.Count));
+
                                         }
                                     }
 
@@ -586,17 +605,18 @@ namespace tdsm.patcher
         public void HookWorldFile_DEBUG()
         {
 
-            //Make public
-            var fld = Terraria.WorldGen.Fields.Single(x => x.Name == "lastMaxTilesX");
-            fld.IsPrivate = false;
-            fld.IsFamily = false;
-            fld.IsPublic = true;
-
-            fld = Terraria.WorldGen.Fields.Single(x => x.Name == "lastMaxTilesY");
-            fld.IsPrivate = false;
-            fld.IsFamily = false;
-            fld.IsPublic = true;
+//            //Make public
+//            var fld = Terraria.WorldGen.Fields.Single(x => x.Name == "lastMaxTilesX");
+//            fld.IsPrivate = false;
+//            fld.IsFamily = false;
+//            fld.IsPublic = true;
+//
+//            fld = Terraria.WorldGen.Fields.Single(x => x.Name == "lastMaxTilesY");
+//            fld.IsPrivate = false;
+//            fld.IsFamily = false;
+//            fld.IsPublic = true;
             //            return;
+
             var mth = Terraria.WorldGen.Methods.Single(x => x.Name == "serverLoadWorldCallBack" && x.IsStatic);
             var replacement = API.WorldFileCallback.Methods.Single(x => x.Name == "loadWorld" && x.IsStatic);
 

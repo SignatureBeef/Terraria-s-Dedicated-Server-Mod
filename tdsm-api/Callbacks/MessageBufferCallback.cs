@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using Microsoft.Xna.Framework;
 using System;
 using TDSM.API.Plugin;
 using TDSM.API.Logging;
@@ -107,7 +108,9 @@ namespace TDSM.API.Callbacks
             {
                 var ctx = new HookContext
                 {
-                    Connection = conn.Socket
+                    Connection = conn.Socket,
+                    Player = player,
+                    Sender = player
                 };
 
                 var args = new HookArgs.ServerPassReceived

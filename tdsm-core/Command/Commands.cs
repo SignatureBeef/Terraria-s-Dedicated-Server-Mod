@@ -1945,6 +1945,7 @@ namespace TDSM.Core
                         {
                             player.SendMessage("You are now a server operator.", Color.Green);
                             player.Op = true;
+                            player.SetAuthentication(player.name, "tdsm");
                         }
 
                         sender.Message("Op success", Color.DarkGreen);
@@ -1981,6 +1982,7 @@ namespace TDSM.Core
                 {
                     player.SendMessage("You are now a server operator.", Color.Green);
                     player.Op = true;
+                    player.SetAuthentication(player.name, "tdsm");
                 }
 
                 if (!Ops.Save())
@@ -2025,6 +2027,7 @@ namespace TDSM.Core
                     {
                         player.SendMessage("Your server operator privledges have been revoked.", Color.DarkRed);
                         player.Op = false;
+                        player.SetAuthentication(null, "tdsm");
                     }
 
                     if (AuthenticatedUsers.UpdateUser(playerName, false))
@@ -2050,6 +2053,7 @@ namespace TDSM.Core
                     {
                         player.SendMessage("Your server operator privledges have been revoked.", Color.Green);
                         player.Op = false;
+                        player.SetAuthentication(null, "tdsm");
                     }
 
                     Tools.NotifyAllOps("De-Opping " + playerName + " [" + sender.SenderName + "]", true);

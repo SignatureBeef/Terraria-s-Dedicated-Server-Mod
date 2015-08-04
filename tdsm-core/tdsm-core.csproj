@@ -79,6 +79,7 @@
     <Compile Include="RemoteConsole\RConSender.cs" />
     <Compile Include="RemoteConsole\RConServer.cs" />
     <Compile Include="Command\Permissions.cs" />
+    <Compile Include="ServerCharacters\CharacterMode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
