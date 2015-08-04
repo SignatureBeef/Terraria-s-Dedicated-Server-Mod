@@ -934,6 +934,8 @@ namespace TDSM.Core
                         Terraria.Main.ServerSideCharacter = characterMode != CharacterMode.NONE;
                         CharacterManager.Mode = characterMode;
                         ProgramLog.Admin.Log("SSC are enabled with mode " + characterMode);
+
+                        Hook(HookPoints.ReceiveNetMessage, OnNetMessageReceived);
                     }
                     else
                         ProgramLog.Error.Log("Failed to parse line server-side-characters. No SSC will be used.");
@@ -1098,6 +1100,23 @@ namespace TDSM.Core
             }
 
             return input;
+        }
+
+        //        [Hook]
+        void OnNetMessageReceived(ref HookContext ctx, ref HookArgs.ReceiveNetMessage args)
+        {
+            if (Terraria.Main.ServerSideCharacter)
+            {
+                switch ((Packet)args.PacketId)
+                {
+                    case Packet.INVENTORY_DATA:
+                        ctx.SetResult(HookResult.IGNORE);
+
+                        //Ignore SSC data and relay nothing [TBC]
+
+                        break;
+                }
+            }
         }
 
         private int lastWritten = 0;

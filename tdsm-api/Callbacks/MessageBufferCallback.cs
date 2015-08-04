@@ -68,6 +68,30 @@ namespace TDSM.API.Callbacks
             }
             #endif
 
+            var ctx = new HookContext()
+            {
+                Connection = Netplay.Clients[bufferId].Socket,
+                Player = Main.player[bufferId],
+                Sender = Main.player[bufferId] 
+            };
+            var args = new HookArgs.ReceiveNetMessage()
+            {
+                BufferId = bufferId,
+                PacketId = packetId,   
+                Start = start,   
+                Length = length
+            };
+            HookPoints.ReceiveNetMessage.Invoke(ref ctx, ref args);
+
+            if (ctx.Result == HookResult.IGNORE)
+            {
+                return 0;
+            }
+            else if (ctx.Result == HookResult.RECTIFY)
+            {
+                return (byte)ctx.ResultParam;
+            }
+
             return packetId;
         }
 

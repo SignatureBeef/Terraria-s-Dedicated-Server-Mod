@@ -20,7 +20,7 @@ namespace TDSM.API.Callbacks
             {
                 Sender = HookContext.ConsoleSender
             };
-            var args = new HookArgs.SendNetData()
+            var args = new HookArgs.SendNetMessage()
             {
                 MsgType = msgType,
                 RemoteClient = remoteClient,
@@ -32,7 +32,7 @@ namespace TDSM.API.Callbacks
                 Number4 = number4,
                 Number5 = number5
             };
-            HookPoints.SendNetData.Invoke(ref ctx, ref args);
+            HookPoints.SendNetMessage.Invoke(ref ctx, ref args);
             return ctx.Result == HookResult.DEFAULT;
             #else
             return false;

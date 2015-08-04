@@ -130,7 +130,6 @@ namespace TDSM.Core.ServerCharacters
 
             if (!String.IsNullOrEmpty(authName))
             {
-                ProgramLog.Log("Saving SSC for " + authName);
                 if (Storage.IsAvailable)
                 {
 

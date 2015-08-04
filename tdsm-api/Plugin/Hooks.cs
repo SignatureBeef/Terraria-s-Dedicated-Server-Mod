@@ -21,9 +21,10 @@ namespace TDSM.API.Plugin
         public static readonly HookPoint<HookArgs.NewConnection> NewConnection;
         public static readonly HookPoint<HookArgs.ServerStateChange> ServerStateChange;
         public static readonly HookPoint<HookArgs.PluginLoadRequest> PluginLoadRequest;
-        //public static readonly HookPoint<HookArgs.UnkownSendPacket> UnkownSendPacket;
-        //public static readonly HookPoint<HookArgs.UnkownReceivedPacket> UnkownReceivedPacket;
-        public static readonly HookPoint<HookArgs.SendNetData> SendNetData;
+        //        public static readonly HookPoint<HookArgs.UnknownSendPacket> UnknownSendPacket;
+        //        public static readonly HookPoint<HookArgs.UnknownReceivedPacket> UnknownReceivedPacket;
+        public static readonly HookPoint<HookArgs.SendNetMessage> SendNetMessage;
+        public static readonly HookPoint<HookArgs.ReceiveNetMessage> ReceiveNetMessage;
         //[TODO] determine if this should be a Action<...>
 
         public static readonly HookPoint<HookArgs.ConnectionRequestReceived> ConnectionRequestReceived;
@@ -90,8 +91,8 @@ namespace TDSM.API.Plugin
         static HookPoints()
         {
             ConsoleMessageReceived = new HookPoint<HookArgs.ConsoleMessageReceived>("console-message-received");
-            //UnkownReceivedPacket = new HookPoint<HookArgs.UnkownReceivedPacket>("unkown-receive-packet");
-            //UnkownSendPacket = new HookPoint<HookArgs.UnkownSendPacket>("unkown-send-packet");
+//            UnknownReceivedPacket = new HookPoint<HookArgs.UnknownReceivedPacket>("unknown-receive-packet");
+//            UnknownSendPacket = new HookPoint<HookArgs.UnknownSendPacket>("unknown-send-packet");
             //PlayerTeleport = new HookPoint<HookArgs.PlayerTeleport>("player-teleport");
             ServerStateChange = new HookPoint<HookArgs.ServerStateChange>("server-state-change");
             NewConnection = new HookPoint<HookArgs.NewConnection>("new-connection");
@@ -134,7 +135,8 @@ namespace TDSM.API.Plugin
             WorldRequestMessage = new HookPoint<HookArgs.WorldRequestMessage>("world-request-message");
             StartDefaultServer = new HookPoint<HookArgs.StartDefaultServer>("start-default-server");
             //StatusTextChanged = new HookPoint<HookArgs.StatusTextChanged>("status-text-changed");
-            SendNetData = new HookPoint<HookArgs.SendNetData>("netmessage-senddata");
+            SendNetMessage = new HookPoint<HookArgs.SendNetMessage>("send-net-message");
+            ReceiveNetMessage = new HookPoint<HookArgs.ReceiveNetMessage>("receive-net-message");
             //UpdateServer = new HookPoint<HookArgs.UpdateServer>("update-server");
             ProgramStart = new HookPoint<HookArgs.ProgramStart>("program-start");
             StartCommandProcessing = new HookPoint<HookArgs.StartCommandProcessing>("start-command-processing");
@@ -214,7 +216,18 @@ namespace TDSM.API.Plugin
             public string Value { get; set; }
         }
 
-        public struct SendNetData
+        public struct ReceiveNetMessage
+        {
+            public int BufferId { get; set; }
+
+            public byte PacketId { get; set; }
+
+            public int Start { get; set; }
+
+            public int Length { get; set; }
+        }
+
+        public struct SendNetMessage
         {
             public int MsgType { get; set; }
 
@@ -234,11 +247,13 @@ namespace TDSM.API.Plugin
 
             public int Number5 { get; set; }
         }
+
         //public struct StatusTextChanged { }
         //{
         //    public string Old { get; set; }
         //    public string New { get; set; }
         //}
+
         public struct StartDefaultServer
         {
 
