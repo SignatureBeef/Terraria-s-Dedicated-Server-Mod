@@ -22,7 +22,7 @@ If you would like to help test and get the unstable development build, you can j
 Need help? Sure, no problem. ;)
 #### Wiki
 There is a Wiki! Take a look at it from the Wiki link on the right side of the GitHub repo home page. Or click [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki).
-#### Live Chat
+#### Live Chat [![Slack](https://img.shields.io/badge/Chat%20on-Slack-blue.svg)](http://tdsm.sithous.com/slack)
 Want to chat with the core team members, other TDSM server operators like you, and plugin developers? Join our official [Slack](http://tdsm.sithous.com/slack) chat.
 
 ## Showcase Server
