@@ -1,72 +1,47 @@
-# TDSM supports Terraria 1.3
-Mono and windows compatibility is now relatively stable, however there are still a few issues being fixed. Expect a release real soon!
+# TDSM: Rebind [![Build Status](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod.svg?branch=master)](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod)
+*Supporting Terraria v1.3!*  
+TDSM is a server modification of the official Terraria dedicated server software. It extends functionallity giving the option for advanced permissions and plugin support. TDSM is a great choice for alternative server software for Terraria if you want stability, multi-platform, and added functionallity. It's also updated very quickly after a new Terraria release because of the way the new TDSM Rebind has been written.
 
-Until then head to our [binaries](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries) folder to grab the latest prerelease.
+#### Notable Features
+* Plugins
+* Permissions System
+* MySQL and SQLite
+* Additional Commands like; spawnnpc, spawnboss, hardmode, invasion (and custom ones too), ect...
+* Web Interface (soon)
+* Remote Console
 
-##Summary [![Build Status](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod.svg?branch=master)](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod)
-TDSM Rebind for Terraria 1.2.4.1 replaces the old TDSM that we stopped supporting a long time ago. It is a completely new approach which does not require us to update all of our code base to match the latest Terraria; rather we patch into the official code.
+## Installing
+1. You may get the latest release from the "[releases](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases)" link at the top or by clicking [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases). Want a the latest unstable build? Check [Testing](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod#testing) below.
+2. Just extract the files somewhere and run tdsm.exe. :) (in linux run it with mono)  
+Get more [Help](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server) with installing.
 
-Should you need help the wiki is currently in progress, but you still may view it right [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki) on GitHub.
+## Testing
+If you would like to help test and get the unstable development build, you can just grab all the files from the "[Binaries](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries)" directory. Those are always updated with each commit. Please use the GitHub Issues section to report bugs. Of course you can always drop by #support in our Slack chat (read more below), but we ask that if it's an actual bug report, to please report it in GitHub so we can track it. It also serves as a reminder.
 
-## Live Chat
-You can chat with the team live or among other TDSM users from the community live! All are welcome to join the chat, hang out, arrange games, ask questions, and chat with the team. Join us on [Slack](http://tdsm.sithous.com/slack).
+## Getting Help
+Need help? Sure, no problem. ;)
+#### Wiki
+There is a Wiki! Take a look at it from the Wiki link on the right side of the GitHub repo home page. Or click [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki).
+#### Live Chat
+Want to chat with the core team members, other TDSM server operators like you, and plugin developers? Join our official [Slack](http://tdsm.sithous.com/slack) chat.
 
-##Getting the new TDSM Rebind:
-You can either compile from source or grab the latest release located [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases).
-Alternatively you can get one of the latest pre-release binaries [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries).
+## Showcase Server
+We have a showcase server running the latest release of TDSM (and maybe sometimes the latest build?)! Join us and play on it any time you want. We are glad to have you. Mainly it's for checking it out from the player's perspective and getting a feel for it, but you could play some too. Though at this time the world may not be persistant and there could be some bad bugs from time to time if we do update it to a dev build.
 
-See [this wiki page](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server) for how to run the new TDSM.
-	
-##Plugin Development
-Plugins are supported via the tdsm-api project. This DLL is hooked into the vanilla server using the tdsm-patcher project. However you must reference both the TDSM.API.dll as well as the patched tdsm.exe.
+The VPS server we are hosting it on was provided to us by CreeperHost. We want to give a **big** shout out to CreeperHost for their generostity and awesome vps server. It really does perform well and we really like it. Thanks!  
+**"Want it easy, get it set up for you at CreeperHost" - [CreeperHost](http://www.creeperhost.net/)**
 
-The Plugin API is essentially the same as the old TDSM, so you can go about creating your plugin as you normally would.
-In addition to the old .NET plugins we now also support LUA. They function in the same manner as if it was a standard .NET plugin. I do suggest that if you need a high performance plugin/event that you use .NET.
-<br/>
-<br/>
-This time TDSM is in fact a plugin to this API, and is known as the "core". So in reality any developer may come along and write another server mod for say their client mod (it's also possible for the patcher to patch the client executable to run using MonoGame).
-<br/>
-<br/>
-Intereracting with TDSM's core dll is as easy as simply creating the reference to it, and then using it's exposed methods.
-<br/>
-<br/>
-The wiki and API documentation will be created very soon, and as a priority.
+#### Login Details
+* IP   = **showcase.tdsm.org**
+* PORT = **7777**
 
-##Core Development
-There are three core components of a TDSM server.
-<br/>
- 1. The API surrounding the official server code (TDSM.API.dll)
- 2. The TDSM patcher that hooks the API into the official code (tdsm.patcher.exe)
- 3. The TDSM core plugin that consumes the API and provides the additional features (TDSM.Core.dll)
-
-######Why do we not use our existing code base?
-For the core developers updating our previous codebase to match the official code each update takes by far too long and to be brutally honest, it is mind numbing.
-The new patching approach is mostly dynamic and where it's not will only need adjusting (apart from where Re-Logic removes functonality). This allows for updates measured in hours rather than weeks, mainly consising of analysis of changes and packet updates (core plugin).
-<br/>
-<br/>
-Note: The API is not for new functionality, rather it is for exposing the official server events to be processed by a plugin whom provides functionality.
-
-##Compiling the solution
-First open the correct solution file, tdsm.sln for Visual Studio or tdsm-md.sln for MonoDevelop and ensure that the Debug x86 platform is selected.
-
-
-1. Build the tdsm-api without the API reference (see defined symbol Full_API in the project properties/options compiler settings for tdsm-api) 
-2. Then build and run tdsm-patcher (in Visual Studio right click the tdsm-patcher project: Debug -> Start New Instance). Do not start the server at this stage.
-3. By default the tdsm solution already is referencing the generated server exe, but if not search the tdsm-patcher\bin\x86\Debug directory for the generated executable and add it as a reference.
-4. Readd Full_API to the tdsm-api project and rebuild it.
-5. Rebuild the entire solution so all projects are now using the latest api and server executable
-6. You are ready to run the patcher again. This time the generated tdsm.[platform].exe is the executable you can use to run a server.
-
-##API Development
-Currently essential hooks are being implemented. However should you need a missing hook simply request it or you can submit a pull request.
-
-##Development Status
-Extreme beta - handle with care.
-<br/>
-<br/>
-Until Terraria is compatible on mono the TDSM Core is essential for Linux compatability.
-<br/>
-If you do not require mono you can actually run the server without the core DLL and it will function as a vanilla server with plugin support.
-<br/>
-<br/>
-We do plan for the core to be disabled and still run a mono compatible vanilla server.
+## Developers. We Need You!
+If you can help with development, we would be happy to have your help! :) TDSM is written in C#. If you know other languages or would like to develop plugins instead, we need those too. Plugins are writting in C#, Lua, VB, and F#.
+#### Plugins Wanted
+Here are a few Plugin ideas we would like to see. Of course you may make whatever kind of plugin you like.
+* Regeons / Home Protection  
+A block protection plugin for specific areas designated by a player.
+* Sort Containers / Inventory
+* Last command, command.  
+For example, be able to issue `/!` command to re-execute the last command that player (or console) has used along with parameters.
+* PVP / Mini-game
