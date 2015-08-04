@@ -1,22 +1,3 @@
-# TDSM supports Terraria 1.3
-Mono and windows compatibility is now relatively stable, however there are still a few issues being fixed. Expect a release real soon!
-
-Until then head to our [binaries](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries) folder to grab the latest prerelease.
-
-##Summary [![Build Status](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod.svg?branch=master)](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod)
-TDSM Rebind for Terraria 1.2.4.1 replaces the old TDSM that we stopped supporting a long time ago. It is a completely new approach which does not require us to update all of our code base to match the latest Terraria; rather we patch into the official code.
-
-Should you need help the wiki is currently in progress, but you still may view it right [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki) on GitHub.
-
-## Live Chat
-You can chat with the team live or among other TDSM users from the community live! All are welcome to join the chat, hang out, arrange games, ask questions, and chat with the team. Join us on [Slack](http://tdsm.sithous.com/slack).
-
-##Getting the new TDSM Rebind:
-You can either compile from source or grab the latest release located [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases).
-Alternatively you can get one of the latest pre-release binaries [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries).
-
-See [this wiki page](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server) for how to run the new TDSM.
-	
 ##Plugin Development
 Plugins are supported via the tdsm-api project. This DLL is hooked into the vanilla server using the tdsm-patcher project. However you must reference both the TDSM.API.dll as well as the patched tdsm.exe.
 
@@ -59,14 +40,3 @@ First open the correct solution file, tdsm.sln for Visual Studio or tdsm-md.sln 
 
 ##API Development
 Currently essential hooks are being implemented. However should you need a missing hook simply request it or you can submit a pull request.
-
-##Development Status
-Extreme beta - handle with care.
-<br/>
-<br/>
-Until Terraria is compatible on mono the TDSM Core is essential for Linux compatability.
-<br/>
-If you do not require mono you can actually run the server without the core DLL and it will function as a vanilla server with plugin support.
-<br/>
-<br/>
-We do plan for the core to be disabled and still run a mono compatible vanilla server.
