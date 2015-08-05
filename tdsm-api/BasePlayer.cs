@@ -105,7 +105,7 @@ namespace TDSM.API
             {
                 var plr = (Terraria.Player)this;
 
-                Callbacks.NetplayCallback.CheckSection(plr.whoAmI, target.position);
+                Terraria.RemoteClient.CheckSection(plr.whoAmI, target.position);
                 plr.Teleport(target.position, style);
                 Terraria.NetMessage.SendData((int)Packet.TELEPORT, -1, -1, "", 0, plr.whoAmI, target.position.X, target.position.Y, 3);
             }
@@ -124,7 +124,7 @@ namespace TDSM.API
                 var plr = (Terraria.Player)this;
                 var pos = new Vector2(x, y);
 
-                Callbacks.NetplayCallback.CheckSection(plr.whoAmI, pos);
+                Terraria.RemoteClient.CheckSection(plr.whoAmI, pos);
                 plr.Teleport(pos, style);
                 Terraria.NetMessage.SendData((int)Packet.TELEPORT, -1, -1, "", 0, plr.whoAmI, pos.X, pos.Y, 3);
             }

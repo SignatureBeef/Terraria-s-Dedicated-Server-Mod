@@ -1675,7 +1675,7 @@ namespace tdsm.patcher
             //            cst.Body.Instructions.RemoveAt(0);
 
             //Temporary until i get more time
-            foreach (var rep in new string[] { /*"SendAnglerQuest,"*/ "sendWater", /*"syncPlayers",*/ "AddBan" })
+            foreach (var rep in new string[] { /*"SendAnglerQuest,"*/ /*"syncPlayers",*/ "AddBan" })
             {
                 var toBeReplaced = _asm.MainModule.Types
                     .SelectMany(x => x.Methods

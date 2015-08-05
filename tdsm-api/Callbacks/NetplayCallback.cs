@@ -321,16 +321,16 @@ namespace TDSM.API.Callbacks
     public static class NetplayCallback
     {
         //        public static Terraria.ServerSock[] slots;// = new IAPISocket[256];
-        #if Full_API
-        public static Action<Int32, Vector2, Int32> CheckSectionMethod = Terraria.RemoteClient.CheckSection;
-        #endif
-
-        public static void CheckSection(int slot, Vector2 position, int fluff = 1)
-        {
-#if Full_API
-            CheckSectionMethod(slot, position, fluff);
-#endif
-        }
+//        #if Full_API
+//        public static Action<Int32, Vector2, Int32> CheckSectionMethod = Terraria.RemoteClient.CheckSection;
+//        #endif
+//
+//        public static void CheckSection(int slot, Vector2 position, int fluff = 1)
+//        {
+//#if Full_API
+//            CheckSectionMethod(slot, position, fluff);
+//#endif
+//        }
 
         public static void StartServer(object state)
         {
@@ -375,29 +375,6 @@ namespace TDSM.API.Callbacks
                 }
             }
 #endif
-        }
-
-        public static void sendWater(int x, int y)
-        {
-            #if Full_API
-            if (Terraria.Main.netMode == 1)
-            {
-                Terraria.NetMessage.SendData (48, -1, -1, "", x, (float)y, 0, 0, 0, 0, 0);
-                return;
-            }
-            for (int i = 0; i < 256; i++)
-            {
-                if ((Terraria.NetMessage.buffer [i].broadcast || Terraria.Netplay.Clients [i].State >= 3) && Terraria.Netplay.Clients [i].IsConnected ())
-                {
-                    int num = x / 200;
-                    int num2 = y / 150;
-                    if (Terraria.Netplay.Clients [i].TileSections [num, num2])
-                    {
-                        Terraria.NetMessage.SendData (48, i, -1, "", x, (float)y, 0, 0, 0, 0, 0);
-                    }
-                }
-            }
-            #endif
         }
 
 //        public static int LastSlot;

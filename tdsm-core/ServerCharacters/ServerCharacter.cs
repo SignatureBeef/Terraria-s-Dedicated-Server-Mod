@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Terraria;
+using TDSM.API.Logging;
 
 namespace TDSM.Core.ServerCharacters
 {
@@ -204,7 +205,8 @@ namespace TDSM.Core.ServerCharacters
             player.inventory = Enumerable.Repeat(new Item(), player.inventory.Length).ToArray();
             foreach (var slotItem in this.Inventory)
             {
-                var item = new Terraria.Item();
+//                var item = new Terraria.Item();
+                var item = player.inventory[slotItem.Slot];
 
                 item.netDefaults(slotItem.NetId);
                 item.stack = slotItem.Stack;
@@ -239,6 +241,7 @@ namespace TDSM.Core.ServerCharacters
 
             //Update client
             this.Send(player);
+            ProgramLog.Log("Sent inventory");
         }
 
         public void Send(Player player)
@@ -249,6 +252,36 @@ namespace TDSM.Core.ServerCharacters
             msg.BuildPlayerUpdate(player.whoAmI);
             msg.Broadcast();
 #endif
+            ProgramLog.Log("Sending inventory");
+            for (int k = 0; k < 59; k++)
+            {
+                NetMessage.SendData(5, -1, -1, player.inventory[k].name, player.whoAmI, (float)k, (float)player.inventory[k].prefix, 0, 0, 0, 0);
+            }
+            for (int l = 0; l < player.armor.Length; l++)
+            {
+                NetMessage.SendData(5, -1, -1, player.armor[l].name, player.whoAmI, (float)(59 + l), (float)player.armor[l].prefix, 0, 0, 0, 0);
+            }
+            for (int m = 0; m < player.dye.Length; m++)
+            {
+                NetMessage.SendData(5, -1, -1, player.dye[m].name, player.whoAmI, (float)(58 + player.armor.Length + 1 + m), (float)player.dye[m].prefix, 0, 0, 0, 0);
+            }
+            for (int n = 0; n < player.miscEquips.Length; n++)
+            {
+                NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + 1 + n), (float)player.miscEquips[n].prefix, 0, 0, 0, 0);
+            }
+            for (int num3 = 0; num3 < player.miscDyes.Length; num3++)
+            {
+                NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + 1 + num3), (float)player.miscDyes[num3].prefix, 0, 0, 0, 0);
+            }
+            for (int num4 = 0; num4 < player.bank.item.Length; num4++)
+            {
+                NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + 1 + num4), (float)player.bank.item[num4].prefix, 0, 0, 0, 0);
+            }
+            for (int num5 = 0; num5 < player.bank2.item.Length; num5++)
+            {
+                NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + 1 + num5), (float)player.bank2.item[num5].prefix, 0, 0, 0, 0);
+            }
+            NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + player.bank2.item.Length + 1), (float)player.trashItem.prefix, 0, 0, 0, 0);
         }
 
         public void Dispose()

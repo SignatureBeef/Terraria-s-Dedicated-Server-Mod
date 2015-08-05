@@ -966,9 +966,9 @@ namespace TDSM.Core
         void OnGreetPlayer(ref HookContext ctx, ref HookArgs.PlayerPreGreeting args)
         {
             ctx.SetResult(HookResult.IGNORE);
-            var lines = args.Motd.Split('\\', 'n');
-            foreach (var lin in lines)
-                ctx.Player.SendMessage(args.Motd, 255, 0, 0, 255);
+            var lines = args.Motd.Split(new string[] { "\\n" }, StringSplitOptions.None);
+            foreach (var line in lines)
+                ctx.Player.SendMessage(line, 255, 0, 0, 255);
 
             string list = "";
             for (int i = 0; i < 255; i++)
@@ -1118,6 +1118,8 @@ namespace TDSM.Core
                         ctx.SetResult(HookResult.IGNORE);
 
                         //Ignore SSC data and relay nothing [TBC]
+
+
 
                         break;
                 }

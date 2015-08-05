@@ -51,10 +51,10 @@ namespace TDSM.API.Callbacks
         {
             var ctx = new HookContext();
             var args = new HookArgs.NPCKilled()
-                {
-                    Type = npc.type,
-                    NetId = npc.netID
-                };
+            {
+                Type = npc.type,
+                NetId = npc.netID
+            };
 
             HookPoints.NPCKilled.Invoke(ref ctx, ref args);
         }

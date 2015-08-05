@@ -84,7 +84,7 @@ namespace TDSM.Core.ServerCharacters
             if (!String.IsNullOrEmpty(authName))
             {
                 ProgramLog.Log("Loading SSC for " + authName);
-                if (Storage.IsAvailable)
+                if (false == true && Storage.IsAvailable)
                 {
 
                 }
@@ -130,7 +130,7 @@ namespace TDSM.Core.ServerCharacters
 
             if (!String.IsNullOrEmpty(authName))
             {
-                if (Storage.IsAvailable)
+                if (false == true && Storage.IsAvailable)
                 {
 
                 }
@@ -170,6 +170,7 @@ namespace TDSM.Core.ServerCharacters
                 //Check to make sure the player is the same player (ie skin, clothes)
 
                 ssc.ApplyToPlayer(player);
+
             }
             else
             {
