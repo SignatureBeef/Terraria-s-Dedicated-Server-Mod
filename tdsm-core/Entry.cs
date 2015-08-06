@@ -16,6 +16,7 @@ using TDSM.API.Misc;
 using TDSM.Core.RemoteConsole;
 using TDSM.Core.ServerCharacters;
 using Terraria;
+using Terraria.Social;
 
 namespace TDSM.Core
 {
@@ -593,15 +594,25 @@ namespace TDSM.Core
             if (CharacterManager.Mode == CharacterMode.UUID)
             {
                 CharacterManager.LoadForAuthenticated(ctx.Player);
+                ProgramLog.Plugin.Log("First type: " + Main.player[ctx.Player.whoAmI].inventory[0].type);
+            }
+            else if (CharacterManager.Mode == CharacterMode.AUTH)
+            {
+                if (!String.IsNullOrEmpty(ctx.Player.AuthenticatedAs))
+                {
+                    CharacterManager.LoadForAuthenticated(ctx.Player);
+                    ProgramLog.Plugin.Log("First type: " + Main.player[ctx.Player.whoAmI].inventory[0].type);
+                }
             }
         }
 
         [Hook(HookOrder.NORMAL)]
         void OnPlayerAuthenticated(ref HookContext ctx, ref HookArgs.PlayerAuthenticationChanged args)
         {
-            if (CharacterManager.Mode == CharacterMode.AUTH)
+            if (ctx.Client.State >= 4 && CharacterManager.Mode == CharacterMode.AUTH)
             {
                 CharacterManager.LoadForAuthenticated(ctx.Player);
+                ProgramLog.Plugin.Log("First type: " + Main.player[ctx.Player.whoAmI].inventory[0].type);
             }
         }
 
@@ -1118,9 +1129,125 @@ namespace TDSM.Core
                         ctx.SetResult(HookResult.IGNORE);
 
                         //Ignore SSC data and relay nothing [TBC]
+//                        Console.WriteLine("Ignoring INVENTORY packet");
 
 
+//                        int num10 = (int)NetMessage.buffer[args.BufferId].reader.ReadByte();
+//
+//                        int num11 = (int)NetMessage.buffer[args.BufferId].reader.ReadByte();
+//                        int stack = (int)NetMessage.buffer[args.BufferId].reader.ReadInt16();
+//                        int num12 = (int)NetMessage.buffer[args.BufferId].reader.ReadByte();
+//                        int type = (int)NetMessage.buffer[args.BufferId].reader.ReadInt16();
 
+//                        Console.WriteLine("Recv type: " + type);
+
+                        break;
+                }
+            }
+        }
+
+        [Hook]
+        void OnNetMessageSend(ref HookContext ctx, ref HookArgs.SendNetMessage args)
+        {
+            if (Terraria.Main.ServerSideCharacter)
+            {
+                switch ((Packet)args.MsgType)
+                {
+                    case Packet.WORLD_DATA:
+                        ctx.SetResult(HookResult.IGNORE);
+
+                        var writer = NetMessage.buffer[args.BufferId].writer;
+
+                        writer.Write((int)Main.time);
+
+                        byte value;
+
+                        value = 0;
+                        if (Main.dayTime) value += 1;
+                        if (Main.bloodMoon) value += 2;
+                        if (Main.bloodMoon) value += 4;
+                        writer.Write(value);
+
+                        writer.Write((byte)Main.moonPhase);
+                        writer.Write((short)Main.maxTilesX);
+                        writer.Write((short)Main.maxTilesY);
+                        writer.Write((short)Main.spawnTileX);
+                        writer.Write((short)Main.spawnTileY);
+                        writer.Write((short)Main.worldSurface);
+                        writer.Write((short)Main.rockLayer);
+                        writer.Write(Main.worldID);
+                        writer.Write(Main.worldName);
+                        writer.Write((byte)Main.moonType);
+                        writer.Write((byte)WorldGen.treeBG);
+                        writer.Write((byte)WorldGen.corruptBG);
+                        writer.Write((byte)WorldGen.jungleBG);
+                        writer.Write((byte)WorldGen.snowBG);
+                        writer.Write((byte)WorldGen.hallowBG);
+                        writer.Write((byte)WorldGen.crimsonBG);
+                        writer.Write((byte)WorldGen.desertBG);
+                        writer.Write((byte)WorldGen.oceanBG);
+                        writer.Write((byte)Main.iceBackStyle);
+                        writer.Write((byte)Main.jungleBackStyle);
+                        writer.Write((byte)Main.hellBackStyle);
+                        writer.Write(Main.windSpeedSet);
+                        writer.Write((byte)Main.numClouds);
+
+                        for (int k = 0; k < 3; k++) writer.Write(Main.treeX[k]);
+                        for (int l = 0; l < 4; l++) writer.Write((byte)Main.treeStyle[l]);
+                        for (int m = 0; m < 3; m++) writer.Write(Main.caveBackX[m]);
+                        for (int n = 0; n < 4; n++) writer.Write((byte)Main.caveBackStyle[n]);
+
+                        if (!Main.raining) Main.maxRaining = 0;
+                        writer.Write(Main.maxRaining);
+
+                        value = 0;
+                        if (WorldGen.shadowOrbSmashed) value += 1;
+                        if (NPC.downedBoss1) value += 2;
+                        if (NPC.downedBoss2) value += 4;
+                        if (NPC.downedBoss3) value += 8;
+                        if (Main.hardMode) value += 16;
+                        if (NPC.downedClown) value += 32;
+                        if (Main.ServerSideCharacter) value += 64;
+                        if (NPC.downedPlantBoss) value += 128;
+                        writer.Write(value);
+
+                        value = 0;
+                        if (NPC.downedMechBoss1) value += 1;
+                        if (NPC.downedMechBoss2) value += 2;
+                        if (NPC.downedMechBoss3) value += 4;
+                        if (NPC.downedMechBossAny) value += 8;
+                        if (Main.cloudBGActive >= 1) value += 16;
+                        if (WorldGen.crimson) value += 32;
+                        if (Main.pumpkinMoon) value += 64;
+                        if (Main.snowMoon) value += 128;
+                        writer.Write(value);
+
+                        value = 0;
+                        if (Main.expertMode) value += 1;
+                        if (Main.fastForwardTime) value += 2;
+                        if (Main.slimeRain) value += 4;
+                        if (NPC.downedSlimeKing) value += 8;
+                        if (NPC.downedQueenBee) value += 16;
+                        if (NPC.downedFishron) value += 32;
+                        if (NPC.downedMartians) value += 64;
+                        if (NPC.downedAncientCultist) value += 128;
+                        writer.Write(value);
+
+                        value = 0;
+                        if (NPC.downedMoonlord) value += 1;
+                        if (NPC.downedHalloweenKing) value += 2;
+                        if (NPC.downedHalloweenTree) value += 4;
+                        if (NPC.downedChristmasIceQueen) value += 8;
+                        if (NPC.downedChristmasSantank) value += 16;
+                        if (NPC.downedChristmasTree) value += 32;
+                        if (NPC.downedGolemBoss) value += 64;
+                        writer.Write(value);
+
+                        writer.Write((sbyte)Main.invasionType);
+
+                        if (SocialAPI.Network != null)
+                            writer.Write(SocialAPI.Network.GetLobbyId());
+                        else writer.Write(0);
                         break;
                 }
             }

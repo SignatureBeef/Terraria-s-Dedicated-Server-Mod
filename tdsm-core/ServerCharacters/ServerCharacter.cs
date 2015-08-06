@@ -179,69 +179,128 @@ namespace TDSM.Core.ServerCharacters
         public void ApplyToPlayer(Player player)
         {
             //player.male = this.Male;
-
-            player.statMana = this.Mana;
-            player.statLife = this.Health;
-            player.statLifeMax = this.MaxHealth;
-
-            player.SpawnX = this.SpawnX;
-            player.SpawnY = this.SpawnY;
-
-            player.hideVisual = this.HideVisual;
-            player.hairDye = this.HairDye;
-
-            player.hair = this.Hair;
-            player.difficulty = this.Difficulty;
-
-            player.hairColor = this.HairColor.ToXna();
-            player.skinColor = this.SkinColor.ToXna();
-            player.eyeColor = this.EyeColor.ToXna();
-            player.shirtColor = this.ShirtColor.ToXna();
-            player.underShirtColor = this.UnderShirtColor.ToXna();
-            player.pantsColor = this.PantsColor.ToXna();
-            player.shoeColor = this.ShoeColor.ToXna();
-
-            //Reset and populate inventory
-            player.inventory = Enumerable.Repeat(new Item(), player.inventory.Length).ToArray();
-            foreach (var slotItem in this.Inventory)
+            try
             {
-//                var item = new Terraria.Item();
-                var item = player.inventory[slotItem.Slot];
+                player.statMana = this.Mana;
+                player.statLife = this.Health;
+                player.statLifeMax = this.MaxHealth;
 
-                item.netDefaults(slotItem.NetId);
-                item.stack = slotItem.Stack;
-                item.Prefix(slotItem.Prefix);
+                player.SpawnX = this.SpawnX;
+                player.SpawnY = this.SpawnY;
 
-                player.inventory[slotItem.Slot] = item;
+                player.hideVisual = this.HideVisual;
+                player.hairDye = this.HairDye;
+
+                player.hair = this.Hair;
+                player.difficulty = this.Difficulty;
+
+                player.hairColor = this.HairColor.ToXna();
+                player.skinColor = this.SkinColor.ToXna();
+                player.eyeColor = this.EyeColor.ToXna();
+                player.shirtColor = this.ShirtColor.ToXna();
+                player.underShirtColor = this.UnderShirtColor.ToXna();
+                player.pantsColor = this.PantsColor.ToXna();
+                player.shoeColor = this.ShoeColor.ToXna();
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to apply player settings");
             }
 
-            //Reset and populate dye
-            player.dye = Enumerable.Repeat(new Item(), player.dye.Length).ToArray();
-            foreach (var slotItem in this.Dye)
+            try
             {
-                var item = new Terraria.Item();
+                //Reset and populate inventory
+                //                player.inventory = Enumerable.Repeat(new Item(){ name = String.Empty }, player.inventory.Length).ToArray();
+                player.inventory = new Item[player.inventory.Length];
+                for (var i = 0; i < player.inventory.Length; i++)
+                {
+                    player.inventory[i] = new Item();
+                    player.inventory[i].name = String.Empty;
+                    player.inventory[i].SetDefaults(0);
+                }
+                #if PRINT_DEBUG
+                ProgramLog.Plugin.Log("Inventory set (" + player.inventory.Length + ")");
+                #endif
+                if (this.Inventory != null)
+                    foreach (var slotItem in this.Inventory)
+                    {
+                        var item = player.inventory[slotItem.Slot];
 
-                item.netDefaults(slotItem.NetId);
-                item.Prefix(slotItem.Prefix);
+                        item.netDefaults(slotItem.NetId);
+                        item.stack = slotItem.Stack;
+                        item.Prefix(slotItem.Prefix);
 
-                player.dye[slotItem.Slot] = item;
+                        player.inventory[slotItem.Slot] = item;
+                    }
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to apply player inventory");
             }
 
-            //Reset and populate armor
-            player.armor = Enumerable.Repeat(new Item(), player.armor.Length).ToArray();
-            foreach (var slotItem in this.Armor)
+            try
             {
-                var item = new Terraria.Item();
+                //Reset and populate dye
+                //                player.dye = Enumerable.Repeat(new Item(){ name = String.Empty }, player.dye.Length).ToArray();
+                player.dye = new Item[player.dye.Length];
+                for (var i = 0; i < player.dye.Length; i++)
+                {
+                    player.dye[i] = new Item();
+                    player.dye[i].name = String.Empty;
+                    player.dye[i].SetDefaults(0);
+                }
+                if (this.Dye != null)
+                    foreach (var slotItem in this.Dye)
+                    {
+                        var item = player.dye[slotItem.Slot];
 
-                item.netDefaults(slotItem.NetId);
-                item.Prefix(slotItem.Prefix);
+                        item.netDefaults(slotItem.NetId);
+                        item.Prefix(slotItem.Prefix);
 
-                player.armor[slotItem.Slot] = item;
+                        player.dye[slotItem.Slot] = item;
+                    }
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to apply player dye");
             }
 
-            //Update client
-            this.Send(player);
-            ProgramLog.Log("Sent inventory");
+            try
+            {
+                //Reset and populate armor
+                //                player.armor = Enumerable.Repeat(new Item(){ name = String.Empty }, player.armor.Length).ToArray();
+                player.armor = new Item[player.armor.Length];
+                for (var i = 0; i < player.armor.Length; i++)
+                {
+                    player.armor[i] = new Item();
+                    player.armor[i].name = String.Empty;
+                    player.armor[i].SetDefaults(0);
+                }
+                if (this.Armor != null)
+                    foreach (var slotItem in this.Armor)
+                    {
+                        var item = player.armor[slotItem.Slot];
+
+                        item.netDefaults(slotItem.NetId);
+                        item.Prefix(slotItem.Prefix);
+
+                        player.armor[slotItem.Slot] = item;
+                    }
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to apply player armor");
+            }
+
+            try
+            {
+                //Update client
+                this.Send(player);
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to send player data");
+            }
         }
 
         public void Send(Player player)
@@ -252,36 +311,43 @@ namespace TDSM.Core.ServerCharacters
             msg.BuildPlayerUpdate(player.whoAmI);
             msg.Broadcast();
 #endif
-            ProgramLog.Log("Sending inventory");
             for (int k = 0; k < 59; k++)
             {
+//                Console.WriteLine(player.inventory[k].type);
                 NetMessage.SendData(5, -1, -1, player.inventory[k].name, player.whoAmI, (float)k, (float)player.inventory[k].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, player.inventory[k].name, player.whoAmI, (float)k, (float)player.inventory[k].prefix, 0, 0, 0, 0);
             }
             for (int l = 0; l < player.armor.Length; l++)
             {
                 NetMessage.SendData(5, -1, -1, player.armor[l].name, player.whoAmI, (float)(59 + l), (float)player.armor[l].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, player.armor[l].name, player.whoAmI, (float)(59 + l), (float)player.armor[l].prefix, 0, 0, 0, 0);
             }
             for (int m = 0; m < player.dye.Length; m++)
             {
                 NetMessage.SendData(5, -1, -1, player.dye[m].name, player.whoAmI, (float)(58 + player.armor.Length + 1 + m), (float)player.dye[m].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, player.dye[m].name, player.whoAmI, (float)(58 + player.armor.Length + 1 + m), (float)player.dye[m].prefix, 0, 0, 0, 0);
             }
             for (int n = 0; n < player.miscEquips.Length; n++)
             {
                 NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + 1 + n), (float)player.miscEquips[n].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + 1 + n), (float)player.miscEquips[n].prefix, 0, 0, 0, 0);
             }
             for (int num3 = 0; num3 < player.miscDyes.Length; num3++)
             {
                 NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + 1 + num3), (float)player.miscDyes[num3].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + 1 + num3), (float)player.miscDyes[num3].prefix, 0, 0, 0, 0);
             }
             for (int num4 = 0; num4 < player.bank.item.Length; num4++)
             {
-                NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + 1 + num4), (float)player.bank.item[num4].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + 1 + num4), (float)player.bank.item[num4].prefix, 0, 0, 0, 0);
             }
             for (int num5 = 0; num5 < player.bank2.item.Length; num5++)
             {
                 NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + 1 + num5), (float)player.bank2.item[num5].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + 1 + num5), (float)player.bank2.item[num5].prefix, 0, 0, 0, 0);
             }
             NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + player.bank2.item.Length + 1), (float)player.trashItem.prefix, 0, 0, 0, 0);
+            NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + player.bank2.item.Length + 1), (float)player.trashItem.prefix, 0, 0, 0, 0);
         }
 
         public void Dispose()

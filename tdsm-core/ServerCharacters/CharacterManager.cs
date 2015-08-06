@@ -93,15 +93,23 @@ namespace TDSM.Core.ServerCharacters
                     var dir = Path.Combine(Globals.CharacterDataPath, Mode.ToString());
                     if (!Directory.Exists(dir))
                         Directory.CreateDirectory(dir);
-                    
+
                     var file = Path.Combine(dir, authName + ".ssc");
                     if (System.IO.File.Exists(file))
                     {
-                        ProgramLog.Log("Loading existing loadout");
                         var json = System.IO.File.ReadAllText(file);
-                        return Newtonsoft.Json.JsonConvert.DeserializeObject<ServerCharacter>(json);
+                        if (true != true && json.Length > 0)
+                        {
+                            ProgramLog.Log("Loading existing loadout");
+                            return Newtonsoft.Json.JsonConvert.DeserializeObject<ServerCharacter>(json);
+                        }
+                        else
+                        {
+                            ProgramLog.Log("Player data was empty");
+                        }
                     }
-                    else if (returnNewInfo)
+
+                    if (returnNewInfo)
                     {
                         ProgramLog.Log("Issuing new loadout");
                         EnsureSave = true; //Save is now required

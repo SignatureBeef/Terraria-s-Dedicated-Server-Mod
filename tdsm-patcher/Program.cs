@@ -247,8 +247,8 @@ namespace tdsm.patcher
             patcher.HookWorldEvents();
             Console.Write("Ok\nHooking statusText...");
             patcher.HookStatusText();
-            //Console.Write("Ok\nHooking NetMessage...");
-            //patcher.HookNetMessage();
+            Console.Write("Ok\nHooking NetMessage...");
+            patcher.HookNetMessage();
             ////Console.Write("Ok\nRemoving client code...");
             ////patcher.RemoveClientCode();
             Console.Write("Ok\nHooking Server events...");

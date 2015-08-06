@@ -2,10 +2,18 @@
 
 namespace TDSM.API.Sockets
 {
-    public enum SlotState
+    public enum SlotState : int
     {
+        PLAYER_AUTH = -2,
+        SERVER_AUTH = -1,
+
         NONE = 0,
-        PLAYER_AUTH = -2
+
+        CONNECTING = 1,
+        ACCEPTED = 2,
+        SENDING_TILES = 3,
+
+        PLAYING = 10
     }
 
     //[Flags]

@@ -231,6 +231,8 @@ namespace TDSM.API.Plugin
         {
             public int MsgType { get; set; }
 
+            public int BufferId { get; set; }
+
             public int RemoteClient { get; set; }
 
             public int IgnoreClient { get; set; }
