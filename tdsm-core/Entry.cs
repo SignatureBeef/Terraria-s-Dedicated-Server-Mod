@@ -20,6 +20,15 @@ using Terraria.Social;
 
 namespace TDSM.Core
 {
+//    public enum SSCResetLevel : byte
+//    {
+//        GUEST = 1,
+//        AUTH = 2,
+//        OP = 4,
+//
+//        ALL = GUEST | AUTH | OP
+//    }
+
     public partial class Entry : BasePlugin
     {
         public const Int32 CoreBuild = 4;
