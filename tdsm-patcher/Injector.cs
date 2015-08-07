@@ -218,7 +218,7 @@ namespace tdsm.patcher
                                             {
 
                                                 if ((iii.Operand is FieldReference
-                                                    && (iii.Operand as FieldReference).Name == "tile") || 
+                                                    && (iii.Operand as FieldReference).Name == "tile") ||
                                                     (iii.Operand is MethodReference && (iii.Operand as MethodReference).Name == "get__tiles"))
                                                 {
                                                     il.Remove(iii);
@@ -901,6 +901,38 @@ namespace tdsm.patcher
                         {
                             ins.Next.Next.Next.Operand = dbl;
                         }
+                    }
+                }
+            }
+        }
+
+        public void MakeEverythingAccessible()
+        {
+            foreach (var type in _asm.MainModule.Types)
+            {
+                type.IsPublic = true;
+
+                foreach (var itm in type.Methods)
+                {
+                    itm.IsPublic = true;
+                    if (itm.IsPrivate) itm.IsPrivate = false;
+                }
+                foreach (var itm in type.Fields)
+                {
+                    itm.IsPublic = true;
+                    if (itm.IsPrivate) itm.IsPrivate = false;
+                }
+                foreach (var itm in type.Properties)
+                {
+                    if (null != itm.GetMethod)
+                    {
+                        itm.GetMethod.IsPublic = true;
+                        if (itm.GetMethod.IsPrivate) itm.GetMethod.IsPrivate = false;
+                    }
+                    if (null != itm.SetMethod)
+                    {
+                        itm.SetMethod.IsPublic = true;
+                        if (itm.SetMethod.IsPrivate) itm.SetMethod.IsPrivate = false;
                     }
                 }
             }

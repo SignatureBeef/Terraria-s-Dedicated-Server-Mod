@@ -518,8 +518,13 @@ namespace TDSM.Core
                     }
                 }
             }
-            else
-                throw new CommandError("No player or options were specified");
+            else if (sender is Player)
+            {
+                var plr = sender as Player;
+                NetMessage.SendData((int)Packet.HEAL_PLAYER, -1, -1, String.Empty, plr.whoAmI, (float)plr.statLifeMax);
+                plr.Message("You have been healed!", Color.Green);
+            }
+            else throw new CommandError("Nobody specified to heal");
         }
 
         /// <summary>
