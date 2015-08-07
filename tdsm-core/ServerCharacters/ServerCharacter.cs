@@ -18,11 +18,13 @@ namespace TDSM.Core.ServerCharacters
     {
         public bool Male { get; set; }
 
-        public int Mana { get; set; }
-
         public int Health { get; set; }
 
         public int MaxHealth { get; set; }
+
+        public int Mana { get; set; }
+
+        public int MaxMana { get; set; }
 
         public int SpawnX { get; set; }
 
@@ -70,11 +72,11 @@ namespace TDSM.Core.ServerCharacters
         /// <param name="player"></param>
         public ServerCharacter(Player player)
         {
-            //this.Male = player.male;
-
-            this.Mana = player.statMana;
             this.Health = player.statLife;
             this.MaxHealth = player.statLifeMax;
+
+            this.Mana = player.statMana;
+            this.MaxMana = player.statManaMax;
 
             this.SpawnX = player.SpawnX;
             this.SpawnY = player.SpawnY;
@@ -146,9 +148,11 @@ namespace TDSM.Core.ServerCharacters
 
             //this.Male = player.male;
 
-            this.Mana = info.Mana;
             this.Health = info.Health;
             this.MaxHealth = info.Health;
+
+            this.Mana = info.Mana;
+            this.MaxMana = info.Mana;
 
             this.SpawnX = player.SpawnX;
             this.SpawnY = player.SpawnY;
@@ -181,9 +185,11 @@ namespace TDSM.Core.ServerCharacters
             //player.male = this.Male;
             try
             {
-                player.statMana = this.Mana;
                 player.statLife = this.Health;
                 player.statLifeMax = this.MaxHealth;
+
+                player.statMana = this.Mana;
+                player.statManaMax = this.MaxMana;
 
                 player.SpawnX = this.SpawnX;
                 player.SpawnY = this.SpawnY;
@@ -349,7 +355,12 @@ namespace TDSM.Core.ServerCharacters
             NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + player.bank2.item.Length + 1), (float)player.trashItem.prefix, 0, 0, 0, 0);
             NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + player.bank2.item.Length + 1), (float)player.trashItem.prefix, 0, 0, 0, 0);
 
-            //TODO health and mana
+
+            //Health
+            NetMessage.SendData(16, player.whoAmI, -1, "", player.whoAmI);
+
+            //Mana
+            NetMessage.SendData(42, player.whoAmI, -1, "", player.whoAmI);
         }
 
         public void Dispose()

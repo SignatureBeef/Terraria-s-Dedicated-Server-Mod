@@ -18,6 +18,11 @@ namespace TDSM.API
 
         public string AuthenticatedBy { get; set; }
 
+        public bool IsAuthenticated
+        {
+            get { return !String.IsNullOrEmpty(AuthenticatedAs); }
+        }
+
         public ConcurrentDictionary<String, Object> PluginData = new ConcurrentDictionary<String, Object>();
 
         public void SetAuthentication(string auth, string by)

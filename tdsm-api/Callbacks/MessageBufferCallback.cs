@@ -54,7 +54,7 @@ namespace TDSM.API.Callbacks
                     ProcessWriteSign(bufferId); //Returns
                     return 0;
 
-            /* Password handling */
+                /* Password handling */
                 case Packet.PASSWORD_RESPONSE: //Returns
                     ProcessPassword(bufferId);
                     return 0;

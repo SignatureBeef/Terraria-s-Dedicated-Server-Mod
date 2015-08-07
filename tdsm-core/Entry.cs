@@ -20,14 +20,14 @@ using Terraria.Social;
 
 namespace TDSM.Core
 {
-//    public enum SSCResetLevel : byte
-//    {
-//        GUEST = 1,
-//        AUTH = 2,
-//        OP = 4,
-//
-//        ALL = GUEST | AUTH | OP
-//    }
+    //    public enum SSCResetLevel : byte
+    //    {
+    //        GUEST = 1,
+    //        AUTH = 2,
+    //        OP = 4,
+    //
+    //        ALL = GUEST | AUTH | OP
+    //    }
 
     public partial class Entry : BasePlugin
     {
@@ -95,6 +95,8 @@ namespace TDSM.Core
         public int ExitAccessLevel { get; set; }
 
         public bool EnableHeartbeat { get; set; }
+
+        public bool AllowSSCGuestInfo { get; set; }
 
         public Entry()
         {
@@ -602,15 +604,13 @@ namespace TDSM.Core
 
             if (CharacterManager.Mode == CharacterMode.UUID)
             {
-                CharacterManager.LoadForAuthenticated(ctx.Player);
-                ProgramLog.Plugin.Log("First type: " + Main.player[ctx.Player.whoAmI].inventory[0].type);
+                CharacterManager.LoadForAuthenticated(ctx.Player, !AllowSSCGuestInfo);
             }
             else if (CharacterManager.Mode == CharacterMode.AUTH)
             {
                 if (!String.IsNullOrEmpty(ctx.Player.AuthenticatedAs))
                 {
-                    CharacterManager.LoadForAuthenticated(ctx.Player);
-                    ProgramLog.Plugin.Log("First type: " + Main.player[ctx.Player.whoAmI].inventory[0].type);
+                    CharacterManager.LoadForAuthenticated(ctx.Player, !AllowSSCGuestInfo);
                 }
             }
         }
@@ -620,8 +620,7 @@ namespace TDSM.Core
         {
             if (ctx.Client.State >= 4 && CharacterManager.Mode == CharacterMode.AUTH)
             {
-                CharacterManager.LoadForAuthenticated(ctx.Player);
-                ProgramLog.Plugin.Log("First type: " + Main.player[ctx.Player.whoAmI].inventory[0].type);
+                CharacterManager.LoadForAuthenticated(ctx.Player, !AllowSSCGuestInfo);
             }
         }
 
@@ -961,6 +960,7 @@ namespace TDSM.Core
                         ProgramLog.Admin.Log("SSC are enabled with mode " + characterMode);
 
                         Hook(HookPoints.ReceiveNetMessage, OnNetMessageReceived);
+//                        Hook(HookPoints.PlayerDataReceived, OnPlayerDataReceived);
                     }
                     else
                         ProgramLog.Error.Log("Failed to parse line server-side-characters. No SSC will be used.");
@@ -977,6 +977,13 @@ namespace TDSM.Core
                     if (Int32.TryParse(args.Value, out accessLevel))
                     {
                         ExitAccessLevel = accessLevel;
+                    }
+                    break;
+                case "ssc-allow-guest-info":
+                    bool guestInfo;
+                    if (Boolean.TryParse(args.Value, out guestInfo))
+                    {
+                        AllowSSCGuestInfo = guestInfo;
                     }
                     break;
             }
@@ -1003,6 +1010,8 @@ namespace TDSM.Core
             }
 
             ctx.Player.SendMessage("Current players: " + list + ".", 255, 255, 240, 20);
+
+            ProgramLog.Plugin.Log("GP Health: " + ctx.Player.statLife);
         }
 
         [Hook(HookOrder.NORMAL)]
@@ -1135,25 +1144,31 @@ namespace TDSM.Core
                 switch ((Packet)args.PacketId)
                 {
                     case Packet.INVENTORY_DATA:
-                        ctx.SetResult(HookResult.IGNORE);
+                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
+                            ctx.SetResult(HookResult.IGNORE);
+                        break;
 
-                        //Ignore SSC data and relay nothing [TBC]
-//                        Console.WriteLine("Ignoring INVENTORY packet");
+                    case Packet.PLAYER_MANA_UPDATE:
+                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
+                            ctx.SetResult(HookResult.IGNORE);
+                        break;
 
-
-//                        int num10 = (int)NetMessage.buffer[args.BufferId].reader.ReadByte();
-//
-//                        int num11 = (int)NetMessage.buffer[args.BufferId].reader.ReadByte();
-//                        int stack = (int)NetMessage.buffer[args.BufferId].reader.ReadInt16();
-//                        int num12 = (int)NetMessage.buffer[args.BufferId].reader.ReadByte();
-//                        int type = (int)NetMessage.buffer[args.BufferId].reader.ReadInt16();
-
-//                        Console.WriteLine("Recv type: " + type);
-
+                    case Packet.PLAYER_HEALTH_UPDATE:
+                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
+                            ctx.SetResult(HookResult.IGNORE);
                         break;
                 }
             }
         }
+
+//        void OnPlayerDataReceived(ref HookContext ctx, ref HookArgs.PlayerDataReceived args)
+//        {
+//            //If the player is not authenticated, then ensure they are reset
+//            if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
+//            {
+//                
+//            }
+//        }
 
         [Hook]
         void OnNetMessageSend(ref HookContext ctx, ref HookArgs.SendNetMessage args)

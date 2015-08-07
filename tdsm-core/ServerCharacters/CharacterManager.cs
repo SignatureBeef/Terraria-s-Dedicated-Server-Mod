@@ -98,7 +98,7 @@ namespace TDSM.Core.ServerCharacters
                     if (System.IO.File.Exists(file))
                     {
                         var json = System.IO.File.ReadAllText(file);
-                        if (true != true && json.Length > 0)
+                        if (json.Length > 0)
                         {
                             ProgramLog.Log("Loading existing loadout");
                             return Newtonsoft.Json.JsonConvert.DeserializeObject<ServerCharacter>(json);
@@ -158,9 +158,9 @@ namespace TDSM.Core.ServerCharacters
             return false;
         }
 
-        public static void LoadForAuthenticated(Player player)
+        public static void LoadForAuthenticated(Player player, bool createIfNone = true)
         {
-            var ssc = LoadPlayerData(player, true);
+            var ssc = LoadPlayerData(player, createIfNone);
 
             if (ssc != null)
             {
@@ -178,7 +178,6 @@ namespace TDSM.Core.ServerCharacters
                 //Check to make sure the player is the same player (ie skin, clothes)
 
                 ssc.ApplyToPlayer(player);
-
             }
             else
             {
