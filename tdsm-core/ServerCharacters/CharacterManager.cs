@@ -176,6 +176,7 @@ namespace TDSM.Core.ServerCharacters
                 }
 
                 //Check to make sure the player is the same player (ie skin, clothes)
+                //Add hooks for pre and post apply
 
                 ssc.ApplyToPlayer(player);
             }

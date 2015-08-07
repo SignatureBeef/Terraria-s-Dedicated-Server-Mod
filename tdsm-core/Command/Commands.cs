@@ -504,8 +504,8 @@ namespace TDSM.Core
                     return;
                 }
 
-                //subject.HealEffect(subject.statLifeMax, true);
-                NetMessage.SendData(35, -1, -1, String.Empty, subject.whoAmI, (float)subject.statLifeMax, 0f, 0f, 0);
+                NetMessage.SendData((int)Packet.HEAL_PLAYER, -1, -1, String.Empty, subject.whoAmI, (float)subject.statLifeMax);
+                subject.Message("You have been healed!", Color.Green);
             }
             else if (args.TryPop("-all"))
             {
@@ -513,7 +513,8 @@ namespace TDSM.Core
                 {
                     if (plr.active)
                     {
-                        NetMessage.SendData(35, -1, -1, String.Empty, plr.whoAmI, (float)plr.statLifeMax, 0f, 0f, 0);
+                        NetMessage.SendData((int)Packet.HEAL_PLAYER, -1, -1, String.Empty, plr.whoAmI, (float)plr.statLifeMax);
+                        plr.Message("You have been healed!", Color.Green);
                     }
                 }
             }

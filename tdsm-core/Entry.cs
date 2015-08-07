@@ -356,13 +356,13 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.timelock")
                 .Calls(this.Timelock);
 
-            //AddCommand("heal")
-            //    .WithAccessLevel(AccessLevel.OP)
-            //    .WithDescription("Heals one or all players.")
-            //    .WithHelpText("<player>")
-            //    .WithHelpText("-all")
-            //    .WithPermissionNode("tdsm.heal")
-            //    .Calls(this.Heal);
+            AddCommand("heal")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Heals one or all players.")
+                .WithHelpText("<player>")
+                .WithHelpText("-all")
+                .WithPermissionNode("tdsm.heal")
+                .Calls(this.Heal);
 
             AddCommand("hardmode")
                 .WithAccessLevel(AccessLevel.OP)
@@ -1009,9 +1009,7 @@ namespace TDSM.Core
                 }
             }
 
-            ctx.Player.SendMessage("Current players: " + list + ".", 255, 255, 240, 20);
-
-            ProgramLog.Plugin.Log("GP Health: " + ctx.Player.statLife);
+            ctx.Player.SendMessage("Current players: " + list + ".", 255, 255, 240, 20); 
         }
 
         [Hook(HookOrder.NORMAL)]

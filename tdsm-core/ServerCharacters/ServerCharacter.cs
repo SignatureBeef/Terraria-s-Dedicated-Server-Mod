@@ -174,6 +174,8 @@ namespace TDSM.Core.ServerCharacters
             this.Inventory = info.Inventory
                 .Select((item, index) => item == null ? null : new SlotItem(item.NetId, item.Stack, item.Prefix, index))
                 .ToList();
+
+//            player.anglerQuestsFinished
         }
 
         /// <summary>
@@ -361,6 +363,8 @@ namespace TDSM.Core.ServerCharacters
 
             //Mana
             NetMessage.SendData(42, player.whoAmI, -1, "", player.whoAmI);
+
+            //TODO buffs, quests
         }
 
         public void Dispose()
