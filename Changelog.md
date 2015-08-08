@@ -1,0 +1,55 @@
+# TDSM Changelog
+
+## Build 5
+- Added send data hook
+- Missing shims for mono ahead of time compilation
+- Wrong disconnectee fix
+- Send net message hook
+- Motd new line fix
+- Server side characters
+- Heal command
+
+## Build 4
+- Fixed vanilla Terraria permission nodes
+- Fixed invasion warnings and fixed support for multiple npc's
+- Fixed some cases where libraries weren't being loaded from the Libraries folder
+- Reimplemented coloured console
+- Added MDB files for debugging
+- Fixed heartbeat code where the build was more than expected
+- Added SQLite dependency for windows machines
+- Fixed assembly resolution issues. tdsm.api.dll is now TDSM.API.dll, and tdsm.core.dll is TDSM.Core.dll
+
+## Build 3
+- Official support for Terraria 1.3.0.7
+- Brand new Data API (SQLite & MySQL connectors provided - MSSQL soon)
+- Brand new Permissions system
+- New commands such as auth, user, group
+- All invasions are now up to date
+- Spawnboss now covers all bosses
+- All latest world events
+- Custom invasions
+- Auto server list publishing to the TDSM website (upcoming)
+- Many stability fixes
+- Fixed LUA issues when using AccessLevel
+- Fixed RCON invalid user exception
+- Op system now utilises the Data API when possible
+- Fixed problems when running TDSM from another directory
+- Give command now supports prefixes
+- Exit crash fixes (a couple of these)
+- Mimic names corrected
+- Plugins now disable on exit
+- The default World path for TDSM is now only created when required
+- TDSM config files can now read space-seperated keys
+- Ghost crash fix
+- API can now handle passwords (allow server and user passwords)
+- World removal fix
+- Mono client connection code does not require a custom server (this may however be reintroduced)
+- Exit command now saves before exiting
+- Namespacing change (Plugin developers please adjust - this was done sooner than later)
+- NPC and item definition updates
+- Added an F# plugin
+- No need to two versions of TDSM (mono/windows) anymore
+- Reintroduced the Libraries folder for organisation
+- Fixed the help command not showing the commands where the plugin name was the same
+- PID file reintroduced
+- Heartbeat to the TDSM master server
