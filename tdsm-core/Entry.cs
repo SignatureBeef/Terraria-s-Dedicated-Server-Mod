@@ -1018,7 +1018,7 @@ namespace TDSM.Core
         void OnGreetPlayer(ref HookContext ctx, ref HookArgs.PlayerPreGreeting args)
         {
             ctx.SetResult(HookResult.IGNORE);
-            var lines = args.Motd.Split(new string[] { "\\n" }, StringSplitOptions.None);
+            var lines = args.Motd.Split(new string[]{ "\\0" }, StringSplitOptions.None);
             foreach (var line in lines)
                 ctx.Player.SendMessage(line, 255, 0, 0, 255);
 
