@@ -97,6 +97,27 @@ namespace tdsm.patcher
         }
 
         [Hook]
+        private void OnPlayerLeave()
+        {
+            var clientReset = Terraria.RemoteClient.Methods.Single(x => x.Name == "Reset");
+            var callback = API.VanillaHooks.Methods.Single(x => x.Name == "OnPlayerLeave");
+
+            //Find the first ldsfld where the player is being reset
+            var ins = clientReset.Body.Instructions.First(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "player");
+
+            var il = clientReset.Body.GetILProcessor();
+
+            //Insert the player reference on the stack
+            il.InsertBefore(ins, il.Create(OpCodes.Ldsfld, ins.Operand as FieldReference)); //Static Player array
+            il.InsertBefore(ins, il.Create(OpCodes.Ldarg_0)); //Current RemoteClient object
+            il.InsertBefore(ins, il.Create(OpCodes.Ldfld, _asm.MainModule.Import(Terraria.RemoteClient.Fields.Single(x => x.Name == "Id")))); //Id (index) for use with the player array
+            il.InsertBefore(ins, il.Create(OpCodes.Ldelem_Ref)); //Now load the array at the index
+
+            //Call the hook with the player
+            il.InsertBefore(ins, il.Create(OpCodes.Call, _asm.MainModule.Import(callback)));
+        }
+
+        [Hook]
         private void OnGreetPlayer()
         {
             var greetPlayer = Terraria.NetMessage.Methods.Single(x => x.Name == "greetPlayer");

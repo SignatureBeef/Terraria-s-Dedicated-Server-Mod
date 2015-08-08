@@ -17,7 +17,6 @@ namespace TDSM.API.Callbacks
 
     public static class VanillaHooks
     {
-
         public static void OnPlayerEntering(Player player)
         {
             #if Full_API
@@ -38,6 +37,25 @@ namespace TDSM.API.Callbacks
             {
                 NetMessage.SendData(4, -1, player.whoAmI, player.name, player.whoAmI, 0f, 0f, 0f, 0, 0, 0);
             }
+            #endif
+        }
+
+        public static void OnPlayerLeave(Player player)
+        {
+            #if Full_API
+            var ctx = new HookContext
+            {
+                Player = player,
+                Sender = player
+            };
+
+            var args = new HookArgs.PlayerLeftGame
+            {
+                Slot = player.whoAmI
+            };
+
+            ctx.SetResult(HookResult.DEFAULT, false);
+            HookPoints.PlayerLeftGame.Invoke(ref ctx, ref args);
             #endif
         }
 
