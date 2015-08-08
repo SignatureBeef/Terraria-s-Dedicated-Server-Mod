@@ -16,8 +16,6 @@ namespace TDSM.Core.ServerCharacters
 
     public class ServerCharacter : IDisposable
     {
-        public bool Male { get; set; }
-
         public int Health { get; set; }
 
         public int MaxHealth { get; set; }
@@ -58,6 +56,8 @@ namespace TDSM.Core.ServerCharacters
 
         public System.Collections.Generic.List<SlotItem> Armor { get; set; }
 
+        public int AnglerQuests { get; set; }
+
         /// <summary>
         /// NEVER USE THIS - Reflection only
         /// 
@@ -94,6 +94,8 @@ namespace TDSM.Core.ServerCharacters
             this.UnderShirtColor = player.underShirtColor;
             this.PantsColor = player.pantsColor;
             this.ShoeColor = player.shoeColor;
+
+            this.AnglerQuests = player.anglerQuestsFinished;
 
             this.Inventory = player.inventory
                 .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
@@ -143,11 +145,6 @@ namespace TDSM.Core.ServerCharacters
 
         public ServerCharacter(NewPlayerInfo info, Player player)
         {
-            //I need to test this soon. I'm not sure that the first time a player authenticates whether we use the existing player data (ie male, colours etc)
-            //At this stage, it'll clone
-
-            //this.Male = player.male;
-
             this.Health = info.Health;
             this.MaxHealth = info.Health;
 
@@ -171,6 +168,8 @@ namespace TDSM.Core.ServerCharacters
             this.PantsColor = player.pantsColor;
             this.ShoeColor = player.shoeColor;
 
+            this.AnglerQuests = player.anglerQuestsFinished;
+
             this.Inventory = info.Inventory
                 .Select((item, index) => item == null ? null : new SlotItem(item.NetId, item.Stack, item.Prefix, index))
                 .ToList();
@@ -184,7 +183,6 @@ namespace TDSM.Core.ServerCharacters
         /// <param name="player"></param>
         public void ApplyToPlayer(Player player)
         {
-            //player.male = this.Male;
             try
             {
                 player.statLife = this.Health;
@@ -209,6 +207,8 @@ namespace TDSM.Core.ServerCharacters
                 player.underShirtColor = this.UnderShirtColor.ToXna();
                 player.pantsColor = this.PantsColor.ToXna();
                 player.shoeColor = this.ShoeColor.ToXna();
+
+                player.anglerQuestsFinished = this.AnglerQuests;
             }
             catch (Exception e)
             {
@@ -226,9 +226,7 @@ namespace TDSM.Core.ServerCharacters
                     player.inventory[i].name = String.Empty;
                     player.inventory[i].SetDefaults(0);
                 }
-                #if PRINT_DEBUG
-                ProgramLog.Plugin.Log("Inventory set (" + player.inventory.Length + ")");
-                #endif
+
                 if (this.Inventory != null)
                     foreach (var slotItem in this.Inventory)
                     {
@@ -319,59 +317,62 @@ namespace TDSM.Core.ServerCharacters
             msg.BuildPlayerUpdate(player.whoAmI);
             msg.Broadcast();
 #endif
-            for (int k = 0; k < 59; k++)
+            for (int i = 0; i < 59; i++)
             {
-//                Console.WriteLine(player.inventory[k].type);
-                NetMessage.SendData(5, -1, -1, player.inventory[k].name, player.whoAmI, (float)k, (float)player.inventory[k].prefix, 0, 0, 0, 0);
-                NetMessage.SendData(5, player.whoAmI, -1, player.inventory[k].name, player.whoAmI, (float)k, (float)player.inventory[k].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, -1, -1, player.inventory[i].name, player.whoAmI, (float)i, (float)player.inventory[i].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, player.inventory[i].name, player.whoAmI, (float)i, (float)player.inventory[i].prefix, 0, 0, 0, 0);
             }
-            for (int l = 0; l < player.armor.Length; l++)
+            for (int i = 0; i < player.armor.Length; i++)
             {
-                NetMessage.SendData(5, -1, -1, player.armor[l].name, player.whoAmI, (float)(59 + l), (float)player.armor[l].prefix, 0, 0, 0, 0);
-                NetMessage.SendData(5, player.whoAmI, -1, player.armor[l].name, player.whoAmI, (float)(59 + l), (float)player.armor[l].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, -1, -1, player.armor[i].name, player.whoAmI, (float)(59 + i), (float)player.armor[i].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, player.armor[i].name, player.whoAmI, (float)(59 + i), (float)player.armor[i].prefix, 0, 0, 0, 0);
             }
-            for (int m = 0; m < player.dye.Length; m++)
+            for (int i = 0; i < player.dye.Length; i++)
             {
-                NetMessage.SendData(5, -1, -1, player.dye[m].name, player.whoAmI, (float)(58 + player.armor.Length + 1 + m), (float)player.dye[m].prefix, 0, 0, 0, 0);
-                NetMessage.SendData(5, player.whoAmI, -1, player.dye[m].name, player.whoAmI, (float)(58 + player.armor.Length + 1 + m), (float)player.dye[m].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, -1, -1, player.dye[i].name, player.whoAmI, (float)(58 + player.armor.Length + 1 + i), (float)player.dye[i].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, player.dye[i].name, player.whoAmI, (float)(58 + player.armor.Length + 1 + i), (float)player.dye[i].prefix, 0, 0, 0, 0);
             }
-            for (int n = 0; n < player.miscEquips.Length; n++)
+            for (int i = 0; i < player.miscEquips.Length; i++)
             {
-                NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + 1 + n), (float)player.miscEquips[n].prefix, 0, 0, 0, 0);
-                NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + 1 + n), (float)player.miscEquips[n].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, -1, -1, String.Empty, player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + 1 + i), (float)player.miscEquips[i].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, String.Empty, player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + 1 + i), (float)player.miscEquips[i].prefix, 0, 0, 0, 0);
             }
-            for (int num3 = 0; num3 < player.miscDyes.Length; num3++)
+            for (int i = 0; i < player.miscDyes.Length; i++)
             {
-                NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + 1 + num3), (float)player.miscDyes[num3].prefix, 0, 0, 0, 0);
-                NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + 1 + num3), (float)player.miscDyes[num3].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, -1, -1, String.Empty, player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + 1 + i), (float)player.miscDyes[i].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, String.Empty, player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + 1 + i), (float)player.miscDyes[i].prefix, 0, 0, 0, 0);
             }
-            for (int num4 = 0; num4 < player.bank.item.Length; num4++)
+            for (int i = 0; i < player.bank.item.Length; i++)
             {
-                NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + 1 + num4), (float)player.bank.item[num4].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, String.Empty, player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + 1 + i), (float)player.bank.item[i].prefix, 0, 0, 0, 0);
             }
-            for (int num5 = 0; num5 < player.bank2.item.Length; num5++)
+            for (int i = 0; i < player.bank2.item.Length; i++)
             {
-                NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + 1 + num5), (float)player.bank2.item[num5].prefix, 0, 0, 0, 0);
-                NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + 1 + num5), (float)player.bank2.item[num5].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, -1, -1, String.Empty, player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + 1 + i), (float)player.bank2.item[i].prefix, 0, 0, 0, 0);
+                NetMessage.SendData(5, player.whoAmI, -1, String.Empty, player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + 1 + i), (float)player.bank2.item[i].prefix, 0, 0, 0, 0);
             }
-            NetMessage.SendData(5, -1, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + player.bank2.item.Length + 1), (float)player.trashItem.prefix, 0, 0, 0, 0);
-            NetMessage.SendData(5, player.whoAmI, -1, "", player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + player.bank2.item.Length + 1), (float)player.trashItem.prefix, 0, 0, 0, 0);
 
+            //Trash
+            NetMessage.SendData(5, -1, -1, String.Empty, player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + player.bank2.item.Length + 1), (float)player.trashItem.prefix, 0, 0, 0, 0);
+            NetMessage.SendData(5, player.whoAmI, -1, String.Empty, player.whoAmI, (float)(58 + player.armor.Length + player.dye.Length + player.miscEquips.Length + player.miscDyes.Length + player.bank.item.Length + player.bank2.item.Length + 1), (float)player.trashItem.prefix, 0, 0, 0, 0);
 
             //Health
-            NetMessage.SendData(16, player.whoAmI, -1, "", player.whoAmI);
+            NetMessage.SendData(16, player.whoAmI, -1, String.Empty, player.whoAmI);
 
             //Mana
-            NetMessage.SendData(42, player.whoAmI, -1, "", player.whoAmI);
+            NetMessage.SendData(42, player.whoAmI, -1, String.Empty, player.whoAmI);
 
-            //TODO buffs, quests
+            //Quests
+            NetMessage.SendData(76, -1, -1, String.Empty, player.whoAmI);
+
+            //TODO buffs
         }
 
         public void Dispose()
         {
-            this.Male = false;
-
             this.Mana = 0;
+            this.MaxMana = 0;
+
             this.Health = 0;
             this.MaxHealth = 0;
 
@@ -391,6 +392,8 @@ namespace TDSM.Core.ServerCharacters
             this.UnderShirtColor = null;
             this.PantsColor = null;
             this.ShoeColor = null;
+
+            this.AnglerQuests = 0;
 
             this.Inventory.Clear();
             this.Inventory = null;

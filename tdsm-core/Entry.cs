@@ -492,6 +492,7 @@ namespace TDSM.Core
                 .WithHelpText("list")
                 .WithHelpText("listnodes <group>")
                 .Calls(this.GroupPermission);
+            
             AddCommand("user")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.user")
@@ -505,16 +506,40 @@ namespace TDSM.Core
                 .WithHelpText("listgroups")
                 .WithHelpText("listnodes")
                 .Calls(this.UserPermission);
+            
             AddCommand("killnpc")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.killnpc")
                 .WithDescription("Kill all non town NPC's")
                 .Calls(this.KillNPC);
+            
             AddCommand("auth")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithPermissionNode("tdsm.auth")
                 .WithDescription("Sign in")
                 .Calls(this.Auth);
+            
+            AddCommand("grow")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.grow")
+                .Calls((ISender sender, ArgumentList args) =>
+                {
+                    if (null == WorldGen.genRand) WorldGen.genRand = new Random();
+                    var ply = sender as Player;
+                    int tileX = (int)(ply.position.X / 16f), tileY = (int)((ply.position.Y + ply.height) / 16f);
+
+//                    if (args.TryPop("-alch")) WorldGen.GrowAlch(tileX, tileY);
+//                    else if (args.TryPop("-cactus")) WorldGen.GrowCactus(tileX, tileY);
+                    if (args.TryPop("-epictree")) WorldGen.GrowEpicTree(tileX, tileY);
+//                    else if (args.TryPop("-livingtree")) WorldGen.GrowLivingTree(tileX, tileY);
+                    else if (args.TryPop("-palmtree")) WorldGen.GrowPalmTree(tileX, tileY);
+//                    else if (args.TryPop("-pumpkin")) WorldGen.GrowPumpkin(tileX, tileY);
+                    else if (args.TryPop("-shroom")) WorldGen.GrowShroom(tileX, tileY);
+//                    else if (args.TryPop("-spike")) WorldGen.GrowSpike(tileX, tileY);
+                    else if (args.TryPop("-tree")) WorldGen.GrowTree(tileX, tileY);
+                    else if (args.TryPop("-undergroundtree")) WorldGen.GrowUndergroundTree(tileX, tileY);
+                    else throw new CommandError("Element not supported");
+                });
 #endif
 
             if (!DefinitionManager.Initialise())
@@ -1159,14 +1184,14 @@ namespace TDSM.Core
             }
         }
 
-//        void OnPlayerDataReceived(ref HookContext ctx, ref HookArgs.PlayerDataReceived args)
-//        {
-//            //If the player is not authenticated, then ensure they are reset
-//            if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
-//            {
-//                
-//            }
-//        }
+        //        void OnPlayerDataReceived(ref HookContext ctx, ref HookArgs.PlayerDataReceived args)
+        //        {
+        //            //If the player is not authenticated, then ensure they are reset
+        //            if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
+        //            {
+        //
+        //            }
+        //        }
 
         [Hook]
         void OnNetMessageSend(ref HookContext ctx, ref HookArgs.SendNetMessage args)

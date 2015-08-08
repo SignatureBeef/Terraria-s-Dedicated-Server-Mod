@@ -215,7 +215,7 @@ namespace tdsm.patcher
 #if SERVER
             Console.Write("Opening up classes for API usage...");
             patcher.MakeTypesPublic(true);
-            patcher. MakeEverythingAccessible();
+            patcher.MakeEverythingAccessible();
             Console.Write("Ok\nHooking command line...");
             patcher.PatchCommandLine();
             Console.Write("Ok\nHooking players...");
