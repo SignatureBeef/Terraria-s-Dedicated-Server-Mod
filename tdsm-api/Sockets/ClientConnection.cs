@@ -61,6 +61,7 @@ namespace TDSM.API.Sockets
             _remoteAddress = new TcpAddress(remoteEndPoint.Address, remoteEndPoint.Port);
 
             sock.LingerState = new LingerOption(true, 10);
+            sock.NoDelay = true;
 
             var ctx = new HookContext
             {
@@ -292,11 +293,17 @@ namespace TDSM.API.Sockets
         bool ISocket.StartListening(SocketConnectionAccepted callback)
         {
             #if Full_API
+            IPAddress any = IPAddress.Any;
+            string ipString;
+            if (Program.LaunchParameters.TryGetValue ("-ip", out ipString) && !IPAddress.TryParse (ipString, out any))
+            {
+                any = IPAddress.Any;
+            }
             this._isListening = true;
             this._listenerCallback = callback;
             if (this._listener == null)
             {
-                this._listener = new TcpListener(IPAddress.Any, Netplay.ListenPort);
+                this._listener = new TcpListener(any, Netplay.ListenPort);
             }
             try
             {

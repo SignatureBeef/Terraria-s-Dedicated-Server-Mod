@@ -496,6 +496,8 @@ namespace TDSM.API.Plugin
                 player.pantsColor = PantsColor;
                 player.shoeColor = ShoeColor;
                 player.extraAccessory = ExtraAccessory;
+
+                Netplay.Clients[player.whoAmI].Name = Name;
             }
             #endif
 

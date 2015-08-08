@@ -661,6 +661,7 @@ namespace TDSM.Core
         [Hook(HookOrder.NORMAL)]
         void OnPlayerDisconnected(ref HookContext ctx, ref HookArgs.PlayerLeftGame args)
         {
+            ProgramLog.Admin.Log("Player disconnected");
 #if TDSMServer
             if (RestartWhenNoPlayers && ClientConnection.All.Count - 1 == 0)
             {
