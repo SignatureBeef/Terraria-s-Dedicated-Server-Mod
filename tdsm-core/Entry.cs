@@ -82,6 +82,8 @@ namespace TDSM.Core
 
         public bool StopNPCSpawning { get; set; }
 
+        public bool TimeFastForwarding { get; set; }
+
         public bool RunServerCore { get; set; }
 
         private string _webServerAddress { get; set; }
@@ -356,6 +358,12 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.timelock")
                 .Calls(this.Timelock);
 
+            AddCommand("fastforwardtime")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Fast forwards time until disabled.")
+                .WithPermissionNode("tdsm.fastforwardtime")
+                .Calls(this.FastForwardTime);
+
             AddCommand("heal")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Heals one or all players.")
@@ -518,7 +526,7 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.auth")
                 .WithDescription("Sign in")
                 .Calls(this.Auth);
-            
+
             AddCommand("grow")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.grow")
@@ -528,17 +536,30 @@ namespace TDSM.Core
                     var ply = sender as Player;
                     int tileX = (int)(ply.position.X / 16f), tileY = (int)((ply.position.Y + ply.height) / 16f);
 
-//                    if (args.TryPop("-alch")) WorldGen.GrowAlch(tileX, tileY);
-//                    else if (args.TryPop("-cactus")) WorldGen.GrowCactus(tileX, tileY);
+                    //                    if (args.TryPop("-alch")) WorldGen.GrowAlch(tileX, tileY);
+                    //                    else if (args.TryPop("-cactus")) WorldGen.GrowCactus(tileX, tileY);
                     if (args.TryPop("-epictree")) WorldGen.GrowEpicTree(tileX, tileY);
-//                    else if (args.TryPop("-livingtree")) WorldGen.GrowLivingTree(tileX, tileY);
-                    else if (args.TryPop("-palmtree")) WorldGen.GrowPalmTree(tileX, tileY);
-//                    else if (args.TryPop("-pumpkin")) WorldGen.GrowPumpkin(tileX, tileY);
-                    else if (args.TryPop("-shroom")) WorldGen.GrowShroom(tileX, tileY);
-//                    else if (args.TryPop("-spike")) WorldGen.GrowSpike(tileX, tileY);
-                    else if (args.TryPop("-tree")) WorldGen.GrowTree(tileX, tileY);
+                        //                    else if (args.TryPop("-livingtree")) WorldGen.GrowLivingTree(tileX, tileY);
+                        else if (args.TryPop("-palmtree")) WorldGen.GrowPalmTree(tileX, tileY);
+                        //                    else if (args.TryPop("-pumpkin")) WorldGen.GrowPumpkin(tileX, tileY);
+                        else if (args.TryPop("-shroom")) WorldGen.GrowShroom(tileX, tileY);
+                        //                    else if (args.TryPop("-spike")) WorldGen.GrowSpike(tileX, tileY);
+                        else if (args.TryPop("-tree")) WorldGen.GrowTree(tileX, tileY);
                     else if (args.TryPop("-undergroundtree")) WorldGen.GrowUndergroundTree(tileX, tileY);
                     else throw new CommandError("Element not supported");
+                });
+
+            AddCommand("abuff")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.abuff")
+                .Calls((ISender sender, ArgumentList args) =>
+                {
+                    var time = args.GetInt(0);
+
+                    (sender as Player).AddBuff(21, time);
+
+                    NetMessage.SendData(55, -1, -1, "", (sender as Player).whoAmI, 21, time, 0, 0, 0, 0);
+                    NetMessage.SendData(55, (sender as Player).whoAmI, -1, "", (sender as Player).whoAmI, 21, time);
                 });
 #endif
 
@@ -661,6 +682,10 @@ namespace TDSM.Core
         [Hook(HookOrder.NORMAL)]
         void OnPlayerDisconnected(ref HookContext ctx, ref HookArgs.PlayerLeftGame args)
         {
+            if (Terraria.Main.ServerSideCharacter)
+            {
+                CharacterManager.SavePlayerData(ctx.Player);
+            }
 #if TDSMServer
             if (RestartWhenNoPlayers && ClientConnection.All.Count - 1 == 0)
             {
@@ -756,6 +781,8 @@ namespace TDSM.Core
                 Terraria.Main.slimeRain = TimelockSlimeRain;
                 //TODO: verify
             }
+
+            if (TimeFastForwarding) Terraria.Main.fastForwardTime = true;
 
             if (Terraria.Main.ServerSideCharacter)
             {

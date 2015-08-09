@@ -1142,6 +1142,19 @@ namespace TDSM.Core
         }
 
         /// <summary>
+        /// Fast forwards time
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public void FastForwardTime(ISender sender, ArgumentList args)
+        {
+            args.ParseNone();
+
+            TimeFastForwarding = !TimeFastForwarding;
+            sender.Message("Time is now " + (TimeFastForwarding ? "fast" : "normal") + "!");
+        }
+
+        /// <summary>
         /// Kicks a given Player from the server
         /// </summary>
         /// <param name="sender">Sending player</param>

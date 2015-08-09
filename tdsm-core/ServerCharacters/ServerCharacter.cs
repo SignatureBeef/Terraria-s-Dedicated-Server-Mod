@@ -58,6 +58,10 @@ namespace TDSM.Core.ServerCharacters
 
         public int AnglerQuests { get; set; }
 
+        public int[] Buffs { get; set; }
+
+        public int[] BuffTime { get; set; }
+
         /// <summary>
         /// NEVER USE THIS - Reflection only
         /// 
@@ -111,6 +115,9 @@ namespace TDSM.Core.ServerCharacters
                 .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
                 .Where(x => x != null)
                 .ToList();
+
+            this.Buffs = player.buffType;
+            this.BuffTime = player.buffTime;
 
             //this.Inventory = new System.Collections.Generic.List<SlotItem>();
             //for (var x = 0; x < player.inventory.Length; x++)
@@ -170,9 +177,23 @@ namespace TDSM.Core.ServerCharacters
 
             this.AnglerQuests = player.anglerQuestsFinished;
 
-            this.Inventory = info.Inventory
-                .Select((item, index) => item == null ? null : new SlotItem(item.NetId, item.Stack, item.Prefix, index))
+            this.Inventory = player.inventory
+                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
+                .Where(x => x != null)
                 .ToList();
+
+            this.Dye = player.dye
+                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
+                .Where(x => x != null)
+                .ToList();
+
+            this.Armor = player.armor
+                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
+                .Where(x => x != null)
+                .ToList();
+
+            this.Buffs = player.buffType;
+            this.BuffTime = player.buffTime;
 
 //            player.anglerQuestsFinished
         }
@@ -319,6 +340,7 @@ namespace TDSM.Core.ServerCharacters
 #endif
             for (int i = 0; i < 59; i++)
             {
+                
                 NetMessage.SendData(5, -1, -1, player.inventory[i].name, player.whoAmI, (float)i, (float)player.inventory[i].prefix, 0, 0, 0, 0);
                 NetMessage.SendData(5, player.whoAmI, -1, player.inventory[i].name, player.whoAmI, (float)i, (float)player.inventory[i].prefix, 0, 0, 0, 0);
             }
@@ -365,7 +387,24 @@ namespace TDSM.Core.ServerCharacters
             //Quests
             NetMessage.SendData(76, -1, -1, String.Empty, player.whoAmI);
 
-            //TODO buffs
+            //Buffs
+//            if (this.Buffs != null && this.BuffTime != null)
+//            {
+//                var max = Math.Min(this.Buffs.Length, this.BuffTime.Length);
+//                for (var x = 0; x < max; x++)
+//                {
+//                    if (this.Buffs[x] > 0)
+//                    {
+//                        var time = this.BuffTime[x] * 60;
+//
+//                        ProgramLog.Plugin.Log("Adding buff {0} for {1}/{2}", this.Buffs[x], time, this.BuffTime[x]);
+//
+//                        player.AddBuff(this.Buffs[x], time);
+//                        NetMessage.SendData(55, -1, -1, String.Empty, player.whoAmI, this.Buffs[x], time);
+//                        NetMessage.SendData(55, player.whoAmI, -1, String.Empty, player.whoAmI, this.Buffs[x], time);
+//                    }
+//                }
+//            }
         }
 
         public void Dispose()
@@ -401,6 +440,9 @@ namespace TDSM.Core.ServerCharacters
             this.Dye = null;
             this.Armor.Clear();
             this.Armor = null;
+
+            this.Buffs = null;
+            this.BuffTime = null;
         }
     }
 

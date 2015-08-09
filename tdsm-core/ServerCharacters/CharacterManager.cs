@@ -150,6 +150,21 @@ namespace TDSM.Core.ServerCharacters
 
                     var file = Path.Combine(dir, authName + ".ssc");
                     var data = new ServerCharacter(player);
+
+//                    if (data.Buffs != null && data.BuffTime != null)
+//                    {
+//                        var max = Math.Min(data.Buffs.Length, data.BuffTime.Length);
+//                        for (var x = 0; x < max; x++)
+//                        {
+//                            if (data.Buffs[x] > 0)
+//                            {
+//                                var time = data.BuffTime[x] * 60;
+//
+//                                ProgramLog.Plugin.Log("Saving buff {0} for {1}/{2}", data.Buffs[x], time, data.BuffTime[x]);
+//                            }
+//                        }
+//                    }
+
                     var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
                     System.IO.File.WriteAllText(file, json);
                     return true;
