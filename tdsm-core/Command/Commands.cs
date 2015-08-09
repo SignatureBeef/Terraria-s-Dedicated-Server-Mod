@@ -2374,22 +2374,25 @@ namespace TDSM.Core
                         sender.Message("The slime rain was disabled.");
                     }
                     break;
-            //case "rain":
-            //    if (!Main.raining)
-            //    {
-            //        _disableActiveEvents(sender);
-            //        Main.raining = true;
-            //        NetMessage.SendData((int)Packet.WORLD_DATA);
+                case "rain":
+                    if (!Main.raining)
+                    {
+                        _disableActiveEvents(sender);
+//                        Main.raining = true;
+//                        Main.rainTime = 3600;
+//                        NetMessage.SendData((int)Packet.WORLD_DATA);
+                        Main.StartRain();
 
-            //        sender.Message("Rain was enabled.");
-            //    }
-            //    else
-            //    {
-            //        Main.raining = false;
-            //        NetMessage.SendData((int)Packet.WORLD_DATA);
-            //        sender.Message("The rain was disabled.");
-            //    }
-            //    break;
+                        sender.Message("Rain was enabled.");
+                    }
+                    else
+                    {
+//                        Main.raining = false;
+//                        NetMessage.SendData((int)Packet.WORLD_DATA);
+                        Main.StopRain();
+                        sender.Message("The rain was disabled.");
+                    }
+                    break;
                 default:
                     throw new CommandError("Not a supported event " + first);
             }

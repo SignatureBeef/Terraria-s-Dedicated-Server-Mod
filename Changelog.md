@@ -7,7 +7,8 @@
 - Send net message hook
 - Motd new line fix
 - Server side characters
-- Heal command
+- New command: fastforwardtime
+- New command: heal
 
 ## Build 4
 - Fixed vanilla Terraria permission nodes
