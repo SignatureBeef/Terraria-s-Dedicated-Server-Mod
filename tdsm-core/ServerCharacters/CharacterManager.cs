@@ -179,17 +179,6 @@ namespace TDSM.Core.ServerCharacters
 
             if (ssc != null)
             {
-                ProgramLog.Log("Has SSC data");
-
-                if (null != ssc.Inventory && ssc.Inventory.Count > 0)
-                {
-                    ProgramLog.Log("Inventory size: " + ssc.Inventory.Count);
-                }
-                else
-                {
-                    ProgramLog.Log("No inventory");
-                }
-
                 //Check to make sure the player is the same player (ie skin, clothes)
                 //Add hooks for pre and post apply
 

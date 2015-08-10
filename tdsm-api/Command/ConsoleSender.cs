@@ -46,7 +46,7 @@ namespace TDSM.API.Command
             if (_consoleMethod == null)
             {
                 if (R == 255 && G == 255 && B == 255)
-                    ProgramLog.Console.Print(message);
+                    Console.WriteLine(message); //ProgramLog.Console.Print(message);
                 else
                 {
                     //Console.ForegroundColor = FromColor(R, G, B);
