@@ -185,7 +185,7 @@ namespace TDSM.Data.MySQL
                         {
                             var prop = tp.GetProperty(col.ColumnName);
                             if (prop != null)
-                                prop.SetValue(boxed, val);
+                                prop.SetValue(boxed, val, null);
                         }
                     }
                     records[x] = (T)boxed;

@@ -168,7 +168,7 @@ namespace TDSM.Data.SQLite
                         {
                             var prop = tp.GetProperty(col.ColumnName);
                             if (prop != null)
-                                prop.SetValue(boxed, GetTypeValue(prop.PropertyType, val));
+                                prop.SetValue(boxed, GetTypeValue(prop.PropertyType, val), null);
                         }
                     }
                     records[x] = (T)boxed;

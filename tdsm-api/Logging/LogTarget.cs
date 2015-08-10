@@ -150,7 +150,6 @@ namespace TDSM.API.Logging
 						if (entry.prefix != null)
 						{
                             SetColor (ConsoleColor.Gray);
-                            System.Diagnostics.Debug.Write("P" + entry.prefix);
 							writer.Write (entry.prefix);
 							backspace -= entry.prefix.Length;
 						}
@@ -164,7 +163,6 @@ namespace TDSM.API.Logging
 						{
 							var str = (string) entry.message;
                             writer.WriteLine(str);
-                            System.Diagnostics.Debug.Write("S" + str);
 							HandleConsoleHook(str, entry.logger);
 							backspace -= str.Length;
 						}
@@ -189,7 +187,6 @@ namespace TDSM.API.Logging
 							}
 							
                             backspace -= str.Length;
-                            System.Diagnostics.Debug.Write("W");
                             if (backspace <= 0)
                             {
                                 writer.WriteLine(str);
@@ -212,7 +209,6 @@ namespace TDSM.API.Logging
 						var str = String.Format ("[ {0} ] ", prog.Format());
 						backspace += str.Length;
                         writer.Write (str);
-                        System.Diagnostics.Debug.Write("C" + str);
 					}
 					
 					if (progs.Count > 0)
