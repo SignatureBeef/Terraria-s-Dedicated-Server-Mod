@@ -16,7 +16,7 @@ TDSM is a server modification of the official Terraria dedicated server software
 Get more [Help](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server) with installing.
 
 ## Testing
-If you would like to help test and get the unstable development build, you can just grab all the files from the "[Binaries](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries)" directory. Those are always updated with each commit. Please use the GitHub Issues section to report bugs. Of course you can always drop by #support in our Slack chat (read more below), but we ask that if it's an actual bug report, to please report it in GitHub so we can track it. It also serves as a reminder.
+If you would like to help test and get the unstable development build, you can just grab all the files from the "[Binaries](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries)" directory. Those are always updated with each commit. Please use the GitHub Issues section to report bugs. Of course you can always drop by #support in our Slack chat (read more below), but we ask that if it's an actual bug report, to please report it in GitHub so we can track it. It also serves as a reminder. You may also see the changes between builds and upcoming builds by checking out the  [CHANGELOG.MD](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/blob/master/CHANGELOG.MD) file.
 
 ## Getting Help
 Need help? Sure, no problem. ;)
