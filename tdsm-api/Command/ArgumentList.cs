@@ -606,6 +606,11 @@ namespace TDSM.API.Command
 
             return false;
         }
+
+        public override string ToString()
+        {
+            return String.Join(" ", this.ToArray());
+        }
     }
 
     public struct WorldTime

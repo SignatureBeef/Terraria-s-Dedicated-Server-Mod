@@ -709,6 +709,7 @@ namespace TDSM.API.Command
                     if (FindTokenCommand(command, out info))
                     {
                         hargs.Arguments = args;
+                        hargs.ArgumentString = args.ToString();
 
                         foreach (BasePlugin plg in PluginManager._plugins.Values)
                         {
