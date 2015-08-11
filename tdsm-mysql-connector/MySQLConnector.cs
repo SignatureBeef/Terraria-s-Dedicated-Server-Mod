@@ -269,6 +269,7 @@ namespace TDSM.Data.MySQL
                     Append(col.Name);
                     Append("`");
 
+                    /* http://dev.mysql.com/doc/refman/5.6/en/integer-types.html */
                     if (col.DataType == typeof(Byte))
                     {
                         Append(" TINYINT UNSIGNED");
@@ -277,13 +278,25 @@ namespace TDSM.Data.MySQL
                     {
                         Append(" SMALLINT");
                     }
+                    else if (col.DataType == typeof(UInt16))
+                    {
+                        Append(" SMALLINT UNSIGNED");
+                    }
                     else if (col.DataType == typeof(Int32))
                     {
                         Append(" INT");
                     }
+                    else if (col.DataType == typeof(UInt32))
+                    {
+                        Append(" INT UNSIGNED");
+                    }
                     else if (col.DataType == typeof(Int64))
                     {
                         Append(" BIGINT");
+                    }
+                    else if (col.DataType == typeof(UInt64))
+                    {
+                        Append(" BIGINT UNSIGNED");
                     }
                     else if (col.DataType == typeof(String))
                     {

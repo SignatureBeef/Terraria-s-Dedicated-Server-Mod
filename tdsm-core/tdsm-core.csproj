@@ -80,6 +80,10 @@
     <Compile Include="RemoteConsole\RConServer.cs" />
     <Compile Include="Command\Permissions.cs" />
     <Compile Include="ServerCharacters\CharacterMode.cs" />
+    <Compile Include="ServerCharacters\Tables\CharacterTable.cs" />
+    <Compile Include="ServerCharacters\Tables\ItemTable.cs" />
+    <Compile Include="ServerCharacters\Tables\PlayerBuffTable.cs" />
+    <Compile Include="ServerCharacters\Tables\DefaultLoadoutTable.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -91,6 +95,7 @@
   <ItemGroup />
   <ItemGroup>
     <Folder Include="RemoteConsole\" />
+    <Folder Include="ServerCharacters\Tables\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">

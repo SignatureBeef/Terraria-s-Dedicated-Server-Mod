@@ -10,6 +10,15 @@ namespace TDSM.Core.ServerCharacters
 {
     public static class CharacterManager
     {
+        internal const String SQLSafeName = "tdsm";
+
+        public enum ItemType
+        {
+            Inventory = 1,
+            Armor,
+            Dye
+        }
+
         public static CharacterMode Mode { get; set; }
 
         public static NewPlayerInfo StartingOutInfo = new NewPlayerInfo()
@@ -25,6 +34,41 @@ namespace TDSM.Core.ServerCharacters
             }
         };
 
+        public static void Init()
+        {
+            if (Storage.IsAvailable)
+            {
+                if (!Tables.CharacterTable.Exists())
+                {
+                    ProgramLog.Admin.Log("SSC table does not exist and will now be created");
+                    Tables.CharacterTable.Create();
+                }
+                if (!Tables.ItemTable.Exists())
+                {
+                    ProgramLog.Admin.Log("SSC item table does not exist and will now be created");
+                    Tables.ItemTable.Create();
+                }
+                if (!Tables.PlayerBuffTable.Exists())
+                {
+                    ProgramLog.Admin.Log("SSC player buff table does not exist and will now be created");
+                    Tables.PlayerBuffTable.Create();
+                }
+                if (!Tables.DefaultLoadoutTable.Exists())
+                {
+                    ProgramLog.Admin.Log("SSC loadout table does not exist and will now be created");
+                    Tables.DefaultLoadoutTable.Create();
+                }
+            }
+
+            //Player inventory,armor,dye common table
+
+            //Default loadout table
+            LoadConfig();
+        }
+
+        /// <summary>
+        /// Load the default start gear
+        /// </summary>
         public static void LoadConfig()
         {
 

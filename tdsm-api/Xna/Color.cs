@@ -1591,7 +1591,8 @@ namespace Microsoft.Xna.Framework
             result.packedValue = (uint)(r | g | b | a);
             return result;
         }
-        private static uint PackHelper(float vectorX, float vectorY, float vectorZ, float vectorW)
+
+        public static uint PackHelper(float vectorX, float vectorY, float vectorZ, float vectorW)
         {
             uint num = PackUNorm(255f, vectorX);
             uint num2 = PackUNorm(255f, vectorY) << 8;

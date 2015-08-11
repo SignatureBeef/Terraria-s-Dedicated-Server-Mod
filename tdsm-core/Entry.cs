@@ -1080,6 +1080,11 @@ namespace TDSM.Core
                     ProgramLog.Log("Starting RCON Server");
                     RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"));
                 }
+
+                if (Terraria.Main.ServerSideCharacter)
+                {
+                    CharacterManager.Init();
+                }
             }
             if (args.ServerChangeState == ServerState.Stopping)
             {

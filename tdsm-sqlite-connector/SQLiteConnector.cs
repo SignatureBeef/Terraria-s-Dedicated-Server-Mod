@@ -270,11 +270,23 @@ namespace TDSM.Data.SQLite
                     {
                         Append(" INTEGER");
                     }
+                    else if (col.DataType == typeof(UInt16))
+                    {
+                        Append(" INTEGER");
+                    }
                     else if (col.DataType == typeof(Int32))
                     {
                         Append(" INTEGER");
                     }
+                    else if (col.DataType == typeof(UInt32))
+                    {
+                        Append(" INTEGER");
+                    }
                     else if (col.DataType == typeof(Int64))
+                    {
+                        Append(" INTEGER");
+                    }
+                    else if (col.DataType == typeof(UInt64))
                     {
                         Append(" INTEGER");
                     }
@@ -417,8 +429,7 @@ namespace TDSM.Data.SQLite
                 }
             }
 
-            return this.Append("COLLATE NOCASE")
-                ;
+            return this.Append("COLLATE NOCASE");
         }
 
         public override QueryBuilder Count(string expression = null)
@@ -500,10 +511,10 @@ namespace TDSM.Data.SQLite
             return this;
         }
 
-//        public override string BuildCommand()
-//        {
-//            return base.BuildCommand() + " COLLATE NOCASE";
-//        }
+        //        public override string BuildCommand()
+        //        {
+        //            return base.BuildCommand() + " COLLATE NOCASE";
+        //        }
     }
 }
 
