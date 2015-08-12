@@ -2227,14 +2227,18 @@ namespace TDSM.Core
                     break;
                 case "public":
                     Heartbeat.PublishToList = args.GetBool(1);
-                    sender.SendMessage("Server list is now " + (Heartbeat.PublishToList ? "public" : "private"));
+                    if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("server-list", Heartbeat.PublishToList))
+                        sender.SendMessage("Server list is now " + (Heartbeat.PublishToList ? "public" : "private"));
+                    else sender.Message("Failed to update visibility");
                     break;
                 case "desc":
                     string d;
                     if (args.TryPopOne(out d))
                     {
                         Heartbeat.ServerDescription = d;
-                        sender.SendMessage("Description set to: " + Heartbeat.ServerDescription);
+                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("server-list-desc", d))
+                            sender.SendMessage("Description set to: " + Heartbeat.ServerDescription);
+                        else sender.Message("Failed to update description");
                     }
                     else
                         sender.SendMessage("Current description: " + Heartbeat.ServerDescription);
@@ -2244,7 +2248,9 @@ namespace TDSM.Core
                     if (args.TryPopOne(out n))
                     {
                         Heartbeat.ServerName = n;
-                        sender.SendMessage("Name set to: " + Heartbeat.ServerName);
+                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("server-list-name", n))
+                            sender.SendMessage("Name set to: " + Heartbeat.ServerName);
+                        else sender.Message("Failed to update name");
                     }
                     else
                         sender.SendMessage("Current name: " + Heartbeat.ServerName);
@@ -2254,7 +2260,9 @@ namespace TDSM.Core
                     if (args.TryPopOne(out h))
                     {
                         Heartbeat.ServerDomain = h;
-                        sender.SendMessage("Domain set to: " + Heartbeat.ServerDomain);
+                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("server-list-domain", h))
+                            sender.SendMessage("Domain set to: " + Heartbeat.ServerDomain);
+                        else sender.Message("Failed to update domain");
                     }
                     else
                         sender.SendMessage("Current domain: " + Heartbeat.ServerDomain);

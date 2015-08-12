@@ -22,7 +22,7 @@ namespace TDSM.Core.ServerCharacters.Tables
         public static readonly TableColumn[] Columns = new TableColumn[]
         {
             new TableColumn(ColumnNames.Id, typeof(Int32), true, true),
-            new TableColumn(ColumnNames.UserId, typeof(Int32)),
+            new TableColumn(ColumnNames.UserId, typeof(Int32), true),
             new TableColumn(ColumnNames.TypeId, typeof(Int32)),
             new TableColumn(ColumnNames.NetId, typeof(Int32)),
             new TableColumn(ColumnNames.Stack, typeof(Int32)),

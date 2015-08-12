@@ -76,6 +76,7 @@ namespace TDSM.API.Callbacks
 
         public static void Load(string file)
         {
+            ConfigUpdater.SourceFile = file;
             if (File.Exists(file))
                 using (var sr = new StreamReader(file))
                 {
