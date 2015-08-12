@@ -211,21 +211,21 @@ namespace tdsm.patcher
                                 var ins = mth.Body.Instructions[i];
 
 
-//                                if (mth.Name == "clearWorld")
+                                //                                if (mth.Name == "clearWorld")
                                 {
                                     var sss = "";
                                     if (ins.OpCode == OpCodes.Call && ins.Operand is MemberReference)
                                     {
-                                        var mr = ins.Operand as MemberReference; 
+                                        var mr = ins.Operand as MemberReference;
                                         if (mr.Name == "Set" && mr.DeclaringType is ArrayType && (mr.DeclaringType as ArrayType).ElementType.Name == "MemTile")
                                         {
                                             //Swap
                                             var il = mth.Body.GetILProcessor();
 
-//                                            if (ins.Previous != null && ins.Previous.OpCode == OpCodes.Ldnull)
-//                                            {
-//                                                il.Replace(ins.Previous, il.Create(OpCodes.Ldsfld, emptyTile));
-//                                            }
+                                            //                                            if (ins.Previous != null && ins.Previous.OpCode == OpCodes.Ldnull)
+                                            //                                            {
+                                            //                                                il.Replace(ins.Previous, il.Create(OpCodes.Ldsfld, emptyTile));
+                                            //                                            }
 
                                             //Remove previous instructions to remove the array instance
 
@@ -243,9 +243,9 @@ namespace tdsm.patcher
                                                 }
                                                 else
                                                 {
-//                                                    il.Remove(ins.Previous);
+                                                    //                                                    il.Remove(ins.Previous);
                                                     iii = iii.Previous;
-//                                                    i--;
+                                                    //                                                    i--;
                                                 }
                                             }
 
@@ -318,48 +318,48 @@ namespace tdsm.patcher
                                             }*/
 
 
-//                                            //Determine what initialisation methods are used.
-//
-//                                            //Assigning to an existing MemTile
-//                                            if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_S)
-//                                            {
-////                                                var vbl = mth.Body.Variables[(int)ins.Next.Operand];
-//                                                if (ins.Next.Operand is VariableReference)
-//                                                {
-//                                                    var vr = ins.Next.Operand as VariableReference;
-//                                                    if (vr.VariableType.Name == "MemTile")
-//                                                    {
-//                                                        var asd = "";
-//                                                    }
-//                                                    else
-//                                                    {
-//                                                        var asd = "";
-//                                                    }
-//                                                }
-//                                                else
-//                                                {
-//                                                    var asd = "";
-//                                                }
-//                                            }
+                                            //                                            //Determine what initialisation methods are used.
+                                            //
+                                            //                                            //Assigning to an existing MemTile
+                                            //                                            if (ins.OpCode == OpCodes.Newobj && ins.Next.OpCode == OpCodes.Stloc_S)
+                                            //                                            {
+                                            ////                                                var vbl = mth.Body.Variables[(int)ins.Next.Operand];
+                                            //                                                if (ins.Next.Operand is VariableReference)
+                                            //                                                {
+                                            //                                                    var vr = ins.Next.Operand as VariableReference;
+                                            //                                                    if (vr.VariableType.Name == "MemTile")
+                                            //                                                    {
+                                            //                                                        var asd = "";
+                                            //                                                    }
+                                            //                                                    else
+                                            //                                                    {
+                                            //                                                        var asd = "";
+                                            //                                                    }
+                                            //                                                }
+                                            //                                                else
+                                            //                                                {
+                                            //                                                    var asd = "";
+                                            //                                                }
+                                            //                                            }
 
 
                                             //INSTEAD OF UPDATING CONSTRUCTORS, REPLACE Main.tile.Set(int, int, tile)! Why did it not do this earlier
 
 
-//                                            if (twoFrom > 0)
-//                                            {
-//                                                var first = mth.Body.Instructions[twoFrom];
-//                                                var second = first.Next;
-//
-//                                                var il = mth.Body.GetILProcessor();
-//                                                il.InsertBefore(ins, first);
-//                                                il.InsertBefore(ins, second);
-//
-//                                                i -= 2;
-//
-//                                                ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == 2 && x.Parameters[0].ParameterType.Name == "Int32"));
-//                                                continue;
-//                                            }
+                                            //                                            if (twoFrom > 0)
+                                            //                                            {
+                                            //                                                var first = mth.Body.Instructions[twoFrom];
+                                            //                                                var second = first.Next;
+                                            //
+                                            //                                                var il = mth.Body.GetILProcessor();
+                                            //                                                il.InsertBefore(ins, first);
+                                            //                                                il.InsertBefore(ins, second);
+                                            //
+                                            //                                                i -= 2;
+                                            //
+                                            //                                                ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == 2 && x.Parameters[0].ParameterType.Name == "Int32"));
+                                            //                                                continue;
+                                            //                                            }
 
                                             ins.Operand = _asm.MainModule.Import(vt.Resolve().Methods.Single(x => x.Name == meth.Name && x.Parameters.Count == meth.Parameters.Count));
                                             continue;
@@ -621,16 +621,16 @@ namespace tdsm.patcher
         public void HookWorldFile_DEBUG()
         {
 
-//            //Make public
-//            var fld = Terraria.WorldGen.Fields.Single(x => x.Name == "lastMaxTilesX");
-//            fld.IsPrivate = false;
-//            fld.IsFamily = false;
-//            fld.IsPublic = true;
-//
-//            fld = Terraria.WorldGen.Fields.Single(x => x.Name == "lastMaxTilesY");
-//            fld.IsPrivate = false;
-//            fld.IsFamily = false;
-//            fld.IsPublic = true;
+            //            //Make public
+            //            var fld = Terraria.WorldGen.Fields.Single(x => x.Name == "lastMaxTilesX");
+            //            fld.IsPrivate = false;
+            //            fld.IsFamily = false;
+            //            fld.IsPublic = true;
+            //
+            //            fld = Terraria.WorldGen.Fields.Single(x => x.Name == "lastMaxTilesY");
+            //            fld.IsPrivate = false;
+            //            fld.IsFamily = false;
+            //            fld.IsPublic = true;
             //            return;
 
             var mth = Terraria.WorldGen.Methods.Single(x => x.Name == "serverLoadWorldCallBack" && x.IsStatic);
@@ -877,7 +877,7 @@ namespace tdsm.patcher
             var sng = _asm.MainModule.Import(API.Rand.Methods.Where(x => x.Name == "Next" && x.Parameters.Count == 1).First());
             var dbl = _asm.MainModule.Import(API.Rand.Methods.Where(x => x.Name == "Next" && x.Parameters.Count == 2).First());
 
-//            var il = ai.Body.GetILProcessor();
+            //            var il = ai.Body.GetILProcessor();
 
             for (var i = ai.Body.Instructions.Count - 1; i > 0; i--)
             {
@@ -922,35 +922,55 @@ namespace tdsm.patcher
             }
         }
 
+        private void MakeAllAccessible(TypeDefinition type, bool nested)
+        {
+            if (!nested) type.IsPublic = true;
+
+            foreach (var itm in type.Methods)
+            {
+                itm.IsPublic = true;
+                if (itm.IsFamily) itm.IsFamily = false;
+                if (itm.IsFamilyAndAssembly) itm.IsFamilyAndAssembly = false;
+                if (itm.IsFamilyOrAssembly) itm.IsFamilyOrAssembly = false;
+                if (itm.IsPrivate) itm.IsPrivate = false;
+            }
+            foreach (var itm in type.Fields)
+            {
+                itm.IsPublic = true;
+                if (itm.IsFamily) itm.IsFamily = false;
+                if (itm.IsFamilyAndAssembly) itm.IsFamilyAndAssembly = false;
+                if (itm.IsFamilyOrAssembly) itm.IsFamilyOrAssembly = false;
+                if (itm.IsPrivate) itm.IsPrivate = false;
+            }
+            foreach (var itm in type.Properties)
+            {
+                if (null != itm.GetMethod)
+                {
+                    itm.GetMethod.IsPublic = true;
+                    if (itm.GetMethod.IsFamily) itm.GetMethod.IsFamily = false;
+                    if (itm.GetMethod.IsFamilyAndAssembly) itm.GetMethod.IsFamilyAndAssembly = false;
+                    if (itm.GetMethod.IsFamilyOrAssembly) itm.GetMethod.IsFamilyOrAssembly = false;
+                    if (itm.GetMethod.IsPrivate) itm.GetMethod.IsPrivate = false;
+                }
+                if (null != itm.SetMethod)
+                {
+                    itm.SetMethod.IsPublic = true;
+                    if (itm.SetMethod.IsFamily) itm.SetMethod.IsFamily = false;
+                    if (itm.SetMethod.IsFamilyAndAssembly) itm.SetMethod.IsFamilyAndAssembly = false;
+                    if (itm.SetMethod.IsFamilyOrAssembly) itm.SetMethod.IsFamilyOrAssembly = false;
+                    if (itm.SetMethod.IsPrivate) itm.SetMethod.IsPrivate = false;
+                }
+            }
+
+            foreach (var nt in type.NestedTypes)
+                MakeAllAccessible(nt, true);
+        }
+
         public void MakeEverythingAccessible()
         {
             foreach (var type in _asm.MainModule.Types)
             {
-                type.IsPublic = true;
-
-                foreach (var itm in type.Methods)
-                {
-                    itm.IsPublic = true;
-                    if (itm.IsPrivate) itm.IsPrivate = false;
-                }
-                foreach (var itm in type.Fields)
-                {
-                    itm.IsPublic = true;
-                    if (itm.IsPrivate) itm.IsPrivate = false;
-                }
-                foreach (var itm in type.Properties)
-                {
-                    if (null != itm.GetMethod)
-                    {
-                        itm.GetMethod.IsPublic = true;
-                        if (itm.GetMethod.IsPrivate) itm.GetMethod.IsPrivate = false;
-                    }
-                    if (null != itm.SetMethod)
-                    {
-                        itm.SetMethod.IsPublic = true;
-                        if (itm.SetMethod.IsPrivate) itm.SetMethod.IsPrivate = false;
-                    }
-                }
+                MakeAllAccessible(type, false);
             }
         }
 
@@ -1026,7 +1046,7 @@ namespace tdsm.patcher
                     x--;
                 }
             }
-//            return;
+            //            return;
 
 
             //Descrease the amount of file descriptors for mono.
@@ -1039,10 +1059,10 @@ namespace tdsm.patcher
             rcCtor.Body.Instructions[1].Operand = _asm.MainModule.Import(rtsCtor);
 
             //1.3.0.7 doesnt have the TcpSocket constructor :)
-//            rcCtor = Terraria.RemoteClient.Methods.Single(x => x.Name == ".ctor");
-//            rtsCtor = API.ClientConnection.Methods.Single(x => x.Name == ".ctor" && x.Parameters.Count == (rcCtor.Body.Instructions[1].Operand as MethodReference).Parameters.Count);
+            //            rcCtor = Terraria.RemoteClient.Methods.Single(x => x.Name == ".ctor");
+            //            rtsCtor = API.ClientConnection.Methods.Single(x => x.Name == ".ctor" && x.Parameters.Count == (rcCtor.Body.Instructions[1].Operand as MethodReference).Parameters.Count);
 
-//            rcCtor.Body.Instructions[1].Operand = _asm.MainModule.Import(rtsCtor);
+            //            rcCtor.Body.Instructions[1].Operand = _asm.MainModule.Import(rtsCtor);
 
 
             var serverLoop = Terraria.Netplay.Methods.Single(x => x.Name == "ServerLoop");
@@ -1230,7 +1250,7 @@ namespace tdsm.patcher
             var initialise = Terraria.Main.Methods.Single(x => x.Name == "Initialize");
             var loc = initialise.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldDefinition)
-                      //.Select(x => x.Operand as FieldDefinition)
+                //.Select(x => x.Operand as FieldDefinition)
                 .Single(x => (x.Operand as FieldDefinition).Name == "skipMenu");
             var il = initialise.Body.GetILProcessor();
             il.InsertBefore(loc, il.Create(OpCodes.Ret));
@@ -1634,7 +1654,7 @@ namespace tdsm.patcher
             var xnaFramework = _asm.MainModule.AssemblyReferences
                 .Where(x => x.Name.StartsWith("Steamworks.NET"))
                 .ToArray();
-            
+
             for (var x = 0; x < xnaFramework.Length; x++)
             {
                 xnaFramework[x].Name = _self.Name.Name;

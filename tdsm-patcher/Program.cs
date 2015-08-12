@@ -32,7 +32,7 @@ namespace tdsm.patcher
         //            };
         //        }
 
-        #if DEV
+#if DEV
         static void Copy(DirectoryInfo root, string project, string to, string pluginName = null, bool debugFolder = true)
         {
             var projectBinary = pluginName ?? project.Replace("-", ".");
@@ -55,24 +55,39 @@ namespace tdsm.patcher
             CopyDep(pdbFrom, pdbTo);
         }
 
+        static void EnsurePath(string path)
+        {
+            var dir = Path.GetDirectoryName(path);
+            if(!System.IO.Directory.Exists(dir))
+            {
+                System.IO.Directory.CreateDirectory(dir);
+            }
+        }
+
         static void CopyDep(string src, string dest)
         {
             //Remove destination
             if (File.Exists(dest))
                 File.Delete(dest);
-            
+
             //Copy new files
 
             if (File.Exists(src))
+            {
+                EnsurePath(dest);
                 File.Copy(src, dest);
+            }
             else
             {
                 src = src.ToLower();
                 if (File.Exists(src))
+                {
+                    EnsurePath(dest);
                     File.Copy(src, dest);
+                }
             }
         }
-        #endif
+#endif
 
         static void Main(string[] args)
         {
@@ -149,7 +164,7 @@ namespace tdsm.patcher
 
             Copy(root, "TDSM-API", Environment.CurrentDirectory);
             Copy(root, "TDSM-Core", Path.Combine(Environment.CurrentDirectory, "Plugins"));
-//            Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "TDSM.API");
+            //            Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "TDSM.API");
             //Copy (root, "Restrict", Path.Combine (Environment.CurrentDirectory, "Plugins"), "RestrictPlugin");
             Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "KopiLua", false);
             Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "NLua", false);
@@ -283,12 +298,15 @@ namespace tdsm.patcher
             patcher.FixNetplay();
             Console.Write("Ok\nFixing NPC AI crashes...");
             patcher.FixRandomErrors();
-//            patcher.DetectMissingXNA();
+            //            patcher.DetectMissingXNA();
 
             Console.Write("Ok\n");
             patcher.InjectHooks();
 
-//            patcher.SwapToVanillaTile(); //Holy shit batman! it works
+            //Console.Write("Ok\nUpdating to .NET v4.5...");
+            //patcher.SwitchFramework();
+
+            //            patcher.SwapToVanillaTile(); //Holy shit batman! it works
 
             //            Console.Write("Ok\nPutting Terraria on a diet...");
             //            patcher.ChangeTileToStruct();
@@ -417,7 +435,7 @@ namespace tdsm.patcher
                 }
             }
 
-            #if DEBUG
+#if DEBUG
             Console.Write("Ok\nUpdating Binaries folder...");
             UpdateBinaries();
             Console.Write("Ok\nGenerating server.config...");
@@ -602,7 +620,7 @@ namespace tdsm.patcher
             }
 
             foreach (var rel in new string[]
-            { 
+            {
                 "TDSM.API.dll",
                 "TDSM.API.dll.mdb",
                 "TDSM.API.pdb",
