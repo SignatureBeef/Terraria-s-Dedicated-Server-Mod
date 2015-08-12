@@ -244,8 +244,8 @@ namespace tdsm.patcher
             patcher.SkipMenu();
             //Console.Write("Ok\nFixing code entry...");
             //patcher.FixEntryPoint();
-//            Console.Write("Ok\nPatching save paths...");
-//            patcher.FixSavePath();
+            Console.Write("Ok\nPatching save paths...");
+            patcher.FixSavePath();
             Console.Write("Ok\nHooking receive buffer...");
             patcher.HookMessageBuffer();
             //Console.Write("Ok\nAdding the slot manager...");

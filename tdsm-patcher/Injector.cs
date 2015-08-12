@@ -1218,7 +1218,12 @@ namespace tdsm.patcher
         public void FixSavePath()
         {
             var staticConstructor = Terraria.Main.Methods.Single(x => x.Name == ".cctor");
-            var il = staticConstructor.Body.GetILProcessor();
+            var mth = staticConstructor.Body.Instructions.Where(x => x.OpCode == OpCodes.Call && x.Operand is MethodReference && (x.Operand as MethodReference).Name == "GetStoragePath").FirstOrDefault();
+
+
+            var dir = _asm.MainModule.Import(API.Patches.Methods.Single(k => k.Name == "GetCurrentDirectory"));
+            mth.Operand = dir;
+            /*1.3.0.7 var il = staticConstructor.Body.GetILProcessor();
             //            var ins = staticConstructor.Body.Instructions.First(x => x.OpCode == OpCodes.Stsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "SavePath");ActiveWorldFileData
             var ins = staticConstructor.Body.Instructions.First(x => x.OpCode == OpCodes.Stsfld && x.Operand is FieldReference && (x.Operand as FieldReference).Name == "ActiveWorldFileData");
             var ix = staticConstructor.Body.Instructions.IndexOf(ins);
@@ -1242,7 +1247,7 @@ namespace tdsm.patcher
 
             var dir = _asm.MainModule.Import(API.Patches.Methods.Single(k => k.Name == "GetCurrentDirectory"));
 
-            il.InsertAfter(ins, il.Create(OpCodes.Call, dir));
+            il.InsertAfter(ins, il.Create(OpCodes.Call, dir));*/
         }
 
         public void SkipMenu()
@@ -1250,7 +1255,7 @@ namespace tdsm.patcher
             var initialise = Terraria.Main.Methods.Single(x => x.Name == "Initialize");
             var loc = initialise.Body.Instructions
                 .Where(x => x.OpCode == OpCodes.Ldsfld && x.Operand is FieldDefinition)
-                //.Select(x => x.Operand as FieldDefinition)
+                      //.Select(x => x.Operand as FieldDefinition)
                 .Single(x => (x.Operand as FieldDefinition).Name == "skipMenu");
             var il = initialise.Body.GetILProcessor();
             il.InsertBefore(loc, il.Create(OpCodes.Ret));
