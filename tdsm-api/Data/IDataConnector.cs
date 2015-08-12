@@ -169,6 +169,10 @@ namespace TDSM.API.Data
 
         public abstract QueryBuilder Where(params WhereFilter[] clause);
 
+//        public abstract QueryBuilder WhereNotExists(QueryBuilder bld);
+//
+//        public abstract QueryBuilder WhereExists(QueryBuilder bld);
+
         public abstract QueryBuilder Count(string expression = null);
 
         public abstract QueryBuilder Delete();
@@ -383,6 +387,7 @@ namespace TDSM.API.Data
             }
 
             AuthenticatedUsers.Initialise();
+            SettingsStore.Initialise();
         }
 
         public static QueryBuilder GetBuilder(string pluginName)

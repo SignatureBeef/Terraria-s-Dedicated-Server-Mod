@@ -49,5 +49,22 @@ namespace TDSM.Core.ServerCharacters.Tables
                 return Storage.ExecuteNonQuery(bl) > 0;
             }
         }
+
+        public static int NewItem(CharacterManager.ItemType type, int netId, int stack, int prefix, int slot, int? userId = null)
+        {
+            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
+            {
+                bl.InsertInto(TableName, 
+                    new DataParameter(ColumnNames.TypeId, (int)type),
+                    new DataParameter(ColumnNames.NetId, netId),
+                    new DataParameter(ColumnNames.Stack, stack),
+                    new DataParameter(ColumnNames.Prefix, prefix),
+                    new DataParameter(ColumnNames.Slot, slot),
+                    new DataParameter(ColumnNames.UserId, userId)
+                );
+
+                return (int)Storage.ExecuteInsert(bl); //Get the new ID
+            }
+        }
     }
 }

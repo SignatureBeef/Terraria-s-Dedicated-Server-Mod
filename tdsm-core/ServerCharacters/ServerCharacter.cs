@@ -9,9 +9,17 @@ namespace TDSM.Core.ServerCharacters
     {
         public int Mana { get; set; }
 
+        public int MaxMana { get; set; }
+
         public int Health { get; set; }
 
-        public PlayerItem[] Inventory { get; set; }
+        public int MaxHealth { get; set; }
+
+        public SlotItem[] Inventory { get; set; }
+
+        public SlotItem[] Armor { get; set; }
+
+        public SlotItem[] Dye { get; set; }
     }
 
     public class ServerCharacter : IDisposable
@@ -153,10 +161,10 @@ namespace TDSM.Core.ServerCharacters
         public ServerCharacter(NewPlayerInfo info, Player player)
         {
             this.Health = info.Health;
-            this.MaxHealth = info.Health;
+            this.MaxHealth = info.MaxHealth;
 
             this.Mana = info.Mana;
-            this.MaxMana = info.Mana;
+            this.MaxMana = info.MaxMana;
 
             this.SpawnX = player.SpawnX;
             this.SpawnY = player.SpawnY;
@@ -177,20 +185,9 @@ namespace TDSM.Core.ServerCharacters
 
             this.AnglerQuests = player.anglerQuestsFinished;
 
-            this.Inventory = player.inventory
-                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
-                .Where(x => x != null)
-                .ToList();
-
-            this.Dye = player.dye
-                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
-                .Where(x => x != null)
-                .ToList();
-
-            this.Armor = player.armor
-                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
-                .Where(x => x != null)
-                .ToList();
+            this.Inventory = info.Inventory.ToList();
+            this.Armor = info.Armor.ToList();
+            this.Dye = info.Dye.ToList();
 
             this.Buffs = player.buffType;
             this.BuffTime = player.buffTime;

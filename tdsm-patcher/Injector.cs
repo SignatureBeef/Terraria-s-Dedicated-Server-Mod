@@ -81,6 +81,22 @@ namespace tdsm.patcher
                 .Value as string;
         }
 
+        public void SwitchFramework()
+        {
+            _asm.MainModule.RuntimeVersion = "4.5";
+
+            for (var x = 0; x < _asm.CustomAttributes.Count; x++)
+            {
+                if (_asm.CustomAttributes[x].AttributeType.Name == "TargetFrameworkAttribute")
+                {
+                    _asm.CustomAttributes[x].ConstructorArguments[0] = new CustomAttributeArgument(_asm.MainModule.Import(typeof(String)), ".NETFramework,Version=v4.5");
+
+                    var cs = new CustomAttributeArgument(_asm.MainModule.Import(typeof(String)), ".NET Framework 4.5");
+                    _asm.CustomAttributes[x].Properties[0] = new CustomAttributeNamedArgument("FrameworkDisplayName", cs);
+                }
+            }
+        }
+
         #region "Memory"
 
         private TypeReference SwapToVanillaReference(TypeReference input, TypeReference replacement)

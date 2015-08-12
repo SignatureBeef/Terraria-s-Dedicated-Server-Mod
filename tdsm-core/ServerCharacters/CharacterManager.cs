@@ -24,13 +24,15 @@ namespace TDSM.Core.ServerCharacters
         public static NewPlayerInfo StartingOutInfo = new NewPlayerInfo()
         {
             Health = 200,
+            MaxHealth = 200,
             Mana = 20,
+            MaxMana = 20,
 
-            Inventory = new PlayerItem[]
+            Inventory = new SlotItem[]
             {
-                new PlayerItem(-15, 1, 0),
-                new PlayerItem(-13, 1, 0),
-                new PlayerItem(-16, 1, 0)
+                new SlotItem(-15, 1, 0, 0),
+                new SlotItem(-13, 1, 0, 1),
+                new SlotItem(-16, 1, 0, 2)
             }
         };
 
@@ -57,6 +59,7 @@ namespace TDSM.Core.ServerCharacters
                 {
                     ProgramLog.Admin.Log("SSC loadout table does not exist and will now be created");
                     Tables.DefaultLoadoutTable.Create();
+                    Tables.DefaultLoadoutTable.PopulateDefaults(StartingOutInfo);
                 }
             }
 
