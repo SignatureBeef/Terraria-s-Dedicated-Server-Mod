@@ -1,3 +1,13 @@
+Version 1.3.0.8 Changes-----------------------------------------------------------------------------------------------
+
+
+Changes:
+  Improved Mac & Linux support.
+  Added config.json setting "KeyFavoriteModifier", set to "LeftAlt" by default. This key will be used with left click for favoriting and chat linking.
+  Add -savedirectory launch parameter which can specify the Terraria save folder.
+
+
+
 Version 1.3.0.7 Changes-----------------------------------------------------------------------------------------------
 
 
