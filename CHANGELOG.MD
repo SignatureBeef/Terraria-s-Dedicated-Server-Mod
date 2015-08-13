@@ -1,16 +1,18 @@
 # TDSM Changelog
 
-## Build 5 *(in progress)*
+## Build 6 *(in progress)*
+- Server side characters
+
+## Build 5 - 1.3.0.8
 - Added send data hook
 - Missing shims for mono ahead of time compilation
 - Wrong disconnectee fix
 - Send net message hook
 - Motd new line fix
-- Server side characters
 - New command: fastforwardtime
 - New command: heal
 
-## Build 4
+## Build 4 - 1.3.0.7
 - Fixed vanilla Terraria permission nodes
 - Fixed invasion warnings and fixed support for multiple npc's
 - Fixed some cases where libraries weren't being loaded from the Libraries folder
@@ -20,7 +22,7 @@
 - Added SQLite dependency for windows machines
 - Fixed assembly resolution issues. tdsm.api.dll is now TDSM.API.dll, and tdsm.core.dll is TDSM.Core.dll
 
-## Build 3
+## Build 3 - 1.3.0.7
 - Official support for Terraria 1.3.0.7
 - Brand new Data API (SQLite & MySQL connectors provided - MSSQL soon)
 - Brand new Permissions system
