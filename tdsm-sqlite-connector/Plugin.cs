@@ -13,7 +13,7 @@ namespace TDSM.Data.SQLite
 
         public Plugin()
         {
-            this.TDSMBuild = 4;
+            this.TDSMBuild = 5;
             this.Version = "1";
             this.Author = "TDSM";
             this.Name = "SQLite Connector";
