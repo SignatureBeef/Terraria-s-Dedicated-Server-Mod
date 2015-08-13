@@ -738,13 +738,17 @@ namespace TDSM.Core
                     throw new CommandError(String.Format("More than 1 item found, total is: {0}", results.Length));
 
                 var item = results[0];
-                try
+                string prefix;
+                if (args.TryGetString(3, out prefix))
                 {
-                    item.Prefix = (int)(Affix)Enum.Parse(typeof(Affix), args.GetString(3), true);
-                }
-                catch (ArgumentException)
-                {
-                    throw new CommandError(String.Format("Error, the Prefix you entered was not found: {0}", args.GetString(3)));
+                    try
+                    {
+                        item.Prefix = (int)(Affix)Enum.Parse(typeof(Affix), prefix, true);
+                    }
+                    catch (ArgumentException)
+                    {
+                        throw new CommandError(String.Format("Error, the Prefix you entered was not found: {0}", args.GetString(3)));
+                    }
                 }
 
                 receiver.GiveItem(item.Id, stack, sender, item.NetId, true, item.Prefix);
@@ -2522,6 +2526,7 @@ namespace TDSM.Core
                     int damage = Int32.MaxValue;
                     npc.StrikeNPC(damage, 0, 0);
                     NetMessage.SendData((int)Packet.STRIKE_NPC, -1, -1, "", npc.whoAmI, damage);
+                    NetMessage.SendData ((int)Packet.NPC_INFO, -1, -1, "", npc.whoAmI, 0, 0, 0, 0, 0, 0);
 
                     killed++;
                 }

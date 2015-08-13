@@ -11,6 +11,7 @@ namespace TDSM.Core.ServerCharacters
     public static class CharacterManager
     {
         internal const String SQLSafeName = "tdsm";
+        internal const String Key_NewCharacter = "tdsm_NewCharacter";
 
         public enum ItemType
         {
@@ -142,7 +143,7 @@ namespace TDSM.Core.ServerCharacters
                         Directory.CreateDirectory(dir);
 
                     var file = Path.Combine(dir, authName + ".ssc");
-                    if (System.IO.File.Exists(file))
+                    if (true == false && System.IO.File.Exists(file))
                     {
                         var json = System.IO.File.ReadAllText(file);
                         if (json.Length > 0)
@@ -159,6 +160,7 @@ namespace TDSM.Core.ServerCharacters
                     if (returnNewInfo)
                     {
                         ProgramLog.Log("Issuing new loadout");
+//                        player.SetPluginData(Key_NewCharacter, true);
                         EnsureSave = true; //Save is now required
                         return new ServerCharacter(StartingOutInfo, player);
                     }
@@ -185,9 +187,82 @@ namespace TDSM.Core.ServerCharacters
 
             if (!String.IsNullOrEmpty(authName))
             {
-                if (false == true && Storage.IsAvailable)
+                if (Storage.IsAvailable)
                 {
+//                    var create = player.GetPluginData<Boolean>(Key_NewCharacter, false);
+                    var existingId = Tables.CharacterTable.GetCharacterId(Mode, player.AuthenticatedAs, player.ClientUUId);
+                    if (existingId <= 0)
+                    {
+                        if (player.ClearPluginData(Key_NewCharacter))
+                        {
+                            var characterId = Tables.CharacterTable.NewCharacter
+                            (
+                                Mode,
+                                player.AuthenticatedAs,
+                                player.ClientUUId,
+                                player.statLife,
+                                player.statLifeMax,
+                                player.statMana,
+                                player.statManaMax,
+                                player.SpawnX,
+                                player.SpawnY,
+                                player.hair,
+                                player.hairDye,
+                                player.hideVisual,
+                                player.difficulty,
+                                player.hairColor,
+                                player.skinColor,
+                                player.eyeColor,
+                                player.shirtColor,
+                                player.underShirtColor,
+                                player.pantsColor,
+                                player.shoeColor,
+                                player.anglerQuestsFinished
+                            );
 
+                            if (characterId > 0)
+                            {
+
+                            }
+                        }
+                        else
+                        {
+                            ProgramLog.Error.Log("Failed to save SSC for player: {0}", player.Name);
+                        }
+                    }
+                    else
+                    {
+                        Tables.CharacterTable.UpdateCharacter
+                        (
+                            Mode,
+                            player.AuthenticatedAs,
+                            player.ClientUUId,
+                            player.statLife,
+                            player.statLifeMax,
+                            player.statMana,
+                            player.statManaMax,
+                            player.SpawnX,
+                            player.SpawnY,
+                            player.hair,
+                            player.hairDye,
+                            player.hideVisual,
+                            player.difficulty,
+                            player.hairColor,
+                            player.skinColor,
+                            player.eyeColor,
+                            player.shirtColor,
+                            player.underShirtColor,
+                            player.pantsColor,
+                            player.shoeColor,
+                            player.anglerQuestsFinished
+                        );
+
+                        var characterId = Tables.CharacterTable.GetCharacterId(Mode, player.AuthenticatedAs, player.ClientUUId);
+                        if (characterId > 0)
+                        {
+
+                        }
+                    }
                 }
                 else
                 {

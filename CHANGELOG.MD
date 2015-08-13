@@ -2,6 +2,7 @@
 
 ## Build 6 *(in progress)*
 - Server side characters
+- Upgrade to .NET 4.5
 
 ## Build 5 - 1.3.0.8
 - Added send data hook

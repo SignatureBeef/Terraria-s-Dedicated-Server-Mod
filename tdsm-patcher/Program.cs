@@ -303,8 +303,8 @@ namespace tdsm.patcher
             Console.Write("Ok\n");
             patcher.InjectHooks();
 
-            //Console.Write("Ok\nUpdating to .NET v4.5...");
-            //patcher.SwitchFramework();
+            Console.Write("Ok\nUpdating to .NET v4.5...");
+            patcher.SwitchFramework();
 
             //            patcher.SwapToVanillaTile(); //Holy shit batman! it works
 

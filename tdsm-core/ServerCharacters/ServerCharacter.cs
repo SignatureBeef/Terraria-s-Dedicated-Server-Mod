@@ -185,9 +185,9 @@ namespace TDSM.Core.ServerCharacters
 
             this.AnglerQuests = player.anglerQuestsFinished;
 
-            this.Inventory = info.Inventory.ToList();
-            this.Armor = info.Armor.ToList();
-            this.Dye = info.Dye.ToList();
+            if (info.Inventory != null) this.Inventory = info.Inventory.ToList();
+            if (info.Armor != null) this.Armor = info.Armor.ToList();
+            if (info.Dye != null) this.Dye = info.Dye.ToList();
 
             this.Buffs = player.buffType;
             this.BuffTime = player.buffTime;

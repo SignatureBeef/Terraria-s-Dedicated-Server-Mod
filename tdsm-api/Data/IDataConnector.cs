@@ -344,11 +344,11 @@ namespace TDSM.API.Data
     {
         public string Column { get; set; }
 
-        public string Value { get; set; }
+        public object Value { get; set; }
 
         public WhereExpression Expression { get; set; }
 
-        public WhereFilter(string column, string value, WhereExpression expression = WhereExpression.EqualTo)
+        public WhereFilter(string column, object value, WhereExpression expression = WhereExpression.EqualTo)
             : this()
         {
             this.Expression = expression;

@@ -25,6 +25,36 @@ namespace TDSM.API
 
         public ConcurrentDictionary<String, Object> PluginData = new ConcurrentDictionary<String, Object>();
 
+        public void SetPluginData(string key, object value)
+        {
+            if (PluginData == null)
+                PluginData = new System.Collections.Concurrent.ConcurrentDictionary<String, Object>();
+            PluginData[key] = value;
+        }
+
+        public T GetPluginData<T>(string key, T defaultValue)
+        {
+            if (PluginData == null)
+            {
+                PluginData = new System.Collections.Concurrent.ConcurrentDictionary<String, Object>();
+            }
+            else if (PluginData.ContainsKey(key))
+            {
+                return (T)(PluginData[key] ?? defaultValue);
+            }
+            return defaultValue;
+        }
+
+        public bool ClearPluginData(string key)
+        {
+            if (PluginData.ContainsKey(key))
+            {
+                object val;
+                return PluginData.TryRemove(key, out val);
+            }
+            return false;
+        }
+
         public void SetAuthentication(string auth, string by)
         {
             #if Full_API

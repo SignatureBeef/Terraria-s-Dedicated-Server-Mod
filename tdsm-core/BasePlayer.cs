@@ -28,21 +28,12 @@ namespace TDSM.Core
 
         public static void SetLastCostlyCommand(this Player player, DateTime value)
         {
-            if (player.PluginData == null)
-                player.PluginData = new System.Collections.Concurrent.ConcurrentDictionary<string, object>();
-            player.PluginData[LastCostlyCommand] = value;
+            player.SetPluginData(LastCostlyCommand, value);
         }
 
         public static DateTime GetLastCostlyCommand(this Player player)
         {
-            if (player.PluginData == null)
-                player.PluginData = new System.Collections.Concurrent.ConcurrentDictionary<string, object>();
-
-            if (player.PluginData.ContainsKey(LastCostlyCommand))
-            {
-                return (DateTime)player.PluginData[LastCostlyCommand];
-            }
-            return DateTime.MinValue;
+            return player.GetPluginData(LastCostlyCommand, DateTime.MinValue);
         }
     }
 }
