@@ -185,13 +185,31 @@ namespace TDSM.API
         /// <param name="notifyOps"></param>
         /// <param name="prefix"></param>
         /// <returns></returns>
-        public int GiveItem(int itemId, int stack, ISender sender, int netId, bool notifyOps = true, int prefix = 0)
+        public int GiveItem(int itemId, int stack, int maxStack, ISender sender, int netId, bool notifyOps = true, int prefix = 0)
         {
             if (this is Terraria.Player)
             {
                 var plr = (Terraria.Player)this;
 
-                var index = Terraria.Item.NewItem((int)plr.position.X, (int)plr.position.Y, plr.width, plr.height, itemId, stack, false, prefix);
+                // Set a max drops limit to be safe.
+                int maxDrops = 10;
+                if (stack / maxStack > maxDrops) { stack = maxStack * maxDrops; }
+
+                int index;
+                while (stack > maxStack) // If stack is greater than the stack size...
+                {
+                    index = Terraria.Item.NewItem((int)plr.position.X, (int)plr.position.Y, plr.width, plr.height, itemId, maxStack, false, prefix);
+
+                    if (netId < 0)
+                        Terraria.Main.item[index].netDefaults(netId);
+
+                    if (prefix > 0)
+                        Terraria.Main.item[index].Prefix(prefix);
+
+                    stack -= maxStack; // remove the amount given.
+                }
+
+                index = Terraria.Item.NewItem((int)plr.position.X, (int)plr.position.Y, plr.width, plr.height, itemId, stack, false, prefix);
 
                 if (netId < 0)
                     Terraria.Main.item[index].netDefaults(netId);
@@ -202,7 +220,7 @@ namespace TDSM.API
                 if (notifyOps)
                     Tools.NotifyAllOps("Giving " + this.Name + " some " + Terraria.Main.item[index].name + " (" + itemId.ToString() + ") [" + sender.SenderName + "]", true);
 
-                return index;
+                return 0;
             }
             return -1;
         }

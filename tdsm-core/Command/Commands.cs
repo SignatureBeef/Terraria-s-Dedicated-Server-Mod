@@ -724,12 +724,7 @@ namespace TDSM.Core
             Player receiver = args.GetOnlinePlayer(0);
             int stack = args.GetInt(1);
             string name = args.GetString(2);
- 
-            var max = Tools.AvailableItemSlots; //Perhaps remove a few incase of new drops
-            if (stack > max)
-            {
-                stack = max; // Set to Tools.AvailableItemSlots because number given was larger than this.
-            }
+
             int id;
             var results = Int32.TryParse(name, out id) ? DefinitionManager.FindItem(id) : DefinitionManager.FindItem(name);
             if (results != null && results.Length > 0)
@@ -751,7 +746,7 @@ namespace TDSM.Core
                     }
                 }
 
-                receiver.GiveItem(item.Id, stack, sender, item.NetId, true, item.Prefix);
+                receiver.GiveItem(item.Id, stack, item.MaxStack, sender, item.NetId, true, item.Prefix);
             }
             else
                 throw new CommandError(String.Format("No item known by: {0}", name));
