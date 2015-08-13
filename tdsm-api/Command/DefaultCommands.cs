@@ -17,7 +17,7 @@ namespace TDSM.API.Command
         //TODO sort commands in alphabetical order.
 
         /// <summary>
-        /// Shuts down an exists.
+        /// Clears the console text.
         /// </summary>
         /// <param name="sender">Sending entity</param>
         /// <param name="args">Arguments sent with command</param>
@@ -28,11 +28,11 @@ namespace TDSM.API.Command
                 Console.Clear();
             }
             else
-                throw new CommandError("This is a console only command");
+                sender.Message("clear: This is a console only command");
         }
 
         /// <summary>
-        /// Shuts down an exists.
+        /// Saves world then exits server.
         /// </summary>
         /// <param name="sender">Sending entity</param>
         /// <param name="args">Arguments sent with command</param>
@@ -45,7 +45,7 @@ namespace TDSM.API.Command
         }
 
         /// <summary>
-        /// Shuts down an exists.
+        /// Exits server without first saving the world.
         /// </summary>
         /// <param name="sender">Sending entity</param>
         /// <param name="args">Arguments sent with command</param>
