@@ -28,20 +28,20 @@ namespace tdsm.utility
                 if (npc.boss)
                 {
                     list.Add(new NPCInfo()
-                    {
-                        Name = npc.name.Trim(),
-                        NetId = npc.netID,
-                        Id = npc.type,
-                        Boss = true
-                    });
+                        {
+                            Name = npc.name.Trim(),
+                            NetId = npc.netID,
+                            Id = npc.type,
+                            Boss = true
+                        });
                 }
                 else
                     list.Add(new NPCInfo()
-                    {
-                        Name = npc.name.Trim(),
-                        NetId = npc.netID,
-                        Id = npc.type
-                    });
+                        {
+                            Name = npc.name.Trim(),
+                            NetId = npc.netID,
+                            Id = npc.type
+                        });
             }
 
             var writable = list
@@ -57,10 +57,10 @@ namespace tdsm.utility
             using (var fs = info.OpenWrite())
             {
                 bf.Serialize(fs, new DefinitionFile<NPCInfo>()
-                {
-                    Version = 2,
-                    Data = writable
-                });
+                    {
+                        Version = 2,
+                        Data = writable
+                    });
                 fs.Flush();
             }
 
@@ -83,21 +83,22 @@ namespace tdsm.utility
                 for (var itemId = -48; itemId <= maxItems; itemId++)
                 {
                     var item = Activator.CreateInstance(typeof(Terraria.Item)) as Terraria.Item;
-                    item.Prefix(prefix);
                     item.netDefaults(itemId);
+                    item.Prefix(prefix);
 
                     if (item.name == String.Empty)
                         continue;
 
                     if (!list.Exists(x => x.Name == item.name))
                         list.Add(new ItemInfo()
-                        {
-                            Name = item.name.Trim(),
-                            NetId = item.netID,
-                            Prefix = prefix,
-                            Affix = item.AffixName().Trim(),
-                            Id = itemId
-                        });
+                            {
+                                Name = item.name.Trim(),
+                                NetId = item.netID,
+                                Prefix = prefix,
+                                Affix = item.AffixName().Trim(),
+                                Id = itemId,
+                                MaxStack = item.maxStack
+                            });
                 }
 
             var writable = list
@@ -111,10 +112,10 @@ namespace tdsm.utility
             using (var fs = info.OpenWrite())
             {
                 bf.Serialize(fs, new DefinitionFile<ItemInfo>()
-                {
-                    Version = 2,
-                    Data = writable
-                });
+                    {
+                        Version = 3,
+                        Data = writable
+                    });
                 fs.Flush();
             }
 
@@ -135,7 +136,9 @@ namespace tdsm.utility
     public class NPCInfo
     {
         public int Id { get; set; }
+
         public int NetId { get; set; }
+
         public string Name { get; set; }
 
         public bool Boss { get; set; }
@@ -147,16 +150,23 @@ namespace tdsm.utility
     public class ItemInfo
     {
         public int Id { get; set; }
+
         public int NetId { get; set; }
+
         public string Affix { get; set; }
+
         public int Prefix { get; set; }
+
         public string Name { get; set; }
+
+        public int MaxStack { get; set; }
     }
 
     [Serializable]
     public class DefinitionFile<T> where T : class
     {
         public int Version { get; set; }
+
         public T[] Data { get; set; }
     }
 }

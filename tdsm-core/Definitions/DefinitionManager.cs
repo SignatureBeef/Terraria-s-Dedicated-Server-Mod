@@ -166,6 +166,7 @@ namespace TDSM.Core.Definitions
         public string Affix { get; set; }
         public int Prefix { get; set; }
         public string Name { get; set; }
+        public int MaxStack { get; set; }
     }
 
     [Serializable]

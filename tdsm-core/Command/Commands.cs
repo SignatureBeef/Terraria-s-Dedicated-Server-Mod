@@ -731,7 +731,7 @@ namespace TDSM.Core
                 stack = max; // Set to Tools.AvailableItemSlots because number given was larger than this.
             }
             int id;
-            var results = int.TryParse(name, out id) ? DefinitionManager.FindItem(id) : DefinitionManager.FindItem(name);
+            var results = Int32.TryParse(name, out id) ? DefinitionManager.FindItem(id) : DefinitionManager.FindItem(name);
             if (results != null && results.Length > 0)
             {
                 if (results.Length > 1)
@@ -742,22 +742,12 @@ namespace TDSM.Core
                 {
                     item.Prefix = (int)(Affix)Enum.Parse(typeof(Affix), args.GetString(3), true);
                 }
-                catch (CommandError)
-                {
-
-                }
                 catch (ArgumentException)
                 {
                     throw new CommandError(String.Format("Error, the Prefix you entered was not found: {0}", args.GetString(3)));
                 }
-                
 
-                var index = receiver.GiveItem(item.Id, stack, sender, item.NetId, true, item.Prefix);
-
-                if (item.NetId < 0)
-                    Main.item[index].netDefaults(item.NetId);
-
-                Main.item[index].Prefix(item.Prefix);
+                receiver.GiveItem(item.Id, stack, sender, item.NetId, true, item.Prefix);
             }
             else
                 throw new CommandError(String.Format("No item known by: {0}", name));
