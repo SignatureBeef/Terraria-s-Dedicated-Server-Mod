@@ -83,7 +83,7 @@ namespace tdsm.patcher
 
         public void SwitchFramework()
         {
-            _asm.MainModule.RuntimeVersion = "4.5";
+//            _asm.MainModule.RuntimeVersion = "";
 
             for (var x = 0; x < _asm.CustomAttributes.Count; x++)
             {
