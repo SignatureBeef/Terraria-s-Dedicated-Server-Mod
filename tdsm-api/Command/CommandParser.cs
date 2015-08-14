@@ -434,6 +434,7 @@ namespace TDSM.API.Command
         /// <returns>CommandInfo for new command</returns>
         public CommandInfo AddCommand(string prefix)
         {
+            prefix = prefix.ToLower();
             if (serverCommands.ContainsKey(prefix))
                 throw new ApplicationException("AddCommand: duplicate command: " + prefix);
 
@@ -463,7 +464,7 @@ namespace TDSM.API.Command
             ParseAndProcess(sender, line);
         }
 
-        #if Full_API
+#if Full_API
         /// <summary>
         /// Parses player commands
         /// </summary>
@@ -478,7 +479,7 @@ namespace TDSM.API.Command
                 ParseAndProcess(player, line);
             }
         }
-        #endif
+#endif
 
         /// <summary>
         /// Determines entity's ability to use command. Used when permissions plugin is running.
@@ -489,8 +490,8 @@ namespace TDSM.API.Command
         public static bool CheckAccessLevel(CommandInfo cmd, ISender sender)
         {
             var perms = CheckPermissions(sender, cmd);
-//            if (Permissions.PermissionsManager.IsSet && perms == Permissions.Permission.Denied)
-//                return false;
+            //            if (Permissions.PermissionsManager.IsSet && perms == Permissions.Permission.Denied)
+            //                return false;
             if (Data.Storage.IsAvailable && perms == Data.Permission.Permitted)
                 return true;
 
@@ -511,15 +512,15 @@ namespace TDSM.API.Command
             if (sender is Player)
                 return acc == AccessLevel.PLAYER || (acc == AccessLevel.OP && sender.Op);
 #endif
-//            if (sender is RConSender)
-//                return acc <= AccessLevel.REMOTE_CONSOLE;
+            //            if (sender is RConSender)
+            //                return acc <= AccessLevel.REMOTE_CONSOLE;
 
             if (ExtCheckAccessLevel != null && ExtCheckAccessLevel(acc, sender))
                 return true;
 
             if (sender is ConsoleSender)
                 return true;
-            
+
             throw new NotImplementedException("Unexpected ISender implementation");
         }
 
@@ -611,6 +612,7 @@ namespace TDSM.API.Command
         {
             info = null;
 
+            prefix = prefix.ToLower();
             foreach (var plugin in PluginManager.EnumeratePlugins)
             {
                 lock (plugin.commands)
@@ -651,7 +653,7 @@ namespace TDSM.API.Command
                 if (firstSpace < 0)
                     firstSpace = line.Length;
 
-                var prefix = line.Substring(0, firstSpace);
+                var prefix = line.Substring(0, firstSpace).ToLower();
 
                 hargs.Prefix = prefix;
 
