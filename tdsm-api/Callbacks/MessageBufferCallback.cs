@@ -66,7 +66,6 @@ namespace TDSM.API.Callbacks
                         return 0; //Ignore
                     break;
             }
-            #endif
 
             var ctx = new HookContext()
             {
@@ -93,6 +92,9 @@ namespace TDSM.API.Callbacks
             }
 
             return packetId;
+            #else
+            return 0;
+            #endif
         }
 
         /// <summary>
@@ -356,9 +358,11 @@ namespace TDSM.API.Callbacks
                 {
                     if (Main.tile[x, y] == null)
                     {
-                        #if Full_API && !MemTile
+                        
+#if Full_API && !MemTile
                         Main.tile[x, y] = new Tile();
-                        #elif Full_API && MemTile
+                        
+#elif Full_API && MemTile
                         Main.tile[x, y] = new TDSM.API.Memory.MemTile(x, y);
                         #endif
                     }
@@ -498,9 +502,11 @@ namespace TDSM.API.Callbacks
 
             if (Main.tile[x, y] == null)
             {
-                #if Full_API && !MemTile
+                
+#if Full_API && !MemTile
                 Main.tile[x, y] = new Tile();
-                #elif Full_API && MemTile
+                
+#elif Full_API && MemTile
                 Main.tile[x, y] = new TDSM.API.Memory.MemTile(x, y);
                 #endif
             }
@@ -1210,9 +1216,11 @@ namespace TDSM.API.Callbacks
 
             if (Main.tile[x, y] == null)
             {
-                #if Full_API && !MemTile
+                
+#if Full_API && !MemTile
                 Main.tile[x, y] = new Tile();
-                #elif Full_API && MemTile
+                
+#elif Full_API && MemTile
                 Main.tile[x, y] = new TDSM.API.Memory.MemTile(x, y);
                 #endif
             }

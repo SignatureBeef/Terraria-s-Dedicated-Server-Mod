@@ -213,10 +213,12 @@ namespace TDSM.API.Memory
                 {
                     return (int)(2 + this.slope());
                 }
+                #if Full_API
                 if (Terraria.Main.tileSolid[(int)data[x, y]._type] && !Terraria.Main.tileSolidTop[(int)data[x, y]._type])
                 {
                     return 1;
                 }
+                #endif
                 return -1;
             }
         }
@@ -342,10 +344,12 @@ namespace TDSM.API.Memory
                 {
                     return false;
                 }
+                #if Full_API
                 if (Terraria.Main.tileFrameImportant[(int)data[x, y]._type] && (data[x, y]._frameX != compTile.frameX || data[x, y]._frameY != compTile.frameY))
                 {
                     return false;
                 }
+                #endif
             }
             if (data[x, y]._wall != compTile.wall || data[x, y]._liquid != compTile.liquid)
             {
@@ -711,6 +715,7 @@ namespace TDSM.API.Memory
                 MemTile.SmoothSlope(x, y + 1, false);
                 MemTile.SmoothSlope(x, y - 1, false);
             }
+            #if Full_API
             var tile = Terraria.Main.tile[x, y];
             if (!Terraria.WorldGen.SolidOrSlopedTile(x, y))
             {
@@ -754,6 +759,7 @@ namespace TDSM.API.Memory
             }
             tile.halfBrick(false);
             tile.slope(0);
+            #endif
         }
 
         public void ClearMetadata()
@@ -1588,6 +1594,10 @@ namespace TDSM.API.Memory
 
 
 
+
+
+
+
 #if Full_API
     if (Terraria.Main.tileSolid[(int)this.type] && !Terraria.Main.tileSolidTop[(int)this.type])
     {
@@ -1692,6 +1702,10 @@ public bool isTheSameAs(VanillaTile compTile)
             return false;
         }
     
+
+
+
+
 
 
 
@@ -2083,6 +2097,10 @@ public static void SmoothSlope(int x, int y, bool applyToNeighbors = true)
 
 
 
+
+
+
+
 #if Full_API
     var tile = Terraria.Main.tile[x, y];
     if (!Terraria.WorldGen.SolidOrSlopedTile(x, y))
@@ -2142,6 +2160,10 @@ public void ClearMetadata()
 }
 }
     
+
+
+
+
 
 
 

@@ -1,10 +1,10 @@
 ﻿using TDSM.API.Plugin;
 using Microsoft.Xna.Framework;
 using System.IO;
-using Terraria.Net.Sockets;
 
 #if Full_API
 using Terraria;
+using Terraria.Net.Sockets;
 #endif
 
 namespace TDSM.API.Callbacks

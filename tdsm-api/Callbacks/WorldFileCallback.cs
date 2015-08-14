@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Terraria.IO;
-using Terraria.Utilities;
-using Terraria.Social;
-
 
 #if Full_API
 using Terraria;
+using Terraria.IO;
+using Terraria.Utilities;
+using Terraria.Social;
 #endif
 
 namespace TDSM.API.Callbacks
@@ -18,6 +17,7 @@ namespace TDSM.API.Callbacks
     {
         public static void loadWorld(bool loadFromCloud)
         {
+            #if Full_API
             MainCallback.WorldLoadBegin();
             WorldFile.IsWorldOnCloud = loadFromCloud;
             Main.checkXMas();
@@ -158,7 +158,7 @@ namespace TDSM.API.Callbacks
 //            {
 //                WorldFile.OnWorldLoad.Invoke();
 //            }
+            #endif
         }
-
     }
 }

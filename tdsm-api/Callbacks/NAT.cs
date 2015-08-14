@@ -12,7 +12,7 @@ namespace TDSM.API.Callbacks
 
         public static void OpenPort()
         {
-#if ENABLE_NAT
+#if ENABLE_NAT && Full_API
             if (Terraria.Netplay.UseUPNP)
             {
                 Terraria.Netplay.portForwardIP = Terraria.Netplay.GetLocalIPAddress();
@@ -42,7 +42,7 @@ namespace TDSM.API.Callbacks
 
         static void NatUtility_DeviceFound(object sender, Mono.Nat.DeviceEventArgs e)
         {
-#if ENABLE_NAT
+#if ENABLE_NAT && Full_API
             try
             {
                 if (e.Device is Mono.Nat.Upnp.UpnpNatDevice) //TODO, see if Pmp should work as well
@@ -86,6 +86,7 @@ namespace TDSM.API.Callbacks
 
         public static void ClosePort()
         {
+            #if Full_API
             if (Terraria.Netplay.portForwardOpen && _map != null && _devices.Count > 0)
             {
                 //Netplay.mappings.Remove(Netplay.portForwardPort, "TCP");
@@ -102,6 +103,7 @@ namespace TDSM.API.Callbacks
                 }
                 ProgramLog.Admin.Log("Removed NAT map record for Terraria Server");
             }
+            #endif
         }
 
 
