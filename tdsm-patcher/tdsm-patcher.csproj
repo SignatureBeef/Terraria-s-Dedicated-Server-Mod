@@ -68,7 +68,7 @@
       <HintPath>..\Binaries\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\External\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\Binaries\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
