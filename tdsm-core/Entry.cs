@@ -131,21 +131,21 @@ namespace TDSM.Core
 
         protected override void Initialized(object state)
         {
-//            if (/*!Globals.IsPatching &&*/ !ProgramLog.IsOpen)
-//            {
-//                var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
-//                ProgramLog.OpenLogFile(logFile);
-//
+            //            if (/*!Globals.IsPatching &&*/ !ProgramLog.IsOpen)
+            //            {
+            //                var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
+            //                ProgramLog.OpenLogFile(logFile);
+            //
             ProgramLog.Log("TDSM Rebind core build {0}", this.Version);
-//
-//                Tools.SetWriteLineMethod(ProgramLog.Log, OnLogFinished);
-//                ConsoleSender.DefaultColour = ConsoleColor.Gray;
-//                //ConsoleSender.SetMethod((msg, r, g, b) =>
-//                //{
-//                //    Console.ForegroundColor = FromColor((byte)r, (byte)g, (byte)b);
-//                //    Console.WriteLine(msg);
-//                //});
-//            }
+            //
+            //                Tools.SetWriteLineMethod(ProgramLog.Log, OnLogFinished);
+            //                ConsoleSender.DefaultColour = ConsoleColor.Gray;
+            //                //ConsoleSender.SetMethod((msg, r, g, b) =>
+            //                //{
+            //                //    Console.ForegroundColor = FromColor((byte)r, (byte)g, (byte)b);
+            //                //    Console.WriteLine(msg);
+            //                //});
+            //            }
 
             Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
 #if WebInterface
@@ -457,13 +457,13 @@ namespace TDSM.Core
                 .SetDefaultUsage()
                 .Calls(Server.Command_AcceptConnections);
 #endif
-//            AddCommand("restart")
-//                .WithAccessLevel(AccessLevel.OP)
-//                .WithDescription("Restart the server.")
-//                .WithHelpText("<no parameters>    - Restart immediately.")
-//                .WithHelpText("--wait             - Wait for users to disconnect and then restart.")
-//                .WithPermissionNode("tdsm.restart")
-//                .Calls(this.Restart);
+            //            AddCommand("restart")
+            //                .WithAccessLevel(AccessLevel.OP)
+            //                .WithDescription("Restart the server.")
+            //                .WithHelpText("<no parameters>    - Restart immediately.")
+            //                .WithHelpText("--wait             - Wait for users to disconnect and then restart.")
+            //                .WithPermissionNode("tdsm.restart")
+            //                .Calls(this.Restart);
 
 #if DEBUG
             AddCommand("repo")
@@ -500,7 +500,7 @@ namespace TDSM.Core
                 .WithHelpText("list")
                 .WithHelpText("listnodes <group>")
                 .Calls(this.GroupPermission);
-            
+
             AddCommand("user")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.user")
@@ -514,13 +514,13 @@ namespace TDSM.Core
                 .WithHelpText("listgroups")
                 .WithHelpText("listnodes")
                 .Calls(this.UserPermission);
-            
+
             AddCommand("killnpc")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.killnpc")
                 .WithDescription("Kill all non town NPC's")
                 .Calls(this.KillNPC);
-            
+
             AddCommand("auth")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithPermissionNode("tdsm.auth")
@@ -896,7 +896,7 @@ namespace TDSM.Core
         //    }
         //}
 
-        #if TDSMServer
+#if TDSMServer
         [Hook(HookOrder.NORMAL)]
         void OnDefaultServerStart(ref HookContext ctx, ref HookArgs.StartDefaultServer args)
         {
@@ -962,7 +962,7 @@ namespace TDSM.Core
                     RConBindAddress = args.Value;
                     break;
                 case "web-server-bind-address":
-//                    _webServerAddress = args.Value;
+                    //                    _webServerAddress = args.Value;
                     TDSM.API.WebServer.Start(args.Value);
                     break;
                 case "web-server-provider":
@@ -1017,7 +1017,7 @@ namespace TDSM.Core
                         ProgramLog.Admin.Log("SSC are enabled with mode " + characterMode);
 
                         Hook(HookPoints.ReceiveNetMessage, OnNetMessageReceived);
-//                        Hook(HookPoints.PlayerDataReceived, OnPlayerDataReceived);
+                        //                        Hook(HookPoints.PlayerDataReceived, OnPlayerDataReceived);
                     }
                     else
                         ProgramLog.Error.Log("Failed to parse line server-side-characters. No SSC will be used.");
@@ -1050,7 +1050,7 @@ namespace TDSM.Core
         void OnGreetPlayer(ref HookContext ctx, ref HookArgs.PlayerPreGreeting args)
         {
             ctx.SetResult(HookResult.IGNORE);
-            var lines = args.Motd.Split(new string[]{ "\\0" }, StringSplitOptions.None);
+            var lines = args.Motd.Split(new string[] { "\\0" }, StringSplitOptions.None);
             foreach (var line in lines)
                 ctx.Player.SendMessage(line, 255, 0, 0, 255);
 
@@ -1066,7 +1066,7 @@ namespace TDSM.Core
                 }
             }
 
-            ctx.Player.SendMessage("Current players: " + list + ".", 255, 255, 240, 20); 
+            ctx.Player.SendMessage("Current players: " + list + ".", 255, 255, 240, 20);
         }
 
         [Hook(HookOrder.NORMAL)]
