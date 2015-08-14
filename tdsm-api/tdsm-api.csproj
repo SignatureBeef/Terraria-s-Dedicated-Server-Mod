@@ -11,6 +11,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AssemblyName>TDSM.API</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -211,7 +213,9 @@
     <Compile Include="Misc\Platform.cs" />
     <Compile Include="Misc\ProducerConsumerSignal.cs" />
     <Compile Include="Misc\ProgramThread.cs" />
-    <Compile Include="Misc\ProgressWebClient.cs" />
+    <Compile Include="Misc\ProgressWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Misc\PropertiesFile.cs" />
     <Compile Include="Misc\Tasks.cs" />
     <Compile Include="Callbacks\Utilities.cs" />
@@ -233,11 +237,9 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Steam\" />
-    <Folder Include="Web\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
