@@ -720,11 +720,16 @@ namespace TDSM.Core
         /// <param name="args">Arguments sent with command</param>
         public void Give(ISender sender, ArgumentList args)
         {
-            // /give <player> <stack> <name> 
-            Player receiver = args.GetOnlinePlayer(0);
-            int stack = args.GetInt(1);
-            string name = args.GetString(2);
-
+            // /give <stack> <item> [prefix] [player]
+            var index = 0;
+            int stack = args.GetInt(index++);
+            string name = args.GetString(index++);
+ 
+//            var max = Tools.AvailableItemSlots; //Perhaps remove a few incase of new drops
+//            if (stack > max)
+//            {
+//                stack = max; // Set to Tools.AvailableItemSlots because number given was larger than this.
+//            }
             int id;
             var results = Int32.TryParse(name, out id) ? DefinitionManager.FindItem(id) : DefinitionManager.FindItem(name);
             if (results != null && results.Length > 0)
@@ -734,16 +739,29 @@ namespace TDSM.Core
 
                 var item = results[0];
                 string prefix;
-                if (args.TryGetString(3, out prefix))
+                if (args.TryGetString(index, out prefix))
                 {
                     try
                     {
-                        item.Prefix = (int)(Affix)Enum.Parse(typeof(Affix), prefix, true);
+                        Affix afx;
+                        if (Enum.TryParse(prefix, out afx))
+                        {
+                            item.Prefix = (int)afx;
+                            index++;
+                        }
                     }
                     catch (ArgumentException)
                     {
                         throw new CommandError(String.Format("Error, the Prefix you entered was not found: {0}", args.GetString(3)));
                     }
+                }
+
+                Player receiver;
+                if (!args.TryGetOnlinePlayer(index, out receiver))
+                {
+                    if (sender is Player)
+                        receiver = sender as Player;
+                    else throw new CommandError("Expected an online player");
                 }
 
                 receiver.GiveItem(item.Id, stack, item.MaxStack, sender, item.NetId, true, item.Prefix);
@@ -2521,7 +2539,7 @@ namespace TDSM.Core
                     int damage = Int32.MaxValue;
                     npc.StrikeNPC(damage, 0, 0);
                     NetMessage.SendData((int)Packet.STRIKE_NPC, -1, -1, "", npc.whoAmI, damage);
-                    NetMessage.SendData ((int)Packet.NPC_INFO, -1, -1, "", npc.whoAmI, 0, 0, 0, 0, 0, 0);
+                    NetMessage.SendData((int)Packet.NPC_INFO, -1, -1, "", npc.whoAmI, 0, 0, 0, 0, 0, 0);
 
                     killed++;
                 }

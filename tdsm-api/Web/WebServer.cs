@@ -31,6 +31,7 @@ namespace TDSM.API
 
         private static void StartServer(object baseAddress)
         {
+            System.Threading.Thread.CurrentThread.Name = "Web";
             try
             {
                 using (WebApp.Start<OWINServer>(url: baseAddress as String))

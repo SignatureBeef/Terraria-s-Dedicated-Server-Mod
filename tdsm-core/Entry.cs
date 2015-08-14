@@ -185,7 +185,7 @@ namespace TDSM.Core
             AddCommand("give")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Give a player items")
-                .WithHelpText("<player> <amount> <itemname:itemid> [prefix]")
+                .WithHelpText("<amount> <itemname:itemid> [prefix] [player]")
                 .WithPermissionNode("tdsm.give")
                 .Calls(this.Give);
 
@@ -963,7 +963,6 @@ namespace TDSM.Core
                     break;
                 case "web-server-bind-address":
 //                    _webServerAddress = args.Value;
-                    Console.WriteLine(args.Value);
                     TDSM.API.WebServer.Start(args.Value);
                     break;
                 case "web-server-provider":
