@@ -3,6 +3,8 @@
 ## Build 6 *(in progress)*
 - Server side characters
 - Upgrade to .NET 4.5
+- `give` command: New syntax and optional player name argument.
+- `give` command: Fixed not giving number of items asked for. Limit is 10 stacks of any item.
 
 ## Build 5 - 1.3.0.8
 - Added send data hook
