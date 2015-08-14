@@ -59,6 +59,9 @@
     <Reference Include="tdsm">
       <HintPath>..\Binaries\tdsm.exe</HintPath>
     </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ServerCharacters\CharacterManager.cs" />
@@ -84,6 +87,7 @@
     <Compile Include="ServerCharacters\Tables\ItemTable.cs" />
     <Compile Include="ServerCharacters\Tables\PlayerBuffTable.cs" />
     <Compile Include="ServerCharacters\Tables\DefaultLoadoutTable.cs" />
+    <Compile Include="WebApi.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
