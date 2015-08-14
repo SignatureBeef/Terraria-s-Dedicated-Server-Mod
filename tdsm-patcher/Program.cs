@@ -305,6 +305,8 @@ namespace tdsm.patcher
 
             Console.Write("Ok\nUpdating to .NET v4.5...");
             patcher.SwitchFramework();
+            Console.Write("Ok\nPatching Newtonsoft.Json...");
+            patcher.PatchJSON();
 
             //            patcher.SwapToVanillaTile(); //Holy shit batman! it works
 

@@ -44,6 +44,7 @@ namespace TDSM.API.Logging
         public static readonly LogChannel Error = new LogChannel("ERR", ConsoleColor.Red);
         public static readonly LogChannel Debug = new LogChannel("DBG", ConsoleColor.Gray);
         public static readonly LogChannel Plugin = new LogChannel("PGN", ConsoleColor.Blue);
+        public static readonly LogChannel Web = new LogChannel("WEB", ConsoleColor.DarkBlue);
 
         struct LogEntry
         {

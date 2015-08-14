@@ -962,7 +962,9 @@ namespace TDSM.Core
                     RConBindAddress = args.Value;
                     break;
                 case "web-server-bind-address":
-                    _webServerAddress = args.Value;
+//                    _webServerAddress = args.Value;
+                    Console.WriteLine(args.Value);
+                    TDSM.API.WebServer.Start(args.Value);
                     break;
                 case "web-server-provider":
                     _webServerProvider = args.Value;

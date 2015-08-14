@@ -1651,6 +1651,21 @@ namespace tdsm.patcher
         }
 
         /// <summary>
+        /// Updates the Newtonsoft binaries to what Owin supports
+        /// </summary>
+        public void PatchJSON()
+        {
+            var xnaFramework = _asm.MainModule.AssemblyReferences
+                .Where(x => x.Name.StartsWith("Newtonsoft"))
+                .ToArray();
+            
+            for (var x = 0; x < xnaFramework.Length; x++)
+            {
+                xnaFramework[x].Version = new Version("6.0.0.0");
+            }
+        }
+
+        /// <summary>
         /// Removes the references to the Steam binaries, and replaces them with dummies.
         /// </summary>
         public void PatchSteam()
