@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Web.Http;
-using Owin;
 using System.Threading;
-using Microsoft.Owin.Hosting;
-using TDSM.API.Logging;
 using System.IO;
-using Microsoft.Owin.StaticFiles;
-using Microsoft.Owin;
-using Microsoft.Owin.FileSystems;
-using System.Web.Http.Dispatcher;
-using System.Collections.Generic;
-using System.Reflection;
+using TDSM.API.Logging;
+using Owin;
+using System.Web.Http;
 
-namespace TDSM.API
+namespace TDSM.API.Web
 {
     public static class WebServer
     {
-        public static HttpConfiguration Config { get; private set; }
+        public static System.Web.Http.HttpConfiguration Config { get; private set; }
 
         public static string StaticFileDirectory = "Web";
 
@@ -24,16 +17,16 @@ namespace TDSM.API
 
         static WebServer()
         {
-            Config = new HttpConfiguration();
+            Config = new System.Web.Http.HttpConfiguration();
 
             Config.Routes.MapHttpRoute(
                 name: "DefaultApi", 
                 routeTemplate: "api/{controller}/{id}", 
-                defaults: new { id = RouteParameter.Optional } 
+                defaults: new { id = System.Web.Http.RouteParameter.Optional } 
             );
 
 //            Config.DependencyResolver = new AssembliesResolver();
-            Config.Services.Replace(typeof(IAssembliesResolver), new PluginServiceResolver());
+            Config.Services.Replace(typeof(System.Web.Http.Dispatcher.IAssembliesResolver), new PluginServiceResolver());
         }
 
         public static void Start(string baseAddress)
@@ -48,9 +41,9 @@ namespace TDSM.API
         }
     }
 
-    public class PluginServiceResolver : DefaultAssembliesResolver
+    class PluginServiceResolver : System.Web.Http.Dispatcher.DefaultAssembliesResolver
     {
-        public override ICollection<Assembly> GetAssemblies()
+        public override System.Collections.Generic.ICollection<System.Reflection.Assembly> GetAssemblies()
         {
             return AppDomain.CurrentDomain.GetAssemblies();
         }
@@ -58,18 +51,18 @@ namespace TDSM.API
 
     class OWINServer
     {
-        public void Configuration(IAppBuilder app)
+        public void Configuration(Owin.IAppBuilder app)
         {
-//            #if DEBUG
-//            app.UseWelcomePage();
-//            #endif
+            #if DEBUG
+            app.UseWelcomePage();
+            #endif
             app.UseErrorPage();
             app.UseWebApi(WebServer.Config); 
 
-            app.UseFileServer(new FileServerOptions()
+            app.UseFileServer(new Microsoft.Owin.StaticFiles.FileServerOptions()
                 {
-                    RequestPath = new PathString("/web"),
-                    FileSystem = new PhysicalFileSystem(WebServer.StaticFileDirectory),
+                    RequestPath = new Microsoft.Owin.PathString("/web"),
+                    FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(WebServer.StaticFileDirectory),
                     EnableDirectoryBrowsing = false
                 });
         }
@@ -86,7 +79,7 @@ namespace TDSM.API
 
             try
             {
-                using (WebApp.Start<OWINServer>(url: baseAddress as String))
+                using (Microsoft.Owin.Hosting.WebApp.Start<OWINServer>(url: baseAddress as String))
                 {
                     ProgramLog.Web.Log("Web server started listening on {0}", baseAddress);
                     WebServer.Switch.WaitOne();

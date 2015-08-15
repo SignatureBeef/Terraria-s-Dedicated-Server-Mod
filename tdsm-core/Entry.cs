@@ -1026,7 +1026,7 @@ namespace TDSM.Core
                     break;
                 case "web-server-bind-address":
                     //                    _webServerAddress = args.Value;
-                    TDSM.API.WebServer.Start(args.Value);
+                    TDSM.API.Web.WebServer.Start(args.Value);
                     break;
                 case "web-server-provider":
                     _webServerProvider = args.Value;

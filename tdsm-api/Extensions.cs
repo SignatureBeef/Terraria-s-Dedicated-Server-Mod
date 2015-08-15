@@ -78,5 +78,20 @@ namespace TDSM.API
             return list.ElementAt(_rand.Next(0, count));
         }
     }
+
+    public static class AssemblyExtensions
+    {
+        public static Type[] GetTypesLoaded(this System.Reflection.Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (System.Reflection.ReflectionTypeLoadException e)
+            {
+                return e.Types.Where(t => t != null).ToArray();
+            } 
+        }
+    }
 }
 
