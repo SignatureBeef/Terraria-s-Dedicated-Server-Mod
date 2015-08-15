@@ -1,4 +1,6 @@
 language: csharp
 solution: tdsm.sln
+install:
+  - nuget restore tdsm.sln
 script:
   - xbuild /p:Configuration=Debug tdsm.sln
