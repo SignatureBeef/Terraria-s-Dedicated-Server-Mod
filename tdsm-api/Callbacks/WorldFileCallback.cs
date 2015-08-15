@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Terraria.IO;
-using Terraria.Utilities;
-using Terraria.Social;
-
+using TDSM.API.Logging;
 
 #if Full_API
 using Terraria;
+using Terraria.IO;
+using Terraria.Utilities;
+using Terraria.Social;
 #endif
 
 namespace TDSM.API.Callbacks
@@ -18,6 +18,7 @@ namespace TDSM.API.Callbacks
     {
         public static void loadWorld(bool loadFromCloud)
         {
+            #if Full_API
             MainCallback.WorldLoadBegin();
             WorldFile.IsWorldOnCloud = loadFromCloud;
             Main.checkXMas();
@@ -137,8 +138,9 @@ namespace TDSM.API.Callbacks
                         }
                         NPC.setWorldMonsters();
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
+                        ProgramLog.Log(e);
                         WorldGen.loadFailed = true;
                         WorldGen.loadSuccess = false;
                         try
@@ -149,7 +151,6 @@ namespace TDSM.API.Callbacks
                         catch
                         {
                         }
-                        Console.WriteLine(e);
                         return;
                     }
                 }
@@ -158,7 +159,7 @@ namespace TDSM.API.Callbacks
 //            {
 //                WorldFile.OnWorldLoad.Invoke();
 //            }
+            #endif
         }
-
     }
 }

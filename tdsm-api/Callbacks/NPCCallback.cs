@@ -47,6 +47,7 @@ namespace TDSM.API.Callbacks
 //            return ctx.Result == HookResult.DEFAULT;
         }
 
+        #if Full_API
         public static void OnNPCKilled(Terraria.NPC npc)
         {
             var ctx = new HookContext();
@@ -58,5 +59,11 @@ namespace TDSM.API.Callbacks
 
             HookPoints.NPCKilled.Invoke(ref ctx, ref args);
         }
+        
+#else
+        public static void OnNPCKilled(object npc)
+        {
+        }
+        #endif
     }
 }

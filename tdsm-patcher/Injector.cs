@@ -1661,7 +1661,7 @@ namespace tdsm.patcher
             
             for (var x = 0; x < xnaFramework.Length; x++)
             {
-                xnaFramework[x].Version = new Version("6.0.0.0");
+                xnaFramework[x].Version = new Version("7.0.0.0");
             }
         }
 

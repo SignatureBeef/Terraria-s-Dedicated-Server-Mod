@@ -38,25 +38,28 @@ namespace TDSM.API.Callbacks
                     }
 
                     //Look in libraries - assembly name must match filename
+                    string filename;
                     var ix = a.Name.IndexOf(',');
                     if (ix > -1)
                     {
-                        var loc = Path.Combine(Globals.LibrariesPath, a.Name.Substring(0, ix) + ".dll");
-                        if (File.Exists(loc))
+                        filename = Path.Combine(Globals.LibrariesPath, a.Name.Substring(0, ix) + ".dll");
+                    }
+                    else filename = Path.Combine(Globals.LibrariesPath, a.Name + ".dll");
+
+                    if (File.Exists(filename))
+                    {
+                        using (var ms = new MemoryStream())
                         {
-                            using (var ms = new MemoryStream())
+                            var buff = new byte[256];
+                            using (var fs = File.OpenRead(filename))
                             {
-                                var buff = new byte[256];
-                                using (var fs = File.OpenRead(loc))
+                                while (fs.Position < fs.Length)
                                 {
-                                    while (fs.Position < fs.Length)
-                                    {
-                                        var read = fs.Read(buff, 0, buff.Length);
-                                        ms.Write(buff, 0, read);
-                                    }
+                                    var read = fs.Read(buff, 0, buff.Length);
+                                    ms.Write(buff, 0, read);
                                 }
-                                return Assembly.Load(ms.ToArray());
                             }
+                            return Assembly.Load(ms.ToArray());
                         }
                     }
                 }
@@ -64,7 +67,8 @@ namespace TDSM.API.Callbacks
                 {
                     Console.WriteLine(e);
                 }
-                return null;
+
+                    return null;
             };
         }
 

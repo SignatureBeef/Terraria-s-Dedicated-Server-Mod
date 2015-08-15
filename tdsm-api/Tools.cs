@@ -84,7 +84,7 @@ namespace TDSM.API
         /// <returns></returns>
         public static bool IsValidLocation(Vector2 point, bool defaultResist = true)
         {
-            if (point != null && (defaultResist) ? (point != default(Vector2)) : true)
+            if (point != null && (defaultResist) ? (point != Vector2.Zero) : true)
             if (point.X <= Main.maxTilesX && point.X >= 0)
             {
                 if (point.Y <= Main.maxTilesY && point.Y >= 0)
