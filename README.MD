@@ -42,8 +42,8 @@ Here are a few Plugin ideas we would like to see. Of course you may make whateve
 * Regions / Home Protection  
 A block protection plugin for specific areas designated by a player.
 * Sort Containers / Inventory
-* Last command, command.  
-For example, be able to issue `/!` command to re-execute the last command that player (or console) has used along with parameters.
+* ~~Last command, command.~~  
+~~For example, be able to issue `/!` command to re-execute the last command that player (or console) has used along with parameters.~~
 * PVP / Mini-game
 * Rollback / Anit-Grief protection
 * Player chat (Player prefixes/suffixes and colours)
