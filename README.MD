@@ -48,3 +48,10 @@ For example, be able to issue `/!` command to re-execute the last command that p
 * Rollback / Anit-Grief protection
 
 Also please take a look at our [DEVELOPMENT.MD](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/blob/master/DEVELOPMENT.MD) file.
+
+##Existing plugins
+This will serve as a "known" plugin list until out website is complete.
+- [Restrict](https://github.com/DeathCradle/TDSM_Restrict) - Player registration and world protection
+- [SQLite](https://github.com/DeathCradle/tdsm-sqlite-connector) - Adds SQLite storage and permissions
+- [MySQL](https://github.com/DeathCradle/tdsm-mysql-connector) - Adds MySQL storage and permissions
+- [RenWorld](https://github.com/D1G1T4L3CH0/TDSM-RenWorld-Plugin) - [Lua] Allows you to rename a world
