@@ -299,7 +299,7 @@ namespace TDSM.API
             try
             {
                 Assembly assembly = null;
-                Type type = typeof(BasePlugin);
+//                Type type = typeof(BasePlugin);
 
                 using (FileStream fs = File.Open(PluginPath, FileMode.Open))
                 {

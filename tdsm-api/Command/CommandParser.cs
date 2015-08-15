@@ -5,7 +5,6 @@ using TDSM.API.Plugin;
 using TDSM.API.Misc;
 using System.Linq;
 
-
 #if Full_API
 using Terraria;
 #endif
