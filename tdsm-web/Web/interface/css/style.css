@@ -1,0 +1,37 @@
+﻿HTML,BODY,A,P,DIV,SECTION,H1,H2,H3,H4,H5,H6 {
+
+}
+
+BODY {
+	background: rgba(213, 213, 213, 1);
+}
+
+BODY > FORM {
+	position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+	z-index: 1;
+}
+
+.navbar-tdsm {
+    background-color: #000;
+    border: none;
+    border-radius: 0;
+}
+.navbar-tdsm .navbar-nav>.active>a, .navbar-tdsm .navbar-nav>.active>a:focus, .navbar-tdsm .navbar-nav>.active>a:hover,.navbar-tdsm .navbar-nav>li>a:focus, .navbar-tdsm .navbar-nav>li>a:hover {
+    color: #72c02c;
+    border-bottom: 3px solid #72c02c;
+    background: none;
+}
+.navbar-tdsm .navbar-nav>li>a {
+    color: #777;
+    color: #fff;
+}
+
+.ui-screen-center {
+    margin-top: 30px;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}

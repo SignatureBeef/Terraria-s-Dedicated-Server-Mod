@@ -53,9 +53,6 @@ namespace TDSM.API.Web
     {
         public void Configuration(Owin.IAppBuilder app)
         {
-            #if DEBUG
-            app.UseWelcomePage();
-            #endif
             app.UseErrorPage();
             app.UseWebApi(WebServer.Config); 
 

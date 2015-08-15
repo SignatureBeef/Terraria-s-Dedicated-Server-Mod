@@ -95,6 +95,15 @@ namespace tdsm.patcher
                     _asm.CustomAttributes[x].Properties[0] = new CustomAttributeNamedArgument("FrameworkDisplayName", cs);
                 }
             }
+
+//            var xnaFramework = _asm.MainModule.AssemblyReferences
+//                .Where(x => x.Name.StartsWith("Microsoft.Xna.Framework"))
+//                .ToArray();
+//            
+//            foreach(var reference in _asm.MainModule.AssemblyReferences)
+//            {
+//                
+//            }
         }
 
         #region "Memory"

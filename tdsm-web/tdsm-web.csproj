@@ -18,6 +18,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="cp ${ProjectDir}/Web/* ${SolutionDir}/tdsm-patcher/bin/x86/Debug/Web" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -53,5 +58,13 @@
       <Project>{48477B14-CEAA-47AA-98F1-EF935734DBC5}</Project>
       <Name>tdsm-core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Web\" />
+    <Folder Include="Web\tdsm-web\" />
+    <Folder Include="Web\tdsm-web\js\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web\tdsm-web\index.html" />
   </ItemGroup>
 </Project>
