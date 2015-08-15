@@ -59,11 +59,11 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="tdsm">
-      <HintPath>..\Binaries\tdsm.exe</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Binaries\Libraries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="tdsm">
+      <HintPath>..\Binaries\tdsm.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -73,12 +73,6 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
-      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
-      <Name>tdsm-api</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -87,4 +81,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
+      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
+      <Name>tdsm-api</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

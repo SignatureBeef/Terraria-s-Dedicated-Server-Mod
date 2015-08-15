@@ -81,11 +81,11 @@ namespace TDSM.API.Plugin
 
         public void HookBase(HookPoint hookPoint, HookOrder order, NLua.LuaFunction callback)
         {
-            var targetType = hookPoint.DelegateType.GetGenericArguments()[0];
-            var call = this.GetType().GetMethod("InternalCall");//.MakeGenericMethod(targetType);
-            var act = typeof(HookAction<>).MakeGenericType(targetType);
-
-            var inst = Activator.CreateInstance(act, call);
+//            var taargetType = hookPoint.DelegateType.GetGenericArguments()[0];
+//            var call = this.GetType().GetMethod("InternalCall");//.MakeGenericMethod(targetType);
+//            var act = typeof(HookAction<>).MakeGenericType(targetType);
+//
+//            var inst = Activator.CreateInstance(act, call);
 
             //if (initialized)
             //hookPoint.HookBase(this, new HookAction<Object>((ref HookContext ctx, ref Object args) =>

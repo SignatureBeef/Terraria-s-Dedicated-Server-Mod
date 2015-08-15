@@ -5,10 +5,10 @@ namespace Microsoft.Xna.Framework
 {
     public struct Vector2
     {
-        public static void Test(ref Vector2[] arr)
-        {
-            var col = new Vector2[0];
-        }
+//        public static void Test(ref Vector2[] arr)
+//        {
+//            var col = new Vector2[0];
+//        }
         public static Vector2[] Array;
 
         /// <summary>Gets or sets the x-component of the vector.</summary>
