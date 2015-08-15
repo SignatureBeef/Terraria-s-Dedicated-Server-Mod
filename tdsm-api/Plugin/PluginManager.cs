@@ -254,9 +254,11 @@ namespace TDSM.API
             }
         }
 
+       
+
         static BasePlugin LoadPluginAssembly(Assembly assembly)
         {
-            foreach (var type in assembly.GetTypes().Where(x => typeof(BasePlugin).IsAssignableFrom(x) && !x.IsAbstract))
+            foreach (var type in assembly.GetTypesLoaded().Where(x => typeof(BasePlugin).IsAssignableFrom(x) && !x.IsAbstract))
             {
                 var plugin = CreatePluginInstance(type);
                 if (plugin == null)
