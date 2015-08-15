@@ -21,3 +21,7 @@ cecil
 /tdsm-patcher/tdsm-patcher.exe
 /tdsm-patcher/Vestris.ResourceLib.dll
 /tdsm-patcher/project.lock.json
+
+/packages
+
+.DS_Store
