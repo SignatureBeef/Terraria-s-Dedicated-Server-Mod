@@ -42,8 +42,8 @@ Here are a few Plugin ideas we would like to see. Of course you may make whateve
 * Regions / Home Protection  
 A block protection plugin for specific areas designated by a player.
 * Sort Containers / Inventory
-* Last command, command.  
-For example, be able to issue `/!` command to re-execute the last command that player (or console) has used along with parameters.
+* ~~Last command, command.~~  
+~~For example, be able to issue `/!` command to re-execute the last command that player (or console) has used along with parameters.~~
 * PVP / Mini-game
 * Rollback / Anit-Grief protection
 * Player chat (Player prefixes/suffixes and colours)
@@ -57,3 +57,4 @@ This will serve as a "known" plugin list until our website is complete. If you k
 - [SQLite](https://github.com/DeathCradle/tdsm-sqlite-connector) - Adds SQLite storage and permissions
 - [MySQL](https://github.com/DeathCradle/tdsm-mysql-connector) - Adds MySQL storage and permissions
 - [RenWorld](https://d1g1t4l3ch0.github.io/TDSM-RenWorld-Plugin/) - [Lua] Allows you to rename a world
+- [Map](https://github.com/elevatorguy/TDSM_map) - Renders the loaded world as a PNG
