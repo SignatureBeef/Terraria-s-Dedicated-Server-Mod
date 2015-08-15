@@ -46,8 +46,8 @@ A block protection plugin for specific areas designated by a player.
 For example, be able to issue `/!` command to re-execute the last command that player (or console) has used along with parameters.
 * PVP / Mini-game
 * Rollback / Anit-Grief protection
-* Player chat
-Player prefixes/suffixes and colours
+* Player chat (Player prefixes/suffixes and colours)
+* Connection/Chat history
 
 Also please take a look at our [DEVELOPMENT.MD](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/blob/master/DEVELOPMENT.MD) file.
 
