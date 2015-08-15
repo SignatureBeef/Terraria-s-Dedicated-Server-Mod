@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using TDSM.API.Logging;
 
 #if Full_API
 using Terraria;
@@ -137,8 +138,9 @@ namespace TDSM.API.Callbacks
                         }
                         NPC.setWorldMonsters();
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
+                        ProgramLog.Log(e);
                         WorldGen.loadFailed = true;
                         WorldGen.loadSuccess = false;
                         try
@@ -149,7 +151,6 @@ namespace TDSM.API.Callbacks
                         catch
                         {
                         }
-                        Console.WriteLine(e);
                         return;
                     }
                 }
