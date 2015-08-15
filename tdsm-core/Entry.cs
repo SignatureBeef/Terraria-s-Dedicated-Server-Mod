@@ -2,6 +2,7 @@
 //#define TDSMServer
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -100,6 +101,10 @@ namespace TDSM.Core
 
         public bool AllowSSCGuestInfo { get; set; }
 
+        public Dictionary<string, string> CommandDictionary { get; set; }
+
+        public CommandParser CommandParser { get; set; }
+
         public Entry()
         {
             this.TDSMBuild = CoreBuild;
@@ -147,6 +152,8 @@ namespace TDSM.Core
             //                //});
             //            }
 
+            CommandDictionary = new Dictionary<string, string>(Tools.MaxPlayers + 1);
+            CommandParser = new CommandParser();
             Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
 #if WebInterface
             WebInterface.WebPermissions.Load();
@@ -527,6 +534,12 @@ namespace TDSM.Core
                 .WithDescription("Sign in")
                 .Calls(this.Auth);
 
+            AddCommand("!")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithPermissionNode("tdsm.previous")
+                .WithDescription("Runs the last command executed by you.")
+                .Calls(PreviousCommandHandle);
+
             AddCommand("grow")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.grow")
@@ -620,7 +633,49 @@ namespace TDSM.Core
                 }
             }
         }
+        private void PreviousCommandHandle(ISender sender, ArgumentList args)
+        {
+            var player = sender as Player;
+            if (player != null)
+            {
+                if (CommandDictionary.ContainsKey(player.Name))
+                {
+                    CommandParser.ParsePlayerCommand(player, CommandDictionary[player.Name]);
+                    ProgramLog.Log("Executed {0}'s previous command: {1}", player.Name, CommandDictionary[player.Name]);
+                }
+                else
+                    sender.SendMessage("No Previous Command", 255, 255, 20, 20);
+                //ProgramLog.Log("{0}", ctx.Player.Name); //, args.Prefix + " " + args.ArgumentString);
+            }
+            if (sender is ConsoleSender)
+            {
+                if (CommandDictionary.ContainsKey("CONSOLE"))
+                    CommandParser.ParseConsoleCommand(CommandDictionary["CONSOLE"]);
+                else
+                    sender.SendMessage("No Previous Command", 255, 255, 20, 20);
+            }
+        }
 
+        [Hook(HookOrder.LATE)]
+        private void Command(ref HookContext ctx, ref HookArgs.Command args)
+        {
+            if (args.Prefix == "!") return;
+
+            if (ctx.Player != null)
+            {
+                if (CommandDictionary.ContainsKey(ctx.Player.Name))
+                    CommandDictionary[ctx.Player.Name] = "/" + args.Prefix + " " + args.ArgumentString;
+                else
+                    CommandDictionary.Add(ctx.Player.Name, "/" + args.Prefix + " " + args.ArgumentString);
+            }
+            if (ctx.Sender is ConsoleSender)
+            {
+                if (CommandDictionary.ContainsKey("CONSOLE"))
+                    CommandDictionary["CONSOLE"] = args.Prefix + " " + args.ArgumentString;
+                else
+                    CommandDictionary.Add("CONSOLE", args.Prefix + " " + args.ArgumentString);
+            }
+        }
         [Hook(HookOrder.NORMAL)]
         void OnInventoryItemReceived(ref HookContext ctx, ref HookArgs.InventoryItemReceived args)
         {
@@ -689,6 +744,14 @@ namespace TDSM.Core
             if (Terraria.Main.ServerSideCharacter)
             {
                 CharacterManager.SavePlayerData(ctx.Player);
+            }
+            if (ctx.Player != null)
+            {
+                if (CommandDictionary.ContainsKey(ctx.Player.Name))
+                {
+                    CommandDictionary.Remove(ctx.Player.Name);
+                }
+                //ProgramLog.Log("{0}", ctx.Player.Name); //, args.Prefix + " " + args.ArgumentString);
             }
 #if TDSMServer
             if (RestartWhenNoPlayers && ClientConnection.All.Count - 1 == 0)
