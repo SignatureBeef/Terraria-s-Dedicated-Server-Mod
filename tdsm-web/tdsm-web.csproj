@@ -54,12 +54,4 @@
       <Name>tdsm-core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Web\" />
-    <Folder Include="Web\tdsm-web\" />
-    <Folder Include="Web\tdsm-web\js\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Web\tdsm-web\index.html" />
-  </ItemGroup>
 </Project>

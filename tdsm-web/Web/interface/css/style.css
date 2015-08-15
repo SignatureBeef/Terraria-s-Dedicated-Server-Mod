@@ -3,6 +3,7 @@
 }
 
 BODY {
+	font-family: Open Sans;
 	background: rgba(213, 213, 213, 1);
 }
 
@@ -23,10 +24,22 @@ BODY > FORM {
     color: #72c02c;
     border-bottom: 3px solid #72c02c;
     background: none;
+    font-size: 14px;
 }
 .navbar-tdsm .navbar-nav>li>a {
     color: #777;
     color: #fff;
+}
+
+.navbar-brand {
+    color: #72C02C;
+    font-size: 24px;
+    font-weight: bold;
+    opacity:.8;
+}
+.navbar-brand:hover {
+    opacity:1;
+    color: #72C02C;
 }
 
 .ui-screen-center {
