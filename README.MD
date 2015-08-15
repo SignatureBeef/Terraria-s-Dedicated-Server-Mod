@@ -57,3 +57,4 @@ This will serve as a "known" plugin list until our website is complete. If you k
 - [SQLite](https://github.com/DeathCradle/tdsm-sqlite-connector) - Adds SQLite storage and permissions
 - [MySQL](https://github.com/DeathCradle/tdsm-mysql-connector) - Adds MySQL storage and permissions
 - [RenWorld](https://d1g1t4l3ch0.github.io/TDSM-RenWorld-Plugin/) - [Lua] Allows you to rename a world
+- [Map](https://github.com/elevatorguy/TDSM_map) - Renders the loaded world as a PNG
