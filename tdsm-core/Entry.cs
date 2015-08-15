@@ -745,6 +745,14 @@ namespace TDSM.Core
             {
                 CharacterManager.SavePlayerData(ctx.Player);
             }
+            if (ctx.Player != null)
+            {
+                if (CommandDictionary.ContainsKey(ctx.Player.Name))
+                {
+                    CommandDictionary.Remove(ctx.Player.Name);
+                }
+                //ProgramLog.Log("{0}", ctx.Player.Name); //, args.Prefix + " " + args.ArgumentString);
+            }
 #if TDSMServer
             if (RestartWhenNoPlayers && ClientConnection.All.Count - 1 == 0)
             {
