@@ -50,7 +50,7 @@ For example, be able to issue `/!` command to re-execute the last command that p
 Also please take a look at our [DEVELOPMENT.MD](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/blob/master/DEVELOPMENT.MD) file.
 
 ##Existing plugins
-This will serve as a "known" plugin list until out website is complete.
+This will serve as a "known" plugin list until our website is complete. If you know of others or wish to add yours, fork and make a pull request.
 - [Restrict](https://github.com/DeathCradle/TDSM_Restrict) - Player registration and world protection
 - [SQLite](https://github.com/DeathCradle/tdsm-sqlite-connector) - Adds SQLite storage and permissions
 - [MySQL](https://github.com/DeathCradle/tdsm-mysql-connector) - Adds MySQL storage and permissions
