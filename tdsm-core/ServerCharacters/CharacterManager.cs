@@ -257,9 +257,57 @@ namespace TDSM.Core.ServerCharacters
 
                     if (characterId > 0)
                     {
-                        foreach (var item in player.inventory)
+                        for (var i = 0; i < player.inventory.Length; i++)
                         {
-//                            var itm = Tables.ItemTable.GetItem(ItemType.Inventory, item.netID, item.prefix
+                            var item = player.inventory[i];
+                            var itemId = Tables.ItemTable.GetItem(ItemType.Inventory, i, characterId);
+                            if (itemId > 0)
+                            {
+                                if (!Tables.ItemTable.UpdateItem(ItemType.Inventory, item.netID, item.prefix, item.stack, i, characterId))
+                                {
+                                    ProgramLog.Error.Log("Failed to save Inventory for player: {0}", player.Name);
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                itemId = Tables.ItemTable.NewItem(ItemType.Inventory, item.netID, item.prefix, item.stack, i, characterId);
+                            }
+                        }
+
+                        for (var i = 0; i < player.armor.Length; i++)
+                        {
+                            var item = player.armor[i];
+                            var itemId = Tables.ItemTable.GetItem(ItemType.Armor, i, characterId);
+                            if (itemId > 0)
+                            {
+                                if (!Tables.ItemTable.UpdateItem(ItemType.Armor, item.netID, item.prefix, item.stack, i, characterId))
+                                {
+                                    ProgramLog.Error.Log("Failed to save Armor for player: {0}", player.Name);
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                itemId = Tables.ItemTable.NewItem(ItemType.Armor, item.netID, item.prefix, item.stack, i, characterId);
+                            }
+                        }
+                        for (var i = 0; i < player.dye.Length; i++)
+                        {
+                            var item = player.dye[i];
+                            var itemId = Tables.ItemTable.GetItem(ItemType.Dye, i, characterId);
+                            if (itemId > 0)
+                            {
+                                if (!Tables.ItemTable.UpdateItem(ItemType.Dye, item.netID, item.prefix, item.stack, i, characterId))
+                                {
+                                    ProgramLog.Error.Log("Failed to save Dye for player: {0}", player.Name);
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                itemId = Tables.ItemTable.NewItem(ItemType.Dye, item.netID, item.prefix, item.stack, i, characterId);
+                            }
                         }
                     }
                 }
