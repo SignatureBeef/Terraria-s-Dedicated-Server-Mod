@@ -81,6 +81,19 @@ namespace TDSM.Core.ServerCharacters.Tables
             }
         }
 
+        public static SlotItem[] GetItemsForCharacter(CharacterManager.ItemType type, int? characterId = null)
+        {
+            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
+            {
+                bl.SelectFrom(TableName, new string[] { "*" },
+                    new WhereFilter(ColumnNames.TypeId, (int)type),
+                    new WhereFilter(ColumnNames.CharacterId, characterId)
+                );
+
+                return Storage.ExecuteArray<SlotItem>(bl);
+            }
+        }
+
         public static bool UpdateItem(CharacterManager.ItemType type, int netId, int prefix, int stack, int slot, int? characterId = null)
         {
             using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))

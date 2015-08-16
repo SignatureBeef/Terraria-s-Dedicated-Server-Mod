@@ -47,6 +47,10 @@ namespace TDSM.API
 
         public bool ClearPluginData(string key)
         {
+            if (PluginData == null)
+            {
+                PluginData = new System.Collections.Concurrent.ConcurrentDictionary<String, Object>();
+            }
             if (PluginData.ContainsKey(key))
             {
                 object val;

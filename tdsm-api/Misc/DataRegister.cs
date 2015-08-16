@@ -133,7 +133,7 @@ namespace TDSM.API.Misc
             {
                 for (var x = 0; x < _data.Length; x++)
                 {
-                    if (_data[x].StartsWith(cleaned + PrefixKey))
+                    if ((_lowerKeys ? _data[x].ToLower() : _data[x]).StartsWith(cleaned + PrefixKey))
                     {
                         updated = true;
                         _data[x] = cleaned + PrefixKey + (value ?? String.Empty);
@@ -157,7 +157,7 @@ namespace TDSM.API.Misc
             lock (_data)
             {
                 if (byKey)
-                    _data = _data.Where(x => !x.StartsWith(cleaned + PrefixKey)).ToArray();
+                    _data = _data.Where(x => !(_lowerKeys ? x.ToLower() : x).StartsWith(cleaned + PrefixKey)).ToArray();
                 else
                     _data = _data.Where(x => x != cleaned).ToArray();
             }
@@ -196,9 +196,16 @@ namespace TDSM.API.Misc
         public string Find(string key)
         {
             var cleaned = (_lowerKeys ? key.ToLower() : key).Trim();
+//            ProgramLog.Log("low {0}, cleaned: {1}", _lowerKeys, cleaned);
             var item = _data
-                .Where(x => x.StartsWith(cleaned + PrefixKey))
+                .Where(x => (_lowerKeys ? x.ToLower() : x).StartsWith(cleaned + PrefixKey))
                 .ToArray();
+//            ProgramLog.Log("Matches: {0}/{1}", item.Length, _data.Length);
+
+//            foreach (var s in _data)
+//            {
+//                ProgramLog.Log("Match: {0}", s);
+//            }
             if (item.Length == 1)
             {
                 var v = item[0].Remove(0, item[0].IndexOf(PrefixKey) + 1);

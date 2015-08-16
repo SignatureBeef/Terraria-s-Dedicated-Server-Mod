@@ -121,15 +121,15 @@ namespace TDSM.Core.ServerCharacters.Tables
                 spawnY,
                 hair,
                 hairDye,
-                Tools.EncodeInteger(hideVisual),
+                Tools.Encoding.EncodeInteger(hideVisual),
                 difficulty,
-                Tools.EncodeColor(hairColor),
-                Tools.EncodeColor(skinColor),
-                Tools.EncodeColor(eyeColor),
-                Tools.EncodeColor(shirtColor),
-                Tools.EncodeColor(underShirtColor),
-                Tools.EncodeColor(pantsColor),
-                Tools.EncodeColor(shoeColor), 
+                Tools.Encoding.EncodeColor(hairColor),
+                Tools.Encoding.EncodeColor(skinColor),
+                Tools.Encoding.EncodeColor(eyeColor),
+                Tools.Encoding.EncodeColor(shirtColor),
+                Tools.Encoding.EncodeColor(underShirtColor),
+                Tools.Encoding.EncodeColor(pantsColor),
+                Tools.Encoding.EncodeColor(shoeColor), 
                 anglerQuests
             );
         }
@@ -235,37 +235,93 @@ namespace TDSM.Core.ServerCharacters.Tables
                 spawnY,
                 hair,
                 hairDye,
-                Tools.EncodeInteger(hideVisual),
+                Tools.Encoding.EncodeInteger(hideVisual),
                 difficulty,
-                Tools.EncodeColor(hairColor),
-                Tools.EncodeColor(skinColor),
-                Tools.EncodeColor(eyeColor),
-                Tools.EncodeColor(shirtColor),
-                Tools.EncodeColor(underShirtColor),
-                Tools.EncodeColor(pantsColor),
-                Tools.EncodeColor(shoeColor), 
+                Tools.Encoding.EncodeColor(hairColor),
+                Tools.Encoding.EncodeColor(skinColor),
+                Tools.Encoding.EncodeColor(eyeColor),
+                Tools.Encoding.EncodeColor(shirtColor),
+                Tools.Encoding.EncodeColor(underShirtColor),
+                Tools.Encoding.EncodeColor(pantsColor),
+                Tools.Encoding.EncodeColor(shoeColor), 
                 anglerQuests
             );
         }
 
         public static int GetCharacterId(CharacterMode mode, string auth, string clientUUID)
         {
+            int userId = 0;
             if (mode == CharacterMode.AUTH)
             {
                 var user = AuthenticatedUsers.GetUser(auth);
-                return  user.Value.Id;
+
+                if (!user.HasValue)
+                {
+                    TDSM.API.Logging.ProgramLog.Error.Log("No user found ");
+                    return 0;
+                }
+
+                userId = user.Value.Id;
             }
             else if (mode != CharacterMode.UUID)
                 return 0;
-            
+
             using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
             {
-                bl.SelectFrom(TableName, new string[] { ColumnNames.Id }, 
-                    new WhereFilter(ColumnNames.UUID, clientUUID)
-                );
+                if (mode == CharacterMode.AUTH)
+                {
+                    bl.SelectFrom(TableName, new string[] { ColumnNames.Id }, 
+                        new WhereFilter(ColumnNames.UserId, userId)
+                    );
+                }
+                else
+                {
+                    bl.SelectFrom(TableName, new string[] { ColumnNames.Id }, 
+                        new WhereFilter(ColumnNames.UUID, clientUUID)
+                    );
+                }
 
                 return Storage.ExecuteScalar<Int32>(bl);
             }
+        }
+
+        public static ServerCharacter GetCharacter(CharacterMode mode, string auth, string clientUUID)
+        {
+            int userId = 0;
+            if (mode == CharacterMode.AUTH)
+            {
+                var user = AuthenticatedUsers.GetUser(auth);
+                userId = user.Value.Id;
+            }
+            else if (mode != CharacterMode.UUID)
+                return null;
+
+            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
+            {
+                if (mode == CharacterMode.AUTH)
+                {
+                    bl.SelectFrom(TableName, new string[]
+                        { 
+                            "*"
+                        }, 
+                        new WhereFilter(ColumnNames.UserId, userId)
+                    );
+                }
+                else
+                {
+                    bl.SelectFrom(TableName, new string[]
+                        { 
+                            "*"
+                        }, 
+                        new WhereFilter(ColumnNames.UUID, clientUUID)
+                    );
+                }
+
+                var arr = Storage.ExecuteArray<ServerCharacter>(bl);
+                if (arr != null && arr.Length > 0) return arr[0];
+            }
+
+            return null;
         }
 
         public static bool UpdateCharacter

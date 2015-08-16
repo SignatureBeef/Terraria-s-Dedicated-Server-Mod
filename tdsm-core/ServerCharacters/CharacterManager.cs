@@ -6,6 +6,7 @@ using Terraria;
 using TDSM.API.Data;
 using TDSM.API.Logging;
 using TDSM.API.Plugin;
+using System.Linq;
 
 namespace TDSM.Core.ServerCharacters
 {
@@ -133,9 +134,35 @@ namespace TDSM.Core.ServerCharacters
             if (!String.IsNullOrEmpty(authName))
             {
                 ProgramLog.Log("Loading SSC for " + authName);
-                if (false == true && Storage.IsAvailable)
+                if (Storage.IsAvailable)
                 {
+                    var ssc = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId);
 
+                    if (ssc != null)
+                    {
+                        ProgramLog.Log("Loading SSC loadout");
+
+                        var inv = Tables.ItemTable.GetItemsForCharacter(ItemType.Inventory, ssc.Id);
+                        if (null != inv) ssc.Inventory = inv.ToList();
+
+                        var amr = Tables.ItemTable.GetItemsForCharacter(ItemType.Armor, ssc.Id);
+                        if (null != amr) ssc.Armor = amr.ToList();
+
+                        var dye = Tables.ItemTable.GetItemsForCharacter(ItemType.Dye, ssc.Id);
+                        if (null != dye) ssc.Dye = dye.ToList();
+
+                        return ssc;
+                    }
+                    else
+                    {
+                        if (returnNewInfo)
+                        {
+                            ProgramLog.Log("Issuing new loadout");
+                            //                        player.SetPluginData(Key_NewCharacter, true);
+                            EnsureSave = true; //Save is now required
+                            return new ServerCharacter(StartingOutInfo, player);
+                        }
+                    }
                 }
                 else
                 {
@@ -194,8 +221,8 @@ namespace TDSM.Core.ServerCharacters
                     var characterId = Tables.CharacterTable.GetCharacterId(Mode, player.AuthenticatedAs, player.ClientUUId);
                     if (characterId <= 0)
                     {
-                        if (player.ClearPluginData(Key_NewCharacter))
-                        {
+//                        if (player.ClearPluginData(Key_NewCharacter))
+//                        {
                             characterId = Tables.CharacterTable.NewCharacter
                             (
                                 Mode,
@@ -220,12 +247,12 @@ namespace TDSM.Core.ServerCharacters
                                 player.shoeColor,
                                 player.anglerQuestsFinished
                             );
-                        }
-                        else
-                        {
-                            ProgramLog.Error.Log("Failed to save SSC for player: {0}", player.Name);
-                            return false;
-                        }
+//                        }
+//                        else
+//                        {
+//                            ProgramLog.Error.Log("Failed to save SSC for player: {0}", player.Name);
+//                            return false;
+//                        }
                     }
                     else
                     {
@@ -260,10 +287,21 @@ namespace TDSM.Core.ServerCharacters
                         for (var i = 0; i < player.inventory.Length; i++)
                         {
                             var item = player.inventory[i];
+                            var netId = 0;
+                            var prefix = 0;
+                            var stack = 0;
+
+                            if (item != null)
+                            {
+                                netId = item.netID;
+                                prefix = item.prefix;
+                                stack = item.stack;
+                            }
+
                             var itemId = Tables.ItemTable.GetItem(ItemType.Inventory, i, characterId);
                             if (itemId > 0)
                             {
-                                if (!Tables.ItemTable.UpdateItem(ItemType.Inventory, item.netID, item.prefix, item.stack, i, characterId))
+                                if (!Tables.ItemTable.UpdateItem(ItemType.Inventory, netId, prefix, stack, i, characterId))
                                 {
                                     ProgramLog.Error.Log("Failed to save Inventory for player: {0}", player.Name);
                                     return false;
@@ -271,17 +309,27 @@ namespace TDSM.Core.ServerCharacters
                             }
                             else
                             {
-                                itemId = Tables.ItemTable.NewItem(ItemType.Inventory, item.netID, item.prefix, item.stack, i, characterId);
+                                itemId = Tables.ItemTable.NewItem(ItemType.Inventory, netId, prefix, stack, i, characterId);
                             }
                         }
-
                         for (var i = 0; i < player.armor.Length; i++)
                         {
                             var item = player.armor[i];
+                            var netId = 0;
+                            var prefix = 0;
+                            var stack = 0;
+
+                            if (item != null)
+                            {
+                                netId = item.netID;
+                                prefix = item.prefix;
+                                stack = item.stack;
+                            }
+
                             var itemId = Tables.ItemTable.GetItem(ItemType.Armor, i, characterId);
                             if (itemId > 0)
                             {
-                                if (!Tables.ItemTable.UpdateItem(ItemType.Armor, item.netID, item.prefix, item.stack, i, characterId))
+                                if (!Tables.ItemTable.UpdateItem(ItemType.Armor, netId, prefix, stack, i, characterId))
                                 {
                                     ProgramLog.Error.Log("Failed to save Armor for player: {0}", player.Name);
                                     return false;
@@ -289,16 +337,27 @@ namespace TDSM.Core.ServerCharacters
                             }
                             else
                             {
-                                itemId = Tables.ItemTable.NewItem(ItemType.Armor, item.netID, item.prefix, item.stack, i, characterId);
+                                itemId = Tables.ItemTable.NewItem(ItemType.Armor, netId, prefix, stack, i, characterId);
                             }
                         }
                         for (var i = 0; i < player.dye.Length; i++)
                         {
                             var item = player.dye[i];
+                            var netId = 0;
+                            var prefix = 0;
+                            var stack = 0;
+
+                            if (item != null)
+                            {
+                                netId = item.netID;
+                                prefix = item.prefix;
+                                stack = item.stack;
+                            }
+
                             var itemId = Tables.ItemTable.GetItem(ItemType.Dye, i, characterId);
                             if (itemId > 0)
                             {
-                                if (!Tables.ItemTable.UpdateItem(ItemType.Dye, item.netID, item.prefix, item.stack, i, characterId))
+                                if (!Tables.ItemTable.UpdateItem(ItemType.Dye, netId, prefix, stack, i, characterId))
                                 {
                                     ProgramLog.Error.Log("Failed to save Dye for player: {0}", player.Name);
                                     return false;
@@ -306,7 +365,7 @@ namespace TDSM.Core.ServerCharacters
                             }
                             else
                             {
-                                itemId = Tables.ItemTable.NewItem(ItemType.Dye, item.netID, item.prefix, item.stack, i, characterId);
+                                itemId = Tables.ItemTable.NewItem(ItemType.Dye, netId, prefix, stack, i, characterId);
                             }
                         }
                     }
