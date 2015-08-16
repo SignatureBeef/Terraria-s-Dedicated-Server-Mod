@@ -48,6 +48,7 @@ A block protection plugin for specific areas designated by a player.
 * Rollback / Anit-Grief protection
 * Player chat (Player prefixes/suffixes and colours)
 * Connection/Chat history
+* Configuration editor command
 
 Also please take a look at our [DEVELOPMENT.MD](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/blob/master/DEVELOPMENT.MD) file.
 
