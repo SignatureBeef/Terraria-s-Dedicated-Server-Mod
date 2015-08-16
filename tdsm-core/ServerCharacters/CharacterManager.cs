@@ -5,6 +5,7 @@ using TDSM.API;
 using Terraria;
 using TDSM.API.Data;
 using TDSM.API.Logging;
+using TDSM.API.Plugin;
 
 namespace TDSM.Core.ServerCharacters
 {
@@ -190,12 +191,12 @@ namespace TDSM.Core.ServerCharacters
                 if (Storage.IsAvailable)
                 {
 //                    var create = player.GetPluginData<Boolean>(Key_NewCharacter, false);
-                    var existingId = Tables.CharacterTable.GetCharacterId(Mode, player.AuthenticatedAs, player.ClientUUId);
-                    if (existingId <= 0)
+                    var characterId = Tables.CharacterTable.GetCharacterId(Mode, player.AuthenticatedAs, player.ClientUUId);
+                    if (characterId <= 0)
                     {
                         if (player.ClearPluginData(Key_NewCharacter))
                         {
-                            var characterId = Tables.CharacterTable.NewCharacter
+                            characterId = Tables.CharacterTable.NewCharacter
                             (
                                 Mode,
                                 player.AuthenticatedAs,
@@ -219,15 +220,11 @@ namespace TDSM.Core.ServerCharacters
                                 player.shoeColor,
                                 player.anglerQuestsFinished
                             );
-
-                            if (characterId > 0)
-                            {
-
-                            }
                         }
                         else
                         {
                             ProgramLog.Error.Log("Failed to save SSC for player: {0}", player.Name);
+                            return false;
                         }
                     }
                     else
@@ -256,11 +253,13 @@ namespace TDSM.Core.ServerCharacters
                             player.shoeColor,
                             player.anglerQuestsFinished
                         );
+                    }
 
-                        var characterId = Tables.CharacterTable.GetCharacterId(Mode, player.AuthenticatedAs, player.ClientUUId);
-                        if (characterId > 0)
+                    if (characterId > 0)
+                    {
+                        foreach (var item in player.inventory)
                         {
-
+//                            var itm = Tables.ItemTable.GetItem(ItemType.Inventory, item.netID, item.prefix
                         }
                     }
                 }
@@ -304,7 +303,23 @@ namespace TDSM.Core.ServerCharacters
                 //Check to make sure the player is the same player (ie skin, clothes)
                 //Add hooks for pre and post apply
 
-                ssc.ApplyToPlayer(player);
+                var ctx = new HookContext()
+                {
+                    Player = player,
+                    Sender = player
+                };
+
+                var args = new TDSM.Core.Events.HookArgs.PreApplyServerSideCharacter()
+                {
+                    Character = ssc
+                };
+
+                TDSM.Core.Events.HookPoints.PreApplyServerSideCharacter.Invoke(ref ctx, ref args);
+
+                args.Character.ApplyToPlayer(player);
+
+                var args1 = new TDSM.Core.Events.HookArgs.PostApplyServerSideCharacter();
+                TDSM.Core.Events.HookPoints.PostApplyServerSideCharacter.Invoke(ref ctx, ref args1);
             }
             else
             {
