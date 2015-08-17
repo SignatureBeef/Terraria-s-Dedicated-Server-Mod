@@ -32,7 +32,7 @@ namespace tdsm.patcher
         //            };
         //        }
 
-#if DEV
+        #if DEV
         static void Copy(DirectoryInfo root, string project, string to, string pluginName = null, bool debugFolder = true)
         {
             var projectBinary = pluginName ?? project.Replace("-", ".");
@@ -58,7 +58,7 @@ namespace tdsm.patcher
         static void EnsurePath(string path)
         {
             var dir = Path.GetDirectoryName(path);
-            if(!System.IO.Directory.Exists(dir))
+            if (!System.IO.Directory.Exists(dir))
             {
                 System.IO.Directory.CreateDirectory(dir);
             }
@@ -87,7 +87,7 @@ namespace tdsm.patcher
                 }
             }
         }
-#endif
+        #endif
 
         static void Main(string[] args)
         {
@@ -171,6 +171,7 @@ namespace tdsm.patcher
             Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "ICSharpCode.SharpZipLib", false);
             Copy(root, "External", Path.Combine(Environment.CurrentDirectory, "Libraries"), "Mono.Nat", false);
             Copy(root, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Libraries"), "Newtonsoft.Json", true);
+            Copy(root, "tdsm-web", Path.Combine(Environment.CurrentDirectory, "Plugins"), "tdsm-web", true);
 //            Copy(root, "tdsm-mysql-connector", Path.Combine(Environment.CurrentDirectory, "Plugins"), "tdsm-mysql-connector", true);
 //            Copy(root, "tdsm-sqlite-connector", Path.Combine(Environment.CurrentDirectory, "Plugins"), "tdsm-sqlite-connector", true);
 
@@ -656,6 +657,16 @@ namespace tdsm.patcher
 
                     File.Copy(rel, pth);
                 }
+            }
+
+            //Copy Libraries
+            foreach (var item in Directory.GetFiles("Libraries"))
+            {
+                if (item == "Libraries/.DS_Store") continue;
+                var target = Path.Combine(pathToBinaries.FullName, item);
+
+                if (File.Exists(target)) File.Delete(target);
+                File.Copy(item, target);
             }
         }
     }
