@@ -1,8 +1,7 @@
-﻿#define SERVER
-
-
+﻿//#define SERVER
 #define DEV
 //#define CLIENT
+
 
 using System.Collections.Generic;
 using System;
@@ -114,7 +113,7 @@ namespace tdsm.patcher
             Console.ForegroundColor = ConsoleColor.White;
             var isMono = Type.GetType("Mono.Runtime") != null;
 
-#if SERVER
+            #if SERVER
             var inFile = "TerrariaServer.exe";
             var fileName = "tdsm";
             //            var outFileMS = fileName + ".microsoft.exe";
@@ -175,14 +174,6 @@ namespace tdsm.patcher
 //            Copy(root, "tdsm-mysql-connector", Path.Combine(Environment.CurrentDirectory, "Plugins"), "tdsm-mysql-connector", true);
 //            Copy(root, "tdsm-sqlite-connector", Path.Combine(Environment.CurrentDirectory, "Plugins"), "tdsm-sqlite-connector", true);
 
-#endif
-#elif CLIENT
-            var inFile = "Terraria.exe";
-            var fileName = "tcsm";
-            var outFileMS = fileName + ".microsoft.exe";
-            var outFileMN = fileName + ".mono.exe";
-            var patchFile = "MonoGame.Framework.dll";
-#endif
             if (!File.Exists(inFile))
             {
                 //Download the supported vanilla software from our GitHub repo
@@ -212,9 +203,45 @@ namespace tdsm.patcher
                 else
                     return;
             }
+#endif
+#elif CLIENT
+            var inFile = "Terraria.exe";
+            var fileName = "tcsm";
+            var output = fileName + ".exe";
+            var patchFile = "TDSM.API.dll";
+
+            if (!File.Exists(inFile))
+            {
+                var bin = Path.Combine(Environment.CurrentDirectory, "bin", "x86", "Debug", inFile);
+                if (File.Exists(bin))
+                    inFile = bin;
+            }
+            if (!File.Exists(patchFile))
+            {
+                var bin = Path.Combine(Environment.CurrentDirectory, "bin", "x86", "Debug", patchFile);
+                if (File.Exists(bin))
+                    patchFile = bin;
+            }
+            if (File.Exists(output))
+                File.Delete(output);
+
+            var root = new DirectoryInfo(Environment.CurrentDirectory);
+            while (root.GetDirectories().Where(x => x.Name == "tdsm-patcher").Count() == 0)
+            {
+                if (root.Parent == null)
+                {
+                    Console.WriteLine("Failed to find root TDSM project directory");
+                    break;
+                }
+                root = root.Parent;
+            }
+
+            Copy(root, "TDSM-API", Environment.CurrentDirectory);
+#endif
 
             var patcher = new Injector(inFile, patchFile);
 
+            #if SERVER
             var noVersionCheck = args != null && args.Where(x => x.ToLower() == "-nover").Count() > 0;
             if (noVersionCheck != true)
             {
@@ -228,7 +255,7 @@ namespace tdsm.patcher
                     Console.WriteLine();
                 }
             }
-#if SERVER
+
             Console.Write("Opening up classes for API usage...");
             patcher.MakeTypesPublic(true);
             patcher.MakeEverythingAccessible();
@@ -320,10 +347,10 @@ namespace tdsm.patcher
 
             //TODO repace Terraria's Console.SetTitles
 #elif CLIENT
-            Console.Write("Opening up classes for API usage...");
-            patcher.MakeTypesPublic(false);
-            Console.Write("Ok\nPatching XNA...");
-            patcher.PatchXNA(false);
+
+            Console.Write("Ok\nHooking start...");
+            patcher.HookProgramStart();
+
             Console.Write("Ok\n");
 #endif
 
@@ -391,7 +418,51 @@ namespace tdsm.patcher
             patcher.Dispose();
             //            Console.WriteLine("Ok");
 
+            #if SERVER
             Console.ForegroundColor = ConsoleColor.White;
+            #elif CLIENT
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("You may now run {0} as you would normally.", output);
+            Console.WriteLine("Press [y] to run {0}, any other key will exit . . .", output);
+
+            if (Console.ReadKey(true).Key == ConsoleKey.Y)
+            {
+                if (!isMono)
+                {
+                    System.Diagnostics.Process.Start(output);
+                }
+                else
+                {
+                    Console.Clear();
+
+                    using (var ms = new MemoryStream())
+                    {
+                        using (var fs = File.OpenRead(output))
+                        {
+                            var buff = new byte[256];
+                            while (fs.Position < fs.Length)
+                            {
+                                var task = fs.Read(buff, 0, buff.Length);
+                                ms.Write(buff, 0, task);
+                            }
+                        }
+
+                        ms.Seek(0L, SeekOrigin.Begin);
+                        var asm = System.Reflection.Assembly.Load(ms.ToArray());
+                        try
+                        {
+                            asm.EntryPoint.Invoke(null, new string[]{ });
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                }
+            }
+            #endif
+
+            #if SERVER
             if (!isMono)
             {
                 Console.Write("Ok\nUpdating icons...");
@@ -437,15 +508,16 @@ namespace tdsm.patcher
                     }
                 }
             }
+            #endif
 
-#if DEBUG
+#if DEBUG && SERVER
             Console.Write("Ok\nUpdating Binaries folder...");
             UpdateBinaries();
             Console.Write("Ok\nGenerating server.config...");
             GenerateConfig();
 #endif
 
-#if Release || true
+#if SERVER
             var noRun = args != null && args.Where(x => x.ToLower() == "-norun").Count() > 0;
             if (!noRun)
             {

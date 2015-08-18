@@ -68,7 +68,7 @@ namespace TDSM.API.Callbacks
                     Console.WriteLine(e);
                 }
 
-                    return null;
+                return null;
             };
         }
 
@@ -131,6 +131,14 @@ namespace TDSM.API.Callbacks
 //                        Permissions.PermissionsManager.SetHandler(handler);
 //                }
 //            }
+        }
+
+        public static bool OnClientStarted(string[] cmd)
+        {
+            System.Threading.Thread.CurrentThread.Name = "Client";
+            Console.WriteLine("Starting client");
+
+            return true;
         }
 
         public static bool OnProgramStarted(string[] cmd)
