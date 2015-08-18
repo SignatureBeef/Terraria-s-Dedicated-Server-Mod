@@ -354,14 +354,27 @@ namespace TDSM.Core
                     break;
 
                 case "add":
-                    //user add "username" "password" "op"
+                    //user add "username" "password" [-op | groupname]
                     if (!args.TryGetString(a++, out username))
                         throw new CommandError("Expected username name after [" + cmd + "]");
                     
                     if (!args.TryGetString(a++, out password))
                         throw new CommandError("Expected password name after username");
 
-                    args.TryGetBool(a++, out op);
+                    grp = null;
+                    groupName = String.Empty;
+                    if (!args.TryGetBool(a, out op))
+                    {
+                        args.TryGetString(a++, out groupName);
+                    }
+                    else a++;
+
+                    op = groupName.ToLower() == "-op";
+                    if (!op && args.Count == 4)
+                    {
+                        grp = Storage.FindGroup(groupName);
+                        if (grp == null || grp.Id == 0) sender.Message("No group found by {0}", groupName);
+                    }
 
                     var existing = AuthenticatedUsers.GetUser(username);
                     if (existing == null)
@@ -374,7 +387,24 @@ namespace TDSM.Core
                             }
                             else
                             {
-                                sender.Message("Successfully created user " + username);
+                                if (args.Count == 4)
+                                {
+                                    if (grp != null)
+                                    {
+                                        if (Storage.AddUserToGroup(username, grp.Name))
+                                        {
+                                            sender.Message("Successfully created user {0} as a member of group {1}", Color.Green, username, grp.Name);
+                                        }
+                                        else
+                                        {
+                                            sender.Message("Successfully created user {0}, but failed associate group {1}", Color.Green, username, grp.Name);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    sender.Message("Successfully created user " + username, Color.Green);
+                                }
                             }
                         }
                         else

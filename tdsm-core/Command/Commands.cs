@@ -2225,15 +2225,29 @@ namespace TDSM.Core
             switch (first)
             {
                 case "enable":
-                    Heartbeat.Begin(CoreBuild);
-                    sender.SendMessage("Heartbeat enabled to the TDSM server.");
+                    if (!Heartbeat.Enabled)
+                    {
+                        Heartbeat.Begin(CoreBuild);
+                        sender.SendMessage("Heartbeat enabled to the TDSM server.");
+                    }
+                    else
+                    {
+                        sender.SendMessage("Heartbeat is already enabled.");
+                    }
                     break;
                 case "disable":
-                    Heartbeat.End();
-                    sender.SendMessage("Heartbeat disabled to the TDSM server.");
+                    if (Heartbeat.Enabled)
+                    {
+                        Heartbeat.End();
+                        sender.SendMessage("Heartbeat disabled to the TDSM server.");
+                    }
+                    else
+                    {
+                        sender.SendMessage("Heartbeat is not enabled.");
+                    }
                     break;
                 case "public":
-                    Heartbeat.PublishToList = args.GetBool(1);
+                    Heartbeat.PublishToList = args.GetBool(0);
                     if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("server-list", Heartbeat.PublishToList))
                         sender.SendMessage("Server list is now " + (Heartbeat.PublishToList ? "public" : "private"));
                     else sender.Message("Failed to update visibility");

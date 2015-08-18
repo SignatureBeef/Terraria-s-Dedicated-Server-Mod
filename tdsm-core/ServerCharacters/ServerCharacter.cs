@@ -2,6 +2,7 @@
 using System.Linq;
 using Terraria;
 using TDSM.API.Logging;
+using Microsoft.Xna.Framework;
 
 namespace TDSM.Core.ServerCharacters
 {
@@ -24,6 +25,8 @@ namespace TDSM.Core.ServerCharacters
 
     public class ServerCharacter : IDisposable
     {
+        public int Id { get; set; }
+
         public int Health { get; set; }
 
         public int MaxHealth { get; set; }
@@ -44,19 +47,19 @@ namespace TDSM.Core.ServerCharacters
 
         public byte Difficulty { get; set; }
 
-        public SimpleColor HairColor { get; set; }
+        public Color HairColor { get; set; }
 
-        public SimpleColor SkinColor { get; set; }
+        public Color SkinColor { get; set; }
 
-        public SimpleColor EyeColor { get; set; }
+        public Color EyeColor { get; set; }
 
-        public SimpleColor ShirtColor { get; set; }
+        public Color ShirtColor { get; set; }
 
-        public SimpleColor UnderShirtColor { get; set; }
+        public Color UnderShirtColor { get; set; }
 
-        public SimpleColor PantsColor { get; set; }
+        public Color PantsColor { get; set; }
 
-        public SimpleColor ShoeColor { get; set; }
+        public Color ShoeColor { get; set; }
 
         public System.Collections.Generic.List<SlotItem> Inventory { get; set; }
 
@@ -218,13 +221,13 @@ namespace TDSM.Core.ServerCharacters
                 player.hair = this.Hair;
                 player.difficulty = this.Difficulty;
 
-                player.hairColor = this.HairColor.ToXna();
-                player.skinColor = this.SkinColor.ToXna();
-                player.eyeColor = this.EyeColor.ToXna();
-                player.shirtColor = this.ShirtColor.ToXna();
-                player.underShirtColor = this.UnderShirtColor.ToXna();
-                player.pantsColor = this.PantsColor.ToXna();
-                player.shoeColor = this.ShoeColor.ToXna();
+                player.hairColor = this.HairColor;
+                player.skinColor = this.SkinColor;
+                player.eyeColor = this.EyeColor;
+                player.shirtColor = this.ShirtColor;
+                player.underShirtColor = this.UnderShirtColor;
+                player.pantsColor = this.PantsColor;
+                player.shoeColor = this.ShoeColor;
 
                 player.anglerQuestsFinished = this.AnglerQuests;
             }
@@ -421,13 +424,13 @@ namespace TDSM.Core.ServerCharacters
             this.Hair = 0;
             this.Difficulty = 0;
 
-            this.HairColor = null;
-            this.SkinColor = null;
-            this.EyeColor = null;
-            this.ShirtColor = null;
-            this.UnderShirtColor = null;
-            this.PantsColor = null;
-            this.ShoeColor = null;
+            this.HairColor = Color.White;
+            this.SkinColor = Color.White;
+            this.EyeColor = Color.White;
+            this.ShirtColor = Color.White;
+            this.UnderShirtColor = Color.White;
+            this.PantsColor = Color.White;
+            this.ShoeColor = Color.White;
 
             this.AnglerQuests = 0;
 
@@ -455,6 +458,13 @@ namespace TDSM.Core.ServerCharacters
         {
         }
 
+        public SimpleColor(uint color)
+        {
+            this.R = (byte)color;
+            this.G = (byte)(color >> 8);
+            this.B = (byte)(color >> 16);
+        }
+
         public SimpleColor(Microsoft.Xna.Framework.Color color)
         {
             this.R = color.R;
@@ -468,6 +478,11 @@ namespace TDSM.Core.ServerCharacters
         }
 
         public static implicit operator SimpleColor(Microsoft.Xna.Framework.Color original)
+        {
+            return new SimpleColor(original);
+        }
+
+        public static implicit operator SimpleColor(uint original)
         {
             return new SimpleColor(original);
         }
@@ -487,6 +502,11 @@ namespace TDSM.Core.ServerCharacters
             Stack = stack;
             Prefix = prefix;
         }
+
+        public PlayerItem() //Serialisation
+        {
+
+        }
     }
 
     public class SlotItem : PlayerItem
@@ -497,6 +517,11 @@ namespace TDSM.Core.ServerCharacters
             : base(netId, stack, prefix)
         {
             Slot = slot;
+        }
+
+        public SlotItem() //Serialisation
+        {
+            
         }
     }
 }

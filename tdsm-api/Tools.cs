@@ -408,62 +408,99 @@ namespace TDSM.API
 
         #region "Encoding"
 
-        public static uint EncodeColor(Color color)
+        public static class Encoding
         {
-            return color.PackedValue;
-        }
+            public const Int32 BitsPerByte = 8;
 
-        public static uint EncodeColor(int r, int g, int b, int a = 255)
-        {
-            return Color.PackHelper(r, g, b, a);
-        }
-
-        public static byte EncodeByte(bool[] bits)
-        {
-            if (bits == null) return 0;
-            if (bits.Length >= 0 && bits.Length <= 8)
+            public static uint EncodeColor(Color color)
             {
-                byte value = 0;
-                for (int i = 0; i < bits.Length; i++)
-                {
-                    if (bits[i]) value |= (byte)(1 << i);
-                }
-
-                return value;
+                return color.PackedValue;
             }
-            else throw new ArgumentOutOfRangeException();
-        }
 
-        public static short EncodeShort(bool[] bits)
-        {
-            if (bits == null) return 0;
-            if (bits.Length >= 0 && bits.Length <= 16)
+            public static uint EncodeColor(int r, int g, int b, int a = 255)
             {
-                short value = 0;
-                for (int i = 0; i < bits.Length; i++)
-                {
-                    if (bits[i]) value |= (short)(1 << i);
-                }
-
-                return value;
+                return Color.PackHelper(r, g, b, a);
             }
-            else throw new ArgumentOutOfRangeException();
-        }
 
-        public static int EncodeInteger(bool[] bits)
-        {
-            if (bits == null) return 0;
-            if (bits.Length >= 0 && bits.Length <= 32)
+            public static Color DecodeColor(uint color)
             {
-                int value = 0;
-                for (int i = 0; i < bits.Length; i++)
-                {
-                    if (bits[i]) value |= (1 << i);
-                }
-
-                return value;
+                return new Color(color);
             }
-            else throw new ArgumentOutOfRangeException();
+
+            public static bool[] DecodeBits(byte data)
+            {
+                var bits = new bool[BitsPerByte];
+                for (int i = 0; i < bits.Length; i++)
+                    bits[i] = (data & 1 << i) != 0;
+
+                return bits;
+            }
+
+            public static bool[] DecodeBits(short data)
+            {
+                var bits = new bool[2 * BitsPerByte];
+                for (int i = 0; i < bits.Length; i++)
+                    bits[i] = (data & 1 << i) != 0;
+
+                return bits;
+            }
+
+            public static bool[] DecodeBits(int data)
+            {
+                var bits = new bool[4 * BitsPerByte];
+                for (int i = 0; i < bits.Length; i++)
+                    bits[i] = (data & 1 << i) != 0;
+
+                return bits;
+            }
+
+            public static byte EncodeByte(bool[] bits)
+            {
+                if (bits == null) return 0;
+                if (bits.Length >= 0 && bits.Length <= 8)
+                {
+                    byte value = 0;
+                    for (int i = 0; i < bits.Length; i++)
+                    {
+                        if (bits[i]) value |= (byte)(1 << i);
+                    }
+
+                    return value;
+                }
+                else throw new ArgumentOutOfRangeException();
+            }
+
+            public static short EncodeShort(bool[] bits)
+            {
+                if (bits == null) return 0;
+                if (bits.Length >= 0 && bits.Length <= 16)
+                {
+                    short value = 0;
+                    for (int i = 0; i < bits.Length; i++)
+                    {
+                        if (bits[i]) value |= (short)(1 << i);
+                    }
+
+                    return value;
+                }
+                else throw new ArgumentOutOfRangeException();
+            }
+
+            public static int EncodeInteger(bool[] bits)
+            {
+                if (bits == null) return 0;
+                if (bits.Length >= 0 && bits.Length <= 32)
+                {
+                    int value = 0;
+                    for (int i = 0; i < bits.Length; i++)
+                    {
+                        if (bits[i]) value |= (1 << i);
+                    }
+
+                    return value;
+                }
+                else throw new ArgumentOutOfRangeException();
+            }
         }
 
         #endregion

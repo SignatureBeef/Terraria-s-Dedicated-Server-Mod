@@ -77,7 +77,7 @@
         TELEPORT = 65,
         HEAL_PLAYER = 66,
         PACKET_67 = 67,
-        PACKET_68 = 68,
+        CLIENT_UUID = 68,
         CHEST_NAME_UPDATE = 69,
         CATCH_NPC = 70,
         RELEASE_NPC = 71,

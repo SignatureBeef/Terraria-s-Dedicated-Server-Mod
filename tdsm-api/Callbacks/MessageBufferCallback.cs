@@ -53,8 +53,11 @@ namespace TDSM.API.Callbacks
                 case Packet.WRITE_SIGN:
                     ProcessWriteSign(bufferId); //Returns
                     return 0;
+                case Packet.CLIENT_UUID:
+                    ProcesUUID(bufferId);
+                    return 0;
 
-                /* Password handling */
+            /* Password handling */
                 case Packet.PASSWORD_RESPONSE: //Returns
                     ProcessPassword(bufferId);
                     return 0;
@@ -119,6 +122,78 @@ namespace TDSM.API.Callbacks
         }
 
         #if Full_API
+        private static void ProcessDoorState(int bufferId)
+        {
+            var buffer = NetMessage.buffer[bufferId];
+            byte kind = buffer.reader.ReadByte();
+            int x = (int)buffer.reader.ReadInt16();
+            int y = (int)buffer.reader.ReadInt16();
+            if (!WorldGen.InWorld(x, y, 3)) return;
+            int direction = (buffer.reader.ReadByte() == 0) ? -1 : 1;
+
+            var args = new HookArgs.DoorStateChanged()
+            {
+                X = x,
+                Y = y,
+                Direction = direction,
+                Kind = kind 
+            };
+            var ctx = new HookContext()
+            {
+                Sender = Main.player[bufferId],
+                Player = Main.player[bufferId]
+            };
+
+            HookPoints.DoorStateChanged.Invoke(ref ctx, ref args);
+
+            if (ctx.Result == HookResult.DEFAULT)
+            {
+                if (kind == 0) WorldGen.OpenDoor(x, y, direction);
+                else if (kind == 1) WorldGen.CloseDoor(x, y, true);
+                else if (kind == 2) WorldGen.ShiftTrapdoor(x, y, direction == 1, 1);
+                else if (kind == 3) WorldGen.ShiftTrapdoor(x, y, direction == 1, 0);
+                else if (kind == 4) WorldGen.ShiftTallGate(x, y, false);
+                else if (kind == 5) WorldGen.ShiftTallGate(x, y, true);
+
+                if (Main.netMode == 2)
+                    NetMessage.SendData((int)Packet.DOOR_UPDATE, -1, bufferId, "", (int)kind, (float)x, (float)y, (float)((direction == 1) ? 1 : 0));
+            }
+            else if (ctx.Result == HookResult.RECTIFY)
+            {
+                if (Main.netMode == 2)
+                {
+                    //Teleport
+                    ctx.Player.Teleport(args.Position);
+
+                    //I would think to send the real door state
+                    if (kind == 0) kind = 1;
+                    else if (kind == 1) kind = 0;
+                    else if (kind == 2) kind = 3;
+                    else if (kind == 3) kind = 2;
+                    else if (kind == 4) kind = 5;
+                    else if (kind == 5) kind = 4;
+
+                    if (Main.netMode == 2)
+                        NetMessage.SendData((int)Packet.DOOR_UPDATE, -1, bufferId, "", (int)kind, (float)x, (float)y, (float)((direction == 1) ? 1 : 0));
+                }
+            }
+        }
+
+        private static void ProcesUUID(int bufferId)
+        {
+            //Not sure why Re-Logic doesn't just do this in the first place.
+            if (Main.netMode != 2)
+            {
+                return;
+            }
+
+            if (String.IsNullOrEmpty(Main.player[bufferId].ClientUUId))
+            {
+                var buffer = NetMessage.buffer[bufferId];
+                Main.player[bufferId].ClientUUId = buffer.reader.ReadString();
+            }
+        }
+
         private static void ProcessPassword(int bufferId)
         {
             var buffer = NetMessage.buffer[bufferId];

@@ -41,7 +41,7 @@ namespace TDSM.API.Plugin
 
         public static readonly HookPoint<HookArgs.PlayerWorldAlteration> PlayerWorldAlteration;
 
-        //public static readonly HookPoint<HookArgs.DoorStateChanged> DoorStateChanged;
+        public static readonly HookPoint<HookArgs.DoorStateChanged> DoorStateChanged;
 
         public static readonly HookPoint<HookArgs.LiquidFlowReceived> LiquidFlowReceived;
         public static readonly HookPoint<HookArgs.ProjectileReceived> ProjectileReceived;
@@ -811,19 +811,23 @@ namespace TDSM.API.Plugin
 
         public struct DoorStateChanged
         {
+            /// <summary>
+            /// Location of the player when the state was changed
+            /// </summary>
+            /// <value>The position.</value>
+            public Vector2 Position { get; set;}
+            
             public int X { get; set; }
 
             public int Y { get; set; }
 
             public int Direction { get; set; }
 
-            public bool Open { get; set; }
-
-            public bool Close
-            {
-                get { return !Open; }
-                set { Open = !value; }
-            }
+            /// <summary>
+            /// Type of object being opened
+            /// </summary>
+            /// <value>The kind.</value>
+            public int Kind { get; set; }
         }
 
         public struct LiquidFlowReceived

@@ -28,13 +28,9 @@ namespace TDSM.Web
     /// </summary>
     public class SystemController : ApiController
     {
-        [AccessAttribute(Node = "tdsm.web.GetSystemStats")]
+        [Authorize(Roles = "tdsm.web.getsystemstats")]
         public Tuple<Double, Double> Get()
         {
-            if (this.CheckAccess())
-            {
-                
-            }
 
             return null;
         }

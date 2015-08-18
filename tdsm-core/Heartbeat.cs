@@ -149,11 +149,12 @@ namespace TDSM.Core
                         req.Add("UUID", _serverKey);
                     req.Add("NPCDef", Definitions.DefinitionManager.NPCVersion.ToString());
                     req.Add("ItemDef", Definitions.DefinitionManager.ItemVersion.ToString());
+                    req.Add("RequiresAuth", (!String.IsNullOrEmpty(Terraria.Netplay.ServerPassword)).ToString());
                     //req.Add("ServiceTo", ServerCore.Server.UniqueConnections.ToString());
 
                     if (PublishToList)
                     {
-                        req.Add("Port", Terraria.Netplay.ServerIP.ToString());
+                        req.Add("Port", Terraria.Netplay.ListenPort.ToString());
                         req.Add("MaxPlayers", Terraria.Main.maxNetPlayers.ToString());
                         //req.Add("ConnectedPlayers", ServerCore.ClientConnection.All.Count.ToString());
 
@@ -186,7 +187,9 @@ namespace TDSM.Core
                                         ProgramLog.Log("Heartbeat Sent: " + str);
                                     }
                                 }
-                                catch { }
+                                catch
+                                {
+                                }
                                 break;
                             case ResponseCode.UpdateReady:
                                 var flag = reader.ReadUpdateReady();
@@ -270,7 +273,7 @@ namespace TDSM.Core
             catch (Exception e)
             {
                 ProgramLog.Log("Heartbeat failed, are we online or is the tdsm server down?");
-                ProgramLog.Log(e);
+//                ProgramLog.Log(e);
             }
 #else
             catch
@@ -324,7 +327,10 @@ namespace TDSM.Core
                 }
             }
             else if (!_timer.Enabled)
+            {
                 _timer.Enabled = true;
+                Enabled = true;
+            }
 #endif
         }
 

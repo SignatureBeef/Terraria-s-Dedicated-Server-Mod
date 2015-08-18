@@ -1,25 +1,30 @@
-﻿//using TDSM.API.Plugin;
-//using TDSM.Core.Logging;
-//
-//namespace TDSM.Core.Events
-//{
-//    public static class HookPoints
-//    {
-//        public static readonly HookPoint<HookArgs.ConsoleMessageReceived> ConsoleMessageReceived;
-//
-//        static HookPoints()
-//        {
-//            ConsoleMessageReceived = new HookPoint<HookArgs.ConsoleMessageReceived>("console-message-received");
-//        }
-//    }
-//
-//    public static class HookArgs
-//    {
-//        public struct ConsoleMessageReceived
-//        {
-//            public string Message { get; set; }
-//            public SendingLogger Logger { get; set; }
-//        }
-//    }
-//}
-//
+﻿using TDSM.API.Plugin;
+
+namespace TDSM.Core.Events
+{
+    public static class HookPoints
+    {
+        public static readonly HookPoint<HookArgs.PreApplyServerSideCharacter> PreApplyServerSideCharacter;
+        public static readonly HookPoint<HookArgs.PostApplyServerSideCharacter> PostApplyServerSideCharacter;
+
+        static HookPoints()
+        {
+            PreApplyServerSideCharacter = new HookPoint<HookArgs.PreApplyServerSideCharacter>("pre-apply-server-side-character");
+            PostApplyServerSideCharacter = new HookPoint<HookArgs.PostApplyServerSideCharacter>("post-apply-server-side-character");
+        }
+    }
+
+    public static class HookArgs
+    {
+        public struct PreApplyServerSideCharacter
+        {
+            public ServerCharacters.ServerCharacter Character { get; set; }
+        }
+
+        public struct PostApplyServerSideCharacter
+        {
+
+        }
+    }
+}
+
