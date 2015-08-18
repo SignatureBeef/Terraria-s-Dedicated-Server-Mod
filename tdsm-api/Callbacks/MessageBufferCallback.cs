@@ -53,6 +53,9 @@ namespace TDSM.API.Callbacks
                 case Packet.WRITE_SIGN:
                     ProcessWriteSign(bufferId); //Returns
                     return 0;
+                case Packet.CLIENT_UUID:
+                    ProcesUUID(bufferId);
+                    return 0;
 
                 /* Password handling */
                 case Packet.PASSWORD_RESPONSE: //Returns
@@ -119,6 +122,22 @@ namespace TDSM.API.Callbacks
         }
 
         #if Full_API
+
+        private static void ProcesUUID(int bufferId)
+        {
+            //Not sure why Re-Logic doesn't just do this in the first place.
+            if (Main.netMode != 2)
+            {
+                return;
+            }
+
+            if (String.IsNullOrEmpty(Main.player[bufferId].ClientUUId))
+            {
+                var buffer = NetMessage.buffer[bufferId];
+                Main.player[bufferId].ClientUUId = buffer.reader.ReadString();
+            }
+        }
+
         private static void ProcessPassword(int bufferId)
         {
             var buffer = NetMessage.buffer[bufferId];
