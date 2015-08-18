@@ -18,6 +18,8 @@ Get more [Help](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/w
 ###Docker
 Alternatively you can use docker to easily setup a pre-built vm running TDSM. [@parkervcp](https://github.com/parkervcp) has been kind enough to keep this up to date, and so you can use `parkervcp/tdsm:latest` to get the latest container. See [http://docs.docker.com/](http://docs.docker.com/) for the latest install instructions for docker.
 
+Using a GUI is the easiest method for using docker, but for those of you who use it via command line; you can start the container with configuration like so `docker run -itd -p 7777:7777 -v /path/to/server.config:/srv/server.config parkervcp/tdsm:latest`
+
 ## Testing
 If you would like to help test and get the unstable development build, you can just grab all the files from the "[Binaries](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries)" directory. Those are always updated with each commit. Please use the GitHub Issues section to report bugs. Of course you can always drop by #support in our Slack chat (read more below), but we ask that if it's an actual bug report, to please report it in GitHub so we can track it. It also serves as a reminder. You may also see the changes between builds and upcoming builds by checking out the  [CHANGELOG.MD](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/blob/master/CHANGELOG.MD) file.
 
