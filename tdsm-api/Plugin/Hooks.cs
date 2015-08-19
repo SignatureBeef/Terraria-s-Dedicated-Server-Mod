@@ -106,7 +106,7 @@ namespace TDSM.API.Plugin
             InventoryItemReceived = new HookPoint<HookArgs.InventoryItemReceived>("inventory-item-received");
             ObituaryReceived = new HookPoint<HookArgs.ObituaryReceived>("obituary-received");
             PlayerWorldAlteration = new HookPoint<HookArgs.PlayerWorldAlteration>("player-world-alteration");
-            //DoorStateChanged = new HookPoint<HookArgs.DoorStateChanged>("door-state-changed");
+            DoorStateChanged = new HookPoint<HookArgs.DoorStateChanged>("door-state-changed");
             LiquidFlowReceived = new HookPoint<HookArgs.LiquidFlowReceived>("liquid-flow-received");
             ProjectileReceived = new HookPoint<HookArgs.ProjectileReceived>("projectile-received");
             KillProjectileReceived = new HookPoint<HookArgs.KillProjectileReceived>("kill-projectile-received");
@@ -731,7 +731,6 @@ namespace TDSM.API.Plugin
             public int X { get; set; }
 
             public int Y { get; set; }
-
             public byte Action { get; set; }
 
             public short Type { get; set; }
@@ -741,66 +740,68 @@ namespace TDSM.API.Plugin
             public bool TypeChecked { get; set; }
 
             //            public WorldMod.PlayerSandbox Sandbox { get; internal set; }
-
-            public bool TileWasRemoved
+            public enum ActionType
             {
-                get { return Action == 0 || Action == 4 || Action == 100; }
+                KillTile = 0,
+                PlaceTile = 1,
+                KillWall = 2,
+                PlaceWall = 3,
+                KillTile1 = 4,
+                PlaceWire = 5,
+                KillWire = 6,
+                PoundTile = 7,
+                PlaceActuator = 8,
+                KillActuator = 9,
+                PlaceWire2 = 10,
+                KillWire2 = 11,
+                PlaceWire3 = 12,
+                KillWire3 = 13,
+                SlopeTile = 14,
+                FrameTrack = 15,
             }
+            public bool TileWasRemoved => Action == (int)ActionType.KillTile || Action == (int)ActionType.KillTile1 || Action == 100;
 
             public bool NoItem
             {
-                get { return Action == 4 || Action == 101; }
+                get { return Action == (int)ActionType.KillTile1 || Action == 101; }
                 set
                 {
                     if (value)
                     {
-                        if (Action == 0)
-                            Action = 4;
+                        if (Action == (int)ActionType.KillTile)
+                            Action = (int)ActionType.KillTile1;
                         else if (Action == 100)
                             Action = 101;
                     }
                     else
                     {
-                        if (Action == 4)
-                            Action = 0;
+                        if (Action == (int)ActionType.KillTile1)
+                            Action = (int)ActionType.KillTile;
                         else if (Action == 101)
                             Action = 100;
                     }
                 }
             }
 
-            public bool TileWasPlaced
-            {
-                get { return Action == 1; }
-            }
+            public bool TileWasPlaced => Action == (int)ActionType.PlaceTile;
 
-            public bool WallWasRemoved
-            {
-                get { return Action == 2 || Action == 100 || Action == 101; }
-            }
+            public bool WallWasRemoved => Action == (int)ActionType.KillWall || Action == 100 || Action == 101;
 
-            public bool WallWasPlaced
-            {
-                get { return Action == 3; }
-            }
+            public bool WallWasPlaced => Action == (int)ActionType.PlaceWall;
 
             public bool RemovalFailed
             {
-                get { return Type == 1 && (Action == 0 || Action == 2 || Action == 4); }
+                get { return Type == 1 && (Action == (int)ActionType.KillTile || Action == (int)ActionType.PlaceTile || Action == (int)ActionType.KillTile1); }
                 set
                 {
-                    if (Action == 0 || Action == 2 || Action == 4)
+                    if (Action == (int)ActionType.KillTile || Action == (int)ActionType.KillWall || Action == (int)ActionType.KillTile1)
                         Type = value ? (byte)1 : (byte)0;
                 }
             }
 
             #if Full_API && !MemTile
-            public Terraria.Tile Tile
-            {
-                get
-                { return Main.tile[X, Y]; }
-            }
-            #elif Full_API && MemTile
+            public Terraria.Tile Tile => Main.tile[X, Y];
+#elif Full_API && MemTile
             public TDSM.API.Memory.MemTile Tile
             {
                 get
