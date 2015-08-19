@@ -126,6 +126,7 @@
     <Compile Include="Command\ISender.cs" />
     <Compile Include="Command\Sender.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="ID\ActionType.cs" />
     <Compile Include="ID\Lookup.cs" />
     <Compile Include="Misc\StringCache.cs" />
     <Compile Include="Permissions\PermissionsManager.cs" />
