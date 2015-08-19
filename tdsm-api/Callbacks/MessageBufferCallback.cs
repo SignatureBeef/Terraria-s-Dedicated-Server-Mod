@@ -891,6 +891,20 @@ namespace TDSM.API.Callbacks
 
             data.Apply(player);
 
+            {
+                var lname = player.Name.ToLower();
+
+                foreach (var otherPlayer in Main.player)
+                {
+                    //                            var otherSlot = Terraria.Netplay.Clients[otherPlayer.whoAmI];
+                    if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherPlayer.whoAmI != bufferId) // && otherSlot.State >= SlotState.CONNECTED)
+                    {
+                        player.Kick("A \"" + otherPlayer.Name + "\" is already on this server.");
+                        return;
+                    }
+                }
+            }
+
             if (isConnection)
             {
                 if (ctx.Result == HookResult.ASK_PASS)
@@ -910,19 +924,6 @@ namespace TDSM.API.Callbacks
                 {
                     // don't allow replacing connections for guests, but do for registered users
                     //                    if (conn.State < SlotState.PLAYING)
-                    {
-                        var lname = player.Name.ToLower();
-
-                        foreach (var otherPlayer in Main.player)
-                        {
-                            //                            var otherSlot = Terraria.Netplay.Clients[otherPlayer.whoAmI];
-                            if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherPlayer.whoAmI != bufferId) // && otherSlot.State >= SlotState.CONNECTED)
-                            {
-                                player.Kick("A \"" + otherPlayer.Name + "\" is already on this server.");
-                                return;
-                            }
-                        }
-                    }
 
                     //conn.Queue = (int)loginEvent.Priority; // actual queueing done on world request message
 
