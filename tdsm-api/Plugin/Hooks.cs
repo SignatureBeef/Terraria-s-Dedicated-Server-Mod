@@ -6,6 +6,7 @@ using Terraria;
 #endif
 using Microsoft.Xna.Framework;
 using TDSM.API.Command;
+using TDSM.API.ID;
 
 namespace TDSM.API.Plugin
 {
@@ -731,7 +732,7 @@ namespace TDSM.API.Plugin
             public int X { get; set; }
 
             public int Y { get; set; }
-            public byte Action { get; set; }
+            public ActionType Action { get; set; }
 
             public short Type { get; set; }
 
@@ -740,61 +741,43 @@ namespace TDSM.API.Plugin
             public bool TypeChecked { get; set; }
 
             //            public WorldMod.PlayerSandbox Sandbox { get; internal set; }
-            public enum ActionType
-            {
-                KillTile = 0,
-                PlaceTile = 1,
-                KillWall = 2,
-                PlaceWall = 3,
-                KillTile1 = 4,
-                PlaceWire = 5,
-                KillWire = 6,
-                PoundTile = 7,
-                PlaceActuator = 8,
-                KillActuator = 9,
-                PlaceWire2 = 10,
-                KillWire2 = 11,
-                PlaceWire3 = 12,
-                KillWire3 = 13,
-                SlopeTile = 14,
-                FrameTrack = 15,
-            }
-            public bool TileWasRemoved => Action == (int)ActionType.KillTile || Action == (int)ActionType.KillTile1 || Action == 100;
+
+            public bool TileWasRemoved => Action == ActionType.KillTile || Action == ActionType.KillTile1 || Action == ActionType.UNKNOWN_1;
 
             public bool NoItem
             {
-                get { return Action == (int)ActionType.KillTile1 || Action == 101; }
+                get { return Action == ActionType.KillTile1 || Action == ActionType.UNKNOWN_2; }
                 set
                 {
                     if (value)
                     {
-                        if (Action == (int)ActionType.KillTile)
-                            Action = (int)ActionType.KillTile1;
-                        else if (Action == 100)
-                            Action = 101;
+                        if (Action == ActionType.KillTile)
+                            Action = ActionType.KillTile1;
+                        else if (Action == ActionType.UNKNOWN_1)
+                            Action = ActionType.UNKNOWN_2;
                     }
                     else
                     {
-                        if (Action == (int)ActionType.KillTile1)
-                            Action = (int)ActionType.KillTile;
-                        else if (Action == 101)
-                            Action = 100;
+                        if (Action == ActionType.KillTile1)
+                            Action = ActionType.KillTile;
+                        else if (Action == ActionType.UNKNOWN_2)
+                            Action = ActionType.UNKNOWN_1;
                     }
                 }
             }
 
-            public bool TileWasPlaced => Action == (int)ActionType.PlaceTile;
+            public bool TileWasPlaced => Action == ActionType.PlaceTile;
 
-            public bool WallWasRemoved => Action == (int)ActionType.KillWall || Action == 100 || Action == 101;
+            public bool WallWasRemoved => Action == ActionType.KillWall || Action == ActionType.UNKNOWN_1 || Action == ActionType.UNKNOWN_2;
 
-            public bool WallWasPlaced => Action == (int)ActionType.PlaceWall;
+            public bool WallWasPlaced => Action == ActionType.PlaceWall;
 
             public bool RemovalFailed
             {
-                get { return Type == 1 && (Action == (int)ActionType.KillTile || Action == (int)ActionType.PlaceTile || Action == (int)ActionType.KillTile1); }
+                get { return Type == 1 && (Action == ActionType.KillTile || Action == ActionType.PlaceTile || Action == ActionType.KillTile1); }
                 set
                 {
-                    if (Action == (int)ActionType.KillTile || Action == (int)ActionType.KillWall || Action == (int)ActionType.KillTile1)
+                    if (Action == (int)ActionType.KillTile || Action == ActionType.KillWall || Action == ActionType.KillTile1)
                         Type = value ? (byte)1 : (byte)0;
                 }
             }

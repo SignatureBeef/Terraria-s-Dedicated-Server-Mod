@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Xna.Framework;
 using System;
+using TDSM.API.ID;
 using TDSM.API.Plugin;
 using TDSM.API.Logging;
 
@@ -1243,7 +1244,7 @@ namespace TDSM.API.Callbacks
         {
             var buffer = NetMessage.buffer[bufferId];
 
-            byte action = buffer.reader.ReadByte();
+            ActionType action = (ActionType) buffer.reader.ReadByte();
             int x = (int)buffer.reader.ReadInt16();
             int y = (int)buffer.reader.ReadInt16();
             short type = buffer.reader.ReadInt16();
@@ -1304,11 +1305,11 @@ namespace TDSM.API.Callbacks
             {
                 if (!fail)
                 {
-                    if (action == 0 || action == 2 || action == 4)
+                    if (action == ActionType.KillTile || action == ActionType.KillWall || action == ActionType.KillTile1)
                     {
                         Netplay.Clients[bufferId].SpamDeleteBlock += 1;
                     }
-                    if (action == 1 || action == 3)
+                    if (action == ActionType.PlaceTile || action == ActionType.PlaceWall)
                     {
                         Netplay.Clients[bufferId].SpamAddBlock += 1;
                     }
@@ -1318,76 +1319,63 @@ namespace TDSM.API.Callbacks
                     fail = true;
                 }
             }
-            if (action == 0)
+            switch (action)
             {
-                WorldGen.KillTile(x, y, fail, false, false);
-            }
-            if (action == 1)
-            {
-                WorldGen.PlaceTile(x, y, (int)type, false, true, -1, style);
-            }
-            if (action == 2)
-            {
-                WorldGen.KillWall(x, y, fail);
-            }
-            if (action == 3)
-            {
-                WorldGen.PlaceWall(x, y, (int)type, false);
-            }
-            if (action == 4)
-            {
-                WorldGen.KillTile(x, y, fail, false, true);
-            }
-            if (action == 5)
-            {
-                WorldGen.PlaceWire(x, y);
-            }
-            if (action == 6)
-            {
-                WorldGen.KillWire(x, y);
-            }
-            if (action == 7)
-            {
-                WorldGen.PoundTile(x, y);
-            }
-            if (action == 8)
-            {
-                WorldGen.PlaceActuator(x, y);
-            }
-            if (action == 9)
-            {
-                WorldGen.KillActuator(x, y);
-            }
-            if (action == 10)
-            {
-                WorldGen.PlaceWire2(x, y);
-            }
-            if (action == 11)
-            {
-                WorldGen.KillWire2(x, y);
-            }
-            if (action == 12)
-            {
-                WorldGen.PlaceWire3(x, y);
-            }
-            if (action == 13)
-            {
-                WorldGen.KillWire3(x, y);
-            }
-            if (action == 14)
-            {
-                WorldGen.SlopeTile(x, y, (int)type);
-            }
-            if (action == 15)
-            {
-                Minecart.FrameTrack(x, y, true, false);
+                case ActionType.KillTile:
+                    WorldGen.KillTile(x, y, fail, false, false);
+                    break;
+                case ActionType.PlaceTile:
+                    WorldGen.PlaceTile(x, y, (int)type, false, true, -1, style);
+                    break;
+                case ActionType.KillWall:
+                    WorldGen.KillWall(x, y, fail);
+                    break;
+                case ActionType.PlaceWall:
+                    WorldGen.PlaceWall(x, y, (int)type, false);
+                    break;
+                case ActionType.KillTile1:
+                    WorldGen.KillTile(x, y, fail, false, true);
+                    break;
+                case ActionType.PlaceWire:
+                    WorldGen.PlaceWall(x, y, (int)type, false);
+                    break;
+                case ActionType.KillWire:
+                    WorldGen.KillWire(x, y);
+                    break;
+                case ActionType.PoundTile:
+                    WorldGen.PoundTile(x, y);
+                    break;
+                case ActionType.PlaceActuator:
+                    WorldGen.PlaceActuator(x, y);
+                    break;
+                case ActionType.KillActuator:
+                    WorldGen.KillActuator(x, y);
+                    break;
+                case ActionType.PlaceWire2:
+                    WorldGen.PlaceWire2(x, y);
+                    break;
+                case ActionType.KillWire2:
+                    WorldGen.KillWire2(x, y);
+                    break;
+                case ActionType.PlaceWire3:
+                    WorldGen.PlaceWire3(x, y);
+                    break;
+                case ActionType.KillWire3:
+                    WorldGen.KillWire3(x, y);
+                    break;
+                case ActionType.SlopeTile:
+                    WorldGen.SlopeTile(x, y, (int)type);
+                    break;
+                case ActionType.FrameTrack:
+                    Minecart.FrameTrack(x, y, true, false);
+                    break;
             }
             if (Main.netMode != 2)
             {
                 return;
             }
             NetMessage.SendData(17, -1, bufferId, "", (int)action, (float)x, (float)y, (float)type, style, 0, 0);
-            if (action == 1 && type == 53)
+            if (action == ActionType.PlaceTile && type == 53)
             {
                 NetMessage.SendTileSquare(-1, x, y, 1);
             }
