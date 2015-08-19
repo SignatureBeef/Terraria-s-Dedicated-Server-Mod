@@ -196,11 +196,21 @@ namespace tdsm.patcher
         //            { return _asm.MainModule.Types.Single(x => x.Name == "ProgramServer"); }
         //        }
 
+        #if SERVER
         public TypeDefinition WindowsLaunch
         {
             get
+
             { return _asm.MainModule.Types.Single(x => x.Name == "WindowsLaunch"); }
         }
+        #elif CLIENT
+        public TypeDefinition Program
+        {
+            get
+
+            { return _asm.MainModule.Types.Single(x => x.Name == "Program"); }
+        }
+        #endif
 
         public TypeDefinition NPC
         {

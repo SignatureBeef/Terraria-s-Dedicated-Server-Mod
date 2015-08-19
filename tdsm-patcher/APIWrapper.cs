@@ -99,6 +99,7 @@ namespace tdsm.patcher
     /// Previously windows would lock the tdsm.exe that was referenced by TDSM.API.dll, which itself was loaded by the patcher.
     /// The locking would cause the patcher (if ran a second time) to fail when saving tdsm.exe
     /// </summary>
+
     public static class APIWrapper
     {
         //static Assembly _api;

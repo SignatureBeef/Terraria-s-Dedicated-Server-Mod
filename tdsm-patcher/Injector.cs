@@ -763,6 +763,7 @@ namespace tdsm.patcher
 
         public void HookProgramStart()
         {
+            #if SERVER
             var method = Terraria.WindowsLaunch.Methods.Single(x => x.Name == "Main");
             var callback = API.MainCallback.Methods.First(m => m.Name == "OnProgramStarted");
 
@@ -776,8 +777,24 @@ namespace tdsm.patcher
             il.InsertBefore(first, call);
             il.InsertBefore(first, il.Create(OpCodes.Brtrue_S, first));
             il.InsertBefore(first, ret);
+            #elif CLIENT
+            var method = Terraria.Program.Methods.Single(x => x.Name == "LaunchGame");
+            var callback = API.MainCallback.Methods.First(m => m.Name == "OnClientStarted");
+
+            var il = method.Body.GetILProcessor();
+
+            var ret = il.Create(OpCodes.Ret);
+            var call = il.Create(OpCodes.Call, _asm.MainModule.Import(callback));
+            var first = method.Body.Instructions.First();
+
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_0));
+            il.InsertBefore(first, call);
+            il.InsertBefore(first, il.Create(OpCodes.Brtrue_S, first));
+            il.InsertBefore(first, ret);
+            #endif
         }
 
+        #if SERVER
         public void RemoveConsoleHandler()
         {
             var method = Terraria.WindowsLaunch.Methods.Single(x => x.Name == "Main");
@@ -788,6 +805,7 @@ namespace tdsm.patcher
             il.Remove(target.Previous);
             il.Remove(target);
         }
+        #endif
 
         //        public void RemoveProcess()
         //        {
@@ -2336,6 +2354,7 @@ namespace tdsm.patcher
 
         public void Save(string fileName, int apiBuild, string tdsmUID, string name)
         {
+            #if SERVER
             //Ensure the name is updated to the new one
             _asm.Name = new AssemblyNameDefinition(name, new Version(0, 0, apiBuild, 0));
             _asm.MainModule.Name = fileName;
@@ -2366,6 +2385,7 @@ namespace tdsm.patcher
                 //        new CustomAttributeArgument(_asm.CustomAttributes[x].ConstructorArguments[0].Type, "1.0.0.0");
                 //}
             }
+            #endif
 
             //_asm.Write(fileName);
             using (var fs = File.OpenWrite(fileName))
