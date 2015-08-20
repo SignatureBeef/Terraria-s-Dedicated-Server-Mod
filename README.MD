@@ -21,7 +21,7 @@ Alternatively you can use docker to easily setup a pre-built vm running TDSM. [@
 Using a GUI is the easiest method for using docker, but for those of you who use it via command line; you can start the container with configuration like so `docker run -itd -p 7777:7777 -v /path/to/server.config:/srv/server.config parkervcp/tdsm:latest`
 
 ## Plugins
-This will serve as a "known" plugin list until our website is complete. If you know of others or wish to add yours, fork and make a pull request. Or you could let request on Slack.
+This will serve as a "known" plugin list until our website is complete. If you know of others or wish to add yours, fork and make a pull request. Or you could request on Slack.
 - [Restrict](https://github.com/DeathCradle/TDSM_Restrict) - Player registration and world protection
 - [SQLite](https://github.com/DeathCradle/tdsm-sqlite-connector) - Adds SQLite storage and permissions
 - [MySQL](https://github.com/DeathCradle/tdsm-mysql-connector) - Adds MySQL storage and permissions
