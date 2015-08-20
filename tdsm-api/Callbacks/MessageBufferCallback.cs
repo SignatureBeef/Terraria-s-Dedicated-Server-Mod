@@ -838,7 +838,7 @@ namespace TDSM.API.Callbacks
                 IsConnecting = isConnection
             };
 
-            data.Parse(buffer.readBuffer, start, length);
+            data.Parse(buffer.reader, start, length);
             //            Skip(read);
             //
             //            if (data.Hair >= MAX_HAIR_ID)

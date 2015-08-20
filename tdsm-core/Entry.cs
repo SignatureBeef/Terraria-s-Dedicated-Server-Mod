@@ -1000,7 +1000,7 @@ namespace TDSM.Core
             //Ensure command line argument supersede config options - hosting providers can use this 
             if (LaunchInitializer.HasParameter(new string[] { "-" + args.Key }))
             {
-                ProgramLog.Log("Ignoring overriden config property " + args.Key);
+//                ProgramLog.Log("Ignoring overridden config property " + args.Key);
                 return;
             }
             switch (args.Key)
@@ -1055,13 +1055,13 @@ namespace TDSM.Core
                 case "web-server-provider":
                     _webServerProvider = args.Value;
                     break;
-                case "web-server-serve-files":
-                    bool serveFiles;
-                    if (Boolean.TryParse(args.Value, out serveFiles))
-                    {
-                        //WebInterface.WebServer.ServeWebFiles = serveFiles;
-                    }
-                    break;
+//                case "web-server-serve-files":
+//                    bool serveFiles;
+//                    if (Boolean.TryParse(args.Value, out serveFiles))
+//                    {
+//                        //WebInterface.WebServer.ServeWebFiles = serveFiles;
+//                    }
+//                    break;
 #if TDSMServer
                 case "send-queue-quota":
                     int sendQueueQuota;

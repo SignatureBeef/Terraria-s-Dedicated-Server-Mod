@@ -416,71 +416,115 @@ namespace TDSM.API.Plugin
 
             public bool WhitelistChecked { get; set; }
 
-            public int Parse(byte[] buf, int at, int length)
+            public int Parse(System.IO.BinaryReader reader, int at, int length)
             {
                 #if Full_API
-                var start = at + 1 /*Skip player id */;
 
-                //                var playerId = (int)buf[at++];
-                //            if (Main.netMode == 2)
-                //            {
-                //                num6 = bufferId;
-                //            }
+                reader.ReadByte (); //Ignore player id
 
-                SkinVariant = (int)MathHelper.Clamp((float)buf[start++], 0, 7);
-                Hair = (int)buf[start++];
+                SkinVariant = (int)MathHelper.Clamp ((float)(int)reader.ReadByte (), 0, 7);
+                Hair = (int)reader.ReadByte ();
                 if (Hair >= 134)
                     Hair = 0;
 
-                int len = 0;
-                while (true)
-                {
-                    len += buf[start] & 0x7F;
-                    if (buf[start++] > 127)
-                        len <<= 7;
-                    else
-                        break;
-                }
+                Name = reader.ReadString ().Trim ();
+                HairDye = reader.ReadByte ();
 
-                Name = System.Text.Encoding.UTF8.GetString(buf, start, len).Trim();
+                BitsByte bb;
 
-                HairDye = buf[start++];
-                BitsByte bitsByte = buf[start++];
                 HideVisual = new bool[10];
-                for (int num7 = 0; num7 < 8; num7++)
-                {
-                    HideVisual[num7] = bitsByte[num7];
-                }
-                bitsByte = buf[start++];
-                for (int num8 = 0; num8 < 2; num8++)
-                {
-                    HideVisual[num8 + 8] = bitsByte[num8];
-                }
-                HideMisc = buf[start++];
-                HairColor = ParseColor(buf, ref start);
-                SkinColor = ParseColor(buf, ref start);
-                EyeColor = ParseColor(buf, ref start);
-                ShirtColor = ParseColor(buf, ref start);
-                UnderShirtColor = ParseColor(buf, ref start);
-                PantsColor = ParseColor(buf, ref start);
-                ShoeColor = ParseColor(buf, ref start);
-                BitsByte bitsByte2 = buf[start++];
-                Difficulty = 0;
-                if (bitsByte2[0])
-                {
-                    Difficulty += 1;
-                }
-                if (bitsByte2[1])
-                {
-                    Difficulty += 2;
-                }
-                if (Difficulty > 2)
-                {
-                    Difficulty = 2;
-                }
-                ExtraAccessory = bitsByte2[2];
+                bb = reader.ReadByte ();
+                for (int i = 0; i < 8; i++)
+                    HideVisual [i] = bb [i];
 
-                return start - at;
+                bb = reader.ReadByte ();
+                for (int i = 0; i < 2; i++)
+                    HideVisual [i + 8] = bb [i];
+
+                HideMisc = reader.ReadByte ();
+                HairColor = reader.ReadRGB ();
+                SkinColor = reader.ReadRGB ();
+                EyeColor = reader.ReadRGB ();
+                ShirtColor = reader.ReadRGB ();
+                UnderShirtColor = reader.ReadRGB ();
+                PantsColor = reader.ReadRGB ();
+                ShoeColor = reader.ReadRGB ();
+
+                bb = reader.ReadByte ();
+                Difficulty = 0;
+                if (bb [0]) Difficulty += 1;
+                if (bb [1]) Difficulty += 2;
+                if (Difficulty > 2) Difficulty = 2;
+
+                ExtraAccessory = bb [2];
+
+//                var start = at + 1 /*Skip player id */;
+//
+//                //                var playerId = (int)buf[at++];
+//                //            if (Main.netMode == 2)
+//                //            {
+//                //                num6 = bufferId;
+//                //            }
+//
+//                SkinVariant = (int)MathHelper.Clamp((float)buf[start++], 0, 7);
+//                Hair = (int)buf[start++];
+//                if (Hair >= 134)
+//                    Hair = 0;
+//
+//                int len = 0;
+//                while (true)
+//                {
+//                    len += buf[start] & 0x7F;
+//                    if (buf[start++] > 127)
+//                        len <<= 7;
+//                    else break;
+//                }
+//
+//                Logging.ProgramLog.Log("len: {0}", len);
+//
+////                start += len;
+//                Name = System.Text.Encoding.UTF8.GetString(buf, start, len).Trim();
+//
+//                HairDye = buf[start++];
+//                BitsByte bitsByte = buf[start++];
+//                HideVisual = new bool[10];
+//                for (int num7 = 0; num7 < 8; num7++)
+//                {
+//                    HideVisual[num7] = bitsByte[num7];
+//                }
+//                bitsByte = buf[start++];
+//                for (int num8 = 0; num8 < 2; num8++)
+//                {
+//                    HideVisual[num8 + 8] = bitsByte[num8];
+//                }
+//                HideMisc = buf[start++];
+//                HairColor = ParseColor(buf, ref start);
+//                SkinColor = ParseColor(buf, ref start);
+//
+//                Logging.ProgramLog.Log("R: {0},{1},{2}", SkinColor.R, SkinColor.G, SkinColor.B);
+//
+//                EyeColor = ParseColor(buf, ref start);
+//                ShirtColor = ParseColor(buf, ref start);
+//                UnderShirtColor = ParseColor(buf, ref start);
+//                PantsColor = ParseColor(buf, ref start);
+//                ShoeColor = ParseColor(buf, ref start);
+//                BitsByte bitsByte2 = buf[start++];
+//                Difficulty = 0;
+//                if (bitsByte2[0])
+//                {
+//                    Difficulty += 1;
+//                }
+//                if (bitsByte2[1])
+//                {
+//                    Difficulty += 2;
+//                }
+//                if (Difficulty > 2)
+//                {
+//                    Difficulty = 2;
+//                }
+//                ExtraAccessory = bitsByte2[2];
+
+                return 0; //start - at;
                 #else
                 return 0;
                 #endif

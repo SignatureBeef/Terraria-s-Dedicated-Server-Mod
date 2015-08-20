@@ -392,6 +392,9 @@ namespace TDSM.Core.ServerCharacters
             //Quests
             NetMessage.SendData(76, -1, -1, String.Empty, player.whoAmI);
 
+            //Update skins
+            NetMessage.SendData(4, -1, player.whoAmI, player.name, player.whoAmI);
+
             //Buffs
 //            if (this.Buffs != null && this.BuffTime != null)
 //            {
