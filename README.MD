@@ -15,10 +15,18 @@ TDSM is a server modification of the official Terraria dedicated server software
 2. Just extract the files somewhere and run tdsm.exe. :) (in linux run it with mono)  
 Get more [Help](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server) with installing.
 
-###Docker
+#### Docker
 Alternatively you can use docker to easily setup a pre-built vm running TDSM. [@parkervcp](https://github.com/parkervcp) has been kind enough to keep this up to date, and so you can use `parkervcp/tdsm:latest` to get the latest container. See [http://docs.docker.com/](http://docs.docker.com/) for the latest install instructions for docker.
 
 Using a GUI is the easiest method for using docker, but for those of you who use it via command line; you can start the container with configuration like so `docker run -itd -p 7777:7777 -v /path/to/server.config:/srv/server.config parkervcp/tdsm:latest`
+
+## Plugins
+This will serve as a "known" plugin list until our website is complete. If you know of others or wish to add yours, fork and make a pull request. Or you could let request on Slack.
+- [Restrict](https://github.com/DeathCradle/TDSM_Restrict) - Player registration and world protection
+- [SQLite](https://github.com/DeathCradle/tdsm-sqlite-connector) - Adds SQLite storage and permissions
+- [MySQL](https://github.com/DeathCradle/tdsm-mysql-connector) - Adds MySQL storage and permissions
+- [RenWorld](https://d1g1t4l3ch0.github.io/TDSM-RenWorld-Plugin/) - [Lua] Allows you to rename a world
+- [Map](https://github.com/elevatorguy/TDSM_map) - Renders the loaded world as a PNG
 
 ## Testing
 If you would like to help test and get the unstable development build, you can just grab all the files from the "[Binaries](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/tree/master/Binaries)" directory. Those are always updated with each commit. Please use the GitHub Issues section to report bugs. Of course you can always drop by #support in our Slack chat (read more below), but we ask that if it's an actual bug report, to please report it in GitHub so we can track it. It also serves as a reminder. You may also see the changes between builds and upcoming builds by checking out the  [CHANGELOG.MD](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/blob/master/CHANGELOG.MD) file.
@@ -56,11 +64,3 @@ A block protection plugin for specific areas designated by a player.
 * Configuration editor command
 
 Also please take a look at our [DEVELOPMENT.MD](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/blob/master/DEVELOPMENT.MD) file.
-
-##Existing plugins
-This will serve as a "known" plugin list until our website is complete. If you know of others or wish to add yours, fork and make a pull request.
-- [Restrict](https://github.com/DeathCradle/TDSM_Restrict) - Player registration and world protection
-- [SQLite](https://github.com/DeathCradle/tdsm-sqlite-connector) - Adds SQLite storage and permissions
-- [MySQL](https://github.com/DeathCradle/tdsm-mysql-connector) - Adds MySQL storage and permissions
-- [RenWorld](https://d1g1t4l3ch0.github.io/TDSM-RenWorld-Plugin/) - [Lua] Allows you to rename a world
-- [Map](https://github.com/elevatorguy/TDSM_map) - Renders the loaded world as a PNG
