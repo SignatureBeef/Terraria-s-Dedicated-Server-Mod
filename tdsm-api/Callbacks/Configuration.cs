@@ -3,6 +3,7 @@ using System.IO;
 using TDSM.API.Plugin;
 using System.Diagnostics;
 using TDSM.API.Logging;
+using TDSM.API.Command;
 
 
 #if Full_API
@@ -72,6 +73,13 @@ namespace TDSM.API.Callbacks
                 }
             }
             #endif
+
+            var ctx = new HookContext()
+            {
+                Sender = HookContext.ConsoleSender
+            };
+            var args = new HookArgs.ParseCommandLineArguments();
+            HookPoints.ParseCommandLineArguments.Invoke(ref ctx, ref args);
         }
 
         public static void Load(string file)

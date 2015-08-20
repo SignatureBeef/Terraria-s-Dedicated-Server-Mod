@@ -5,6 +5,10 @@
 - Upgrade to .NET 4.5
 - `give` command: New syntax and optional player name argument.
 - `give` command: Fixed not giving number of items asked for. Limit is 10 stacks of any item.
+- Whitelist is back in, see command 'whitelist', and config property is now 'whitelist' instead of 'usewhitelist'
+- OWIN based web server for files and a REST API
+- Command line arguments can now be specified for TDSM commands, and supersede configuration properties.
+- Fixed the heartbeat not disabling
 
 ## Build 5 - 1.3.0.8
 - Added send data hook

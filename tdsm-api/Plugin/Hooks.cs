@@ -89,6 +89,8 @@ namespace TDSM.API.Plugin
 
         //public static readonly HookPoint<HookArgs.PatchServer> PatchServer;
 
+        public static readonly HookPoint<HookArgs.ParseCommandLineArguments> ParseCommandLineArguments;
+
         static HookPoints()
         {
             ConsoleMessageReceived = new HookPoint<HookArgs.ConsoleMessageReceived>("console-message-received");
@@ -149,6 +151,8 @@ namespace TDSM.API.Plugin
 
             NPCKilled = new HookPoint<HookArgs.NPCKilled>("npc-killed");
             InvasionWarning = new HookPoint<HookArgs.InvasionWarning>("invasion-warning");
+
+            ParseCommandLineArguments = new HookPoint<HookArgs.ParseCommandLineArguments>("parse-cmd-args");
         }
     }
 
@@ -198,6 +202,11 @@ namespace TDSM.API.Plugin
             public int X { get; set; }
 
             public int Y { get; set; }
+        }
+
+        public struct ParseCommandLineArguments
+        {
+
         }
 
         public struct InvasionWarning

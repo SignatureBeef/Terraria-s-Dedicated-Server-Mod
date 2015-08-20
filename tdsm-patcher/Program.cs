@@ -568,7 +568,7 @@ namespace tdsm.patcher
                                 if (File.Exists("server.config"))
                                     asm.EntryPoint.Invoke(null, new object[]
                                         {
-                                            new string[] { "-config", "server.config", "-noupnp" }
+                                            new string[] { "-config", "server.config", "-noupnp", "-heartbeat", "false" }
                                         });
                                 else
                                     asm.EntryPoint.Invoke(null, null);

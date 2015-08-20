@@ -270,7 +270,7 @@ namespace TDSM.Core
                 }
             }
 #if DEBUG
-            catch (Exception e)
+            catch //(Exception e)
             {
                 ProgramLog.Log("Heartbeat failed, are we online or is the tdsm server down?");
 //                ProgramLog.Log(e);

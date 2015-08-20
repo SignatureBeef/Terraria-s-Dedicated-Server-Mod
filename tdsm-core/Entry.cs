@@ -18,6 +18,7 @@ using TDSM.Core.RemoteConsole;
 using TDSM.Core.ServerCharacters;
 using Terraria;
 using Terraria.Social;
+using Terraria.Initializers;
 
 namespace TDSM.Core
 {
@@ -996,9 +997,15 @@ namespace TDSM.Core
         [Hook(HookOrder.NORMAL)]
         void OnConfigLineRead(ref HookContext ctx, ref HookArgs.ConfigurationLine args)
         {
+            //Ensure command line argument supersede config options - hosting providers can use this 
+            if (LaunchInitializer.HasParameter(new string[] { "-" + args.Key }))
+            {
+                ProgramLog.Log("Ignoring overriden config property " + args.Key);
+                return;
+            }
             switch (args.Key)
             {
-                case "usewhitelist":
+                case "whitelist":
                     bool usewhitelist;
                     if (Boolean.TryParse(args.Value, out usewhitelist))
                     {
@@ -1126,6 +1133,77 @@ namespace TDSM.Core
             }
         }
 
+        [Hook]
+        void OnCMDArgsReady(ref HookContext ctx, ref HookArgs.ParseCommandLineArguments args)
+        {
+            string tmp;
+            bool tmp1;
+            
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-whitelist" }))
+                && Boolean.TryParse(tmp, out tmp1))
+                WhitelistEnabled = tmp1;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-heartbeat" }))
+                && Boolean.TryParse(tmp, out tmp1))
+                EnableHeartbeat = tmp1;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-server-list" }))
+                && Boolean.TryParse(tmp, out tmp1))
+                Heartbeat.PublishToList = tmp1;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-server-list-name" })))
+                Heartbeat.ServerName = tmp;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-server-list-desc" })))
+                Heartbeat.ServerDescription = tmp;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-server-list-domain" })))
+                Heartbeat.ServerDomain = tmp;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-rcon-hash-nonce" })))
+                RConHashNonce = tmp;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-rcon-bind-address" })))
+                RConBindAddress = tmp;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-web-server-bind-address" })))
+                TDSM.API.Web.WebServer.Start(tmp);
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-web-server-provider" })))
+                _webServerProvider = tmp;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-pid-file" })))
+                ProcessPIDFile(tmp);
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-cheat-detection" }))
+                && Boolean.TryParse(tmp, out tmp1))
+                EnableCheatProtection = tmp1;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-log-rotation" }))
+                && Boolean.TryParse(tmp, out tmp1))
+                ProgramLog.LogRotation = tmp1;
+
+            CharacterMode characterMode;
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-server-side-characters" }))
+                && CharacterMode.TryParse(tmp, out characterMode))
+            {
+                Terraria.Main.ServerSideCharacter = characterMode != CharacterMode.NONE;
+                CharacterManager.Mode = characterMode;
+                ProgramLog.Admin.Log("SSC are enabled with mode " + characterMode);
+
+                Hook(HookPoints.ReceiveNetMessage, OnNetMessageReceived);
+            }
+
+            int accessLevel;
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-exitaccesslevel" }))
+                && Int32.TryParse(tmp, out accessLevel))
+                ExitAccessLevel = accessLevel;
+
+            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-ssc-allow-guest-info" }))
+                && Boolean.TryParse(tmp, out tmp1))
+                AllowSSCGuestInfo = tmp1;
+        }
+
         [Hook(HookOrder.NORMAL)]
         void OnGreetPlayer(ref HookContext ctx, ref HookArgs.PlayerPreGreeting args)
         {
@@ -1173,7 +1251,8 @@ namespace TDSM.Core
             }
             if (args.ServerChangeState == ServerState.Starting)
             {
-                Heartbeat.Begin(CoreBuild);
+                if (EnableHeartbeat)
+                    Heartbeat.Begin(CoreBuild);
             }
 
             //if (args.ServerChangeState == ServerState.Initialising)
