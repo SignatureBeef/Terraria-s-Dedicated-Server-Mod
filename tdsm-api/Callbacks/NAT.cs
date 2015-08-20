@@ -103,6 +103,7 @@ namespace TDSM.API.Callbacks
                 }
                 ProgramLog.Admin.Log("Removed NAT map record for Terraria Server");
             }
+            Mono.Nat.NatUtility.StopDiscovery();
             #endif
         }
 

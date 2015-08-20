@@ -255,11 +255,11 @@ namespace TDSM.Core
                 //Prevent further connections
                 Terraria.Netplay.Connection.Socket.StopListening();
 
-                //Wait for total disconnection
-                while (Netplay.anyClients)
-                {
-                    System.Threading.Thread.Sleep(100);
-                }
+//                //Wait for total disconnection
+//                while (Netplay.anyClients)
+//                {
+//                    System.Threading.Thread.Sleep(100);
+//                }
             }
 
             Terraria.IO.WorldFile.saveWorld(false);

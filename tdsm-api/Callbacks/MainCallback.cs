@@ -170,6 +170,16 @@ namespace TDSM.API.Callbacks
 
         public static void OnProgramFinished()
         {
+            var ctx = new HookContext()
+            {
+                Sender = HookContext.ConsoleSender
+            };
+            var args = new HookArgs.ServerStateChange()
+            {
+                ServerChangeState = ServerState.Stopping
+            };
+            HookPoints.ServerStateChange.Invoke(ref ctx, ref args);
+
             PluginManager.DisablePlugins();
 
             //Close the logging if set

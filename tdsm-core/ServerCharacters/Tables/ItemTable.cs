@@ -17,6 +17,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             public const String Stack = "Stack";
             public const String Prefix = "Prefix";
             public const String Slot = "Slot";
+            public const String Favorite = "Favorite";
         }
 
         public static readonly TableColumn[] Columns = new TableColumn[]
@@ -27,7 +28,8 @@ namespace TDSM.Core.ServerCharacters.Tables
             new TableColumn(ColumnNames.NetId, typeof(Int32)),
             new TableColumn(ColumnNames.Stack, typeof(Int32)),
             new TableColumn(ColumnNames.Prefix, typeof(Int32)),
-            new TableColumn(ColumnNames.Slot, typeof(Int32))
+            new TableColumn(ColumnNames.Slot, typeof(Int32)),
+            new TableColumn(ColumnNames.Favorite, typeof(Boolean))
         };
 
         public static bool Exists()
@@ -50,7 +52,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             }
         }
 
-        public static int NewItem(CharacterManager.ItemType type, int netId, int stack, int prefix, int slot, int? characterId = null)
+        public static int NewItem(CharacterManager.ItemType type, int netId, int stack, int prefix, bool favorite, int slot, int? characterId = null)
         {
             using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
             {
@@ -60,7 +62,8 @@ namespace TDSM.Core.ServerCharacters.Tables
                     new DataParameter(ColumnNames.Stack, stack),
                     new DataParameter(ColumnNames.Prefix, prefix),
                     new DataParameter(ColumnNames.Slot, slot),
-                    new DataParameter(ColumnNames.CharacterId, characterId)
+                    new DataParameter(ColumnNames.CharacterId, characterId),
+                    new DataParameter(ColumnNames.Favorite, favorite)
                 );
 
                 return (int)Storage.ExecuteInsert(bl); //Get the new ID
@@ -94,7 +97,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             }
         }
 
-        public static bool UpdateItem(CharacterManager.ItemType type, int netId, int prefix, int stack, int slot, int? characterId = null)
+        public static bool UpdateItem(CharacterManager.ItemType type, int netId, int prefix, int stack, bool favorite, int slot, int? characterId = null)
         {
             using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
             {
@@ -102,7 +105,8 @@ namespace TDSM.Core.ServerCharacters.Tables
                     {
                         new DataParameter(ColumnNames.NetId, netId),
                         new DataParameter(ColumnNames.Prefix, prefix),
-                        new DataParameter(ColumnNames.Stack, stack)
+                        new DataParameter(ColumnNames.Stack, stack),
+                        new DataParameter(ColumnNames.Favorite, favorite)
                     },
                     new WhereFilter(ColumnNames.TypeId, (int)type),
                     new WhereFilter(ColumnNames.Slot, slot),

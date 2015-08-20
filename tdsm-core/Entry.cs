@@ -1049,7 +1049,7 @@ namespace TDSM.Core
                     RConBindAddress = args.Value;
                     break;
                 case "web-server-bind-address":
-                    //                    _webServerAddress = args.Value;
+                    _webServerAddress = args.Value;
                     TDSM.API.Web.WebServer.Start(args.Value);
                     break;
                 case "web-server-provider":
@@ -1247,7 +1247,18 @@ namespace TDSM.Core
             }
             if (args.ServerChangeState == ServerState.Stopping)
             {
-                RemoteConsole.RConServer.Stop();
+                if (!String.IsNullOrEmpty(RConBindAddress))
+                {
+                    ProgramLog.Log("Stopping RCON Server");
+                    RemoteConsole.RConServer.Stop();
+                }
+
+                if (!String.IsNullOrEmpty(_webServerAddress))
+                {
+                    ProgramLog.Log("Stopping web server");
+                    TDSM.API.Web.WebServer.Stop();
+                }
+
             }
             if (args.ServerChangeState == ServerState.Starting)
             {

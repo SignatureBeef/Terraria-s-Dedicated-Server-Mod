@@ -113,17 +113,17 @@ namespace TDSM.Core.ServerCharacters
             this.AnglerQuests = player.anglerQuestsFinished;
 
             this.Inventory = player.inventory
-                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
+                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, item.favorited, index))
                 .Where(x => x != null)
                 .ToList();
 
             this.Dye = player.dye
-                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
+                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, item.favorited, index))
                 .Where(x => x != null)
                 .ToList();
 
             this.Armor = player.armor
-                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, index))
+                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, item.favorited, index))
                 .Where(x => x != null)
                 .ToList();
 
@@ -256,6 +256,7 @@ namespace TDSM.Core.ServerCharacters
                         item.netDefaults(slotItem.NetId);
                         item.stack = slotItem.Stack;
                         item.Prefix(slotItem.Prefix);
+                        item.favorited = slotItem.Favorite;
 
                         player.inventory[slotItem.Slot] = item;
                     }
@@ -282,7 +283,9 @@ namespace TDSM.Core.ServerCharacters
                         var item = player.dye[slotItem.Slot];
 
                         item.netDefaults(slotItem.NetId);
+                        item.stack = slotItem.Stack;
                         item.Prefix(slotItem.Prefix);
+                        item.favorited = slotItem.Favorite;
 
                         player.dye[slotItem.Slot] = item;
                     }
@@ -309,7 +312,9 @@ namespace TDSM.Core.ServerCharacters
                         var item = player.armor[slotItem.Slot];
 
                         item.netDefaults(slotItem.NetId);
+                        item.stack = slotItem.Stack;
                         item.Prefix(slotItem.Prefix);
+                        item.favorited = slotItem.Favorite;
 
                         player.armor[slotItem.Slot] = item;
                     }
@@ -496,11 +501,14 @@ namespace TDSM.Core.ServerCharacters
 
         public byte Prefix { get; set; }
 
-        public PlayerItem(int netId, int stack, byte prefix)
+        public bool Favorite { get; set; }
+
+        public PlayerItem(int netId, int stack, byte prefix, bool favorite)
         {
             NetId = netId;
             Stack = stack;
             Prefix = prefix;
+            Favorite = favorite;
         }
 
         public PlayerItem() //Serialisation
@@ -513,8 +521,8 @@ namespace TDSM.Core.ServerCharacters
     {
         public int Slot { get; set; }
 
-        public SlotItem(int netId, int stack, byte prefix, int slot)
-            : base(netId, stack, prefix)
+        public SlotItem(int netId, int stack, byte prefix, bool favorite, int slot)
+            : base(netId, stack, prefix, favorite)
         {
             Slot = slot;
         }

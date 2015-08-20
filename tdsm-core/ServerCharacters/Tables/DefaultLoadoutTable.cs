@@ -71,7 +71,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Inventory)
                 {
-                    var id = ItemTable.NewItem(CharacterManager.ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Slot);
+                    var id = ItemTable.NewItem(CharacterManager.ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id);
                 }
             }
@@ -80,7 +80,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Armor)
                 {
-                    var id = ItemTable.NewItem(CharacterManager.ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Slot);
+                    var id = ItemTable.NewItem(CharacterManager.ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id);
                 }
             }
@@ -89,7 +89,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Dye)
                 {
-                    var id = ItemTable.NewItem(CharacterManager.ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Slot);
+                    var id = ItemTable.NewItem(CharacterManager.ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id);
                 }
             }

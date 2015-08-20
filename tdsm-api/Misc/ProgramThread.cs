@@ -14,7 +14,8 @@ namespace TDSM.API.Misc
             thread = new Thread((object arg) =>
             {
                 SetOSThreadName(name);
-                entrypoint();
+
+                    entrypoint();
             });
             thread.Name = name;
             thread.IsBackground = true;

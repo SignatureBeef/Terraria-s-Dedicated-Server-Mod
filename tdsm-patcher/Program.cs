@@ -340,8 +340,8 @@ namespace tdsm.patcher
 
             //            Console.Write("Ok\nPutting Terraria on a diet...");
             //            patcher.ChangeTileToStruct();
-            Console.Write("Ok\nHooking DEBUG...");
-            patcher.HookWorldFile_DEBUG();
+//            Console.Write("Ok\nHooking DEBUG...");
+//            patcher.HookWorldFile_DEBUG();
 
             Console.Write("Ok\n");
 
