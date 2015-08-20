@@ -21,6 +21,10 @@ namespace TDSM.Core.ServerCharacters
         public SlotItem[] Armor { get; set; }
 
         public SlotItem[] Dye { get; set; }
+
+        public SlotItem[] Equipment { get; set; }
+
+        public SlotItem[] MiscDyes { get; set; }
     }
 
     public class ServerCharacter : IDisposable
@@ -66,6 +70,10 @@ namespace TDSM.Core.ServerCharacters
         public System.Collections.Generic.List<SlotItem> Dye { get; set; }
 
         public System.Collections.Generic.List<SlotItem> Armor { get; set; }
+
+        public System.Collections.Generic.List<SlotItem> Equipment { get; set; }
+
+        public System.Collections.Generic.List<SlotItem> MiscDyes { get; set; }
 
         public int AnglerQuests { get; set; }
 
@@ -123,6 +131,16 @@ namespace TDSM.Core.ServerCharacters
                 .ToList();
 
             this.Armor = player.armor
+                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, item.favorited, index))
+                .Where(x => x != null)
+                .ToList();
+
+            this.Equipment = player.miscEquips
+                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, item.favorited, index))
+                .Where(x => x != null)
+                .ToList();
+
+            this.MiscDyes = player.miscDyes
                 .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, item.favorited, index))
                 .Where(x => x != null)
                 .ToList();
@@ -191,6 +209,8 @@ namespace TDSM.Core.ServerCharacters
             if (info.Inventory != null) this.Inventory = info.Inventory.ToList();
             if (info.Armor != null) this.Armor = info.Armor.ToList();
             if (info.Dye != null) this.Dye = info.Dye.ToList();
+            if (info.Equipment != null) this.Equipment = info.Equipment.ToList();
+            if (info.MiscDyes != null) this.MiscDyes = info.MiscDyes.ToList();
 
             this.Buffs = player.buffType;
             this.BuffTime = player.buffTime;
@@ -238,91 +258,132 @@ namespace TDSM.Core.ServerCharacters
 
             try
             {
-                //Reset and populate inventory
-                //                player.inventory = Enumerable.Repeat(new Item(){ name = String.Empty }, player.inventory.Length).ToArray();
-                player.inventory = new Item[player.inventory.Length];
-                for (var i = 0; i < player.inventory.Length; i++)
-                {
-                    player.inventory[i] = new Item();
-                    player.inventory[i].name = String.Empty;
-                    player.inventory[i].SetDefaults(0);
-                }
-
-                if (this.Inventory != null)
-                    foreach (var slotItem in this.Inventory)
-                    {
-                        var item = player.inventory[slotItem.Slot];
-
-                        item.netDefaults(slotItem.NetId);
-                        item.stack = slotItem.Stack;
-                        item.Prefix(slotItem.Prefix);
-                        item.favorited = slotItem.Favorite;
-
-                        player.inventory[slotItem.Slot] = item;
-                    }
+                ApplyItems(ref player.inventory, this.Inventory);
             }
             catch (Exception e)
             {
                 ProgramLog.Log(e, "Failed to apply player inventory");
             }
-
             try
             {
-                //Reset and populate dye
-                //                player.dye = Enumerable.Repeat(new Item(){ name = String.Empty }, player.dye.Length).ToArray();
-                player.dye = new Item[player.dye.Length];
-                for (var i = 0; i < player.dye.Length; i++)
-                {
-                    player.dye[i] = new Item();
-                    player.dye[i].name = String.Empty;
-                    player.dye[i].SetDefaults(0);
-                }
-                if (this.Dye != null)
-                    foreach (var slotItem in this.Dye)
-                    {
-                        var item = player.dye[slotItem.Slot];
-
-                        item.netDefaults(slotItem.NetId);
-                        item.stack = slotItem.Stack;
-                        item.Prefix(slotItem.Prefix);
-                        item.favorited = slotItem.Favorite;
-
-                        player.dye[slotItem.Slot] = item;
-                    }
-            }
-            catch (Exception e)
-            {
-                ProgramLog.Log(e, "Failed to apply player dye");
-            }
-
-            try
-            {
-                //Reset and populate armor
-                //                player.armor = Enumerable.Repeat(new Item(){ name = String.Empty }, player.armor.Length).ToArray();
-                player.armor = new Item[player.armor.Length];
-                for (var i = 0; i < player.armor.Length; i++)
-                {
-                    player.armor[i] = new Item();
-                    player.armor[i].name = String.Empty;
-                    player.armor[i].SetDefaults(0);
-                }
-                if (this.Armor != null)
-                    foreach (var slotItem in this.Armor)
-                    {
-                        var item = player.armor[slotItem.Slot];
-
-                        item.netDefaults(slotItem.NetId);
-                        item.stack = slotItem.Stack;
-                        item.Prefix(slotItem.Prefix);
-                        item.favorited = slotItem.Favorite;
-
-                        player.armor[slotItem.Slot] = item;
-                    }
+                ApplyItems(ref player.armor, this.Armor);
             }
             catch (Exception e)
             {
                 ProgramLog.Log(e, "Failed to apply player armor");
             }
+            try
+            {
+                ApplyItems(ref player.dye, this.Dye);
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to apply player dye");
+            }
+            try
+            {
+                ApplyItems(ref player.miscEquips, this.Equipment);
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to apply player equipment");
+            }
+            try
+            {
+                ApplyItems(ref player.miscDyes, this.MiscDyes);
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to apply player misc dyes");
+            }
+
+//            try
+//            {
+//                //Reset and populate inventory
+//                //                player.inventory = Enumerable.Repeat(new Item(){ name = String.Empty }, player.inventory.Length).ToArray();
+//                player.inventory = new Item[player.inventory.Length];
+//                for (var i = 0; i < player.inventory.Length; i++)
+//                {
+//                    player.inventory[i] = new Item();
+//                    player.inventory[i].name = String.Empty;
+//                    player.inventory[i].SetDefaults(0);
+//                }
+//
+//                if (this.Inventory != null)
+//                    foreach (var slotItem in this.Inventory)
+//                    {
+//                        var item = player.inventory[slotItem.Slot];
+//
+//                        item.netDefaults(slotItem.NetId);
+//                        item.stack = slotItem.Stack;
+//                        item.Prefix(slotItem.Prefix);
+//                        item.favorited = slotItem.Favorite;
+//
+//                        player.inventory[slotItem.Slot] = item;
+//                    }
+//            }
+//            catch (Exception e)
+//            {
+//                ProgramLog.Log(e, "Failed to apply player inventory");
+//            }
+//
+//            try
+//            {
+//                //Reset and populate dye
+//                //                player.dye = Enumerable.Repeat(new Item(){ name = String.Empty }, player.dye.Length).ToArray();
+//                player.dye = new Item[player.dye.Length];
+//                for (var i = 0; i < player.dye.Length; i++)
+//                {
+//                    player.dye[i] = new Item();
+//                    player.dye[i].name = String.Empty;
+//                    player.dye[i].SetDefaults(0);
+//                }
+//                if (this.Dye != null)
+//                    foreach (var slotItem in this.Dye)
+//                    {
+//                        var item = player.dye[slotItem.Slot];
+//
+//                        item.netDefaults(slotItem.NetId);
+//                        item.stack = slotItem.Stack;
+//                        item.Prefix(slotItem.Prefix);
+//                        item.favorited = slotItem.Favorite;
+//
+//                        player.dye[slotItem.Slot] = item;
+//                    }
+//            }
+//            catch (Exception e)
+//            {
+//                ProgramLog.Log(e, "Failed to apply player dye");
+//            }
+//
+//            try
+//            {
+//                //Reset and populate armor
+//                //                player.armor = Enumerable.Repeat(new Item(){ name = String.Empty }, player.armor.Length).ToArray();
+//                player.armor = new Item[player.armor.Length];
+//                for (var i = 0; i < player.armor.Length; i++)
+//                {
+//                    player.armor[i] = new Item();
+//                    player.armor[i].name = String.Empty;
+//                    player.armor[i].SetDefaults(0);
+//                }
+//                if (this.Armor != null)
+//                    foreach (var slotItem in this.Armor)
+//                    {
+//                        var item = player.armor[slotItem.Slot];
+//
+//                        item.netDefaults(slotItem.NetId);
+//                        item.stack = slotItem.Stack;
+//                        item.Prefix(slotItem.Prefix);
+//                        item.favorited = slotItem.Favorite;
+//
+//                        player.armor[slotItem.Slot] = item;
+//                    }
+//            }
+//            catch (Exception e)
+//            {
+//                ProgramLog.Log(e, "Failed to apply player armor");
+//            }
 
             try
             {
@@ -333,6 +394,30 @@ namespace TDSM.Core.ServerCharacters
             {
                 ProgramLog.Log(e, "Failed to send player data");
             }
+        }
+
+        private void ApplyItems(ref Item[] items, System.Collections.Generic.List< SlotItem> source)
+        {
+            //Reset and populate
+            items = new Item[items.Length];
+            for (var i = 0; i < items.Length; i++)
+            {
+                items[i] = new Item();
+                items[i].name = String.Empty;
+                items[i].SetDefaults(0);
+            }
+            if (source != null)
+                foreach (var slotItem in source)
+                {
+                    var item = items[slotItem.Slot];
+
+                    item.netDefaults(slotItem.NetId);
+                    item.stack = slotItem.Stack;
+                    item.Prefix(slotItem.Prefix);
+                    item.favorited = slotItem.Favorite;
+
+                    items[slotItem.Slot] = item;
+                }
         }
 
         public void Send(Player player)
@@ -442,12 +527,31 @@ namespace TDSM.Core.ServerCharacters
 
             this.AnglerQuests = 0;
 
-            this.Inventory.Clear();
-            this.Inventory = null;
-            this.Dye.Clear();
-            this.Dye = null;
-            this.Armor.Clear();
-            this.Armor = null;
+            if (this.Inventory != null)
+            {
+                this.Inventory.Clear();
+                this.Inventory = null;
+            }
+            if (this.Dye != null)
+            {
+                this.Dye.Clear();
+                this.Dye = null;
+            }
+            if (this.Armor != null)
+            {
+                this.Armor.Clear();
+                this.Armor = null;
+            }
+            if (this.Equipment != null)
+            {
+                this.Equipment.Clear();
+                this.Equipment = null;
+            }
+            if (this.MiscDyes != null)
+            {
+                this.MiscDyes.Clear();
+                this.MiscDyes = null;
+            }
 
             this.Buffs = null;
             this.BuffTime = null;

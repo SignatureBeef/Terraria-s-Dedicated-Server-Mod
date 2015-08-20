@@ -19,7 +19,9 @@ namespace TDSM.Core.ServerCharacters
         {
             Inventory = 1,
             Armor,
-            Dye
+            Dye,
+            Equipment,
+            MiscDyes
         }
 
         public static CharacterMode Mode { get; set; }
@@ -150,6 +152,12 @@ namespace TDSM.Core.ServerCharacters
 
                         var dye = Tables.ItemTable.GetItemsForCharacter(ItemType.Dye, ssc.Id);
                         if (null != dye) ssc.Dye = dye.ToList();
+
+                        var equipment = Tables.ItemTable.GetItemsForCharacter(ItemType.Equipment, ssc.Id);
+                        if (null != equipment) ssc.Equipment = equipment.ToList();
+
+                        var miscdye = Tables.ItemTable.GetItemsForCharacter(ItemType.MiscDyes, ssc.Id);
+                        if (null != miscdye) ssc.MiscDyes = miscdye.ToList();
 
                         return ssc;
                     }
@@ -284,96 +292,101 @@ namespace TDSM.Core.ServerCharacters
 
                     if (characterId > 0)
                     {
-                        for (var i = 0; i < player.inventory.Length; i++)
-                        {
-                            var item = player.inventory[i];
-                            var netId = 0;
-                            var prefix = 0;
-                            var stack = 0;
-                            var favorite = false;
-
-                            if (item != null)
-                            {
-                                netId = item.netID;
-                                prefix = item.prefix;
-                                stack = item.stack;
-                                favorite = item.favorited;
-                            }
-
-                            var itemId = Tables.ItemTable.GetItem(ItemType.Inventory, i, characterId);
-                            if (itemId > 0)
-                            {
-                                if (!Tables.ItemTable.UpdateItem(ItemType.Inventory, netId, prefix, stack, favorite, i, characterId))
-                                {
-                                    ProgramLog.Error.Log("Failed to save Inventory for player: {0}", player.Name);
-                                    return false;
-                                }
-                            }
-                            else
-                            {
-                                itemId = Tables.ItemTable.NewItem(ItemType.Inventory, netId, prefix, stack, favorite, i, characterId);
-                            }
-                        }
-                        for (var i = 0; i < player.armor.Length; i++)
-                        {
-                            var item = player.armor[i];
-                            var netId = 0;
-                            var prefix = 0;
-                            var stack = 0;
-                            var favorite = false;
-
-                            if (item != null)
-                            {
-                                netId = item.netID;
-                                prefix = item.prefix;
-                                stack = item.stack;
-                                favorite = item.favorited;
-                            }
-
-                            var itemId = Tables.ItemTable.GetItem(ItemType.Armor, i, characterId);
-                            if (itemId > 0)
-                            {
-                                if (!Tables.ItemTable.UpdateItem(ItemType.Armor, netId, prefix, stack, favorite, i, characterId))
-                                {
-                                    ProgramLog.Error.Log("Failed to save Armor for player: {0}", player.Name);
-                                    return false;
-                                }
-                            }
-                            else
-                            {
-                                itemId = Tables.ItemTable.NewItem(ItemType.Armor, netId, prefix, stack,favorite, i, characterId);
-                            }
-                        }
-                        for (var i = 0; i < player.dye.Length; i++)
-                        {
-                            var item = player.dye[i];
-                            var netId = 0;
-                            var prefix = 0;
-                            var stack = 0;
-                            var favorite = false;
-
-                            if (item != null)
-                            {
-                                netId = item.netID;
-                                prefix = item.prefix;
-                                stack = item.stack;
-                                favorite = item.favorited;
-                            }
-
-                            var itemId = Tables.ItemTable.GetItem(ItemType.Dye, i, characterId);
-                            if (itemId > 0)
-                            {
-                                if (!Tables.ItemTable.UpdateItem(ItemType.Dye, netId, prefix, stack, favorite, i, characterId))
-                                {
-                                    ProgramLog.Error.Log("Failed to save Dye for player: {0}", player.Name);
-                                    return false;
-                                }
-                            }
-                            else
-                            {
-                                itemId = Tables.ItemTable.NewItem(ItemType.Dye, netId, prefix, stack, favorite, i, characterId);
-                            }
-                        }
+                        if (!SaveCharacterItems(player, characterId, player.inventory, ItemType.Inventory)) return false;
+                        if (!SaveCharacterItems(player, characterId, player.armor, ItemType.Armor)) return false;
+                        if (!SaveCharacterItems(player, characterId, player.dye, ItemType.Dye)) return false;
+                        if (!SaveCharacterItems(player, characterId, player.miscEquips, ItemType.Equipment)) return false;
+                        if (!SaveCharacterItems(player, characterId, player.miscDyes, ItemType.MiscDyes)) return false;
+//                        for (var i = 0; i < player.inventory.Length; i++)
+//                        {
+//                            var item = player.inventory[i];
+//                            var netId = 0;
+//                            var prefix = 0;
+//                            var stack = 0;
+//                            var favorite = false;
+//
+//                            if (item != null)
+//                            {
+//                                netId = item.netID;
+//                                prefix = item.prefix;
+//                                stack = item.stack;
+//                                favorite = item.favorited;
+//                            }
+//
+//                            var itemId = Tables.ItemTable.GetItem(ItemType.Inventory, i, characterId);
+//                            if (itemId > 0)
+//                            {
+//                                if (!Tables.ItemTable.UpdateItem(ItemType.Inventory, netId, prefix, stack, favorite, i, characterId))
+//                                {
+//                                    ProgramLog.Error.Log("Failed to save Inventory for player: {0}", player.Name);
+//                                    return false;
+//                                }
+//                            }
+//                            else
+//                            {
+//                                itemId = Tables.ItemTable.NewItem(ItemType.Inventory, netId, prefix, stack, favorite, i, characterId);
+//                            }
+//                        }
+//                        for (var i = 0; i < player.armor.Length; i++)
+//                        {
+//                            var item = player.armor[i];
+//                            var netId = 0;
+//                            var prefix = 0;
+//                            var stack = 0;
+//                            var favorite = false;
+//
+//                            if (item != null)
+//                            {
+//                                netId = item.netID;
+//                                prefix = item.prefix;
+//                                stack = item.stack;
+//                                favorite = item.favorited;
+//                            }
+//
+//                            var itemId = Tables.ItemTable.GetItem(ItemType.Armor, i, characterId);
+//                            if (itemId > 0)
+//                            {
+//                                if (!Tables.ItemTable.UpdateItem(ItemType.Armor, netId, prefix, stack, favorite, i, characterId))
+//                                {
+//                                    ProgramLog.Error.Log("Failed to save Armor for player: {0}", player.Name);
+//                                    return false;
+//                                }
+//                            }
+//                            else
+//                            {
+//                                itemId = Tables.ItemTable.NewItem(ItemType.Armor, netId, prefix, stack, favorite, i, characterId);
+//                            }
+//                        }
+//                        for (var i = 0; i < player.dye.Length; i++)
+//                        {
+//                            var item = player.dye[i];
+//                            var netId = 0;
+//                            var prefix = 0;
+//                            var stack = 0;
+//                            var favorite = false;
+//
+//                            if (item != null)
+//                            {
+//                                netId = item.netID;
+//                                prefix = item.prefix;
+//                                stack = item.stack;
+//                                favorite = item.favorited;
+//                            }
+//
+//                            var itemId = Tables.ItemTable.GetItem(ItemType.Dye, i, characterId);
+//                            if (itemId > 0)
+//                            {
+//                                if (!Tables.ItemTable.UpdateItem(ItemType.Dye, netId, prefix, stack, favorite, i, characterId))
+//                                {
+//                                    ProgramLog.Error.Log("Failed to save Dye for player: {0}", player.Name);
+//                                    return false;
+//                                }
+//                            }
+//                            else
+//                            {
+//                                itemId = Tables.ItemTable.NewItem(ItemType.Dye, netId, prefix, stack, favorite, i, characterId);
+//                            }
+//                        }
                     }
                 }
                 else
@@ -405,6 +418,42 @@ namespace TDSM.Core.ServerCharacters
                 }
             }
             return false;
+        }
+
+        private static bool SaveCharacterItems(Player player, int characterId, Item[] items, ItemType type)
+        {
+            for (var i = 0; i < items.Length; i++)
+            {
+                var item = items[i];
+                var netId = 0;
+                var prefix = 0;
+                var stack = 0;
+                var favorite = false;
+
+                if (item != null)
+                {
+                    netId = item.netID;
+                    prefix = item.prefix;
+                    stack = item.stack;
+                    favorite = item.favorited;
+                }
+
+                var itemId = Tables.ItemTable.GetItem(type, i, characterId);
+                if (itemId > 0)
+                {
+                    if (!Tables.ItemTable.UpdateItem(type, netId, prefix, stack, favorite, i, characterId))
+                    {
+                        ProgramLog.Error.Log("Failed to save {1} for player: {0}", player.Name, type.ToString());
+                        return false;
+                    }
+                }
+                else
+                {
+                    itemId = Tables.ItemTable.NewItem(type, netId, prefix, stack, favorite, i, characterId);
+                }
+            }
+
+            return true;
         }
 
         public static void LoadForAuthenticated(Player player, bool createIfNone = true)
