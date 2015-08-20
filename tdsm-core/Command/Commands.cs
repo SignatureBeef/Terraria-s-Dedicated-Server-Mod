@@ -583,6 +583,125 @@ namespace TDSM.Core
         ////    }
         ////}
 
+        void WhitelistMan(ISender sender, ArgumentList args)
+        {
+            var index = 0;
+            var cmd = args.GetString(index++);
+            string name, ip;
+
+            switch (cmd)
+            {
+                case "status":
+                case "current":
+                case "?":
+                    sender.Message("The whitelist is currently " + (WhitelistEnabled ? "enabled" : "disabled"));
+                    break;
+                case "reload":
+                    Whitelist.Load();
+                    Tools.NotifyAllOps("The whitelist was reloaded");
+                    if (!sender.Op) sender.Message("The whitelist was reloaded", Color.Green);
+                    break;
+                case "enable":
+                    if (!WhitelistEnabled)
+                    {
+                        WhitelistEnabled = true;
+
+                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("usewhitelist", WhitelistEnabled))
+                        {
+                            Tools.NotifyAllOps("The whitelist was enabled");
+                            if (!sender.Op) sender.Message("The whitelist was enabled", Color.Green);
+                        }
+                        else sender.Message("Failed to save to config, whitelist is only enabled this session.", Color.Red);
+                    }
+                    else sender.Message("The whitelist is already enabled", Color.Red);
+                    break;
+                case "disable":
+                    if (WhitelistEnabled)
+                    {
+                        WhitelistEnabled = false;
+
+                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("usewhitelist", WhitelistEnabled))
+                        {
+                            Tools.NotifyAllOps("The whitelist was disabled");
+                            if (!sender.Op) sender.Message("The whitelist was disabled", Color.Green);
+                        }
+                        else sender.Message("Failed to save to config, whitelist is only disabled this session.", Color.Red);
+                    }
+                    else sender.Message("The whitelist is already disabled", Color.Red);
+                    break;
+
+                case "addplayer":
+                    if (!args.TryGetString(index++, out name))
+                    {
+                        throw new CommandError("Expected player name after [addplayer]");
+                    }
+
+                    var addName = Prefix_WhitelistName + name;
+                    if (Whitelist.Add(addName))
+                    {
+                        Tools.NotifyAllOps(String.Format("Player {0} was added to the whitelist", name));
+                        if (!sender.Op) sender.Message(String.Format("Player {0} was added to the whitelist", name), Color.Green);
+
+                        if (!WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
+                    }
+
+                    else sender.Message("Failed to add " + name + " to the whitelist", Color.Red);
+                    break;
+                case "removeplayer":
+                    if (!args.TryGetString(index++, out name))
+                    {
+                        throw new CommandError("Expected player name after [removeplayer]");
+                    }
+
+                    var removeName = Prefix_WhitelistName + name;
+                    if (Whitelist.Remove(removeName))
+                    {
+                        Tools.NotifyAllOps(String.Format("Player {0} was removed from the whitelist", name));
+                        if (!sender.Op) sender.Message(String.Format("Player {0} was removed from the whitelist", name), Color.Green);
+
+                        if (!WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
+                    }
+                    else sender.Message("Failed to remove " + name + " from the whitelist", Color.Red);
+                    break;
+
+                case "addip":
+                    if (!args.TryGetString(index++, out ip))
+                    {
+                        throw new CommandError("Expected IP after [addip]");
+                    }
+
+                    var addIP = Prefix_WhitelistIp + ip;
+                    if (Whitelist.Add(addIP))
+                    {
+                        Tools.NotifyAllOps(String.Format("IP {0} was added to the whitelist", ip));
+                        if (!sender.Op) sender.Message(String.Format("IP {0} was added to the whitelist", ip), Color.Green);
+
+                        if (!WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
+                    }
+                    else sender.Message("Failed to add " + ip + " to the whitelist", Color.Red);
+                    break;
+                case "removeip":
+                    if (!args.TryGetString(index++, out ip))
+                    {
+                        throw new CommandError("Expected IP after [removeip]");
+                    }
+
+                    var removeIP = Prefix_WhitelistIp + ip;
+                    if (Whitelist.Remove(removeIP))
+                    {
+                        Tools.NotifyAllOps(String.Format("IP {0} was removed from the whitelist", ip));
+                        if (!sender.Op) sender.Message(String.Format("IP {0} was removed from the whitelist", ip), Color.Green);
+
+                        if (!WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
+                    }
+                    else sender.Message("Failed to remove " + ip + " from the whitelist", Color.Red);
+                    break;
+
+                default:
+                    throw new CommandError("Unknown whitelist command: " + cmd);
+            }
+        }
+
         ///// <summary>
         ///// Adds a player or ip (Exception) to the ban list.
         ///// </summary>

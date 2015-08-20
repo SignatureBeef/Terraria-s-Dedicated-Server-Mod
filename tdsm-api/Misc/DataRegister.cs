@@ -104,7 +104,7 @@ namespace TDSM.API.Misc
             lock (_data)
             {
                 System.Array.Resize(ref _data, _data.Length + 1);
-                _data[_data.Length - 1] = item.ToLower().Trim();
+                _data[_data.Length - 1] = (_lowerKeys ? item.ToLower() : item).Trim();
             }
 
             if (autoSave)

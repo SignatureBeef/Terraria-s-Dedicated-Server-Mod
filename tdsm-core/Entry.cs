@@ -34,6 +34,9 @@ namespace TDSM.Core
     {
         public const Int32 CoreBuild = 5;
 
+        const String Prefix_WhitelistName = "NAME:";
+        const String Prefix_WhitelistIp = "IP:";
+
         private bool _useTimeLock;
 
         public bool UseTimeLock
@@ -95,6 +98,10 @@ namespace TDSM.Core
 
         public static DataRegister Ops { get; private set; }
 
+        public static bool WhitelistEnabled { get; set; }
+
+        public static DataRegister Whitelist { get; private set; }
+
         public int ExitAccessLevel { get; set; }
 
         public bool EnableHeartbeat { get; set; }
@@ -155,6 +162,7 @@ namespace TDSM.Core
             CommandDictionary = new Dictionary<string, string>(Tools.MaxPlayers + 1);
             CommandParser = new CommandParser();
             Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
+            Whitelist = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "whitelist.txt"), false);
 #if WebInterface
             WebInterface.WebPermissions.Load();
 #endif
@@ -578,6 +586,15 @@ namespace TDSM.Core
                     NetMessage.SendData(55, -1, -1, "", (sender as Player).whoAmI, 21, time, 0, 0, 0, 0);
                     NetMessage.SendData(55, (sender as Player).whoAmI, -1, "", (sender as Player).whoAmI, 21, time);
                 });
+            
+            AddCommand("whitelist")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.whitelist")
+                .WithDescription("Manages the whitelist")
+                .WithHelpText("enable|disable|reload|?")
+                .WithHelpText("addplayer|removeplayer <name>")
+                .WithHelpText("addip|removeip <ip>")
+                .Calls(this.WhitelistMan);
 #endif
 
             if (!DefinitionManager.Initialise())
@@ -633,6 +650,7 @@ namespace TDSM.Core
                 }
             }
         }
+
         private void PreviousCommandHandle(ISender sender, ArgumentList args)
         {
             var player = sender as Player;
@@ -676,6 +694,7 @@ namespace TDSM.Core
                     CommandDictionary.Add("CONSOLE", args.Prefix + " " + args.ArgumentString);
             }
         }
+
         [Hook(HookOrder.NORMAL)]
         void OnInventoryItemReceived(ref HookContext ctx, ref HookArgs.InventoryItemReceived args)
         {
@@ -959,7 +978,7 @@ namespace TDSM.Core
         //    }
         //}
 
-#if TDSMServer
+        #if TDSMServer
         [Hook(HookOrder.NORMAL)]
         void OnDefaultServerStart(ref HookContext ctx, ref HookArgs.StartDefaultServer args)
         {
@@ -979,15 +998,13 @@ namespace TDSM.Core
         {
             switch (args.Key)
             {
-#if TDSMServer
                 case "usewhitelist":
                     bool usewhitelist;
                     if (Boolean.TryParse(args.Value, out usewhitelist))
                     {
-                        Server.WhitelistEnabled = usewhitelist;
+                        WhitelistEnabled = usewhitelist;
                     }
                     break;
-#endif
                 case "vanilla-linux":
                     bool vanillaOnly;
                     if (Boolean.TryParse(args.Value, out vanillaOnly))
@@ -1284,14 +1301,29 @@ namespace TDSM.Core
             }
         }
 
-        //        void OnPlayerDataReceived(ref HookContext ctx, ref HookArgs.PlayerDataReceived args)
-        //        {
-        //            //If the player is not authenticated, then ensure they are reset
-        //            if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
-        //            {
-        //
-        //            }
-        //        }
+        [Hook(HookOrder.FIRST)]
+        void OnPlayerDataReceived(ref HookContext ctx, ref HookArgs.PlayerDataReceived args)
+        {
+//            //If the player is not authenticated, then ensure they are reset
+//            if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
+//            {
+//        
+//            }
+
+            ProgramLog.Log("WhitelistEnabled: " + WhitelistEnabled);
+            if (WhitelistEnabled)
+            {
+                ProgramLog.Log("Checking whitelist access for " + args.Name);
+                var name = Prefix_WhitelistName + args.Name;
+                var ip = Prefix_WhitelistIp + ctx.Client.RemoteAddress();
+
+                if (!Whitelist.Contains(name) && !Whitelist.Contains(ip))
+                {
+                    ProgramLog.Log("Kicked");
+                    ctx.SetKick("You are not whitelisted");
+                }
+            }
+        }
 
         [Hook]
         void OnNetMessageSend(ref HookContext ctx, ref HookArgs.SendNetMessage args)
