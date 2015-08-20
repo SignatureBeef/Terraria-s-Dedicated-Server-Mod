@@ -44,11 +44,11 @@ The VPS server we are hosting it on was provided to us by CreeperHost. We want t
 If you can help with development, we would be happy to have your help! :) TDSM is written in C#. If you know other languages or would like to develop plugins instead, we need those too. Plugins can be written in C#, Lua, VB.NET, and F#.
 #### Plugins Wanted
 Here are a few Plugin ideas we would like to see. Of course you may make whatever kind of plugin you like.
+* Anti-Cheat  
+Different mechanisms for detecting cheating. One could be to detect post-hardmode items that exist in player inventory pre-hardmode and remove them, notify ops, or ban.
 * Regions / Home Protection  
 A block protection plugin for specific areas designated by a player.
 * Sort Containers / Inventory
-* ~~Last command, command.~~  
-~~For example, be able to issue `/!` command to re-execute the last command that player (or console) has used along with parameters.~~
 * PVP / Mini-game
 * Rollback / Anit-Grief protection
 * Player chat (Player prefixes/suffixes and colours)
