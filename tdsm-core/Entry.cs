@@ -1310,16 +1310,13 @@ namespace TDSM.Core
 //        
 //            }
 
-            ProgramLog.Log("WhitelistEnabled: " + WhitelistEnabled);
             if (WhitelistEnabled)
             {
-                ProgramLog.Log("Checking whitelist access for " + args.Name);
                 var name = Prefix_WhitelistName + args.Name;
                 var ip = Prefix_WhitelistIp + ctx.Client.RemoteAddress();
 
                 if (!Whitelist.Contains(name) && !Whitelist.Contains(ip))
                 {
-                    ProgramLog.Log("Kicked");
                     ctx.SetKick("You are not whitelisted");
                 }
             }
