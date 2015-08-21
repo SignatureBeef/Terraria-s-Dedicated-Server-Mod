@@ -62,6 +62,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Binaries\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ServerCharacters\CharacterManager.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="ServerCharacters\Tables\PlayerBuffTable.cs" />
     <Compile Include="ServerCharacters\Tables\DefaultLoadoutTable.cs" />
     <Compile Include="WebApi.cs" />
+    <Compile Include="Mono\Sigterm.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -100,6 +102,7 @@
   <ItemGroup>
     <Folder Include="RemoteConsole\" />
     <Folder Include="ServerCharacters\Tables\" />
+    <Folder Include="Mono\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">

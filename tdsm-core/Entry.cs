@@ -601,6 +601,11 @@ namespace TDSM.Core
             if (!DefinitionManager.Initialise())
                 ProgramLog.Log("Failed to initialise definitions.");
 
+            if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)
+            {
+                TDSM.Core.Mono.Sigterm.Attach();
+            }
+
             ProgramLog.Log("TDSM Rebind core enabled");
         }
 
@@ -656,8 +661,6 @@ namespace TDSM.Core
         private void Command(ref HookContext ctx, ref HookArgs.Command args)
         {
             if (args.Prefix == "!") return;
-            ProgramLog.Log("args.ArgumentString: " + args.ArgumentString);
-            ProgramLog.Log("args.Prefix: " + args.Prefix);
 
             //Perhaps here we can use the player's PluginData, and simply store a string for the console
             if (ctx.Sender is Player)
@@ -1239,6 +1242,10 @@ namespace TDSM.Core
                     TDSM.API.Web.WebServer.Stop();
                 }
 
+                if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)
+                {
+                    TDSM.Core.Mono.Sigterm.Detach();
+                }
             }
             if (args.ServerChangeState == ServerState.Starting)
             {
