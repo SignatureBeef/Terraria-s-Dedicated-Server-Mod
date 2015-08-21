@@ -21,7 +21,9 @@ namespace TDSM.Core.ServerCharacters
             Armor,
             Dye,
             Equipment,
-            MiscDyes
+            MiscDyes,
+            Bank,
+            Bank2
         }
 
         public static CharacterMode Mode { get; set; }
@@ -158,6 +160,12 @@ namespace TDSM.Core.ServerCharacters
 
                         var miscdye = Tables.ItemTable.GetItemsForCharacter(ItemType.MiscDyes, ssc.Id);
                         if (null != miscdye) ssc.MiscDyes = miscdye.ToList();
+
+                        var bank = Tables.ItemTable.GetItemsForCharacter(ItemType.Bank, ssc.Id);
+                        if (null != miscdye) ssc.Bank = bank.ToList();
+
+                        var bank2 = Tables.ItemTable.GetItemsForCharacter(ItemType.Bank2, ssc.Id);
+                        if (null != miscdye) ssc.Bank2 = bank2.ToList();
 
                         return ssc;
                     }

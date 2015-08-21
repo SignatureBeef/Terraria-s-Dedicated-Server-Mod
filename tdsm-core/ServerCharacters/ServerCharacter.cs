@@ -25,6 +25,10 @@ namespace TDSM.Core.ServerCharacters
         public SlotItem[] Equipment { get; set; }
 
         public SlotItem[] MiscDyes { get; set; }
+
+        public SlotItem[] Bank { get; set; }
+
+        public SlotItem[] Bank2 { get; set; }
     }
 
     public class ServerCharacter : IDisposable
@@ -74,6 +78,10 @@ namespace TDSM.Core.ServerCharacters
         public System.Collections.Generic.List<SlotItem> Equipment { get; set; }
 
         public System.Collections.Generic.List<SlotItem> MiscDyes { get; set; }
+
+        public System.Collections.Generic.List<SlotItem> Bank { get; set; }
+
+        public System.Collections.Generic.List<SlotItem> Bank2 { get; set; }
 
         public int AnglerQuests { get; set; }
 
@@ -145,6 +153,16 @@ namespace TDSM.Core.ServerCharacters
                 .Where(x => x != null)
                 .ToList();
 
+            this.Bank = player.bank.item
+                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, item.favorited, index))
+                .Where(x => x != null)
+                .ToList();
+
+            this.Bank2 = player.bank2.item
+                .Select((item, index) => item == null ? null : new SlotItem(item.netID, item.stack, item.prefix, item.favorited, index))
+                .Where(x => x != null)
+                .ToList();
+
             this.Buffs = player.buffType;
             this.BuffTime = player.buffTime;
 
@@ -211,6 +229,8 @@ namespace TDSM.Core.ServerCharacters
             if (info.Dye != null) this.Dye = info.Dye.ToList();
             if (info.Equipment != null) this.Equipment = info.Equipment.ToList();
             if (info.MiscDyes != null) this.MiscDyes = info.MiscDyes.ToList();
+            if (info.Bank != null) this.Bank = info.Bank.ToList();
+            if (info.Bank2 != null) this.Bank2 = info.Bank2.ToList();
 
             this.Buffs = player.buffType;
             this.BuffTime = player.buffTime;
@@ -295,6 +315,22 @@ namespace TDSM.Core.ServerCharacters
             catch (Exception e)
             {
                 ProgramLog.Log(e, "Failed to apply player misc dyes");
+            }
+            try
+            {
+                ApplyItems(ref player.bank.item, this.Bank);
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to apply player bank items");
+            }
+            try
+            {
+                ApplyItems(ref player.bank2.item, this.Bank2);
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to apply player bank (2) items");
             }
 
 //            try
@@ -551,6 +587,16 @@ namespace TDSM.Core.ServerCharacters
             {
                 this.MiscDyes.Clear();
                 this.MiscDyes = null;
+            }
+            if (this.Bank != null)
+            {
+                this.Bank.Clear();
+                this.Bank = null;
+            }
+            if (this.Bank2 != null)
+            {
+                this.Bank2.Clear();
+                this.Bank2 = null;
             }
 
             this.Buffs = null;

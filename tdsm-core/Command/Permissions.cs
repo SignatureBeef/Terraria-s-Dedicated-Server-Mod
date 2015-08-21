@@ -365,7 +365,10 @@ namespace TDSM.Core
                     groupName = String.Empty;
                     if (!args.TryGetBool(a, out op))
                     {
-                        args.TryGetString(a++, out groupName);
+                        if (!args.TryGetString(a++, out groupName))
+                        {
+                            groupName = String.Empty;
+                        }
                     }
                     else a++;
 
