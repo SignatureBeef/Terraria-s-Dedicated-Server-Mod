@@ -137,14 +137,14 @@ namespace TDSM.Core.ServerCharacters
 
             if (!String.IsNullOrEmpty(authName))
             {
-                ProgramLog.Log("Loading SSC for " + authName);
+//                ProgramLog.Log("Loading SSC for " + authName);
                 if (Storage.IsAvailable)
                 {
                     var ssc = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId);
 
                     if (ssc != null)
                     {
-                        ProgramLog.Log("Loading SSC loadout");
+//                        ProgramLog.Log("Loading SSC loadout");
 
                         var inv = Tables.ItemTable.GetItemsForCharacter(ItemType.Inventory, ssc.Id);
                         if (null != inv) ssc.Inventory = inv.ToList();
@@ -162,10 +162,10 @@ namespace TDSM.Core.ServerCharacters
                         if (null != miscdye) ssc.MiscDyes = miscdye.ToList();
 
                         var bank = Tables.ItemTable.GetItemsForCharacter(ItemType.Bank, ssc.Id);
-                        if (null != miscdye) ssc.Bank = bank.ToList();
+                        if (null != bank) ssc.Bank = bank.ToList();
 
                         var bank2 = Tables.ItemTable.GetItemsForCharacter(ItemType.Bank2, ssc.Id);
-                        if (null != miscdye) ssc.Bank2 = bank2.ToList();
+                        if (null != bank2) ssc.Bank2 = bank2.ToList();
 
                         return ssc;
                     }
@@ -173,7 +173,7 @@ namespace TDSM.Core.ServerCharacters
                     {
                         if (returnNewInfo)
                         {
-                            ProgramLog.Log("Issuing new loadout");
+//                            ProgramLog.Log("Issuing new loadout");
                             //                        player.SetPluginData(Key_NewCharacter, true);
                             EnsureSave = true; //Save is now required
                             return new ServerCharacter(StartingOutInfo, player);
@@ -187,12 +187,12 @@ namespace TDSM.Core.ServerCharacters
                         Directory.CreateDirectory(dir);
 
                     var file = Path.Combine(dir, authName + ".ssc");
-                    if (true == false && System.IO.File.Exists(file))
+                    if (System.IO.File.Exists(file))
                     {
                         var json = System.IO.File.ReadAllText(file);
                         if (json.Length > 0)
                         {
-                            ProgramLog.Log("Loading existing loadout");
+//                            ProgramLog.Log("Loading existing loadout");
                             return Newtonsoft.Json.JsonConvert.DeserializeObject<ServerCharacter>(json);
                         }
                         else
@@ -203,7 +203,7 @@ namespace TDSM.Core.ServerCharacters
 
                     if (returnNewInfo)
                     {
-                        ProgramLog.Log("Issuing new loadout");
+//                        ProgramLog.Log("Issuing new loadout");
 //                        player.SetPluginData(Key_NewCharacter, true);
                         EnsureSave = true; //Save is now required
                         return new ServerCharacter(StartingOutInfo, player);

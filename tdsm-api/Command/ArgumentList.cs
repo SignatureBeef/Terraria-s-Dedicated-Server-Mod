@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 #if Full_API
 using Terraria;
@@ -8,35 +9,43 @@ namespace TDSM.API.Command
 {
     public class CommandError : ApplicationException
     {
-        public CommandError(string message) : base(message) { }
-        public CommandError(string fmt, params object[] args) : base(String.Format(fmt, args)) { }
+        public CommandError(string message) : base(message)
+        {
+        }
+
+        public CommandError(string fmt, params object[] args) : base(String.Format(fmt, args))
+        {
+        }
     }
 
     public class ArgumentList : List<string>
     {
         public object Plugin { get; set; }
 
-        public ArgumentList() { }
+        public ArgumentList()
+        {
+        }
 
         static readonly Dictionary<System.Type, string> typeNames = new Dictionary<System.Type, string>()
-		{
-			{ typeof(string),   "a string" },
-			{ typeof(int),      "an integer number" },
-			{ typeof(double),   "a number" },
-			{ typeof(bool),     "a boolean value" },
+        {
+            { typeof(string),   "a string" },
+            { typeof(int),      "an integer number" },
+            { typeof(double),   "a number" },
+            { typeof(bool),     "a boolean value" },
 			#if Full_API
-			{ typeof(Player),   "an online player's name" },
+            { typeof(Player),   "an online player's name" },
 			#endif
-			{ typeof(TimeSpan), "a duration" },
-		};
+            { typeof(TimeSpan), "a duration" },
+        };
 
-        static readonly Dictionary<string, bool> booleanValues = new Dictionary<string, bool>() {
-			{ "true", true }, { "yes", true }, { "+", true }, { "1", true },
-			{ "enable", true }, { "enabled", true }, { "on", true },
+        static readonly Dictionary<string, bool> booleanValues = new Dictionary<string, bool>()
+        {
+            { "true", true }, { "yes", true }, { "+", true }, { "1", true },
+            { "enable", true }, { "enabled", true }, { "on", true },
 			
-			{ "false", false }, { "no", false }, { "-", false }, { "0", false },
-			{ "disable", false }, { "disabled", false }, { "off", false },
-		};
+            { "false", false }, { "no", false }, { "-", false }, { "0", false },
+            { "disable", false }, { "disabled", false }, { "off", false },
+        };
 
         public string GetString(int at)
         {
@@ -223,7 +232,7 @@ namespace TDSM.API.Command
             return booleanValues.TryGetValue(lower, out val);
         }
 
-#if Full_API
+        #if Full_API
         public Player GetOnlinePlayer(int at)
         {
             if (at >= Count) throw new CommandError("Too few arguments given.");
@@ -262,7 +271,7 @@ namespace TDSM.API.Command
 
             return false;
         }
-#endif
+        #endif
 
         bool TryParseAt<T>(int at, out T t)
         {
@@ -609,7 +618,7 @@ namespace TDSM.API.Command
 
         public override string ToString()
         {
-            return String.Join(" ", this.ToArray());
+            return String.Join(" ", this.Select(x => x.Replace(" ", "\\ ")).ToArray());
         }
     }
 
@@ -619,7 +628,9 @@ namespace TDSM.API.Command
         public const double TimeMin = 0;
 
         public byte Hour { get; set; }
+
         public byte Minute { get; set; }
+
         public bool AM { get; set; }
 
         public double GameTime
@@ -698,7 +709,7 @@ namespace TDSM.API.Command
             return String.Format("{0}:{1:00} {2}", Hour, Minute, AM ? "AM" : "PM");
         }
 
-#if true
+        #if true
         public static bool Test()
         {
             if ((new WorldTime()
@@ -775,6 +786,6 @@ namespace TDSM.API.Command
 
             return true;
         }
-#endif
+        #endif
     }
 }

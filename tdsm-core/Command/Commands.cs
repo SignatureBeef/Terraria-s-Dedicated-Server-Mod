@@ -2680,5 +2680,28 @@ namespace TDSM.Core
 
             sender.Message("Killed {0} npc(s)", Color.Green, killed);
         }
+
+        private void PreviousCommandHandle(ISender sender, ArgumentList args)
+        {
+            var player = sender as Player;
+            if (player != null)
+            {
+                if (CommandDictionary.ContainsKey(player.Name))
+                {
+                    CommandParser.ParsePlayerCommand(player, CommandDictionary[player.Name]);
+                    ProgramLog.Log("Executed {0}'s previous command: {1}", player.Name, CommandDictionary[player.Name]);
+                }
+                else
+                    sender.SendMessage("No Previous Command", 255, 255, 20, 20);
+                //ProgramLog.Log("{0}", ctx.Player.Name); //, args.Prefix + " " + args.ArgumentString);
+            }
+            if (sender is ConsoleSender)
+            {
+                if (CommandDictionary.ContainsKey("CONSOLE"))
+                    CommandParser.ParseConsoleCommand(CommandDictionary["CONSOLE"]);
+                else
+                    sender.SendMessage("No Previous Command", 255, 255, 20, 20);
+            }
+        }
     }
 }

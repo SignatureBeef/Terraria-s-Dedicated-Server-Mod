@@ -652,42 +652,22 @@ namespace TDSM.Core
             }
         }
 
-        private void PreviousCommandHandle(ISender sender, ArgumentList args)
-        {
-            var player = sender as Player;
-            if (player != null)
-            {
-                if (CommandDictionary.ContainsKey(player.Name))
-                {
-                    CommandParser.ParsePlayerCommand(player, CommandDictionary[player.Name]);
-                    ProgramLog.Log("Executed {0}'s previous command: {1}", player.Name, CommandDictionary[player.Name]);
-                }
-                else
-                    sender.SendMessage("No Previous Command", 255, 255, 20, 20);
-                //ProgramLog.Log("{0}", ctx.Player.Name); //, args.Prefix + " " + args.ArgumentString);
-            }
-            if (sender is ConsoleSender)
-            {
-                if (CommandDictionary.ContainsKey("CONSOLE"))
-                    CommandParser.ParseConsoleCommand(CommandDictionary["CONSOLE"]);
-                else
-                    sender.SendMessage("No Previous Command", 255, 255, 20, 20);
-            }
-        }
-
         [Hook(HookOrder.LATE)]
         private void Command(ref HookContext ctx, ref HookArgs.Command args)
         {
             if (args.Prefix == "!") return;
+            ProgramLog.Log("args.ArgumentString: " + args.ArgumentString);
+            ProgramLog.Log("args.Prefix: " + args.Prefix);
 
-            if (ctx.Player != null)
+            //Perhaps here we can use the player's PluginData, and simply store a string for the console
+            if (ctx.Sender is Player)
             {
                 if (CommandDictionary.ContainsKey(ctx.Player.Name))
                     CommandDictionary[ctx.Player.Name] = "/" + args.Prefix + " " + args.ArgumentString;
                 else
                     CommandDictionary.Add(ctx.Player.Name, "/" + args.Prefix + " " + args.ArgumentString);
             }
-            if (ctx.Sender is ConsoleSender)
+            else if (ctx.Sender is ConsoleSender)
             {
                 if (CommandDictionary.ContainsKey("CONSOLE"))
                     CommandDictionary["CONSOLE"] = args.Prefix + " " + args.ArgumentString;
