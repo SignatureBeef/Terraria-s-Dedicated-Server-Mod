@@ -1201,7 +1201,7 @@ namespace TDSM.Core
         //Late so other plugins can perform alterations
         void OnPlayerKilled(ref HookContext ctx, ref HookArgs.PlayerKilled args)
         {
-            if (true == true || _likeABoss)
+            if (_likeABoss)
             {
                 if (Terraria.Main.rand == null) Terraria.Main.rand = new Random();
 
