@@ -118,5 +118,41 @@ namespace TDSM.API.Callbacks
 
             return false; //We implemented our own, so do not continue on with vanilla
         }
+
+        public static string OnDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)
+        {
+//            ProgramLog.Log("DEATH");
+//            return "DEATH";
+            var args = new HookArgs.DeathMessage()
+            {
+                Player = plr,
+                NPC = npc,
+                Projectile = proj,
+                Other = other
+            };
+
+            Terraria.Player player = null;
+            TDSM.API.Command.ISender sender = null;
+
+            if (plr > -1 && plr < Terraria.Main.player.Length)
+            {
+                player = Terraria.Main.player[plr];
+                sender = player;
+            }
+            if (npc > -1 && npc < Terraria.Main.npc.Length) sender = Terraria.Main.npc[npc];
+            if (proj > -1 && proj < Terraria.Main.projectile.Length) sender = Terraria.Main.projectile[proj];
+
+            var ctx = new HookContext()
+            {
+                Sender = sender,
+                Player = player
+            };
+
+            HookPoints.DeathMessage.Invoke(ref ctx, ref args);
+
+            var msg = ctx.ResultParam as string;
+            if (msg == null) return Terraria.Lang.deathMsg(args.Player, args.NPC, args.Projectile, args.Other);
+            return msg;
+        }
     }
 }

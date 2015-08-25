@@ -261,8 +261,8 @@ namespace tdsm.patcher
             patcher.MakeEverythingAccessible();
             Console.Write("Ok\nHooking command line...");
             patcher.PatchCommandLine();
-            Console.Write("Ok\nHooking players...");
-            patcher.PatchPlayer();
+            Console.Write("Ok\nHooking senders...");
+            patcher.HookSenders();
             Console.Write("Ok\nRemoving console handlers...");
             patcher.RemoveConsoleHandler();
             Console.Write("Ok\nRemoving mono incompatible code...");
@@ -331,8 +331,8 @@ namespace tdsm.patcher
             Console.Write("Ok\n");
             patcher.InjectHooks();
 
-            Console.Write("Ok\nUpdating to .NET v4.5...");
-            patcher.SwitchFramework();
+            Console.Write("Ok\nUpdating to .NET v4.5.1...");
+            patcher.SwitchFramework("4.5.1");
             Console.Write("Ok\nPatching Newtonsoft.Json...");
             patcher.PatchJSON();
 

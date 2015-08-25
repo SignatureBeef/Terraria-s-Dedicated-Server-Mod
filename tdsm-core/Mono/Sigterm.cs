@@ -35,6 +35,7 @@ namespace TDSM.Core.Mono
 
                     (signal_thread = new Thread(delegate ()
                         {
+                            System.Threading.Thread.CurrentThread.Name = "SIG";
                             while (!Terraria.Netplay.disconnect && _attached)
                             {
                                 // Wait for a signal to be delivered

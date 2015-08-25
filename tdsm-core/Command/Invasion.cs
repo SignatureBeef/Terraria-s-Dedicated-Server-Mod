@@ -5,6 +5,7 @@ using TDSM.API.Misc;
 using TDSM.API.Plugin;
 using Terraria;
 using TDSM.API;
+using System.Linq;
 
 namespace TDSM.Core
 {
@@ -44,6 +45,53 @@ namespace TDSM.Core
             }
         }
 
+        class CyclicQueue<T>
+        {
+            private T[] _source;
+            private int _index;
+
+            public int Count
+            {
+                get
+                {
+                    return _source.Length;
+                }
+            }
+
+            public CyclicQueue(T[] source)
+            {
+                this._source = source;
+                this._index = -1;
+            }
+
+            public CyclicQueue(IEnumerable<T> source)
+            {
+                this._source = source.ToArray();
+                this._index = -1;
+            }
+
+            public T Next()
+            {
+                var ix = System.Threading.Interlocked.Increment(ref _index);
+                System.Threading.Interlocked.CompareExchange(ref _index, -1, _source.Length - 1);
+                return this._source[ix];
+            }
+        }
+
+        private bool _likeABoss;
+        private static CyclicQueue<String> _labDeathMessages = new CyclicQueue<String>((new string[]
+            {
+                " jumped out a window",
+                " had to approve memo's",
+                " failed to promote synergy",
+                " cried deeply",
+                " was too busy eating chicken strips",
+                " forgot to approve memo's",
+                " crashed into the sun",
+                " blacked out in a sewer",
+                " swallowed sadness"
+            }).Shuffle());
+
         [Hook]
         void OnNPCKilled(ref HookContext ctx, ref HookArgs.NPCKilled args)
         {
@@ -64,6 +112,12 @@ namespace TDSM.Core
                         }
                     }
                 }
+            }
+
+            if (_likeABoss)
+            {
+                //NPC death message
+                //Check if all bosses are inactive
             }
         }
 

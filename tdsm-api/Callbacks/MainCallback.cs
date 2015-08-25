@@ -208,6 +208,7 @@ namespace TDSM.API.Callbacks
 
         public static void UpdateServerEnd()
         {
+//            Console.WriteLine("SE");
             ///* Check tolled tasks */
             //Tasks.CheckTasks();
 
@@ -233,6 +234,22 @@ namespace TDSM.API.Callbacks
             //};
             //var args = new HookArgs.UpdateServer();
             //HookPoints.UpdateServer.Invoke(ref ctx, ref args);
+
+            try
+            {
+                if (MessageBufferCallback.PlayerCommands.Count > 0)
+                {
+                    PlayerCommandReceived cmd;
+                    if (MessageBufferCallback.PlayerCommands.TryDequeue(out cmd))
+                    {
+                        MessageBufferCallback.ProcessQueuedPlayerCommand(cmd);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Exception from user chat");
+            }
         }
 
         public static void WorldLoadBegin()

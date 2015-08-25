@@ -54,6 +54,7 @@ namespace tdsm.patcher
 
                 line = String.Format(Fmt, x + 1, hooks.Length);
                 Console.Write(line);
+
                 hooks[x].Invoke(this, null);
             }
 
@@ -61,6 +62,107 @@ namespace tdsm.patcher
             if (line != null)
                 ConsoleHelper.ClearLine();
             Console.Write("Patching in hooks - ");
+        }
+
+        [Hook]
+        void OnPlayerKilled() //OnEntityHurt
+        {
+            //Routing all instances because i'm yet again in another rush
+            //Anyone, feel free to swap out to pure IL directly in the deathMsg body ;)
+
+            var mth = Terraria.Player.Methods.Single(x => x.Name == "KillMe");
+            var hook = _asm.MainModule.Import(API.Player.Methods.Single(x => x.Name == "OnPlayerKilled"));
+
+            var il = mth.Body.GetILProcessor();
+            var first = mth.Body.Instructions.First();
+
+            //Contruct the call to the API
+
+            //Arguments
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_0));
+//            il.InsertBefore(first, il.Create(OpCodes.Ldarg_1));
+//            il.InsertBefore(first, il.Create(OpCodes.Ldarg_2));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarga_S, mth.Parameters.Single(x => x.Name == "dmg")));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarga_S, mth.Parameters.Single(x => x.Name == "hitDirection")));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarga_S, mth.Parameters.Single(x => x.Name == "pvp")));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarga_S, mth.Parameters.Single(x => x.Name == "deathText")));
+
+            //Call
+            il.InsertBefore(first, il.Create(OpCodes.Call, hook));
+            il.InsertBefore(first, il.Create(OpCodes.Brtrue_S, first));
+            il.InsertBefore(first, il.Create(OpCodes.Ret));
+
+            //Remove the Concat with the Entity name+death-message and leave the message
+            //We will reproduce this in the API so plugins can have full control
+            var matches = mth.Body.Instructions.Where(x => x.OpCode == OpCodes.Call
+                              && x.Operand is MethodReference
+                              && (x.Operand as MethodReference).Name == "Concat")
+                .Reverse() /* Remove IL from the bottom up */
+                .ToArray();
+         
+            foreach (var match in matches)
+            {
+                il.Remove(match.Previous.Previous.Previous); //this
+                il.Remove(match.Previous.Previous); //.name
+                il.Remove(match); //call
+            }
+        }
+
+        [Hook]
+        void OnPlayerHurt() //OnEntityHurt
+        {
+            //Routing all instances because i'm yet again in another rush
+            //Anyone, feel free to swap out to pure IL directly in the deathMsg body ;)
+
+            var mth = Terraria.Player.Methods.Single(x => x.Name == "Hurt");
+            var hook = _asm.MainModule.Import(API.Player.Methods.Single(x => x.Name == "OnPlayerHurt"));
+
+            var il = mth.Body.GetILProcessor();
+            var first = mth.Body.Instructions.First();
+
+            //Contruct the call to the API
+
+            //Arguments
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_0));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_1));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_2));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_S, mth.Parameters.Single(x => x.Name == "pvp")));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_S, mth.Parameters.Single(x => x.Name == "quiet")));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_S, mth.Parameters.Single(x => x.Name == "deathText")));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_S, mth.Parameters.Single(x => x.Name == "Crit")));
+            il.InsertBefore(first, il.Create(OpCodes.Ldarg_S, mth.Parameters.Single(x => x.Name == "cooldownCounter")));
+
+            //Call
+            il.InsertBefore(first, il.Create(OpCodes.Call, hook));
+            il.InsertBefore(first, il.Create(OpCodes.Brtrue_S, first));
+            il.InsertBefore(first, il.Create(OpCodes.Ldc_R8, 0.0));
+            il.InsertBefore(first, il.Create(OpCodes.Ret));
+        }
+
+        [Hook]
+        void OnDeathMessage()
+        {
+            //Routing all instances because i'm yet again in another rush
+            //Anyone, feel free to swap out to pure IL directly in the deathMsg body ;)
+
+            //            var mth = Terraria.Lang.Methods.Single(x => x.Name == "deathMsg");
+            var hook = _asm.MainModule.Import(API.VanillaHooks.Methods.Single(x => x.Name == "OnDeathMessage"));
+
+            foreach (var type in _asm.MainModule.Types)
+            {
+                foreach (var mth in type.Methods)
+                {
+                    if (mth.Body != null)
+                        foreach (var ins in mth.Body.Instructions)
+                        {
+                            var mr = ins.Operand as MethodReference;
+                            if (mr != null && mr.Name == "deathMsg")
+                            {
+                                ins.Operand = hook;
+                            }
+                        }
+                }
+            }
         }
 
         [Hook]
@@ -265,6 +367,18 @@ namespace tdsm.patcher
             get
             { return _asm.MainModule.Types.Single(x => x.Name == "LaunchInitializer"); }
         }
+
+        public TypeDefinition Lang
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "Lang"); }
+        }
+
+        public TypeDefinition Projectile
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "Projectile"); }
+        }
     }
 
     public class APIOrganiser
@@ -393,6 +507,18 @@ namespace tdsm.patcher
         {
             get
             { return _asm.MainModule.Types.Single(x => x.Name == "Utilities"); }
+        }
+
+        public TypeDefinition Player
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "PlayerCallback"); }
+        }
+
+        public TypeDefinition WorldSender
+        {
+            get
+            { return _asm.MainModule.Types.Single(x => x.Name == "WorldSender"); }
         }
     }
 }

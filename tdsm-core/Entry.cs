@@ -1121,6 +1121,16 @@ namespace TDSM.Core
         {
             string tmp;
             bool tmp1;
+
+//            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-world" }))
+//                && !File.Exists(tmp))
+//            {
+//                ProgramLog.Error.Log("Command line world file not found at: {0}\nPress the [Y] key to continue", tmp);
+//                if (Console.ReadKey().Key != ConsoleKey.Y)
+//                {
+//                    
+//                }
+//            }
             
             if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-whitelist" }))
                 && Boolean.TryParse(tmp, out tmp1))
@@ -1185,6 +1195,40 @@ namespace TDSM.Core
             if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-ssc-allow-guest-info" }))
                 && Boolean.TryParse(tmp, out tmp1))
                 AllowSSCGuestInfo = tmp1;
+        }
+
+        [Hook(HookOrder.LATE)]
+        //Late so other plugins can perform alterations
+        void OnPlayerKilled(ref HookContext ctx, ref HookArgs.PlayerKilled args)
+        {
+            if (true == true || _likeABoss)
+            {
+                if (Terraria.Main.rand == null) Terraria.Main.rand = new Random();
+
+                if (ctx.Player.talkNPC > -1 && Terraria.Main.rand.Next(_labDeathMessages.Count - 1) == 1)
+                {
+                    args.DeathText = " was too busy talking";
+                }
+//                else if (Terraria.Main.rand.Next(_labDeathMessages.Count - 1) == 1)
+//                {
+//
+//                }
+                // forgot [NPC]'s birthday
+                // tried to hit on [NPC]
+
+                else
+                {
+                    args.DeathText = _labDeathMessages.Next();
+                }
+                args.DeathText = ctx.Player.Name + args.DeathText;
+                ctx.SetResult(HookResult.CONTINUE);
+                ProgramLog.Death.Log(args.DeathText);
+            }
+            else
+            {
+                //Standard death log
+                ProgramLog.Death.Log(ctx.Player.Name + args.DeathText);
+            }
         }
 
         [Hook(HookOrder.NORMAL)]

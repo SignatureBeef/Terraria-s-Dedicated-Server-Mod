@@ -77,6 +77,27 @@ namespace TDSM.API
                 return default(T);
             return list.ElementAt(_rand.Next(0, count));
         }
+
+        /// <summary>
+        /// Shuffle the specified data.
+        /// </summary>
+        /// <remarks>Based on https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle</remarks>
+        /// <param name="data">Data.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        public static IEnumerable<T> Shuffle<T>(this T[] data)
+        {
+            var n = data.Length;  
+            while (n > 1)
+            {  
+                n--;  
+                var j = _rand.Next(n + 1);
+                T value = data[j];  
+                data[j] = data[n];  
+                data[n] = value;  
+            }  
+
+            return data;
+        }
     }
 
     public static class AssemblyExtensions

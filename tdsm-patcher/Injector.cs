@@ -81,7 +81,7 @@ namespace tdsm.patcher
                 .Value as string;
         }
 
-        public void SwitchFramework()
+        public void SwitchFramework(string version)
         {
 //            _asm.MainModule.RuntimeVersion = "";
 
@@ -89,9 +89,9 @@ namespace tdsm.patcher
             {
                 if (_asm.CustomAttributes[x].AttributeType.Name == "TargetFrameworkAttribute")
                 {
-                    _asm.CustomAttributes[x].ConstructorArguments[0] = new CustomAttributeArgument(_asm.MainModule.Import(typeof(String)), ".NETFramework,Version=v4.5");
+                    _asm.CustomAttributes[x].ConstructorArguments[0] = new CustomAttributeArgument(_asm.MainModule.Import(typeof(String)), ".NETFramework,Version=v" + version);
 
-                    var cs = new CustomAttributeArgument(_asm.MainModule.Import(typeof(String)), ".NET Framework 4.5");
+                    var cs = new CustomAttributeArgument(_asm.MainModule.Import(typeof(String)), ".NET Framework " + version);
                     _asm.CustomAttributes[x].Properties[0] = new CustomAttributeNamedArgument("FrameworkDisplayName", cs);
                 }
             }
@@ -1001,9 +1001,11 @@ namespace tdsm.patcher
             }
         }
 
-        public void PatchPlayer()
+        public void HookSenders()
         {
             Terraria.Player.BaseType = _asm.MainModule.Import(API.BasePlayer);
+            Terraria.Projectile.BaseType = _asm.MainModule.Import(API.WorldSender);
+            Terraria.NPC.BaseType = _asm.MainModule.Import(API.WorldSender);
 
             ////By default the constructor calls Object.ctor. 
             //var ctor = Terraria.Player.Methods.Single(x => x.Name == ".ctor");

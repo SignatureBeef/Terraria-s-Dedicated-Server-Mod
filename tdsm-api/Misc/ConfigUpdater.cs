@@ -55,6 +55,8 @@ namespace TDSM.API
                 {
                     System.IO.File.WriteAllLines(SourceFile, lines);
                 }
+
+                if (lines.Length == 0) return true;
             }
 
             return changed;

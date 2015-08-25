@@ -4,6 +4,35 @@ using TDSM.API.Callbacks;
 
 namespace TDSM.API.Command
 {
+
+    #if Full_API
+    /// <summary>
+    /// Sender class for command sending/parsing
+    /// </summary>
+    public abstract class WorldSender : Terraria.Entity, ISender
+    #else
+    public abstract class WorldSender : ISender
+    #endif
+    {
+        public bool Op { get; set; }
+
+        public string SenderName
+        {
+            get
+            { return this.name; }
+        }
+
+        public void SendMessage(string message, int sender = 255, byte R = 255, byte G = 255, byte B = 255)
+        {
+
+        }
+
+        public Dictionary<string, CommandInfo> GetAvailableCommands()
+        {
+            return null;
+        }
+    }
+
     #if Full_API
     /// <summary>
     /// Sender class for command sending/parsing
@@ -45,7 +74,7 @@ namespace TDSM.API.Command
         //    return this.GetType().IsAssignableFrom(type);
         //}
 
-#if Full_API
+        #if Full_API
         public bool IsPlayer()
         {
             return this is Terraria.Player;

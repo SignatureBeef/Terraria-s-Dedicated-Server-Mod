@@ -606,7 +606,7 @@ namespace TDSM.Core
                     {
                         WhitelistEnabled = true;
 
-                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("usewhitelist", WhitelistEnabled))
+                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("whitelist", WhitelistEnabled))
                         {
                             Tools.NotifyAllOps("The whitelist was enabled");
                             if (!sender.Op) sender.Message("The whitelist was enabled", Color.Green);
@@ -620,7 +620,7 @@ namespace TDSM.Core
                     {
                         WhitelistEnabled = false;
 
-                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("usewhitelist", WhitelistEnabled))
+                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("whitelist", WhitelistEnabled))
                         {
                             Tools.NotifyAllOps("The whitelist was disabled");
                             if (!sender.Op) sender.Message("The whitelist was disabled", Color.Green);
@@ -644,7 +644,6 @@ namespace TDSM.Core
 
                         if (!WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
                     }
-
                     else sender.Message("Failed to add " + name + " to the whitelist", Color.Red);
                     break;
                 case "removeplayer":
@@ -1586,6 +1585,24 @@ namespace TDSM.Core
             }
         }
 
+        struct Boss
+        {
+            /// <summary>
+            /// Display name for the notification (null fto use default)
+            /// </summary>
+            public string name;
+
+            /// <summary>
+            /// The typeid of the boss
+            /// </summary>
+            public int type;
+
+            /// <summary>
+            /// Ignore notifying of the spawn
+            /// </summary>
+            internal bool ignore;
+        }
+
         /// <summary>
         /// Summon a Boss
         /// </summary>
@@ -1613,25 +1630,38 @@ namespace TDSM.Core
                 }
             }
 
-            int type = -1, type1 = -1;
-            string name = null;
+//            int type = -1, type1 = -1;
+//            string name = null;
+            var queue = new Queue<Boss>();
 
             switch (bossName)
             {
                 case "wyvern":
-                    type = 87;
+//                    type = 87;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 87
+                        });
                     break;
 
                 case "brain":
                 case "brain of cthulhu":
-                    type = 266;
+//                    type = 266;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 266
+                        });
                     break;
 
 //                case "crimson mimic":
 //                    type = 474;
 //                    break;
                 case "corrupt mimic":
-                    type = 473;
+//                    type = 473;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 473
+                        });
                     break;
 //                case "hallowed mimic":
 //                    type = 475;
@@ -1640,151 +1670,273 @@ namespace TDSM.Core
                 case "duke fishron":
                 case "duke":
                 case "fishron":
-                    type = 370;
+//                    type = 370;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 370
+                        });
                     break;
 
                 case "everscream":
                     World.SetTime(16200.0, false);
-                    type = 344;
+//                    type = 344;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 344
+                        });
                     break;
 
                 case "eye":
                 case "cthulhu":
                 case "eye of cthulhu":
                     World.SetTime(16200.0, false);
-                    type = 4;
+//                    type = 4;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 4
+                        });
                     break;
 
                 case "dutchman":
                 case "flying dutchman":
-                    type = 491;
+//                    type = 491;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 491
+                        });
                     break;
 
                 case "golem":
-                    type = 245;
+//                    type = 245;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 245
+                        });
                     break;
 
                 case "goblin summoner":
-                    type = 471;
+//                    type = 471;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 471
+                        });
                     break;
 
                 case "king":
                 case "king slime":
-                    type = 50;
+//                    type = 50;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 50
+                        });
                     break;
 
                 case "ice golem":
-                    type = 243;
+//                    type = 243;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 243
+                        });
                     break;
 
                 case "ice queen":
                     World.SetTime(16200.0, false);
-                    type = 345;
+//                    type = 345;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 345
+                        });
                     break;
 
                 case "lunatic":
                 case "cultist":
                 case "lunatic cultist":
-                    type = 439;
+//                    type = 439;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 439
+                        });
                     break;
 
                 case "saucer":
                 case "martian saucer":
-                    type = 395;
+//                    type = 395;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 395
+                        });
                     break;
 
                 case "moon":
                 case "moon lord":
-                    type = 398;
+//                    type = 398;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 398
+                        });
                     break;
 
                 case "mothron":
                     if (!Main.eclipse)
                         throw new CommandError("Mothron can only be spawned during a solar eclipse. See the worldevent command.");
-                    type = 477;
+//                    type = 477;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 477
+                        });
                     break;
 
                 case "wood":
                 case "mourning wood":
                     World.SetTime(16200.0, false);
-                    type = 325;
+//                    type = 325;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 325
+                        });
                     break;
 
                 case "paladin":
-                    type = 290;
+//                    type = 290;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 290
+                        });
                     break;
 
                 case "captain":
                 case "pirate":
                 case "pirate captain":
                     World.SetTime(16200.0, false);
-                    type = 216;
+//                    type = 216;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 216
+                        });
                     break;
 
                 case "plantera":
-                    type = 262;
+//                    type = 262;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 262
+                        });
                     break;
 
                 case "pumpking":
                     World.SetTime(16200.0, false);
-                    type = 327;
+//                    type = 327;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 327
+                        });
                     break;
 
                 case "queen":
                 case "queen bee":
-                    type = 222;
+//                    type = 222;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 222
+                        });
                     break;
 
                 case "santa":
                 case "santa nk1":
                 case "santa-nk1":
                     World.SetTime(16200.0, false);
-                    type = 346;
+//                    type = 346;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 346
+                        });
                     break;
 
                 case "skeletron":
                     World.SetTime(16200.0, false);
-                    type = 35;
+//                    type = 35;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 35
+                        });
                     break;
 
                 case "prime":
                 case "skeletron prime":
-                    type = 127;
+//                    type = 127;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 127
+                        });
                     break;
 
                 case "nebula":
                 case "nebula pillar":
-                    type = 507;
+//                    type = 507;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 507
+                        });
                     break;
                 case "solar":
                 case "solar pillar":
-                    type = 517;
+//                    type = 517;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 517
+                        });
                     break;
                 case "stardust":
                 case "stardust pillar":
-                    type = 493;
+//                    type = 493;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 493
+                        });
                     break;
                 case "vortex":
                 case "vortex pillar":
-                    type = 422;
+//                    type = 422;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 422
+                        });
                     break;
 
                 case "destroyer":
                 case "the destroyer":
                     World.SetTime(16200.0, false);
-                    type = 134;
+//                    type = 134;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 134
+                        });
                     break;
 
                 case "twins":
                 case "the twins":
                     World.SetTime(16200.0, false);
-                    type = 125;
-                    type1 = 126;
+//                    type = 125;
+//                    type1 = 126;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 125,
+                            name = "The Twins"
+                        });
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 126,
+                            ignore = true
+                        });
                     break;
 
                 case "eater":
                 case "eater of worlds":
-                    type = 13;
+//                    type = 13;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 13
+                        });
                     break;
 
                 case "wall":
@@ -1796,7 +1948,43 @@ namespace TDSM.Core
                     if (target.position.Y / 16 < (float)(Main.maxTilesY - 205)) //As per NPC.SpawnWOF
                         throw new CommandError("Player must be in The Underworld to spawn the Eater Of Worlds");
 
-                    type = 113;
+//                    type = 113;
+                    queue.Enqueue(new Boss()
+                        {
+                            type = 113
+                        });
+                    break;
+
+                case "deathcradle":
+                    count = 1;
+                    var items = new int[]
+                    {
+                        87, 266, 473, 
+                        370, 344, 4, 
+                        491, 245, 471, 
+                        50, 243, 345, 
+                        439, 395, 398, 
+                        477, 325, 290, 
+                        216, 262, 327, 
+                        222, 346, 35, 
+                        127, 507, 517,
+                        493, 422, 134,
+                        125, 126, 13
+                    };
+                    World.SetTime(16200.0, false);
+
+                    foreach (var item in items)
+                    {
+                        queue.Enqueue(new Boss()
+                            {
+                                type = item,
+                                ignore = true
+                            });
+                    }
+
+                    _likeABoss = true;
+                    Tools.NotifyAllPlayers("Easter egg found: Like a boss mini game!", Color.Purple, true);
+
                     break;
                 default:
                     throw new CommandError("Unknown boss: " + bossName);
@@ -1804,26 +1992,22 @@ namespace TDSM.Core
 
             while (count-- > 0)
             {
-                var position = World.GetRandomClearTile(target.position.X / 16f, target.position.Y / 16f);
-                var id = NPC.NewNPC((int)(position.X * 16f), (int)(position.Y * 16f), type);
-                Main.npc[id].SetDefaults(type);
-                Main.npc[id].SetDefaults(Main.npc[id].name);
-
-                if (type1 > 0)
+                while (queue.Count > 0)
                 {
-                    id = NPC.NewNPC((int)(position.X * 16f), (int)(position.Y * 16f), type1);
-                    Main.npc[id].SetDefaults(type1);
+                    var boss = queue.Dequeue();
+                    var position = World.GetRandomClearTile(target.position.X / 16f, target.position.Y / 16f);
+                    var id = NPC.NewNPC((int)(position.X * 16f), (int)(position.Y * 16f), boss.type);
+
+                    Main.npc[id].SetDefaults(boss.type);
                     Main.npc[id].SetDefaults(Main.npc[id].name);
-                }
 
-                if (count == 0)
-                {
-                    var tms = String.Empty;
-                    if (count > 1)
+                    if (count == 0 && !boss.ignore)
                     {
-                        tms = " " + count + " times";
+                        var tms = String.Empty;
+                        if (count > 1)
+                            tms = " " + count + " times";
+                        Tools.NotifyAllPlayers((boss.name ?? Main.npc[id].name) + " [" + boss.type + "]" + " summoned by " + sender.SenderName + tms, Color.Purple, true);
                     }
-                    Tools.NotifyAllPlayers(Main.npc[id].name + " [" + type + "]" + " summoned by " + sender.SenderName + tms, Color.Purple, true);
                 }
             }
         }
@@ -2663,6 +2847,8 @@ namespace TDSM.Core
         {
             if (Main.rand == null)
                 Main.rand = new Random();
+
+            if (_likeABoss) _likeABoss = false;
             
             int killed = 0;
             foreach (var npc in Main.npc)

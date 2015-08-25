@@ -4,6 +4,7 @@ using System;
 using TDSM.API.ID;
 using TDSM.API.Plugin;
 using TDSM.API.Logging;
+using System.Collections.Concurrent;
 
 
 #if Full_API
@@ -56,6 +57,9 @@ namespace TDSM.API.Callbacks
                     return 0;
                 case Packet.CLIENT_UUID:
                     ProcesUUID(bufferId);
+                    return 0;
+                case Packet.STRIKE_NPC:
+                    ProcessNPCStrike(bufferId);
                     return 0;
 
             /* Password handling */
@@ -123,6 +127,46 @@ namespace TDSM.API.Callbacks
         }
 
         #if Full_API
+        private static void ProcessNPCStrike(int bufferId)
+        {
+            var buffer = NetMessage.buffer[bufferId];
+
+            int npcId = (int)buffer.reader.ReadInt16();
+            int playerId = (int)buffer.reader.ReadByte();
+
+            if (Main.netMode == 2)
+                playerId = bufferId;
+
+            var ply = Main.player[playerId];
+            var ctx = new HookContext()
+            {
+                Sender = ply,
+                Player = ply
+            };
+            var args = new HookArgs.NpcHurt()
+            {
+                Victim = Terraria.Main.npc[npcId],
+                Damage = ply.inventory[ply.selectedItem].damage,
+                HitDirection = ply.direction,
+                Knockback = ply.inventory[ply.selectedItem].knockBack,
+                Critical = false,
+                FromNet = false,
+                NoEffect = false
+            };
+
+            HookPoints.NpcHurt.Invoke(ref ctx, ref args);
+
+            if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE) return;
+
+            Terraria.Main.npc[npcId].StrikeNPC(args.Damage, args.Knockback, args.HitDirection, false, false, false);
+
+            if (Main.netMode == 2)
+            {
+                NetMessage.SendData(24, -1, bufferId, "", npcId, (float)playerId, 0, 0, 0, 0, 0);
+                NetMessage.SendData(23, -1, -1, "", npcId, 0, 0, 0, 0, 0, 0);
+            }
+        }
+
         private static void ProcessDoorState(int bufferId)
         {
             var buffer = NetMessage.buffer[bufferId];
@@ -1245,7 +1289,7 @@ namespace TDSM.API.Callbacks
         {
             var buffer = NetMessage.buffer[bufferId];
 
-            ActionType action = (ActionType) buffer.reader.ReadByte();
+            ActionType action = (ActionType)buffer.reader.ReadByte();
             int x = (int)buffer.reader.ReadInt16();
             int y = (int)buffer.reader.ReadInt16();
             short type = buffer.reader.ReadInt16();
@@ -1382,6 +1426,11 @@ namespace TDSM.API.Callbacks
             }
         }
 
+        /// <summary>
+        /// Used to run player commands from the server thread preventing deadlocks under certain circumstances
+        /// </summary>
+        public static readonly ConcurrentQueue<PlayerCommandReceived> PlayerCommands = new ConcurrentQueue<PlayerCommandReceived>();
+
         private static void ProcessChat(int bufferId)
         {
             var buffer = NetMessage.buffer[bufferId];
@@ -1392,13 +1441,112 @@ namespace TDSM.API.Callbacks
 
             var chatText = buffer.reader.ReadString();
 
-            var player = Main.player[bufferId];
+            PlayerCommands.Enqueue(new PlayerCommandReceived()
+                {
+                    BufferId = bufferId,
+                    Message = chatText
+                });
+            return;
+//            var player = Main.player[bufferId];
+//            var color = Color.White;
+//
+//            if (Main.netMode != 2)
+//                return;
+//
+//            var lowered = chatText.ToLower();
+//            if (lowered == Lang.mp[6] || lowered == Lang.mp[21])
+//            {
+//                var players = "";
+//                for (int i = 0; i < 255; i++)
+//                {
+//                    if (Main.player[i].active)
+//                    {
+//                        if (players.Length > 0)
+//                            players += ", ";
+//                        players += Main.player[i].name;
+//                    }
+//                }
+//                NetMessage.SendData(25, bufferId, -1, Lang.mp[7] + " " + players + ".", 255, 255, 240, 20, 0, 0, 0);
+//                return;
+//            }
+//            else if (lowered.StartsWith("/me "))
+//            {
+//                NetMessage.SendData(25, -1, -1, "*" + Main.player[bufferId].name + " " + chatText.Substring(4), 255, 200, 100, 0, 0, 0, 0);
+//                return;
+//            }
+//            else if (lowered == Lang.mp[8])
+//            {
+//                NetMessage.SendData(25, -1, -1, string.Concat(new object[]
+//                        {
+//                            "*",
+//                            Main.player[bufferId].name,
+//                            " ",
+//                            Lang.mp[9],
+//                            " ",
+//                            Main.rand.Next(1, 101)
+//                        }), 255, 255, 240, 20, 0, 0, 0);
+//                return;
+//            }
+//            else if (lowered.StartsWith("/p "))
+//            {
+//                int team = Main.player[bufferId].team;
+//                color = Main.teamColor[team];
+//                if (team != 0)
+//                {
+//                    for (int num74 = 0; num74 < 255; num74++)
+//                    {
+//                        if (Main.player[num74].team == team)
+//                        {
+//                            NetMessage.SendData(25, num74, -1, chatText.Substring(3), bufferId, (float)color.R, (float)color.G, (float)color.B, 0, 0, 0);
+//                        }
+//                    }
+//                    return;
+//                }
+//                NetMessage.SendData(25, bufferId, -1, Lang.mp[10], 255, 255, 240, 20, 0, 0, 0);
+//                return;
+//            }
+//            else
+//            {
+//                if (Main.player[bufferId].difficulty == 2)
+//                    color = Main.hcColor;
+//                else if (Main.player[bufferId].difficulty == 1)
+//                    color = Main.mcColor;
+//
+//                var ctx = new HookContext
+//                {
+//                    Connection = player.Connection.Socket,
+//                    Sender = player,
+//                    Player = player
+//                };
+//
+//                var args = new HookArgs.PlayerChat
+//                {
+//                    Message = chatText,
+//                    Color = color
+//                };
+//
+//                HookPoints.PlayerChat.Invoke(ref ctx, ref args);
+//
+//                if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
+//                    return;
+//
+//                NetMessage.SendData(25, -1, -1, chatText, bufferId, (float)color.R, (float)color.G, (float)color.B, 0, 0, 0);
+//                if (Main.dedServ)
+//                {
+//                    ProgramLog.Chat.Log("<" + Main.player[bufferId].name + "> " + chatText);
+//                }
+//            }
+        }
+
+        internal static void ProcessQueuedPlayerCommand(PlayerCommandReceived cmd)
+        {
+            var player = Main.player[cmd.BufferId];
             var color = Color.White;
 
             if (Main.netMode != 2)
                 return;
 
-            var lowered = chatText.ToLower();
+            var lowered = cmd.Message.ToLower();
             if (lowered == Lang.mp[6] || lowered == Lang.mp[21])
             {
                 var players = "";
@@ -1411,20 +1559,20 @@ namespace TDSM.API.Callbacks
                         players += Main.player[i].name;
                     }
                 }
-                NetMessage.SendData(25, bufferId, -1, Lang.mp[7] + " " + players + ".", 255, 255, 240, 20, 0, 0, 0);
+                NetMessage.SendData((int)Packet.PLAYER_CHAT, cmd.BufferId, -1, Lang.mp[7] + " " + players + ".", 255, 255, 240, 20, 0, 0, 0);
                 return;
             }
             else if (lowered.StartsWith("/me "))
             {
-                NetMessage.SendData(25, -1, -1, "*" + Main.player[bufferId].name + " " + chatText.Substring(4), 255, 200, 100, 0, 0, 0, 0);
+                NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, "*" + Main.player[cmd.BufferId].name + " " + cmd.Message.Substring(4), 255, 200, 100, 0, 0, 0, 0);
                 return;
             }
             else if (lowered == Lang.mp[8])
             {
-                NetMessage.SendData(25, -1, -1, string.Concat(new object[]
+                NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, string.Concat(new object[]
                         {
                             "*",
-                            Main.player[bufferId].name,
+                            Main.player[cmd.BufferId].name,
                             " ",
                             Lang.mp[9],
                             " ",
@@ -1434,7 +1582,7 @@ namespace TDSM.API.Callbacks
             }
             else if (lowered.StartsWith("/p "))
             {
-                int team = Main.player[bufferId].team;
+                int team = Main.player[cmd.BufferId].team;
                 color = Main.teamColor[team];
                 if (team != 0)
                 {
@@ -1442,19 +1590,19 @@ namespace TDSM.API.Callbacks
                     {
                         if (Main.player[num74].team == team)
                         {
-                            NetMessage.SendData(25, num74, -1, chatText.Substring(3), bufferId, (float)color.R, (float)color.G, (float)color.B, 0, 0, 0);
+                            NetMessage.SendData((int)Packet.PLAYER_CHAT, num74, -1, cmd.Message.Substring(3), cmd.BufferId, (float)color.R, (float)color.G, (float)color.B, 0, 0, 0);
                         }
                     }
                     return;
                 }
-                NetMessage.SendData(25, bufferId, -1, Lang.mp[10], 255, 255, 240, 20, 0, 0, 0);
+                NetMessage.SendData((int)Packet.PLAYER_CHAT, cmd.BufferId, -1, Lang.mp[10], 255, 255, 240, 20, 0, 0, 0);
                 return;
             }
             else
             {
-                if (Main.player[bufferId].difficulty == 2)
+                if (Main.player[cmd.BufferId].difficulty == 2)
                     color = Main.hcColor;
-                else if (Main.player[bufferId].difficulty == 1)
+                else if (Main.player[cmd.BufferId].difficulty == 1)
                     color = Main.mcColor;
 
                 var ctx = new HookContext
@@ -1466,7 +1614,7 @@ namespace TDSM.API.Callbacks
 
                 var args = new HookArgs.PlayerChat
                 {
-                    Message = chatText,
+                    Message = cmd.Message,
                     Color = color
                 };
 
@@ -1475,13 +1623,20 @@ namespace TDSM.API.Callbacks
                 if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
                     return;
 
-                NetMessage.SendData(25, -1, -1, chatText, bufferId, (float)color.R, (float)color.G, (float)color.B, 0, 0, 0);
+                NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, args.Message, cmd.BufferId, (float)args.Color.R, (float)args.Color.G, (float)args.Color.B, 0, 0, 0);
                 if (Main.dedServ)
                 {
-                    ProgramLog.Chat.Log("<" + Main.player[bufferId].name + "> " + chatText);
+                    ProgramLog.Chat.Log("<" + Main.player[cmd.BufferId].name + "> " + args.Message);
                 }
             }
+
         }
         #endif
+    }
+
+    public struct PlayerCommandReceived
+    {
+        public int BufferId;
+        public string Message;
     }
 }

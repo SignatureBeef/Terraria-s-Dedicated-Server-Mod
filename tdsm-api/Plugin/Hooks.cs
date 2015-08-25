@@ -68,8 +68,8 @@ namespace TDSM.API.Plugin
         public static readonly HookPoint<HookArgs.PluginsLoaded> PluginsLoaded;
         //public static readonly HookPoint<HookArgs.WorldLoaded> WorldLoaded;
 
-        //public static readonly HookPoint<HookArgs.PlayerHurt> PlayerHurt;
-        //public static readonly HookPoint<HookArgs.NpcHurt> NpcHurt;
+        public static readonly HookPoint<HookArgs.PlayerHurt> PlayerHurt;
+        public static readonly HookPoint<HookArgs.NpcHurt> NpcHurt;
         //public static readonly HookPoint<HookArgs.NpcCreation> NpcCreation;
         public static readonly HookPoint<HookArgs.PlayerTriggeredEvent> PlayerTriggeredEvent;
 
@@ -90,6 +90,8 @@ namespace TDSM.API.Plugin
         //public static readonly HookPoint<HookArgs.PatchServer> PatchServer;
 
         public static readonly HookPoint<HookArgs.ParseCommandLineArguments> ParseCommandLineArguments;
+        public static readonly HookPoint<HookArgs.DeathMessage> DeathMessage;
+        public static readonly HookPoint<HookArgs.PlayerKilled> PlayerKilled;
 
         static HookPoints()
         {
@@ -128,8 +130,8 @@ namespace TDSM.API.Plugin
             SignTextGet = new HookPoint<HookArgs.SignTextGet>("sign-text-get");
             PluginsLoaded = new HookPoint<HookArgs.PluginsLoaded>("plugins-loaded");
             //WorldLoaded = new HookPoint<HookArgs.WorldLoaded>("world-loaded");
-            //PlayerHurt = new HookPoint<HookArgs.PlayerHurt>("player-hurt");
-            //NpcHurt = new HookPoint<HookArgs.NpcHurt>("npc-hurt");
+            PlayerHurt = new HookPoint<HookArgs.PlayerHurt>("player-hurt");
+            NpcHurt = new HookPoint<HookArgs.NpcHurt>("npc-hurt");
             //NpcCreation = new HookPoint<HookArgs.NpcCreation>("npc-creation");
             PlayerTriggeredEvent = new HookPoint<HookArgs.PlayerTriggeredEvent>("player-triggered-event");
             PlayerChat = new HookPoint<HookArgs.PlayerChat>("player-chat");
@@ -153,11 +155,29 @@ namespace TDSM.API.Plugin
             InvasionWarning = new HookPoint<HookArgs.InvasionWarning>("invasion-warning");
 
             ParseCommandLineArguments = new HookPoint<HookArgs.ParseCommandLineArguments>("parse-cmd-args");
+            DeathMessage = new HookPoint<HookArgs.DeathMessage>("death-message");
+            PlayerKilled = new HookPoint<HookArgs.PlayerKilled>("player-killed");
         }
     }
 
     public static class HookArgs
     {
+        public struct PlayerKilled
+        {
+            public double Damage { get; set; }
+            public int HitDirection { get; set; }
+            public bool PvP { get; set; }
+            public string DeathText { get; set; }
+        }
+
+        public struct DeathMessage
+        {
+            public int Player { get; set; }
+            public int NPC { get; set; }
+            public int Projectile { get; set; }
+            public int Other { get; set; }
+        }
+
         public struct ConsoleMessageReceived
         {
             public string Message { get; set; }
@@ -1082,6 +1102,8 @@ namespace TDSM.API.Plugin
             public string Obituary { get; set; }
 
             public bool Critical { get; set; }
+
+            public int CooldownCounter { get; set; }
         }
 
         public struct NpcHurt
@@ -1096,6 +1118,10 @@ namespace TDSM.API.Plugin
             public float Knockback { get; set; }
 
             public bool Critical { get; set; }
+
+            public bool FromNet { get; set; }
+
+            public bool NoEffect { get; set; }
         }
 
         public struct NpcCreation

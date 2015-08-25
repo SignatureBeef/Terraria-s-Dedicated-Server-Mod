@@ -1,4 +1,5 @@
 ﻿using TDSM.API.Plugin;
+using TDSM.API.Command;
 
 namespace TDSM.API.Callbacks
 {
@@ -50,7 +51,10 @@ namespace TDSM.API.Callbacks
         #if Full_API
         public static void OnNPCKilled(Terraria.NPC npc)
         {
-            var ctx = new HookContext();
+            var ctx = new HookContext()
+            {
+                Sender = npc
+            };
             var args = new HookArgs.NPCKilled()
             {
                 Type = npc.type,
@@ -60,7 +64,7 @@ namespace TDSM.API.Callbacks
             HookPoints.NPCKilled.Invoke(ref ctx, ref args);
         }
         
-#else
+        #else
         public static void OnNPCKilled(object npc)
         {
         }
