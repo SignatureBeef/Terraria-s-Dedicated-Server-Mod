@@ -7,7 +7,6 @@ using System.Threading;
 using Mono.Unix.Native;
 using Mono.Unix;
 
-
 namespace TDSM.Core.Mono
 {
     /// <summary>

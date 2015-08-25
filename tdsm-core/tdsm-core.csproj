@@ -51,6 +51,9 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Posix">
+      <HintPath>..\External\Mono.Posix.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="tdsm">
@@ -62,7 +65,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Binaries\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ServerCharacters\CharacterManager.cs" />
@@ -98,12 +100,10 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Folder Include="RemoteConsole\" />
-    <Folder Include="ServerCharacters\Tables\" />
-    <Folder Include="Mono\" />
+    <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\tdsm-api\tdsm-api.csproj">
       <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
