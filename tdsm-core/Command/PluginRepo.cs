@@ -1,6 +1,6 @@
 ﻿using System;
-using TDSM.API;
-using TDSM.API.Command;
+using OTA;
+using OTA.Command;
 
 namespace TDSM.Core
 {

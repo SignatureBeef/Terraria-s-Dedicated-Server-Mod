@@ -3,17 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using TDSM.API;
-using TDSM.API.Command;
-using TDSM.API.Misc;
+using OTA;
+using OTA.Command;
+using OTA.Misc;
 using TDSM.Core.Definitions;
-using TDSM.API.Logging;
+using OTA.Logging;
 
 //using TDSM.Core.Messages.Out;
 //using TDSM.Core.ServerCore;
 using Terraria;
-using TDSM.API.Sockets;
-using TDSM.API.Data;
+using OTA.Sockets;
+using OTA.Data;
 
 namespace TDSM.Core
 {
@@ -1502,7 +1502,7 @@ namespace TDSM.Core
 
         //        msg.PlayerChat(255, "<Server> " + Languages.PurgingItems, 255, 180, 100);
 
-        //        lock (TDSM.API.Callbacks.Main.updatingItems)
+        //        lock (OTA.Callbacks.Main.updatingItems)
         //        {
         //            for (int i = 0; i < 200; i++)
         //            {
@@ -2621,7 +2621,7 @@ namespace TDSM.Core
                         _disableActiveEvents(sender);
 
                         World.SetTime(0);
-                        //TDSM.API.Callbacks.MainCallback.StartEclipse = true;
+                        //OTA.Callbacks.MainCallback.StartEclipse = true;
                         Main.eclipse = true;
 
                         NetMessage.SendData(25, -1, -1, Lang.misc[20], 255, 50f, 255f, 130f, 0);
@@ -2676,7 +2676,7 @@ namespace TDSM.Core
                     {
                         _disableActiveEvents(sender);
                         World.SetTime(0, false);
-                        //TDSM.API.Callbacks.MainCallback.StartEclipse = true;
+                        //OTA.Callbacks.MainCallback.StartEclipse = true;
                         Main.bloodMoon = true;
                         NetMessage.SendData((int)Packet.WORLD_DATA);
                         NetMessage.SendData(25, -1, -1, Lang.misc[8], 255, 50f, 255f, 130f, 0);

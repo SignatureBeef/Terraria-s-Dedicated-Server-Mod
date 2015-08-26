@@ -1,7 +1,6 @@
 ﻿using System;
-using TDSM.API.Plugin;
+using OTA.Plugin;
 using System.Web.Http;
-using TDSM.Core;
 
 namespace TDSM.Web
 {

@@ -6,14 +6,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using TDSM.API;
-using TDSM.API.Callbacks;
-using TDSM.API.Command;
-using TDSM.API.Plugin;
+using OTA;
+using OTA.Callbacks;
+using OTA.Command;
+using OTA.Plugin;
 using TDSM.Core.Definitions;
-using TDSM.API.Logging;
-using TDSM.Core.Misc;
-using TDSM.API.Misc;
+using OTA.Logging;
+using OTA.Misc;
 using TDSM.Core.RemoteConsole;
 using TDSM.Core.ServerCharacters;
 using Terraria;
@@ -126,10 +125,10 @@ namespace TDSM.Core
         {
             base.Enabled();
 
-            TDSM.API.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
-            TDSM.API.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
+            OTA.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
+            OTA.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
 
-            TDSM.API.Command.CommandParser.ExtCheckAccessLevel = (acc, sender) =>
+            OTA.Command.CommandParser.ExtCheckAccessLevel = (acc, sender) =>
             {
                 if (sender is RConSender)
                     return acc <= AccessLevel.REMOTE_CONSOLE;
@@ -738,7 +737,7 @@ namespace TDSM.Core
         {
             ctx.SetResult(HookResult.IGNORE);
 
-            (new TDSM.API.Misc.ProgramThread("Command", ListenForCommands)).Start();
+            (new OTA.Misc.ProgramThread("Command", ListenForCommands)).Start();
         }
 
         [Hook(HookOrder.NORMAL)]
@@ -839,8 +838,8 @@ namespace TDSM.Core
             //    //    Server.CheckSection(i, Terraria.Main.player[i].position);
 
             //    //    //TODO SpamUpdate
-            //    //    //if(TDSM.API.Callbacks.Netplay.slots[i].conn != null && TDSM.API.Callbacks.Netplay.slots[i].conn.Active )
-            //    //    //    TDSM.API.Callbacks.Netplay.slots[i].conn.s
+            //    //    //if(OTA.Callbacks.Netplay.slots[i].conn != null && OTA.Callbacks.Netplay.slots[i].conn.Active )
+            //    //    //    OTA.Callbacks.Netplay.slots[i].conn.s
             //    //}
             //}
 
@@ -908,7 +907,7 @@ namespace TDSM.Core
         //        var terraria = AssemblyDefinition.ReadAssembly(msa);
         //        //var terraria = args.Terraria as AssemblyDefinition;
 
-        //        //Replace Terraria.Netplay.Clients references with TDSM.Core.TDSM.API.Callbacks.Netplay.slots
+        //        //Replace Terraria.Netplay.Clients references with TDSM.Core.OTA.Callbacks.Netplay.slots
         //        var instructions = terraria.MainModule.Types
         //            .SelectMany(x => x.Methods
         //                .Where(y => y.HasBody && y.Body.Instructions != null)
@@ -1033,7 +1032,7 @@ namespace TDSM.Core
                     break;
                 case "web-server-bind-address":
                     _webServerAddress = args.Value;
-                    TDSM.API.Web.WebServer.Start(args.Value);
+                    OTA.Web.WebServer.Start(args.Value);
                     break;
                 case "web-server-provider":
                     _webServerProvider = args.Value;
@@ -1160,7 +1159,7 @@ namespace TDSM.Core
                 RConBindAddress = tmp;
 
             if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-web-server-bind-address" })))
-                TDSM.API.Web.WebServer.Start(tmp);
+                OTA.Web.WebServer.Start(tmp);
 
             if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-web-server-provider" })))
                 _webServerProvider = tmp;
@@ -1283,7 +1282,7 @@ namespace TDSM.Core
                 if (!String.IsNullOrEmpty(_webServerAddress))
                 {
                     ProgramLog.Log("Stopping web server");
-                    TDSM.API.Web.WebServer.Stop();
+                    OTA.Web.WebServer.Stop();
                 }
 
                 if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)

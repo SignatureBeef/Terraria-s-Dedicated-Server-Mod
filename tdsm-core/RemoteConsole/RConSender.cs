@@ -1,5 +1,5 @@
 using System;
-using TDSM.API.Command;
+using OTA.Command;
 
 namespace TDSM.Core.RemoteConsole
 {

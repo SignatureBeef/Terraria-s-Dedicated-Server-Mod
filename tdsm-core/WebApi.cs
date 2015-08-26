@@ -14,7 +14,7 @@ namespace TDSM.Core
 
         //TODO implement permissions
 
-        [Authorize(Roles = "tdsm.api.getplayers")]
+        [Authorize(Roles = "OTA.getplayers")]
         public string[] Get()
         {
 //            if (this.CheckAccess())

@@ -3,8 +3,8 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using TDSM.API.Logging;
-using TDSM.API;
+using OTA.Logging;
+using OTA;
 
 //using TDSM.Core.ServerCore;
 
@@ -195,7 +195,7 @@ namespace TDSM.Core.RemoteConsole
         {
             writer.WriteLine(ASCIIArt);
             writer.WriteLine("");
-            writer.WriteLine("\x1b[1;37mTerraria {0} dedicated server remote console, running TDSM #{1}.\x1b[0m", TDSM.API.Globals.TerrariaVersion, _tdsmBuild);
+            writer.WriteLine("\x1b[1;37mTerraria {0} dedicated server remote console, running TDSM #{1}.\x1b[0m", OTA.Globals.TerrariaVersion, _tdsmBuild);
             writer.WriteLine("\x1b[1;37mYou have 20 seconds to log in.\x1b[0m");
             writer.Flush();
         }
@@ -318,9 +318,9 @@ namespace TDSM.Core.RemoteConsole
 
             try
             {
-                TDSM.API.Callbacks.UserInput.CommandParser.ParseConsoleCommand(line, this.sender);
+                OTA.Callbacks.UserInput.CommandParser.ParseConsoleCommand(line, this.sender);
             }
-            catch (TDSM.API.Misc.ExitException)
+            catch (OTA.Misc.ExitException)
             {
             }
             catch (Exception e)

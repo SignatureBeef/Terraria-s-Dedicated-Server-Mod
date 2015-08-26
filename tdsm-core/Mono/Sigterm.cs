@@ -44,18 +44,18 @@ namespace TDSM.Core.Mono
                                 if (!Terraria.Netplay.disconnect && _attached)
                                 {
                                     _attached = false;
-                                    TDSM.API.Logging.ProgramLog.Log("Server received Exit Signal");
-                                    TDSM.API.Command.DefaultCommands.Exit(null, null);
+                                    OTA.Logging.ProgramLog.Log("Server received Exit Signal");
+                                    OTA.Command.DefaultCommands.Exit(null, null);
                                 }
                             }
                         })).Start();
                 }
 
-                TDSM.API.Logging.ProgramLog.Log("Server can accept SIGTERM");
+                OTA.Logging.ProgramLog.Log("Server can accept SIGTERM");
             }
             catch
             {
-                TDSM.API.Logging.ProgramLog.Log("Failed to attatch SIGTERM listener");
+                OTA.Logging.ProgramLog.Log("Failed to attatch SIGTERM listener");
             }
         }
 

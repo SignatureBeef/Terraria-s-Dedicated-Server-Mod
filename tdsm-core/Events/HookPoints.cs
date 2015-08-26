@@ -1,4 +1,4 @@
-﻿using TDSM.API.Plugin;
+﻿using OTA.Plugin;
 
 namespace TDSM.Core.Events
 {

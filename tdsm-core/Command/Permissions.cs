@@ -1,8 +1,8 @@
 ﻿using System;
-using TDSM.API.Command;
-using TDSM.API.Data;
+using OTA.Command;
+using OTA.Data;
 using Microsoft.Xna.Framework;
-using TDSM.API.Logging;
+using OTA.Logging;
 
 namespace TDSM.Core
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Terraria;
-using TDSM.API.Logging;
+using OTA.Logging;
 using Microsoft.Xna.Framework;
 
 namespace TDSM.Core.ServerCharacters

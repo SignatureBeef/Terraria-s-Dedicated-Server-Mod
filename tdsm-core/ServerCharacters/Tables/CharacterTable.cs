@@ -1,7 +1,7 @@
 ﻿using System;
-using TDSM.API.Data;
+using OTA.Data;
 using TDSM.Core.ServerCharacters;
-using TDSM.API;
+using OTA;
 
 namespace TDSM.Core.ServerCharacters.Tables
 {
@@ -257,7 +257,7 @@ namespace TDSM.Core.ServerCharacters.Tables
 
                 if (!user.HasValue)
                 {
-                    TDSM.API.Logging.ProgramLog.Error.Log("No user found ");
+                    OTA.Logging.ProgramLog.Error.Log("No user found ");
                     return 0;
                 }
 

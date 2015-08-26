@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDSM.API.Command;
-using TDSM.API.Misc;
-using TDSM.API.Plugin;
+using OTA.Command;
+using OTA.Misc;
+using OTA.Plugin;
 using Terraria;
-using TDSM.API;
+using OTA;
 using System.Linq;
 
 namespace TDSM.Core
@@ -13,7 +13,7 @@ namespace TDSM.Core
     {
         //private Task _customInvasion;
         private Dictionary<Int32,Int32> _invasion;
-        private int _assignedInvasionType = TDSM.API.Callbacks.NPCCallback.AssignInvasionType();
+        private int _assignedInvasionType = OTA.Callbacks.NPCCallback.AssignInvasionType();
         private bool _notfInbound;
 
         [Hook(HookOrder.NORMAL)]

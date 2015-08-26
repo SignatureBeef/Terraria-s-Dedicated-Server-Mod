@@ -5,11 +5,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using TDSM.API;
-using TDSM.API.Command;
-using TDSM.API.Misc;
-using TDSM.API.Logging;
-using TDSM.Core.Misc;
+using OTA;
+using OTA.Command;
+using OTA.Misc;
+using OTA.Logging;
 using Terraria;
 
 namespace TDSM.Core.RemoteConsole

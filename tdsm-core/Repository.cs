@@ -5,9 +5,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
-using TDSM.API;
-using TDSM.API.Logging;
-using TDSM.API.Misc;
+using OTA;
+using OTA.Logging;
+using OTA.Misc;
 
 
 namespace TDSM.Core

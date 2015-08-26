@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using TDSM.API;
-using TDSM.API.Logging;
+using OTA;
+using OTA.Logging;
 
 namespace TDSM.Core.Definitions
 {

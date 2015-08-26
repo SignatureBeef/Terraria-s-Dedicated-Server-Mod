@@ -1,5 +1,5 @@
 ﻿using System;
-using TDSM.API.Data;
+using OTA.Data;
 using TDSM.Core.ServerCharacters;
 
 namespace TDSM.Core.ServerCharacters.Tables

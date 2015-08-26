@@ -81,7 +81,7 @@ namespace TDSM.Core
         public static bool IsTileClear(int x, int y)
         {
             #if MemTile
-            return Main.tile[x, y] == TDSM.API.Memory.MemTile.Empty || !Main.tile[x, y].active() || Main.tile[x, y].inActive();
+            return Main.tile[x, y] == OTA.Memory.MemTile.Empty || !Main.tile[x, y].active() || Main.tile[x, y].inActive();
             #else
             return Main.tile[x, y] == null || !Main.tile[x, y].active() || Main.tile[x, y].inActive();
             #endif
