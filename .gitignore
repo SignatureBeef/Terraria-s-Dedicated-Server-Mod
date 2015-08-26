@@ -10,18 +10,6 @@ obj/
 
 cecil
 
-/tdsm-patcher/KopiLua.dll
-/tdsm-patcher/NLua.dll
-/tdsm-patcher/TDSM.API.dll
-/tdsm-patcher/TDSM.API.pdb
-/tdsm-patcher/tdsm.microsoft.exe
-/tdsm-patcher/tdsm.mono.exe
-/tdsm-patcher/corenet
-/tdsm-patcher/Plugins
-/tdsm-patcher/tdsm-patcher.exe
-/tdsm-patcher/Vestris.ResourceLib.dll
-/tdsm-patcher/project.lock.json
-
 /packages
 
 .DS_Store

@@ -48,9 +48,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\tdsm-core\tdsm-core.csproj">
+    <ProjectReference Include="..\Core\Core.csproj">
       <Project>{48477B14-CEAA-47AA-98F1-EF935734DBC5}</Project>
-      <Name>tdsm-core</Name>
+      <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
