@@ -1,48 +1,48 @@
-﻿using System;
-using System.Web.Http;
-using System.Linq;
-
-namespace TDSM.Core
-{
-    public struct IdentityUser
-    {
-
-    }
-
-    public class PlayersController : ApiController
-    {
-
-        //TODO implement permissions
-
-        [Authorize(Roles = "OTA.getplayers")]
-        public string[] Get()
-        {
-//            if (this.CheckAccess())
-//            {
-                return Terraria.Main.player
-                    .Where(x => x != null && x.active)
-                    .Select(x => x.Name)
-                    .ToArray();
-//            }
+﻿//using System;
+//using System.Web.Http;
+//using System.Linq;
 //
-//            return null;
-        }
-    }
-
-    //    public class AccessAttribute : Attribute
-    //    {
-    //        public AccessAttribute()
-    //        {
-    //        }
-    //
-    //        public string Node { get; set; }
-    //    }
-
-//    public static class ApiControllerExtensions
+//namespace TDSM.Core
+//{
+//    public struct IdentityUser
 //    {
-//        public static bool CheckAccess(this ApiController controller)
+//
+//    }
+//
+//    public class PlayersController : ApiController
+//    {
+//
+//        //TODO implement permissions
+//
+//        [Authorize(Roles = "OTA.getplayers")]
+//        public string[] Get()
 //        {
-//            return false;
+////            if (this.CheckAccess())
+////            {
+//                return Terraria.Main.player
+//                    .Where(x => x != null && x.active)
+//                    .Select(x => x.Name)
+//                    .ToArray();
+////            }
+////
+////            return null;
 //        }
 //    }
-}
+//
+//    //    public class AccessAttribute : Attribute
+//    //    {
+//    //        public AccessAttribute()
+//    //        {
+//    //        }
+//    //
+//    //        public string Node { get; set; }
+//    //    }
+//
+////    public static class ApiControllerExtensions
+////    {
+////        public static bool CheckAccess(this ApiController controller)
+////        {
+////            return false;
+////        }
+////    }
+//}

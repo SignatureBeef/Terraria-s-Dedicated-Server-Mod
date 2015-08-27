@@ -56,17 +56,14 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Binaries\Libraries\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="TerrariaServer">
       <HintPath>..\Open-Terraria-API\Binaries\TerrariaServer.exe</HintPath>
     </Reference>
     <Reference Include="OTA">
       <HintPath>..\Open-Terraria-API\Binaries\OTA.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http">
-      <HintPath>..\Open-Terraria-API\Binaries\Libraries\System.Web.Http.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
 </Project>
