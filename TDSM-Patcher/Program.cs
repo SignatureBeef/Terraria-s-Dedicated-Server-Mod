@@ -31,6 +31,8 @@ namespace TDSM.Patcher
             OTAPatcher.PerformPatch += (object sender, OTAPatcher.InjectorEventArgs e) =>
             {
                 e.Injector.ExampleExtension();
+
+//                e.Injector.SwapOTAReferences();
             };
 
             //Attach to the dependencies event so we can copy our own files

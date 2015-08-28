@@ -30,13 +30,12 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Patcher, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Open-Terraria-API\Binaries\Patcher.exe</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="Vestris.ResourceLib">
       <HintPath>..\packages\Vestris.1.0.1\lib\Vestris.ResourceLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Patcher">
+      <HintPath>..\Open-Terraria-API\Binaries\Patcher.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -46,5 +45,13 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\Open-Terraria-API\Binaries\Libraries\Newtonsoft.Json.dll">
+      <Link>Newtonsoft.Json.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Open-Terraria-API\Official\TerrariaServer.exe">
+      <Link>TerrariaServer.exe</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

@@ -96,7 +96,7 @@ namespace TDSM.Core
 
         public bool RestartWhenNoPlayers { get; set; }
 
-        public static DataRegister Ops { get; private set; }
+        public static PairFileRegister Ops { get; private set; }
 
         public static bool WhitelistEnabled { get; set; }
 
@@ -161,7 +161,7 @@ namespace TDSM.Core
 
             CommandDictionary = new Dictionary<string, string>(Tools.MaxPlayers + 1);
             CommandParser = new CommandParser();
-            Ops = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
+            Ops = new PairFileRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
             Whitelist = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "whitelist.txt"), false);
 #if WebInterface
             WebInterface.WebPermissions.Load();
