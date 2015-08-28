@@ -719,6 +719,14 @@ namespace TDSM.Core
                 {
                     CharacterManager.LoadForAuthenticated(ctx.Player, !AllowSSCGuestInfo);
                 }
+                else
+                {
+                    if (!AllowSSCGuestInfo)
+                    {
+//                        ProgramLog.Debug.Log("This fella, yeah him; clear his inventory");
+                        CharacterManager.LoadForGuest(ctx.Player);
+                    }
+                }
             }
         }
 

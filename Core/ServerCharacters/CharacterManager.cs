@@ -496,5 +496,32 @@ namespace TDSM.Core.ServerCharacters
                 ProgramLog.Log("No SSC data");
             }
         }
+
+        public static void LoadForGuest(Player player)
+        {
+            var ssc = new ServerCharacter(StartingOutInfo, player);
+            ssc.ApplyToPlayer(player);
+            //TODO add guest events
+            //Check to make sure the player is the same player (ie skin, clothes)
+            //Add hooks for pre and post apply
+
+//            var ctx = new HookContext()
+//            {
+//                Player = player,
+//                Sender = player
+//            };
+//
+//            var args = new TDSM.Core.Events.HookArgs.PreApplyServerSideCharacter()
+//            {
+//                Character = ssc
+//            };
+//
+//            TDSM.Core.Events.HookPoints.PreApplyServerSideCharacter.Invoke(ref ctx, ref args);
+
+//            args.Character.ApplyToPlayer(player);
+
+//            var args1 = new TDSM.Core.Events.HookArgs.PostApplyServerSideCharacter();
+//            TDSM.Core.Events.HookPoints.PostApplyServerSideCharacter.Invoke(ref ctx, ref args1);
+        }
     }
 }
