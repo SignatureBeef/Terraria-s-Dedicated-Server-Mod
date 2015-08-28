@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -30,6 +30,10 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Patcher, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Open-Terraria-API\Binaries\Patcher.exe</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="Vestris.ResourceLib">
       <HintPath>..\packages\Vestris.1.0.1\lib\Vestris.ResourceLib.dll</HintPath>
@@ -40,12 +44,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\Open-Terraria-API\Patcher\Patcher.csproj">
-      <Project>{0ED8C37C-355A-4271-92B8-F9ED66881C46}</Project>
-      <Name>Patcher</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
