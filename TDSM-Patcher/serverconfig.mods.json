@@ -1,0 +1,25 @@
+﻿[
+	{
+		"OfficialLinePrefix": "#world=C:",
+		"Offset": -1,
+		"Modifications": [
+			"#If your server is running linux make sure to use forward slashes for your directory.",
+			"#world=Worlds/world.wld"
+		]
+	},
+	{
+		"OfficialLinePrefix": "#worldpath=C:",
+		"Offset": -1,
+		"Modifications": [
+			"#If your server is running linux make sure to use forward slashes for your directory.",
+			"#worldpath=Worlds/"
+		]
+	},
+	{
+		"OfficialLinePrefix": "#motd=Please ",
+		"Offset": 0,
+		"Modifications": [
+			"motd=Welcome to a TDSM Rebind Server!\\0            ~ tdsm.org ~"
+		]
+	}
+]

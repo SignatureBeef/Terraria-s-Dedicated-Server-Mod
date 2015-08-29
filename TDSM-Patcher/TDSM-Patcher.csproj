@@ -53,5 +53,27 @@
       <Link>TerrariaServer.exe</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="additional.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="serverconfig.mods.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Open-Terraria-API\Official\serverconfig.txt">
+      <Link>serverconfig.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Open-Terraria-API\Binaries\OTA.dll">
+      <Link>OTA.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Open-Terraria-API\Binaries\OTA.dll.mdb">
+      <Link>OTA.dll.mdb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Open-Terraria-API\Binaries\OTA.pdb">
+      <Link>OTA.pdb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
