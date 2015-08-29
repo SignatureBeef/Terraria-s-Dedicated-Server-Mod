@@ -63,6 +63,7 @@ namespace TDSM.Patcher
             OTAPatcher.CopyProjectFiles = true;
 
             OTAPatcher.PromptToRun = false;
+            OTAPatcher.CopyAPI = false; //We only care about the Binaries OTA.dll, not it's debug version
 
             OTAPatcher.DefaultProcess(args);
 
@@ -74,6 +75,7 @@ namespace TDSM.Patcher
             OTAPatcher.BinariesFiles.Add(Path.Combine("Plugins", "TDSM.Core.dll"));
             OTAPatcher.BinariesFiles.Add(Path.Combine("Plugins", "TDSM.Core.dll.mdb"));
             OTAPatcher.BinariesFiles.Add(Path.Combine("Plugins", "TDSM.Core.pdb"));
+            OTAPatcher.BinariesFiles.RemoveAll(x => x.StartsWith("OTA"));
             Console.Write("Ok\n");
 
             //Update dev files
