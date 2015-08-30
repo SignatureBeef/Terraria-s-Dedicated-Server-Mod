@@ -126,7 +126,7 @@ namespace TDSM.Core
             base.Enabled();
 
             OTA.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
-            OTA.Callbacks.MainCallback.UpdateServer = OnUpdateServer;
+            OTA.Callbacks.MainCallback.UpdateServer += OnUpdateServer;
 
             OTA.Command.CommandParser.ExtCheckAccessLevel = (acc, sender) =>
             {
@@ -830,7 +830,7 @@ namespace TDSM.Core
         }
 
         //[Hook(HookOrder.NORMAL)]
-        void OnUpdateServer(/*ref HookContext ctx, ref HookArgs.UpdateServer args*/)
+        void OnUpdateServer(object empty, EventArgs noargs) /*ref HookContext ctx, ref HookArgs.UpdateServer args*/
         {
             //for (var i = 0; i < Terraria.Main.player.Length; i++)
             //{
