@@ -1091,7 +1091,7 @@ namespace TDSM.Core
                     {
                         Terraria.Main.ServerSideCharacter = characterMode != CharacterMode.NONE;
                         CharacterManager.Mode = characterMode;
-                        ProgramLog.Admin.Log("SSC are enabled with mode " + characterMode);
+                        ProgramLog.Admin.Log("SSC mode is: " + characterMode);
 
                         Hook(HookPoints.ReceiveNetMessage, OnNetMessageReceived);
                         //                        Hook(HookPoints.PlayerDataReceived, OnPlayerDataReceived);

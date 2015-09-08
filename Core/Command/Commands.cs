@@ -2263,7 +2263,7 @@ namespace TDSM.Core
                 var existing = AuthenticatedUsers.GetUser(playerName);
                 if (existing != null)
                 {
-                    if (existing.Value.Operator)
+                    if (existing.Operator)
                         throw new CommandError("Player is already an operator");
 
                     if (AuthenticatedUsers.UpdateUser(playerName, true))
@@ -2348,7 +2348,7 @@ namespace TDSM.Core
                 var existing = AuthenticatedUsers.GetUser(playerName);
                 if (existing != null)
                 {
-                    if (!existing.Value.Operator)
+                    if (!existing.Operator)
                         throw new CommandError("Player is not an operator");
                     
                     var player = Tools.GetPlayerByName(playerName);
@@ -2413,7 +2413,7 @@ namespace TDSM.Core
                     var existing = AuthenticatedUsers.GetUser(sender.SenderName);
                     if (existing != null)
                     {
-                        if (existing.Value.ComparePassword(sender.SenderName, password) && existing.Value.Operator)
+                        if (existing.ComparePassword(sender.SenderName, password) && existing.Operator)
                         {
                             Tools.NotifyAllOps(
                                 String.Format("{0} successfully logged in.", player.Name)
@@ -2466,7 +2466,7 @@ namespace TDSM.Core
                     var existing = AuthenticatedUsers.GetUser(sender.SenderName);
                     if (existing != null)
                     {
-                        if (existing.Value.ComparePassword(sender.SenderName, password))
+                        if (existing.ComparePassword(sender.SenderName, password))
                         {
                             Tools.NotifyAllOps(
                                 String.Format("{0} successfully logged in.", player.Name)

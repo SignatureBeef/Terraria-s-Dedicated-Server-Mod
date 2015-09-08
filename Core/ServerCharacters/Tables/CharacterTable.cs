@@ -163,7 +163,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             if (mode == CharacterMode.AUTH)
             {
                 var user = AuthenticatedUsers.GetUser(auth);
-                userId = user.Value.Id;
+                userId = user.Id;
             }
             else if (mode != CharacterMode.UUID)
                 return 0;
@@ -255,13 +255,13 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 var user = AuthenticatedUsers.GetUser(auth);
 
-                if (!user.HasValue)
+                if (user == null)
                 {
                     OTA.Logging.ProgramLog.Error.Log("No user found ");
                     return 0;
                 }
 
-                userId = user.Value.Id;
+                userId = user.Id;
             }
             else if (mode != CharacterMode.UUID)
                 return 0;
@@ -291,7 +291,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             if (mode == CharacterMode.AUTH)
             {
                 var user = AuthenticatedUsers.GetUser(auth);
-                userId = user.Value.Id;
+                userId = user.Id;
             }
             else if (mode != CharacterMode.UUID)
                 return null;
@@ -353,7 +353,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             if (mode == CharacterMode.AUTH)
             {
                 var user = AuthenticatedUsers.GetUser(auth);
-                userId = user.Value.Id;
+                userId = user.Id;
             }
             else if (mode != CharacterMode.UUID)
                 return false;

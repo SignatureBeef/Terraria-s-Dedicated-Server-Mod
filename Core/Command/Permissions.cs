@@ -182,7 +182,7 @@ namespace TDSM.Core
             
             int a = 0;
             string username, groupName, node, password;
-            UserDetails? user;
+            DbPlayer user;
             Group grp;
             bool deny, op;
 
@@ -204,13 +204,13 @@ namespace TDSM.Core
                     if (grp == null)
                         throw new CommandError("Group does not exist: " + groupName);
 
-                    if (Storage.AddUserToGroup(user.Value.Username, grp.Name))
+                    if (Storage.AddUserToGroup(user.Username, grp.Name))
                     {
-                        sender.Message(String.Format("Successfully added {0} to group {1} ", user.Value.Username, grp.Name), Color.Green);
+                        sender.Message(String.Format("Successfully added {0} to group {1} ", user.Username, grp.Name), Color.Green);
                     }
                     else
                     {
-                        sender.Message(String.Format("Failed to add {0} from group {1} ", user.Value.Username, grp.Name), Color.Red);
+                        sender.Message(String.Format("Failed to add {0} from group {1} ", user.Username, grp.Name), Color.Red);
                     }
                     break;
                 case "removegroup":
@@ -228,13 +228,13 @@ namespace TDSM.Core
                     if (grp == null)
                         throw new CommandError("Group does not exist: " + groupName);
 
-                    if (Storage.RemoveUserFromGroup(user.Value.Username, grp.Name))
+                    if (Storage.RemoveUserFromGroup(user.Username, grp.Name))
                     {
-                        sender.Message(String.Format("Successfully removed {0} to group {1} ", user.Value.Username, grp.Name), Color.Green);
+                        sender.Message(String.Format("Successfully removed {0} to group {1} ", user.Username, grp.Name), Color.Green);
                     }
                     else
                     {
-                        sender.Message(String.Format("Failed to remove {0} from group {1} ", user.Value.Username, grp.Name), Color.Red);
+                        sender.Message(String.Format("Failed to remove {0} from group {1} ", user.Username, grp.Name), Color.Red);
                     }
                     break;
 
@@ -252,13 +252,13 @@ namespace TDSM.Core
                     if (null == user)
                         throw new CommandError("No user found by: " + username);
 
-                    if (Storage.AddNodeToUser(user.Value.Username, node, deny))
+                    if (Storage.AddNodeToUser(user.Username, node, deny))
                     {
-                        sender.Message(String.Format("Successfully added {0} to user {1} ", node, user.Value.Username), Color.Green);
+                        sender.Message(String.Format("Successfully added {0} to user {1} ", node, user.Username), Color.Green);
                     }
                     else
                     {
-                        sender.Message(String.Format("Failed to add {0} from user {1} ", node, user.Value.Username), Color.Red);
+                        sender.Message(String.Format("Failed to add {0} from user {1} ", node, user.Username), Color.Red);
                     }
                     break;
                 case "removenode":
@@ -275,13 +275,13 @@ namespace TDSM.Core
                     if (null == user)
                         throw new CommandError("No user found by: " + username);
 
-                    if (Storage.RemoveNodeFromUser(user.Value.Username, node, deny))
+                    if (Storage.RemoveNodeFromUser(user.Username, node, deny))
                     {
-                        sender.Message(String.Format("Successfully removed {0} to user {1} ", node, user.Value.Username), Color.Green);
+                        sender.Message(String.Format("Successfully removed {0} to user {1} ", node, user.Username), Color.Green);
                     }
                     else
                     {
-                        sender.Message(String.Format("Failed to remove {0} from user {1} ", node, user.Value.Username), Color.Red);
+                        sender.Message(String.Format("Failed to remove {0} from user {1} ", node, user.Username), Color.Red);
                     }
                     break;
 
@@ -305,7 +305,7 @@ namespace TDSM.Core
                     }
                     else
                     {
-                        sender.Message("There are no registered groups for user " + user.Value.Username);
+                        sender.Message("There are no registered groups for user " + user.Username);
                     }
                     break;
 
@@ -321,7 +321,7 @@ namespace TDSM.Core
                     var nodes = Storage.UserNodes(username);
                     if (nodes != null && nodes.Length > 0)
                     {
-                        sender.Message("Current permissions for user {0}:", user.Value.Username);
+                        sender.Message("Current permissions for user {0}:", user.Username);
                         foreach (var nd in nodes)
                         {
                             sender.Message("\t{0}\t- {1}", nd.Deny ? "Denied" : "Allowed", nd.Node);
@@ -329,7 +329,7 @@ namespace TDSM.Core
                     }
                     else
                     {
-                        sender.Message("There are no permissions assigned to user: " + user.Value.Username);
+                        sender.Message("There are no permissions assigned to user: " + user.Username);
                     }
                     break;
 
