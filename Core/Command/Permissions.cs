@@ -162,7 +162,7 @@ namespace TDSM.Core
                         sender.Message("Current permissions for group {0}:", grpList.Name);
                         foreach (var nd in nodes)
                         {
-                            sender.Message("\t{0}\t- {1}", nd.Deny ? "Denied" : "Allowed", nd.Node);
+                            sender.Message("\t{0}\t- {1}", (nd.Permission == Permission.Denied) ? "Denied" : "Allowed", nd.Node);
                         }
                     }
                     else
@@ -324,7 +324,7 @@ namespace TDSM.Core
                         sender.Message("Current permissions for user {0}:", user.Username);
                         foreach (var nd in nodes)
                         {
-                            sender.Message("\t{0}\t- {1}", nd.Deny ? "Denied" : "Allowed", nd.Node);
+                            sender.Message("\t{0}\t- {1}", (nd.Permission == Permission.Denied) ? "Denied" : "Allowed", nd.Node);
                         }
                     }
                     else
