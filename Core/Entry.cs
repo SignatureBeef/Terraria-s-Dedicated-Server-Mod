@@ -139,6 +139,8 @@ namespace TDSM.Core
             EnableCheatProtection = true;
             RunServerCore = true;
             ExitAccessLevel = -1;
+
+            OTA.Web.API.PublicController.ShowPlugins = true;
         }
 
         protected override void Initialized(object state)
@@ -1118,6 +1120,14 @@ namespace TDSM.Core
                     if (Boolean.TryParse(args.Value, out guestInfo))
                     {
                         AllowSSCGuestInfo = guestInfo;
+                    }
+                    break;
+
+                case "api-showplugins":
+                    bool apiShowPlugins;
+                    if (Boolean.TryParse(args.Value, out apiShowPlugins))
+                    {
+                        OTA.Web.API.PublicController.ShowPlugins = apiShowPlugins;
                     }
                     break;
             }
