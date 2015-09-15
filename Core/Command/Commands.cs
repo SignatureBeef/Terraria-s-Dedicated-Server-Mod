@@ -2254,7 +2254,7 @@ namespace TDSM.Core
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public void OpPlayer(ISender sender, ArgumentList args)
+        public async void OpPlayer(ISender sender, ArgumentList args)
         {
             var playerName = args.GetString(0);
 
@@ -2266,7 +2266,7 @@ namespace TDSM.Core
                     if (existing.Operator)
                         throw new CommandError("Player is already an operator");
 
-                    if (AuthenticatedUsers.UpdateUser(playerName, true))
+                    if (await AuthenticatedUsers.UpdateUser(playerName, null, op: true))
                     {
                         Tools.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
                         var player = Tools.GetPlayerByName(playerName);
@@ -2327,7 +2327,7 @@ namespace TDSM.Core
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public void DeopPlayer(ISender sender, ArgumentList args)
+        public async void DeopPlayer(ISender sender, ArgumentList args)
         {
             var playerName = args.GetString(0);
             //Player player;
@@ -2359,7 +2359,7 @@ namespace TDSM.Core
                         player.SetAuthentication(null, "tdsm");
                     }
 
-                    if (AuthenticatedUsers.UpdateUser(playerName, false))
+                    if (await AuthenticatedUsers.UpdateUser(playerName, null, false))
                     {
                         sender.Message("Deop success", Color.DarkGreen);
                     }

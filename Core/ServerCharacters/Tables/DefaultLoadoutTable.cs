@@ -1,6 +1,9 @@
 ﻿using System;
 using OTA.Data;
 using TDSM.Core.ServerCharacters;
+using TDSM.Core.Data;
+using TDSM.Core.Data.Models;
+using System.Threading.Tasks;
 
 namespace TDSM.Core.ServerCharacters.Tables
 {
@@ -13,54 +16,23 @@ namespace TDSM.Core.ServerCharacters.Tables
         public const String Setting_Health = "SSC_Health";
         public const String Setting_MaxHealth = "SSC_MaxHealth";
 
-        static class ColumnNames
+        public static async Task<LoadoutItem> AddItem(/*CharacterManager.ItemType type,*/ int itemId)
         {
-            public const String Id = "Id";
-            //            public const String TypeId = "TypeId";
-            public const String ItemId = "ItemId";
-        }
-
-        public static readonly TableColumn[] Columns = new TableColumn[]
-        {
-            new TableColumn(ColumnNames.Id, typeof(Int32), true, true),
-//            new TableColumn(ColumnNames.TypeId, typeof(Int32)),
-            new TableColumn(ColumnNames.ItemId, typeof(Int32))
-        };
-
-        public static bool Exists()
-        {
-            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
+            using (var ctx = new TContext())
             {
-                bl.TableExists(TableName);
+                var li = new LoadoutItem()
+                {
+                    ItemId = itemId
+                };
+                ctx.DefaultLoadout.Add(li);
 
-                return Storage.Execute(bl);
+                await ctx.SaveChangesAsync();
+
+                return li;
             }
         }
 
-        public static bool Create()
-        {
-            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
-            {
-                bl.TableCreate(TableName, Columns);
-
-                return Storage.ExecuteNonQuery(bl) > 0;
-            }
-        }
-
-        public static int AddItem(/*CharacterManager.ItemType type,*/ int itemId)
-        {
-            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
-            {
-                bl.InsertInto(TableName, 
-//                    new DataParameter(ColumnNames.TypeId, (int)type),
-                    new DataParameter(ColumnNames.ItemId, itemId)
-                );
-
-                return (int)Storage.ExecuteInsert(bl); //Get the new ID
-            }
-        }
-
-        public static void PopulateDefaults(NewPlayerInfo info)
+        public static async Task PopulateDefaults(NewPlayerInfo info)
         {
             SettingsStore.Set(Setting_Health, info.Health);
             SettingsStore.Set(Setting_MaxHealth, info.MaxHealth);
@@ -71,8 +43,8 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Inventory)
                 {
-                    var id = ItemTable.NewItem(CharacterManager.ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
-                    AddItem(id);
+                    var id = await ItemTable.NewItem(CharacterManager.ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    await AddItem(id.Id);
                 }
             }
 
@@ -80,8 +52,8 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Armor)
                 {
-                    var id = ItemTable.NewItem(CharacterManager.ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
-                    AddItem(id);
+                    var id = await ItemTable.NewItem(CharacterManager.ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    await AddItem(id.Id);
                 }
             }
 
@@ -89,8 +61,8 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Dye)
                 {
-                    var id = ItemTable.NewItem(CharacterManager.ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
-                    AddItem(id);
+                    var id = await ItemTable.NewItem(CharacterManager.ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    await AddItem(id.Id);
                 }
             }
         }

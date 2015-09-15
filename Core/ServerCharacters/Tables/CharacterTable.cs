@@ -2,88 +2,16 @@
 using OTA.Data;
 using TDSM.Core.ServerCharacters;
 using OTA;
+using System.Threading.Tasks;
+using TDSM.Core.Data;
+using System.Linq;
+using TDSM.Core.Data.Models;
 
 namespace TDSM.Core.ServerCharacters.Tables
 {
     internal class CharacterTable
     {
-        public const String TableName = "SSC";
-
-        static class ColumnNames
-        {
-            public const String Id = "Id";
-            public const String UserId = "UserId";
-            public const String UUID = "UUID";
-            public const String Health = "Health";
-            public const String MaxHealth = "MaxHealth";
-            public const String Mana = "Mana";
-            public const String MaxMana = "MaxMana";
-            public const String SpawnX = "SpawnX";
-            public const String SpawnY = "SpawnY";
-            public const String Hair = "Hair";
-            public const String HairDye = "HairDye";
-            public const String HideVisual = "HideVisual";
-            public const String Difficulty = "Difficulty";
-            public const String HairColor = "HairColor";
-            public const String SkinColor = "SkinColor";
-            public const String EyeColor = "EyeColor";
-            public const String ShirtColor = "ShirtColor";
-            public const String UnderShirtColor = "UnderShirtColor";
-            public const String PantsColor = "PantsColor";
-            public const String ShoeColor = "ShoeColor";
-            public const String AnglerQuests = "AnglerQuests";
-        }
-
-        public static readonly TableColumn[] Columns = new TableColumn[]
-        {
-            new TableColumn(ColumnNames.Id, typeof(Int32), true, true),
-            new TableColumn(ColumnNames.UserId, typeof(Int32), true),
-            new TableColumn(ColumnNames.UUID, typeof(String), 36, true),
-            new TableColumn(ColumnNames.Health, typeof(Int32)),
-            new TableColumn(ColumnNames.MaxHealth, typeof(Int32)),
-            new TableColumn(ColumnNames.Mana, typeof(Int32)),
-            new TableColumn(ColumnNames.MaxMana, typeof(Int32)),
-            new TableColumn(ColumnNames.SpawnX, typeof(Int32)),
-            new TableColumn(ColumnNames.SpawnY, typeof(Int32)),
-            new TableColumn(ColumnNames.Hair, typeof(Int32)),
-            new TableColumn(ColumnNames.HairDye, typeof(Byte)),
-
-            //This could techincally fit in a short, but that would leave only 6 bits left (HideVisual is 10)
-            //I would rather use a typical int just for furture additions
-            new TableColumn(ColumnNames.HideVisual, typeof(Int32)), 
-
-            new TableColumn(ColumnNames.Difficulty, typeof(Byte)),
-            new TableColumn(ColumnNames.HairColor, typeof(UInt32)),
-            new TableColumn(ColumnNames.SkinColor, typeof(UInt32)),
-            new TableColumn(ColumnNames.EyeColor, typeof(UInt32)),
-            new TableColumn(ColumnNames.ShirtColor, typeof(UInt32)),
-            new TableColumn(ColumnNames.UnderShirtColor, typeof(UInt32)),
-            new TableColumn(ColumnNames.PantsColor, typeof(UInt32)),
-            new TableColumn(ColumnNames.ShoeColor, typeof(UInt32)),
-            new TableColumn(ColumnNames.AnglerQuests, typeof(Int32))
-        };
-
-        public static bool Exists()
-        {
-            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
-            {
-                bl.TableExists(TableName);
-
-                return Storage.Execute(bl);
-            }
-        }
-
-        public static bool Create()
-        {
-            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
-            {
-                bl.TableCreate(TableName, Columns);
-
-                return Storage.ExecuteNonQuery(bl) > 0;
-            }
-        }
-
-        public static int NewCharacter
+        public static async Task<Character> NewCharacter
         (
             CharacterMode mode,
             string auth,
@@ -108,7 +36,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             int anglerQuests
         )
         {
-            return NewCharacter
+            return await NewCharacter
             (
                 mode,
                 auth,
@@ -134,7 +62,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             );
         }
 
-        public static int NewCharacter
+        public static async Task<Character> NewCharacter
         (
             CharacterMode mode,
             string auth,
@@ -166,38 +94,42 @@ namespace TDSM.Core.ServerCharacters.Tables
                 userId = user.Id;
             }
             else if (mode != CharacterMode.UUID)
-                return 0;
+                return null;
 
-            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
+            using (var ctx = new TContext())
             {
-                bl.InsertInto(TableName, 
-                    new DataParameter(ColumnNames.UserId, userId),
-                    new DataParameter(ColumnNames.UUID, clientUUID),
-                    new DataParameter(ColumnNames.Health, health),
-                    new DataParameter(ColumnNames.MaxHealth, maxHealth),
-                    new DataParameter(ColumnNames.Mana, mana),
-                    new DataParameter(ColumnNames.MaxMana, maxMana),
-                    new DataParameter(ColumnNames.SpawnX, spawnX),
-                    new DataParameter(ColumnNames.SpawnY, spawnY),
-                    new DataParameter(ColumnNames.Hair, hair),
-                    new DataParameter(ColumnNames.HairDye, hairDye),
-                    new DataParameter(ColumnNames.HideVisual, hideVisual),
-                    new DataParameter(ColumnNames.Difficulty, difficulty),
-                    new DataParameter(ColumnNames.HairColor, hairColor),
-                    new DataParameter(ColumnNames.SkinColor, skinColor),
-                    new DataParameter(ColumnNames.EyeColor, eyeColor),
-                    new DataParameter(ColumnNames.ShirtColor, shirtColor),
-                    new DataParameter(ColumnNames.UnderShirtColor, underShirtColor),
-                    new DataParameter(ColumnNames.PantsColor, pantsColor),
-                    new DataParameter(ColumnNames.ShoeColor, shoeColor),
-                    new DataParameter(ColumnNames.AnglerQuests, anglerQuests)
-                );
+                Character chr = new Character()
+                {
+                    UserId = userId,
+                    UUID = clientUUID,
+                    Health = health,
+                    MaxHealth = maxHealth,
+                    Mana = mana,
+                    MaxMana = maxMana,
+                    SpawnX = spawnX,
+                    SpawnY = spawnY,
+                    Hair = hair,
+                    HairDye = hairDye,
+                    HideVisual = hideVisual,
+                    Difficulty = difficulty,
+                    HairColor = hairColor,
+                    SkinColor = skinColor,
+                    EyeColor = eyeColor,
+                    ShirtColor = shirtColor,
+                    UnderShirtColor = underShirtColor,
+                    PantsColor = pantsColor,
+                    ShoeColor = shoeColor,
+                    AnglerQuests = anglerQuests
+                };
+                ctx.Characters.Add(chr);
 
-                return (int)Storage.ExecuteInsert(bl); //Get the new ID
+                await ctx.SaveChangesAsync();
+
+                return chr;
             }
         }
 
-        public static bool UpdateCharacter
+        public static async Task<Character> UpdateCharacter
         (
             CharacterMode mode,
             string auth,
@@ -222,7 +154,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             int anglerQuests
         )
         {
-            return UpdateCharacter
+            return await UpdateCharacter
             (
                 mode,
                 auth,
@@ -248,7 +180,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             );
         }
 
-        public static int GetCharacterId(CharacterMode mode, string auth, string clientUUID)
+        public static Character GetCharacter(CharacterMode mode, string auth, string clientUUID)
         {
             int userId = 0;
             if (mode == CharacterMode.AUTH)
@@ -258,73 +190,28 @@ namespace TDSM.Core.ServerCharacters.Tables
                 if (user == null)
                 {
                     OTA.Logging.ProgramLog.Error.Log("No user found ");
-                    return 0;
+                    return null;
                 }
 
-                userId = user.Id;
-            }
-            else if (mode != CharacterMode.UUID)
-                return 0;
-
-            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
-            {
-                if (mode == CharacterMode.AUTH)
-                {
-                    bl.SelectFrom(TableName, new string[] { ColumnNames.Id }, 
-                        new WhereFilter(ColumnNames.UserId, userId)
-                    );
-                }
-                else
-                {
-                    bl.SelectFrom(TableName, new string[] { ColumnNames.Id }, 
-                        new WhereFilter(ColumnNames.UUID, clientUUID)
-                    );
-                }
-
-                return Storage.ExecuteScalar<Int32>(bl);
-            }
-        }
-
-        public static ServerCharacter GetCharacter(CharacterMode mode, string auth, string clientUUID)
-        {
-            int userId = 0;
-            if (mode == CharacterMode.AUTH)
-            {
-                var user = AuthenticatedUsers.GetUser(auth);
                 userId = user.Id;
             }
             else if (mode != CharacterMode.UUID)
                 return null;
-
-            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
+            
+            using (var ctx = new TContext())
             {
                 if (mode == CharacterMode.AUTH)
                 {
-                    bl.SelectFrom(TableName, new string[]
-                        { 
-                            "*"
-                        }, 
-                        new WhereFilter(ColumnNames.UserId, userId)
-                    );
+                    return ctx.Characters.Single(x => x.UserId == userId);
                 }
                 else
                 {
-                    bl.SelectFrom(TableName, new string[]
-                        { 
-                            "*"
-                        }, 
-                        new WhereFilter(ColumnNames.UUID, clientUUID)
-                    );
+                    return ctx.Characters.Single(x => x.UUID == clientUUID);
                 }
-
-                var arr = Storage.ExecuteArray<ServerCharacter>(bl);
-                if (arr != null && arr.Length > 0) return arr[0];
             }
-
-            return null;
         }
 
-        public static bool UpdateCharacter
+        public static async Task<Character> UpdateCharacter
         (
             CharacterMode mode,
             string auth,
@@ -356,66 +243,43 @@ namespace TDSM.Core.ServerCharacters.Tables
                 userId = user.Id;
             }
             else if (mode != CharacterMode.UUID)
-                return false;
+                return null;
             
-            using (var bl = Storage.GetBuilder(CharacterManager.SQLSafeName))
+            using (var ctx = new TContext())
             {
+                Character chr;
                 if (mode == CharacterMode.AUTH)
                 {
-                    bl.Update(TableName, new DataParameter[]
-                        {
-                            new DataParameter(ColumnNames.Health, health),
-                            new DataParameter(ColumnNames.MaxHealth, maxHealth),
-                            new DataParameter(ColumnNames.Mana, mana),
-                            new DataParameter(ColumnNames.MaxMana, maxMana),
-                            new DataParameter(ColumnNames.SpawnX, spawnX),
-                            new DataParameter(ColumnNames.SpawnY, spawnY),
-                            new DataParameter(ColumnNames.Hair, hair),
-                            new DataParameter(ColumnNames.HairDye, hairDye),
-                            new DataParameter(ColumnNames.HideVisual, hideVisual),
-                            new DataParameter(ColumnNames.Difficulty, difficulty),
-                            new DataParameter(ColumnNames.HairColor, hairColor),
-                            new DataParameter(ColumnNames.SkinColor, skinColor),
-                            new DataParameter(ColumnNames.EyeColor, eyeColor),
-                            new DataParameter(ColumnNames.ShirtColor, shirtColor),
-                            new DataParameter(ColumnNames.UnderShirtColor, underShirtColor),
-                            new DataParameter(ColumnNames.PantsColor, pantsColor),
-                            new DataParameter(ColumnNames.ShoeColor, shoeColor),
-                            new DataParameter(ColumnNames.AnglerQuests, anglerQuests)
-                        },
-                        new WhereFilter(ColumnNames.UserId, userId.Value)
-                    );
+                    chr = ctx.Characters.Single(x => x.UserId == userId.Value);
                 }
                 else
                 {
-                    bl.Update(TableName, new DataParameter[]
-                        {
-                            new DataParameter(ColumnNames.Health, health),
-                            new DataParameter(ColumnNames.MaxHealth, maxHealth),
-                            new DataParameter(ColumnNames.Mana, mana),
-                            new DataParameter(ColumnNames.MaxMana, maxMana),
-                            new DataParameter(ColumnNames.SpawnX, spawnX),
-                            new DataParameter(ColumnNames.SpawnY, spawnY),
-                            new DataParameter(ColumnNames.Hair, hair),
-                            new DataParameter(ColumnNames.HairDye, hairDye),
-                            new DataParameter(ColumnNames.HideVisual, hideVisual),
-                            new DataParameter(ColumnNames.Difficulty, difficulty),
-                            new DataParameter(ColumnNames.HairColor, hairColor),
-                            new DataParameter(ColumnNames.SkinColor, skinColor),
-                            new DataParameter(ColumnNames.EyeColor, eyeColor),
-                            new DataParameter(ColumnNames.ShirtColor, shirtColor),
-                            new DataParameter(ColumnNames.UnderShirtColor, underShirtColor),
-                            new DataParameter(ColumnNames.PantsColor, pantsColor),
-                            new DataParameter(ColumnNames.ShoeColor, shoeColor),
-                            new DataParameter(ColumnNames.AnglerQuests, anglerQuests)
-                        },
-                        new WhereFilter(ColumnNames.UUID, clientUUID)
-                    );
+                    chr = ctx.Characters.Single(x => x.UUID == clientUUID);
                 }
 
-                return Storage.ExecuteNonQuery(bl) > 0;
+                chr.Health = health;
+                chr.MaxHealth = maxHealth;
+                chr.Mana = mana;
+                chr.MaxMana = maxMana;
+                chr.SpawnX = spawnX;
+                chr.SpawnY = spawnY;
+                chr.Hair = hair;
+                chr.HairDye = hairDye;
+                chr.HideVisual = hideVisual;
+                chr.Difficulty = difficulty;
+                chr.HairColor = hairColor;
+                chr.SkinColor = skinColor;
+                chr.EyeColor = eyeColor;
+                chr.ShirtColor = shirtColor;
+                chr.UnderShirtColor = underShirtColor;
+                chr.PantsColor = pantsColor;
+                chr.ShoeColor = shoeColor;
+                chr.AnglerQuests = anglerQuests;
+
+                await ctx.SaveChangesAsync();
+
+                return chr;
             }
         }
-
     }
 }

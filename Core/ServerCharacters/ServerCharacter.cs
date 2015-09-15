@@ -35,6 +35,10 @@ namespace TDSM.Core.ServerCharacters
     {
         public int Id { get; set; }
 
+        public int? UserId { get; set; }
+
+        public string UUID { get; set; }
+
         public int Health { get; set; }
 
         public int MaxHealth { get; set; }
@@ -648,13 +652,23 @@ namespace TDSM.Core.ServerCharacters
 
     public class PlayerItem
     {
+        /// <summary>
+        /// Internal database Id
+        /// </summary>
+        /// <value>The identifier.</value>
+        public int Id { get; set; }
+
         public int NetId { get; set; }
 
         public int Stack { get; set; }
 
-        public byte Prefix { get; set; }
+        public int Prefix { get; set; }
 
         public bool Favorite { get; set; }
+
+        public int? CharacterId { get; set; } //FOR DB
+
+        public TDSM.Core.ServerCharacters.CharacterManager.ItemType Type { get; set; }
 
         public PlayerItem(int netId, int stack, byte prefix, bool favorite)
         {

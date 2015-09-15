@@ -7,6 +7,7 @@ using OTA.Data;
 using OTA.Logging;
 using OTA.Plugin;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace TDSM.Core.ServerCharacters
 {
@@ -45,30 +46,30 @@ namespace TDSM.Core.ServerCharacters
 
         public static void Init()
         {
-            if (Storage.IsAvailable)
-            {
-                if (!Tables.CharacterTable.Exists())
-                {
-                    ProgramLog.Admin.Log("SSC table does not exist and will now be created");
-                    Tables.CharacterTable.Create();
-                }
-                if (!Tables.ItemTable.Exists())
-                {
-                    ProgramLog.Admin.Log("SSC item table does not exist and will now be created");
-                    Tables.ItemTable.Create();
-                }
-                if (!Tables.PlayerBuffTable.Exists())
-                {
-                    ProgramLog.Admin.Log("SSC player buff table does not exist and will now be created");
-                    Tables.PlayerBuffTable.Create();
-                }
-                if (!Tables.DefaultLoadoutTable.Exists())
-                {
-                    ProgramLog.Admin.Log("SSC loadout table does not exist and will now be created");
-                    Tables.DefaultLoadoutTable.Create();
-                    Tables.DefaultLoadoutTable.PopulateDefaults(StartingOutInfo);
-                }
-            }
+//            if (Storage.IsAvailable)
+//            {
+//                if (!Tables.CharacterTable.Exists())
+//                {
+//                    ProgramLog.Admin.Log("SSC table does not exist and will now be created");
+//                    Tables.CharacterTable.Create();
+//                }
+//                if (!Tables.ItemTable.Exists())
+//                {
+//                    ProgramLog.Admin.Log("SSC item table does not exist and will now be created");
+//                    Tables.ItemTable.Create();
+//                }
+//                if (!Tables.PlayerBuffTable.Exists())
+//                {
+//                    ProgramLog.Admin.Log("SSC player buff table does not exist and will now be created");
+//                    Tables.PlayerBuffTable.Create();
+//                }
+//                if (!Tables.DefaultLoadoutTable.Exists())
+//                {
+//                    ProgramLog.Admin.Log("SSC loadout table does not exist and will now be created");
+//                    Tables.DefaultLoadoutTable.Create();
+//                    Tables.DefaultLoadoutTable.PopulateDefaults(StartingOutInfo);
+//                }
+//            }
 
             //Player inventory,armor,dye common table
 
@@ -140,7 +141,7 @@ namespace TDSM.Core.ServerCharacters
 //                ProgramLog.Log("Loading SSC for " + authName);
                 if (Storage.IsAvailable)
                 {
-                    var ssc = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId);
+                    var ssc = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId).ToServerCharacter();
 
                     if (ssc != null)
                     {
@@ -214,7 +215,7 @@ namespace TDSM.Core.ServerCharacters
             return null;
         }
 
-        public static bool SavePlayerData(Player player)
+        public static async Task<bool> SavePlayerData(Player player)
         {
             //If using a flat based system ensure the MODE is stored
             string authName = null;
@@ -234,12 +235,12 @@ namespace TDSM.Core.ServerCharacters
                 if (Storage.IsAvailable)
                 {
 //                    var create = player.GetPluginData<Boolean>(Key_NewCharacter, false);
-                    var characterId = Tables.CharacterTable.GetCharacterId(Mode, player.AuthenticatedAs, player.ClientUUId);
-                    if (characterId <= 0)
+                    var character = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId);
+                    if (character == null)
                     {
 //                        if (player.ClearPluginData(Key_NewCharacter))
 //                        {
-                        characterId = Tables.CharacterTable.NewCharacter
+                        character = await Tables.CharacterTable.NewCharacter
                             (
                             Mode,
                             player.AuthenticatedAs,
@@ -272,7 +273,7 @@ namespace TDSM.Core.ServerCharacters
                     }
                     else
                     {
-                        Tables.CharacterTable.UpdateCharacter
+                        character = await Tables.CharacterTable.UpdateCharacter
                         (
                             Mode,
                             player.AuthenticatedAs,
@@ -298,13 +299,13 @@ namespace TDSM.Core.ServerCharacters
                         );
                     }
 
-                    if (characterId > 0)
+                    if (character != null)
                     {
-                        if (!SaveCharacterItems(player, characterId, player.inventory, ItemType.Inventory)) return false;
-                        if (!SaveCharacterItems(player, characterId, player.armor, ItemType.Armor)) return false;
-                        if (!SaveCharacterItems(player, characterId, player.dye, ItemType.Dye)) return false;
-                        if (!SaveCharacterItems(player, characterId, player.miscEquips, ItemType.Equipment)) return false;
-                        if (!SaveCharacterItems(player, characterId, player.miscDyes, ItemType.MiscDyes)) return false;
+                        if (!await SaveCharacterItems(player, character.Id, player.inventory, ItemType.Inventory)) return false;
+                        if (!await SaveCharacterItems(player, character.Id, player.armor, ItemType.Armor)) return false;
+                        if (!await SaveCharacterItems(player, character.Id, player.dye, ItemType.Dye)) return false;
+                        if (!await SaveCharacterItems(player, character.Id, player.miscEquips, ItemType.Equipment)) return false;
+                        if (!await SaveCharacterItems(player, character.Id, player.miscDyes, ItemType.MiscDyes)) return false;
 //                        for (var i = 0; i < player.inventory.Length; i++)
 //                        {
 //                            var item = player.inventory[i];
@@ -428,7 +429,7 @@ namespace TDSM.Core.ServerCharacters
             return false;
         }
 
-        private static bool SaveCharacterItems(Player player, int characterId, Item[] items, ItemType type)
+        private static async Task<bool> SaveCharacterItems(Player player, int characterId, Item[] items, ItemType type)
         {
             for (var i = 0; i < items.Length; i++)
             {
@@ -446,10 +447,10 @@ namespace TDSM.Core.ServerCharacters
                     favorite = item.favorited;
                 }
 
-                var itemId = Tables.ItemTable.GetItem(type, i, characterId);
-                if (itemId > 0)
+                var slotItem = Tables.ItemTable.GetItem(type, i, characterId);
+                if (slotItem != null)
                 {
-                    if (!Tables.ItemTable.UpdateItem(type, netId, prefix, stack, favorite, i, characterId))
+                    if (!await Tables.ItemTable.UpdateItem(type, netId, prefix, stack, favorite, i, characterId))
                     {
                         ProgramLog.Error.Log("Failed to save {1} for player: {0}", player.Name, type.ToString());
                         return false;
@@ -457,7 +458,7 @@ namespace TDSM.Core.ServerCharacters
                 }
                 else
                 {
-                    itemId = Tables.ItemTable.NewItem(type, netId, prefix, stack, favorite, i, characterId);
+                    slotItem = await Tables.ItemTable.NewItem(type, netId, prefix, stack, favorite, i, characterId);
                 }
             }
 

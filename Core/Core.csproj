@@ -68,6 +68,12 @@
     <Reference Include="System.Web.Http">
       <HintPath>..\Open-Terraria-API\Binaries\Libraries\System.Web.Http.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ServerCharacters\CharacterManager.cs" />
@@ -95,6 +101,7 @@
     <Compile Include="ServerCharacters\Tables\DefaultLoadoutTable.cs" />
     <Compile Include="WebApi.cs" />
     <Compile Include="Mono\Sigterm.cs" />
+    <Compile Include="Data\TContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -108,4 +115,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Data\Models\" />
+  </ItemGroup>
 </Project>
