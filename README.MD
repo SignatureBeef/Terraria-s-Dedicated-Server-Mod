@@ -9,6 +9,7 @@ TDSM is a server modification of the official Terraria dedicated server software
 * Additional Commands like; spawnnpc, spawnboss, hardmode, invasion (and custom ones too), ect...
 * Web Interface (soon)
 * Remote Console
+* Memory optimisations
 
 ## Installing
 1. You may get the latest release from the "[releases](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases)" link at the top or by clicking [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases). Want a the latest unstable build? Check [Testing](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod#testing) below.
