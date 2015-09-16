@@ -5,7 +5,7 @@ TDSM is a server modification of the official Terraria dedicated server software
 #### Notable Features
 * Plugins
 * Permissions System
-* MySQL and SQLite
+* MSSQL, MySQL and SQLite support
 * Additional Commands like; spawnnpc, spawnboss, hardmode, invasion (and custom ones too), ect...
 * Web Interface (soon)
 * Remote Console
