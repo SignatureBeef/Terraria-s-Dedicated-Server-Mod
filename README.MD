@@ -1,6 +1,6 @@
 # TDSM: Rebind [![Build Status](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod.svg?branch=master)](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod) [![Slack](https://img.shields.io/badge/Chat%20on-Slack-blue.svg)](http://tdsm.sithous.com/slack)
 *Supporting Terraria v1.3!*  
-TDSM is a server modification of the official Terraria dedicated server software. It extends functionallity giving the option for advanced permissions and plugin support. TDSM is a great choice for alternative server software for Terraria if you want stability, multi-platform, and added functionallity. It's also updated very quickly after a new Terraria release because of the way the new TDSM Rebind has been written.
+TDSM is a server modification of the official Terraria dedicated server software via the [Open Terraria API](https://github.com/DeathCradle/Open-Terraria-API/) project. It extends functionallity giving the option for advanced permissions and plugin support. TDSM is a great choice for alternative server software for Terraria if you want stability, multi-platform, and added functionallity. It's also updated very quickly after a new Terraria release because of the way the new TDSM Rebind has been written.
 
 #### Notable Features
 * Plugins
