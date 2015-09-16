@@ -2,7 +2,6 @@
 using OTA.Data;
 using TDSM.Core.ServerCharacters;
 using TDSM.Core.Data;
-using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -10,7 +9,7 @@ namespace TDSM.Core.ServerCharacters.Tables
 {
     internal class ItemTable
     {
-        public static async Task<SlotItem> NewItem(CharacterManager.ItemType type, int netId, int stack, int prefix, bool favorite, int slot, int? characterId = null)
+        public static SlotItem NewItem(CharacterManager.ItemType type, int netId, int stack, int prefix, bool favorite, int slot, int? characterId = null)
         {
             using (var ctx = new TContext())
             {
@@ -27,7 +26,7 @@ namespace TDSM.Core.ServerCharacters.Tables
 
                 ctx.Items.Add(itm);
 
-                await ctx.SaveChangesAsync();
+                ctx.SaveChanges();
 
                 return itm;
             }
@@ -49,7 +48,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             }
         }
 
-        public static async Task<bool> UpdateItem(CharacterManager.ItemType type, int netId, int prefix, int stack, bool favorite, int slot, int? characterId = null)
+        public static bool UpdateItem(CharacterManager.ItemType type, int netId, int prefix, int stack, bool favorite, int slot, int? characterId = null)
         {
             using (var ctx = new TContext())
             {
@@ -61,7 +60,7 @@ namespace TDSM.Core.ServerCharacters.Tables
                     existing.Stack = stack;
                     existing.Favorite = favorite;
 
-                    await ctx.SaveChangesAsync();
+                    ctx.SaveChanges();
 
                     return true;
                 }

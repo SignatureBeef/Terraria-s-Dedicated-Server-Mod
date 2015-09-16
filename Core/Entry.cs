@@ -530,6 +530,7 @@ namespace TDSM.Core
                 .WithHelpText("removenode <username> <node> [deny]")
                 .WithHelpText("listgroups")
                 .WithHelpText("listnodes")
+                .WithHelpText("search <term>")
                 .Calls(this.UserPermission);
 
             AddCommand("killnpc")

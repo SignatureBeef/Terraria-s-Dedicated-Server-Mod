@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using OTA;
 using Terraria;
@@ -7,7 +6,6 @@ using OTA.Data;
 using OTA.Logging;
 using OTA.Plugin;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace TDSM.Core.ServerCharacters
 {
@@ -215,7 +213,7 @@ namespace TDSM.Core.ServerCharacters
             return null;
         }
 
-        public static async Task<bool> SavePlayerData(Player player)
+        public static bool SavePlayerData(Player player)
         {
             //If using a flat based system ensure the MODE is stored
             string authName = null;
@@ -240,7 +238,7 @@ namespace TDSM.Core.ServerCharacters
                     {
 //                        if (player.ClearPluginData(Key_NewCharacter))
 //                        {
-                        character = await Tables.CharacterTable.NewCharacter
+                        character = Tables.CharacterTable.NewCharacter
                             (
                             Mode,
                             player.AuthenticatedAs,
@@ -273,7 +271,7 @@ namespace TDSM.Core.ServerCharacters
                     }
                     else
                     {
-                        character = await Tables.CharacterTable.UpdateCharacter
+                        character = Tables.CharacterTable.UpdateCharacter
                         (
                             Mode,
                             player.AuthenticatedAs,
@@ -301,11 +299,11 @@ namespace TDSM.Core.ServerCharacters
 
                     if (character != null)
                     {
-                        if (!await SaveCharacterItems(player, character.Id, player.inventory, ItemType.Inventory)) return false;
-                        if (!await SaveCharacterItems(player, character.Id, player.armor, ItemType.Armor)) return false;
-                        if (!await SaveCharacterItems(player, character.Id, player.dye, ItemType.Dye)) return false;
-                        if (!await SaveCharacterItems(player, character.Id, player.miscEquips, ItemType.Equipment)) return false;
-                        if (!await SaveCharacterItems(player, character.Id, player.miscDyes, ItemType.MiscDyes)) return false;
+                        if (!SaveCharacterItems(player, character.Id, player.inventory, ItemType.Inventory)) return false;
+                        if (!SaveCharacterItems(player, character.Id, player.armor, ItemType.Armor)) return false;
+                        if (!SaveCharacterItems(player, character.Id, player.dye, ItemType.Dye)) return false;
+                        if (!SaveCharacterItems(player, character.Id, player.miscEquips, ItemType.Equipment)) return false;
+                        if (!SaveCharacterItems(player, character.Id, player.miscDyes, ItemType.MiscDyes)) return false;
 //                        for (var i = 0; i < player.inventory.Length; i++)
 //                        {
 //                            var item = player.inventory[i];
@@ -429,7 +427,7 @@ namespace TDSM.Core.ServerCharacters
             return false;
         }
 
-        private static async Task<bool> SaveCharacterItems(Player player, int characterId, Item[] items, ItemType type)
+        private static bool SaveCharacterItems(Player player, int characterId, Item[] items, ItemType type)
         {
             for (var i = 0; i < items.Length; i++)
             {
@@ -450,7 +448,7 @@ namespace TDSM.Core.ServerCharacters
                 var slotItem = Tables.ItemTable.GetItem(type, i, characterId);
                 if (slotItem != null)
                 {
-                    if (!await Tables.ItemTable.UpdateItem(type, netId, prefix, stack, favorite, i, characterId))
+                    if (!Tables.ItemTable.UpdateItem(type, netId, prefix, stack, favorite, i, characterId))
                     {
                         ProgramLog.Error.Log("Failed to save {1} for player: {0}", player.Name, type.ToString());
                         return false;
@@ -458,7 +456,7 @@ namespace TDSM.Core.ServerCharacters
                 }
                 else
                 {
-                    slotItem = await Tables.ItemTable.NewItem(type, netId, prefix, stack, favorite, i, characterId);
+                    slotItem = Tables.ItemTable.NewItem(type, netId, prefix, stack, favorite, i, characterId);
                 }
             }
 

@@ -8,7 +8,7 @@ namespace TDSM.Core
 {
     public partial class Entry
     {
-        async void GroupPermission(ISender sender, ArgumentList args)
+        void GroupPermission(ISender sender, ArgumentList args)
         {
             if (!Storage.IsAvailable)
                 throw new CommandError("No permissions plugin or data plugin is attached");
@@ -48,7 +48,7 @@ namespace TDSM.Core
                     if (Storage.FindGroup(groupName) != null)
                         throw new CommandError("There is already a group defined as " + groupName);
 
-                    if (await Storage.AddOrUpdateGroup(groupName, applyToGuests, parent, r, g, b, prefix, suffix) != null)
+                    if (Storage.AddOrUpdateGroup(groupName, applyToGuests, parent, r, g, b, prefix, suffix) != null)
                     {
                         sender.Message("Successfully created group " + groupName, Color.Green);
                     }
@@ -65,7 +65,7 @@ namespace TDSM.Core
                     if (Storage.FindGroup(groupName) == null)
                         throw new CommandError("Group does not exist: " + groupName);
 
-                    if (await Storage.RemoveGroup(groupName))
+                    if (Storage.RemoveGroup(groupName))
                     {
                         sender.Message("Successfully removed group " + groupName, Color.Green);
                     }
@@ -94,7 +94,7 @@ namespace TDSM.Core
                     if (Storage.FindGroup(groupName) == null)
                         throw new CommandError("Group does not exist: " + groupName);
                     
-                    if (await Storage.AddGroupNode(groupName, addNode, deny ? Permission.Denied : Permission.Permitted))
+                    if (Storage.AddGroupNode(groupName, addNode, deny ? Permission.Denied : Permission.Permitted))
                     {
                         sender.Message(String.Format("Successfully added node {0} to group {1} ", addNode, groupName), Color.Green);
                     }
@@ -119,7 +119,7 @@ namespace TDSM.Core
                     if (!args.TryGetBool(a++, out denied))
                         denied = false;
 
-                    if (await Storage.RemoveGroupNode(groupName, remNode, denied ? Permission.Denied : Permission.Permitted))
+                    if (Storage.RemoveGroupNode(groupName, remNode, denied ? Permission.Denied : Permission.Permitted))
                     {
                         sender.Message(String.Format("Successfully removed node {0} from group {1} ", remNode, groupName), Color.Green);
                     }
@@ -175,7 +175,7 @@ namespace TDSM.Core
             }
         }
 
-        async void UserPermission(ISender sender, ArgumentList args)
+        void UserPermission(ISender sender, ArgumentList args)
         {
             if (!Storage.IsAvailable)
                 throw new CommandError("No permissions plugin or data plugin is attached");
@@ -204,7 +204,7 @@ namespace TDSM.Core
                     if (grp == null)
                         throw new CommandError("Group does not exist: " + groupName);
 
-                    if (await Storage.AddUserToGroup(user.Name, grp.Name))
+                    if (Storage.AddUserToGroup(user.Name, grp.Name))
                     {
                         sender.Message(String.Format("Successfully added {0} to group {1} ", user.Name, grp.Name), Color.Green);
                     }
@@ -228,7 +228,7 @@ namespace TDSM.Core
                     if (grp == null)
                         throw new CommandError("Group does not exist: " + groupName);
 
-                    if (await Storage.RemoveUserFromGroup(user.Name, grp.Name))
+                    if (Storage.RemoveUserFromGroup(user.Name, grp.Name))
                     {
                         sender.Message(String.Format("Successfully removed {0} to group {1} ", user.Name, grp.Name), Color.Green);
                     }
@@ -252,7 +252,7 @@ namespace TDSM.Core
                     if (null == user)
                         throw new CommandError("No user found by: " + username);
 
-                    if (await Storage.AddNodeToUser(user.Name, node, deny ? Permission.Denied : Permission.Permitted))
+                    if (Storage.AddNodeToUser(user.Name, node, deny ? Permission.Denied : Permission.Permitted))
                     {
                         sender.Message(String.Format("Successfully added {0} to user {1} ", node, user.Name), Color.Green);
                     }
@@ -275,7 +275,7 @@ namespace TDSM.Core
                     if (null == user)
                         throw new CommandError("No user found by: " + username);
 
-                    if (await Storage.RemoveNodeFromUser(user.Name, node, deny ? Permission.Denied : Permission.Permitted))
+                    if (Storage.RemoveNodeFromUser(user.Name, node, deny ? Permission.Denied : Permission.Permitted))
                     {
                         sender.Message(String.Format("Successfully removed {0} to user {1} ", node, user.Name), Color.Green);
                     }
@@ -372,7 +372,7 @@ namespace TDSM.Core
                     }
                     else a++;
 
-                    op = groupName.ToLower() == "-op";
+                    op = groupName.ToLower() == "-op" || groupName.ToLower() == "op";
                     if (!op && args.Count == 4)
                     {
                         grp = Storage.FindGroup(groupName);
@@ -382,7 +382,7 @@ namespace TDSM.Core
                     var existing = AuthenticatedUsers.GetUser(username);
                     if (existing == null)
                     {
-                        if (await AuthenticatedUsers.CreateUser(username, password, op) != null)
+                        if (AuthenticatedUsers.CreateUser(username, password, op) != null)
                         {
                             if (op)
                             {
@@ -394,7 +394,7 @@ namespace TDSM.Core
                                 {
                                     if (grp != null)
                                     {
-                                        if (await Storage.AddUserToGroup(username, grp.Name))
+                                        if (Storage.AddUserToGroup(username, grp.Name))
                                         {
                                             sender.Message("Successfully created user {0} as a member of group {1}", Color.Green, username, grp.Name);
                                         }
@@ -430,7 +430,7 @@ namespace TDSM.Core
                     var updatee = AuthenticatedUsers.GetUser(username);
                     if (updatee != null)
                     {
-                        if (await AuthenticatedUsers.UpdateUser(username, password, op))
+                        if (AuthenticatedUsers.UpdateUser(username, password, op))
                         {
                             if (op)
                             {
@@ -456,7 +456,7 @@ namespace TDSM.Core
                     var delUser = AuthenticatedUsers.GetUser(username);
                     if (delUser != null)
                     {
-                        if (await AuthenticatedUsers.DeleteUser(username))
+                        if (AuthenticatedUsers.DeleteUser(username))
                         {
                             sender.Message("Successfully removed user " + username);
                         }

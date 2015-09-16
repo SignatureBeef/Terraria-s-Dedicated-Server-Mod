@@ -2,7 +2,6 @@
 using OTA.Data;
 using TDSM.Core.ServerCharacters;
 using OTA;
-using System.Threading.Tasks;
 using TDSM.Core.Data;
 using System.Linq;
 using TDSM.Core.Data.Models;
@@ -11,7 +10,7 @@ namespace TDSM.Core.ServerCharacters.Tables
 {
     internal class CharacterTable
     {
-        public static async Task<Character> NewCharacter
+        public static Character NewCharacter
         (
             CharacterMode mode,
             string auth,
@@ -36,7 +35,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             int anglerQuests
         )
         {
-            return await NewCharacter
+            return NewCharacter
             (
                 mode,
                 auth,
@@ -62,7 +61,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             );
         }
 
-        public static async Task<Character> NewCharacter
+        public static Character NewCharacter
         (
             CharacterMode mode,
             string auth,
@@ -123,13 +122,13 @@ namespace TDSM.Core.ServerCharacters.Tables
                 };
                 ctx.Characters.Add(chr);
 
-                await ctx.SaveChangesAsync();
+                ctx.SaveChanges();
 
                 return chr;
             }
         }
 
-        public static async Task<Character> UpdateCharacter
+        public static Character UpdateCharacter
         (
             CharacterMode mode,
             string auth,
@@ -154,7 +153,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             int anglerQuests
         )
         {
-            return await UpdateCharacter
+            return UpdateCharacter
             (
                 mode,
                 auth,
@@ -211,7 +210,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             }
         }
 
-        public static async Task<Character> UpdateCharacter
+        public static Character UpdateCharacter
         (
             CharacterMode mode,
             string auth,
@@ -276,7 +275,7 @@ namespace TDSM.Core.ServerCharacters.Tables
                 chr.ShoeColor = shoeColor;
                 chr.AnglerQuests = anglerQuests;
 
-                await ctx.SaveChangesAsync();
+                ctx.SaveChanges();
 
                 return chr;
             }

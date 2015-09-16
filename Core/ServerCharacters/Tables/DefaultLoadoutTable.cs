@@ -3,7 +3,6 @@ using OTA.Data;
 using TDSM.Core.ServerCharacters;
 using TDSM.Core.Data;
 using TDSM.Core.Data.Models;
-using System.Threading.Tasks;
 
 namespace TDSM.Core.ServerCharacters.Tables
 {
@@ -16,7 +15,7 @@ namespace TDSM.Core.ServerCharacters.Tables
         public const String Setting_Health = "SSC_Health";
         public const String Setting_MaxHealth = "SSC_MaxHealth";
 
-        public static async Task<LoadoutItem> AddItem(/*CharacterManager.ItemType type,*/ int itemId)
+        public static LoadoutItem AddItem(/*CharacterManager.ItemType type,*/ int itemId)
         {
             using (var ctx = new TContext())
             {
@@ -26,13 +25,13 @@ namespace TDSM.Core.ServerCharacters.Tables
                 };
                 ctx.DefaultLoadout.Add(li);
 
-                await ctx.SaveChangesAsync();
+                ctx.SaveChanges();
 
                 return li;
             }
         }
 
-        public static async Task PopulateDefaults(NewPlayerInfo info)
+        public static void PopulateDefaults(NewPlayerInfo info)
         {
             SettingsStore.Set(Setting_Health, info.Health);
             SettingsStore.Set(Setting_MaxHealth, info.MaxHealth);
@@ -43,8 +42,8 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Inventory)
                 {
-                    var id = await ItemTable.NewItem(CharacterManager.ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
-                    await AddItem(id.Id);
+                    var id = ItemTable.NewItem(CharacterManager.ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    AddItem(id.Id);
                 }
             }
 
@@ -52,8 +51,8 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Armor)
                 {
-                    var id = await ItemTable.NewItem(CharacterManager.ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
-                    await AddItem(id.Id);
+                    var id = ItemTable.NewItem(CharacterManager.ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    AddItem(id.Id);
                 }
             }
 
@@ -61,8 +60,8 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Dye)
                 {
-                    var id = await ItemTable.NewItem(CharacterManager.ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
-                    await AddItem(id.Id);
+                    var id = ItemTable.NewItem(CharacterManager.ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    AddItem(id.Id);
                 }
             }
         }

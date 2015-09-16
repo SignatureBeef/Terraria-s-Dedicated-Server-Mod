@@ -37,6 +37,9 @@
     <Reference Include="Patcher">
       <HintPath>..\Open-Terraria-API\Binaries\Patcher.exe</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
