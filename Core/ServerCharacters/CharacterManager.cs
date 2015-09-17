@@ -137,12 +137,14 @@ namespace TDSM.Core.ServerCharacters
             if (!String.IsNullOrEmpty(authName))
             {
 //                ProgramLog.Log("Loading SSC for " + authName);
+
                 if (Storage.IsAvailable)
                 {
-                    var ssc = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId).ToServerCharacter();
+                    var dbSSC = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId);
 
-                    if (ssc != null)
+                    if (dbSSC != null)
                     {
+                        var ssc = dbSSC.ToServerCharacter();
 //                        ProgramLog.Log("Loading SSC loadout");
 
                         var inv = Tables.ItemTable.GetItemsForCharacter(ItemType.Inventory, ssc.Id);
@@ -177,6 +179,7 @@ namespace TDSM.Core.ServerCharacters
                             EnsureSave = true; //Save is now required
                             return new ServerCharacter(StartingOutInfo, player);
                         }
+//                        else ProgramLog.Log("New loadout not specified");
                     }
                 }
                 else

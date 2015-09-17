@@ -201,11 +201,11 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 if (mode == CharacterMode.AUTH)
                 {
-                    return ctx.Characters.Single(x => x.UserId == userId);
+                    return ctx.Characters.SingleOrDefault(x => x.UserId == userId);
                 }
                 else
                 {
-                    return ctx.Characters.Single(x => x.UUID == clientUUID);
+                    return ctx.Characters.SingleOrDefault(x => x.UUID == clientUUID);
                 }
             }
         }
