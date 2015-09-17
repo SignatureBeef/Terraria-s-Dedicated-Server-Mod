@@ -56,9 +56,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="TerrariaServer">
-      <HintPath>..\Open-Terraria-API\Binaries\TerrariaServer.exe</HintPath>
-    </Reference>
     <Reference Include="OTA">
       <HintPath>..\Open-Terraria-API\Binaries\OTA.dll</HintPath>
     </Reference>
@@ -74,6 +71,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="TerrariaServer">
+      <HintPath>..\Open-Terraria-API\Binaries\TerrariaServer.exe</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ServerCharacters\CharacterManager.cs" />

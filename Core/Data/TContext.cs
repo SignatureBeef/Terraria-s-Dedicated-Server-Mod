@@ -106,14 +106,23 @@ namespace TDSM.Core.Data
 
         public DbSet<SlotItem> Items { get; set; }
 
+
         protected override void OnModelCreating(DbModelBuilder builder)
         {
+            CreateModel(builder);
+        }
+
+        public void CreateModel(DbModelBuilder builder)
+        {
+//            builder.HasDefaultSchema("tdsm");
+
+            OTA.Logging.ProgramLog.Admin.Log("Initialising TDSM database context");
             builder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            if (this.Database.Connection.GetType().Name == "SQLiteConnection") //Since we support SQLite as default, let's use this hack...
-            {
-                Database.SetInitializer(new SqliteContextInitializer<OTAContext>(builder));
-            }
+//            if (this.Database.Connection.GetType().Name == "SQLiteConnection") //Since we support SQLite as default, let's use this hack...
+//            {
+//                Database.SetInitializer(new SqliteContextInitializer<OTAContext>(builder));
+//            }
 
             builder.Entity<Character>()
                 .HasKey(x => x.Id)

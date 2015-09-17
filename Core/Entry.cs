@@ -18,6 +18,7 @@ using TDSM.Core.ServerCharacters;
 using Terraria;
 using Terraria.Social;
 using Terraria.Initializers;
+using System.Linq;
 
 namespace TDSM.Core
 {
@@ -603,12 +604,17 @@ namespace TDSM.Core
             if (!DefinitionManager.Initialise())
                 ProgramLog.Log("Failed to initialise definitions.");
 
-            if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)
-            {
-                TDSM.Core.Mono.Sigterm.Attach();
-            }
-
             ProgramLog.Log("TDSM Rebind core enabled");
+        }
+
+        protected override void DatabaseInitialising(System.Data.Entity.DbModelBuilder builder)
+        {
+            base.DatabaseInitialising(builder);
+
+            using (var dbc = new TDSM.Core.Data.TContext())
+            {
+                dbc.CreateModel(builder);
+            }
         }
 
         void ProcessPIDFile(string pidPath)
@@ -1313,6 +1319,11 @@ namespace TDSM.Core
             {
                 if (EnableHeartbeat)
                     Heartbeat.Begin(CoreBuild);
+
+                if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)
+                {
+                    TDSM.Core.Mono.Sigterm.Attach();
+                }
             }
 
             //if (args.ServerChangeState == ServerState.Initialising)
