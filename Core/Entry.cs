@@ -607,16 +607,6 @@ namespace TDSM.Core
             ProgramLog.Log("TDSM Rebind core enabled");
         }
 
-        protected override void DatabaseInitialising(System.Data.Entity.DbModelBuilder builder)
-        {
-            base.DatabaseInitialising(builder);
-
-            using (var dbc = new TDSM.Core.Data.TContext())
-            {
-                dbc.CreateModel(builder);
-            }
-        }
-
         void ProcessPIDFile(string pidPath)
         {
             var PIDFile = pidPath.Trim();

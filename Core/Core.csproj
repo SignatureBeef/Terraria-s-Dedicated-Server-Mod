@@ -102,6 +102,7 @@
     <Compile Include="WebApi.cs" />
     <Compile Include="Mono\Sigterm.cs" />
     <Compile Include="Data\TContext.cs" />
+    <Compile Include="Database.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
