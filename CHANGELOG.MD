@@ -10,6 +10,9 @@
 - Command line arguments can now be specified for TDSM commands, and supersede configuration properties.
 - Fixed the heartbeat not disabling
 - Fixed character data reading - other players now look like they are meant to.
+- Data API backend changed to Entity Framework.
+- The API has been separated to now be known as the Open Terraria API.
+- Sigterm is now supported
 
 ## Build 5 - 1.3.0.8
 - Added send data hook
