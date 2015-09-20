@@ -40,11 +40,11 @@ namespace TDSM.Core.ServerCharacters.Tables
             }
         }
 
-        public static IEnumerable<SlotItem> GetItemsForCharacter(CharacterManager.ItemType type, int? characterId = null)
+        public static List<SlotItem> GetItemsForCharacter(CharacterManager.ItemType type, int? characterId = null)
         {
             using (var ctx = new TContext())
             {
-                return ctx.Items.Where(x => x.Type == type && x.CharacterId == characterId);
+                return ctx.Items.Where(x => x.Type == type && x.CharacterId == characterId).ToList();
             }
         }
 
