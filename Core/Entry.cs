@@ -599,6 +599,13 @@ namespace TDSM.Core
                 .WithHelpText("addplayer|removeplayer <name>")
                 .WithHelpText("addip|removeip <ip>")
                 .Calls(this.WhitelistMan);
+
+            AddCommand("whoami")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithPermissionNode("tdsm.whoami")
+                .WithDescription("Find out if you are authenticated")
+                .SetDefaultUsage()
+                .Calls(this.WhoAmI);
 #endif
 
             if (!DefinitionManager.Initialise())

@@ -9,8 +9,6 @@ using OTA.Misc;
 using TDSM.Core.Definitions;
 using OTA.Logging;
 
-//using TDSM.Core.Messages.Out;
-//using TDSM.Core.ServerCore;
 using Terraria;
 using OTA.Sockets;
 using OTA.Data;
@@ -2888,6 +2886,18 @@ namespace TDSM.Core
                 else
                     sender.SendMessage("No Previous Command", 255, 255, 20, 20);
             }
+        }
+
+        private void WhoAmI(ISender sender, string args)
+        {
+            var player = sender as Player;
+            if (player != null)
+            {
+                if (player.IsAuthenticated)
+                    sender.Message("You are authenticated as {0}", Color.Orange, player.AuthenticatedAs);
+                else sender.Message("You are not authenticated", Color.Red);
+            }
+            else sender.Message("This command is for players only", Color.Red);
         }
     }
 }
