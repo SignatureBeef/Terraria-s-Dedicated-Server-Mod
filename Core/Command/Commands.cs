@@ -2471,6 +2471,7 @@ namespace TDSM.Core
                             );
                             player.SendMessage("Successfully logged in.", Color.DarkGreen);
                             player.SetAuthentication(sender.SenderName, "tdsm");
+                            player.Op = existing.Operator;
                         }
                         else
                         {
