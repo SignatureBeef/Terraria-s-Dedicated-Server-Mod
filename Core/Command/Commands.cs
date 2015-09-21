@@ -12,6 +12,7 @@ using OTA.Logging;
 using Terraria;
 using OTA.Sockets;
 using OTA.Data;
+using System.Text;
 
 namespace TDSM.Core
 {
@@ -2894,9 +2895,34 @@ namespace TDSM.Core
             var player = sender as Player;
             if (player != null)
             {
-                if (player.IsAuthenticated)
-                    sender.Message("You are authenticated as {0}", Color.Orange, player.AuthenticatedAs);
-                else sender.Message("You are not authenticated", Color.Red);
+//                if (player.IsAuthenticated)
+//                    sender.Message("You are authenticated as {0}", Color.Orange, player.AuthenticatedAs);
+//                else sender.Message("You are not authenticated", Color.Red);
+
+                var sb = new StringBuilder();
+                sb.Append("You are ");
+                if (!player.IsAuthenticated) sb.Append("not ");
+
+                if (player.Op) sb.Append("an operator");
+                else sb.Append("logged in");
+
+                var groupName = String.Empty;
+                if (Storage.IsAvailable)
+                {
+                    var grp = Storage.GetInheritedGroup(player);
+                    if (grp != null) groupName = grp.Name;
+                }
+
+                if (!String.IsNullOrEmpty(groupName))
+                {
+                    sb.Append(" and are a part of the ");
+                    sb.Append(groupName);
+                    sb.Append(" group");
+                }
+                else sb.Append(" but not apart of any groups");
+
+                sb.Append(".");
+                sender.Message(sb.ToString(), Color.Orange);
             }
             else sender.Message("This command is for players only", Color.Red);
         }
