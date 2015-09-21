@@ -736,7 +736,7 @@ namespace TDSM.Core
             }
         }
 
-        [Hook(HookOrder.NORMAL)]
+        [Hook(HookOrder.LATE)] //This is required so this can be called last, in order for us to know if it's been cancelled or not
         void OnPlayerAuthenticated(ref HookContext ctx, ref HookArgs.PlayerAuthenticationChanged args)
         {
             if (ctx.Client.State >= 4 && CharacterManager.Mode == CharacterMode.AUTH)
@@ -1126,12 +1126,18 @@ namespace TDSM.Core
                         AllowSSCGuestInfo = guestInfo;
                     }
                     break;
-
                 case "api-showplugins":
                     bool apiShowPlugins;
                     if (Boolean.TryParse(args.Value, out apiShowPlugins))
                     {
                         OTA.Web.API.PublicController.ShowPlugins = apiShowPlugins;
+                    }
+                    break;
+                case "ssc-save-interval":
+                    int sscSaveInterval;
+                    if (Int32.TryParse(args.Value, out sscSaveInterval))
+                    {
+                        CharacterManager.SaveInterval = sscSaveInterval;
                     }
                     break;
             }

@@ -64,6 +64,10 @@ namespace TDSM.Core.Data.Models
         {
             return new ServerCharacter()
             {
+                Id = this.Id,
+                UserId = this.UserId,
+                UUID = this.UUID,
+
                 Health = this.Health,
                 MaxHealth = this.MaxHealth,
                 Mana = this.Mana,

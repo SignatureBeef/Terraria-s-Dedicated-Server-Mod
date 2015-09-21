@@ -87,6 +87,8 @@ namespace TDSM.Core.ServerCharacters
 
         public System.Collections.Generic.List<SlotItem> Bank2 { get; set; }
 
+        public SlotItem Trash { get; set; }
+
         public int AnglerQuests { get; set; }
 
         public int[] Buffs { get; set; }
@@ -169,6 +171,8 @@ namespace TDSM.Core.ServerCharacters
 
             this.Buffs = player.buffType;
             this.BuffTime = player.buffTime;
+
+            this.Trash = new SlotItem(player.trashItem.netID, player.trashItem.stack, player.trashItem.prefix, player.trashItem.favorited, 0);
 
             //this.Inventory = new System.Collections.Generic.List<SlotItem>();
             //for (var x = 0; x < player.inventory.Length; x++)
@@ -274,6 +278,18 @@ namespace TDSM.Core.ServerCharacters
                 player.shoeColor = this.ShoeColor;
 
                 player.anglerQuestsFinished = this.AnglerQuests;
+
+                //Trash
+                player.trashItem = new Item();
+                player.trashItem.name = String.Empty;
+                player.trashItem.SetDefaults(0);
+                if (this.Trash != null)
+                {
+                    player.trashItem.netDefaults(this.Trash.NetId);
+                    player.trashItem.stack = this.Trash.Stack;
+                    player.trashItem.Prefix(this.Trash.Prefix);
+                    player.trashItem.favorited = this.Trash.Favorite;
+                }
             }
             catch (Exception e)
             {
@@ -434,6 +450,8 @@ namespace TDSM.Core.ServerCharacters
             {
                 ProgramLog.Log(e, "Failed to send player data");
             }
+
+            player.SetSSCReadyForSave(true);
         }
 
         private void ApplyItems(ref Item[] items, System.Collections.Generic.List< SlotItem> source)
@@ -666,7 +684,8 @@ namespace TDSM.Core.ServerCharacters
 
         public bool Favorite { get; set; }
 
-        public int? CharacterId { get; set; } //FOR DB
+        public int? CharacterId { get; set; }
+        //FOR DB
 
         public TDSM.Core.ServerCharacters.CharacterManager.ItemType Type { get; set; }
 

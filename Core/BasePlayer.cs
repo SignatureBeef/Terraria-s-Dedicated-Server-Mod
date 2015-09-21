@@ -7,6 +7,7 @@ namespace TDSM.Core
     public static class PlayerExtensions
     {
         private const String LastCostlyCommand = "LastCostlyCommand";
+        private const String SSCReadyForSave = "SSCReadyForSave";
 
         //public static void SetAuthenticatedAs(this Player player, string value)
         //{
@@ -34,6 +35,16 @@ namespace TDSM.Core
         public static DateTime GetLastCostlyCommand(this Player player)
         {
             return player.GetPluginData(LastCostlyCommand, DateTime.MinValue);
+        }
+
+        public static void SetSSCReadyForSave(this Player player, bool value)
+        {
+            player.SetPluginData(SSCReadyForSave, value);
+        }
+
+        public static bool GetSSCReadyForSave(this Player player)
+        {
+            return player.GetPluginData(SSCReadyForSave, false);
         }
     }
 }

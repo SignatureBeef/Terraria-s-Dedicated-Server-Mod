@@ -11,6 +11,11 @@ namespace TDSM.Core.ServerCharacters
 {
     public static class CharacterManager
     {
+        static CharacterManager()
+        {
+            SaveInterval = 5;
+        }
+
         internal const String SQLSafeName = "tdsm";
         internal const String Key_NewCharacter = "tdsm_NewCharacter";
 
@@ -22,7 +27,8 @@ namespace TDSM.Core.ServerCharacters
             Equipment,
             MiscDyes,
             Bank,
-            Bank2
+            Bank2,
+            Trash
         }
 
         public static CharacterMode Mode { get; set; }
@@ -76,7 +82,7 @@ namespace TDSM.Core.ServerCharacters
         }
 
         /// <summary>
-        /// Load the default start gear
+        /// Load the default start gear and settings
         /// </summary>
         public static void LoadConfig()
         {
@@ -88,10 +94,15 @@ namespace TDSM.Core.ServerCharacters
 
         public static bool EnsureSave { get; set; }
 
+        /// <summary>
+        /// Gets or sets the save interval, in seconds
+        /// </summary>
+        /// <value>The save interval.</value>
+        public static int SaveInterval { get; set; }
 
         public static void SaveAll()
         {
-            if ((DateTime.Now - _lastSave).TotalSeconds >= 5)
+            if ((DateTime.Now - _lastSave).TotalSeconds >= SaveInterval)
             {
                 //Don't perform any unnecessary writes
                 var hasPlayers = Netplay.anyClients;
@@ -103,7 +114,7 @@ namespace TDSM.Core.ServerCharacters
                 {
                     foreach (var ply in Terraria.Main.player)
                     {
-                        if (ply != null && ply.active)
+                        if (ply != null && ply.active && ply.GetSSCReadyForSave())
                         {
                             SavePlayerData(ply);
                         }
@@ -134,6 +145,9 @@ namespace TDSM.Core.ServerCharacters
                     authName = player.ClientUUId + '@' + player.name;
             }
 
+//            ProgramLog.Admin.Log("SSC is: " + Storage.IsAvailable);
+//            ProgramLog.Admin.Log("Finding SSC for: " + (authName ?? "NULL"));
+
             if (!String.IsNullOrEmpty(authName))
             {
 //                ProgramLog.Log("Loading SSC for " + authName);
@@ -142,11 +156,16 @@ namespace TDSM.Core.ServerCharacters
                 {
                     var dbSSC = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId);
 
+                    ProgramLog.Admin.Log("Found SCC: " + (dbSSC != null));
+
                     if (dbSSC != null)
                     {
                         var ssc = dbSSC.ToServerCharacter();
 //                        ProgramLog.Log("Loading SSC loadout");
 
+//                        ProgramLog.Admin.Log("Loading SSC loadout: " + dbSSC.Id);
+//                        ProgramLog.Admin.Log("Translated SCC: " + (ssc != null));
+//
                         var inv = Tables.ItemTable.GetItemsForCharacter(ItemType.Inventory, ssc.Id);
                         if (null != inv) ssc.Inventory = inv.ToList();
 
@@ -167,6 +186,9 @@ namespace TDSM.Core.ServerCharacters
 
                         var bank2 = Tables.ItemTable.GetItemsForCharacter(ItemType.Bank2, ssc.Id);
                         if (null != bank2) ssc.Bank2 = bank2.ToList();
+
+                        var trash = Tables.ItemTable.GetItemsForCharacter(ItemType.Trash, ssc.Id);
+                        if (null != trash && trash.Count > 0) ssc.Trash = trash.First();
 
                         return ssc;
                     }
@@ -307,6 +329,7 @@ namespace TDSM.Core.ServerCharacters
                         if (!SaveCharacterItems(player, character.Id, player.dye, ItemType.Dye)) return false;
                         if (!SaveCharacterItems(player, character.Id, player.miscEquips, ItemType.Equipment)) return false;
                         if (!SaveCharacterItems(player, character.Id, player.miscDyes, ItemType.MiscDyes)) return false;
+                        if (!SaveCharacterItem(player, character.Id, ItemType.Trash, player.trashItem, 0)) return false;
 //                        for (var i = 0; i < player.inventory.Length; i++)
 //                        {
 //                            var item = player.inventory[i];
@@ -430,37 +453,43 @@ namespace TDSM.Core.ServerCharacters
             return false;
         }
 
+        private static bool SaveCharacterItem(Player player, int characterId, ItemType type, Item item, int slot)
+        {
+            var netId = 0;
+            var prefix = 0;
+            var stack = 0;
+            var favorite = false;
+
+            if (item != null)
+            {
+                netId = item.netID;
+                prefix = item.prefix;
+                stack = item.stack;
+                favorite = item.favorited;
+            }
+
+            var slotItem = Tables.ItemTable.GetItem(type, slot, characterId);
+            if (slotItem != null)
+            {
+                if (!Tables.ItemTable.UpdateItem(type, netId, prefix, stack, favorite, slot, characterId))
+                {
+                    ProgramLog.Error.Log("Failed to save {1} for player: {0}", player.Name, type.ToString());
+                    return false;
+                }
+            }
+            else
+            {
+                slotItem = Tables.ItemTable.NewItem(type, netId, prefix, stack, favorite, slot, characterId);
+            }
+
+            return true;
+        }
+
         private static bool SaveCharacterItems(Player player, int characterId, Item[] items, ItemType type)
         {
             for (var i = 0; i < items.Length; i++)
             {
-                var item = items[i];
-                var netId = 0;
-                var prefix = 0;
-                var stack = 0;
-                var favorite = false;
-
-                if (item != null)
-                {
-                    netId = item.netID;
-                    prefix = item.prefix;
-                    stack = item.stack;
-                    favorite = item.favorited;
-                }
-
-                var slotItem = Tables.ItemTable.GetItem(type, i, characterId);
-                if (slotItem != null)
-                {
-                    if (!Tables.ItemTable.UpdateItem(type, netId, prefix, stack, favorite, i, characterId))
-                    {
-                        ProgramLog.Error.Log("Failed to save {1} for player: {0}", player.Name, type.ToString());
-                        return false;
-                    }
-                }
-                else
-                {
-                    slotItem = Tables.ItemTable.NewItem(type, netId, prefix, stack, favorite, i, characterId);
-                }
+                if (!SaveCharacterItem(player, characterId, type, items[i], i)) return false;
             }
 
             return true;
@@ -472,6 +501,9 @@ namespace TDSM.Core.ServerCharacters
 
             if (ssc != null)
             {
+                var loaded = String.Join(",", ssc.Inventory.Select(x => x.NetId).Where(x => x > 0).ToArray());
+                ProgramLog.Admin.Log("Loaded items: " + loaded);
+
                 //Check to make sure the player is the same player (ie skin, clothes)
                 //Add hooks for pre and post apply
 
