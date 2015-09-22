@@ -103,6 +103,8 @@
     <Compile Include="Mono\Sigterm.cs" />
     <Compile Include="Data\TContext.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="Data\Management\BackupManager.cs" />
+    <Compile Include="Data\Management\LogManagement.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -119,5 +121,6 @@
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Data\Models\" />
+    <Folder Include="Data\Management\" />
   </ItemGroup>
 </Project>

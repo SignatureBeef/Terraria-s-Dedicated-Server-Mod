@@ -156,7 +156,7 @@ namespace TDSM.Core.ServerCharacters
                 {
                     var dbSSC = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId);
 
-                    ProgramLog.Admin.Log("Found SCC: " + (dbSSC != null));
+//                    ProgramLog.Admin.Log("Found SCC: " + (dbSSC != null));
 
                     if (dbSSC != null)
                     {
@@ -501,8 +501,8 @@ namespace TDSM.Core.ServerCharacters
 
             if (ssc != null)
             {
-                var loaded = String.Join(",", ssc.Inventory.Select(x => x.NetId).Where(x => x > 0).ToArray());
-                ProgramLog.Admin.Log("Loaded items: " + loaded);
+//                var loaded = String.Join(",", ssc.Inventory.Select(x => x.NetId).Where(x => x > 0).ToArray());
+//                ProgramLog.Admin.Log("Loaded items: " + loaded);
 
                 //Check to make sure the player is the same player (ie skin, clothes)
                 //Add hooks for pre and post apply

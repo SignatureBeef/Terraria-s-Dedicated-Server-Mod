@@ -611,6 +611,9 @@ namespace TDSM.Core
             if (!DefinitionManager.Initialise())
                 ProgramLog.Log("Failed to initialise definitions.");
 
+            TDSM.Core.Data.Management.BackupManager.Initialise();
+            TDSM.Core.Data.Management.LogManagement.Initialise();
+
             ProgramLog.Log("TDSM Rebind core enabled");
         }
 
@@ -871,6 +874,8 @@ namespace TDSM.Core
             {
                 ServerCharacters.CharacterManager.SaveAll();
             }
+
+            TDSM.Core.Data.Management.BackupManager.OnUpdate();
         }
 
         //[Hook(HookOrder.NORMAL)]
@@ -1675,6 +1680,12 @@ namespace TDSM.Core
             if (_tskWaitForPlayers != null) _tskWaitForPlayers.Enabled = false;
             Server.AcceptNewConnections = _waitFPState.HasValue ? _waitFPState.Value : true;
 #endif
+        }
+
+        void OnWorldSave(ref HookContext ctx, ref HookArgs.WorldAutoSave args)
+        {
+            //let our backup manager do it's thing
+            ctx.SetResult(HookResult.IGNORE, true);
         }
     }
 }
