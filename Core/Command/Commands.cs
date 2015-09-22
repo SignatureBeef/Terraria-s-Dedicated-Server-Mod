@@ -2895,10 +2895,6 @@ namespace TDSM.Core
             var player = sender as Player;
             if (player != null)
             {
-//                if (player.IsAuthenticated)
-//                    sender.Message("You are authenticated as {0}", Color.Orange, player.AuthenticatedAs);
-//                else sender.Message("You are not authenticated", Color.Red);
-
                 var sb = new StringBuilder();
                 sb.Append("You are ");
                 if (!player.IsAuthenticated) sb.Append("not ");
