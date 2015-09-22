@@ -38,7 +38,7 @@ namespace TDSM.Patcher
             //Attach to the dependencies event so we can copy our own files
             OTAPatcher.CopyDependencies += (object sender, OTAPatcher.CopyDependenciesEventArgs e) =>
             {
-                OTAPatcher.Copy(e.RootDirectory, "Core", Path.Combine(Environment.CurrentDirectory, "Plugins"), "TDSM-Core", true);
+                OTAPatcher.Copy(e.RootDirectory, "Core", Path.Combine(Environment.CurrentDirectory, "Plugins"), "TDSM-Core", true, "Debug");
                 //            Copy(root, "Binaries", Path.Combine(Environment.CurrentDirectory), "TDSM.API");
                 //Copy (root, "Restrict", Path.Combine (Environment.CurrentDirectory, "Plugins"), "RestrictPlugin");
 //                OTAPatcher.Copy(e.RootDirectory, "tdsm-core", Path.Combine(Environment.CurrentDirectory, "Libraries"), "Newtonsoft.Json", true);

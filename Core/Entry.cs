@@ -128,6 +128,7 @@ namespace TDSM.Core
 
             OTA.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
             OTA.Callbacks.MainCallback.UpdateServer += OnUpdateServer;
+            OTA.Callbacks.MainCallback.ServerTick += OnServerTick;
 
             OTA.Command.CommandParser.ExtCheckAccessLevel = (acc, sender) =>
             {
@@ -838,6 +839,17 @@ namespace TDSM.Core
             }
         }
 
+        void OnServerTick(object empty, EventArgs noargs)
+        {
+            if (Terraria.Main.ServerSideCharacter)
+            {
+                ServerCharacters.CharacterManager.SaveAll();
+            }
+
+            TDSM.Core.Data.Management.SaveManager.OnUpdate();
+            TDSM.Core.Data.Management.BackupManager.OnUpdate();
+        }
+
         //[Hook(HookOrder.NORMAL)]
         void OnUpdateServer(object empty, EventArgs noargs) /*ref HookContext ctx, ref HookArgs.UpdateServer args*/
         {
@@ -869,14 +881,6 @@ namespace TDSM.Core
             }
 
             if (TimeFastForwarding) Terraria.Main.fastForwardTime = true;
-
-            if (Terraria.Main.ServerSideCharacter)
-            {
-                ServerCharacters.CharacterManager.SaveAll();
-            }
-
-            TDSM.Core.Data.Management.SaveManager.OnUpdate();
-            TDSM.Core.Data.Management.BackupManager.OnUpdate();
         }
 
         //[Hook(HookOrder.NORMAL)]

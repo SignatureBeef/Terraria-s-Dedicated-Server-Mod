@@ -34,11 +34,11 @@
     <Reference Include="Vestris.ResourceLib">
       <HintPath>..\packages\Vestris.1.0.1\lib\Vestris.ResourceLib.dll</HintPath>
     </Reference>
-    <Reference Include="Patcher">
-      <HintPath>..\Open-Terraria-API\Binaries\Patcher.exe</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Open-Terraria-API\Binaries\Libraries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OTA.Patcher">
+      <HintPath>..\Open-Terraria-API\Binaries\OTA.Patcher.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
