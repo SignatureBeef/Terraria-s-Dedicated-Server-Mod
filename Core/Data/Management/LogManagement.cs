@@ -7,8 +7,14 @@ namespace TDSM.Core.Data.Management
 {
     public static class LogManagement
     {
+        /// <summary>
+        /// The latest count of log files not to be deleted
+        /// </summary>
         public static int LogsToLeave { get; set; }
 
+        /// <summary>
+        /// Gets if log purging is enabled
+        /// </summary>
         public static bool LogPurgingEnabled
         {
             get { return LogsToLeave > 0; }

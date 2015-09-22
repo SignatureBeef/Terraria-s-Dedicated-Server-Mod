@@ -1145,6 +1145,35 @@ namespace TDSM.Core
                         CharacterManager.SaveInterval = sscSaveInterval;
                     }
                     break;
+
+                case "logs-to-keep":
+                    int logsToKeep;
+                    if (Int32.TryParse(args.Value, out logsToKeep))
+                    {
+                        TDSM.Core.Data.Management.LogManagement.LogsToLeave = logsToKeep;
+                    }
+                    break;
+                case "backup-interval-min":
+                    int backupInterval;
+                    if (Int32.TryParse(args.Value, out backupInterval))
+                    {
+                        TDSM.Core.Data.Management.BackupManager.BackupIntervalMinutes = backupInterval;
+                    }
+                    break;
+                case "backup-expiry-min":
+                    int backupExpiry;
+                    if (Int32.TryParse(args.Value, out backupExpiry))
+                    {
+                        TDSM.Core.Data.Management.BackupManager.BackupExpiryMinutes = backupExpiry;
+                    }
+                    break;
+                case "compress-backups":
+                    bool compressBackups;
+                    if (Boolean.TryParse(args.Value, out compressBackups))
+                    {
+                        TDSM.Core.Data.Management.BackupManager.CompressBackups = compressBackups;
+                    }
+                    break;
             }
         }
 

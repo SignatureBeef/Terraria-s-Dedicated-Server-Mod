@@ -8,6 +8,9 @@ using Terraria;
 
 namespace TDSM.Core.Data.Management
 {
+    /// <summary>
+    /// Backup result.
+    /// </summary>
     public enum BackupResult : int
     {
         SUCCESS = 0,
@@ -20,30 +23,51 @@ namespace TDSM.Core.Data.Management
     {
         const String FolderName = "Backups";
 
+        /// <summary>
+        /// Gets the backup folder.
+        /// </summary>
+        /// <value>The backup folder.</value>
         public static string BackupFolder
         {
             get { return Path.Combine(OTA.Globals.WorldPath, FolderName); }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="TDSM.Core.Data.Management.BackupManager"/> compress backups.
+        /// Gets or sets whether to compress backups
         /// </summary>
-        /// <value><c>true</c> if compress backups; otherwise, <c>false</c>.</value>
         public static bool CompressBackups { get; set; }
 
+        /// <summary>
+        /// The maximum age in minutes for backups
+        /// </summary>
         public static int BackupExpiryMinutes { get; set; }
 
+        /// <summary>
+        /// How often backups are created, in minutes
+        /// </summary>
+        /// <value>The backup interval minutes.</value>
         public static int BackupIntervalMinutes { get; set; }
 
+        /// <summary>
+        /// Gets whether backups are enabled
+        /// </summary>
         public static bool BackupsEnabled
         {
             get { return BackupIntervalMinutes > 0; }
         }
 
+        /// <summary>
+        /// Gets whether backup expirations are enabled
+        /// </summary>
+        public static bool ExpirationsEnabled
+        {
+            get { return BackupExpiryMinutes > 0; }
+        }
+
         static BackupManager()
         {
-            BackupExpiryMinutes = 2;
-            BackupIntervalMinutes = 1;//60;
+            BackupExpiryMinutes = 120;
+            BackupIntervalMinutes = 60;
             CompressBackups = true;
         }
 
@@ -266,7 +290,7 @@ namespace TDSM.Core.Data.Management
 
         public static void AutoPurge(string worldName)
         {
-            if (BackupExpiryMinutes == 0)
+            if (!ExpirationsEnabled)
                 return;
 
             ProgramLog.Log("Performing backup purge...");
