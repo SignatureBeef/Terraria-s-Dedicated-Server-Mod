@@ -105,6 +105,7 @@
     <Compile Include="Database.cs" />
     <Compile Include="Data\Management\BackupManager.cs" />
     <Compile Include="Data\Management\LogManagement.cs" />
+    <Compile Include="Data\Management\SaveManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

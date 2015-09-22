@@ -66,8 +66,8 @@ namespace TDSM.Core.Data.Management
 
         static BackupManager()
         {
-            BackupExpiryMinutes = 120;
-            BackupIntervalMinutes = 60;
+            BackupExpiryMinutes = 40;
+            BackupIntervalMinutes = 10;
             CompressBackups = true;
         }
 
@@ -108,10 +108,10 @@ namespace TDSM.Core.Data.Management
 
         public static BackupResult Compress(string worldPath)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            ProgramLog.Log("Compressing backup...");
+//            Stopwatch stopwatch = new Stopwatch();
+//            stopwatch.Start();
+//
+//            ProgramLog.Log("Compressing backup...");
 
             if (!File.Exists(worldPath))
             {
@@ -119,35 +119,40 @@ namespace TDSM.Core.Data.Management
                 return BackupResult.LOAD_FAIL;
             }
 
-            FileInfo world = new FileInfo(worldPath);
-            String archivePath = String.Concat(worldPath, ".zip");
-
-            using (FileStream inStream = world.OpenRead())
+            using (var pg = new ProgressLogger(1, "Compressing backup"))
             {
-                using (FileStream outStream = File.Create(archivePath))
+                FileInfo world = new FileInfo(worldPath);
+                String archivePath = String.Concat(worldPath, ".zip");
+
+                using (FileStream inStream = world.OpenRead())
                 {
-                    using (GZipStream alg = new GZipStream(outStream, CompressionMode.Compress))
+                    using (FileStream outStream = File.Create(archivePath))
                     {
-                        // copy the input file into the compression stream
-                        inStream.CopyTo(alg);
+                        using (GZipStream alg = new GZipStream(outStream, CompressionMode.Compress))
+                        {
+                            // copy the input file into the compression stream
+                            inStream.CopyTo(alg);
+                        }
                     }
                 }
-            }
 
-            if (File.Exists(archivePath))
-            {
-                if (File.Exists(worldPath))
-                    File.Delete(worldPath);
-                stopwatch.Stop();
-                ProgramLog.Log("Compression duration: " + stopwatch.Elapsed.Seconds + " Second(s)");
-                return BackupResult.SUCCESS;
+                if (File.Exists(archivePath))
+                {
+                    if (File.Exists(worldPath))
+                        File.Delete(worldPath);
+                    //                    stopwatch.Stop();
+
+                    pg.Value = 1;
+//                    ProgramLog.Log("Compression duration: " + stopwatch.Elapsed.Seconds + " Second(s)");
+                    return BackupResult.SUCCESS;
+                }
             }
-            else
-            {
-                stopwatch.Stop();
-                ProgramLog.Error.Log("Compression Failed!");
-                return BackupResult.SAVE_FAIL;
-            }
+//                else
+//                {
+//                    stopwatch.Stop();
+            ProgramLog.Error.Log("Compression Failed!");
+            return BackupResult.SAVE_FAIL;
+//                }
         }
 
         public static BackupResult Decompress(string archivePath)
@@ -199,16 +204,20 @@ namespace TDSM.Core.Data.Management
 
             try
             {
-                lock (OTA.Callbacks.WorldFileCallback.SavePathLock)
+                using (var pg = new ProgressLogger(1, "Backing up world"))
                 {
-                    OTA.Callbacks.WorldFileCallback.SavePath = path;
-                    Terraria.IO.WorldFile.saveWorld();
-                    OTA.Callbacks.WorldFileCallback.SavePath = null; //Reset
+                    lock (OTA.Callbacks.WorldFileCallback.SavePathLock)
+                    {
+                        OTA.Callbacks.WorldFileCallback.SavePath = path;
+                        Terraria.IO.WorldFile.saveWorld();
+                        OTA.Callbacks.WorldFileCallback.SavePath = null; //Reset
+                    }
+                    pg.Value = 1;
                 }
 
                 if (CompressBackups)
                     Compress(path); // it just adds ".zip" to the timestamp+".wld"
-
+                    
                 return BackupResult.SUCCESS;
             }
             catch (Exception e)
@@ -223,7 +232,7 @@ namespace TDSM.Core.Data.Management
         {
             try
             {
-                ProgramLog.Log("Performing backup...");
+//                ProgramLog.Log("Performing backup...");
 
                 var file = GetStamptedFilePath(worldName);
                 while (File.Exists(file))
@@ -293,24 +302,30 @@ namespace TDSM.Core.Data.Management
             if (!ExpirationsEnabled)
                 return;
 
-            ProgramLog.Log("Performing backup purge...");
+//            ProgramLog.Log("Performing backup purge...");
             var backups = GetBackups(worldName);
 
-            var expired = (from x in backups
-                                    where (DateTime.Now - File.GetCreationTime(x)).TotalMinutes >= BackupExpiryMinutes
-                                    select x).ToArray();
-            //var deleted = 0;
-            foreach (var file in expired)
-            {
-                try
+            if (backups != null && backups.Length > 0)
+                using (var pg = new ProgressLogger(backups.Length, "Purging old backups"))
                 {
-                    File.Delete(file);
-                    //deleted++;
+
+                    var expired = (from x in backups
+                                                  where (DateTime.Now - File.GetCreationTime(x)).TotalMinutes >= BackupExpiryMinutes
+                                                  select x).ToArray();
+                    //var deleted = 0;
+                    foreach (var file in expired)
+                    {
+                        try
+                        {
+                            File.Delete(file);
+                            //deleted++;
+                        }
+                        catch
+                        {
+                        }
+                    }
                 }
-                catch
-                {
-                }
-            }
+            else ProgramLog.Log("No backups to be purged.");
         }
 
         public static void AutoPurge()

@@ -875,6 +875,7 @@ namespace TDSM.Core
                 ServerCharacters.CharacterManager.SaveAll();
             }
 
+            TDSM.Core.Data.Management.SaveManager.OnUpdate();
             TDSM.Core.Data.Management.BackupManager.OnUpdate();
         }
 
@@ -1172,6 +1173,13 @@ namespace TDSM.Core
                     if (Boolean.TryParse(args.Value, out compressBackups))
                     {
                         TDSM.Core.Data.Management.BackupManager.CompressBackups = compressBackups;
+                    }
+                    break;
+                case "save-interval-min":
+                    int saveInterval;
+                    if (Int32.TryParse(args.Value, out saveInterval))
+                    {
+                        TDSM.Core.Data.Management.SaveManager.SaveIntervalMinutes = saveInterval;
                     }
                     break;
             }
