@@ -64,11 +64,17 @@ namespace TDSM.Core.Data.Management
             get { return BackupExpiryMinutes > 0; }
         }
 
+        /// <summary>
+        /// Determines upon backing-up if the world should be saved or only duplicated from the existing world file.
+        /// </summary>
+        public static bool CopyBackups { get; set; }
+
         static BackupManager()
         {
-            BackupExpiryMinutes = 40;
-            BackupIntervalMinutes = 10;
+            BackupExpiryMinutes = 2;
+            BackupIntervalMinutes = 1;
             CompressBackups = true;
+            CopyBackups = true;
         }
 
         internal static void Initialise()
@@ -206,11 +212,22 @@ namespace TDSM.Core.Data.Management
             {
                 using (var pg = new ProgressLogger(1, "Backing up world"))
                 {
-                    lock (OTA.Callbacks.WorldFileCallback.SavePathLock)
+                    if (CopyBackups)
                     {
-                        OTA.Callbacks.WorldFileCallback.SavePath = path;
-                        Terraria.IO.WorldFile.saveWorld();
-                        OTA.Callbacks.WorldFileCallback.SavePath = null; //Reset
+                        var copyFrom = Terraria.Main.ActiveWorldFileData.Path;
+                        if (File.Exists(copyFrom))
+                        {
+                            File.Copy(copyFrom, path);
+                        }
+                    }
+                    else
+                    {
+                        lock (OTA.Callbacks.WorldFileCallback.SavePathLock)
+                        {
+                            OTA.Callbacks.WorldFileCallback.SavePath = path;
+                            Terraria.IO.WorldFile.saveWorld();
+                            OTA.Callbacks.WorldFileCallback.SavePath = null; //Reset
+                        }
                     }
                     pg.Value = 1;
                 }
@@ -269,7 +286,8 @@ namespace TDSM.Core.Data.Management
 
         public static string[] GetBackups(string worldName)
         {
-            return Directory.GetFiles(BackupFolder).Where(x => Path.GetFileName(x).StartsWith(worldName + "_")).ToArray();
+            var filter = CompressBackups ? "*.zip" : "*.wld";
+            return Directory.GetFiles(BackupFolder, filter).Where(x => Path.GetFileName(x).StartsWith(worldName + "_")).ToArray();
         }
 
         public static string[] GetBackupsBefore(string worldName, DateTime date)

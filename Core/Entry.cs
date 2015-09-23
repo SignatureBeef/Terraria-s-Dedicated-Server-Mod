@@ -19,6 +19,7 @@ using Terraria;
 using Terraria.Social;
 using Terraria.Initializers;
 using System.Linq;
+using TDSM.Core.Data.Management;
 
 namespace TDSM.Core
 {
@@ -1179,10 +1180,24 @@ namespace TDSM.Core
                         TDSM.Core.Data.Management.BackupManager.CompressBackups = compressBackups;
                     }
                     break;
+                case "copy-backups":
+                    bool copyBackups;
+                    if (Boolean.TryParse(args.Value, out copyBackups))
+                    {
+                        TDSM.Core.Data.Management.BackupManager.CopyBackups = copyBackups;
+                    }
+                    break;
                 case "save-interval-min":
                     int saveInterval;
                     if (Int32.TryParse(args.Value, out saveInterval))
                     {
+                        const Int32 MinSaveInterval = 1;
+                        if (saveInterval < MinSaveInterval)
+                        {
+                            saveInterval = MinSaveInterval;
+                            ProgramLog.Admin.Log("The save interval cannot be disabled and is now set to {0} minute", MinSaveInterval);
+                        }
+
                         TDSM.Core.Data.Management.SaveManager.SaveIntervalMinutes = saveInterval;
                     }
                     break;
@@ -1343,6 +1358,11 @@ namespace TDSM.Core
                 if (Terraria.Main.ServerSideCharacter)
                 {
                     CharacterManager.Init();
+                }
+
+                if (BackupManager.BackupsEnabled && BackupManager.BackupIntervalMinutes < SaveManager.SaveIntervalMinutes)
+                {
+                    ProgramLog.Admin.Log("[Warning] Backup interval is smaller than the save interval.");
                 }
             }
             if (args.ServerChangeState == ServerState.Stopping)
