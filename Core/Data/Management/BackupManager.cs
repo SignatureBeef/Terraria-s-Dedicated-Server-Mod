@@ -71,8 +71,8 @@ namespace TDSM.Core.Data.Management
 
         static BackupManager()
         {
-            BackupExpiryMinutes = 2;
-            BackupIntervalMinutes = 1;
+            BackupExpiryMinutes = 40;
+            BackupIntervalMinutes = 10;
             CompressBackups = true;
             CopyBackups = true;
         }

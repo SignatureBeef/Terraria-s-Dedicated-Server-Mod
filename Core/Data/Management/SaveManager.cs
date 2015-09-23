@@ -13,7 +13,7 @@ namespace TDSM.Core.Data.Management
 
         static SaveManager()
         {
-            SaveIntervalMinutes = 1;
+            SaveIntervalMinutes = 10;
         }
 
         static DateTime _lastSave = DateTime.Now;
