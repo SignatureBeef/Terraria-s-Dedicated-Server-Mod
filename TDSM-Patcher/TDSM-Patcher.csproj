@@ -40,6 +40,9 @@
     <Reference Include="OTA.Patcher">
       <HintPath>..\Open-Terraria-API\Binaries\OTA.Patcher.exe</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\Open-Terraria-API\Binaries\Mono.Cecil.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
