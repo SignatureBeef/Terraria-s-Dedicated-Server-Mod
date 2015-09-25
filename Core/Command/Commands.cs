@@ -2767,7 +2767,7 @@ namespace TDSM.Core
             }
         }
 
-        Task _tskWaitForPlayers;
+        GameTask _tskWaitForPlayers;
         private bool? _waitFPState;
 
         /// <summary>

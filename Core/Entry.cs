@@ -32,9 +32,10 @@ namespace TDSM.Core
     //        ALL = GUEST | AUTH | OP
     //    }
 
+    [OTAVersion(1, 1)]
     public partial class Entry : BasePlugin
     {
-        public const Int32 CoreBuild = 5;
+        public const Int32 CoreBuild = 6;
 
         const String Prefix_WhitelistName = "NAME:";
         const String Prefix_WhitelistIp = "IP:";
