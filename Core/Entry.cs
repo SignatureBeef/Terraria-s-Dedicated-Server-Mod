@@ -526,13 +526,14 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.user")
                 .WithDescription("Manage user permissions")
                 .WithHelpText("add <user> <password> [op]")
-                .WithHelpText("add <group>")
+                .WithHelpText("addgroup <username> <group>")
                 .WithHelpText("remove <user> ")
+                .WithHelpText("removegroup <username> <group>")
                 .WithHelpText("update <user> <password> [op]")
                 .WithHelpText("addnode <username> <node> [deny]")
                 .WithHelpText("removenode <username> <node> [deny]")
-                .WithHelpText("listgroups")
-                .WithHelpText("listnodes")
+                .WithHelpText("listgroups <username>")
+                .WithHelpText("listnodes <username>")
                 .WithHelpText("search <term>")
                 .Calls(this.UserPermission);
 
