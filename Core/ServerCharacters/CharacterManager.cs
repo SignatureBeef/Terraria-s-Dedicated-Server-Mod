@@ -240,6 +240,8 @@ namespace TDSM.Core.ServerCharacters
 
         public static bool SavePlayerData(Player player)
         {
+            if (!player.IsAuthenticated) return false;
+
             //If using a flat based system ensure the MODE is stored
             string authName = null;
             if (Mode == CharacterMode.AUTH)

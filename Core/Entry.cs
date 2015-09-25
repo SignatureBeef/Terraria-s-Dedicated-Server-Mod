@@ -756,6 +756,12 @@ namespace TDSM.Core
         {
             ctx.SetResult(HookResult.IGNORE);
 
+            if (Console.IsInputRedirected)
+            {
+                ProgramLog.Admin.Log("Console input redirection has been detected.");
+                return;
+            }
+
             (new OTA.Misc.ProgramThread("Command", ListenForCommands)).Start();
         }
 
@@ -792,6 +798,11 @@ namespace TDSM.Core
 
         void ListenForCommands()
         {
+            if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)
+            {
+                TDSM.Core.Mono.Sigterm.Attach();
+            }
+
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             ProgramLog.Log("Ready for commands.");
             while (!Terraria.Netplay.disconnect /*|| Server.RestartInProgress*/)
@@ -1388,11 +1399,6 @@ namespace TDSM.Core
             {
                 if (EnableHeartbeat)
                     Heartbeat.Begin(CoreBuild);
-
-                if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)
-                {
-                    TDSM.Core.Mono.Sigterm.Attach();
-                }
             }
 
             //if (args.ServerChangeState == ServerState.Initialising)
