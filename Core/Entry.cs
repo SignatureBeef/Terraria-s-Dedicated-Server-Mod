@@ -1540,11 +1540,11 @@ namespace TDSM.Core
             if (WhitelistEnabled)
             {
                 var name = Prefix_WhitelistName + args.Name;
-                var ip = Prefix_WhitelistIp + ctx.Client.RemoteAddress();
+                var ip = Prefix_WhitelistIp + ctx.Client.RemoteIPAddress();
 
                 if (!Whitelist.Contains(name) && !Whitelist.Contains(ip))
                 {
-                    ctx.SetKick("You are not whitelisted");
+                    ctx.SetKick(args.Name + ", You are not whitelisted");
                 }
             }
         }
