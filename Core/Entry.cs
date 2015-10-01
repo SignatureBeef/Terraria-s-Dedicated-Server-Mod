@@ -749,6 +749,11 @@ namespace TDSM.Core
             if (ctx.Client.State >= 4 && CharacterManager.Mode == CharacterMode.AUTH)
             {
                 CharacterManager.LoadForAuthenticated(ctx.Player, !AllowSSCGuestInfo);
+
+                if (AllowSSCGuestInfo)
+                {
+                    ctx.Player.SetSSCReadyForSave(true); //Since we aren't issuing out data, and accepting it, we can save it.
+                }
             }
         }
 
