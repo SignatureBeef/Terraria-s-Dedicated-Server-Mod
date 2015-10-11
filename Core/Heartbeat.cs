@@ -141,7 +141,7 @@ namespace TDSM.Core
                 {
                     var req = new System.Collections.Specialized.NameValueCollection();
 //                    var req = new System.Collections.Generic.Dictionary<String, String>();
-                    req.Add("API", Globals.Build.ToString());
+                    req.Add("API", Globals.Version.Major + "." + Globals.Version.Minor);
                     req.Add("Core", _coreBuild.ToString());
                     req.Add("Platform", ((int)Platform.Type).ToString());
                     req.Add("OSPlatform", ((int)Environment.OSVersion.Platform).ToString());

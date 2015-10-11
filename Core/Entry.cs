@@ -32,7 +32,7 @@ namespace TDSM.Core
     //        ALL = GUEST | AUTH | OP
     //    }
 
-    [OTAVersion(1, 1)]
+    [OTAVersion(1, 0)]
     public partial class Entry : BasePlugin
     {
         public const Int32 CoreBuild = 6;
@@ -117,7 +117,6 @@ namespace TDSM.Core
 
         public Entry()
         {
-            this.TDSMBuild = CoreBuild;
             this.Author = "TDSM";
             this.Description = "TDSM Core";
             this.Name = "TDSM Core Module";
@@ -127,10 +126,6 @@ namespace TDSM.Core
         protected override void Enabled()
         {
             base.Enabled();
-
-            OTA.Callbacks.MainCallback.StatusTextChange = OnStatusTextChanged;
-            OTA.Callbacks.MainCallback.UpdateServer += OnUpdateServer;
-            OTA.Callbacks.MainCallback.ServerTick += OnServerTick;
 
             OTA.Command.CommandParser.ExtCheckAccessLevel = (acc, sender) =>
             {
@@ -691,29 +686,29 @@ namespace TDSM.Core
             }
         }
 
-        [Hook(HookOrder.NORMAL)]
-        void OnInventoryItemReceived(ref HookContext ctx, ref HookArgs.InventoryItemReceived args)
-        {
-#if TDSMSever
-            if (Server.ItemRejections.Count > 0)
-            {
-                if (args.Item != null)
-                {
-                    if (Server.ItemRejections.Contains(args.Item.name) || Server.ItemRejections.Contains(args.Item.type.ToString()))
-                    {
-                        if (!String.IsNullOrEmpty(args.Item.name))
-                        {
-                            ctx.SetKick(args.Item.name + " is not allowed on this server.");
-                        }
-                        else
-                        {
-                            ctx.SetKick("Item type " + args.Item.type.ToString() + " is not allowed on this server.");
-                        }
-                    }
-                }
-            }
-#endif
-        }
+//        [Hook(HookOrder.NORMAL)]
+//        void OnInventoryItemReceived(ref HookContext ctx, ref HookArgs.InventoryItemReceived args)
+//        {
+//#if TDSMSever
+//            if (Server.ItemRejections.Count > 0)
+//            {
+//                if (args.Item != null)
+//                {
+//                    if (Server.ItemRejections.Contains(args.Item.name) || Server.ItemRejections.Contains(args.Item.type.ToString()))
+//                    {
+//                        if (!String.IsNullOrEmpty(args.Item.name))
+//                        {
+//                            ctx.SetKick(args.Item.name + " is not allowed on this server.");
+//                        }
+//                        else
+//                        {
+//                            ctx.SetKick("Item type " + args.Item.type.ToString() + " is not allowed on this server.");
+//                        }
+//                    }
+//                }
+//            }
+//#endif
+//        }
 
         [Hook(HookOrder.NORMAL)]
         void OnPlayerJoin(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)
@@ -858,7 +853,8 @@ namespace TDSM.Core
             }
         }
 
-        void OnServerTick(object empty, EventArgs noargs)
+        [Hook(HookOrder.NORMAL)]
+        void OnServerTick(ref HookContext ctx, ref HookArgs.ServerTick args)
         {
             if (Terraria.Main.ServerSideCharacter)
             {
@@ -869,37 +865,40 @@ namespace TDSM.Core
             TDSM.Core.Data.Management.BackupManager.OnUpdate();
         }
 
-        //[Hook(HookOrder.NORMAL)]
-        void OnUpdateServer(object empty, EventArgs noargs) /*ref HookContext ctx, ref HookArgs.UpdateServer args*/
+        [Hook(HookOrder.NORMAL)]
+        void OnUpdateServer(ref HookContext ctx, ref HookArgs.ServerUpdate args)
         {
-            //for (var i = 0; i < Terraria.Main.player.Length; i++)
-            //{
-            //    var player = Terraria.Main.player[i];
-            //    //if (player.active)
-            //    {
-            //        var conn = (player.Connection as ClientConnection);
-            //        if (conn != null)
-            //            conn.Flush();
-            //    }
-            //    //if (Terraria.Main.player[i].active)
-            //    //{
-            //    //    Server.CheckSection(i, Terraria.Main.player[i].position);
-
-            //    //    //TODO SpamUpdate
-            //    //    //if(OTA.Callbacks.Netplay.slots[i].conn != null && OTA.Callbacks.Netplay.slots[i].conn.Active )
-            //    //    //    OTA.Callbacks.Netplay.slots[i].conn.s
-            //    //}
-            //}
-
-            if (_useTimeLock)
+            if (args.State == MethodState.End)
             {
-                Terraria.Main.time = TimelockTime;
-                Terraria.Main.raining = TimelockRain;
-                Terraria.Main.slimeRain = TimelockSlimeRain;
-                //TODO: verify
-            }
+                //for (var i = 0; i < Terraria.Main.player.Length; i++)
+                //{
+                //    var player = Terraria.Main.player[i];
+                //    //if (player.active)
+                //    {
+                //        var conn = (player.Connection as ClientConnection);
+                //        if (conn != null)
+                //            conn.Flush();
+                //    }
+                //    //if (Terraria.Main.player[i].active)
+                //    //{
+                //    //    Server.CheckSection(i, Terraria.Main.player[i].position);
 
-            if (TimeFastForwarding) Terraria.Main.fastForwardTime = true;
+                //    //    //TODO SpamUpdate
+                //    //    //if(OTA.Callbacks.Netplay.slots[i].conn != null && OTA.Callbacks.Netplay.slots[i].conn.Active )
+                //    //    //    OTA.Callbacks.Netplay.slots[i].conn.s
+                //    //}
+                //}
+
+                if (_useTimeLock)
+                {
+                    Terraria.Main.time = TimelockTime;
+                    Terraria.Main.raining = TimelockRain;
+                    Terraria.Main.slimeRain = TimelockSlimeRain;
+                    //TODO: verify
+                }
+
+                if (TimeFastForwarding) Terraria.Main.fastForwardTime = true;
+            }
         }
 
         //[Hook(HookOrder.NORMAL)]
@@ -923,7 +922,7 @@ namespace TDSM.Core
         }
 
         [Hook(HookOrder.NORMAL)]
-        void OnNPCSpawned(ref HookContext ctx, ref HookArgs.NPCSpawn args)
+        void OnNPCSpawned(ref HookContext ctx, ref HookArgs.NpcSpawn args)
         {
             if (StopNPCSpawning)
                 ctx.SetResult(HookResult.IGNORE);
@@ -1662,10 +1661,10 @@ namespace TDSM.Core
         }
 
         private int lastWritten = 0;
-        //[Hook(HookOrder.NORMAL)]
-        void OnStatusTextChanged() //ref HookContext ctx, ref HookArgs.StatusTextChanged args)
+        [Hook(HookOrder.NORMAL)]
+        void OnStatusTextChanged(ref HookContext ctx, ref HookArgs.StatusTextChange args)
         {
-            //ctx.SetResult(HookResult.IGNORE);
+            ctx.SetResult(HookResult.IGNORE);
             //There's no locking and two seperate threads, so we must use local variables incase of changes
             var statusText = Terraria.Main.statusText;
             var oldStatusText = Terraria.Main.oldStatusText;

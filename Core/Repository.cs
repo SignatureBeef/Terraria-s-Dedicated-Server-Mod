@@ -110,19 +110,20 @@ namespace TDSM.Core
         private static PackageInfo GetUpdateInfo(string packageName, string currentVersion = null)
         {
             string data = null;
-            try
-            {
-                using (var wc = new WebClient())
-                {
-                    var url = GetUrl_PackageInfoUrl(Globals.Build, (short)Globals.BuildPhase, packageName, currentVersion);
-                    data = wc.DownloadString(url);
-                }
-            }
-            catch (Exception e)
-            {
-                ProgramLog.Error.Log("Failed to fetch package", e);
-                return null;
-            }
+            //TODO uncommented until the new DB is in
+//            try
+//            {
+//                using (var wc = new WebClient())
+//                {
+//                    var url = GetUrl_PackageInfoUrl(Globals.Build, (short)Globals.BuildPhase, packageName, currentVersion);
+//                    data = wc.DownloadString(url);
+//                }
+//            }
+//            catch (Exception e)
+//            {
+//                ProgramLog.Error.Log("Failed to fetch package", e);
+//                return null;
+//            }
 
 #if RESPONSE_TYPE_JSON
             try

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace TDSM.Web
 {
+    [OTAVersion(1, 0)]
     public class Plugin : BasePlugin
     {
         public Plugin()
@@ -15,7 +16,6 @@ namespace TDSM.Web
             base.Author = "TDSM";
             base.Description = "A web management interface for TDSM";
             base.Name = "Web Interface";
-            base.TDSMBuild = 5;
         }
 
         protected override void Enabled()
@@ -51,7 +51,7 @@ namespace TDSM.Web
             return this.Request.CreateResponse(HttpStatusCode.OK, items);
         }
 
-//        [Route("")]
+        //        [Route("")]
         [Authorize(Roles = "console")]
         public async Task<HttpResponseMessage> Put()
         {

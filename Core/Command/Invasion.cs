@@ -17,7 +17,7 @@ namespace TDSM.Core
         private bool _notfInbound;
 
         [Hook(HookOrder.NORMAL)]
-        void OnInvasionNPCSpawn(ref HookContext ctx, ref HookArgs.InvasionNPCSpawn args)
+        void OnInvasionNPCSpawn(ref HookContext ctx, ref HookArgs.InvasionNpcSpawn args)
         {
             if (Main.rand == null)
                 Main.rand = new Random();
@@ -93,7 +93,7 @@ namespace TDSM.Core
             }).Shuffle());
 
         [Hook]
-        void OnNPCKilled(ref HookContext ctx, ref HookArgs.NPCKilled args)
+        void OnNPCKilled(ref HookContext ctx, ref HookArgs.NpcKilled args)
         {
             if (Main.invasionType == _assignedInvasionType && _invasion != null)
             {
