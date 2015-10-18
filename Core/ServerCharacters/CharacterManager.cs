@@ -6,6 +6,7 @@ using OTA.Data;
 using OTA.Logging;
 using OTA.Plugin;
 using System.Linq;
+using TDSM.Core.Data;
 
 namespace TDSM.Core.ServerCharacters
 {
@@ -136,8 +137,9 @@ namespace TDSM.Core.ServerCharacters
             string authName = null;
             if (Mode == CharacterMode.AUTH)
             {
-                if (!String.IsNullOrEmpty(player.AuthenticatedAs))
-                    authName = player.AuthenticatedAs;
+                var auth = player.GetAuthenticatedAs();
+                if (!String.IsNullOrEmpty(auth))
+                    authName = auth;
             }
             else if (Mode == CharacterMode.UUID)
             {
@@ -154,7 +156,8 @@ namespace TDSM.Core.ServerCharacters
 
                 if (Storage.IsAvailable)
                 {
-                    var dbSSC = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId);
+                    var auth = player.GetAuthenticatedAs();
+                    var dbSSC = Tables.CharacterTable.GetCharacter(Mode, auth, player.ClientUUId);
 
 //                    ProgramLog.Admin.Log("Found SCC: " + (dbSSC != null));
 
@@ -240,14 +243,15 @@ namespace TDSM.Core.ServerCharacters
 
         public static bool SavePlayerData(Player player)
         {
-            if (!player.IsAuthenticated) return false;
+            if (!player.IsAuthenticated()) return false;
 
             //If using a flat based system ensure the MODE is stored
             string authName = null;
             if (Mode == CharacterMode.AUTH)
             {
-                if (!String.IsNullOrEmpty(player.AuthenticatedAs))
-                    authName = player.AuthenticatedAs;
+                var auth = player.GetAuthenticatedAs();
+                if (!String.IsNullOrEmpty(auth))
+                    authName = auth;
             }
             else if (Mode == CharacterMode.UUID)
             {
@@ -259,8 +263,8 @@ namespace TDSM.Core.ServerCharacters
             {
                 if (Storage.IsAvailable)
                 {
-//                    var create = player.GetPluginData<Boolean>(Key_NewCharacter, false);
-                    var character = Tables.CharacterTable.GetCharacter(Mode, player.AuthenticatedAs, player.ClientUUId);
+                    var auth = player.GetAuthenticatedAs();
+                    var character = Tables.CharacterTable.GetCharacter(Mode, auth, player.ClientUUId);
                     if (character == null)
                     {
 //                        if (player.ClearPluginData(Key_NewCharacter))
@@ -268,7 +272,7 @@ namespace TDSM.Core.ServerCharacters
                         character = Tables.CharacterTable.NewCharacter
                             (
                             Mode,
-                            player.AuthenticatedAs,
+                            auth,
                             player.ClientUUId,
                             player.statLife,
                             player.statLifeMax,
@@ -292,7 +296,7 @@ namespace TDSM.Core.ServerCharacters
 //                        }
 //                        else
 //                        {
-//                            ProgramLog.Error.Log("Failed to save SSC for player: {0}", player.Name);
+//                            ProgramLog.Error.Log("Failed to save SSC for player: {0}", player.name);
 //                            return false;
 //                        }
                     }
@@ -301,7 +305,7 @@ namespace TDSM.Core.ServerCharacters
                         character = Tables.CharacterTable.UpdateCharacter
                         (
                             Mode,
-                            player.AuthenticatedAs,
+                            auth,
                             player.ClientUUId,
                             player.statLife,
                             player.statLifeMax,
@@ -353,7 +357,7 @@ namespace TDSM.Core.ServerCharacters
 //                            {
 //                                if (!Tables.ItemTable.UpdateItem(ItemType.Inventory, netId, prefix, stack, favorite, i, characterId))
 //                                {
-//                                    ProgramLog.Error.Log("Failed to save Inventory for player: {0}", player.Name);
+//                                    ProgramLog.Error.Log("Failed to save Inventory for player: {0}", player.name);
 //                                    return false;
 //                                }
 //                            }
@@ -383,7 +387,7 @@ namespace TDSM.Core.ServerCharacters
 //                            {
 //                                if (!Tables.ItemTable.UpdateItem(ItemType.Armor, netId, prefix, stack, favorite, i, characterId))
 //                                {
-//                                    ProgramLog.Error.Log("Failed to save Armor for player: {0}", player.Name);
+//                                    ProgramLog.Error.Log("Failed to save Armor for player: {0}", player.name);
 //                                    return false;
 //                                }
 //                            }
@@ -413,7 +417,7 @@ namespace TDSM.Core.ServerCharacters
 //                            {
 //                                if (!Tables.ItemTable.UpdateItem(ItemType.Dye, netId, prefix, stack, favorite, i, characterId))
 //                                {
-//                                    ProgramLog.Error.Log("Failed to save Dye for player: {0}", player.Name);
+//                                    ProgramLog.Error.Log("Failed to save Dye for player: {0}", player.name);
 //                                    return false;
 //                                }
 //                            }
@@ -475,7 +479,7 @@ namespace TDSM.Core.ServerCharacters
             {
                 if (!Tables.ItemTable.UpdateItem(type, netId, prefix, stack, favorite, slot, characterId))
                 {
-                    ProgramLog.Error.Log("Failed to save {1} for player: {0}", player.Name, type.ToString());
+                    ProgramLog.Error.Log("Failed to save {1} for player: {0}", player.name, type.ToString());
                     return false;
                 }
             }

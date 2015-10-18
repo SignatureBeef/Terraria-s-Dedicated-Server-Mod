@@ -68,6 +68,39 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLua">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\NLua.dll</HintPath>
+    </Reference>
+    <Reference Include="KopiLua">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\KopiLua.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.FileSystems">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.FileSystems.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.StaticFiles">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.StaticFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

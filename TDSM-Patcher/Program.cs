@@ -49,7 +49,7 @@ namespace TDSM.Patcher
             };
 
             //By default we will patch a server
-            OTAPatcher.PatchMode = OTA.Patcher.PatchMode.Server;
+            OTAPatcher.PatchMode = SupportType.Server;
 
             //Specifiy the official file name
             OTAPatcher.InputFileName = "TerrariaServer.exe";

@@ -13,6 +13,8 @@ using Terraria;
 using OTA.Sockets;
 using OTA.Data;
 using System.Text;
+using TDSM.Core.Command;
+using TDSM.Core.Data;
 
 namespace TDSM.Core
 {
@@ -380,7 +382,7 @@ namespace TDSM.Core
             {
                 var players = from p in Main.player
                                           where p.active
-                                          select String.Format("{0} ({1})", p.Name, p.IPAddress);
+                    select String.Format("{0} ({1})", p.name, p.IPAddress);
 
                 online = String.Join(", ", players);
             }
@@ -388,7 +390,7 @@ namespace TDSM.Core
             {
                 var players = from p in Main.player
                                           where p.active
-                                          select p.Name;
+                    select p.name;
 
                 online = String.Join(", ", players);
             }
@@ -410,10 +412,10 @@ namespace TDSM.Core
 
             var players = from p in Terraria.Main.player
                                    where p.active && !p.Op
-                                   select p.Name;
+                select p.name;
             var ops = from p in Terraria.Main.player
                                where p.active && p.Op
-                               select p.Name;
+                select p.name;
 
             var pn = players.Count();
             var on = ops.Count();
@@ -432,9 +434,8 @@ namespace TDSM.Core
 
             if (on > 0)
                 os = "Ops: " + String.Join(", ", ops);
-
-            //sender.Message(string.Concat(os, ps, " (", on + pn, "/", SlotManager.MaxSlots, ")"), 255, 255, 240, 20);
-            sender.Message(string.Concat(os, ps, " (", on + pn, "/", Netplay.MaxConnections, ")"), 255, 255, 240, 20);
+            
+            sender.SendMessage(string.Concat(os, ps, " (", on + pn, "/", Netplay.MaxConnections, ")"), 255, 255, 240, 20);
         }
 
         /// <summary>
@@ -965,7 +966,7 @@ namespace TDSM.Core
                 realNPCName = Main.npc[npcIndex].name;
             }
             Tools.NotifyAllOps("Spawned " + amount.ToString() + " of " +
-                realNPCName + " [" + player.Name + "]", true);
+                realNPCName + " [" + player.name + "]", true);
         }
 
         /// <summary>
@@ -992,12 +993,12 @@ namespace TDSM.Core
                     if (subject.SpawnX > -1)
                     {
                         subject.Teleport(subject.SpawnX * 16f, subject.SpawnY * 16f - subject.height);
-                        Tools.NotifyAllOps(String.Format("{0} has teleported home", subject.Name), true);
+                        Tools.NotifyAllOps(String.Format("{0} has teleported home", subject.name), true);
                     }
                     else
                     {
                         subject.Teleport(Main.spawnTileX * 16f, Main.spawnTileY * 16f - subject.height);
-                        Tools.NotifyAllOps(String.Format("{0} has teleported to spawn", subject.Name), true);
+                        Tools.NotifyAllOps(String.Format("{0} has teleported to spawn", subject.name), true);
                     }
                     return;
                 }
@@ -1016,8 +1017,8 @@ namespace TDSM.Core
                 /*if (*/
                 subject.Teleport(target); //)
                 {
-                    Tools.NotifyAllOps(String.Concat("Teleported ", subject.Name, " to ",
-                            target.Name, ". [", sender.SenderName, "]"), true);
+                    Tools.NotifyAllOps(String.Concat("Teleported ", subject.name, " to ",
+                        target.name, ". [", sender.SenderName, "]"), true);
                 }
                 //else
                 //    sender.Message(Languages.TeleportFailed);
@@ -1034,8 +1035,8 @@ namespace TDSM.Core
                     /*if (*/
                     subject.Teleport(target); //)
                     {
-                        Tools.NotifyAllOps(string.Concat("Teleported ", subject.Name, " to ",
-                                target.Name, ". [", sender.SenderName, "]"), true);
+                        Tools.NotifyAllOps(string.Concat("Teleported ", subject.name, " to ",
+                            target.name, ". [", sender.SenderName, "]"), true);
                     }
                     //else
                     //    sender.Message(Languages.TeleportFailed);
@@ -1058,7 +1059,7 @@ namespace TDSM.Core
                     /*if (*/
                     subject.Teleport((x - OutOfBoundsPadding) * 16f, (y - OutOfBoundsPadding) * 16f); //)
                     {
-                        Tools.NotifyAllOps(string.Concat("Teleported ", subject.Name, " to ",
+                        Tools.NotifyAllOps(string.Concat("Teleported ", subject.name, " to ",
                                 x, ":", y, ". [", sender.SenderName, "]"), true);
                     }
                     //else
@@ -1094,8 +1095,8 @@ namespace TDSM.Core
 
                     subject.Teleport(player);
 
-                    Tools.NotifyAllOps("Teleported " + subject.Name + " to " +
-                        player.Name + " [" + sender.SenderName + "]", true);
+                    Tools.NotifyAllOps("Teleported " + subject.name + " to " +
+                        player.name + " [" + sender.SenderName + "]", true);
                 }
             }
             else
@@ -1116,7 +1117,7 @@ namespace TDSM.Core
         //    Player player;
         //    if (args.TryGetOnlinePlayer(0, out player))
         //    {
-        //        playerName = player.Name;
+        //        playerName = player.name;
 
         //        player.sendMessage(Languages.YouAreNowOP, Color.Green);
         //        player.Op = true;
@@ -1147,7 +1148,7 @@ namespace TDSM.Core
         //    Player player;
         //    if (args.TryGetOnlinePlayer(0, out player))
         //    {
-        //        playerName = player.Name;
+        //        playerName = player.name;
 
         //        if (Player.isInOpList(playerName))
         //        {
@@ -1190,7 +1191,7 @@ namespace TDSM.Core
         //            if (player.Password.Equals(Password))
         //            {
         //                Tools.NotifyAllOps(
-        //                    String.Format("{0} " + Languages.SuccessfullyLoggedInOP, player.Name)
+        //                    String.Format("{0} " + Languages.SuccessfullyLoggedInOP, player.name)
         //                );
         //                player.Op = true;
         //                player.sendMessage(Languages.SuccessfullyLoggedInOP, Color.DarkGreen);
@@ -1203,7 +1204,7 @@ namespace TDSM.Core
         //            else
         //            {
         //                Tools.NotifyAllOps(
-        //                    String.Format("{0} " + Languages.FailedLoginWrongPassword, player.Name)
+        //                    String.Format("{0} " + Languages.FailedLoginWrongPassword, player.name)
         //                );
         //                player.sendMessage(Languages.IncorrectOPPassword, Color.DarkRed);
         //            }
@@ -1231,7 +1232,7 @@ namespace TDSM.Core
         //            player.sendMessage(Languages.SuccessfullyLoggedOutOP, Color.DarkRed);
 
         //            Tools.NotifyAllOps(
-        //                String.Format("{0} " + Languages.SuccessfullyLoggedOutOP, player.Name)
+        //                String.Format("{0} " + Languages.SuccessfullyLoggedOutOP, player.name)
         //            );
 
         //            if (player.HasClientMod)
@@ -1298,8 +1299,8 @@ namespace TDSM.Core
                     slot.Kick("You have been kicked by " + sender.SenderName + ".");
 
                     var player = Main.player[s];
-                    if (player != null && player.Name != null)
-                        NewNetMessage.SendData(25, -1, -1, player.Name + " has been kicked by " + sender.SenderName + ".", 255);
+                    if (player != null && player.name != null)
+                        NewNetMessage.SendData(25, -1, -1, player.name + " has been kicked by " + sender.SenderName + ".", 255);
                 }
                 else
                 {
@@ -1314,14 +1315,14 @@ namespace TDSM.Core
                 Player player;
                 args.ParseOne<Player>(out player);
 
-                if (player.Name == null)
+                if (player.name == null)
                 {
                     sender.Message("Kick player name is not set.");
                     return;
                 }
 
                 player.Kick("You have been kicked by " + sender.SenderName + ".");
-                NetMessage.SendData(25, -1, -1, player.Name + " has been kicked by " + sender.SenderName + ".", 255);
+                NetMessage.SendData(25, -1, -1, player.name + " has been kicked by " + sender.SenderName + ".", 255);
             }
         }
 
@@ -1392,10 +1393,10 @@ namespace TDSM.Core
         //            var name = String.Empty;
         //            if (player != null)
         //            {
-        //                name = string.Concat(", ", player.Op ? "Op. " : String.Empty, "\String.Empty, (player.Name ?? "<null>"), "\String.Empty);
+        //                name = string.Concat(", ", player.Op ? "Op. " : String.Empty, "\String.Empty, (player.name ?? "<null>"), "\String.Empty);
         //                if (player.AuthenticatedAs != null)
         //                {
-        //                    if (player.Name == player.AuthenticatedAs)
+        //                    if (player.name == player.AuthenticatedAs)
         //                        name = name + " (auth'd)";
         //                    else
         //                        name = name + " (auth'd as " + player.AuthenticatedAs + ")";
@@ -2299,7 +2300,7 @@ namespace TDSM.Core
                 //Player player;
                 //if (args.TryGetOnlinePlayer(0, out player))
                 //{
-                //    playerName = player.Name;
+                //    playerName = player.name;
 
                 //    player.SendMessage("You are now a server operator.", Color.Green);
                 //    player.Op = true;
@@ -2332,7 +2333,7 @@ namespace TDSM.Core
             //Player player;
             //if (args.TryGetOnlinePlayer(0, out player))
             //{
-            //    playerName = player.Name;
+            //    playerName = player.name;
 
             //    if (Server.Ops.Contains(playerName, true))
             //    {
@@ -2415,7 +2416,7 @@ namespace TDSM.Core
                         if (existing.ComparePassword(sender.SenderName, password) && existing.Operator)
                         {
                             Tools.NotifyAllOps(
-                                String.Format("{0} successfully logged in.", player.Name)
+                                String.Format("{0} successfully logged in.", player.name)
                             );
                             player.Op = true;
                             player.SetAuthentication(sender.SenderName, "tdsm");
@@ -2436,7 +2437,7 @@ namespace TDSM.Core
                     if (Ops.Contains(player.name, password))
                     {
                         Tools.NotifyAllOps(
-                            String.Format("{0} successfully logged in.", player.Name)
+                            String.Format("{0} successfully logged in.", player.name)
                         );
                         player.Op = true;
                         player.SetAuthentication(sender.SenderName, "tdsm");
@@ -2468,7 +2469,7 @@ namespace TDSM.Core
                         if (existing.ComparePassword(sender.SenderName, password))
                         {
                             Tools.NotifyAllOps(
-                                String.Format("{0} successfully logged in.", player.Name)
+                                String.Format("{0} successfully logged in.", player.name)
                             );
                             player.SendMessage("Successfully logged in.", Color.DarkGreen);
                             player.SetAuthentication(sender.SenderName, "tdsm");
@@ -2506,7 +2507,7 @@ namespace TDSM.Core
                     player.SetAuthentication(String.Empty, "tdsm");
 
                     Tools.NotifyAllOps(
-                        String.Format("{0} successfully logged out.", player.Name)
+                        String.Format("{0} successfully logged out.", player.name)
                     );
                 }
                 else
@@ -2872,14 +2873,14 @@ namespace TDSM.Core
             var player = sender as Player;
             if (player != null)
             {
-                if (CommandDictionary.ContainsKey(player.Name))
+                if (CommandDictionary.ContainsKey(player.name))
                 {
-                    CommandParser.ParsePlayerCommand(player, CommandDictionary[player.Name]);
-                    ProgramLog.Log("Executed {0}'s previous command: {1}", player.Name, CommandDictionary[player.Name]);
+                    CommandParser.ParsePlayerCommand(player, CommandDictionary[player.name]);
+                    ProgramLog.Log("Executed {0}'s previous command: {1}", player.name, CommandDictionary[player.name]);
                 }
                 else
                     sender.SendMessage("No Previous Command", 255, 255, 20, 20);
-                //ProgramLog.Log("{0}", ctx.Player.Name); //, args.Prefix + " " + args.ArgumentString);
+                //ProgramLog.Log("{0}", ctx.Player.name); //, args.Prefix + " " + args.ArgumentString);
             }
             if (sender is ConsoleSender)
             {
@@ -2897,7 +2898,7 @@ namespace TDSM.Core
             {
                 var sb = new StringBuilder();
                 sb.Append("You are ");
-                if (!player.IsAuthenticated) sb.Append("not ");
+                if (!player.IsAuthenticated()) sb.Append("not ");
 
                 if (player.Op) sb.Append("an operator");
                 else sb.Append("logged in");

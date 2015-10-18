@@ -43,6 +43,9 @@
     <Reference Include="Mono.Cecil">
       <HintPath>..\Open-Terraria-API\Binaries\Mono.Cecil.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\Open-Terraria-API\Binaries\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

@@ -27,26 +27,6 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>True</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <Optimize>True</Optimize>
-    <DebugType>none</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -56,9 +36,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="OTA">
-      <HintPath>..\Open-Terraria-API\Binaries\OTA.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -71,6 +48,39 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="NLua">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\NLua.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.FileSystems">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.FileSystems.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.StaticFiles">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.StaticFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="KopiLua">
+      <HintPath>..\Open-Terraria-API\Binaries\Libraries\KopiLua.dll</HintPath>
+    </Reference>
+    <Reference Include="OTA">
+      <HintPath>..\Open-Terraria-API\Binaries\OTA.dll</HintPath>
+    </Reference>
     <Reference Include="TerrariaServer">
       <HintPath>..\Open-Terraria-API\Binaries\TerrariaServer.exe</HintPath>
     </Reference>
@@ -80,7 +90,6 @@
     <Compile Include="ServerCharacters\ServerCharacter.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="BasePlayer.cs" />
-    <Compile Include="Callbacks\Net.cs" />
     <Compile Include="Command\PluginRepo.cs" />
     <Compile Include="Command\Invasion.cs" />
     <Compile Include="Command\Commands.cs" />
@@ -106,6 +115,31 @@
     <Compile Include="Data\Management\BackupManager.cs" />
     <Compile Include="Data\Management\LogManagement.cs" />
     <Compile Include="Data\Management\SaveManager.cs" />
+    <Compile Include="Data\AuthenticatedUsers.cs" />
+    <Compile Include="Data\DbPlayer.cs" />
+    <Compile Include="Data\Group.cs" />
+    <Compile Include="Data\SettingsStore.cs" />
+    <Compile Include="Data\Models\APIAccount.cs" />
+    <Compile Include="Data\Models\APIAccountRole.cs" />
+    <Compile Include="Data\Models\DataSetting.cs" />
+    <Compile Include="Data\Models\GroupNode.cs" />
+    <Compile Include="Data\Models\NodePermission.cs" />
+    <Compile Include="Data\Models\PlayerGroup.cs" />
+    <Compile Include="Data\Models\PlayerNode.cs" />
+    <Compile Include="Data\Permissions\IPermissionsHandler.cs" />
+    <Compile Include="Data\Permissions\Permission.cs" />
+    <Compile Include="Data\Management\APIAccountManager.cs" />
+    <Compile Include="Data\PermissionsOAuthProvider.cs" />
+    <Compile Include="Data\OTAContextExtensions.cs" />
+    <Compile Include="Command\CommandParser.cs" />
+    <Compile Include="Command\AccessLevel.cs" />
+    <Compile Include="Command\CommandInfo.cs" />
+    <Compile Include="Command\CommandMapExtensions.cs" />
+    <Compile Include="PluginExtensions.cs" />
+    <Compile Include="Command\VanillaCommands.cs" />
+    <Compile Include="Data\PasswordFormat.cs" />
+    <Compile Include="Data\Storage.cs" />
+    <Compile Include="PluginHooks\ServerCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -123,5 +157,7 @@
     <Folder Include="Data\" />
     <Folder Include="Data\Models\" />
     <Folder Include="Data\Management\" />
+    <Folder Include="Data\Permissions\" />
+    <Folder Include="PluginHooks\" />
   </ItemGroup>
 </Project>

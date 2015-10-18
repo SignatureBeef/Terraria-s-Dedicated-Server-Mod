@@ -318,7 +318,7 @@ namespace TDSM.Core.RemoteConsole
 
             try
             {
-                OTA.Callbacks.UserInput.CommandParser.ParseConsoleCommand(line, this.sender);
+                Entry.CommandParser.ParseConsoleCommand(line, this.sender);
             }
             catch (OTA.Misc.ExitException)
             {

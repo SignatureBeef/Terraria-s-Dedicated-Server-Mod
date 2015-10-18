@@ -3,6 +3,8 @@ using OTA.Command;
 using OTA.Data;
 using Microsoft.Xna.Framework;
 using OTA.Logging;
+using TDSM.Core.Data;
+using TDSM.Core.Data.Permissions;
 
 namespace TDSM.Core
 {

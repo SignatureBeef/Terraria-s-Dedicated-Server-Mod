@@ -20,6 +20,11 @@ using Terraria.Social;
 using Terraria.Initializers;
 using System.Linq;
 using TDSM.Core.Data.Management;
+using TDSM.Core.Command;
+using TDSM.Core.Data;
+using System.Text;
+using Microsoft.Xna.Framework;
+using TDSM.Core.Plugin.Hooks;
 
 namespace TDSM.Core
 {
@@ -113,8 +118,6 @@ namespace TDSM.Core
 
         public Dictionary<string, string> CommandDictionary { get; set; }
 
-        public CommandParser CommandParser { get; set; }
-
         public Entry()
         {
             this.Author = "TDSM";
@@ -127,7 +130,7 @@ namespace TDSM.Core
         {
             base.Enabled();
 
-            OTA.Command.CommandParser.ExtCheckAccessLevel = (acc, sender) =>
+            CommandParser.ExtCheckAccessLevel = (acc, sender) =>
             {
                 if (sender is RConSender)
                     return acc <= AccessLevel.REMOTE_CONSOLE;
@@ -144,51 +147,39 @@ namespace TDSM.Core
 
         protected override void Initialized(object state)
         {
-            //            if (/*!Globals.IsPatching &&*/ !ProgramLog.IsOpen)
-            //            {
-            //                var logFile = Globals.DataPath + System.IO.Path.DirectorySeparatorChar + "server.log";
-            //                ProgramLog.OpenLogFile(logFile);
-            //
             ProgramLog.Log("TDSM Rebind core build {0}", this.Version);
-            //
-            //                Tools.SetWriteLineMethod(ProgramLog.Log, OnLogFinished);
-            //                ConsoleSender.DefaultColour = ConsoleColor.Gray;
-            //                //ConsoleSender.SetMethod((msg, r, g, b) =>
-            //                //{
-            //                //    Console.ForegroundColor = FromColor((byte)r, (byte)g, (byte)b);
-            //                //    Console.WriteLine(msg);
-            //                //});
-            //            }
 
-            CommandDictionary = new Dictionary<string, string>(Tools.MaxPlayers + 1);
-            CommandParser = new CommandParser();
+            CommandDictionary = new Dictionary<string, string>();
+            PluginExtensions.Initialise(this);
+
+//            CommandParser = new CommandParser();
             Ops = new PairFileRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
             Whitelist = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "whitelist.txt"), false);
 #if WebInterface
             WebInterface.WebPermissions.Load();
 #endif
-            AddCommand("platform")
+            this.AddCommand("platform")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Show what type of server is running TDSM")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.platform")
                 .Calls(this.OperatingSystem);
 
-            AddCommand("exit")
+            this.AddCommand("exit")
                 .WithDescription("Stops the server")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.admin")
                 .Calls(this.Exit);
 
-            AddCommand("stop")
+            this.AddCommand("stop")
                 .WithDescription("Stops the server")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.admin")
                 .Calls(this.Exit);
 
-            AddCommand("time")
+            this.AddCommand("time")
                 .WithDescription("Change the time of day")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("set <numeric time>")
@@ -198,21 +189,21 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.time")
                 .Calls(this.Time);
 
-            AddCommand("give")
+            this.AddCommand("give")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Give a player items")
                 .WithHelpText("<amount> <itemname:itemid> [prefix] [player]")
                 .WithPermissionNode("tdsm.give")
                 .Calls(this.Give);
 
-            AddCommand("spawnnpc")
+            this.AddCommand("spawnnpc")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Spawns NPCs")
                 .WithHelpText("<amount> \"<name:id>\" \"<player>\"")
                 .WithPermissionNode("tdsm.spawnnpc")
                 .Calls(this.SpawnNPC);
 
-            AddCommand("tp")
+            this.AddCommand("tp")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Teleport a player to another player")
                 .WithHelpText("<player> <toplayer> - another player")
@@ -223,34 +214,34 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.tp")
                 .Calls(this.Teleport);
 
-            AddCommand("tphere")
+            this.AddCommand("tphere")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Teleport a player to yourself")
                 .WithHelpText("<player>")
                 .WithPermissionNode("tdsm.tphere")
                 .Calls(this.TeleportHere);
 
-            AddCommand("save")
+            this.AddCommand("save")
                 .WithDescription("Save world and configuration data")
                 .WithAccessLevel(AccessLevel.OP)
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.admin")
                 .Calls(this.SaveAll);
 
-            AddCommand("save-all")
+            this.AddCommand("save-all")
                 .WithDescription("Save world and configuration data")
                 .WithAccessLevel(AccessLevel.OP)
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.admin")
                 .Calls(this.SaveAll);
 
-            //AddCommand("reload")
+            //this.AddCommand("reload")
             //    .WithDescription(Languages.CommandDescription_ReloadConfig)
             //    .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
             //    .WithPermissionNode("tdsm.admin")
             //    .Calls(this.Reload);
 
-            AddCommand("itemrej")
+            this.AddCommand("itemrej")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Manage item rejections")
                 .WithHelpText("-add|-remove <id:name>")
@@ -258,28 +249,28 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.itemrej")
                 .Calls(this.ItemRejection);
 
-            AddCommand("refresh")
+            this.AddCommand("refresh")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Redownload the area around you from the server")
                 .WithHelpText("Usage:    refresh")
                 .WithPermissionNode("tdsm.refresh")
                 .Calls(this.Refresh);
 
-            AddCommand("list")
+            this.AddCommand("list")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.List);
 
-            AddCommand("who")
+            this.AddCommand("who")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.List);
 
-            AddCommand("players")
+            this.AddCommand("players")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()
@@ -287,21 +278,21 @@ namespace TDSM.Core
                 .Calls(this.OldList);
 
             // this is what the server crawler expects
-            AddCommand("playing")
+            this.AddCommand("playing")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.OldList);
 
-            AddCommand("online")
+            this.AddCommand("online")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.List);
 
-            AddCommand("me")
+            this.AddCommand("me")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("3rd person talk")
                 .WithHelpText("<message> - Message to display in third person.")
@@ -309,54 +300,54 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.me")
                 .Calls(this.Action);
 
-            AddCommand("say")
+            this.AddCommand("say")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Say a message from the server")
                 .WithHelpText("<message>")
                 .WithPermissionNode("tdsm.say")
                 .Calls(this.Say);
 
-            AddCommand("status")
+            this.AddCommand("status")
                 .WithDescription("Server status")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.status")
                 .Calls(this.ServerStatus);
 
-            AddCommand("kick")
+            this.AddCommand("kick")
                 .WithDescription("Kicks a player from the server")
                 .WithHelpText("<player> - Kicks the player specified.")
                 .WithPermissionNode("tdsm.kick")
                 .Calls(this.Kick);
 
-            AddCommand("op")
+            this.AddCommand("op")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Allows a player server operator status")
                 .WithHelpText("<player> <password> - Sets the player as an operator on the server and sets the OP password for that player.")
                 .WithPermissionNode("tdsm.op")
                 .Calls(this.OpPlayer);
 
-            AddCommand("deop")
+            this.AddCommand("deop")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Removes server operator status from a player")
                 .WithHelpText("<player> - Removes server operator status from the specified player.")
                 .WithPermissionNode("tdsm.deop")
                 .Calls(this.DeopPlayer);
 
-            AddCommand("oplogin")
+            this.AddCommand("oplogin")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Allows an operator to log in")
                 .WithHelpText("<password> - Logs into the server as an OP.")
                 .WithPermissionNode("tdsm.oplogin")
                 .Calls(this.OpLogin);
 
-            AddCommand("oplogout")
+            this.AddCommand("oplogout")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Logs out a signed in operator.")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.oplogout")
                 .Calls(this.OpLogout);
 
-            AddCommand("spawnboss")
+            this.AddCommand("spawnboss")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Spawn a boss")
                 .WithHelpText("<amount> <boss> <player>")
@@ -364,7 +355,7 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.spawnboss")
                 .Calls(this.SummonBoss);
 
-            AddCommand("timelock")
+            this.AddCommand("timelock")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Forces the time to stay at a certain point.")
                 .WithHelpText("now")
@@ -374,13 +365,13 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.timelock")
                 .Calls(this.Timelock);
 
-            AddCommand("fastforwardtime")
+            this.AddCommand("fastforwardtime")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Fast forwards time until disabled.")
                 .WithPermissionNode("tdsm.fastforwardtime")
                 .Calls(this.FastForwardTime);
 
-            AddCommand("heal")
+            this.AddCommand("heal")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Heals one or all players.")
                 .WithHelpText("<player>")
@@ -388,14 +379,14 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.heal")
                 .Calls(this.Heal);
 
-            AddCommand("hardmode")
+            this.AddCommand("hardmode")
                 .WithAccessLevel(AccessLevel.OP)
                 .SetDefaultUsage()
                 .WithDescription("Enables hard mode.")
                 .WithPermissionNode("tdsm.hardmode")
                 .Calls(this.HardMode);
 
-            AddCommand("rcon")
+            this.AddCommand("rcon")
                 .WithDescription("Manage remote console access.")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
                 .WithHelpText("load       - reload login database")
@@ -406,14 +397,14 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.rcon")
                 .Calls(RConServer.RConCommand);
 
-            AddCommand("npcspawning")
+            this.AddCommand("npcspawning")
                 .WithDescription("Turn NPC spawning on or off.")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("<true|false>")
                 .WithPermissionNode("tdsm.npcspawning")
                 .Calls(this.NPCSpawning);
 
-            AddCommand("invasion")
+            this.AddCommand("invasion")
                 .WithDescription("Begins an invasion")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("goblin|frost|pirate|martian")
@@ -422,7 +413,7 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.invasion")
                 .Calls(this.Invasion);
 
-            AddCommand("serverlist")
+            this.AddCommand("serverlist")
                 .WithDescription("Manages the heartbeat and server list")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("print|?              - Displays the current details")
@@ -435,7 +426,7 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.serverlist")
                 .Calls(this.ServerList);
 
-            AddCommand("var")
+            this.AddCommand("var")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Experimental variable manipulation")
                 .WithHelpText("<field|exec|prop> <namespace.classname> <fieldname|methodname>")
@@ -444,14 +435,14 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.var")
                 .Calls(this.VariableMan);
 
-            AddCommand("worldevent")
+            this.AddCommand("worldevent")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Start or stop an event")
                 .WithHelpText("eclipse|bloodmoon|pumpkinmoon|snowmoon|slimerain")
                 .WithPermissionNode("tdsm.worldevent")
                 .Calls(this.WorldEvent);
 #if TDSMServer
-            AddCommand("maxplayers")
+            this.AddCommand("maxplayers")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
                 .WithDescription("Set the maximum number of player slots.")
                 .WithHelpText("<num> - set the max number of slots")
@@ -459,21 +450,21 @@ namespace TDSM.Core
                 .WithPermissionNode("tdsm.maxplayers")
                 .Calls(SlotManager.MaxPlayersCommand);
 
-            AddCommand("q")
+            this.AddCommand("q")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("List connections waiting in queues.")
                 .WithHelpText("q")
                 .WithPermissionNode("tdsm.q")
                 .Calls(SlotManager.QCommand);
 
-            AddCommand("conn")
+            this.AddCommand("conn")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Accept new connections.")
                 .WithPermissionNode("tdsm.conn")
                 .SetDefaultUsage()
                 .Calls(Server.Command_AcceptConnections);
 #endif
-            //            AddCommand("restart")
+            //            this.AddCommand("restart")
             //                .WithAccessLevel(AccessLevel.OP)
             //                .WithDescription("Restart the server.")
             //                .WithHelpText("<no parameters>    - Restart immediately.")
@@ -482,7 +473,7 @@ namespace TDSM.Core
             //                .Calls(this.Restart);
 
 #if DEBUG
-            AddCommand("repo")
+            this.AddCommand("repo")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Install or update plugins.")
                 .WithHelpText("<status|update|install> <plugin name>")
@@ -493,7 +484,7 @@ namespace TDSM.Core
                 .Calls(this.RepositoryCommand);
 
             //Template for when we have more plugins
-            //AddCommand("repo")
+            //this.AddCommand("repo")
             //    .WithDescription("The tdsm update repository")
             //    .WithAccessLevel(AccessLevel.OP)
             //    .WithHelpText("status       - Displays plugins out of date")
@@ -505,7 +496,7 @@ namespace TDSM.Core
             //    .WithPermissionNode("tdsm.repo")
             //    .Calls(this.Repository);
 
-            AddCommand("group")
+            this.AddCommand("group")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.group")
                 .WithDescription("Manage groups and their permissions")
@@ -517,7 +508,7 @@ namespace TDSM.Core
                 .WithHelpText("listnodes <group>")
                 .Calls(this.GroupPermission);
 
-            AddCommand("user")
+            this.AddCommand("user")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.user")
                 .WithDescription("Manage user permissions")
@@ -533,25 +524,25 @@ namespace TDSM.Core
                 .WithHelpText("search <term>")
                 .Calls(this.UserPermission);
 
-            AddCommand("killnpc")
+            this.AddCommand("killnpc")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.killnpc")
                 .WithDescription("Kill all non town NPC's")
                 .Calls(this.KillNPC);
 
-            AddCommand("auth")
+            this.AddCommand("auth")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithPermissionNode("tdsm.auth")
                 .WithDescription("Sign in")
                 .Calls(this.Auth);
 
-            AddCommand("!")
+            this.AddCommand("!")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithPermissionNode("tdsm.previous")
                 .WithDescription("Runs the last command executed by you.")
                 .Calls(PreviousCommandHandle);
 
-            AddCommand("grow")
+            this.AddCommand("grow")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.grow")
                 .Calls((ISender sender, ArgumentList args) =>
@@ -577,7 +568,7 @@ namespace TDSM.Core
                     NetMessage.SendTileSquare(ply.whoAmI, (int)(ply.position.X / 16), (int)(ply.position.Y / 16), 32);
                 });
 
-            AddCommand("abuff")
+            this.AddCommand("abuff")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.abuff")
                 .Calls((ISender sender, ArgumentList args) =>
@@ -590,7 +581,7 @@ namespace TDSM.Core
                     NetMessage.SendData(55, (sender as Player).whoAmI, -1, "", (sender as Player).whoAmI, 21, time);
                 });
             
-            AddCommand("whitelist")
+            this.AddCommand("whitelist")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.whitelist")
                 .WithDescription("Manages the whitelist")
@@ -599,7 +590,7 @@ namespace TDSM.Core
                 .WithHelpText("addip|removeip <ip>")
                 .Calls(this.WhitelistMan);
 
-            AddCommand("whoami")
+            this.AddCommand("whoami")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithPermissionNode("tdsm.whoami")
                 .WithDescription("Find out if you are authenticated")
@@ -613,7 +604,29 @@ namespace TDSM.Core
             TDSM.Core.Data.Management.BackupManager.Initialise();
             TDSM.Core.Data.Management.LogManagement.Initialise();
 
+            SetupDatabase();
+
             ProgramLog.Log("TDSM Rebind core enabled");
+        }
+
+        void SetupDatabase()
+        {
+            Storage.IsAvailable = OTA.Data.OTAContext.HasConnection();
+
+            if (Storage.IsAvailable) ProgramLog.Admin.Log("Entity framework has a registered connection.");
+            else ProgramLog.Admin.Log("Entity framework has no registered connection.");
+
+            if (Storage.IsAvailable)
+                using (var ctx = new TContext())
+                {
+                    ctx.APIAccounts.Add(new TDSM.Core.Data.Models.APIAccount()
+                        {
+                            Username = "Test",
+                            Password = "Testing"
+                        });
+
+                    ctx.SaveChanges();
+                }
         }
 
         void ProcessPIDFile(string pidPath)
@@ -665,17 +678,17 @@ namespace TDSM.Core
         }
 
         [Hook(HookOrder.LATE)]
-        private void Command(ref HookContext ctx, ref HookArgs.Command args)
+        private void Command(ref HookContext ctx, ref TDSMHookArgs.ServerCommand args)
         {
             if (args.Prefix == "!") return;
 
             //Perhaps here we can use the player's PluginData, and simply store a string for the console
             if (ctx.Sender is Player)
             {
-                if (CommandDictionary.ContainsKey(ctx.Player.Name))
-                    CommandDictionary[ctx.Player.Name] = "/" + args.Prefix + " " + args.ArgumentString;
+                if (CommandDictionary.ContainsKey(ctx.Player.name))
+                    CommandDictionary[ctx.Player.name] = "/" + args.Prefix + " " + args.ArgumentString;
                 else
-                    CommandDictionary.Add(ctx.Player.Name, "/" + args.Prefix + " " + args.ArgumentString);
+                    CommandDictionary.Add(ctx.Player.name, "/" + args.Prefix + " " + args.ArgumentString);
             }
             else if (ctx.Sender is ConsoleSender)
             {
@@ -686,29 +699,29 @@ namespace TDSM.Core
             }
         }
 
-//        [Hook(HookOrder.NORMAL)]
-//        void OnInventoryItemReceived(ref HookContext ctx, ref HookArgs.InventoryItemReceived args)
-//        {
-//#if TDSMSever
-//            if (Server.ItemRejections.Count > 0)
-//            {
-//                if (args.Item != null)
-//                {
-//                    if (Server.ItemRejections.Contains(args.Item.name) || Server.ItemRejections.Contains(args.Item.type.ToString()))
-//                    {
-//                        if (!String.IsNullOrEmpty(args.Item.name))
-//                        {
-//                            ctx.SetKick(args.Item.name + " is not allowed on this server.");
-//                        }
-//                        else
-//                        {
-//                            ctx.SetKick("Item type " + args.Item.type.ToString() + " is not allowed on this server.");
-//                        }
-//                    }
-//                }
-//            }
-//#endif
-//        }
+        //        [Hook(HookOrder.NORMAL)]
+        //        void OnInventoryItemReceived(ref HookContext ctx, ref HookArgs.InventoryItemReceived args)
+        //        {
+        //#if TDSMSever
+        //            if (Server.ItemRejections.Count > 0)
+        //            {
+        //                if (args.Item != null)
+        //                {
+        //                    if (Server.ItemRejections.Contains(args.Item.name) || Server.ItemRejections.Contains(args.Item.type.ToString()))
+        //                    {
+        //                        if (!String.IsNullOrEmpty(args.Item.name))
+        //                        {
+        //                            ctx.SetKick(args.Item.name + " is not allowed on this server.");
+        //                        }
+        //                        else
+        //                        {
+        //                            ctx.SetKick("Item type " + args.Item.type.ToString() + " is not allowed on this server.");
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //#endif
+        //        }
 
         [Hook(HookOrder.NORMAL)]
         void OnPlayerJoin(ref HookContext ctx, ref HookArgs.PlayerEnteredGame args)
@@ -723,7 +736,7 @@ namespace TDSM.Core
             }
             else if (CharacterManager.Mode == CharacterMode.AUTH)
             {
-                if (!String.IsNullOrEmpty(ctx.Player.AuthenticatedAs))
+                if (!String.IsNullOrEmpty(ctx.Player.GetAuthenticatedAs()))
                 {
                     CharacterManager.LoadForAuthenticated(ctx.Player, !AllowSSCGuestInfo);
                 }
@@ -776,11 +789,11 @@ namespace TDSM.Core
             }
             if (ctx.Player != null)
             {
-                if (CommandDictionary.ContainsKey(ctx.Player.Name))
+                if (CommandDictionary.ContainsKey(ctx.Player.name))
                 {
-                    CommandDictionary.Remove(ctx.Player.Name);
+                    CommandDictionary.Remove(ctx.Player.name);
                 }
-                //ProgramLog.Log("{0}", ctx.Player.Name); //, args.Prefix + " " + args.ArgumentString);
+                //ProgramLog.Log("{0}", ctx.Player.name); //, args.Prefix + " " + args.ArgumentString);
             }
 #if TDSMServer
             if (RestartWhenNoPlayers && ClientConnection.All.Count - 1 == 0)
@@ -813,7 +826,7 @@ namespace TDSM.Core
                 {
                     var ln = Console.ReadLine();
                     if (!String.IsNullOrEmpty(ln))
-                        UserInput.CommandParser.ParseConsoleCommand(ln);
+                        CommandParser.ParseConsoleCommand(ln);
                     else if (null == ln)
                     {
                         ProgramLog.Log("No console input available");
@@ -846,10 +859,10 @@ namespace TDSM.Core
         {
             if (args.Message.Length > 0 && args.Message.Substring(0, 1).Equals("/"))
             {
-                ProgramLog.Log(ctx.Player.Name + " sent command: " + args.Message);
+                ProgramLog.Log(ctx.Player.name + " sent command: " + args.Message);
                 ctx.SetResult(HookResult.IGNORE);
 
-                UserInput.CommandParser.ParsePlayerCommand(ctx.Player, args.Message);
+                CommandParser.ParsePlayerCommand(ctx.Player, args.Message);
             }
         }
 
@@ -1019,7 +1032,7 @@ namespace TDSM.Core
 #endif
 
         [Hook(HookOrder.NORMAL)]
-        void OnConfigLineRead(ref HookContext ctx, ref HookArgs.ConfigurationLine args)
+        void OnConfigLineRead(ref HookContext ctx, ref HookArgs.ConfigurationFileLineRead args)
         {
             //Ensure command line argument supersede config options - hosting providers can use this 
             if (LaunchInitializer.HasParameter(new string[] { "-" + args.Key }))
@@ -1325,14 +1338,14 @@ namespace TDSM.Core
                 {
                     args.DeathText = _labDeathMessages.Next();
                 }
-                args.DeathText = ctx.Player.Name + args.DeathText;
+                args.DeathText = ctx.Player.name + args.DeathText;
                 ctx.SetResult(HookResult.CONTINUE);
                 ProgramLog.Death.Log(args.DeathText);
             }
             else
             {
                 //Standard death log
-                ProgramLog.Death.Log(ctx.Player.Name + args.DeathText);
+                ProgramLog.Death.Log(ctx.Player.name + args.DeathText);
             }
         }
 
@@ -1352,7 +1365,7 @@ namespace TDSM.Core
                     if (list == "")
                         list += Main.player[i].name;
                     else
-                        list = list + ", " + Main.player[i].Name;
+                        list = list + ", " + Main.player[i].name;
                 }
             }
 
@@ -1424,7 +1437,7 @@ namespace TDSM.Core
                     ProgramLog.Log("Starting Web Server");
                     WebInterface.WebServer.Begin(_webServerAddress, _webServerProvider);
 
-                    AddCommand("webauth")
+                    this.AddCommand("webauth")
                         .WithAccessLevel(AccessLevel.OP)
                         .Calls(WebInterface.WebServer.WebAuthCommand);
                 }
@@ -1515,17 +1528,17 @@ namespace TDSM.Core
                 switch ((Packet)args.PacketId)
                 {
                     case Packet.INVENTORY_DATA:
-                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
+                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated())
                             ctx.SetResult(HookResult.IGNORE);
                         break;
 
                     case Packet.PLAYER_MANA_UPDATE:
-                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
+                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated())
                             ctx.SetResult(HookResult.IGNORE);
                         break;
 
                     case Packet.PLAYER_HEALTH_UPDATE:
-                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
+                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated())
                             ctx.SetResult(HookResult.IGNORE);
                         break;
                 }
@@ -1661,6 +1674,7 @@ namespace TDSM.Core
         }
 
         private int lastWritten = 0;
+
         [Hook(HookOrder.NORMAL)]
         void OnStatusTextChanged(ref HookContext ctx, ref HookArgs.StatusTextChange args)
         {
@@ -1759,6 +1773,350 @@ namespace TDSM.Core
         {
             //let our backup manager do it's thing
             ctx.SetResult(HookResult.IGNORE, true);
+        }
+
+
+
+        static readonly CommandParser _cmdParser = new CommandParser();
+
+        /// <summary>
+        /// The active server instance of the command parser
+        /// </summary>
+        /// <value>The command parser.</value>
+        public static CommandParser CommandParser
+        {
+            get
+            { return _cmdParser; }
+        }
+
+        public static void PluginCommand(ISender sender, ArgumentList args)
+        {
+            /*
+             * Commands:
+             *      list    - shows all plugins
+             *      info    - shows a plugin's author & description etc
+             *      disable - disables a plugin
+             *      enable  - enables a plugin
+             *      reload
+             *      unload
+             *      status
+             *      load
+             */
+
+            if (args.Count == 0)
+                throw new CommandError("Subcommand expected.");
+
+            string command = args[0];
+            args.RemoveAt(0); //Allow the commands to use any additional arguments without also getting the command
+
+            lock (PluginManager._plugins)
+                switch (command)
+                {
+                    case "-l":
+                    case "ls":
+                    case "list":
+                        {
+                            if (PluginManager.PluginCount == 0)
+                            {
+                                sender.Message(255, "No plugins loaded.");
+                                return;
+                            }
+
+                            var msg = new StringBuilder();
+                            msg.Append("Plugins: ");
+
+                            int i = 0;
+                            foreach (var plugin in PluginManager.EnumeratePlugins)
+                            {
+                                if (i > 0)
+                                    msg.Append(", ");
+                                msg.Append(plugin.Name);
+
+                                if (!String.IsNullOrEmpty(plugin.Version))
+                                {
+                                    msg.Append(" (");
+                                    msg.Append(plugin.Version);
+                                    msg.Append(")");
+                                }
+
+                                if (!plugin.IsEnabled)
+                                    msg.Append("[OFF]");
+                                i++;
+                            }
+                            msg.Append(".");
+
+                            sender.Message(255, Color.DodgerBlue, msg.ToString());
+
+                            break;
+                        }
+
+                    case "-s":
+                    case "stat":
+                    case "status":
+                        {
+                            if (PluginManager.PluginCount == 0)
+                            {
+                                sender.Message(255, "No plugins loaded.");
+                                return;
+                            }
+
+                            var msg = new StringBuilder();
+
+                            foreach (var plugin in PluginManager.EnumeratePlugins)
+                            {
+                                msg.Clear();
+                                msg.Append(plugin.IsDisposed ? "[DISPOSED] " : (plugin.IsEnabled ? "[ON]  " : "[OFF] "));
+                                msg.Append(plugin.Name);
+                                msg.Append(" ");
+                                msg.Append(plugin.Version);
+                                if (plugin.Status != null && plugin.Status.Length > 0)
+                                {
+                                    msg.Append(" : ");
+                                    msg.Append(plugin.Status);
+                                }
+                                sender.Message(255, Color.DodgerBlue, msg.ToString());
+                            }
+
+                            break;
+                        }
+
+                    case "-i":
+                    case "info":
+                        {
+                            string name;
+                            args.ParseOne(out name);
+
+                            var fplugin = PluginManager.GetPlugin(name);
+                            if (fplugin != null)
+                            {
+                                var path = Path.GetFileName(fplugin.FilePath);
+                                sender.Message(255, Color.DodgerBlue, fplugin.Name);
+                                sender.Message(255, Color.DodgerBlue, "Filename: " + path);
+                                sender.Message(255, Color.DodgerBlue, "Version:  " + fplugin.Version);
+                                sender.Message(255, Color.DodgerBlue, "Author:   " + fplugin.Author);
+                                if (fplugin.Description != null && fplugin.Description.Length > 0)
+                                    sender.Message(255, Color.DodgerBlue, fplugin.Description);
+                                sender.Message(255, Color.DodgerBlue, "Status:   " + (fplugin.IsEnabled ? "[ON] " : "[OFF] ") + fplugin.Status);
+                            }
+                            else
+                            {
+                                sender.SendMessage("The plugin \"" + args[1] + "\" was not found.");
+                            }
+
+                            break;
+                        }
+
+                    case "-d":
+                    case "disable":
+                        {
+                            string name;
+                            args.ParseOne(out name);
+
+                            var fplugin = PluginManager.GetPlugin(name);
+                            if (fplugin != null)
+                            {
+                                if (fplugin.Disable())
+                                    sender.Message(255, Color.DodgerBlue, fplugin.Name + " was disabled.");
+                                else
+                                    sender.Message(255, Color.DodgerBlue, fplugin.Name + " was disabled, errors occured during the process.");
+                            }
+                            else
+                                sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+
+                            break;
+                        }
+
+                    case "-e":
+                    case "enable":
+                        {
+                            string name;
+                            args.ParseOne(out name);
+
+                            var fplugin = PluginManager.GetPlugin(name);
+                            if (fplugin != null)
+                            {
+                                if (fplugin.Enable())
+                                    sender.Message(255, Color.DodgerBlue, fplugin.Name + " was enabled.");
+                                else
+                                    sender.Message(255, Color.DodgerBlue, fplugin.Name + " was enabled, errors occured during the process.");
+                            }
+                            else
+                                sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+
+                            break;
+                        }
+
+                    case "-u":
+                    case "-ua":
+                    case "unload":
+                        {
+                            string name;
+
+                            if (command == "-ua" || command == "-uca")
+                                name = "all";
+                            else
+                                args.ParseOne(out name);
+
+                            BasePlugin[] plugs;
+                            if (name == "all" || name == "-a")
+                            {
+                                plugs = PluginManager._plugins.Values.ToArray();
+                            }
+                            else
+                            {
+                                var splugin = PluginManager.GetPlugin(name);
+
+                                if (splugin == null)
+                                {
+                                    sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+                                    return;
+                                }
+
+                                plugs = new BasePlugin[] { splugin };
+                            }
+
+                            foreach (var fplugin in plugs)
+                            {
+                                if (PluginManager.UnloadPlugin(fplugin))
+                                    sender.Message(255, Color.DodgerBlue, fplugin.Name + " was unloaded.");
+                                else
+                                    sender.Message(255, Color.DodgerBlue, fplugin.Name + " was unloaded, errors occured during the process.");
+                            }
+
+                            break;
+                        }
+
+                    case "-r":
+                    case "-rc":
+                    case "-ra":
+                    case "-rca":
+                    case "reload":
+                        {
+                            bool save = true;
+                            if (command == "-rc" || command == "-rca" || args.TryPop("-c") || args.TryPop("-clean"))
+                                save = false;
+
+                            string name;
+
+                            if (command == "-ra" || command == "-rca")
+                                name = "all";
+                            else
+                                args.ParseOne(out name);
+
+                            BasePlugin[] plugs;
+                            if (name == "all" || name == "-a")
+                            {
+                                plugs = PluginManager._plugins.Values.ToArray();
+                            }
+                            else
+                            {
+                                var splugin = PluginManager.GetPlugin(name);
+
+                                if (splugin == null)
+                                {
+                                    sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+                                    return;
+                                }
+
+                                plugs = new BasePlugin[] { splugin };
+                            }
+
+                            foreach (var fplugin in plugs)
+                            {
+                                var nplugin = PluginManager.ReloadPlugin(fplugin, save);
+                                if (nplugin == fplugin)
+                                {
+                                    sender.Message(255, Color.DodgerBlue, "Errors occured while reloading plugin " + fplugin.Name + ", old instance kept.");
+                                }
+                                else if (nplugin == null)
+                                {
+                                    sender.Message(255, Color.DodgerBlue, "Errors occured while reloading plugin " + fplugin.Name + ", it has been unloaded.");
+                                }
+                            }
+
+                            break;
+                        }
+
+                    case "-L":
+                    case "-LR":
+                    case "load":
+                        {
+                            bool replace = command == "-LR" || args.TryPop("-R") || args.TryPop("-replace");
+                            bool save = command != "-LRc" && !args.TryPop("-c") && !args.TryPop("-clean");
+
+                            var fname = string.Join(" ", args);
+                            string path;
+
+                            if (fname == "")
+                                throw new CommandError("File name expected");
+
+                            if (Path.IsPathRooted(fname))
+                                path = Path.GetFullPath(fname);
+                            else
+                                path = Path.Combine(Globals.PluginPath, fname);
+
+                            var fi = new FileInfo(path);
+
+                            if (!fi.Exists)
+                            {
+                                sender.Message(255, "Specified file doesn't exist.");
+                                return;
+                            }
+
+                            var newPlugin = PluginManager.LoadPluginFromPath(path);
+
+                            if (newPlugin == null)
+                            {
+                                sender.Message(255, "Unable to load plugin.");
+                                return;
+                            }
+
+                            var oldPlugin = PluginManager.GetPlugin(newPlugin.Name);
+                            if (oldPlugin != null)
+                            {
+                                if (!replace)
+                                {
+                                    sender.Message(255, "A plugin named {0} is already loaded, use -replace to replace it.", oldPlugin.Name);
+                                    return;
+                                }
+
+                                if (PluginManager.ReplacePlugin(oldPlugin, newPlugin, save))
+                                {
+                                    sender.Message(255, Color.DodgerBlue, "Plugin {0} has been replaced.", oldPlugin.Name);
+                                }
+                                else if (oldPlugin.IsDisposed)
+                                {
+                                    sender.Message(255, Color.DodgerBlue, "Replacement of plugin {0} failed, it has been unloaded.", oldPlugin.Name);
+                                }
+                                else
+                                {
+                                    sender.Message(255, Color.DodgerBlue, "Replacement of plugin {0} failed, old instance kept.", oldPlugin.Name);
+                                }
+
+                                return;
+                            }
+
+                            if (!newPlugin.InitializeAndHookUp())
+                            {
+                                sender.Message(255, Color.DodgerBlue, "Failed to initialize new plugin instance.");
+                            }
+
+                            PluginManager._plugins.Add(newPlugin.Name.ToLower().Trim(), newPlugin);
+
+                            if (!newPlugin.Enable())
+                            {
+                                sender.Message(255, Color.DodgerBlue, "Failed to enable new plugin instance.");
+                            }
+
+                            sender.Message(255, Color.DodgerBlue, "New plugin instance loaded.");
+                            break;
+                        }
+
+                    default:
+                        {
+                            throw new CommandError("Subcommand not recognized.");
+                        }
+                }
         }
     }
 }

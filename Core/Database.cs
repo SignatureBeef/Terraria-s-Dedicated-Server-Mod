@@ -2,11 +2,13 @@
 using OTA.Command;
 using System.Linq;
 using OTA.Data;
-using OTA.Data.Entity.Models;
 using TDSM.Core.Data;
 using OTA.Logging;
 using TDSM.Core.ServerCharacters;
 using TDSM.Core.ServerCharacters.Tables;
+using TDSM.Core.Command;
+using TDSM.Core.Data.Permissions;
+using TDSM.Core.Data.Models;
 
 namespace TDSM.Core
 {
@@ -43,7 +45,7 @@ namespace TDSM.Core
             var ad = CommandParser.GetAvailableCommands(AccessLevel.OP);
             var op = CommandParser.GetAvailableCommands(AccessLevel.CONSOLE); //Funny how these have now changed
 
-            using (var ctx = new OTAContext())
+            using (var ctx = new TContext())
             {
                 CreateGroup("Guest", true, null, 255, 255, 255, pc
                     .Where(x => !String.IsNullOrEmpty(x.Value.Node))
@@ -63,7 +65,7 @@ namespace TDSM.Core
             }
         }
 
-        static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, OTAContext ctx,
+        static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, TContext ctx,
                                 string chatPrefix = null,
                                 string chatSuffix = null)
         {

@@ -45,7 +45,7 @@ namespace TDSM.Core.Mono
                                 {
                                     _attached = false;
                                     OTA.Logging.ProgramLog.Log("Server received Exit Signal");
-                                    OTA.Command.DefaultCommands.Exit(null, null);
+                                    VanillaCommands.Exit(null, null);
                                 }
                             }
                         })).Start();

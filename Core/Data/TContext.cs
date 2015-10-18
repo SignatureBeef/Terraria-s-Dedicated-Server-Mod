@@ -111,6 +111,24 @@ namespace TDSM.Core.Data
         public DbSet<SlotItem> Items { get; set; }
 
 
+        public DbSet<PlayerGroup> PlayerGroups { get; set; }
+
+        public DbSet<Group> Groups { get; set; }
+
+        public DbSet<DbPlayer> Players { get; set; }
+
+        public DbSet<NodePermission> Nodes { get; set; }
+
+        public DbSet<PlayerNode> PlayerNodes { get; set; }
+
+        public DbSet<GroupNode> GroupNodes { get; set; }
+
+        public DbSet<APIAccount> APIAccounts { get; set; }
+
+        public DbSet<APIAccountRole> APIAccountsRoles { get; set; }
+
+        public DbSet<DataSetting> Settings { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder builder)
         {
             CreateModel(builder);
@@ -140,6 +158,53 @@ namespace TDSM.Core.Data
 
             builder.Entity<SlotItem>()
                 .HasKey(x => x.Id)
+                .Property(x => x.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            
+
+            builder.Entity<Group>()
+                .HasKey(x => x.Id)
+                .Property(x => x.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            builder.Entity<DbPlayer>()
+                .ToTable("Player")
+                .HasKey(x => x.Id)
+                .Property(x => x.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            builder.Entity<PlayerGroup>()
+                .HasKey(x => new { x.Id })
+                .Property(x => x.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            builder.Entity<NodePermission>()
+                .HasKey(x => new { x.Id })
+                .Property(x => x.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            builder.Entity<PlayerNode>()
+                .HasKey(x => new { x.Id })
+                .Property(x => x.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            builder.Entity<GroupNode>()
+                .HasKey(x => new { x.Id })
+                .Property(x => x.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            builder.Entity<APIAccount>()
+                .HasKey(x => new { x.Id })
+                .Property(x => x.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            builder.Entity<APIAccountRole>()
+                .HasKey(x => new { x.Id })
+                .Property(x => x.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            builder.Entity<DataSetting>()
+                .HasKey(x => new { x.Id })
                 .Property(x => x.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
         }
