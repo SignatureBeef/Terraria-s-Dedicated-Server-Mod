@@ -140,6 +140,39 @@
     <Compile Include="Data\PasswordFormat.cs" />
     <Compile Include="Data\Storage.cs" />
     <Compile Include="PluginHooks\ServerCommand.cs" />
+    <Compile Include="PluginHooks\PlayerAuthenticationChanged.cs" />
+    <Compile Include="PluginHooks\PlayerAuthenticationChanging.cs" />
+    <Compile Include="Net\PacketHandling\IPacketHandler.cs" />
+    <Compile Include="Net\PacketHandling\Packets\PlayerChat.cs" />
+    <Compile Include="Net\PacketHandling\PacketProcessor.cs" />
+    <Compile Include="Net\PacketHandling\Packets\TileBreak.cs" />
+    <Compile Include="PluginHooks\PlayerChat.cs" />
+    <Compile Include="PluginHooks\PlayerWorldAlteration.cs" />
+    <Compile Include="Net\PacketHandling\Packets\ProjectileReceived.cs" />
+    <Compile Include="PluginHooks\ProjectileReceived.cs" />
+    <Compile Include="Net\PacketHandling\Packets\PlayerData.cs" />
+    <Compile Include="PluginHooks\PlayerDataReceived.cs" />
+    <Compile Include="Net\PacketHandling\Packets\BarrierStateChange.cs" />
+    <Compile Include="Net\PacketHandling\Packets\NpcHurt.cs" />
+    <Compile Include="PluginHooks\BarrierStateUpdate.cs" />
+    <Compile Include="Net\PacketHandling\Packets\ClientUUId.cs" />
+    <Compile Include="Net\PacketHandling\Packets\PasswordReceived.cs" />
+    <Compile Include="PluginHooks\ServerPassReceived.cs" />
+    <Compile Include="PluginHooks\PlayerPassReceived.cs" />
+    <Compile Include="Net\PacketHandling\Packets\ReadSign.cs" />
+    <Compile Include="Net\PacketHandling\Packets\WriteSign.cs" />
+    <Compile Include="PluginHooks\SignTextSet.cs" />
+    <Compile Include="PluginHooks\SignTextGet.cs" />
+    <Compile Include="Net\PacketHandling\Packets\TileSquare.cs" />
+    <Compile Include="PluginHooks\TileSquare.cs" />
+    <Compile Include="Net\PacketHandling\Packets\LiquidFlow.cs" />
+    <Compile Include="Net\PacketHandling\Packets\ChestOpen.cs" />
+    <Compile Include="PluginHooks\ChestOpenReceived.cs" />
+    <Compile Include="PluginHooks\LiquidFlowReceived.cs" />
+    <Compile Include="PluginHooks\NpcHurtReceived.cs" />
+    <Compile Include="Net\PacketHandling\Packets\ChestBreakReceived.cs" />
+    <Compile Include="PluginHooks\ChestBreakReceived.cs" />
+    <Compile Include="Net\PacketHandling\Packets\WorldRequest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -159,5 +192,8 @@
     <Folder Include="Data\Management\" />
     <Folder Include="Data\Permissions\" />
     <Folder Include="PluginHooks\" />
+    <Folder Include="Net\" />
+    <Folder Include="Net\PacketHandling\" />
+    <Folder Include="Net\PacketHandling\Packets\" />
   </ItemGroup>
 </Project>

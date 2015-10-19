@@ -149,6 +149,9 @@ namespace TDSM.Core
         {
             ProgramLog.Log("TDSM Rebind core build {0}", this.Version);
 
+            //Register hook sources
+            PluginManager.RegisterHookSource(typeof(TDSMHookPoints));
+
             CommandDictionary = new Dictionary<string, string>();
             PluginExtensions.Initialise(this);
 
@@ -604,6 +607,8 @@ namespace TDSM.Core
             TDSM.Core.Data.Management.BackupManager.Initialise();
             TDSM.Core.Data.Management.LogManagement.Initialise();
 
+            Net.PacketHandling.PacketProcessor.Initialise(this);
+
             SetupDatabase();
 
             ProgramLog.Log("TDSM Rebind core enabled");
@@ -752,7 +757,7 @@ namespace TDSM.Core
         }
 
         [Hook(HookOrder.LATE)] //This is required so this can be called last, in order for us to know if it's been cancelled or not
-        void OnPlayerAuthenticated(ref HookContext ctx, ref HookArgs.PlayerAuthenticationChanged args)
+        void OnPlayerAuthenticated(ref HookContext ctx, ref TDSMHookArgs.PlayerAuthenticationChanged args)
         {
             if (ctx.Client.State >= 4 && CharacterManager.Mode == CharacterMode.AUTH)
             {
@@ -855,7 +860,7 @@ namespace TDSM.Core
         }
 
         [Hook(HookOrder.NORMAL)]
-        void OnChat(ref HookContext ctx, ref HookArgs.PlayerChat args)
+        void OnChat(ref HookContext ctx, ref TDSMHookArgs.PlayerChat args)
         {
             if (args.Message.Length > 0 && args.Message.Substring(0, 1).Equals("/"))
             {
@@ -1546,7 +1551,7 @@ namespace TDSM.Core
         }
 
         [Hook(HookOrder.FIRST)]
-        void OnPlayerDataReceived(ref HookContext ctx, ref HookArgs.PlayerDataReceived args)
+        void OnPlayerDataReceived(ref HookContext ctx, ref TDSMHookArgs.PlayerDataReceived args)
         {
 //            //If the player is not authenticated, then ensure they are reset
 //            if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)

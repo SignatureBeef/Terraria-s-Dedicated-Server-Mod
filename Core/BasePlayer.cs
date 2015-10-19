@@ -3,6 +3,7 @@ using System;
 using Terraria;
 using OTA.Plugin;
 using OTA;
+using TDSM.Core.Plugin.Hooks;
 
 namespace TDSM.Core
 {
@@ -96,12 +97,12 @@ namespace TDSM.Core
                 Player = (Terraria.Player)player,
                 Connection = player.Connection.Socket
             };
-            var changing = new HookArgs.PlayerAuthenticationChanging()
+            var changing = new TDSMHookArgs.PlayerAuthenticationChanging()
             {
                 AuthenticatedAs = auth,
                 AuthenticatedBy = by
             };
-            HookPoints.PlayerAuthenticationChanging.Invoke(ref ctx, ref changing);
+            TDSMHookPoints.PlayerAuthenticationChanging.Invoke(ref ctx, ref changing);
             if (ctx.Result != HookResult.DEFAULT)
                 return;
 
@@ -113,13 +114,13 @@ namespace TDSM.Core
                 Player = (Terraria.Player)player,
                 Connection = player.Connection.Socket
             };
-            var changed = new HookArgs.PlayerAuthenticationChanged()
+            var changed = new TDSMHookArgs.PlayerAuthenticationChanged()
             {
                 AuthenticatedAs = auth,
                 AuthenticatedBy = by
             };
 
-            HookPoints.PlayerAuthenticationChanged.Invoke(ref ctx, ref changed);
+            TDSMHookPoints.PlayerAuthenticationChanged.Invoke(ref ctx, ref changed);
         }
     }
 }
