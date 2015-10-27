@@ -288,7 +288,9 @@ namespace TDSM.Core.Command
             //We *may* not need this - but let's see how it goes
             foreach (var plg in PluginManager.EnumeratePlugins)
             {
-                var additional = plg.GetPluginCommands().GetAvailableCommands(access)
+                var cmds = plg.GetPluginCommands();
+                if (cmds == null) continue;
+                var additional = cmds.GetAvailableCommands(access)
                     .Where(x => !x.Key.StartsWith(plg.Name.ToLower() + '.'))
                     .ToArray();
                 foreach (var pair in additional)

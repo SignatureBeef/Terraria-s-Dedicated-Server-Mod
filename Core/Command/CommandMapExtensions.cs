@@ -34,7 +34,7 @@ namespace TDSM.Core.Command
         public static Dictionary<string, CommandInfo> GetAvailableCommands(this Dictionary<string, CommandInfo> map, AccessLevel access)
         {
             return map
-                .Where(x => x.Value.accessLevel == access && !x.Key.StartsWith("."))
+                .Where(x => x.Key != null && x.Value != null && x.Value.accessLevel == access && !x.Key.StartsWith("."))
                 .ToDictionary(x => x.Key, y => y.Value);
         }
 

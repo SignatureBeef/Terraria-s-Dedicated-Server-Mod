@@ -19,6 +19,7 @@ namespace TDSM.Core
         public const String Setting_Health = "SSC_Health";
         public const String Setting_MaxHealth = "SSC_MaxHealth";
 
+#if EF6
         protected override void DatabaseInitialising(System.Data.Entity.DbModelBuilder builder)
         {
             base.DatabaseInitialising(builder);
@@ -28,6 +29,7 @@ namespace TDSM.Core
                 dbc.CreateModel(builder);
             }
         }
+#endif
 
         protected override void DatabaseCreated()
         {

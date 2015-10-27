@@ -97,7 +97,8 @@ namespace TDSM.Core.Data.Permissions
         /// <returns>The inherited group for user.</returns>
         /// <param name="username">Username.</param>
         Group GetInheritedGroupForUser(string username);
-
+        
+        Group GetGuestGroup();
         #endregion
     }
 }

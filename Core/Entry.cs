@@ -155,7 +155,7 @@ namespace TDSM.Core
             CommandDictionary = new Dictionary<string, string>();
             PluginExtensions.Initialise(this);
 
-//            CommandParser = new CommandParser();
+            //            CommandParser = new CommandParser();
             Ops = new PairFileRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
             Whitelist = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "whitelist.txt"), false);
 #if WebInterface
@@ -583,7 +583,7 @@ namespace TDSM.Core
                     NetMessage.SendData(55, -1, -1, "", (sender as Player).whoAmI, 21, time, 0, 0, 0, 0);
                     NetMessage.SendData(55, (sender as Player).whoAmI, -1, "", (sender as Player).whoAmI, 21, time);
                 });
-            
+
             this.AddCommand("whitelist")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.whitelist")
@@ -616,22 +616,32 @@ namespace TDSM.Core
 
         void SetupDatabase()
         {
+#if EF6
             Storage.IsAvailable = OTA.Data.OTAContext.HasConnection();
+#endif
+
+#if !DATA_CONNECTOR
+            using (var ctx = new TContext())
+            {
+                ctx.Database.EnsureCreated();
+                Storage.IsAvailable = true;
+            }
 
             if (Storage.IsAvailable) ProgramLog.Admin.Log("Entity framework has a registered connection.");
             else ProgramLog.Admin.Log("Entity framework has no registered connection.");
+#endif
 
-            if (Storage.IsAvailable)
-                using (var ctx = new TContext())
-                {
-                    ctx.APIAccounts.Add(new TDSM.Core.Data.Models.APIAccount()
-                        {
-                            Username = "Test",
-                            Password = "Testing"
-                        });
+            //if (Storage.IsAvailable)
+            //    using (var ctx = new TContext())
+            //    {
+            //        ctx.APIAccounts.Add(new TDSM.Core.Data.Models.APIAccount()
+            //        {
+            //            Username = "Test",
+            //            Password = "Testing"
+            //        });
 
-                    ctx.SaveChanges();
-                }
+            //        ctx.SaveChanges();
+            //    }
         }
 
         void ProcessPIDFile(string pidPath)
@@ -749,7 +759,7 @@ namespace TDSM.Core
                 {
                     if (!AllowSSCGuestInfo)
                     {
-//                        ProgramLog.Debug.Log("This fella, yeah him; clear his inventory");
+                        //                        ProgramLog.Debug.Log("This fella, yeah him; clear his inventory");
                         CharacterManager.LoadForGuest(ctx.Player);
                     }
                 }
@@ -1021,7 +1031,7 @@ namespace TDSM.Core
         //    }
         //}
 
-        #if TDSMServer
+#if TDSMServer
         [Hook(HookOrder.NORMAL)]
         void OnDefaultServerStart(ref HookContext ctx, ref HookArgs.StartDefaultServer args)
         {
@@ -1042,7 +1052,7 @@ namespace TDSM.Core
             //Ensure command line argument supersede config options - hosting providers can use this 
             if (LaunchInitializer.HasParameter(new string[] { "-" + args.Key }))
             {
-//                ProgramLog.Log("Ignoring overridden config property " + args.Key);
+                //                ProgramLog.Log("Ignoring overridden config property " + args.Key);
                 return;
             }
             switch (args.Key)
@@ -1097,13 +1107,13 @@ namespace TDSM.Core
                 case "web-server-provider":
                     _webServerProvider = args.Value;
                     break;
-//                case "web-server-serve-files":
-//                    bool serveFiles;
-//                    if (Boolean.TryParse(args.Value, out serveFiles))
-//                    {
-//                        //WebInterface.WebServer.ServeWebFiles = serveFiles;
-//                    }
-//                    break;
+                //                case "web-server-serve-files":
+                //                    bool serveFiles;
+                //                    if (Boolean.TryParse(args.Value, out serveFiles))
+                //                    {
+                //                        //WebInterface.WebServer.ServeWebFiles = serveFiles;
+                //                    }
+                //                    break;
 #if TDSMServer
                 case "send-queue-quota":
                     int sendQueueQuota;
@@ -1245,16 +1255,16 @@ namespace TDSM.Core
             string tmp;
             bool tmp1;
 
-//            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-world" }))
-//                && !File.Exists(tmp))
-//            {
-//                ProgramLog.Error.Log("Command line world file not found at: {0}\nPress the [Y] key to continue", tmp);
-//                if (Console.ReadKey().Key != ConsoleKey.Y)
-//                {
-//                    
-//                }
-//            }
-            
+            //            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-world" }))
+            //                && !File.Exists(tmp))
+            //            {
+            //                ProgramLog.Error.Log("Command line world file not found at: {0}\nPress the [Y] key to continue", tmp);
+            //                if (Console.ReadKey().Key != ConsoleKey.Y)
+            //                {
+            //                    
+            //                }
+            //            }
+
             if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-whitelist" }))
                 && Boolean.TryParse(tmp, out tmp1))
                 WhitelistEnabled = tmp1;
@@ -1332,10 +1342,10 @@ namespace TDSM.Core
                 {
                     args.DeathText = " was too busy talking";
                 }
-//                else if (Terraria.Main.rand.Next(_labDeathMessages.Count - 1) == 1)
-//                {
-//
-//                }
+                //                else if (Terraria.Main.rand.Next(_labDeathMessages.Count - 1) == 1)
+                //                {
+                //
+                //                }
                 // forgot [NPC]'s birthday
                 // tried to hit on [NPC]
 
@@ -1553,11 +1563,11 @@ namespace TDSM.Core
         [Hook(HookOrder.FIRST)]
         void OnPlayerDataReceived(ref HookContext ctx, ref TDSMHookArgs.PlayerDataReceived args)
         {
-//            //If the player is not authenticated, then ensure they are reset
-//            if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
-//            {
-//        
-//            }
+            //            //If the player is not authenticated, then ensure they are reset
+            //            if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated)
+            //            {
+            //        
+            //            }
 
             if (WhitelistEnabled)
             {

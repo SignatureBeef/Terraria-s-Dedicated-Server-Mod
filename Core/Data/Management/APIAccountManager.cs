@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TDSM.Core.Data.Models;
 using System.Data.Entity;
 using System.Linq;
+using Microsoft.Data.Entity;
 
 namespace TDSM.Core.Data.Management
 {

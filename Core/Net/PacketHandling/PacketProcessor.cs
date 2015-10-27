@@ -23,7 +23,7 @@ namespace TDSM.Core.Net.PacketHandling
             //Load all instances of IPacketHandler
             var type = typeof(IPacketHandler);
             foreach (var messageType in AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(clazz => clazz.GetTypes())
+                .SelectMany(clazz => clazz.GetTypesLoaded())
                 .Where(x => type.IsAssignableFrom(x) && x != type && !x.IsAbstract))
             {
                 var handler = (IPacketHandler)Activator.CreateInstance(messageType);
