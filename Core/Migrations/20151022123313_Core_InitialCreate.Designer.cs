@@ -1,12 +1,9 @@
 using System;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Data.Entity.Metadata;
-using Microsoft.Data.Entity.Migrations;
 using TDSM.Core.Data;
 
 namespace TDSM.Core.Migrations
 {
+#if ENTITY_FRAMEWORK_7
     [DbContext(typeof(TContext))]
     [Migration("20151022123313_Core_InitialCreate")]
     partial class Core_InitialCreate
@@ -229,4 +226,5 @@ namespace TDSM.Core.Migrations
                 });
         }
     }
+#endif
 }

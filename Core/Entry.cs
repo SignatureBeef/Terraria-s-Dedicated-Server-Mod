@@ -616,11 +616,9 @@ namespace TDSM.Core
 
         void SetupDatabase()
         {
-#if EF6
-            Storage.IsAvailable = OTA.Data.OTAContext.HasConnection();
-#endif
-
-#if !DATA_CONNECTOR
+#if ENTITY_FRAMEWORK_6
+            Storage.IsAvailable = OTA.Data.EF6.OTAContext.HasConnection();
+#elif !DATA_CONNECTOR
             using (var ctx = new TContext())
             {
                 ctx.Database.EnsureCreated();

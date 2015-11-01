@@ -2,7 +2,6 @@
 using System.Linq;
 using OTA.Logging;
 using TDSM.Core.Data.Models;
-using TDSM.Core.Data.Old;
 
 namespace TDSM.Core.Data
 {

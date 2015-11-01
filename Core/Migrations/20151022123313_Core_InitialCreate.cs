@@ -1,3 +1,4 @@
+#if ENTITY_FRAMEWORK_7
 using System;
 using System.Collections.Generic;
 using Microsoft.Data.Entity.Migrations;
@@ -220,3 +221,5 @@ namespace TDSM.Core.Migrations
         }
     }
 }
+    
+#endif

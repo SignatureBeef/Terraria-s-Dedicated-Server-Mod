@@ -31,6 +31,7 @@ namespace TDSM.Core
         }
 #endif
 
+#if ENTITY_FRAMEWORK_7
         protected override void DatabaseCreated()
         {
             base.DatabaseCreated();
@@ -109,6 +110,7 @@ namespace TDSM.Core
 
             ctx.SaveChanges();
         }
+#endif
     }
 }
 

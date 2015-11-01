@@ -5,6 +5,7 @@ using TDSM.Core.Data.Models;
 
 namespace TDSM.Core.Data
 {
+#if ENTITY_FRAMEWORK_6 || ENTITY_FAMEWORK_7
     public static class OTAContextExtensions
     {
         public static IQueryable<DbPlayer> GetUser(this TContext ctx, string name)
@@ -57,5 +58,6 @@ namespace TDSM.Core.Data
                 .Any(n => n.Node == node && n.Permission == permission);
         }
     }
+#endif
 }
 

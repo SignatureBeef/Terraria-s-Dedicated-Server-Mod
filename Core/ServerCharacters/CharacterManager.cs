@@ -157,6 +157,7 @@ namespace TDSM.Core.ServerCharacters
                 if (Storage.IsAvailable)
                 {
                     var auth = player.GetAuthenticatedAs();
+#if ENTITY_FRAMEWORK_6 || ENTITY_FRAMEWORK_7
                     var dbSSC = Tables.CharacterTable.GetCharacter(Mode, auth, player.ClientUUId);
 
 //                    ProgramLog.Admin.Log("Found SCC: " + (dbSSC != null));
@@ -164,12 +165,17 @@ namespace TDSM.Core.ServerCharacters
                     if (dbSSC != null)
                     {
                         var ssc = dbSSC.ToServerCharacter();
-//                        ProgramLog.Log("Loading SSC loadout");
+#elif DATA_CONNECTOR
+                    var ssc = Tables.CharacterTable.GetCharacter(Mode, auth, player.ClientUUId);
+                    if (ssc != null)
+                    { 
+#endif
+                    //                        ProgramLog.Log("Loading SSC loadout");
 
-//                        ProgramLog.Admin.Log("Loading SSC loadout: " + dbSSC.Id);
-//                        ProgramLog.Admin.Log("Translated SCC: " + (ssc != null));
-//
-                        var inv = Tables.ItemTable.GetItemsForCharacter(ItemType.Inventory, ssc.Id);
+                    //                        ProgramLog.Admin.Log("Loading SSC loadout: " + dbSSC.Id);
+                    //                        ProgramLog.Admin.Log("Translated SCC: " + (ssc != null));
+                    //
+                    var inv = Tables.ItemTable.GetItemsForCharacter(ItemType.Inventory, ssc.Id);
                         if (null != inv) ssc.Inventory = inv.ToList();
 
                         var amr = Tables.ItemTable.GetItemsForCharacter(ItemType.Armor, ssc.Id);
@@ -191,7 +197,11 @@ namespace TDSM.Core.ServerCharacters
                         if (null != bank2) ssc.Bank2 = bank2.ToList();
 
                         var trash = Tables.ItemTable.GetItemsForCharacter(ItemType.Trash, ssc.Id);
+#if ENTITY_FRAMEWORK_6 || ENTITY_FRAMEWORK_7
                         if (null != trash && trash.Count > 0) ssc.Trash = trash.First();
+#elif DATA_CONNECTOR
+                        if (null != trash && trash.Length > 0) ssc.Trash = trash.First();
+#endif
 
                         return ssc;
                     }
