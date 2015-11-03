@@ -6,6 +6,7 @@ using System.Threading;
 /// </summary>
 using Mono.Unix.Native;
 using Mono.Unix;
+using OTA;
 
 namespace TDSM.Core.Mono
 {
@@ -17,57 +18,65 @@ namespace TDSM.Core.Mono
         private static bool _attached;
         private static Thread signal_thread;
 
-        public static void Attach()
+        [TDSMComponent(ComponentEvent.ReadyForCommands)]
+        internal static void Attach(Entry plugin)
         {
-            try
+            if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)
             {
-                if (!_attached)
+                try
                 {
-                    _attached = true;
-                    // Catch SIGINT, SIGUSR1 and SIGTERM
-                    UnixSignal[] signals = new UnixSignal[]
+                    if (!_attached)
                     {
-                        new UnixSignal(Signum.SIGINT),
-                        new UnixSignal(Signum.SIGUSR1),
-                        new UnixSignal(Signum.SIGTERM)
-                    };
-
-                    (signal_thread = new Thread(delegate ()
+                        _attached = true;
+                        // Catch SIGINT, SIGUSR1 and SIGTERM
+                        UnixSignal[] signals = new UnixSignal[]
                         {
-                            System.Threading.Thread.CurrentThread.Name = "SIG";
-                            while (!Terraria.Netplay.disconnect && _attached)
+                            new UnixSignal(Signum.SIGINT),
+                            new UnixSignal(Signum.SIGUSR1),
+                            new UnixSignal(Signum.SIGTERM)
+                        };
+
+                        (signal_thread = new Thread(delegate ()
                             {
-                                // Wait for a signal to be delivered
-                                var index = UnixSignal.WaitAny(signals, -1);
-                                var signal = signals[index].Signum;
-
-                                if (!Terraria.Netplay.disconnect && _attached)
+                                System.Threading.Thread.CurrentThread.Name = "SIG";
+                                while (!Terraria.Netplay.disconnect && _attached)
                                 {
-                                    _attached = false;
-                                    OTA.Logging.ProgramLog.Log("Server received Exit Signal");
-                                    VanillaCommands.Exit(null, null);
-                                }
-                            }
-                        })).Start();
-                }
+                                    // Wait for a signal to be delivered
+                                    var index = UnixSignal.WaitAny(signals, -1);
+                                    var signal = signals[index].Signum;
 
-                OTA.Logging.ProgramLog.Log("Server can accept SIGTERM");
-            }
-            catch
-            {
-                OTA.Logging.ProgramLog.Log("Failed to attatch SIGTERM listener");
+                                    if (!Terraria.Netplay.disconnect && _attached)
+                                    {
+                                        _attached = false;
+                                        OTA.Logging.ProgramLog.Log("Server received Exit Signal");
+                                        VanillaCommands.Exit(null, null);
+                                    }
+                                }
+                            })).Start();
+                    }
+
+                    OTA.Logging.ProgramLog.Log("Server can accept SIGTERM");
+                }
+                catch
+                {
+                    OTA.Logging.ProgramLog.Log("Failed to attatch SIGTERM listener");
+                }
             }
         }
 
-        public static void Detach()
+        [TDSMComponent(ComponentEvent.ServerStopping)]
+        public static void Detach(Entry plugin)
         {
-            _attached = false;
-            try
+            if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)
             {
-                signal_thread.Abort();
-            }
-            catch
-            {
+                _attached = false;
+                try
+                {
+                    signal_thread.Abort();
+                }
+                catch
+                {
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ using OTA.ID;
 using OTA.Plugin;
 using TDSM.Core.Plugin.Hooks;
 using Microsoft.Xna.Framework;
+using TDSM.Core.Net.PacketHandling.Misc;
 
 namespace TDSM.Core.Net.PacketHandling.Packets
 {
@@ -59,7 +60,7 @@ namespace TDSM.Core.Net.PacketHandling.Packets
             
                 conn.Kick("Incorrect server password.");
             }
-            else if (conn.State == -2)
+            else if (conn.State == (int)ConnectionState.WaitingForUserPassword)
             {
                 //var name = player.name ?? "";
             

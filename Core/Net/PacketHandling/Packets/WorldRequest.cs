@@ -5,6 +5,7 @@ using OTA.ID;
 using OTA.Plugin;
 using TDSM.Core.Plugin.Hooks;
 using Microsoft.Xna.Framework;
+using TDSM.Core.Net.PacketHandling.Misc;
 
 namespace TDSM.Core.Net.PacketHandling.Packets
 {
@@ -19,7 +20,7 @@ namespace TDSM.Core.Net.PacketHandling.Packets
         {
             //Check to see if the client is to send the player password
             //If they must, then we can ignore the world request until they respond.
-            if (Netplay.Clients[bufferId].State == -2)
+            if (Netplay.Clients[bufferId].State == (int)ConnectionState.WaitingForUserPassword)
                 return true;
             
             return false;

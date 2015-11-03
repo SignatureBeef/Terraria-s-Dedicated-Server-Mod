@@ -2,6 +2,7 @@
 using Terraria;
 using OTA.Plugin;
 using TDSM.Core.Plugin.Hooks;
+using TDSM.Core.Net.PacketHandling.Misc;
 
 namespace TDSM.Core.Net.PacketHandling.Packets
 {
@@ -106,7 +107,7 @@ namespace TDSM.Core.Net.PacketHandling.Packets
             {
                 if (ctx.Result == HookResult.ASK_PASS)
                 {
-                    Netplay.Clients[bufferId].State = -2;
+                    Netplay.Clients[bufferId].State = (int)ConnectionState.WaitingForUserPassword;
                     //                    conn.State = SlotState.PLAYER_AUTH;
             
             

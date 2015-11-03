@@ -15,11 +15,457 @@ using OTA.Data;
 using System.Text;
 using TDSM.Core.Command;
 using TDSM.Core.Data;
+using TDSM.Core.RemoteConsole;
+using OTA.Plugin;
+using System.IO;
 
 namespace TDSM.Core
 {
     public partial class Entry
     {
+        private void AddCommands()
+        {
+            this.AddCommand("platform")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Show what type of server is running TDSM")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.platform")
+                .Calls(this.OperatingSystem);
+
+            this.AddCommand("exit")
+                .WithDescription("Stops the server")
+                .WithAccessLevel(AccessLevel.CONSOLE)
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.admin")
+                .Calls(this.Exit);
+
+            this.AddCommand("stop")
+                .WithDescription("Stops the server")
+                .WithAccessLevel(AccessLevel.CONSOLE)
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.admin")
+                .Calls(this.Exit);
+
+            this.AddCommand("time")
+                .WithDescription("Change the time of day")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithHelpText("set <numeric time>")
+                .WithHelpText("set 5:10am")
+                .WithHelpText("now|?")
+                .WithHelpText("day|dawn|dusk|noon|night")
+                .WithPermissionNode("tdsm.time")
+                .Calls(this.Time);
+
+            this.AddCommand("give")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Give a player items")
+                .WithHelpText("<amount> <itemname:itemid> [prefix] [player]")
+                .WithPermissionNode("tdsm.give")
+                .Calls(this.Give);
+
+            this.AddCommand("spawnnpc")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Spawns NPCs")
+                .WithHelpText("<amount> \"<name:id>\" \"<player>\"")
+                .WithPermissionNode("tdsm.spawnnpc")
+                .Calls(this.SpawnNPC);
+
+            this.AddCommand("tp")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Teleport a player to another player")
+                .WithHelpText("<player> <toplayer> - another player")
+                .WithHelpText("<player> <x> <y>")
+                .WithHelpText("<toplayer>          - yourself")
+                .WithHelpText("<x> <y>")
+                .WithHelpText("                    - yourself to spawn")
+                .WithPermissionNode("tdsm.tp")
+                .Calls(this.Teleport);
+
+            this.AddCommand("tphere")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Teleport a player to yourself")
+                .WithHelpText("<player>")
+                .WithPermissionNode("tdsm.tphere")
+                .Calls(this.TeleportHere);
+
+            this.AddCommand("save")
+                .WithDescription("Save world and configuration data")
+                .WithAccessLevel(AccessLevel.OP)
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.admin")
+                .Calls(this.SaveAll);
+
+            this.AddCommand("save-all")
+                .WithDescription("Save world and configuration data")
+                .WithAccessLevel(AccessLevel.OP)
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.admin")
+                .Calls(this.SaveAll);
+
+            //this.AddCommand("reload")
+            //    .WithDescription(Languages.CommandDescription_ReloadConfig)
+            //    .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
+            //    .WithPermissionNode("tdsm.admin")
+            //    .Calls(this.Reload);
+
+            this.AddCommand("itemrej")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Manage item rejections")
+                .WithHelpText("-add|-remove <id:name>")
+                .WithHelpText("-clear")
+                .WithPermissionNode("tdsm.itemrej")
+                .Calls(this.ItemRejection);
+
+            this.AddCommand("refresh")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Redownload the area around you from the server")
+                .WithHelpText("Usage:    refresh")
+                .WithPermissionNode("tdsm.refresh")
+                .Calls(this.Refresh);
+
+            this.AddCommand("list")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Lists online players")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.who")
+                .Calls(this.List);
+
+            this.AddCommand("who")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Lists online players")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.who")
+                .Calls(this.List);
+
+            this.AddCommand("players")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Lists online players")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.who")
+                .Calls(this.OldList);
+
+            // this is what the server crawler expects
+            this.AddCommand("playing")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Lists online players")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.who")
+                .Calls(this.OldList);
+
+            this.AddCommand("online")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Lists online players")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.who")
+                .Calls(this.List);
+
+            this.AddCommand("me")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("3rd person talk")
+                .WithHelpText("<message> - Message to display in third person.")
+            //.SetDefaultUsage() //This was causing an additional "me" to be displayed in the help commmand syntax.
+                .WithPermissionNode("tdsm.me")
+                .Calls(this.Action);
+
+            this.AddCommand("say")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Say a message from the server")
+                .WithHelpText("<message>")
+                .WithPermissionNode("tdsm.say")
+                .Calls(this.Say);
+
+            this.AddCommand("status")
+                .WithDescription("Server status")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.status")
+                .Calls(this.ServerStatus);
+
+            this.AddCommand("kick")
+                .WithDescription("Kicks a player from the server")
+                .WithHelpText("<player> - Kicks the player specified.")
+                .WithPermissionNode("tdsm.kick")
+                .Calls(this.Kick);
+
+            this.AddCommand("op")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Allows a player server operator status")
+                .WithHelpText("<player> <password> - Sets the player as an operator on the server and sets the OP password for that player.")
+                .WithPermissionNode("tdsm.op")
+                .Calls(this.OpPlayer);
+
+            this.AddCommand("deop")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Removes server operator status from a player")
+                .WithHelpText("<player> - Removes server operator status from the specified player.")
+                .WithPermissionNode("tdsm.deop")
+                .Calls(this.DeopPlayer);
+
+            this.AddCommand("oplogin")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Allows an operator to log in")
+                .WithHelpText("<password> - Logs into the server as an OP.")
+                .WithPermissionNode("tdsm.oplogin")
+                .Calls(this.OpLogin);
+
+            this.AddCommand("oplogout")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Logs out a signed in operator.")
+                .SetDefaultUsage()
+                .WithPermissionNode("tdsm.oplogout")
+                .Calls(this.OpLogout);
+
+            this.AddCommand("spawnboss")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Spawn a boss")
+                .WithHelpText("<amount> <boss> <player>")
+                .WithHelpText("(If no player is entered it will be a random online player)")
+                .WithPermissionNode("tdsm.spawnboss")
+                .Calls(this.SummonBoss);
+
+            this.AddCommand("timelock")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Forces the time to stay at a certain point.")
+                .WithHelpText("now")
+                .WithHelpText("set day|dawn|dusk|noon|night")
+                .WithHelpText("setat <time>")
+                .WithHelpText("disable")
+                .WithPermissionNode("tdsm.timelock")
+                .Calls(this.Timelock);
+
+            this.AddCommand("fastforwardtime")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Fast forwards time until disabled.")
+                .WithPermissionNode("tdsm.fastforwardtime")
+                .Calls(this.FastForwardTime);
+
+            this.AddCommand("heal")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Heals one or all players.")
+                .WithHelpText("<player>")
+                .WithHelpText("-all")
+                .WithPermissionNode("tdsm.heal")
+                .Calls(this.Heal);
+
+            this.AddCommand("hardmode")
+                .WithAccessLevel(AccessLevel.OP)
+                .SetDefaultUsage()
+                .WithDescription("Enables hard mode.")
+                .WithPermissionNode("tdsm.hardmode")
+                .Calls(this.HardMode);
+
+            this.AddCommand("rcon")
+                .WithDescription("Manage remote console access.")
+                .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
+                .WithHelpText("load       - reload login database")
+                .WithHelpText("list       - list rcon connections")
+                .WithHelpText("cut <name> - cut off rcon connections")
+                .WithHelpText("ban <name> - cut off rcon connections and revoke access")
+                .WithHelpText("add <name> <password> - add an rcon user")
+                .WithPermissionNode("tdsm.rcon")
+                .Calls(RConServer.RConCommand);
+
+            this.AddCommand("npcspawning")
+                .WithDescription("Turn NPC spawning on or off.")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithHelpText("<true|false>")
+                .WithPermissionNode("tdsm.npcspawning")
+                .Calls(this.NPCSpawning);
+
+            this.AddCommand("invasion")
+                .WithDescription("Begins an invasion")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithHelpText("goblin|frost|pirate|martian")
+                .WithHelpText("-custom <npc id or name> <npc id or name> ...")
+                .WithHelpText("stop|end|cancel")
+                .WithPermissionNode("tdsm.invasion")
+                .Calls(this.Invasion);
+
+            this.AddCommand("serverlist")
+                .WithDescription("Manages the heartbeat and server list")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithHelpText("print|?              - Displays the current details")
+                .WithHelpText("enable|disable       - Enable/disable the heartbeat")
+                .WithHelpText("public true|false    - Allows public viewing")
+                .WithHelpText("desc|name|domain     - Displays the current")
+                .WithHelpText("desc <description>")
+                .WithHelpText("name <name>")
+                .WithHelpText("domain <domain>")
+                .WithPermissionNode("tdsm.serverlist")
+                .Calls(this.ServerList);
+
+            this.AddCommand("var")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Experimental variable manipulation")
+                .WithHelpText("<field|exec|prop> <namespace.classname> <fieldname|methodname>")
+                .WithHelpText("field Terraria.Main eclipse          #Get the value")
+                .WithHelpText("field Terraria.Main eclipse false    #Set the value")
+                .WithPermissionNode("tdsm.var")
+                .Calls(this.VariableMan);
+
+            this.AddCommand("worldevent")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Start or stop an event")
+                .WithHelpText("eclipse|bloodmoon|pumpkinmoon|snowmoon|slimerain")
+                .WithPermissionNode("tdsm.worldevent")
+                .Calls(this.WorldEvent);
+#if TDSMServer
+            this.AddCommand("maxplayers")
+                .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
+                .WithDescription("Set the maximum number of player slots.")
+                .WithHelpText("<num> - set the max number of slots")
+                .WithHelpText("<num> <num> - also set the number of overlimit slots")
+                .WithPermissionNode("tdsm.maxplayers")
+                .Calls(SlotManager.MaxPlayersCommand);
+
+            this.AddCommand("q")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("List connections waiting in queues.")
+                .WithHelpText("q")
+                .WithPermissionNode("tdsm.q")
+                .Calls(SlotManager.QCommand);
+
+            this.AddCommand("conn")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Accept new connections.")
+                .WithPermissionNode("tdsm.conn")
+                .SetDefaultUsage()
+                .Calls(Server.Command_AcceptConnections);
+#endif
+            //            this.AddCommand("restart")
+            //                .WithAccessLevel(AccessLevel.OP)
+            //                .WithDescription("Restart the server.")
+            //                .WithHelpText("<no parameters>    - Restart immediately.")
+            //                .WithHelpText("--wait             - Wait for users to disconnect and then restart.")
+            //                .WithPermissionNode("tdsm.restart")
+            //                .Calls(this.Restart);
+
+#if DEBUG
+            this.AddCommand("repo")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Install or update plugins.")
+                .WithHelpText("<status|update|install> <plugin name>")
+                .WithHelpText("status -all")
+                .WithHelpText("update -all")
+                .WithHelpText("update \"TDSM Core Module\"")
+                .WithPermissionNode("tdsm.repo")
+                .Calls(this.RepositoryCommand);
+
+            //Template for when we have more plugins
+            //this.AddCommand("repo")
+            //    .WithDescription("The tdsm update repository")
+            //    .WithAccessLevel(AccessLevel.OP)
+            //    .WithHelpText("status       - Displays plugins out of date")
+            //    .WithHelpText("definitions  - Update NPC and Item definitions")
+            //    .WithHelpText("updatetest   - Tests if your plugins are compatible with the latest TDSM")
+            //    .WithHelpText("search <search params> - Browse the repository")
+            //    .WithHelpText("update <plugin name>|-all  - Update a particular plugin or all")
+            //    .WithHelpText("install <plugin name>  - Installs a plugin")
+            //    .WithPermissionNode("tdsm.repo")
+            //    .Calls(this.Repository);
+
+            this.AddCommand("group")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.group")
+                .WithDescription("Manage groups and their permissions")
+                .WithHelpText("add <group> <ApplyToGuests> <Parent> <R> <G> <B> <Prefix> <Suffix>")
+                .WithHelpText("remove <group>")
+                .WithHelpText("addnode <group> <node> [deny]")
+                .WithHelpText("removenode <group> <node>")
+                .WithHelpText("list")
+                .WithHelpText("listnodes <group>")
+                .Calls(this.GroupPermission);
+
+            this.AddCommand("user")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.user")
+                .WithDescription("Manage user permissions")
+                .WithHelpText("add <user> <password> [op]")
+                .WithHelpText("addgroup <username> <group>")
+                .WithHelpText("remove <user> ")
+                .WithHelpText("removegroup <username> <group>")
+                .WithHelpText("update <user> <password> [op]")
+                .WithHelpText("addnode <username> <node> [deny]")
+                .WithHelpText("removenode <username> <node> [deny]")
+                .WithHelpText("listgroups <username>")
+                .WithHelpText("listnodes <username>")
+                .WithHelpText("search <term>")
+                .Calls(this.UserPermission);
+
+            this.AddCommand("killnpc")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.killnpc")
+                .WithDescription("Kill all non town NPC's")
+                .Calls(this.KillNPC);
+
+            this.AddCommand("auth")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithPermissionNode("tdsm.auth")
+                .WithDescription("Sign in")
+                .Calls(this.Auth);
+
+            this.AddCommand("!")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithPermissionNode("tdsm.previous")
+                .WithDescription("Runs the last command executed by you.")
+                .Calls(PreviousCommandHandle);
+
+            this.AddCommand("grow")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.grow")
+                .Calls((ISender sender, ArgumentList args) =>
+                {
+                    if (null == WorldGen.genRand) WorldGen.genRand = new Random();
+                    var ply = sender as Player;
+                    int tileX = (int)(ply.position.X / 16f), tileY = (int)((ply.position.Y + ply.height) / 16f);
+
+                    if (args.TryPop("-alch")) WorldGen.GrowAlch(tileX, tileY);
+                    //                    else if (args.TryPop("-cactus")) WorldGen.GrowCactus(tileX, tileY);
+                    else if (args.TryPop("-epictree")) WorldGen.GrowEpicTree(tileX, tileY);
+                    //                    else if (args.TryPop("-livingtree")) WorldGen.GrowLivingTree(tileX, tileY);
+                    else if (args.TryPop("-palmtree")) WorldGen.GrowPalmTree(tileX, tileY);
+                    //                    else if (args.TryPop("-pumpkin")) WorldGen.GrowPumpkin(tileX, tileY);
+                    else if (args.TryPop("-shroom")) WorldGen.GrowShroom(tileX, tileY);
+                    //                    else if (args.TryPop("-spike")) WorldGen.GrowSpike(tileX, tileY);
+                    else if (args.TryPop("-tree") || args.TryPop("-t")) WorldGen.GrowTree(tileX, tileY);
+                    else if (args.TryPop("-tree")) WorldGen.GrowTree(tileX, tileY);
+                    else if (args.TryPop("-grass") || args.TryPop("-g")) WorldGen.SpreadGrass(tileX, tileY);
+                    else if (args.TryPop("-undergroundtree")) WorldGen.GrowUndergroundTree(tileX, tileY);
+                    else throw new CommandError("Element not supported");
+
+                    NetMessage.SendTileSquare(ply.whoAmI, (int)(ply.position.X / 16), (int)(ply.position.Y / 16), 32);
+                });
+
+            this.AddCommand("abuff")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.abuff")
+                .Calls((ISender sender, ArgumentList args) =>
+                {
+                    var time = args.GetInt(0);
+
+                    (sender as Player).AddBuff(21, time);
+
+                    NetMessage.SendData(55, -1, -1, "", (sender as Player).whoAmI, 21, time, 0, 0, 0, 0);
+                    NetMessage.SendData(55, (sender as Player).whoAmI, -1, "", (sender as Player).whoAmI, 21, time);
+                });
+
+            this.AddCommand("whitelist")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.whitelist")
+                .WithDescription("Manages the whitelist")
+                .WithHelpText("enable|disable|reload|?")
+                .WithHelpText("addplayer|removeplayer <name>")
+                .WithHelpText("addip|removeip <ip>")
+                .Calls(this.WhitelistMan);
+
+            this.AddCommand("whoami")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithPermissionNode("tdsm.whoami")
+                .WithDescription("Find out if you are authenticated")
+                .SetDefaultUsage()
+                .Calls(this.WhoAmI);
+#endif
+        }
+
         private static object GetDataValue(Type dataType, string val)
         {
             switch (dataType.Name)
@@ -382,7 +828,7 @@ namespace TDSM.Core
             {
                 var players = from p in Main.player
                                           where p.active
-                    select String.Format("{0} ({1})", p.name, p.IPAddress);
+                                          select String.Format("{0} ({1})", p.name, p.IPAddress);
 
                 online = String.Join(", ", players);
             }
@@ -390,7 +836,7 @@ namespace TDSM.Core
             {
                 var players = from p in Main.player
                                           where p.active
-                    select p.name;
+                                          select p.name;
 
                 online = String.Join(", ", players);
             }
@@ -412,10 +858,10 @@ namespace TDSM.Core
 
             var players = from p in Terraria.Main.player
                                    where p.active && !p.Op
-                select p.name;
+                                   select p.name;
             var ops = from p in Terraria.Main.player
                                where p.active && p.Op
-                select p.name;
+                               select p.name;
 
             var pn = players.Count();
             var on = ops.Count();
@@ -1018,7 +1464,7 @@ namespace TDSM.Core
                 subject.Teleport(target); //)
                 {
                     Tools.NotifyAllOps(String.Concat("Teleported ", subject.name, " to ",
-                        target.name, ". [", sender.SenderName, "]"), true);
+                            target.name, ". [", sender.SenderName, "]"), true);
                 }
                 //else
                 //    sender.Message(Languages.TeleportFailed);
@@ -1036,7 +1482,7 @@ namespace TDSM.Core
                     subject.Teleport(target); //)
                     {
                         Tools.NotifyAllOps(string.Concat("Teleported ", subject.name, " to ",
-                            target.name, ". [", sender.SenderName, "]"), true);
+                                target.name, ". [", sender.SenderName, "]"), true);
                     }
                     //else
                     //    sender.Message(Languages.TeleportFailed);
@@ -2922,6 +3368,336 @@ namespace TDSM.Core
                 sender.Message(sb.ToString(), Color.Orange);
             }
             else sender.Message("This command is for players only", Color.Red);
+        }
+
+        public static void PluginCommand(ISender sender, ArgumentList args)
+        {
+            /*
+             * Commands:
+             *      list    - shows all plugins
+             *      info    - shows a plugin's author & description etc
+             *      disable - disables a plugin
+             *      enable  - enables a plugin
+             *      reload
+             *      unload
+             *      status
+             *      load
+             */
+
+            if (args.Count == 0)
+                throw new CommandError("Subcommand expected.");
+
+            string command = args[0];
+            args.RemoveAt(0); //Allow the commands to use any additional arguments without also getting the command
+
+            lock (PluginManager._plugins)
+                switch (command)
+            {
+                case "-l":
+                case "ls":
+                case "list":
+                    {
+                        if (PluginManager.PluginCount == 0)
+                        {
+                            sender.Message(255, "No plugins loaded.");
+                            return;
+                        }
+
+                        var msg = new StringBuilder();
+                        msg.Append("Plugins: ");
+
+                        int i = 0;
+                        foreach (var plugin in PluginManager.EnumeratePlugins)
+                        {
+                            if (i > 0)
+                                msg.Append(", ");
+                            msg.Append(plugin.Name);
+
+                            if (!String.IsNullOrEmpty(plugin.Version))
+                            {
+                                msg.Append(" (");
+                                msg.Append(plugin.Version);
+                                msg.Append(")");
+                            }
+
+                            if (!plugin.IsEnabled)
+                                msg.Append("[OFF]");
+                            i++;
+                        }
+                        msg.Append(".");
+
+                        sender.Message(255, Color.DodgerBlue, msg.ToString());
+
+                        break;
+                    }
+
+                case "-s":
+                case "stat":
+                case "status":
+                    {
+                        if (PluginManager.PluginCount == 0)
+                        {
+                            sender.Message(255, "No plugins loaded.");
+                            return;
+                        }
+
+                        var msg = new StringBuilder();
+
+                        foreach (var plugin in PluginManager.EnumeratePlugins)
+                        {
+                            msg.Clear();
+                            msg.Append(plugin.IsDisposed ? "[DISPOSED] " : (plugin.IsEnabled ? "[ON]  " : "[OFF] "));
+                            msg.Append(plugin.Name);
+                            msg.Append(" ");
+                            msg.Append(plugin.Version);
+                            if (plugin.Status != null && plugin.Status.Length > 0)
+                            {
+                                msg.Append(" : ");
+                                msg.Append(plugin.Status);
+                            }
+                            sender.Message(255, Color.DodgerBlue, msg.ToString());
+                        }
+
+                        break;
+                    }
+
+                case "-i":
+                case "info":
+                    {
+                        string name;
+                        args.ParseOne(out name);
+
+                        var fplugin = PluginManager.GetPlugin(name);
+                        if (fplugin != null)
+                        {
+                            var path = Path.GetFileName(fplugin.FilePath);
+                            sender.Message(255, Color.DodgerBlue, fplugin.Name);
+                            sender.Message(255, Color.DodgerBlue, "Filename: " + path);
+                            sender.Message(255, Color.DodgerBlue, "Version:  " + fplugin.Version);
+                            sender.Message(255, Color.DodgerBlue, "Author:   " + fplugin.Author);
+                            if (fplugin.Description != null && fplugin.Description.Length > 0)
+                                sender.Message(255, Color.DodgerBlue, fplugin.Description);
+                            sender.Message(255, Color.DodgerBlue, "Status:   " + (fplugin.IsEnabled ? "[ON] " : "[OFF] ") + fplugin.Status);
+                        }
+                        else
+                        {
+                            sender.SendMessage("The plugin \"" + args[1] + "\" was not found.");
+                        }
+
+                        break;
+                    }
+
+                case "-d":
+                case "disable":
+                    {
+                        string name;
+                        args.ParseOne(out name);
+
+                        var fplugin = PluginManager.GetPlugin(name);
+                        if (fplugin != null)
+                        {
+                            if (fplugin.Disable())
+                                sender.Message(255, Color.DodgerBlue, fplugin.Name + " was disabled.");
+                            else
+                                sender.Message(255, Color.DodgerBlue, fplugin.Name + " was disabled, errors occured during the process.");
+                        }
+                        else
+                            sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+
+                        break;
+                    }
+
+                case "-e":
+                case "enable":
+                    {
+                        string name;
+                        args.ParseOne(out name);
+
+                        var fplugin = PluginManager.GetPlugin(name);
+                        if (fplugin != null)
+                        {
+                            if (fplugin.Enable())
+                                sender.Message(255, Color.DodgerBlue, fplugin.Name + " was enabled.");
+                            else
+                                sender.Message(255, Color.DodgerBlue, fplugin.Name + " was enabled, errors occured during the process.");
+                        }
+                        else
+                            sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+
+                        break;
+                    }
+
+                case "-u":
+                case "-ua":
+                case "unload":
+                    {
+                        string name;
+
+                        if (command == "-ua" || command == "-uca")
+                            name = "all";
+                        else
+                            args.ParseOne(out name);
+
+                        BasePlugin[] plugs;
+                        if (name == "all" || name == "-a")
+                        {
+                            plugs = PluginManager._plugins.Values.ToArray();
+                        }
+                        else
+                        {
+                            var splugin = PluginManager.GetPlugin(name);
+
+                            if (splugin == null)
+                            {
+                                sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+                                return;
+                            }
+
+                            plugs = new BasePlugin[] { splugin };
+                        }
+
+                        foreach (var fplugin in plugs)
+                        {
+                            if (PluginManager.UnloadPlugin(fplugin))
+                                sender.Message(255, Color.DodgerBlue, fplugin.Name + " was unloaded.");
+                            else
+                                sender.Message(255, Color.DodgerBlue, fplugin.Name + " was unloaded, errors occured during the process.");
+                        }
+
+                        break;
+                    }
+
+                case "-r":
+                case "-rc":
+                case "-ra":
+                case "-rca":
+                case "reload":
+                    {
+                        bool save = true;
+                        if (command == "-rc" || command == "-rca" || args.TryPop("-c") || args.TryPop("-clean"))
+                            save = false;
+
+                        string name;
+
+                        if (command == "-ra" || command == "-rca")
+                            name = "all";
+                        else
+                            args.ParseOne(out name);
+
+                        BasePlugin[] plugs;
+                        if (name == "all" || name == "-a")
+                        {
+                            plugs = PluginManager._plugins.Values.ToArray();
+                        }
+                        else
+                        {
+                            var splugin = PluginManager.GetPlugin(name);
+
+                            if (splugin == null)
+                            {
+                                sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+                                return;
+                            }
+
+                            plugs = new BasePlugin[] { splugin };
+                        }
+
+                        foreach (var fplugin in plugs)
+                        {
+                            var nplugin = PluginManager.ReloadPlugin(fplugin, save);
+                            if (nplugin == fplugin)
+                            {
+                                sender.Message(255, Color.DodgerBlue, "Errors occured while reloading plugin " + fplugin.Name + ", old instance kept.");
+                            }
+                            else if (nplugin == null)
+                            {
+                                sender.Message(255, Color.DodgerBlue, "Errors occured while reloading plugin " + fplugin.Name + ", it has been unloaded.");
+                            }
+                        }
+
+                        break;
+                    }
+
+                case "-L":
+                case "-LR":
+                case "load":
+                    {
+                        bool replace = command == "-LR" || args.TryPop("-R") || args.TryPop("-replace");
+                        bool save = command != "-LRc" && !args.TryPop("-c") && !args.TryPop("-clean");
+
+                        var fname = string.Join(" ", args);
+                        string path;
+
+                        if (fname == "")
+                            throw new CommandError("File name expected");
+
+                        if (Path.IsPathRooted(fname))
+                            path = Path.GetFullPath(fname);
+                        else
+                            path = Path.Combine(Globals.PluginPath, fname);
+
+                        var fi = new FileInfo(path);
+
+                        if (!fi.Exists)
+                        {
+                            sender.Message(255, "Specified file doesn't exist.");
+                            return;
+                        }
+
+                        var newPlugin = PluginManager.LoadPluginFromPath(path);
+
+                        if (newPlugin == null)
+                        {
+                            sender.Message(255, "Unable to load plugin.");
+                            return;
+                        }
+
+                        var oldPlugin = PluginManager.GetPlugin(newPlugin.Name);
+                        if (oldPlugin != null)
+                        {
+                            if (!replace)
+                            {
+                                sender.Message(255, "A plugin named {0} is already loaded, use -replace to replace it.", oldPlugin.Name);
+                                return;
+                            }
+
+                            if (PluginManager.ReplacePlugin(oldPlugin, newPlugin, save))
+                            {
+                                sender.Message(255, Color.DodgerBlue, "Plugin {0} has been replaced.", oldPlugin.Name);
+                            }
+                            else if (oldPlugin.IsDisposed)
+                            {
+                                sender.Message(255, Color.DodgerBlue, "Replacement of plugin {0} failed, it has been unloaded.", oldPlugin.Name);
+                            }
+                            else
+                            {
+                                sender.Message(255, Color.DodgerBlue, "Replacement of plugin {0} failed, old instance kept.", oldPlugin.Name);
+                            }
+
+                            return;
+                        }
+
+                        if (!newPlugin.InitializeAndHookUp())
+                        {
+                            sender.Message(255, Color.DodgerBlue, "Failed to initialize new plugin instance.");
+                        }
+
+                        PluginManager._plugins.Add(newPlugin.Name.ToLower().Trim(), newPlugin);
+
+                        if (!newPlugin.Enable())
+                        {
+                            sender.Message(255, Color.DodgerBlue, "Failed to enable new plugin instance.");
+                        }
+
+                        sender.Message(255, Color.DodgerBlue, "New plugin instance loaded.");
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new CommandError("Subcommand not recognized.");
+                    }
+            }
         }
     }
 }

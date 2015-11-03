@@ -203,6 +203,11 @@
     <Compile Include="Net\PacketHandling\Packets\ChestBreakReceived.cs" />
     <Compile Include="PluginHooks\ChestBreakReceived.cs" />
     <Compile Include="Net\PacketHandling\Packets\WorldRequest.cs" />
+    <Compile Include="Net\PacketHandling\Misc\ConnectionState.cs" />
+    <Compile Include="Component.cs" />
+    <Compile Include="TDSMComponentAttribute.cs" />
+    <Compile Include="Core\Events.cs" />
+    <Compile Include="Core\ProgressText.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -216,4 +221,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Net\PacketHandling\Misc\" />
+    <Folder Include="Core\" />
+  </ItemGroup>
 </Project>

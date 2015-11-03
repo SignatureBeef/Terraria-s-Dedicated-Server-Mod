@@ -19,7 +19,36 @@ namespace TDSM.Core
         public const String Setting_Health = "SSC_Health";
         public const String Setting_MaxHealth = "SSC_MaxHealth";
 
-#if EF6
+        [TDSMComponent(ComponentEvent.Initialise)]
+        void SetupDatabase(Entry plugin)
+        {
+            #if ENTITY_FRAMEWORK_6
+            Storage.IsAvailable = OTA.Data.EF6.OTAContext.HasConnection;
+            #elif !DATA_CONNECTOR
+            using (var ctx = new TContext())
+            {
+            ctx.Database.EnsureCreated();
+            Storage.IsAvailable = true;
+            }
+
+            if (Storage.IsAvailable) ProgramLog.Admin.Log("Entity framework has a registered connection.");
+            else ProgramLog.Admin.Log("Entity framework has no registered connection.");
+            #endif
+
+            //if (Storage.IsAvailable)
+            //    using (var ctx = new TContext())
+            //    {
+            //        ctx.APIAccounts.Add(new TDSM.Core.Data.Models.APIAccount()
+            //        {
+            //            Username = "Test",
+            //            Password = "Testing"
+            //        });
+
+            //        ctx.SaveChanges();
+            //    }
+        }
+
+        #if ENTITY_FRAMEWORK_6
         protected override void DatabaseInitialising(System.Data.Entity.DbModelBuilder builder)
         {
             base.DatabaseInitialising(builder);
@@ -29,9 +58,7 @@ namespace TDSM.Core
                 dbc.CreateModel(builder);
             }
         }
-#endif
-
-#if ENTITY_FRAMEWORK_7
+        #elif ENTITY_FRAMEWORK_7
         protected override void DatabaseCreated()
         {
             base.DatabaseCreated();

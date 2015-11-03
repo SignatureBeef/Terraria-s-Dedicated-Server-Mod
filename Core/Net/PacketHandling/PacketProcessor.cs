@@ -2,6 +2,7 @@
 using OTA.Plugin;
 using OTA;
 using System.Linq;
+using TDSM.Core.Net.PacketHandling.Misc;
 
 namespace TDSM.Core.Net.PacketHandling
 {
@@ -33,20 +34,22 @@ namespace TDSM.Core.Net.PacketHandling
             return handlers;
         }
 
-        public static void Initialise(BasePlugin plugin)
+        [TDSMComponent(ComponentEvent.Initialise)]
+        internal static void Initialise(Entry plugin)
         {
             plugin.Hook(HookPoints.ReceiveNetMessage, HandlePacket);
             plugin.Hook(HookPoints.CheckBufferState, CheckState);
         }
 
         /// <summary>
-        /// Handles packets received from OTA
+        /// Handles the connection state when receiving a packet
         /// </summary>
         public static void CheckState(ref HookContext ctx, ref HookArgs.CheckBufferState args)
         {
-            if (Terraria.Netplay.Clients[args.BufferId].State == -2)
+            if (Terraria.Netplay.Clients[args.BufferId].State == (int)ConnectionState.WaitingForUserPassword)
             {
-                ctx.SetResult(HookResult.RECTIFY, true, false);
+                //Since this is a custom state, we accept it [true to kick the connection, false to accept]
+                ctx.SetResult(HookResult.RECTIFY, true, false /* TODO validate packets */);
             }
         }
 
@@ -59,7 +62,7 @@ namespace TDSM.Core.Net.PacketHandling
             {
                 if (_packetHandlers[args.PacketId].Read(args.BufferId, args.Start, args.Length))
                 {
-                    //Consume the packet
+                    //Packet informed us that it was read, let OTA know we consumed the packet
                     ctx.SetResult(HookResult.IGNORE, true);
                 }
             }

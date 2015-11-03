@@ -77,7 +77,8 @@ namespace TDSM.Core.Data.Management
             CopyBackups = true;
         }
 
-        internal static void Initialise()
+        [TDSMComponent(ComponentEvent.Initialise)]
+        internal static void Initialise(Entry plugin)
         {
             if (!Directory.Exists(BackupFolder)) Directory.CreateDirectory(BackupFolder);
         }

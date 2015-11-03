@@ -122,7 +122,8 @@ namespace TDSM.Core
             return null;
         }
 
-        public static void Initialise(Entry plugin)
+        [TDSMComponent(ComponentEvent.Initialise)]
+        internal static void Initialise(Entry plugin)
         {
             plugin.Hook(HookPoints.PluginDisposed, OnDisposed);
             plugin.Hook(HookPoints.PluginReplacing, OnPluginReplacing);

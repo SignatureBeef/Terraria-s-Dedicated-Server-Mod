@@ -25,7 +25,8 @@ namespace TDSM.Core.Data.Management
             LogsToLeave = 5;
         }
 
-        internal static void Initialise()
+        [TDSMComponent(ComponentEvent.Initialise)]
+        internal static void Initialise(Entry plugin)
         {
             if (LogPurgingEnabled)
             {

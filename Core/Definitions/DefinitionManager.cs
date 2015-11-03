@@ -23,6 +23,13 @@ namespace TDSM.Core.Definitions
             { return _item.Version; }
         }
 
+        [TDSMComponent(ComponentEvent.Initialise)]
+        public static void Initialise(Entry plugin)
+        {
+            if (!Initialise())
+                ProgramLog.Log("Failed to initialise definitions.");
+        }
+
         public static bool Initialise()
         {
             var npc = new FileInfo(Path.Combine(Globals.DataPath, "npc.xml"));
@@ -107,6 +114,7 @@ namespace TDSM.Core.Definitions
         }
 
         #region "IO"
+
         static void Save<T>(FileInfo info, DefinitionFile<T> definition) where T : class
         {
             if (info.Exists) info.Delete();
@@ -126,6 +134,7 @@ namespace TDSM.Core.Definitions
             using (var srm = GetInternalDefinition(internalFile))
                 return LoadDefinition<T>(srm);
         }
+
         static DefinitionFile<T> LoadDefinition<T>(FileInfo local) where T : class
         {
             using (var srm = local.OpenRead())
@@ -145,6 +154,7 @@ namespace TDSM.Core.Definitions
         {
             return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("TDSM.Core.Definitions." + file);
         }
+
         #endregion
     }
 
@@ -152,7 +162,9 @@ namespace TDSM.Core.Definitions
     public class NPCInfo
     {
         public int Id { get; set; }
+
         public int NetId { get; set; }
+
         public string Name { get; set; }
 
         public bool? Boss { get; set; }
@@ -162,10 +174,15 @@ namespace TDSM.Core.Definitions
     public class ItemInfo
     {
         public int Id { get; set; }
+
         public int NetId { get; set; }
+
         public string Affix { get; set; }
+
         public int Prefix { get; set; }
+
         public string Name { get; set; }
+
         public int MaxStack { get; set; }
     }
 
@@ -173,6 +190,7 @@ namespace TDSM.Core.Definitions
     public class DefinitionFile<T> where T : class
     {
         public int Version { get; set; }
+
         public T[] Data { get; set; }
     }
 }
