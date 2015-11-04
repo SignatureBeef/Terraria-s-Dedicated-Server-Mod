@@ -60,7 +60,7 @@ namespace TDSM.Core.Net.PacketHandling.Packets
             
                 conn.Kick("Incorrect server password.");
             }
-            else if (conn.State == (int)ConnectionState.WaitingForUserPassword)
+            else if (conn.State == (int)ConnectionState.AwaitingUserPassword)
             {
                 //var name = player.name ?? "";
             

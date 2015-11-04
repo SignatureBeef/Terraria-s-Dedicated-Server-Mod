@@ -7,7 +7,7 @@ namespace TDSM.Core.Net.PacketHandling.Misc
     /// </summary>
     public enum ConnectionState : int
     {
-        WaitingForUserPassword = -2
+        AwaitingUserPassword = -2
     }
 }
 

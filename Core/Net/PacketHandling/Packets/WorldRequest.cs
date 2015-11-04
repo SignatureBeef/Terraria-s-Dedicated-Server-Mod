@@ -20,7 +20,7 @@ namespace TDSM.Core.Net.PacketHandling.Packets
         {
             //Check to see if the client is to send the player password
             //If they must, then we can ignore the world request until they respond.
-            if (Netplay.Clients[bufferId].State == (int)ConnectionState.WaitingForUserPassword)
+            if (Netplay.Clients[bufferId].State == (int)ConnectionState.AwaitingUserPassword)
                 return true;
             
             return false;

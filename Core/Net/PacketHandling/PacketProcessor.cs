@@ -3,6 +3,7 @@ using OTA.Plugin;
 using OTA;
 using System.Linq;
 using TDSM.Core.Net.PacketHandling.Misc;
+using OTA.Logging;
 
 namespace TDSM.Core.Net.PacketHandling
 {
@@ -18,20 +19,29 @@ namespace TDSM.Core.Net.PacketHandling
         /// </summary>
         private static IPacketHandler[] GetHandlers()
         {
-            var max = ((Packet[])Enum.GetValues(typeof(Packet))).Select(x => (byte)x).Max();
-            var handlers = new IPacketHandler[max];
-
-            //Load all instances of IPacketHandler
-            var type = typeof(IPacketHandler);
-            foreach (var messageType in AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(clazz => clazz.GetTypesLoaded())
-                .Where(x => type.IsAssignableFrom(x) && x != type && !x.IsAbstract))
+            try
             {
-                var handler = (IPacketHandler)Activator.CreateInstance(messageType);
-                handlers[(int)handler.PacketId] = handler;
-            }
+                var max = ((Packet[])Enum.GetValues(typeof(Packet))).Select(x => (byte)x).Max();
+                var handlers = new IPacketHandler[max];
 
-            return handlers;
+                //Load all instances of IPacketHandler
+                var type = typeof(IPacketHandler);
+                foreach (var messageType in typeof(PacketProcessor).Assembly
+                    .GetTypesLoaded()
+                    .Where(x => type.IsAssignableFrom(x) && x != type && !x.IsAbstract)
+                )
+                {
+                    var handler = (IPacketHandler)Activator.CreateInstance(messageType);
+                    handlers[(int)handler.PacketId] = handler;
+                }
+
+                return handlers;
+            }
+            catch (Exception e)
+            {
+                ProgramLog.Log(e, "Failed to collect all packet handlers");
+                return null;
+            }
         }
 
         [TDSMComponent(ComponentEvent.Initialise)]
@@ -46,7 +56,7 @@ namespace TDSM.Core.Net.PacketHandling
         /// </summary>
         public static void CheckState(ref HookContext ctx, ref HookArgs.CheckBufferState args)
         {
-            if (Terraria.Netplay.Clients[args.BufferId].State == (int)ConnectionState.WaitingForUserPassword)
+            if (Terraria.Netplay.Clients[args.BufferId].State == (int)ConnectionState.AwaitingUserPassword)
             {
                 //Since this is a custom state, we accept it [true to kick the connection, false to accept]
                 ctx.SetResult(HookResult.RECTIFY, true, false /* TODO validate packets */);
@@ -58,12 +68,15 @@ namespace TDSM.Core.Net.PacketHandling
         /// </summary>
         public static void HandlePacket(ref HookContext ctx, ref HookArgs.ReceiveNetMessage args)
         {
-            if (_packetHandlers[args.PacketId] != null)
+            if (_packetHandlers != null)
             {
-                if (_packetHandlers[args.PacketId].Read(args.BufferId, args.Start, args.Length))
+                if (_packetHandlers[args.PacketId] != null)
                 {
-                    //Packet informed us that it was read, let OTA know we consumed the packet
-                    ctx.SetResult(HookResult.IGNORE, true);
+                    if (_packetHandlers[args.PacketId].Read(args.BufferId, args.Start, args.Length))
+                    {
+                        //Packet informed us that it was read, let OTA know we consumed the packet
+                        ctx.SetResult(HookResult.IGNORE, true);
+                    }
                 }
             }
         }

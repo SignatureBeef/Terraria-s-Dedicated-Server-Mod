@@ -107,7 +107,7 @@ namespace TDSM.Core.Net.PacketHandling.Packets
             {
                 if (ctx.Result == HookResult.ASK_PASS)
                 {
-                    Netplay.Clients[bufferId].State = (int)ConnectionState.WaitingForUserPassword;
+                    Netplay.Clients[bufferId].State = (int)ConnectionState.AwaitingUserPassword;
                     //                    conn.State = SlotState.PLAYER_AUTH;
             
             
