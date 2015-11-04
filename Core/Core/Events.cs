@@ -9,6 +9,7 @@ using Terraria.Initializers;
 using OTA;
 using TDSM.Core.Data.Management;
 using System.IO;
+using TDSM.Core.Command.Commands;
 
 namespace TDSM.Core
 {
@@ -710,8 +711,8 @@ namespace TDSM.Core
 
             if (WhitelistEnabled)
             {
-                var name = Prefix_WhitelistName + args.Name;
-                var ip = Prefix_WhitelistIp + ctx.Client.RemoteIPAddress();
+                var name = WhiteListCommand.Prefix_WhitelistName + args.Name;
+                var ip = WhiteListCommand.Prefix_WhitelistIp + ctx.Client.RemoteIPAddress();
 
                 if (!Whitelist.Contains(name) && !Whitelist.Contains(ip))
                 {

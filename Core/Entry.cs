@@ -13,6 +13,7 @@ using System.Threading;
 using System.Text;
 using Microsoft.Xna.Framework;
 using System.Linq;
+using TDSM.Core.Misc;
 
 namespace TDSM.Core
 {
@@ -20,9 +21,6 @@ namespace TDSM.Core
     public partial class Entry : BasePlugin
     {
         public const Int32 CoreBuild = 6;
-
-        const String Prefix_WhitelistName = "NAME:";
-        const String Prefix_WhitelistIp = "IP:";
 
         private bool _useTimeLock;
 
@@ -48,7 +46,7 @@ namespace TDSM.Core
 
         public static string RConBindAddress { get; set; }
 
-        public static bool EnableCheatProtection { get; set; }
+        public bool EnableCheatProtection { get; set; }
 
         private bool VanillaOnly
         {
@@ -83,11 +81,11 @@ namespace TDSM.Core
 
         public bool RestartWhenNoPlayers { get; set; }
 
-        public static PairFileRegister Ops { get; private set; }
+        public PairFileRegister Ops { get; private set; }
 
-        public static bool WhitelistEnabled { get; set; }
+        public bool WhitelistEnabled { get; set; }
 
-        public static DataRegister Whitelist { get; private set; }
+        public DataRegister Whitelist { get; private set; }
 
         public int ExitAccessLevel { get; set; }
 
@@ -96,6 +94,25 @@ namespace TDSM.Core
         public bool AllowSSCGuestInfo { get; set; }
 
         public Dictionary<string, string> CommandDictionary { get; set; }
+
+        //private Task _customInvasion;
+        internal Dictionary<Int32,Int32> _invasion;
+        internal int _assignedInvasionType = OTA.Callbacks.NPCCallback.AssignInvasionType();
+        internal bool _notfInbound;
+
+        internal bool _likeABoss;
+        internal static CyclicQueue<String> _labDeathMessages = new CyclicQueue<String>((new string[]
+        {
+            " jumped out a window",
+            " had to approve memo's",
+            " failed to promote synergy",
+            " cried deeply",
+            " was too busy eating chicken strips",
+            " forgot to approve memo's",
+            " crashed into the sun",
+            " blacked out in a sewer",
+            " swallowed sadness"
+        }).Shuffle());
 
         /// <summary>
         /// The active server instance of the command parser
@@ -133,8 +150,6 @@ namespace TDSM.Core
 
             Ops = new PairFileRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
             Whitelist = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "whitelist.txt"), false);
-
-            AddCommands();
 
             AddComponents<Entry>();
             RunComponent(ComponentEvent.Initialise);

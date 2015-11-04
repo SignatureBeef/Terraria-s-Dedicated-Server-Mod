@@ -147,19 +147,6 @@ namespace TDSM.Core.Command
             .SetDefaultUsage()
             .WithPermissionNode("tdsm.plugins")
             .Calls(VanillaCommands.ListPlugins);
-            AddCommand("plugin")
-            .WithAccessLevel(AccessLevel.OP)
-            .WithDescription("Manage and view plugins")
-            .WithHelpText("list")
-            .WithHelpText("stat")
-            .WithHelpText("info <plugin>")
-            .WithHelpText("enable <plugin>")
-            .WithHelpText("disable <plugin>")
-            .WithHelpText("reload [-clean] all|<plugin>")
-            .WithHelpText("unload all|<plugin>")
-            .WithHelpText("load [-replace] <file>")
-            .WithPermissionNode("tdsm.plugin")
-            .Calls(Entry.PluginCommand);
         }
 
         /// <summary>

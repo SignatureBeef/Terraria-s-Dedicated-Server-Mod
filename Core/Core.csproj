@@ -120,9 +120,6 @@
     <Compile Include="ServerCharacters\ServerCharacter.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="BasePlayer.cs" />
-    <Compile Include="Command\PluginRepo.cs" />
-    <Compile Include="Command\Invasion.cs" />
-    <Compile Include="Command\Commands.cs" />
     <Compile Include="Definitions\DefinitionManager.cs" />
     <Compile Include="Heartbeat.cs" />
     <Compile Include="Events\HookPoints.cs" />
@@ -132,7 +129,6 @@
     <Compile Include="RemoteConsole\RConClient.cs" />
     <Compile Include="RemoteConsole\RConSender.cs" />
     <Compile Include="RemoteConsole\RConServer.cs" />
-    <Compile Include="Command\Permissions.cs" />
     <Compile Include="ServerCharacters\CharacterMode.cs" />
     <Compile Include="ServerCharacters\Tables\CharacterTable.cs" />
     <Compile Include="ServerCharacters\Tables\ItemTable.cs" />
@@ -208,6 +204,44 @@
     <Compile Include="TDSMComponentAttribute.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\ProgressText.cs" />
+    <Compile Include="Core\Command\Commands\PlatformCommand.cs" />
+    <Compile Include="Core\Command\Commands\ExitCommand.cs" />
+    <Compile Include="Core\Command\Commands\TimeCommand.cs" />
+    <Compile Include="Core\Command\Commands\GiveCommand.cs" />
+    <Compile Include="Core\Command\Commands\SpawnNpcCommand.cs" />
+    <Compile Include="Core\Command\Commands\TeleportCommand.cs" />
+    <Compile Include="Core\Command\Commands\TeleportHereCommand.cs" />
+    <Compile Include="Core\Command\Commands\SaveCommand.cs" />
+    <Compile Include="Core\Command\Commands\ItemRejectionsCommand.cs" />
+    <Compile Include="Core\Command\Commands\RefreshCommand.cs" />
+    <Compile Include="Core\Command\Commands\PlayerListCommand.cs" />
+    <Compile Include="Core\Command\Commands\ThirdPersonCommand.cs" />
+    <Compile Include="Core\Command\Commands\SayCommand.cs" />
+    <Compile Include="Core\Command\Commands\StatusCommand.cs" />
+    <Compile Include="Core\Command\Commands\KickCommand.cs" />
+    <Compile Include="Core\Command\Commands\OperatorCommand.cs" />
+    <Compile Include="Core\Command\Commands\SpawnBossCommand.cs" />
+    <Compile Include="Core\Command\Commands\TimeLockCommand.cs" />
+    <Compile Include="Core\Command\Commands\HealCommand.cs" />
+    <Compile Include="Core\Command\Commands\HardModeCommand.cs" />
+    <Compile Include="Core\Command\Commands\RconCommand.cs" />
+    <Compile Include="Core\Command\Commands\NpcSpawningCommand.cs" />
+    <Compile Include="Core\Command\Commands\InvasionCommand.cs" />
+    <Compile Include="Core\Command\Commands\ServerListCommand.cs" />
+    <Compile Include="Core\Command\Commands\VarCommand.cs" />
+    <Compile Include="Core\Command\Commands\WorldEventCommand.cs" />
+    <Compile Include="Core\Command\Commands\RepoCommand.cs" />
+    <Compile Include="Core\Command\Commands\KillNpcCommand.cs" />
+    <Compile Include="Core\Command\Commands\PreviousCommand.cs" />
+    <Compile Include="Core\Command\Commands\GrowCommand.cs" />
+    <Compile Include="Core\Command\Commands\BuffCommand.cs" />
+    <Compile Include="Core\Command\Commands\WhiteListCommand.cs" />
+    <Compile Include="Core\Command\Commands\WhoAmICommand.cs" />
+    <Compile Include="Core\Command\CoreCommand.cs" />
+    <Compile Include="Core\Command\Commands\PluginCommand.cs" />
+    <Compile Include="Misc\CyclicQueue.cs" />
+    <Compile Include="Core\Command\Commands\PermissionsCommand.cs" />
+    <Compile Include="Core\Command\Commands\RestartCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -224,5 +258,8 @@
   <ItemGroup>
     <Folder Include="Net\PacketHandling\Misc\" />
     <Folder Include="Core\" />
+    <Folder Include="Core\Command\" />
+    <Folder Include="Core\Command\Commands\" />
+    <Folder Include="Misc\" />
   </ItemGroup>
 </Project>
