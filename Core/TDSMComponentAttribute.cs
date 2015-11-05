@@ -7,6 +7,8 @@ namespace TDSM.Core
     {
         Initialise = 1,
 
+        Enabled,
+
         ReadyForCommands,
 
         ServerStarting,

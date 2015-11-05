@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
+# Visual Studio 2012
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EED99527-E456-4B5C-8079-D4DC60410DFE}"
@@ -30,8 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B8BA4F
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebInterface", "WebInterface\WebInterface.csproj", "{088DB004-BC33-4FC6-B7F5-43C157D55AF9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDSM-Patcher", "TDSM-Patcher\TDSM-Patcher.csproj", "{839564C2-F3ED-450B-AAE4-59B65285E1DB}"
 EndProject
 Global
@@ -44,21 +42,14 @@ Global
 		{48477B14-CEAA-47AA-98F1-EF935734DBC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48477B14-CEAA-47AA-98F1-EF935734DBC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48477B14-CEAA-47AA-98F1-EF935734DBC5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{839564C2-F3ED-450B-AAE4-59B65285E1DB}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{839564C2-F3ED-450B-AAE4-59B65285E1DB}.Debug|Any CPU.Build.0 = Debug|x86
 		{839564C2-F3ED-450B-AAE4-59B65285E1DB}.Release|Any CPU.ActiveCfg = Release|x86
 		{839564C2-F3ED-450B-AAE4-59B65285E1DB}.Release|Any CPU.Build.0 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
+		{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D87DBA58-1E96-43CC-BD55-A7F30CAEE90E} = {EED99527-E456-4B5C-8079-D4DC60410DFE}
@@ -96,5 +87,8 @@ Global
 		$2.inheritsSet = Mono
 		$2.inheritsScope = text/x-csharp
 		$2.scope = text/x-csharp
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

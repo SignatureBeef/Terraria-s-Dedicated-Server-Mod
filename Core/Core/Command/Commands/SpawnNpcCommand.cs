@@ -4,6 +4,7 @@ using TDSM.Core.Definitions;
 using OTA;
 using Terraria;
 using Microsoft.Xna.Framework;
+using TDSM.Core.Misc;
 
 namespace TDSM.Core.Command.Commands
 {

@@ -10,6 +10,7 @@ using OTA;
 using TDSM.Core.Data.Management;
 using System.IO;
 using TDSM.Core.Command.Commands;
+using TDSM.Core.Net.Web;
 
 namespace TDSM.Core
 {
@@ -616,18 +617,10 @@ namespace TDSM.Core
                     ProgramLog.Log("Stopping RCON Server");
                     RemoteConsole.RConServer.Stop();
                 }
-
-                if (!String.IsNullOrEmpty(_webServerAddress))
-                {
-                    ProgramLog.Log("Stopping web server");
-                    OTA.Web.WebServer.Stop();
-                }
             }
             if (args.ServerChangeState == ServerState.Starting)
             {
                 RunComponent(ComponentEvent.ServerStarting);
-                if (EnableHeartbeat)
-                    Heartbeat.Begin(CoreBuild);
             }
 
             //if (args.ServerChangeState == ServerState.Initialising)

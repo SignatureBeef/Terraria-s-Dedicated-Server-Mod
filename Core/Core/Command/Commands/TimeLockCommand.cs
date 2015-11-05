@@ -2,6 +2,7 @@
 using OTA.Command;
 using Terraria;
 using OTA;
+using TDSM.Core.Misc;
 
 namespace TDSM.Core.Command.Commands
 {

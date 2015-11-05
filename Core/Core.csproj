@@ -118,14 +118,9 @@
     <Compile Include="Migrations\TContextModelSnapshot.cs" />
     <Compile Include="ServerCharacters\CharacterManager.cs" />
     <Compile Include="ServerCharacters\ServerCharacter.cs" />
-    <Compile Include="Repository.cs" />
-    <Compile Include="BasePlayer.cs" />
     <Compile Include="Definitions\DefinitionManager.cs" />
-    <Compile Include="Heartbeat.cs" />
     <Compile Include="Events\HookPoints.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Entry.cs" />
-    <Compile Include="World.cs" />
     <Compile Include="RemoteConsole\RConClient.cs" />
     <Compile Include="RemoteConsole\RConSender.cs" />
     <Compile Include="RemoteConsole\RConServer.cs" />
@@ -134,10 +129,8 @@
     <Compile Include="ServerCharacters\Tables\ItemTable.cs" />
     <Compile Include="ServerCharacters\Tables\PlayerBuffTable.cs" />
     <Compile Include="ServerCharacters\Tables\DefaultLoadoutTable.cs" />
-    <Compile Include="WebApi.cs" />
     <Compile Include="Mono\Sigterm.cs" />
     <Compile Include="Data\TContext.cs" />
-    <Compile Include="Database.cs" />
     <Compile Include="Data\Management\BackupManager.cs" />
     <Compile Include="Data\Management\LogManagement.cs" />
     <Compile Include="Data\Management\SaveManager.cs" />
@@ -242,6 +235,13 @@
     <Compile Include="Misc\CyclicQueue.cs" />
     <Compile Include="Core\Command\Commands\PermissionsCommand.cs" />
     <Compile Include="Core\Command\Commands\RestartCommand.cs" />
+    <Compile Include="Net\Web\ServerManager.cs" />
+    <Compile Include="Net\Web\Heartbeat.cs" />
+    <Compile Include="Net\Web\Repository.cs" />
+    <Compile Include="Core\Database.cs" />
+    <Compile Include="Core\Entry.cs" />
+    <Compile Include="Misc\BasePlayer.cs" />
+    <Compile Include="Misc\World.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -261,5 +261,7 @@
     <Folder Include="Core\Command\" />
     <Folder Include="Core\Command\Commands\" />
     <Folder Include="Misc\" />
+    <Folder Include="Net\Web\" />
+    <Folder Include="Net\Web\ApiControllers\" />
   </ItemGroup>
 </Project>
