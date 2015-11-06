@@ -12,6 +12,7 @@ namespace TDSM.Core.ServerCharacters.Tables
     {
         public static Character NewCharacter
         (
+            TContext ctx,
             CharacterMode mode,
             string auth,
             string clientUUID,
@@ -37,6 +38,7 @@ namespace TDSM.Core.ServerCharacters.Tables
         {
             return NewCharacter
             (
+                ctx,
                 mode,
                 auth,
                 clientUUID,
@@ -63,6 +65,7 @@ namespace TDSM.Core.ServerCharacters.Tables
 
         public static Character NewCharacter
         (
+            TContext ctx,
             CharacterMode mode,
             string auth,
             string clientUUID,
@@ -94,42 +97,40 @@ namespace TDSM.Core.ServerCharacters.Tables
             }
             else if (mode != CharacterMode.UUID)
                 return null;
-
-            using (var ctx = new TContext())
+            
+            Character chr = new Character()
             {
-                Character chr = new Character()
-                {
-                    UserId = userId,
-                    UUID = clientUUID,
-                    Health = health,
-                    MaxHealth = maxHealth,
-                    Mana = mana,
-                    MaxMana = maxMana,
-                    SpawnX = spawnX,
-                    SpawnY = spawnY,
-                    Hair = hair,
-                    HairDye = hairDye,
-                    HideVisual = hideVisual,
-                    Difficulty = difficulty,
-                    HairColor = hairColor,
-                    SkinColor = skinColor,
-                    EyeColor = eyeColor,
-                    ShirtColor = shirtColor,
-                    UnderShirtColor = underShirtColor,
-                    PantsColor = pantsColor,
-                    ShoeColor = shoeColor,
-                    AnglerQuests = anglerQuests
-                };
-                ctx.Characters.Add(chr);
+                UserId = userId,
+                UUID = clientUUID,
+                Health = health,
+                MaxHealth = maxHealth,
+                Mana = mana,
+                MaxMana = maxMana,
+                SpawnX = spawnX,
+                SpawnY = spawnY,
+                Hair = hair,
+                HairDye = hairDye,
+                HideVisual = hideVisual,
+                Difficulty = difficulty,
+                HairColor = hairColor,
+                SkinColor = skinColor,
+                EyeColor = eyeColor,
+                ShirtColor = shirtColor,
+                UnderShirtColor = underShirtColor,
+                PantsColor = pantsColor,
+                ShoeColor = shoeColor,
+                AnglerQuests = anglerQuests
+            };
+            ctx.Characters.Add(chr);
 
-                ctx.SaveChanges();
+            ctx.SaveChanges();
 
-                return chr;
-            }
+            return chr;
         }
 
         public static Character UpdateCharacter
         (
+            TContext ctx,
             CharacterMode mode,
             string auth,
             string clientUUID,
@@ -155,6 +156,7 @@ namespace TDSM.Core.ServerCharacters.Tables
         {
             return UpdateCharacter
             (
+                ctx,
                 mode,
                 auth,
                 clientUUID,
@@ -179,7 +181,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             );
         }
 
-        public static Character GetCharacter(CharacterMode mode, string auth, string clientUUID)
+        public static Character GetCharacter(TContext ctx, CharacterMode mode, string auth, string clientUUID)
         {
             int userId = 0;
             if (mode == CharacterMode.AUTH)
@@ -197,21 +199,19 @@ namespace TDSM.Core.ServerCharacters.Tables
             else if (mode != CharacterMode.UUID)
                 return null;
             
-            using (var ctx = new TContext())
+            if (mode == CharacterMode.AUTH)
             {
-                if (mode == CharacterMode.AUTH)
-                {
-                    return ctx.Characters.SingleOrDefault(x => x.UserId == userId);
-                }
-                else
-                {
-                    return ctx.Characters.SingleOrDefault(x => x.UUID == clientUUID);
-                }
+                return ctx.Characters.SingleOrDefault(x => x.UserId == userId);
+            }
+            else
+            {
+                return ctx.Characters.SingleOrDefault(x => x.UUID == clientUUID);
             }
         }
 
         public static Character UpdateCharacter
         (
+            TContext ctx,
             CharacterMode mode,
             string auth,
             string clientUUID,
@@ -244,41 +244,38 @@ namespace TDSM.Core.ServerCharacters.Tables
             else if (mode != CharacterMode.UUID)
                 return null;
             
-            using (var ctx = new TContext())
+            Character chr;
+            if (mode == CharacterMode.AUTH)
             {
-                Character chr;
-                if (mode == CharacterMode.AUTH)
-                {
-                    chr = ctx.Characters.Single(x => x.UserId == userId.Value);
-                }
-                else
-                {
-                    chr = ctx.Characters.Single(x => x.UUID == clientUUID);
-                }
-
-                chr.Health = health;
-                chr.MaxHealth = maxHealth;
-                chr.Mana = mana;
-                chr.MaxMana = maxMana;
-                chr.SpawnX = spawnX;
-                chr.SpawnY = spawnY;
-                chr.Hair = hair;
-                chr.HairDye = hairDye;
-                chr.HideVisual = hideVisual;
-                chr.Difficulty = difficulty;
-                chr.HairColor = hairColor;
-                chr.SkinColor = skinColor;
-                chr.EyeColor = eyeColor;
-                chr.ShirtColor = shirtColor;
-                chr.UnderShirtColor = underShirtColor;
-                chr.PantsColor = pantsColor;
-                chr.ShoeColor = shoeColor;
-                chr.AnglerQuests = anglerQuests;
-
-                ctx.SaveChanges();
-
-                return chr;
+                chr = ctx.Characters.Single(x => x.UserId == userId.Value);
             }
+            else
+            {
+                chr = ctx.Characters.Single(x => x.UUID == clientUUID);
+            }
+
+            chr.Health = health;
+            chr.MaxHealth = maxHealth;
+            chr.Mana = mana;
+            chr.MaxMana = maxMana;
+            chr.SpawnX = spawnX;
+            chr.SpawnY = spawnY;
+            chr.Hair = hair;
+            chr.HairDye = hairDye;
+            chr.HideVisual = hideVisual;
+            chr.Difficulty = difficulty;
+            chr.HairColor = hairColor;
+            chr.SkinColor = skinColor;
+            chr.EyeColor = eyeColor;
+            chr.ShirtColor = shirtColor;
+            chr.UnderShirtColor = underShirtColor;
+            chr.PantsColor = pantsColor;
+            chr.ShoeColor = shoeColor;
+            chr.AnglerQuests = anglerQuests;
+
+            ctx.SaveChanges();
+
+            return chr;
         }
     }
 }

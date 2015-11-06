@@ -38,7 +38,7 @@ namespace TDSM.Core.Data.Management
                 }
                 catch (Exception e)
                 {
-                    ProgramLog.Log(e, "Error during the world save process.");
+                    ProgramLog.Log(e, "Error during the world save process");
                 }
             }
         }

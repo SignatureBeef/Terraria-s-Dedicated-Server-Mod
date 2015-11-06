@@ -98,7 +98,7 @@ namespace TDSM.Core.Data.Management
                 }
                 catch (Exception e)
                 {
-                    ProgramLog.Log(e, "Error during the backup process.");
+                    ProgramLog.Log(e, "Error during the backup process");
                 }
             }
         }

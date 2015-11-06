@@ -15,6 +15,12 @@ namespace TDSM.Core.Command.Commands
                 .WithPermissionNode("tdsm.killnpc")
                 .WithDescription("Kill all non town NPC's")
                 .Calls(this.KillNPC);
+            
+            Core.AddCommand("killnpcs")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithPermissionNode("tdsm.killnpc")
+                .WithDescription("Kill all non town NPC's")
+                .Calls(this.KillNPC);
         }
 
         void KillNPC(ISender sender, ArgumentList args)

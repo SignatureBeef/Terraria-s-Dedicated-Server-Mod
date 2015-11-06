@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace TDSM.Core.ServerCharacters.Tables
 {
-#if DATA_CONNECTOR
+    #if DATA_CONNECTOR
     internal class ItemTable
     {
         public const String TableName = "SSC_Items";
@@ -122,67 +122,58 @@ namespace TDSM.Core.ServerCharacters.Tables
         }
     }
 
+
+
+
 #elif ENTITY_FRAMEWORK_6 || ENTITY_FRAMEWORK_7
     internal class ItemTable
     {
-        public static SlotItem NewItem(CharacterManager.ItemType type, int netId, int stack, int prefix, bool favorite, int slot, int? characterId = null)
+        public static SlotItem NewItem(TContext ctx, bool save, CharacterManager.ItemType type, int netId, int stack, int prefix, bool favorite, int slot, int? characterId = null)
         {
-            using (var ctx = new TContext())
+            var itm = new SlotItem()
             {
-                var itm = new SlotItem()
-                {
-                    Type = type,
-                    NetId = netId,
-                    Stack = stack,
-                    Prefix = prefix,
-                    Favorite = favorite,
-                    Slot = slot,
-                    CharacterId = characterId
-                };
+                Type = type,
+                NetId = netId,
+                Stack = stack,
+                Prefix = prefix,
+                Favorite = favorite,
+                Slot = slot,
+                CharacterId = characterId
+            };
 
-                ctx.Items.Add(itm);
+            ctx.Items.Add(itm);
 
-                ctx.SaveChanges();
+            if (save) ctx.SaveChanges();
 
-                return itm;
-            }
+            return itm;
         }
 
-        public static SlotItem GetItem(CharacterManager.ItemType type, int slot, int? characterId = null)
+        public static SlotItem GetItem(TContext ctx, CharacterManager.ItemType type, int slot, int? characterId = null)
         {
-            using (var ctx = new TContext())
-            {
-                return ctx.Items.FirstOrDefault(x => x.Type == type && x.Slot == slot && x.CharacterId == characterId);
-            }
+            return ctx.Items.FirstOrDefault(x => x.Type == type && x.Slot == slot && x.CharacterId == characterId);
         }
 
-        public static List<SlotItem> GetItemsForCharacter(CharacterManager.ItemType type, int? characterId = null)
+        public static List<SlotItem> GetItemsForCharacter(TContext ctx, CharacterManager.ItemType type, int? characterId = null)
         {
-            using (var ctx = new TContext())
-            {
-                return ctx.Items.Where(x => x.Type == type && x.CharacterId == characterId).ToList();
-            }
+            return ctx.Items.Where(x => x.Type == type && x.CharacterId == characterId).ToList();
         }
 
-        public static bool UpdateItem(CharacterManager.ItemType type, int netId, int prefix, int stack, bool favorite, int slot, int? characterId = null)
+        public static bool UpdateItem(TContext ctx, bool save, CharacterManager.ItemType type, int netId, int prefix, int stack, bool favorite, int slot, int? characterId = null)
         {
-            using (var ctx = new TContext())
+            var existing = ctx.Items.FirstOrDefault(x => x.Type == type && x.Slot == slot && x.CharacterId == characterId);
+            if (existing != null)
             {
-                var existing = ctx.Items.FirstOrDefault(x => x.Type == type && x.Slot == slot && x.CharacterId == characterId);
-                if (existing != null)
-                {
-                    existing.NetId = netId;
-                    existing.Prefix = prefix;
-                    existing.Stack = stack;
-                    existing.Favorite = favorite;
+                existing.NetId = netId;
+                existing.Prefix = prefix;
+                existing.Stack = stack;
+                existing.Favorite = favorite;
 
-                    ctx.SaveChanges();
+                if (save) ctx.SaveChanges();
 
-                    return true;
-                }
-                else return false;
+                return true;
             }
+            else return false;
         }
     }
-#endif
+    #endif
 }

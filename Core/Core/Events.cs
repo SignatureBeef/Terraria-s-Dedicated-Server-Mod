@@ -11,12 +11,12 @@ using TDSM.Core.Data.Management;
 using System.IO;
 using TDSM.Core.Command.Commands;
 using TDSM.Core.Net.Web;
+using TDSM.Core.Data;
 
 namespace TDSM.Core
 {
     public partial class Entry
     {
-
         [Hook(HookOrder.LATE)]
         private void Command(ref HookContext ctx, ref TDSMHookArgs.ServerCommand args)
         {
@@ -70,22 +70,25 @@ namespace TDSM.Core
             //So we must ensure the data is saved.
             //ServerCharacters.CharacterManager.EnsureSave = true;
 
-            if (CharacterManager.Mode == CharacterMode.UUID)
+            using (var dbCtx = new TContext())
             {
-                CharacterManager.LoadForAuthenticated(ctx.Player, !AllowSSCGuestInfo);
-            }
-            else if (CharacterManager.Mode == CharacterMode.AUTH)
-            {
-                if (!String.IsNullOrEmpty(ctx.Player.GetAuthenticatedAs()))
+                if (CharacterManager.Mode == CharacterMode.UUID)
                 {
-                    CharacterManager.LoadForAuthenticated(ctx.Player, !AllowSSCGuestInfo);
+                    CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !AllowSSCGuestInfo);
                 }
-                else
+                else if (CharacterManager.Mode == CharacterMode.AUTH)
                 {
-                    if (!AllowSSCGuestInfo)
+                    if (!String.IsNullOrEmpty(ctx.Player.GetAuthenticatedAs()))
                     {
-                        //                        ProgramLog.Debug.Log("This fella, yeah him; clear his inventory");
-                        CharacterManager.LoadForGuest(ctx.Player);
+                        CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !AllowSSCGuestInfo);
+                    }
+                    else
+                    {
+                        if (!AllowSSCGuestInfo)
+                        {
+                            //                        ProgramLog.Debug.Log("This fella, yeah him; clear his inventory");
+                            CharacterManager.LoadForGuest(ctx.Player);
+                        }
                     }
                 }
             }
@@ -96,7 +99,10 @@ namespace TDSM.Core
         {
             if (ctx.Client.State >= 4 && CharacterManager.Mode == CharacterMode.AUTH)
             {
-                CharacterManager.LoadForAuthenticated(ctx.Player, !AllowSSCGuestInfo);
+                using (var dbCtx = new TContext())
+                {
+                    CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !AllowSSCGuestInfo);
+                }
 
                 if (AllowSSCGuestInfo)
                 {
@@ -124,7 +130,10 @@ namespace TDSM.Core
         {
             if (Terraria.Main.ServerSideCharacter)
             {
-                CharacterManager.SavePlayerData(ctx.Player);
+                using (var dbCtx = new TContext())
+                {
+                    CharacterManager.SavePlayerData(dbCtx, true, ctx.Player);
+                }
             }
             if (ctx.Player != null)
             {
@@ -306,13 +315,13 @@ namespace TDSM.Core
                 case "web-server-provider":
                     _webServerProvider = args.Value;
                     break;
-                    //                case "web-server-serve-files":
-                    //                    bool serveFiles;
-                    //                    if (Boolean.TryParse(args.Value, out serveFiles))
-                    //                    {
-                    //                        //WebInterface.WebServer.ServeWebFiles = serveFiles;
-                    //                    }
-                    //                    break;
+            //                case "web-server-serve-files":
+            //                    bool serveFiles;
+            //                    if (Boolean.TryParse(args.Value, out serveFiles))
+            //                    {
+            //                        //WebInterface.WebServer.ServeWebFiles = serveFiles;
+            //                    }
+            //                    break;
                     #if TDSMServer
                     case "send-queue-quota":
                     int sendQueueQuota;
@@ -815,7 +824,8 @@ namespace TDSM.Core
 
                         /*if (SocialAPI.Network != null)
                             writer.Write(SocialAPI.Network.GetLobbyId());
-                        else*/ writer.Write(0);
+                        else*/
+                        writer.Write(0);
 
                         break;
                 }

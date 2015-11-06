@@ -6,7 +6,7 @@ using TDSM.Core.Data.Models;
 
 namespace TDSM.Core.ServerCharacters.Tables
 {
-#if DATA_CONNECTOR
+    #if DATA_CONNECTOR
     internal class DefaultLoadoutTable
     {
         public const String TableName = "SSC_Loadout";
@@ -99,6 +99,8 @@ namespace TDSM.Core.ServerCharacters.Tables
         }
     }
 
+
+
 #elif ENTITY_FRAMEWORK_6 || ENTITY_FRAMEWORK_7
     internal class DefaultLoadoutTable
     {
@@ -125,7 +127,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             }
         }
 
-        public static void PopulateDefaults(NewPlayerInfo info)
+        public static void PopulateDefaults(TContext ctx, bool save, NewPlayerInfo info)
         {
             SettingsStore.Set(Setting_Health, info.Health);
             SettingsStore.Set(Setting_MaxHealth, info.MaxHealth);
@@ -136,7 +138,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Inventory)
                 {
-                    var id = ItemTable.NewItem(CharacterManager.ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    var id = ItemTable.NewItem(ctx, save, CharacterManager.ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id.Id);
                 }
             }
@@ -145,7 +147,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Armor)
                 {
-                    var id = ItemTable.NewItem(CharacterManager.ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    var id = ItemTable.NewItem(ctx, save, CharacterManager.ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id.Id);
                 }
             }
@@ -154,11 +156,11 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Dye)
                 {
-                    var id = ItemTable.NewItem(CharacterManager.ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    var id = ItemTable.NewItem(ctx, save, CharacterManager.ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id.Id);
                 }
             }
         }
     }
-#endif
+    #endif
 }
