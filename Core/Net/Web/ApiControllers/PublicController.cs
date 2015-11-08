@@ -30,7 +30,7 @@ namespace TDSM.Core.Net.Web.ApiControllers
 
                 //Allocations
                 MaxPlayers = Terraria.Main.maxNetPlayers,
-                Player = Terraria.Main.player
+                Players = Terraria.Main.player
                     .Where(x => x != null && x.active && !String.IsNullOrEmpty(x.name))
                     .Select(x => x.name)
                     .OrderBy(x => x)

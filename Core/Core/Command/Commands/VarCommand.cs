@@ -36,6 +36,8 @@ namespace TDSM.Core.Command.Commands
                     return Double.Parse(val);
                 case "Single":
                     return Single.Parse(val);
+                case "String":
+                    return val;
                 default:
                     throw new CommandError("Unsupported datatype");
             }
