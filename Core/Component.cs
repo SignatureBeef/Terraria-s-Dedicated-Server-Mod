@@ -5,6 +5,7 @@ using OTA.Logging;
 using System.Collections.Concurrent;
 using OTA.Plugin;
 using OTA;
+using OTA.Extensions;
 
 namespace TDSM.Core
 {

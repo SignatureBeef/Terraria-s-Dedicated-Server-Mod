@@ -21,7 +21,7 @@ namespace TDSM.Core.Mono
         [TDSMComponent(ComponentEvent.ReadyForCommands)]
         internal static void Attach(Entry plugin)
         {
-            if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)
+            if (Tools.RuntimePlatform != OTA.Misc.RuntimePlatform.Microsoft)
             {
                 try
                 {
@@ -67,7 +67,7 @@ namespace TDSM.Core.Mono
         [TDSMComponent(ComponentEvent.ServerStopping)]
         public static void Detach(Entry plugin)
         {
-            if (Tools.RuntimePlatform != RuntimePlatform.Microsoft)
+            if (Tools.RuntimePlatform != OTA.Misc.RuntimePlatform.Microsoft)
             {
                 _attached = false;
                 try

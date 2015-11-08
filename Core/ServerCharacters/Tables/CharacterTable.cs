@@ -5,6 +5,7 @@ using OTA;
 using TDSM.Core.Data;
 using System.Linq;
 using TDSM.Core.Data.Models;
+using OTA.Misc;
 
 namespace TDSM.Core.ServerCharacters.Tables
 {
@@ -50,15 +51,15 @@ namespace TDSM.Core.ServerCharacters.Tables
                 spawnY,
                 hair,
                 hairDye,
-                Tools.Encoding.EncodeInteger(hideVisual),
+                DataEncoding.EncodeInteger(hideVisual),
                 difficulty,
-                Tools.Encoding.EncodeColor(hairColor),
-                Tools.Encoding.EncodeColor(skinColor),
-                Tools.Encoding.EncodeColor(eyeColor),
-                Tools.Encoding.EncodeColor(shirtColor),
-                Tools.Encoding.EncodeColor(underShirtColor),
-                Tools.Encoding.EncodeColor(pantsColor),
-                Tools.Encoding.EncodeColor(shoeColor), 
+                DataEncoding.EncodeColor(hairColor),
+                DataEncoding.EncodeColor(skinColor),
+                DataEncoding.EncodeColor(eyeColor),
+                DataEncoding.EncodeColor(shirtColor),
+                DataEncoding.EncodeColor(underShirtColor),
+                DataEncoding.EncodeColor(pantsColor),
+                DataEncoding.EncodeColor(shoeColor), 
                 anglerQuests
             );
         }
@@ -168,15 +169,15 @@ namespace TDSM.Core.ServerCharacters.Tables
                 spawnY,
                 hair,
                 hairDye,
-                Tools.Encoding.EncodeInteger(hideVisual),
+                DataEncoding.EncodeInteger(hideVisual),
                 difficulty,
-                Tools.Encoding.EncodeColor(hairColor),
-                Tools.Encoding.EncodeColor(skinColor),
-                Tools.Encoding.EncodeColor(eyeColor),
-                Tools.Encoding.EncodeColor(shirtColor),
-                Tools.Encoding.EncodeColor(underShirtColor),
-                Tools.Encoding.EncodeColor(pantsColor),
-                Tools.Encoding.EncodeColor(shoeColor), 
+                DataEncoding.EncodeColor(hairColor),
+                DataEncoding.EncodeColor(skinColor),
+                DataEncoding.EncodeColor(eyeColor),
+                DataEncoding.EncodeColor(shirtColor),
+                DataEncoding.EncodeColor(underShirtColor),
+                DataEncoding.EncodeColor(pantsColor),
+                DataEncoding.EncodeColor(shoeColor), 
                 anglerQuests
             );
         }

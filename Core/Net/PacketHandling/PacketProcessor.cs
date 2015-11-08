@@ -4,6 +4,7 @@ using OTA;
 using System.Linq;
 using TDSM.Core.Net.PacketHandling.Misc;
 using OTA.Logging;
+using OTA.Extensions;
 
 namespace TDSM.Core.Net.PacketHandling
 {

@@ -103,6 +103,7 @@
     <Reference Include="System.Reflection.Metadata, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\System.Reflection.Metadata.1.1.0\lib\dotnet5.2\System.Reflection.Metadata.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Migrations\20151022123313_Core_InitialCreate.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Misc\BasePlayer.cs" />
     <Compile Include="Misc\World.cs" />
     <Compile Include="Data\Extensions\CharacterExtensions.cs" />
+    <Compile Include="Net\Web\ApiControllers\PublicController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

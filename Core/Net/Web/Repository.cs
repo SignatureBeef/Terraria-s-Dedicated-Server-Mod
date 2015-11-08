@@ -8,6 +8,7 @@ using System.Net;
 using OTA;
 using OTA.Logging;
 using OTA.Misc;
+using OTA.Plugin;
 
 namespace TDSM.Core.Net.Web
 {

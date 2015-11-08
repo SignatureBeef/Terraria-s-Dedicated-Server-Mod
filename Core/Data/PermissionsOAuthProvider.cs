@@ -5,6 +5,7 @@ using TDSM.Core.Data.Management;
 using OTA.Logging;
 using OTA.Web;
 using System.Security.Claims;
+using TDSM.Core.Net.Web;
 
 namespace TDSM.Core.Data
 {
@@ -32,7 +33,7 @@ namespace TDSM.Core.Data
                 return;
             }
 
-            if (OTA.Protection.IpLimiting.Register(context.Request.RemoteIpAddress, WebServer.MaxRequestsPerLapse, WebServer.RequestLockoutDuration))
+            if (OTA.Protection.IpLimiting.Register(context.Request.RemoteIpAddress, ServerManager.MaxRequestsPerLapse, ServerManager.RequestLockoutDuration))
             {
                 //Prevent console spamming
                 if (OTA.Protection.IpLimiting.GetJustLockedOut(context.Request.RemoteIpAddress))

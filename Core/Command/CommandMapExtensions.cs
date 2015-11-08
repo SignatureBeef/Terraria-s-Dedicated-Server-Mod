@@ -46,7 +46,7 @@ namespace TDSM.Core.Command
         {
             var available = Entry.CommandParser.serverCommands.GetAvailableCommands(sender);
 
-            foreach (var plg in PluginManager.EnumeratePlugins)
+            foreach (var plg in OTA.Plugin.PluginManager.EnumeratePlugins)
             {
                 if (plg.IsEnabled)
                 {

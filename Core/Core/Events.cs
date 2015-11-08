@@ -12,6 +12,7 @@ using System.IO;
 using TDSM.Core.Command.Commands;
 using TDSM.Core.Net.Web;
 using TDSM.Core.Data;
+using OTA.Extensions;
 
 namespace TDSM.Core
 {
@@ -309,8 +310,7 @@ namespace TDSM.Core
                     RConBindAddress = args.Value;
                     break;
                 case "web-server-bind-address":
-                    _webServerAddress = args.Value;
-                    OTA.Web.WebServer.Start(args.Value);
+                    CreateAndStartWebServer(args.Value);
                     break;
                 case "web-server-provider":
                     _webServerProvider = args.Value;
@@ -394,7 +394,7 @@ namespace TDSM.Core
                     bool apiShowPlugins;
                     if (Boolean.TryParse(args.Value, out apiShowPlugins))
                     {
-                        OTA.Web.API.PublicController.ShowPlugins = apiShowPlugins;
+                        Core.Net.Web.ApiControllers.PublicController.ShowPlugins = apiShowPlugins;
                     }
                     break;
                 case "ssc-save-interval":
@@ -501,7 +501,9 @@ namespace TDSM.Core
                 RConBindAddress = tmp;
 
             if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-web-server-bind-address" })))
-                OTA.Web.WebServer.Start(tmp);
+            {
+                CreateAndStartWebServer(tmp);
+            }
 
             if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-web-server-provider" })))
                 _webServerProvider = tmp;

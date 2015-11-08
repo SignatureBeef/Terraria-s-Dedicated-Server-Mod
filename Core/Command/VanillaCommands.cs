@@ -1,10 +1,12 @@
 ﻿using System;
 using OTA.Command;
 using OTA;
+using OTA.Extensions;
 using Terraria;
 using TDSM.Core.Command;
 using System.Collections.Generic;
 using System.Linq;
+using OTA.Plugin;
 
 namespace TDSM.Core
 {

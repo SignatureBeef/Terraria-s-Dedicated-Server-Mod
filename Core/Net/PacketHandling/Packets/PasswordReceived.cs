@@ -3,6 +3,7 @@ using Terraria;
 using OTA;
 using OTA.ID;
 using OTA.Plugin;
+using OTA.Extensions;
 using TDSM.Core.Plugin.Hooks;
 using Microsoft.Xna.Framework;
 using TDSM.Core.Net.PacketHandling.Misc;

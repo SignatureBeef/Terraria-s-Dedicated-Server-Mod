@@ -1,6 +1,7 @@
 ﻿using OTA;
 using Terraria;
 using OTA.Plugin;
+using OTA.Extensions;
 using TDSM.Core.Plugin.Hooks;
 using TDSM.Core.Net.PacketHandling.Misc;
 

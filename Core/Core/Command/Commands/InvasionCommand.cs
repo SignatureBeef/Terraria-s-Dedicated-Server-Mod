@@ -6,6 +6,7 @@ using Terraria;
 using System.Collections.Generic;
 using OTA.Command;
 using OTA.Misc;
+using OTA.Extensions;
 
 namespace TDSM.Core.Command.Commands
 {

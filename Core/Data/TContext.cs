@@ -75,7 +75,7 @@ namespace TDSM.Core.Data.Models
                 SpawnY = this.SpawnY,
                 Hair = this.Hair,
                 HairDye = this.HairDye,
-                HideVisual = OTA.Tools.Encoding.DecodeBits(this.HideVisual),
+                HideVisual = OTA.Misc.DataEncoding.DecodeBits(this.HideVisual),
                 Difficulty = this.Difficulty,
                 HairColor = new Microsoft.Xna.Framework.Color(this.HairColor),
                 SkinColor = new Microsoft.Xna.Framework.Color(this.SkinColor),

@@ -14,6 +14,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using System.Linq;
 using TDSM.Core.Misc;
+using OTA.Extensions;
 
 namespace TDSM.Core
 {
@@ -95,6 +96,8 @@ namespace TDSM.Core
 
         public Dictionary<string, string> CommandDictionary { get; set; }
 
+        public OTA.Web.WebServer WebServer { get; set; }
+
         //private Task _customInvasion;
         internal Dictionary<Int32,Int32> _invasion;
         internal int _assignedInvasionType = OTA.Callbacks.NPCCallback.AssignInvasionType();
@@ -102,17 +105,17 @@ namespace TDSM.Core
 
         internal bool _likeABoss;
         internal static CyclicQueue<String> _labDeathMessages = new CyclicQueue<String>((new string[]
-        {
-            " jumped out a window",
-            " had to approve memo's",
-            " failed to promote synergy",
-            " cried deeply",
-            " was too busy eating chicken strips",
-            " forgot to approve memo's",
-            " crashed into the sun",
-            " blacked out in a sewer",
-            " swallowed sadness"
-        }).Shuffle());
+            {
+                " jumped out a window",
+                " had to approve memo's",
+                " failed to promote synergy",
+                " cried deeply",
+                " was too busy eating chicken strips",
+                " forgot to approve memo's",
+                " crashed into the sun",
+                " blacked out in a sewer",
+                " swallowed sadness"
+            }).Shuffle());
 
         /// <summary>
         /// The active server instance of the command parser
@@ -136,7 +139,7 @@ namespace TDSM.Core
             RunServerCore = true;
             ExitAccessLevel = -1;
 
-            OTA.Web.API.PublicController.ShowPlugins = true;
+            Core.Net.Web.ApiControllers.PublicController.ShowPlugins = true;
 
             RunComponent(ComponentEvent.Enabled);
         }
@@ -268,6 +271,20 @@ namespace TDSM.Core
         {
             //let our backup manager do it's thing
             ctx.SetResult(HookResult.IGNORE, true);
+        }
+
+        internal void CreateAndStartWebServer(string address)
+        {
+            WebServer = new OTA.Web.WebServer();
+
+            WebServer.Started += (sender, e) =>
+            {
+                ProgramLog.Web.Log("Web server started listening on {0}", address);
+            };
+            
+            _webServerAddress = address;
+
+            WebServer.Start(address);
         }
     }
 }

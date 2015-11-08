@@ -3,6 +3,7 @@ using TDSM.Core.ServerCharacters;
 using System.Linq;
 using TDSM.Core.Data.Models;
 using OTA;
+using OTA.Misc;
 
 namespace TDSM.Core.Data.Extensions
 {
@@ -32,15 +33,15 @@ namespace TDSM.Core.Data.Extensions
             character.SpawnY = player.SpawnY;
             character.Hair = player.hair;
             character.HairDye = player.hairDye;
-            character.HideVisual = Tools.Encoding.EncodeInteger(player.hideVisual);
+            character.HideVisual = DataEncoding.EncodeInteger(player.hideVisual);
             character.Difficulty = player.difficulty;
-            character.HairColor = Tools.Encoding.EncodeColor(player.hairColor);
-            character.SkinColor = Tools.Encoding.EncodeColor(player.skinColor);
-            character.EyeColor = Tools.Encoding.EncodeColor(player.eyeColor);
-            character.ShirtColor = Tools.Encoding.EncodeColor(player.shirtColor);
-            character.UnderShirtColor = Tools.Encoding.EncodeColor(player.underShirtColor);
-            character.PantsColor = Tools.Encoding.EncodeColor(player.pantsColor);
-            character.ShoeColor = Tools.Encoding.EncodeColor(player.shoeColor);
+            character.HairColor = DataEncoding.EncodeColor(player.hairColor);
+            character.SkinColor = DataEncoding.EncodeColor(player.skinColor);
+            character.EyeColor = DataEncoding.EncodeColor(player.eyeColor);
+            character.ShirtColor = DataEncoding.EncodeColor(player.shirtColor);
+            character.UnderShirtColor = DataEncoding.EncodeColor(player.underShirtColor);
+            character.PantsColor = DataEncoding.EncodeColor(player.pantsColor);
+            character.ShoeColor = DataEncoding.EncodeColor(player.shoeColor);
             character.AnglerQuests = player.anglerQuestsFinished;
 
             return character;
@@ -60,15 +61,15 @@ namespace TDSM.Core.Data.Extensions
                 SpawnY = player.SpawnY,
                 Hair = player.hair,
                 HairDye = player.hairDye,
-                HideVisual = Tools.Encoding.EncodeInteger(player.hideVisual),
+                HideVisual = DataEncoding.EncodeInteger(player.hideVisual),
                 Difficulty = player.difficulty,
-                HairColor = Tools.Encoding.EncodeColor(player.hairColor),
-                SkinColor = Tools.Encoding.EncodeColor(player.skinColor),
-                EyeColor = Tools.Encoding.EncodeColor(player.eyeColor),
-                ShirtColor = Tools.Encoding.EncodeColor(player.shirtColor),
-                UnderShirtColor = Tools.Encoding.EncodeColor(player.underShirtColor),
-                PantsColor = Tools.Encoding.EncodeColor(player.pantsColor),
-                ShoeColor = Tools.Encoding.EncodeColor(player.shoeColor),
+                HairColor = DataEncoding.EncodeColor(player.hairColor),
+                SkinColor = DataEncoding.EncodeColor(player.skinColor),
+                EyeColor = DataEncoding.EncodeColor(player.eyeColor),
+                ShirtColor = DataEncoding.EncodeColor(player.shirtColor),
+                UnderShirtColor = DataEncoding.EncodeColor(player.underShirtColor),
+                PantsColor = DataEncoding.EncodeColor(player.pantsColor),
+                ShoeColor = DataEncoding.EncodeColor(player.shoeColor),
                 AnglerQuests = player.anglerQuestsFinished
             };
             ctx.Characters.Add(chr);

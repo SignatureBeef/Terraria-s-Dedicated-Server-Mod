@@ -7,6 +7,7 @@ using OTA.Logging;
 using OTA;
 
 //using TDSM.Core.ServerCore;
+using OTA.Extensions;
 
 namespace TDSM.Core.RemoteConsole
 {
