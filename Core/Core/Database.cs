@@ -50,7 +50,6 @@ namespace TDSM.Core
             #endif
         }
 
-        #if ENTITY_FRAMEWORK_6
         protected override void DatabaseInitialising(System.Data.Entity.DbModelBuilder builder)
         {
             base.DatabaseInitialising(builder);
@@ -60,41 +59,41 @@ namespace TDSM.Core
                 dbc.CreateModel(builder);
             }
         }
-        #elif ENTITY_FRAMEWORK_7
+
         protected override void DatabaseCreated()
         {
             base.DatabaseCreated();
 
-            ProgramLog.Admin.Log("Creating default groups...");
-            CreateDefaultGroups();
-            ProgramLog.Admin.Log("Creating default SSC values...");
-            DefaultLoadoutTable.PopulateDefaults(CharacterManager.StartingOutInfo);
+            using (var ctx = new TContext())
+            {
+                ProgramLog.Admin.Log("Creating default groups...");
+                CreateDefaultGroups(ctx);
+                ProgramLog.Admin.Log("Creating default SSC values...");
+                DefaultLoadoutTable.PopulateDefaults(ctx, true, CharacterManager.StartingOutInfo);
+            }
         }
 
-        public void CreateDefaultGroups()
+        public void CreateDefaultGroups(TContext ctx)
         {
             var pc = CommandParser.GetAvailableCommands(AccessLevel.PLAYER);
             var ad = CommandParser.GetAvailableCommands(AccessLevel.OP);
             var op = CommandParser.GetAvailableCommands(AccessLevel.CONSOLE); //Funny how these have now changed
 
-            using (var ctx = new TContext())
-            {
-                CreateGroup("Guest", true, null, 255, 255, 255, pc
+            CreateGroup("Guest", true, null, 255, 255, 255, pc
                     .Where(x => !String.IsNullOrEmpty(x.Value.Node))
                     .Select(x => x.Value.Node)
                     .Distinct()
                     .ToArray(), ctx, "[Guest] ");
-                CreateGroup("Admin", false, "Guest", 240, 131, 77, ad
+            CreateGroup("Admin", false, "Guest", 240, 131, 77, ad
                     .Where(x => !String.IsNullOrEmpty(x.Value.Node))
                     .Select(x => x.Value.Node)
                     .Distinct()
                     .ToArray(), ctx, "[Admin] ");
-                CreateGroup("Operator", false, "Admin", 77, 166, 240, op
+            CreateGroup("Operator", false, "Admin", 77, 166, 240, op
                     .Where(x => !String.IsNullOrEmpty(x.Value.Node))
                     .Select(x => x.Value.Node)
                     .Distinct()
                     .ToArray(), ctx, "[OP] ");
-            }
         }
 
         static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, TContext ctx,
@@ -139,7 +138,5 @@ namespace TDSM.Core
 
             ctx.SaveChanges();
         }
-#endif
     }
 }
-

@@ -14,7 +14,7 @@ namespace TDSM.Core.RemoteConsole
             Client = rcon;
         }
 
-        public void SendMessage(string message, int A = 255, byte R = 255, byte G = 255, byte B = 255)
+        public new void SendMessage(string message, int A = 255, byte R = 255, byte G = 255, byte B = 255)
         {
             Client.WriteLine(message);
         }

@@ -17,7 +17,7 @@ namespace TDSM.Core.Net.Web.ApiControllers
         public static bool ShowPlugins { get; set; }
 
         /// <summary>
-        /// Get the online player names
+        /// Outputs public information to such things like server crawlers
         /// </summary>
         public HttpResponseMessage Get()
         {

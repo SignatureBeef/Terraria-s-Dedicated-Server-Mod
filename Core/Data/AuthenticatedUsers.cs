@@ -6,7 +6,7 @@ using OTA.Logging;
 
 namespace TDSM.Core.Data
 {
-#if DATA_CONNECTOR
+    #if DATA_CONNECTOR
     /// <summary>
     /// Authenticated users.
     /// </summary>
@@ -289,6 +289,7 @@ namespace TDSM.Core.Data
         }
     }
 
+
 #else
     /// <summary>
     /// Authenticated users.
@@ -373,8 +374,8 @@ namespace TDSM.Core.Data
         {
             using (var ctx = new TContext())
             {
-#if EF6
-                if (OTA.Data.OTAContext.IsSQLite)
+                #if ENTITY_FRAMEWORK_6
+                if (OTA.Data.EF6.OTAContext.IsSQLite)
                 {
                     var lowered = search.ToLower();
                     return ctx.Players
@@ -389,7 +390,7 @@ namespace TDSM.Core.Data
                          .Where(x => x.Name.StartsWith(search))
                          .Select(x => x.Name)
                          .ToArray();
-#if EF6
+                    #if ENTITY_FRAMEWORK_6
                 }
 #endif
             }
@@ -426,10 +427,10 @@ namespace TDSM.Core.Data
             {
                 DbPlayer player;
                 ctx.Players.Add(player = new DbPlayer(username, password)
-                {
-                    Operator = op,
-                    DateAddedUTC = DateTime.UtcNow
-                });
+                    {
+                        Operator = op,
+                        DateAddedUTC = DateTime.UtcNow
+                    });
 
                 ctx.SaveChanges();
 
@@ -461,6 +462,6 @@ namespace TDSM.Core.Data
             }
         }
     }
-#endif
+    #endif
 }
 

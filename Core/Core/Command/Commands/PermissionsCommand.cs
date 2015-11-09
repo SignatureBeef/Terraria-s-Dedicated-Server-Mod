@@ -329,7 +329,7 @@ namespace TDSM.Core.Command.Commands
                     var groups = Storage.UserGroupList(username);
                     if (groups != null && groups.Length > 0)
                     {
-                        ProgramLog.Admin.Log("Current groups:");
+                        sender.Message("Current groups:");
                         foreach (var gps in groups)
                         {
                             sender.Message("\t" + gps);
