@@ -11,9 +11,17 @@ namespace TDSM.Core.Data.Management
         /// <value>The backup interval minutes.</value>
         public static int SaveIntervalMinutes { get; set; }
 
-        static SaveManager()
+        [TDSMComponent(ComponentEvent.Initialise)]
+        internal static void Initialise(Entry plugin)
         {
-            SaveIntervalMinutes = 10;
+            SaveIntervalMinutes = plugin.Config.Maintenance_SaveIntervalMinutes;
+
+            const Int32 MinSaveInterval = 1;
+            if (SaveIntervalMinutes < MinSaveInterval)
+            {
+                SaveIntervalMinutes = MinSaveInterval;
+                ProgramLog.Admin.Log("The save interval cannot be disabled and is now set to {0} minute", MinSaveInterval);
+            }
         }
 
         static DateTime _lastSave = DateTime.Now;

@@ -24,19 +24,44 @@ namespace TDSM.Core.RemoteConsole
 
         public static PropertiesFile LoginDatabase { get; private set; }
 
+        static string _nonce, _bindAddress;
+
+        [TDSMComponent(ComponentEvent.ServerInitialising)]
+        public static void OnServerInitialising(Entry core)
+        {
+            if (!String.IsNullOrEmpty(core.Config.Rcon_BindAddress))
+            {
+                _nonce = core.Config.Rcon_HashNonce;
+                _bindAddress = core.Config.Rcon_BindAddress;
+
+                ProgramLog.Log("Starting RCON Server");
+                Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"));
+            }
+        }
+
+        [TDSMComponent(ComponentEvent.ServerStopping)]
+        public static void OnServerStopping(Entry core)
+        {
+            if (!String.IsNullOrEmpty(core.Config.Rcon_BindAddress))
+            {
+                ProgramLog.Log("Stopping RCON Server");
+                Stop();
+            }
+        }
+
         public static void Start(string dbPath)
         {
             LoginDatabase = new PropertiesFile(dbPath);
             LoginDatabase.Load();
 
-            if (String.IsNullOrEmpty(Entry.RConHashNonce))
+            if (String.IsNullOrEmpty(_nonce))
             {
                 var nonceFile = Path.Combine(Globals.DataPath, "rcon.nonce");
 
                 if (File.Exists(nonceFile))
-                    Entry.RConHashNonce = File.ReadAllText(nonceFile);
+                    _nonce = File.ReadAllText(nonceFile);
 
-                if (String.IsNullOrEmpty(Entry.RConHashNonce))
+                if (String.IsNullOrEmpty(_nonce))
                 {
                     ProgramLog.Admin.Log("The rcon nonce value has not been set, one is being generated...");
                     var rand = new Random(Main.rand.Next(Int32.MinValue, Int32.MaxValue));
@@ -50,8 +75,8 @@ namespace TDSM.Core.RemoteConsole
                         var chr = (char)(byte)rand.Next(0x20, 0x7E);
                         sb.Append(chr);
                     }
-                    Entry.RConHashNonce = sb.ToString();
-                    File.WriteAllText(nonceFile, Entry.RConHashNonce);
+                    _nonce = sb.ToString();
+                    File.WriteAllText(nonceFile, _nonce);
                     ProgramLog.Admin.Log("Saved nonce to {0}", nonceFile);
                 }
             }
@@ -71,7 +96,7 @@ namespace TDSM.Core.RemoteConsole
 
             LoginDatabase.Save();
 
-            var bind = Entry.RConBindAddress;
+            var bind = _bindAddress;
             var split = bind.Split(':');
             IPAddress addr;
             ushort port;
@@ -108,7 +133,7 @@ namespace TDSM.Core.RemoteConsole
         {
             var hash = SHA256.Create();
             var sb = new StringBuilder(64);
-            var bytes = hash.ComputeHash(Encoding.ASCII.GetBytes(string.Concat(username, ":", Entry.RConHashNonce, ":", password)));
+            var bytes = hash.ComputeHash(Encoding.ASCII.GetBytes(string.Concat(username, ":", _nonce, ":", password)));
             foreach (var b in bytes)
                 sb.Append(b.ToString("x2"));
             return sb.ToString();
@@ -116,7 +141,7 @@ namespace TDSM.Core.RemoteConsole
 
         public static void RConLoop()
         {
-            ProgramLog.Admin.Log("Remote console server started on {0}.", Entry.RConBindAddress);
+            ProgramLog.Admin.Log("Remote console server started on {0}.", _bindAddress);
 
             var socketToObject = new Dictionary<Socket, RConClient>();
             var readList = new List<Socket>();

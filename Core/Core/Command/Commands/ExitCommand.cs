@@ -32,7 +32,7 @@ namespace TDSM.Core.Command.Commands
         /// <param name="args">Arguments sent with command</param>
         public void Exit(ISender sender, ArgumentList args)
         {
-            var accessLevel = Core.ExitAccessLevel;
+            var accessLevel = Core.Config.ExitAccessLevel;
             if (accessLevel == -1 && sender is Player)
             {
                 sender.Message("You cannot perform that action.", 255, 238, 130, 238);

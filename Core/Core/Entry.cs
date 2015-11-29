@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework;
 using System.Linq;
 using TDSM.Core.Misc;
 using OTA.Extensions;
+using TDSM.Core.Data;
 
 namespace TDSM.Core
 {
@@ -22,6 +23,8 @@ namespace TDSM.Core
     public partial class Entry : BasePlugin
     {
         public const Int32 CoreBuild = 6;
+
+        public TDSMConfig Config { get; private set; } = new TDSMConfig();
 
         private bool _useTimeLock;
 
@@ -43,60 +46,17 @@ namespace TDSM.Core
 
         public bool TimelockSlimeRain { get; set; }
 
-        public static string RConHashNonce { get; set; }
-
-        public static string RConBindAddress { get; set; }
-
-        public bool EnableCheatProtection { get; set; }
-
-        private bool VanillaOnly
-        {
-            get
-            {
-                return !IsEnabled;
-            }
-            set
-            {
-                if (value)
-                {
-                    if (IsEnabled)
-                        PluginManager.DisablePlugin(this);
-                }
-                else
-                {
-                    if (!IsEnabled)
-                        PluginManager.EnablePlugin(this);
-                }
-            }
-        }
-
         public bool StopNPCSpawning { get; set; }
 
         public bool TimeFastForwarding { get; set; }
-
-        public bool RunServerCore { get; set; }
-
-        internal string _webServerAddress { get; set; }
-
-        internal string _webServerProvider { get; set; }
 
         public bool RestartWhenNoPlayers { get; set; }
 
         public PairFileRegister Ops { get; private set; }
 
-        public bool WhitelistEnabled { get; set; }
-
         public DataRegister Whitelist { get; private set; }
 
-        public int ExitAccessLevel { get; set; }
-
-        public bool EnableHeartbeat { get; set; }
-
-        public bool AllowSSCGuestInfo { get; set; }
-
         public Dictionary<string, string> CommandDictionary { get; set; }
-
-        public OTA.Web.WebServer WebServer { get; set; }
 
         //private Task _customInvasion;
         internal Dictionary<Int32,Int32> _invasion;
@@ -135,10 +95,6 @@ namespace TDSM.Core
         {
             base.Enabled();
 
-            EnableCheatProtection = true;
-            RunServerCore = true;
-            ExitAccessLevel = -1;
-
             Core.Net.Web.ApiControllers.PublicController.ShowPlugins = true;
 
             RunComponent(ComponentEvent.Enabled);
@@ -155,6 +111,14 @@ namespace TDSM.Core
 
             Ops = new PairFileRegister(System.IO.Path.Combine(Globals.DataPath, "ops.txt"));
             Whitelist = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "whitelist.txt"), false);
+
+            string configFile;
+            if (!String.IsNullOrEmpty(configFile = Terraria.Initializers.LaunchInitializer.TryParameter(new string[] { "-config" })))
+                Config.LoadFromFile(configFile);
+            
+            Config.LoadFromArguments();
+
+            ProgramLog.LogRotation = Config.LogRotation;
 
             AddComponents<Entry>();
             RunComponent(ComponentEvent.Initialise);
@@ -271,20 +235,6 @@ namespace TDSM.Core
         {
             //let our backup manager do it's thing
             ctx.SetResult(HookResult.IGNORE, true);
-        }
-
-        internal void CreateAndStartWebServer(string address)
-        {
-            WebServer = new OTA.Web.WebServer();
-
-            WebServer.Started += (sender, e) =>
-            {
-                ProgramLog.Web.Log("Web server started listening on {0}", address);
-            };
-            
-            _webServerAddress = address;
-
-            WebServer.Start(address);
         }
     }
 }

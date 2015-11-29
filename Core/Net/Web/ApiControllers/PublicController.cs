@@ -16,6 +16,12 @@ namespace TDSM.Core.Net.Web.ApiControllers
     {
         public static bool ShowPlugins { get; set; }
 
+        [TDSMComponent(ComponentEvent.Initialise)]
+        internal static void Init(Entry plugin)
+        {
+            ShowPlugins = plugin.Config.API_ShowPlugins;
+        }
+
         /// <summary>
         /// Outputs public information to such things like server crawlers
         /// </summary>

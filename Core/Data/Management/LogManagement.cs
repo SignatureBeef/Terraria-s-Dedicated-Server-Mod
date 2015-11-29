@@ -10,30 +10,27 @@ namespace TDSM.Core.Data.Management
         /// <summary>
         /// The latest count of log files not to be deleted
         /// </summary>
-        public static int LogsToLeave { get; set; }
+        public static int LogsToKeep { get; set; }
 
         /// <summary>
         /// Gets if log purging is enabled
         /// </summary>
         public static bool LogPurgingEnabled
         {
-            get { return LogsToLeave > 0; }
-        }
-
-        static LogManagement()
-        {
-            LogsToLeave = 5;
+            get { return LogsToKeep > 0; }
         }
 
         [TDSMComponent(ComponentEvent.Initialise)]
         internal static void Initialise(Entry plugin)
         {
+            LogsToKeep = plugin.Config.Maintenance_LogsToKeep;
+
             if (LogPurgingEnabled)
             {
                 var files = Directory.GetFiles(OTA.Globals.LogFolderPath, "*.log")
                     .Select(x => new FileInfo(x))
                     .OrderByDescending(x => x.CreationTime)
-                    .Skip(LogsToLeave)
+                    .Skip(LogsToKeep)
                     .ToList();
 
                 foreach (var file in files)

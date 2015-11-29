@@ -69,18 +69,15 @@ namespace TDSM.Core.Data.Management
         /// </summary>
         public static bool CopyBackups { get; set; }
 
-        static BackupManager()
-        {
-            BackupExpiryMinutes = 40;
-            BackupIntervalMinutes = 10;
-            CompressBackups = true;
-            CopyBackups = true;
-        }
-
         [TDSMComponent(ComponentEvent.Initialise)]
         internal static void Initialise(Entry plugin)
         {
             if (!Directory.Exists(BackupFolder)) Directory.CreateDirectory(BackupFolder);
+
+            BackupExpiryMinutes = plugin.Config.Maintenance_BackupExpiryMinutes;
+            BackupIntervalMinutes = plugin.Config.Maintenance_BackupIntervalMinutes;
+            CompressBackups = plugin.Config.Maintenance_CompressBackups;
+            CopyBackups = plugin.Config.Maintenance_CopyBackups;
         }
 
         static DateTime _lastBackup = DateTime.Now;

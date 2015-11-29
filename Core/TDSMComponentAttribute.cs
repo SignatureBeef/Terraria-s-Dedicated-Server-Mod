@@ -12,7 +12,8 @@ namespace TDSM.Core
         ReadyForCommands,
 
         ServerStarting,
-        ServerStopping
+        ServerStopping,
+        ServerInitialising
     }
 
     /// <summary>

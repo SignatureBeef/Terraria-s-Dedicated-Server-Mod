@@ -131,7 +131,7 @@ namespace TDSM.Core.Net.PacketHandling.Packets
         
                 if (Main.dedServ)
                 {
-                    ProgramLog.Chat.Log("<" + Main.player[bufferId].name + "> " + args.Message);
+                    Loggers.Chat.Log("<" + Main.player[bufferId].name + "> " + args.Message);
                 }
             }
         

@@ -136,8 +136,13 @@ namespace TDSM.Core.Net.Web
         [TDSMComponent(ComponentEvent.ReadyForCommands)]
         internal static void OnReadyForCommands(Entry core)
         {
-            if (core.EnableHeartbeat)
+            if (core.Config.EnableHeartbeat)
+            {
+                ServerName = core.Config.Heartbeat_ServerName;
+                ServerDescription = core.Config.Heartbeat_ServerDescription;
+                ServerDomain = core.Config.Heartbeat_ServerDomain;
                 Heartbeat.Begin(Entry.CoreBuild);
+            }
         }
 
         static void Beat()

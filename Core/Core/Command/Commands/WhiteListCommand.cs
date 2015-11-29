@@ -33,7 +33,7 @@ namespace TDSM.Core.Command.Commands
                 case "status":
                 case "current":
                 case "?":
-                    sender.Message("The whitelist is currently " + (Core.WhitelistEnabled ? "enabled" : "disabled"));
+                    sender.Message("The whitelist is currently " + (Core.Config.WhitelistEnabled ? "enabled" : "disabled"));
                     break;
                 case "reload":
                     Core.Whitelist.Load();
@@ -41,11 +41,11 @@ namespace TDSM.Core.Command.Commands
                     if (!sender.Op) sender.Message("The whitelist was reloaded", Color.Green);
                     break;
                 case "enable":
-                    if (!Core.WhitelistEnabled)
+                    if (!Core.Config.WhitelistEnabled)
                     {
-                        Core.WhitelistEnabled = true;
+                        Core.Config.WhitelistEnabled = true;
 
-                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("whitelist", Core.WhitelistEnabled))
+                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("whitelist", Core.Config.WhitelistEnabled))
                         {
                             Tools.NotifyAllOps("The whitelist was enabled");
                             if (!sender.Op) sender.Message("The whitelist was enabled", Color.Green);
@@ -55,11 +55,11 @@ namespace TDSM.Core.Command.Commands
                     else sender.Message("The whitelist is already enabled", Color.Red);
                     break;
                 case "disable":
-                    if (Core.WhitelistEnabled)
+                    if (Core.Config.WhitelistEnabled)
                     {
-                        Core.WhitelistEnabled = false;
+                        Core.Config.WhitelistEnabled = false;
 
-                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("whitelist", Core.WhitelistEnabled))
+                        if (!ConfigUpdater.IsAvailable || ConfigUpdater.Set("whitelist", Core.Config.WhitelistEnabled))
                         {
                             Tools.NotifyAllOps("The whitelist was disabled");
                             if (!sender.Op) sender.Message("The whitelist was disabled", Color.Green);
@@ -81,7 +81,7 @@ namespace TDSM.Core.Command.Commands
                         Tools.NotifyAllOps(String.Format("Player {0} was added to the whitelist", name));
                         if (!sender.Op) sender.Message(String.Format("Player {0} was added to the whitelist", name), Color.Green);
 
-                        if (!Core.WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
+                        if (!Core.Config.WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
                     }
                     else sender.Message("Failed to add " + name + " to the whitelist", Color.Red);
                     break;
@@ -97,7 +97,7 @@ namespace TDSM.Core.Command.Commands
                         Tools.NotifyAllOps(String.Format("Player {0} was removed from the whitelist", name));
                         if (!sender.Op) sender.Message(String.Format("Player {0} was removed from the whitelist", name), Color.Green);
 
-                        if (!Core.WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
+                        if (!Core.Config.WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
                     }
                     else sender.Message("Failed to remove " + name + " from the whitelist", Color.Red);
                     break;
@@ -114,7 +114,7 @@ namespace TDSM.Core.Command.Commands
                         Tools.NotifyAllOps(String.Format("IP {0} was added to the whitelist", ip));
                         if (!sender.Op) sender.Message(String.Format("IP {0} was added to the whitelist", ip), Color.Green);
 
-                        if (!Core.WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
+                        if (!Core.Config.WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
                     }
                     else sender.Message("Failed to add " + ip + " to the whitelist", Color.Red);
                     break;
@@ -130,7 +130,7 @@ namespace TDSM.Core.Command.Commands
                         Tools.NotifyAllOps(String.Format("IP {0} was removed from the whitelist", ip));
                         if (!sender.Op) sender.Message(String.Format("IP {0} was removed from the whitelist", ip), Color.Green);
 
-                        if (!Core.WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
+                        if (!Core.Config.WhitelistEnabled) sender.Message("Note, the whitelist is not enabled", Color.Orange);
                     }
                     else sender.Message("Failed to remove " + ip + " from the whitelist", Color.Red);
                     break;

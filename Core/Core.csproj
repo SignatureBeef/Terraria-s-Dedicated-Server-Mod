@@ -239,6 +239,12 @@
     <Compile Include="Misc\World.cs" />
     <Compile Include="Data\Extensions\CharacterExtensions.cs" />
     <Compile Include="Net\Web\ApiControllers\PublicController.cs" />
+    <Compile Include="Core\Command\Commands\ApiCommand.cs" />
+    <Compile Include="Core\Common.cs" />
+    <Compile Include="Config\ComponentConfiguration.cs" />
+    <Compile Include="Config\ConfigPrefixAttribute.cs" />
+    <Compile Include="Core\TDSMConfig.cs" />
+    <Compile Include="Loggers.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -261,5 +267,6 @@
     <Folder Include="Net\Web\" />
     <Folder Include="Net\Web\ApiControllers\" />
     <Folder Include="Data\Extensions\" />
+    <Folder Include="Config\" />
   </ItemGroup>
 </Project>

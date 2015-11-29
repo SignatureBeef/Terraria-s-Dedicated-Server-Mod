@@ -44,38 +44,81 @@ namespace TDSM.Core.ServerCharacters
                 new SlotItem(-16, 1, 0, false, 2)
             }
         };
-
-        public static void Init()
+        
+        [TDSMComponent(ComponentEvent.Initialise)]
+        internal static void Init(Entry plugin)
         {
-//            if (Storage.IsAvailable)
-//            {
-//                if (!Tables.CharacterTable.Exists())
-//                {
-//                    ProgramLog.Admin.Log("SSC table does not exist and will now be created");
-//                    Tables.CharacterTable.Create();
-//                }
-//                if (!Tables.ItemTable.Exists())
-//                {
-//                    ProgramLog.Admin.Log("SSC item table does not exist and will now be created");
-//                    Tables.ItemTable.Create();
-//                }
-//                if (!Tables.PlayerBuffTable.Exists())
-//                {
-//                    ProgramLog.Admin.Log("SSC player buff table does not exist and will now be created");
-//                    Tables.PlayerBuffTable.Create();
-//                }
-//                if (!Tables.DefaultLoadoutTable.Exists())
-//                {
-//                    ProgramLog.Admin.Log("SSC loadout table does not exist and will now be created");
-//                    Tables.DefaultLoadoutTable.Create();
-//                    Tables.DefaultLoadoutTable.PopulateDefaults(StartingOutInfo);
-//                }
-//            }
+            //            if (Storage.IsAvailable)
+            //            {
+            //                if (!Tables.CharacterTable.Exists())
+            //                {
+            //                    ProgramLog.Admin.Log("SSC table does not exist and will now be created");
+            //                    Tables.CharacterTable.Create();
+            //                }
+            //                if (!Tables.ItemTable.Exists())
+            //                {
+            //                    ProgramLog.Admin.Log("SSC item table does not exist and will now be created");
+            //                    Tables.ItemTable.Create();
+            //                }
+            //                if (!Tables.PlayerBuffTable.Exists())
+            //                {
+            //                    ProgramLog.Admin.Log("SSC player buff table does not exist and will now be created");
+            //                    Tables.PlayerBuffTable.Create();
+            //                }
+            //                if (!Tables.DefaultLoadoutTable.Exists())
+            //                {
+            //                    ProgramLog.Admin.Log("SSC loadout table does not exist and will now be created");
+            //                    Tables.DefaultLoadoutTable.Create();
+            //                    Tables.DefaultLoadoutTable.PopulateDefaults(StartingOutInfo);
+            //                }
+            //            }
 
             //Player inventory,armor,dye common table
 
+
+            CharacterMode characterMode;
+            if (CharacterMode.TryParse(plugin.Config.SSC_CharacterMode, out characterMode))
+            {
+                Terraria.Main.ServerSideCharacter = characterMode != CharacterMode.NONE;
+                CharacterManager.Mode = characterMode;
+                ProgramLog.Admin.Log("SSC mode is: " + characterMode);
+
+                plugin.Hook(HookPoints.ReceiveNetMessage, OnNetMessageReceived);
+                //                        Hook(HookPoints.PlayerDataReceived, OnPlayerDataReceived);
+            }
+            else
+                ProgramLog.Error.Log("Failed to parse line server-side-characters. No SSC will be used.");
+
+            AllowGuestInfo = plugin.Config.SSC_AllowGuestInfo;
+            SaveInterval = plugin.Config.SSC_SaveInterval;
+
             //Default loadout table
             LoadConfig();
+        }
+
+        static bool AllowGuestInfo;
+        static void OnNetMessageReceived(ref HookContext ctx, ref HookArgs.ReceiveNetMessage args)
+        {
+            if (Terraria.Main.ServerSideCharacter)
+            {
+                switch ((Packet)args.PacketId)
+                {
+                    case Packet.INVENTORY_DATA:
+                        if (!AllowGuestInfo && !ctx.Player.IsAuthenticated())
+                            ctx.SetResult(HookResult.IGNORE);
+                        break;
+
+                    case Packet.PLAYER_MANA_UPDATE:
+                        if (!AllowGuestInfo && !ctx.Player.IsAuthenticated())
+                            ctx.SetResult(HookResult.IGNORE);
+                        break;
+
+                    case Packet.PLAYER_HEALTH_UPDATE:
+                        if (!AllowGuestInfo && !ctx.Player.IsAuthenticated())
+                            ctx.SetResult(HookResult.IGNORE);
+                        break;
+                }
+            }
         }
 
         /// <summary>

@@ -75,19 +75,18 @@ namespace TDSM.Core
             {
                 if (CharacterManager.Mode == CharacterMode.UUID)
                 {
-                    CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !AllowSSCGuestInfo);
+                    CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !Config.SSC_AllowGuestInfo);
                 }
                 else if (CharacterManager.Mode == CharacterMode.AUTH)
                 {
                     if (!String.IsNullOrEmpty(ctx.Player.GetAuthenticatedAs()))
                     {
-                        CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !AllowSSCGuestInfo);
+                        CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !Config.SSC_AllowGuestInfo);
                     }
                     else
                     {
-                        if (!AllowSSCGuestInfo)
+                        if (!Config.SSC_AllowGuestInfo)
                         {
-                            //                        ProgramLog.Debug.Log("This fella, yeah him; clear his inventory");
                             CharacterManager.LoadForGuest(ctx.Player);
                         }
                     }
@@ -102,10 +101,10 @@ namespace TDSM.Core
             {
                 using (var dbCtx = new TContext())
                 {
-                    CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !AllowSSCGuestInfo);
+                    CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !Config.SSC_AllowGuestInfo);
                 }
 
-                if (AllowSSCGuestInfo)
+                if (Config.SSC_AllowGuestInfo)
                 {
                     ctx.Player.SetSSCReadyForSave(true); //Since we aren't issuing out data, and accepting it, we can save it.
                 }
@@ -255,291 +254,6 @@ namespace TDSM.Core
         }
         #endif
 
-        [Hook(HookOrder.NORMAL)]
-        void OnConfigLineRead(ref HookContext ctx, ref HookArgs.ConfigurationFileLineRead args)
-        {
-            //Ensure command line argument supersede config options - hosting providers can use this 
-            if (LaunchInitializer.HasParameter(new string[] { "-" + args.Key }))
-            {
-                //                ProgramLog.Log("Ignoring overridden config property " + args.Key);
-                return;
-            }
-            switch (args.Key)
-            {
-                case "whitelist":
-                    bool usewhitelist;
-                    if (Boolean.TryParse(args.Value, out usewhitelist))
-                    {
-                        WhitelistEnabled = usewhitelist;
-                    }
-                    break;
-                case "vanilla-linux":
-                    bool vanillaOnly;
-                    if (Boolean.TryParse(args.Value, out vanillaOnly))
-                    {
-                        VanillaOnly = vanillaOnly;
-                    }
-                    break;
-                case "heartbeat":
-                    bool hb;
-                    if (Boolean.TryParse(args.Value, out hb) && hb)
-                    {
-                        EnableHeartbeat = true;
-                    }
-                    break;
-                case "server-list":
-                    bool serverList;
-                    if (Boolean.TryParse(args.Value, out serverList))
-                    {
-                        Heartbeat.PublishToList = serverList;
-                    }
-                    break;
-                case "server-list-name":
-                    Heartbeat.ServerName = args.Value;
-                    break;
-                case "server-list-desc":
-                    Heartbeat.ServerDescription = args.Value;
-                    break;
-                case "server-list-domain":
-                    Heartbeat.ServerDomain = args.Value;
-                    break;
-                case "rcon-hash-nonce":
-                    RConHashNonce = args.Value;
-                    break;
-                case "rcon-bind-address":
-                    RConBindAddress = args.Value;
-                    break;
-                case "web-server-bind-address":
-                    CreateAndStartWebServer(args.Value);
-                    break;
-                case "web-server-provider":
-                    _webServerProvider = args.Value;
-                    break;
-            //                case "web-server-serve-files":
-            //                    bool serveFiles;
-            //                    if (Boolean.TryParse(args.Value, out serveFiles))
-            //                    {
-            //                        //WebInterface.WebServer.ServeWebFiles = serveFiles;
-            //                    }
-            //                    break;
-                    #if TDSMServer
-                    case "send-queue-quota":
-                    int sendQueueQuota;
-                    if (Int32.TryParse(args.Value, out sendQueueQuota))
-                    {
-                    Connection.SendQueueQuota = sendQueueQuota;
-                    }
-                    break;
-                    case "overlimit-slots":
-                    int overlimitSlots;
-                    if (Int32.TryParse(args.Value, out overlimitSlots))
-                    {
-                    Server.OverlimitSlots = overlimitSlots;
-                    }
-                    break;
-                    #endif
-                case "pid-file":
-                    ProcessPIDFile(args.Value);
-                    break;
-                case "cheat-detection":
-                    bool cheatDetection;
-                    if (Boolean.TryParse(args.Value, out cheatDetection))
-                    {
-                        EnableCheatProtection = cheatDetection;
-                    }
-                    break;
-                case "log-rotation":
-                    bool logRotation;
-                    if (Boolean.TryParse(args.Value, out logRotation))
-                    {
-                        ProgramLog.LogRotation = logRotation;
-                    }
-                    break;
-                case "server-side-characters":
-                    CharacterMode characterMode;
-                    if (CharacterMode.TryParse(args.Value, out characterMode))
-                    {
-                        Terraria.Main.ServerSideCharacter = characterMode != CharacterMode.NONE;
-                        CharacterManager.Mode = characterMode;
-                        ProgramLog.Admin.Log("SSC mode is: " + characterMode);
-
-                        Hook(HookPoints.ReceiveNetMessage, OnNetMessageReceived);
-                        //                        Hook(HookPoints.PlayerDataReceived, OnPlayerDataReceived);
-                    }
-                    else
-                        ProgramLog.Error.Log("Failed to parse line server-side-characters. No SSC will be used.");
-                    break;
-                case "tdsm-server-core":
-                    bool runServerCore;
-                    if (Boolean.TryParse(args.Value, out runServerCore))
-                    {
-                        RunServerCore = runServerCore;
-                    }
-                    break;
-                case "exitaccesslevel":
-                    int accessLevel;
-                    if (Int32.TryParse(args.Value, out accessLevel))
-                    {
-                        ExitAccessLevel = accessLevel;
-                    }
-                    break;
-                case "ssc-allow-guest-info":
-                    bool guestInfo;
-                    if (Boolean.TryParse(args.Value, out guestInfo))
-                    {
-                        AllowSSCGuestInfo = guestInfo;
-                    }
-                    break;
-                case "api-showplugins":
-                    bool apiShowPlugins;
-                    if (Boolean.TryParse(args.Value, out apiShowPlugins))
-                    {
-                        Core.Net.Web.ApiControllers.PublicController.ShowPlugins = apiShowPlugins;
-                    }
-                    break;
-                case "ssc-save-interval":
-                    int sscSaveInterval;
-                    if (Int32.TryParse(args.Value, out sscSaveInterval))
-                    {
-                        CharacterManager.SaveInterval = sscSaveInterval;
-                    }
-                    break;
-
-                case "logs-to-keep":
-                    int logsToKeep;
-                    if (Int32.TryParse(args.Value, out logsToKeep))
-                    {
-                        TDSM.Core.Data.Management.LogManagement.LogsToLeave = logsToKeep;
-                    }
-                    break;
-                case "backup-interval-min":
-                    int backupInterval;
-                    if (Int32.TryParse(args.Value, out backupInterval))
-                    {
-                        TDSM.Core.Data.Management.BackupManager.BackupIntervalMinutes = backupInterval;
-                    }
-                    break;
-                case "backup-expiry-min":
-                    int backupExpiry;
-                    if (Int32.TryParse(args.Value, out backupExpiry))
-                    {
-                        TDSM.Core.Data.Management.BackupManager.BackupExpiryMinutes = backupExpiry;
-                    }
-                    break;
-                case "compress-backups":
-                    bool compressBackups;
-                    if (Boolean.TryParse(args.Value, out compressBackups))
-                    {
-                        TDSM.Core.Data.Management.BackupManager.CompressBackups = compressBackups;
-                    }
-                    break;
-                case "copy-backups":
-                    bool copyBackups;
-                    if (Boolean.TryParse(args.Value, out copyBackups))
-                    {
-                        TDSM.Core.Data.Management.BackupManager.CopyBackups = copyBackups;
-                    }
-                    break;
-                case "save-interval-min":
-                    int saveInterval;
-                    if (Int32.TryParse(args.Value, out saveInterval))
-                    {
-                        const Int32 MinSaveInterval = 1;
-                        if (saveInterval < MinSaveInterval)
-                        {
-                            saveInterval = MinSaveInterval;
-                            ProgramLog.Admin.Log("The save interval cannot be disabled and is now set to {0} minute", MinSaveInterval);
-                        }
-
-                        TDSM.Core.Data.Management.SaveManager.SaveIntervalMinutes = saveInterval;
-                    }
-                    break;
-            }
-        }
-
-        [Hook]
-        void OnCMDArgsReady(ref HookContext ctx, ref HookArgs.ParseCommandLineArguments args)
-        {
-            string tmp;
-            bool tmp1;
-
-            //            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-world" }))
-            //                && !File.Exists(tmp))
-            //            {
-            //                ProgramLog.Error.Log("Command line world file not found at: {0}\nPress the [Y] key to continue", tmp);
-            //                if (Console.ReadKey().Key != ConsoleKey.Y)
-            //                {
-            //                    
-            //                }
-            //            }
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-whitelist" }))
-                && Boolean.TryParse(tmp, out tmp1))
-                WhitelistEnabled = tmp1;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-heartbeat" }))
-                && Boolean.TryParse(tmp, out tmp1))
-                EnableHeartbeat = tmp1;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-server-list" }))
-                && Boolean.TryParse(tmp, out tmp1))
-                Heartbeat.PublishToList = tmp1;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-server-list-name" })))
-                Heartbeat.ServerName = tmp;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-server-list-desc" })))
-                Heartbeat.ServerDescription = tmp;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-server-list-domain" })))
-                Heartbeat.ServerDomain = tmp;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-rcon-hash-nonce" })))
-                RConHashNonce = tmp;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-rcon-bind-address" })))
-                RConBindAddress = tmp;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-web-server-bind-address" })))
-            {
-                CreateAndStartWebServer(tmp);
-            }
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-web-server-provider" })))
-                _webServerProvider = tmp;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-pid-file" })))
-                ProcessPIDFile(tmp);
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-cheat-detection" }))
-                && Boolean.TryParse(tmp, out tmp1))
-                EnableCheatProtection = tmp1;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-log-rotation" }))
-                && Boolean.TryParse(tmp, out tmp1))
-                ProgramLog.LogRotation = tmp1;
-
-            CharacterMode characterMode;
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-server-side-characters" }))
-                && CharacterMode.TryParse(tmp, out characterMode))
-            {
-                Terraria.Main.ServerSideCharacter = characterMode != CharacterMode.NONE;
-                CharacterManager.Mode = characterMode;
-                ProgramLog.Admin.Log("SSC are enabled with mode " + characterMode);
-
-                Hook(HookPoints.ReceiveNetMessage, OnNetMessageReceived);
-            }
-
-            int accessLevel;
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-exitaccesslevel" }))
-                && Int32.TryParse(tmp, out accessLevel))
-                ExitAccessLevel = accessLevel;
-
-            if (!String.IsNullOrEmpty(tmp = LaunchInitializer.TryParameter(new string[] { "-ssc-allow-guest-info" }))
-                && Boolean.TryParse(tmp, out tmp1))
-                AllowSSCGuestInfo = tmp1;
-        }
-
         [Hook(HookOrder.LATE)]
         //Late so other plugins can perform alterations
         void OnPlayerKilled(ref HookContext ctx, ref HookArgs.PlayerKilled args)
@@ -565,12 +279,12 @@ namespace TDSM.Core
                 }
                 args.DeathText = ctx.Player.name + args.DeathText;
                 ctx.SetResult(HookResult.CONTINUE);
-                ProgramLog.Death.Log(args.DeathText);
+                Loggers.Death.Log(args.DeathText);
             }
             else
             {
                 //Standard death log
-                ProgramLog.Death.Log(ctx.Player.name + args.DeathText);
+                Loggers.Death.Log(ctx.Player.name + args.DeathText);
             }
         }
 
@@ -604,103 +318,19 @@ namespace TDSM.Core
 
             if (args.ServerChangeState == ServerState.Initialising)
             {
-                if (!String.IsNullOrEmpty(RConBindAddress))
-                {
-                    ProgramLog.Log("Starting RCON Server");
-                    RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"));
-                }
-
-                if (Terraria.Main.ServerSideCharacter)
-                {
-                    CharacterManager.Init();
-                }
-
+                RunComponent(ComponentEvent.ServerInitialising);
                 if (BackupManager.BackupsEnabled && BackupManager.BackupIntervalMinutes < SaveManager.SaveIntervalMinutes)
                 {
                     ProgramLog.Admin.Log("[Warning] Backup interval is smaller than the save interval.");
                 }
             }
-            if (args.ServerChangeState == ServerState.Stopping)
-            {
-                RunComponent(ComponentEvent.ServerStopping);
-                if (!String.IsNullOrEmpty(RConBindAddress))
-                {
-                    ProgramLog.Log("Stopping RCON Server");
-                    RemoteConsole.RConServer.Stop();
-                }
-            }
-            if (args.ServerChangeState == ServerState.Starting)
+            else if (args.ServerChangeState == ServerState.Starting)
             {
                 RunComponent(ComponentEvent.ServerStarting);
             }
-
-            //if (args.ServerChangeState == ServerState.Initialising)
-            #if TDSMServer
-            if (!Server.IsInitialised)
+            else if (args.ServerChangeState == ServerState.Stopping)
             {
-            Server.Init();
-
-            if (!String.IsNullOrEmpty(RConBindAddress))
-            {
-            ProgramLog.Log("Starting RCON Server");
-            RemoteConsole.RConServer.Start(Path.Combine(Globals.DataPath, "rcon_logins.properties"));
-            }
-
-            if (!String.IsNullOrEmpty(_webServerAddress))
-            {
-            ProgramLog.Log("Starting Web Server");
-            WebInterface.WebServer.Begin(_webServerAddress, _webServerProvider);
-
-            this.AddCommand("webauth")
-            .WithAccessLevel(AccessLevel.OP)
-            .Calls(WebInterface.WebServer.WebAuthCommand);
-            }
-            }
-
-            if (args.ServerChangeState == ServerState.Stopping)
-            {
-            RemoteConsole.RConServer.Stop();
-            WebInterface.WebServer.End();
-            //if (properties != null && File.Exists(properties.PIDFile.Trim()))
-            //File.Delete(properties.PIDFile.Trim());
-            }
-
-            ctx.SetResult(HookResult.IGNORE); //Don't continue on with vanilla code
-            #endif
-        }
-
-        //[Hook(HookOrder.NORMAL)]
-        //void OnNetMessageSendData(ref HookContext ctx, ref HookArgs.SendNetData args)
-        //{
-        //    ctx.SetResult(HookResult.IGNORE);
-        //    NewNetMessage.SendData(args.MsgType, args.RemoteClient, args.IgnoreClient, args.Text, args.Number,
-        //        args.Number2, args.Number3, args.Number4, args.Number5);
-        //}
-
-
-
-        //        [Hook]
-        void OnNetMessageReceived(ref HookContext ctx, ref HookArgs.ReceiveNetMessage args)
-        {
-            if (Terraria.Main.ServerSideCharacter)
-            {
-                switch ((Packet)args.PacketId)
-                {
-                    case Packet.INVENTORY_DATA:
-                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated())
-                            ctx.SetResult(HookResult.IGNORE);
-                        break;
-
-                    case Packet.PLAYER_MANA_UPDATE:
-                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated())
-                            ctx.SetResult(HookResult.IGNORE);
-                        break;
-
-                    case Packet.PLAYER_HEALTH_UPDATE:
-                        if (!AllowSSCGuestInfo && !ctx.Player.IsAuthenticated())
-                            ctx.SetResult(HookResult.IGNORE);
-                        break;
-                }
+                RunComponent(ComponentEvent.ServerStopping);
             }
         }
 
@@ -713,7 +343,7 @@ namespace TDSM.Core
             //        
             //            }
 
-            if (WhitelistEnabled)
+            if (Config.WhitelistEnabled)
             {
                 var name = WhiteListCommand.Prefix_WhitelistName + args.Name;
                 var ip = WhiteListCommand.Prefix_WhitelistIp + ctx.Client.RemoteIPAddress();
@@ -832,6 +462,12 @@ namespace TDSM.Core
                         break;
                 }
             }
+        }
+
+        [Hook]
+        void OnLoadConfiguration(ref HookContext ctx, ref HookArgs.LoadConfigurationFile args)
+        {
+            ctx.SetResult(HookResult.IGNORE);
         }
     }
 }
