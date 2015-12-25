@@ -5,5 +5,6 @@ install:
   - mono .nuget/NuGet.exe restore Core/packages.config -PackagesDirectory packages/ -source "https://api.nuget.org/v3/index.json;https://www.nuget.org/api/v2/curated-feeds/microsoftdotnet/"
   - mono .nuget/NuGet.exe restore TDSM-Patcher/packages.config -PackagesDirectory packages/ -source "https://api.nuget.org/v3/index.json;https://www.nuget.org/api/v2/curated-feeds/microsoftdotnet/"
   - mono .nuget/NuGet.exe restore Open-Terraria-API/API/packages.config -PackagesDirectory Open-Terraria-API/packages/ -source "https://api.nuget.org/v3/index.json;https://www.nuget.org/api/v2/curated-feeds/microsoftdotnet/"
+  - mono .nuget/NuGet.exe restore Open-Terraria-API/Patcher/packages.config -PackagesDirectory Open-Terraria-API/packages -source "https://api.nuget.org/v3/index.json;https://www.nuget.org/api/v2/curated-feeds/microsoftdotnet/"
 script:
   - xbuild /p:Configuration=Debug tdsm.sln
