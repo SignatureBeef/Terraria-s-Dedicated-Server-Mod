@@ -50,9 +50,21 @@ namespace TDSM.Core.Command.Commands
 
             // Get the class id of the npc
             var npcs = DefinitionManager.FindNPC(npcName);
-            if (npcs.Length == 0)
-                throw new CommandError("No npc exists by the name {0}", npcName);
-            else if (npcs.Length > 1)
+            if (npcs == null || npcs.Length == 0)
+            {
+                int npcId;
+                if (Int32.TryParse(npcName, out npcId))
+                {
+                    npcs = DefinitionManager.FindNPC(npcId);
+                    if (npcs == null || npcs.Length == 0)
+                    {
+                        throw new CommandError("No npc exists by type {0}", npcId);
+                    }
+                }
+                else throw new CommandError("No npc exists {0}", npcName);
+            }
+
+            if (npcs.Length > 1)
             {
                 bool first;
                 args.TryGetBool(3, out first);

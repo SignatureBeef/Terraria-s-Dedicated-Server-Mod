@@ -78,6 +78,13 @@ namespace TDSM.Core.Definitions
             return true;
         }
 
+        public static NPCInfo[] FindNPC(int type)
+        {
+            return _npc.Data
+                .Where(x => x.Id == type)
+                .ToArray();
+        }
+
         public static NPCInfo[] FindNPC(string name)
         {
             var lowered = name.ToLower();
@@ -85,7 +92,8 @@ namespace TDSM.Core.Definitions
             var singular = _npc.Data
                 .Where(x => x.Name.ToLower() == lowered)
                 .ToArray();
-            if (singular.Length == 1) return new NPCInfo[] { singular[0] };
+            
+            if (singular.Length == 1) return singular;
 
             return _npc.Data
                 .Where(x => x.Name.ToLower().StartsWith(name))
@@ -99,7 +107,7 @@ namespace TDSM.Core.Definitions
             var singular = _item.Data
                 .Where(x => x.Name.ToLower() == lowered)
                 .ToArray();
-            if (singular.Length == 1) return new ItemInfo[] { singular[0] };
+            if (singular.Length == 1) return singular;
 
             return _item.Data
                 .Where(x => x.Name.ToLower().StartsWith(name))

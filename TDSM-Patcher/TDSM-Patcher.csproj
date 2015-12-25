@@ -37,9 +37,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Open-Terraria-API\Binaries\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="OTA.Patcher">
-      <HintPath>..\Open-Terraria-API\Binaries\OTA.Patcher.exe</HintPath>
-    </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -99,5 +96,11 @@
     <None Include="start-server.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Open-Terraria-API\Patcher\OTA.Patcher.csproj">
+      <Project>{0ED8C37C-355A-4271-92B8-F9ED66881C46}</Project>
+      <Name>OTA.Patcher</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

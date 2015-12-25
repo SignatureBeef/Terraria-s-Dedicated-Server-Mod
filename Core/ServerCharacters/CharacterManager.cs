@@ -81,13 +81,13 @@ namespace TDSM.Core.ServerCharacters
             {
                 Terraria.Main.ServerSideCharacter = characterMode != CharacterMode.NONE;
                 CharacterManager.Mode = characterMode;
-                ProgramLog.Admin.Log("SSC mode is: " + characterMode);
+                ProgramLog.Admin.Log("SSC mode: " + characterMode);
 
                 plugin.Hook(HookPoints.ReceiveNetMessage, OnNetMessageReceived);
                 //                        Hook(HookPoints.PlayerDataReceived, OnPlayerDataReceived);
             }
-            else
-                ProgramLog.Error.Log("Failed to parse line server-side-characters. No SSC will be used.");
+//            else
+//                ProgramLog.Error.Log("Failed to parse line server-side-characters. No SSC will be used.");
 
             AllowGuestInfo = plugin.Config.SSC_AllowGuestInfo;
             SaveInterval = plugin.Config.SSC_SaveInterval;
