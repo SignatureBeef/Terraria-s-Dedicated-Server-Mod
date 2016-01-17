@@ -241,6 +241,7 @@
     <Compile Include="Extensions\ISenderExtensions.cs" />
     <Compile Include="Extensions\BasePlayerExtensions.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Extensions\CommandExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

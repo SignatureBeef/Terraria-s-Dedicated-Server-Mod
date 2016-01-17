@@ -4,7 +4,7 @@ namespace TDSM.Core.Command
 {
     public class TDSMCommandInfo : OTA.Commands.CommandDefinition<TDSMCommandInfo>
     {
-        private AccessLevel? _accessLevel;
+        internal AccessLevel? _accessLevel;
 
         public TDSMCommandInfo(string prefix) : base(prefix) { }
 
