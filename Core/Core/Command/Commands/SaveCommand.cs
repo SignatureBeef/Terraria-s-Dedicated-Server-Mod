@@ -10,7 +10,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            AddCommand("save")
+            AddCommand("save", true)
                 .WithDescription("Save world and configuration data")
                 .WithAccessLevel(AccessLevel.OP)
                 .SetDefaultUsage()

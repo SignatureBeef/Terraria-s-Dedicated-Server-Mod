@@ -9,7 +9,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            AddCommand("kick")
+            AddCommand("kick", true)
                 .WithDescription("Kicks a player from the server")
                 .WithHelpText("<player> - Kicks the player specified.")
                 .WithPermissionNode("tdsm.kick")

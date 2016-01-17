@@ -17,6 +17,21 @@ namespace TDSM.Patcher
     {
         public static void Main(string[] args)
         {
+            //Debugging :)
+            OTAPatcher.CopyProjectFiles = args != null && args.Where(x => x == "-projectfiles").Count() > 0;
+
+            //By default we will patch a server
+            OTAPatcher.PatchMode = SupportType.Server;
+
+            //Specify the output assembly[name]
+            OTAPatcher.OutputName = "TerrariaServer";
+
+            //Specify the output assembly[name]
+            OTAPatcher.OTAProjectDirectory = "Open-Terraria-API";
+
+            OTAPatcher.PromptToRun = false;
+            OTAPatcher.CopyAPI = false; //We only care about the Binaries OTA.dll, not it's debug version
+
             var resourceLib = "Vestris.ResourceLib.dll";
             if (!System.IO.File.Exists(resourceLib))
             {
@@ -88,21 +103,6 @@ namespace TDSM.Patcher
                 }
             }
             OTAPatcher.InputFileName = OTAPatcher.PatchMode == SupportType.Client ? "Terraria." + OTAPatcher.Platform + ".exe" : "TerrariaServer.exe";
-
-            //Debugging :)
-            OTAPatcher.CopyProjectFiles = args != null && args.Where(x => x == "-projectfiles").Count() > 0;
-
-            //By default we will patch a server
-            OTAPatcher.PatchMode = SupportType.Server;
-
-            //Specify the output assembly[name]
-            OTAPatcher.OutputName = "TerrariaServer";
-
-            //Specify the output assembly[name]
-            OTAPatcher.OTAProjectDirectory = "Open-Terraria-API";
-
-            OTAPatcher.PromptToRun = false;
-            OTAPatcher.CopyAPI = false; //We only care about the Binaries OTA.dll, not it's debug version
 
             OTAPatcher.DefaultProcess(args);
 

@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using OTA.Plugin;
 using OTA;
 using OTA.Extensions;
+using System.Reflection;
 
 namespace TDSM.Core
 {
@@ -16,8 +17,8 @@ namespace TDSM.Core
         public void AddComponents<T>()
         {
             var methods = typeof(T).Assembly.GetTypesLoaded()
-                .SelectMany(t => t.GetMethods(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic))
-                .Select(m => new { Method = m, Attributes = m.GetCustomAttributes(typeof(TDSMComponentAttribute), true) })
+                .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public))
+                .Select(m => new { Method = m, Attributes = m.GetCustomAttributes(typeof(TDSMComponentAttribute), false) })
                 .Where(x => x.Attributes != null && x.Attributes.Length > 0);
 
             foreach (var method in methods)
@@ -43,15 +44,31 @@ namespace TDSM.Core
             }
         }
 
-        public void RunComponent(ComponentEvent componentEvent)
+        public bool RunComponent(ComponentEvent componentEvent)
         {
             if (_componentEvents.ContainsKey(componentEvent))
             {
                 foreach (var callback in _componentEvents[componentEvent])
                 {
-                    callback(this);
+                    try
+                    {
+                        callback(this);
+                    }
+                    catch (StackOverflowException so)
+                    {
+                        if (so == null)
+                            ProgramLog.Log("Stack overflow detected while running component " + componentEvent);
+                        else ProgramLog.Log(so, "Stack overflow detected while running component " + componentEvent);
+                        return false;
+                    }
+                    catch (Exception e)
+                    {
+                        ProgramLog.Log(e, "Exception running component " + componentEvent);
+                        return false;
+                    }
                 }
             }
+            return true;
         }
     }
 }

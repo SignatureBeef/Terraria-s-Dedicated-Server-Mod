@@ -46,7 +46,7 @@ namespace TDSM.Core.Net.PacketHandling
         }
 
         [TDSMComponent(ComponentEvent.Initialise)]
-        internal static void Initialise(Entry plugin)
+        public static void Initialise(Entry plugin)
         {
             plugin.Hook(HookPoints.ReceiveNetMessage, HandlePacket);
             plugin.Hook(HookPoints.CheckBufferState, CheckState);

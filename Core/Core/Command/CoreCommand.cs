@@ -14,9 +14,9 @@ namespace TDSM.Core.Command
 
         public abstract void Initialise();
 
-        public TDSMCommandInfo AddCommand(string prefix)
+        public TDSMCommandInfo AddCommand(string prefix, bool replaceExisting = false)
         {
-            return AddCommand(prefix);
+            return Core.AddCommand<TDSMCommandInfo>(prefix, replaceExisting);
         }
 
         [TDSMComponent(ComponentEvent.Initialise)]

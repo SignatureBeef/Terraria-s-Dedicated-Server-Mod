@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace TDSM.Web
 {
@@ -21,47 +22,41 @@ namespace TDSM.Web
         protected override void Enabled()
         {
             base.Enabled();
-
-
         }
     }
 
     /// <summary>
     /// A OWIN controller for non TDSM API's (Most will be in TDSM anyway)
     /// </summary>
-    [Authorize(Roles = "system")]
-    public class SystemController : ApiController
-    {
-        public Tuple<Double, Double> Get()
-        {
-
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// A OWIN controller for non TDSM API's (Most will be in TDSM anyway)
-    /// </summary>
+//    [Authorize(Roles = "console")]
     public class ConsoleController : ApiController
     {
-        [Authorize(Roles = "console")]
-        public async Task<HttpResponseMessage> Get()
+        static class Console
         {
-            var items = await FetchConsole();
-            return this.Request.CreateResponse(HttpStatusCode.OK, items);
+            public static ConsoleTarget Listener;
+
+            static Console()
+            {
+                OTA.Logging.ProgramLog.AddTarget(Listener = new ConsoleTarget());
+            }
+
+            public class ConsoleTarget : OTA.Logging.LogTarget
+            {
+                private readonly object _sync = new object();
+
+                public OTA.Logging.OutputEntry[] Entries
+                {
+                    get
+                    {
+                        lock (_sync) return base.entries.ToArray();
+                    }
+                }
+            }
         }
 
-        //        [Route("")]
-        [Authorize(Roles = "console")]
-        public async Task<HttpResponseMessage> Put()
+        public static OTA.Logging.OutputEntry[] FetchConsole()
         {
-            var items = await FetchConsole();
-            return this.Request.CreateResponse(HttpStatusCode.OK, items);
-        }
-
-        public static async Task<object> FetchConsole()
-        {
-            return null;
+            return Console.Listener.Entries;
         }
     }
 }

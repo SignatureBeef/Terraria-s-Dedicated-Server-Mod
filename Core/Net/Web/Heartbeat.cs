@@ -134,7 +134,7 @@ namespace TDSM.Core.Net.Web
         }
 
         [TDSMComponent(ComponentEvent.ReadyForCommands)]
-        internal static void OnReadyForCommands(Entry core)
+        public static void OnReadyForCommands(Entry core)
         {
             if (core.Config.EnableHeartbeat)
             {

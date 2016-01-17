@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTA.Patcher", "Open-Terrari
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTA.Commands", "Open-Terraria-API\OTA.Commands\OTA.Commands.csproj", "{1F4BFCFD-FA1F-4E47-B44E-91E18EC785AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebInterface", "WebInterface\WebInterface.csproj", "{088DB004-BC33-4FC6-B7F5-43C157D55AF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,22 @@ Global
 		XNA-Debug|Any CPU = XNA-Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Client-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Client-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.FNA-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.FNA-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Release %28Server%29|Any CPU.ActiveCfg = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Release %28Server%29|Any CPU.Build.0 = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Server-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Server-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Server-Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.Server-Release|Any CPU.Build.0 = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.XNA-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{088DB004-BC33-4FC6-B7F5-43C157D55AF9}.XNA-Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0ED8C37C-355A-4271-92B8-F9ED66881C46}.Client-Debug|Any CPU.ActiveCfg = Client-Debug|Any CPU
 		{0ED8C37C-355A-4271-92B8-F9ED66881C46}.Client-Debug|Any CPU.Build.0 = Client-Debug|Any CPU
 		{0ED8C37C-355A-4271-92B8-F9ED66881C46}.Debug|Any CPU.ActiveCfg = Server-Debug|Any CPU

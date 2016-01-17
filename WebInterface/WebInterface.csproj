@@ -29,12 +29,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="OTA">
-      <HintPath>..\Open-Terraria-API\Binaries\OTA.dll</HintPath>
-    </Reference>
-    <Reference Include="TerrariaServer">
-      <HintPath>..\Open-Terraria-API\Binaries\TerrariaServer.exe</HintPath>
-    </Reference>
     <Reference Include="System.Web.Http">
       <HintPath>..\Open-Terraria-API\Binaries\Libraries\System.Web.Http.dll</HintPath>
     </Reference>
@@ -45,6 +39,9 @@
     <Reference Include="EntityFramework">
       <HintPath>..\Open-Terraria-API\Binaries\Libraries\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="TerrariaServer">
+      <HintPath>..\Open-Terraria-API\Binaries\Server\TerrariaServer.exe</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -54,11 +51,22 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Web\interface\index.html" />
+    <None Include="Web\interface\css\style.css" />
+    <None Include="Web\interface\js\app.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{48477B14-CEAA-47AA-98F1-EF935734DBC5}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Open-Terraria-API\API\API.csproj">
+      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
+      <Name>API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Open-Terraria-API\OTA.Commands\OTA.Commands.csproj">
+      <Project>{1F4BFCFD-FA1F-4E47-B44E-91E18EC785AC}</Project>
+      <Name>OTA.Commands</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

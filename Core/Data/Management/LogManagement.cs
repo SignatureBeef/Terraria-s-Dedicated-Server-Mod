@@ -21,7 +21,7 @@ namespace TDSM.Core.Data.Management
         }
 
         [TDSMComponent(ComponentEvent.Initialise)]
-        internal static void Initialise(Entry plugin)
+        public static void Initialise(Entry plugin)
         {
             LogsToKeep = plugin.Config.Maintenance_LogsToKeep;
 

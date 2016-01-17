@@ -18,6 +18,8 @@ using OTA.Extensions;
 using TDSM.Core.Data;
 using OTA.Config;
 
+[assembly: PluginDependency("OTA.Commands")]
+
 namespace TDSM.Core
 {
     [OTAVersion(1, 0)]
@@ -90,8 +92,6 @@ namespace TDSM.Core
         {
             base.Enabled();
 
-            Core.Net.Web.ApiControllers.PublicController.ShowPlugins = true;
-
             RunComponent(ComponentEvent.Enabled);
         }
 
@@ -118,7 +118,12 @@ namespace TDSM.Core
             Hook(OTA.Commands.Events.CommandEvents.Listening, OnListeningForCommands);
 
             AddComponents<Entry>();
-            RunComponent(ComponentEvent.Initialise);
+            if (!RunComponent(ComponentEvent.Initialise))
+            {
+                this.Disable();
+                ProgramLog.Log("TDSM Rebind core disabled as components are not running.");
+                return;
+            }
 
             ProgramLog.Log("TDSM Rebind core enabled");
         }

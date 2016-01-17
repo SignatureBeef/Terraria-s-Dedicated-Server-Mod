@@ -12,7 +12,7 @@ namespace TDSM.Core.Data.Management
         public static int SaveIntervalMinutes { get; set; }
 
         [TDSMComponent(ComponentEvent.Initialise)]
-        internal static void Initialise(Entry plugin)
+        public static void Initialise(Entry plugin)
         {
             SaveIntervalMinutes = plugin.Config.Maintenance_SaveIntervalMinutes;
 

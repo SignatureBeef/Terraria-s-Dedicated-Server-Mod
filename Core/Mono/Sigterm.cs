@@ -19,7 +19,7 @@ namespace TDSM.Core.Mono
         private static Thread signal_thread;
 
         [TDSMComponent(ComponentEvent.ReadyForCommands)]
-        internal static void Attach(Entry plugin)
+        public static void Attach(Entry plugin)
         {
             if (Tools.RuntimePlatform != OTA.Misc.RuntimePlatform.Microsoft)
             {

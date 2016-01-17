@@ -10,7 +10,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            AddCommand("exit")
+            AddCommand("exit", true)
                 .WithDescription("Stops the server")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .SetDefaultUsage()

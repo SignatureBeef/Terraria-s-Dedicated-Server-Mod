@@ -17,7 +17,7 @@ namespace TDSM.Core.Net.Web.ApiControllers
         public static bool ShowPlugins { get; set; }
 
         [TDSMComponent(ComponentEvent.Initialise)]
-        internal static void Init(Entry plugin)
+        public static void Init(Entry plugin)
         {
             ShowPlugins = plugin.Config.API_ShowPlugins;
         }

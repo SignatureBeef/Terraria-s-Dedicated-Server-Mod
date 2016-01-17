@@ -46,7 +46,7 @@ namespace TDSM.Core.ServerCharacters
         };
         
         [TDSMComponent(ComponentEvent.Initialise)]
-        internal static void Init(Entry plugin)
+        public static void Init(Entry plugin)
         {
             //            if (Storage.IsAvailable)
             //            {

@@ -21,7 +21,7 @@ namespace TDSM.Core
         public const String Setting_MaxHealth = "SSC_MaxHealth";
 
         [TDSMComponent(ComponentEvent.Enabled)]
-        internal static void SetupDatabase(Entry plugin)
+        public static void SetupDatabase(Entry plugin)
         {
             #if ENTITY_FRAMEWORK_6
             Storage.IsAvailable = OTA.Data.EF6.OTAContext.HasConnection;

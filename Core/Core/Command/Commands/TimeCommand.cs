@@ -11,7 +11,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            AddCommand("time")
+            AddCommand("time", true)
                 .WithDescription("Change the time of day")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("set <numeric time>")
