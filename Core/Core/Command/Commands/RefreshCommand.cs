@@ -1,4 +1,5 @@
 ﻿using System;
+using OTA;
 using OTA.Command;
 using Terraria;
 
@@ -8,7 +9,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("refresh")
+            AddCommand("refresh")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Redownload the area around you from the server")
                 .WithHelpText("Usage:    refresh")
@@ -36,7 +37,7 @@ namespace TDSM.Core.Command.Commands
             if (player.whoAmI < 0)
                 return;
 
-            if (!player.Op)
+            if (!player.IsOp())
             {
                 var diff = DateTime.Now - player.GetLastCostlyCommand();
 

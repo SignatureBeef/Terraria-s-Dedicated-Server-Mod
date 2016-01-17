@@ -15,7 +15,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("plugin")
+            AddCommand("plugin")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Manage and view plugins")
                 .WithHelpText("list")

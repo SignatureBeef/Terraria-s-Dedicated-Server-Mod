@@ -10,7 +10,6 @@ namespace TDSM.Core.RemoteConsole
         public RConSender(RConClient rcon)
             : base()
         {
-            Op = true;
             Client = rcon;
         }
 

@@ -11,39 +11,25 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("auth")
+            AddCommand("auth")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithPermissionNode("tdsm.auth")
                 .WithDescription("Sign in")
                 .Calls(this.Auth);
             
-            Core.AddCommand("op")
+            AddCommand("op")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Allows a player server operator status")
                 .WithHelpText("<player> <password> - Sets the player as an operator on the server and sets the OP password for that player.")
-                .WithPermissionNode("tdsm.op")
+                .WithPermissionNode("tdsm.IsOp()")
                 .Calls(this.OpPlayer);
 
-            Core.AddCommand("deop")
+            AddCommand("deop")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Removes server operator status from a player")
                 .WithHelpText("<player> - Removes server operator status from the specified player.")
                 .WithPermissionNode("tdsm.deop")
                 .Calls(this.DeopPlayer);
-
-            Core.AddCommand("oplogin")
-                .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("Allows an operator to log in")
-                .WithHelpText("<password> - Logs into the server as an OP.")
-                .WithPermissionNode("tdsm.oplogin")
-                .Calls(this.OpLogin);
-
-            Core.AddCommand("oplogout")
-                .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("Logs out a signed in operator.")
-                .SetDefaultUsage()
-                .WithPermissionNode("tdsm.oplogout")
-                .Calls(this.OpLogout);
         }
 
         /// <summary>
@@ -65,12 +51,12 @@ namespace TDSM.Core.Command.Commands
 
                     if (AuthenticatedUsers.UpdateUser(playerName, null, op: true))
                     {
-                        Tools.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
+                        Utils.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
                         var player = Tools.GetPlayerByName(playerName);
                         if (player != null)
                         {
                             player.SendMessage("You are now a server operator.", Color.Green);
-                            player.Op = true;
+                            player.SetOp(true);
                             player.SetAuthentication(player.name, "tdsm");
                         }
 
@@ -91,20 +77,20 @@ namespace TDSM.Core.Command.Commands
             {
                 var password = args.GetString(1);
 
-                Tools.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
+                Utils.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
                 Core.Ops.Add(playerName, password);
 
                 var player = Tools.GetPlayerByName(playerName);
                 if (player != null)
                 {
                     player.SendMessage("You are now a server operator.", Color.Green);
-                    player.Op = true;
+                    player.SetOp(true);
                     player.SetAuthentication(player.name, "tdsm");
                 }
 
                 if (!Core.Ops.Save())
                 {
-                    Tools.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
+                    Utils.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
                     return;
                 }
             }
@@ -130,7 +116,7 @@ namespace TDSM.Core.Command.Commands
                     if (player != null)
                     {
                         player.SendMessage("Your server operator privledges have been revoked.", Color.DarkRed);
-                        player.Op = false;
+                        player.SetOp(false);
                         player.SetAuthentication(null, "tdsm");
                     }
 
@@ -156,73 +142,20 @@ namespace TDSM.Core.Command.Commands
                     if (player != null)
                     {
                         player.SendMessage("Your server operator privledges have been revoked.", Color.Green);
-                        player.Op = false;
+                        player.SetOp(false);
                         player.SetAuthentication(null, "tdsm");
                     }
 
-                    Tools.NotifyAllOps("De-Opping " + playerName + " [" + sender.SenderName + "]", true);
+                    Utils.NotifyAllOps("De-Opping " + playerName + " [" + sender.SenderName + "]", true);
                     Core.Ops.Remove(playerName, true);
 
                     if (!Core.Ops.Save())
                     {
-                        Tools.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
+                        Utils.NotifyAllOps("Failed to save op list [" + sender.SenderName + "]", true);
                     }
                 }
                 else
                     sender.SendMessage("No user found by " + playerName);
-            }
-        }
-
-        /// <summary>
-        /// Allows Operators to login.
-        /// </summary>
-        /// <param name="sender">Sending player</param>
-        /// <param name="password">Password for verification</param>
-        public void OpLogin(ISender sender, string password)
-        {
-            if (sender is Player)
-            {
-                var player = sender as Player;
-                if (Storage.IsAvailable)
-                {
-                    var existing = AuthenticatedUsers.GetUser(sender.SenderName);
-                    if (existing != null)
-                    {
-                        if (existing.ComparePassword(sender.SenderName, password) && existing.Operator)
-                        {
-                            Tools.NotifyAllOps(
-                                String.Format("{0} successfully logged in.", player.name)
-                            );
-                            player.Op = true;
-                            player.SetAuthentication(sender.SenderName, "tdsm");
-                            player.SendMessage("Successfully logged in.", Color.DarkGreen);
-                        }
-                        else
-                        {
-                            sender.Message("Login failed", Color.DarkRed);
-                        }
-                    }
-                    else
-                    {
-                        sender.Message("Login failed", Color.DarkRed);
-                    }
-                }
-                else
-                {
-                    if (Core.Ops.Contains(player.name, password))
-                    {
-                        Tools.NotifyAllOps(
-                            String.Format("{0} successfully logged in.", player.name)
-                        );
-                        player.Op = true;
-                        player.SetAuthentication(sender.SenderName, "tdsm");
-                        player.SendMessage("Successfully logged in.", Color.DarkGreen);
-                    }
-                    else
-                    {
-                        player.SendMessage("Login failed", Color.DarkRed);
-                    }
-                }
             }
         }
 
@@ -243,12 +176,12 @@ namespace TDSM.Core.Command.Commands
                     {
                         if (existing.ComparePassword(sender.SenderName, password))
                         {
-                            Tools.NotifyAllOps(
+                            Utils.NotifyAllOps(
                                 String.Format("{0} successfully logged in.", player.name)
                             );
                             player.SendMessage("Successfully logged in.", Color.DarkGreen);
                             player.SetAuthentication(sender.SenderName, "tdsm");
-                            player.Op = existing.Operator;
+                            player.SetOp(existing.Operator);
                         }
                         else
                         {
@@ -266,22 +199,22 @@ namespace TDSM.Core.Command.Commands
         }
 
         /// <summary>
-        /// Allows Operators to logout.
+        /// Allows players to logout.
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public void OpLogout(ISender sender, ArgumentList args)
+        public void LogOut(ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
                 var player = sender as Player;
-                if (sender.Op)
+                if (player.IsOp())
                 {
-                    player.Op = false;
-                    player.SendMessage("Ssccessfully logged out", Color.DarkRed);
+                    player.SetOp(false);
+                    player.SendMessage("Successfully logged out", Color.DarkRed);
                     player.SetAuthentication(String.Empty, "tdsm");
 
-                    Tools.NotifyAllOps(
+                    Utils.NotifyAllOps(
                         String.Format("{0} successfully logged out.", player.name)
                     );
                 }

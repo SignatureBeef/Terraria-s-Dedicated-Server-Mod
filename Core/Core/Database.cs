@@ -75,25 +75,25 @@ namespace TDSM.Core
 
         public void CreateDefaultGroups(TContext ctx)
         {
-            var pc = CommandParser.GetAvailableCommands(AccessLevel.PLAYER);
-            var ad = CommandParser.GetAvailableCommands(AccessLevel.OP);
-            var op = CommandParser.GetAvailableCommands(AccessLevel.CONSOLE); //Funny how these have now changed
-
-            CreateGroup("Guest", true, null, 255, 255, 255, pc
-                    .Where(x => !String.IsNullOrEmpty(x.Value.Node))
-                    .Select(x => x.Value.Node)
-                    .Distinct()
-                    .ToArray(), ctx, "[Guest] ");
-            CreateGroup("Admin", false, "Guest", 240, 131, 77, ad
-                    .Where(x => !String.IsNullOrEmpty(x.Value.Node))
-                    .Select(x => x.Value.Node)
-                    .Distinct()
-                    .ToArray(), ctx, "[Admin] ");
-            CreateGroup("Operator", false, "Admin", 77, 166, 240, op
-                    .Where(x => !String.IsNullOrEmpty(x.Value.Node))
-                    .Select(x => x.Value.Node)
-                    .Distinct()
-                    .ToArray(), ctx, "[OP] ");
+//            var pc = CommandParser.GetAvailableCommands(AccessLevel.PLAYER);
+//            var ad = CommandParser.GetAvailableCommands(AccessLevel.OP);
+//            var op = CommandParser.GetAvailableCommands(AccessLevel.CONSOLE); //Funny how these have now changed
+//
+//            CreateGroup("Guest", true, null, 255, 255, 255, pc
+//                    .Where(x => !String.IsNullOrEmpty(x.Value.Node))
+//                    .Select(x => x.Value.Node)
+//                    .Distinct()
+//                    .ToArray(), ctx, "[Guest] ");
+//            CreateGroup("Admin", false, "Guest", 240, 131, 77, ad
+//                    .Where(x => !String.IsNullOrEmpty(x.Value.Node))
+//                    .Select(x => x.Value.Node)
+//                    .Distinct()
+//                    .ToArray(), ctx, "[Admin] ");
+//            CreateGroup("Operator", false, "Admin", 77, 166, 240, op
+//                    .Where(x => !String.IsNullOrEmpty(x.Value.Node))
+//                    .Select(x => x.Value.Node)
+//                    .Distinct()
+//                    .ToArray(), ctx, "[OP] ");
         }
 
         static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, TContext ctx,

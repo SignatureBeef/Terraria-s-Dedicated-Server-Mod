@@ -1,5 +1,6 @@
 ﻿using System;
 using Terraria;
+using OTA;
 using OTA.Command;
 
 namespace TDSM.Core.Command.Commands
@@ -8,7 +9,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("status")
+            AddCommand("status")
                 .WithDescription("Server status")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.status")

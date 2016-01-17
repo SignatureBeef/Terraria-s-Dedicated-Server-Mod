@@ -1,4 +1,5 @@
 ﻿using System;
+using OTA;
 using TDSM.Core.Data;
 using OTA.Command;
 using Microsoft.Xna.Framework;
@@ -11,7 +12,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("group")
+            AddCommand("group")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.group")
                 .WithDescription("Manage groups and their permissions")
@@ -23,7 +24,7 @@ namespace TDSM.Core.Command.Commands
                 .WithHelpText("listnodes <group>")
                 .Calls(this.GroupPermission);
             
-            Core.AddCommand("user")
+            AddCommand("user")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.user")
                 .WithDescription("Manage user permissions")

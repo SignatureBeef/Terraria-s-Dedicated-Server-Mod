@@ -319,7 +319,7 @@ namespace TDSM.Core.RemoteConsole
 
             try
             {
-                Entry.CommandParser.ParseConsoleCommand(line, this.sender);
+                OTA.Commands.CommandManager.Parser.ParseConsoleCommand(line, this.sender);
             }
             catch (OTA.Misc.ExitException)
             {

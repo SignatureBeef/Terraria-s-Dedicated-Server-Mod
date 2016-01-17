@@ -1,4 +1,5 @@
 ﻿using System;
+using OTA;
 using OTA.Command;
 
 namespace TDSM.Core.Command.Commands
@@ -7,7 +8,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("npcspawning")
+            AddCommand("npcspawning")
                 .WithDescription("Turn NPC spawning on or off.")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("<true|false>")

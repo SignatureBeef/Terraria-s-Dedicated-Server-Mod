@@ -3,6 +3,7 @@ using TDSM.Core.Definitions;
 using OTA.Command;
 using Terraria;
 using OTA.Misc;
+using OTA;
 
 namespace TDSM.Core.Command.Commands
 {
@@ -10,7 +11,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("give")
+            AddCommand("give")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Give a player items")
                 .WithHelpText("<amount> <itemname:itemid> [prefix] [player]")
@@ -69,7 +70,7 @@ namespace TDSM.Core.Command.Commands
                     else throw new CommandError("Expected an online player");
                 }
 
-                receiver.GiveItem(item.Id, stack, item.MaxStack, sender, item.NetId, true, item.Prefix);
+                receiver.GiveItem(item.Id, stack, item.MaxStack, item.NetId, item.Prefix);
             }
             else
                 throw new CommandError(String.Format("No item known by: {0}", name));

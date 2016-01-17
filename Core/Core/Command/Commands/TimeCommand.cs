@@ -11,7 +11,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("time")
+            AddCommand("time")
                 .WithDescription("Change the time of day")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("set <numeric time>")
@@ -21,7 +21,7 @@ namespace TDSM.Core.Command.Commands
                 .WithPermissionNode("tdsm.time")
                 .Calls(this.Time);
             
-            Core.AddCommand("fastforwardtime")
+            AddCommand("fastforwardtime")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Fast forwards time until disabled.")
                 .WithPermissionNode("tdsm.fastforwardtime")

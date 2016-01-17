@@ -2,6 +2,7 @@
 using OTA.Command;
 using OTA.Misc;
 using Microsoft.Xna.Framework;
+using OTA;
 
 namespace TDSM.Core.Command.Commands
 {
@@ -9,7 +10,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("platform")
+            AddCommand("platform")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Show what type of server is running TDSM")
                 .SetDefaultUsage()

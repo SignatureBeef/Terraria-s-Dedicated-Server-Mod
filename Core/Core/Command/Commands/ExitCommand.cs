@@ -10,14 +10,14 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("exit")
+            AddCommand("exit")
                 .WithDescription("Stops the server")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.admin")
                 .Calls(this.Exit);
 
-            Core.AddCommand("stop") //TODO Add alias
+            AddCommand("stop") //TODO Add alias
                 .WithDescription("Stops the server")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .SetDefaultUsage()
@@ -38,7 +38,7 @@ namespace TDSM.Core.Command.Commands
                 sender.Message("You cannot perform that action.", 255, 238, 130, 238);
                 return;
             }
-            else if (!CommandParser.CheckAccessLevel((AccessLevel)accessLevel, sender))
+            else if (!sender.HasAccessLevel((AccessLevel)accessLevel))
             {
                 sender.Message("You cannot perform that action.", 255, 238, 130, 238);
                 return;
@@ -52,7 +52,7 @@ namespace TDSM.Core.Command.Commands
 
             //            args.ParseNone();
 
-            Tools.NotifyAllOps("Exiting on request.");
+            Utils.NotifyAllOps("Exiting on request.");
 
             if (Netplay.anyClients)
             {

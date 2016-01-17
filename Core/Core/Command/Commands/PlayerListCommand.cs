@@ -1,5 +1,6 @@
 ﻿using System;
 using Terraria;
+using OTA;
 using OTA.Command;
 using System.Linq;
 
@@ -9,21 +10,21 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("list")
+            AddCommand("list")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.List);
 
-            Core.AddCommand("who")
+            AddCommand("who")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.List);
 
-            Core.AddCommand("players")
+            AddCommand("players")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()
@@ -31,14 +32,14 @@ namespace TDSM.Core.Command.Commands
                 .Calls(this.OldList);
 
             // this is what the server crawler expects
-            Core.AddCommand("playing")
+            AddCommand("playing")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.who")
                 .Calls(this.OldList);
 
-            Core.AddCommand("online")
+            AddCommand("online")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()
@@ -89,10 +90,10 @@ namespace TDSM.Core.Command.Commands
             args.ParseNone();
 
             var players = from p in Terraria.Main.player
-                                   where p.active && !p.Op
+                                   where p.active && !p.IsOp()
                                    select p.name;
             var ops = from p in Terraria.Main.player
-                               where p.active && p.Op
+                               where p.active && p.IsOp()
                                select p.name;
 
             var pn = players.Count();

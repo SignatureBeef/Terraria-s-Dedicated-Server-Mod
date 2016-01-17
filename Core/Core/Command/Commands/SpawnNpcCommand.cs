@@ -12,7 +12,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("spawnnpc")
+            AddCommand("spawnnpc")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Spawns NPCs")
                 .WithHelpText("<amount> \"<name:id>\" \"<player>\"")
@@ -109,8 +109,7 @@ namespace TDSM.Core.Command.Commands
 
                 realNPCName = Main.npc[npcIndex].name;
             }
-            Tools.NotifyAllOps("Spawned " + amount.ToString() + " of " +
-                realNPCName + " [" + player.name + "]", true);
+            Utils.NotifyAllOps("Spawned " + amount.ToString() + " of " + realNPCName + " [" + player.name + "]", true);
         }
     }
 }

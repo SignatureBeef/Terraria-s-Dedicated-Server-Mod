@@ -9,7 +9,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("tphere")
+            AddCommand("tphere")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Teleport a player to yourself")
                 .WithHelpText("<player>")
@@ -39,7 +39,7 @@ namespace TDSM.Core.Command.Commands
 
                     subject.Teleport(player);
 
-                    Tools.NotifyAllOps("Teleported " + subject.name + " to " +
+                    Utils.NotifyAllOps("Teleported " + subject.name + " to " +
                         player.name + " [" + sender.SenderName + "]", true);
                 }
             }

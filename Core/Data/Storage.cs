@@ -149,7 +149,7 @@ namespace TDSM.Core.Data
         public static Permission IsPermitted(string node, BasePlayer player)
         {
             if (_connector == null)
-                return player.Op ? Permission.Permitted : Permission.Denied;
+                return player.IsOp() ? Permission.Permitted : Permission.Denied;
             return _connector.IsPermitted(node, player);
         }
 

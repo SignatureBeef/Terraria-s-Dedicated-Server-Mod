@@ -11,7 +11,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("worldevent")
+            AddCommand("worldevent")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Start or stop an event")
                 .WithHelpText("eclipse|bloodmoon|pumpkinmoon|snowmoon|slimerain")

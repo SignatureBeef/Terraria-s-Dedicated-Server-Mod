@@ -3,6 +3,7 @@ using OTA;
 using Terraria;
 using OTA.Command;
 using TDSM.Core.Net.Web;
+using OTA.Config;
 
 namespace TDSM.Core.Command.Commands
 {
@@ -10,7 +11,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("serverlist")
+            AddCommand("serverlist")
                 .WithDescription("Manages the heartbeat and server list")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("print|?              - Displays the current details")

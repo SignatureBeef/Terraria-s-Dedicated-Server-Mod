@@ -49,7 +49,9 @@ namespace TDSM.Core.Mono
                                     {
                                         _attached = false;
                                         OTA.Logging.ProgramLog.Log("Server received Exit Signal");
-                                        VanillaCommands.Exit(null, null);
+
+                                        Terraria.IO.WorldFile.saveWorld(false);
+                                        Terraria.Netplay.disconnect = true;
                                     }
                                 }
                             })).Start();

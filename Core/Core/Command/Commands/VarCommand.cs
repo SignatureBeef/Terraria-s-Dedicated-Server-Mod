@@ -1,4 +1,5 @@
 ﻿using System;
+using OTA;
 using OTA.Command;
 using Terraria;
 
@@ -8,7 +9,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("var")
+            AddCommand("var")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Experimental variable manipulation")
                 .WithHelpText("<field|exec|prop> <namespace.classname> <fieldname|methodname>")

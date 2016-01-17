@@ -11,6 +11,7 @@ using OTA.Misc;
 using OTA.Logging;
 using Terraria;
 using OTA.Extensions;
+using OTA.Config;
 
 namespace TDSM.Core.RemoteConsole
 {

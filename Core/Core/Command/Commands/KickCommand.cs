@@ -1,5 +1,6 @@
 ﻿using System;
 using Terraria;
+using OTA;
 using OTA.Command;
 
 namespace TDSM.Core.Command.Commands
@@ -8,7 +9,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("kick")
+            AddCommand("kick")
                 .WithDescription("Kicks a player from the server")
                 .WithHelpText("<player> - Kicks the player specified.")
                 .WithPermissionNode("tdsm.kick")

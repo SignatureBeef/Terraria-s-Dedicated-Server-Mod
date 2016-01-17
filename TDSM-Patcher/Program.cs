@@ -46,21 +46,60 @@ namespace TDSM.Patcher
 //                OTAPatcher.Copy(e.RootDirectory, "tdsm-mysql-connector", Path.Combine(Environment.CurrentDirectory, "Plugins"), "tdsm-mysql-connector", true);
 //                OTAPatcher.Copy(e.RootDirectory, "tdsm-sqlite-connector", Path.Combine(Environment.CurrentDirectory, "Plugins"), "tdsm-sqlite-connector", true);
 
-            };
+                };
+            //Specifiy the official file name
+            if (args != null)
+            {
+                var ix = Array.FindIndex(args, x => x == "-platform");
+                if (ix > -1)
+                    OTAPatcher.Platform = args[ix + 1];
+            }
+
+            if (args != null)
+            {
+                var ix = Array.FindIndex(args, x => x == "-patchmode");
+                if (ix > -1)
+                    OTAPatcher.PatchMode = (SupportType)Enum.Parse(typeof(SupportType), args[ix + 1]);
+            }
+            if (0 == OTAPatcher.PatchMode)
+            {
+                #if CLIENT
+                OTAPatcher.PatchMode = SupportType.Client;
+                #else
+                OTAPatcher.PatchMode = SupportType.Server;
+                OTAPatcher.Platform = "Server";
+                #endif
+            }
+
+            if (String.IsNullOrEmpty(OTAPatcher.Platform))
+            {
+                var platform = OTA.Misc.Platform.Type;
+                switch (OTA.Misc.Platform.Type)
+                {
+                    case OTA.Misc.Platform.PlatformType.LINUX:
+                        OTAPatcher.Platform = "Linux";
+                        break;
+                    case OTA.Misc.Platform.PlatformType.MAC:
+                        OTAPatcher.Platform = "Mac";
+                        break;
+                    case OTA.Misc.Platform.PlatformType.WINDOWS:
+                        OTAPatcher.Platform = "Windows";
+                        break;
+                }
+            }
+            OTAPatcher.InputFileName = OTAPatcher.PatchMode == SupportType.Client ? "Terraria." + OTAPatcher.Platform + ".exe" : "TerrariaServer.exe";
+
+            //Debugging :)
+            OTAPatcher.CopyProjectFiles = args != null && args.Where(x => x == "-projectfiles").Count() > 0;
 
             //By default we will patch a server
             OTAPatcher.PatchMode = SupportType.Server;
-
-            //Specifiy the official file name
-            OTAPatcher.InputFileName = "TerrariaServer.exe";
 
             //Specify the output assembly[name]
             OTAPatcher.OutputName = "TerrariaServer";
 
             //Specify the output assembly[name]
             OTAPatcher.OTAProjectDirectory = "Open-Terraria-API";
-
-            OTAPatcher.CopyProjectFiles = true;
 
             OTAPatcher.PromptToRun = false;
             OTAPatcher.CopyAPI = false; //We only care about the Binaries OTA.dll, not it's debug version

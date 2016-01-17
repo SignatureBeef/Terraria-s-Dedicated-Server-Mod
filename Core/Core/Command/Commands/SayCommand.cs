@@ -1,4 +1,5 @@
 ﻿using System;
+using OTA;
 using OTA.Command;
 using OTA.Logging;
 using Terraria;
@@ -9,7 +10,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("say")
+            AddCommand("say")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Say a message from the server")
                 .WithHelpText("<message>")

@@ -1,4 +1,5 @@
 ﻿using System;
+using OTA;
 using OTA.Command;
 using System.Text;
 using TDSM.Core.Data;
@@ -11,7 +12,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("whoami")
+            AddCommand("whoami")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithPermissionNode("tdsm.whoami")
                 .WithDescription("Find out if you are authenticated")
@@ -28,7 +29,7 @@ namespace TDSM.Core.Command.Commands
                 sb.Append("You are ");
                 if (!player.IsAuthenticated()) sb.Append("not ");
 
-                if (player.Op) sb.Append("an operator");
+                if (player.IsOp()) sb.Append("an operator");
                 else sb.Append("logged in");
 
                 var groupName = String.Empty;

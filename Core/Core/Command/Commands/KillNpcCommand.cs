@@ -10,13 +10,13 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("killnpc")
+            AddCommand("killnpc")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.killnpc")
                 .WithDescription("Kill all non town NPC's")
                 .Calls(this.KillNPC);
             
-            Core.AddCommand("killnpcs")
+            AddCommand("killnpcs")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.killnpc")
                 .WithDescription("Kill all non town NPC's")

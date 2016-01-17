@@ -14,7 +14,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("spawnboss")
+            AddCommand("spawnboss")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Spawn a boss")
                 .WithHelpText("<amount> <boss> <player>")

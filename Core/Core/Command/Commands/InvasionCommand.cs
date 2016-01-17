@@ -14,7 +14,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("invasion")
+            AddCommand("invasion")
                 .WithDescription("Begins an invasion")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("goblin|frost|pirate|martian")

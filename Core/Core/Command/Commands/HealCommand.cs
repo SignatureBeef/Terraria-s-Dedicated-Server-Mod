@@ -10,7 +10,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("heal")
+            AddCommand("heal")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Heals one or all players.")
                 .WithHelpText("<player>")

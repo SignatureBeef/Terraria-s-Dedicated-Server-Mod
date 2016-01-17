@@ -59,12 +59,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="OTA">
-      <HintPath>..\Open-Terraria-API\Binaries\OTA.dll</HintPath>
-    </Reference>
-    <Reference Include="TerrariaServer">
-      <HintPath>..\Open-Terraria-API\Binaries\TerrariaServer.exe</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -101,6 +95,9 @@
     <Reference Include="Microsoft.Owin.Hosting">
       <HintPath>..\Open-Terraria-API\Binaries\Libraries\Microsoft.Owin.Hosting.dll</HintPath>
     </Reference>
+    <Reference Include="TerrariaServer">
+      <HintPath>..\Open-Terraria-API\Binaries\Server\TerrariaServer.exe</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -118,4 +115,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\Open-Terraria-API\API\API.csproj">
+      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
+      <Name>API</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

@@ -16,6 +16,7 @@ using System.Linq;
 using TDSM.Core.Misc;
 using OTA.Extensions;
 using TDSM.Core.Data;
+using OTA.Config;
 
 namespace TDSM.Core
 {
@@ -77,12 +78,6 @@ namespace TDSM.Core
                 " swallowed sadness"
             }).Shuffle());
 
-        /// <summary>
-        /// The active server instance of the command parser
-        /// </summary>
-        /// <value>The command parser.</value>
-        public static CommandParser CommandParser { get; } = new CommandParser();
-
         public Entry()
         {
             this.Author = "TDSM";
@@ -120,40 +115,17 @@ namespace TDSM.Core
 
             ProgramLog.LogRotation = Config.LogRotation;
 
+            Hook(OTA.Commands.Events.CommandEvents.Listening, OnListeningForCommands);
+
             AddComponents<Entry>();
             RunComponent(ComponentEvent.Initialise);
 
             ProgramLog.Log("TDSM Rebind core enabled");
         }
 
-        public void ListenForCommands()
+        public void OnListeningForCommands(ref HookContext ctx, ref OTA.Commands.Events.CommandArgs.Listening args)
         {
             RunComponent(ComponentEvent.ReadyForCommands);
-
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            ProgramLog.Log("Ready for commands.");
-            while (!Terraria.Netplay.disconnect /*|| Server.RestartInProgress*/)
-            {
-                try
-                {
-                    var ln = Console.ReadLine();
-                    if (!String.IsNullOrEmpty(ln))
-                        CommandParser.ParseConsoleCommand(ln);
-                    else if (null == ln)
-                    {
-                        ProgramLog.Log("No console input available");
-                        break;
-                    }
-                }
-                catch (ExitException)
-                {
-                }
-                catch (Exception e)
-                {
-                    ProgramLog.Log("Exception from command");
-                    ProgramLog.Log(e);
-                }
-            }
         }
 
         void ProcessPIDFile(string pidPath)

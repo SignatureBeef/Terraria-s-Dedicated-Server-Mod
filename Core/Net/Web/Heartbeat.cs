@@ -231,7 +231,7 @@ namespace TDSM.Core.Net.Web
                                 {
                                     if (!_lastUpdateNotice.HasValue || (DateTime.Now - _lastUpdateNotice.Value).TotalMinutes >= 60)
                                     {
-                                        Tools.NotifyAllOps("Updates are ready for: " + updates);
+                                        Utils.NotifyAllOps("Updates are ready for: " + updates);
                                         _lastUpdateNotice = DateTime.Now;
                                     }
                                 }

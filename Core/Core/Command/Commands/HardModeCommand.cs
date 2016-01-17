@@ -1,4 +1,5 @@
 ﻿using System;
+using OTA;
 using OTA.Command;
 using Terraria;
 
@@ -8,7 +9,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("hardmode")
+            AddCommand("hardmode")
                 .WithAccessLevel(AccessLevel.OP)
                 .SetDefaultUsage()
                 .WithDescription("Enables hard mode.")

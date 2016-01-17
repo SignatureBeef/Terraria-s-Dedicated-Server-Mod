@@ -46,7 +46,7 @@ namespace TDSM.Core.Config
         {
             var line = String.Join(" ", args);
             var al = new List<String>();
-            TDSM.Core.Command.CommandParser.Tokenize(line, al);
+            OTA.Commands.CommandParser.Tokenize(line, al);
 
             var t = typeof(ConfigPrefixAttribute);
             var props = typeof(T).GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(ConfigPrefixAttribute)));

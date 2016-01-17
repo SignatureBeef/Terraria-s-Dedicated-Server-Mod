@@ -1,6 +1,7 @@
 ﻿using System;
 using OTA.Command;
 using Terraria;
+using OTA;
 
 namespace TDSM.Core.Command.Commands
 {
@@ -8,8 +9,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("api")
-                .WithAccessLevel(AccessLevel.OP)
+            AddCommand("api")
                 .WithPermissionNode("tdsm.api")
                 .Calls(ManageApi);
         }

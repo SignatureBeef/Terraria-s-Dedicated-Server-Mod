@@ -10,7 +10,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("repo")
+            AddCommand("repo")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Install or update plugins.")
                 .WithHelpText("<status|update|install> <plugin name>")

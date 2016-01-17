@@ -9,7 +9,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("tp")
+            AddCommand("tp")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Teleport a player to another player")
                 .WithHelpText("<player> <toplayer> - another player")
@@ -45,12 +45,12 @@ namespace TDSM.Core.Command.Commands
                     if (subject.SpawnX > -1)
                     {
                         subject.Teleport(subject.SpawnX * 16f, subject.SpawnY * 16f - subject.height);
-                        Tools.NotifyAllOps(String.Format("{0} has teleported home", subject.name), true);
+                        Utils.NotifyAllOps(String.Format("{0} has teleported home", subject.name), true);
                     }
                     else
                     {
                         subject.Teleport(Main.spawnTileX * 16f, Main.spawnTileY * 16f - subject.height);
-                        Tools.NotifyAllOps(String.Format("{0} has teleported to spawn", subject.name), true);
+                        Utils.NotifyAllOps(String.Format("{0} has teleported to spawn", subject.name), true);
                     }
                     return;
                 }
@@ -69,7 +69,7 @@ namespace TDSM.Core.Command.Commands
                 /*if (*/
                 subject.Teleport(target); //)
                 {
-                    Tools.NotifyAllOps(String.Concat("Teleported ", subject.name, " to ",
+                    Utils.NotifyAllOps(String.Concat("Teleported ", subject.name, " to ",
                             target.name, ". [", sender.SenderName, "]"), true);
                 }
                 //else
@@ -87,7 +87,7 @@ namespace TDSM.Core.Command.Commands
                     /*if (*/
                     subject.Teleport(target); //)
                     {
-                        Tools.NotifyAllOps(string.Concat("Teleported ", subject.name, " to ",
+                        Utils.NotifyAllOps(string.Concat("Teleported ", subject.name, " to ",
                                 target.name, ". [", sender.SenderName, "]"), true);
                     }
                     //else
@@ -111,7 +111,7 @@ namespace TDSM.Core.Command.Commands
                     /*if (*/
                     subject.Teleport((x - OutOfBoundsPadding) * 16f, (y - OutOfBoundsPadding) * 16f); //)
                     {
-                        Tools.NotifyAllOps(string.Concat("Teleported ", subject.name, " to ",
+                        Utils.NotifyAllOps(string.Concat("Teleported ", subject.name, " to ",
                                 x, ":", y, ". [", sender.SenderName, "]"), true);
                     }
                     //else

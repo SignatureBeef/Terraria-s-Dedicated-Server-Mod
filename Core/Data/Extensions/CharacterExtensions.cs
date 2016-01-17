@@ -4,6 +4,7 @@ using System.Linq;
 using TDSM.Core.Data.Models;
 using OTA;
 using OTA.Misc;
+using OTA.Data;
 
 namespace TDSM.Core.Data.Extensions
 {

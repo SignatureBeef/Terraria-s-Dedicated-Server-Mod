@@ -10,7 +10,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("timelock")
+            AddCommand("timelock")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Forces the time to stay at a certain point.")
                 .WithHelpText("now")

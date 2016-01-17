@@ -112,20 +112,6 @@ namespace TDSM.Core
         }
 
         [Hook(HookOrder.NORMAL)]
-        void OnStartCommandProcessing(ref HookContext ctx, ref HookArgs.StartCommandProcessing args)
-        {
-            ctx.SetResult(HookResult.IGNORE);
-
-            if (Console.IsInputRedirected)
-            {
-                ProgramLog.Admin.Log("Console input redirection has been detected.");
-                return;
-            }
-
-            (new OTA.Misc.ProgramThread("Command", ListenForCommands)).Start();
-        }
-
-        [Hook(HookOrder.NORMAL)]
         void OnPlayerDisconnected(ref HookContext ctx, ref HookArgs.PlayerLeftGame args)
         {
             if (Terraria.Main.ServerSideCharacter)
@@ -158,18 +144,6 @@ namespace TDSM.Core
 
         //    //Server.Bans.Add(args.RemoteAddress); //TODO see if port needs removing
         //}
-
-        [Hook(HookOrder.NORMAL)]
-        void OnChat(ref HookContext ctx, ref TDSMHookArgs.PlayerChat args)
-        {
-            if (args.Message.Length > 0 && args.Message.Substring(0, 1).Equals("/"))
-            {
-                ProgramLog.Log(ctx.Player.name + " sent command: " + args.Message);
-                ctx.SetResult(HookResult.IGNORE);
-
-                CommandParser.ParsePlayerCommand(ctx.Player, args.Message);
-            }
-        }
 
         [Hook(HookOrder.NORMAL)]
         void OnServerTick(ref HookContext ctx, ref HookArgs.ServerTick args)

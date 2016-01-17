@@ -46,7 +46,7 @@ namespace TDSM.Core.Data
                 new TableColumn(ColumnNames.Id, typeof(Int32), true, true),
                 new TableColumn(ColumnNames.Username, typeof(String), 255),
                 new TableColumn(ColumnNames.Password, typeof(String), 255),
-                new TableColumn(ColumnNames.Operator, typeof(Boolean)),
+                new TableColumn(ColumnNames.IsOperator, typeof(Boolean)),
                 new TableColumn(ColumnNames.DateAdded, typeof(DateTime))
             };
 
@@ -150,7 +150,7 @@ namespace TDSM.Core.Data
                         UserTable.ColumnNames.Id,
                         UserTable.ColumnNames.Username,
                         UserTable.ColumnNames.Password,
-                        UserTable.ColumnNames.Operator
+                        UserTable.ColumnNames.IsOperator
                     }, new WhereFilter(UserTable.ColumnNames.Username, username));
 
                 var res = Storage.ExecuteArray<DbPlayer>(bl);
@@ -217,7 +217,7 @@ namespace TDSM.Core.Data
                     {
                         new DataParameter(UserTable.ColumnNames.Username, username),
                         new DataParameter(UserTable.ColumnNames.Password, hs),
-                        new DataParameter(UserTable.ColumnNames.Operator, op),
+                        new DataParameter(UserTable.ColumnNames.IsOperator, op),
                         new DataParameter(UserTable.ColumnNames.DateAdded, DateTime.Now)
                     });
                 return Storage.ExecuteNonQuery(bl) > 0;
@@ -239,7 +239,7 @@ namespace TDSM.Core.Data
                 bl.Update(UserTable.TableName, new DataParameter[]
                     {
                         new DataParameter(UserTable.ColumnNames.Password, hs),
-                        new DataParameter(UserTable.ColumnNames.Operator, op)
+                        new DataParameter(UserTable.ColumnNames.IsOperator, op)
                     },
                     new WhereFilter(UserTable.ColumnNames.Username, username)
                 );
@@ -280,7 +280,7 @@ namespace TDSM.Core.Data
             {
                 bl.Update(UserTable.TableName, new DataParameter[]
                     {
-                        new DataParameter(UserTable.ColumnNames.Operator, op)
+                        new DataParameter(UserTable.ColumnNames.IsOperator, op)
                     },
                     new WhereFilter(UserTable.ColumnNames.Username, username)
                 );
@@ -288,6 +288,8 @@ namespace TDSM.Core.Data
             }
         }
     }
+
+
 
 
 #else

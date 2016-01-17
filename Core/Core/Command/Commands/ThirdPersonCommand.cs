@@ -1,4 +1,5 @@
 ﻿using System;
+using OTA;
 using OTA.Command;
 using OTA.Logging;
 using Terraria;
@@ -9,7 +10,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("me")
+            AddCommand("me")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("3rd person talk")
                 .WithHelpText("<message> - Message to display in third person.")

@@ -10,14 +10,14 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            Core.AddCommand("save")
+            AddCommand("save")
                 .WithDescription("Save world and configuration data")
                 .WithAccessLevel(AccessLevel.OP)
                 .SetDefaultUsage()
                 .WithPermissionNode("tdsm.admin")
                 .Calls(this.SaveAll);
 
-            Core.AddCommand("save-all")
+            AddCommand("save-all")
                 .WithDescription("Save world and configuration data")
                 .WithAccessLevel(AccessLevel.OP)
                 .SetDefaultUsage()
@@ -32,20 +32,20 @@ namespace TDSM.Core.Command.Commands
         /// <param name="args">Arguments sent with command</param>
         public void SaveAll(ISender sender, ArgumentList args)
         {
-            Tools.NotifyAllOps("Saving world.....");
+            Utils.NotifyAllOps("Saving world.....");
 
             Terraria.IO.WorldFile.saveWorld();
 
             while (WorldGen.saveLock)
                 Thread.Sleep(100);
 
-            //            Tools.NotifyAllOps("Saving data...", true);
+            //            Utils.NotifyAllOps("Saving data...", true);
 
             //Server.BanList.Save();
             //Server.WhiteList.Save();
-            //Server.OpList.Save();
+            //Server.IsOp()List.Save();
 
-            Tools.NotifyAllOps("Saving Complete.", true);
+            Utils.NotifyAllOps("Saving Complete.", true);
         }
     }
 }
