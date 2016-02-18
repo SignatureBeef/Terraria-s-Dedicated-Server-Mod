@@ -8,7 +8,7 @@ set AutoRestart=1
 :: ~~~~ END USER EDIT ~~~~
 
 :start
-TerrariaServer.exe -config server.config
+TerrariaServer.exe -config serverconfig.txt
 
 if %AutoRestart%==1 (
 	echo.
