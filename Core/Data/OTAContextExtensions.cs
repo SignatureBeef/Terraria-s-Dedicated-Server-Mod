@@ -1,11 +1,10 @@
-﻿using System;
-using TDSM.Core.Data.Permissions;
-using System.Linq;
+﻿using System.Linq;
 using TDSM.Core.Data.Models;
+using OTA.Permissions;
 
 namespace TDSM.Core.Data
 {
-#if ENTITY_FRAMEWORK_6 || ENTITY_FAMEWORK_7
+#if ENTITY_FRAMEWORK_6 || ENTITY_FRAMEWORK_7
     public static class OTAContextExtensions
     {
         public static IQueryable<DbPlayer> GetUser(this TContext ctx, string name)

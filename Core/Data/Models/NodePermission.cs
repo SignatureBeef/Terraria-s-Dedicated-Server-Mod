@@ -1,5 +1,4 @@
-﻿using System;
-using TDSM.Core.Data.Permissions;
+﻿using OTA.Permissions;
 
 namespace TDSM.Core.Data.Models
 {

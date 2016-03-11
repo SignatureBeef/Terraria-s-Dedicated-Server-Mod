@@ -10,6 +10,7 @@ using TDSM.Core.Command;
 using TDSM.Core.Data.Permissions;
 using TDSM.Core.Data.Models;
 using OTA;
+using OTA.Permissions;
 
 namespace TDSM.Core
 {
@@ -51,15 +52,15 @@ namespace TDSM.Core
             #endif
         }
 
-        protected override void DatabaseInitialising(System.Data.Entity.DbModelBuilder builder)
-        {
-            base.DatabaseInitialising(builder);
+        //protected override void DatabaseInitialising(System.Data.Entity.DbModelBuilder builder)
+        //{
+        //    base.DatabaseInitialising(builder);
 
-            using (var dbc = new TDSM.Core.Data.TContext())
-            {
-                dbc.CreateModel(builder);
-            }
-        }
+        //    using (var dbc = new TDSM.Core.Data.TContext())
+        //    {
+        //        dbc.CreateModel(builder);
+        //    }
+        //}
 
         protected override void DatabaseCreated()
         {

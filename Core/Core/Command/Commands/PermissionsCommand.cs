@@ -5,6 +5,7 @@ using OTA.Command;
 using Microsoft.Xna.Framework;
 using TDSM.Core.Data.Permissions;
 using OTA.Logging;
+using OTA.Permissions;
 
 namespace TDSM.Core.Command.Commands
 {

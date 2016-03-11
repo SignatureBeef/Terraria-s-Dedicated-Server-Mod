@@ -1,18 +1,15 @@
 ﻿using System;
 using OTA;
 using TDSM.Core.Data.Models;
+using OTA.Permissions;
 
 namespace TDSM.Core.Data.Permissions
 {
     /// <summary>
     /// The interface behind custom permissions handlers
     /// </summary>
-    public interface IPermissionHandler
+    public interface IPermissionHandler : OTA.Permissions.IPermissionHandler
     {
-        Permission IsPermitted(string node, BasePlayer player);
-
-        #region "Management"
-
         /// <summary>
         /// Find a group by name
         /// </summary>
@@ -99,7 +96,6 @@ namespace TDSM.Core.Data.Permissions
         Group GetInheritedGroupForUser(string username);
         
         Group GetGuestGroup();
-        #endregion
     }
 }
 

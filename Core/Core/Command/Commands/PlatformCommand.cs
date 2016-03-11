@@ -29,13 +29,13 @@ namespace TDSM.Core.Command.Commands
 
             switch (Platform.Type)
             {
-                case Platform.PlatformType.LINUX:
+                case Platform.PlatformType.Linux:
                     platform = "Linux";
                     break;
-                case Platform.PlatformType.MAC:
+                case Platform.PlatformType.Mac:
                     platform = "Mac";
                     break;
-                case Platform.PlatformType.WINDOWS:
+                case Platform.PlatformType.Windows:
                     platform = "Windows";
                     break;
             }

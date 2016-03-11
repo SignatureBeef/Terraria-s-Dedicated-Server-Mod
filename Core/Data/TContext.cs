@@ -1,9 +1,6 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.Data.Entity;
+using OTA.Data.EF7.Extensions;
 using TDSM.Core.Data.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using OTA.Data.EF6;
-using OTA.Data.EF6.Config.SQLite;
 using TDSM.Core.ServerCharacters;
 
 namespace TDSM.Core.Data.Models
@@ -128,8 +125,7 @@ namespace TDSM.Core.Data
         public DbSet<APIAccountRole> APIAccountsRoles { get; set; }
 
         public DbSet<DataSetting> Settings { get; set; }
-
-
+        
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             CreateModel(modelBuilder);
@@ -141,7 +137,7 @@ namespace TDSM.Core.Data
 
             if (this.Database.Connection.GetType().Name == "SQLiteConnection") //Since we support SQLite as default, let's use this hack...
             {
-                Database.SetInitializer(new SqliteContextInitializer<OTAContext>(builder));
+                //Database.SetInitializer(new SqliteContextInitializer<OTAContext>(builder)); LETS
             }
 
             builder.Entity<Character>()
@@ -208,7 +204,7 @@ namespace TDSM.Core.Data
         }
     }
 #elif ENTITY_FRAMEWORK_7
-    public class TContext : DbContext
+        public class TContext : DbContext
     {
         //public TContext() : this("terraria_ota")
         //{
