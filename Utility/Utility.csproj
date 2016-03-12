@@ -7,8 +7,8 @@
     <ProjectGuid>{E0C31830-7BEC-4D9C-A0F1-5A5CD176BF7A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>tdsm.utility</RootNamespace>
-    <AssemblyName>tdsm-utility</AssemblyName>
+    <RootNamespace>TDSM.Utility</RootNamespace>
+    <AssemblyName>TDSM-Utility</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -100,6 +100,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extractors\Npc.cs" />
+    <Compile Include="Extractors\Affix.cs" />
+    <Compile Include="Extractors\Item.cs" />
+    <Compile Include="Extractor.cs" />
+    <Compile Include="Info\ItemInfo.cs" />
+    <Compile Include="Info\DefinitionFile.cs" />
+    <Compile Include="Info\NpcInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

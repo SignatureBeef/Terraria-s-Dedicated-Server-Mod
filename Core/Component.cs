@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using OTA.Logging;
 using System.Collections.Concurrent;
-using OTA.Plugin;
-using OTA;
 using OTA.Extensions;
 using System.Reflection;
 

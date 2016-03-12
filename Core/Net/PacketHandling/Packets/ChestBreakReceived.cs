@@ -157,7 +157,6 @@ namespace TDSM.Core.Net.PacketHandling.Packets
                     return true;
                 }
             }
-            return true;
         }
     }
 }
