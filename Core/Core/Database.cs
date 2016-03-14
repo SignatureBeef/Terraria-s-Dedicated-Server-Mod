@@ -70,6 +70,7 @@ namespace TDSM.Core
             {
                 ProgramLog.Admin.Log("Creating default groups...");
                 CreateDefaultGroups(ctx);
+
                 ProgramLog.Admin.Log("Creating default SSC values...");
                 DefaultLoadoutTable.PopulateDefaults(ctx, true, CharacterManager.StartingOutInfo);
             }

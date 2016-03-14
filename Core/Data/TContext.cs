@@ -1,5 +1,9 @@
 ﻿using Microsoft.Data.Entity;
+using Microsoft.Data.Entity.Metadata.Builders;
+using OTA.Data.EF7;
 using OTA.Data.EF7.Extensions;
+using System;
+using System.Linq.Expressions;
 using TDSM.Core.Data.Models;
 using TDSM.Core.ServerCharacters;
 
@@ -204,7 +208,7 @@ namespace TDSM.Core.Data
         }
     }
 #elif ENTITY_FRAMEWORK_7
-        public class TContext : DbContext
+    public class TContext : OTAContext
     {
         //public TContext() : this("terraria_ota")
         //{
@@ -240,91 +244,37 @@ namespace TDSM.Core.Data
 
         public DbSet<DataSetting> Settings { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            //optionsBuilder.UseDynamic("sqlite", "Filename=ota.db");
-            optionsBuilder.UseDynamic("sqlserver", "Server=.\\SQLEXPRESS;Database=ota;Trusted_Connection=True;");
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             CreateModel(modelBuilder);
         }
 
+        private EntityTypeBuilder<T> DefaultEntity<T>(ModelBuilder builder, Expression<Func<T, object>> keyExpression) where T : class
+        {
+            var entity = builder.Entity<T>();
+
+            entity.HasKey(keyExpression);
+            entity.Property(keyExpression).ValueGeneratedOnAdd();
+
+            return entity;
+        }
+
         public void CreateModel(ModelBuilder builder)
         {
-            //            builder.HasDefaultSchema("tdsm");
-
-            OTA.Logging.ProgramLog.Admin.Log("Initialising TDSM database context");
             base.OnModelCreating(builder);
-            //builder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            //            if (this.Database.Connection.GetType().Name == "SQLiteConnection") //Since we support SQLite as default, let's use this hack...
-            //            {
-            //                Database.SetInitializer(new SqliteContextInitializer<OTAContext>(builder));
-            //            }
-
-            //builder.Entity<Character>()
-            //    .HasKey(x => x.Id)
-            //    .(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-            //builder.Entity<LoadoutItem>()
-            //    .HasKey(x => x.Id)
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-            //builder.Entity<SlotItem>()
-            //    .HasKey(x => x.Id)
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-
-            //builder.Entity<Group>()
-            //    .HasKey(x => x.Id)
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-            //builder.Entity<DbPlayer>()
-            //    .ToTable("Player")
-            //    .HasKey(x => x.Id)
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-            //builder.Entity<PlayerGroup>()
-            //    .HasKey(x => new { x.Id })
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-            //builder.Entity<NodePermission>()
-            //    .HasKey(x => new { x.Id })
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-            //builder.Entity<PlayerNode>()
-            //    .HasKey(x => new { x.Id })
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-            //builder.Entity<GroupNode>()
-            //    .HasKey(x => new { x.Id })
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-            //builder.Entity<APIAccount>()
-            //    .HasKey(x => new { x.Id })
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-            //builder.Entity<APIAccountRole>()
-            //    .HasKey(x => new { x.Id })
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-            //builder.Entity<DataSetting>()
-            //    .HasKey(x => new { x.Id })
-            //    .Property(x => x.Id)
-            //    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            DefaultEntity<Character>(builder, x => x.Id);
+            DefaultEntity<LoadoutItem>(builder, x => x.Id);
+            DefaultEntity<SlotItem>(builder, x => x.Id);
+            DefaultEntity<Group>(builder, x => x.Id);
+            DefaultEntity<DbPlayer>(builder, x => x.Id).ToTable("Player");
+            DefaultEntity<PlayerGroup>(builder, x => x.Id);
+            DefaultEntity<NodePermission>(builder, x => x.Id);
+            DefaultEntity<PlayerNode>(builder, x => x.Id);
+            DefaultEntity<GroupNode>(builder, x => x.Id);
+            DefaultEntity<APIAccount>(builder, x => x.Id);
+            DefaultEntity<APIAccountRole>(builder, x => x.Id);
+            DefaultEntity<DataSetting>(builder, x => x.Id);
         }
     }
 #endif
