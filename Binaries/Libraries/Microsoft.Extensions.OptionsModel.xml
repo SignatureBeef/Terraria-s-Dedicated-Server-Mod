@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.OptionsModel</name>
+    </assembly>
+    <members>
+        <member name="P:Microsoft.Extensions.OptionsModel.Resources.Error_CannotActivateAbstractOrInterface">
+            <summary>
+            Cannot create instance of type '{0}' because it is either abstract or an interface.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.OptionsModel.Resources.FormatError_CannotActivateAbstractOrInterface(System.Object)">
+            <summary>
+            Cannot create instance of type '{0}' because it is either abstract or an interface.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.OptionsModel.Resources.Error_FailedBinding">
+            <summary>
+            Failed to convert '{0}' to type '{1}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.OptionsModel.Resources.FormatError_FailedBinding(System.Object,System.Object)">
+            <summary>
+            Failed to convert '{0}' to type '{1}'.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.OptionsModel.Resources.Error_FailedToActivate">
+            <summary>
+            Failed to create instance of type '{0}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.OptionsModel.Resources.FormatError_FailedToActivate(System.Object)">
+            <summary>
+            Failed to create instance of type '{0}'.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.OptionsModel.Resources.Error_MissingParameterlessConstructor">
+            <summary>
+            Cannot create instance of type '{0}' because it is missing a public parameterless constructor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.OptionsModel.Resources.FormatError_MissingParameterlessConstructor(System.Object)">
+            <summary>
+            Cannot create instance of type '{0}' because it is missing a public parameterless constructor.
+            </summary>
+        </member>
+    </members>
+</doc>

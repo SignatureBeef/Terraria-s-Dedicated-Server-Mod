@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Caching.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.Caching.Memory.CacheItemPriority">
+            <summary>
+            Specifies how items are prioritized for preservation during a memory pressure triggered cleanup.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.Caching.Memory.EvictionReason.Removed">
+            <summary>
+            Manually
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.Caching.Memory.EvictionReason.Replaced">
+            <summary>
+            Overwritten
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.Caching.Memory.EvictionReason.Expired">
+            <summary>
+            Timed out
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.Caching.Memory.EvictionReason.TokenExpired">
+            <summary>
+            Event
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.Caching.Memory.EvictionReason.Capacity">
+            <summary>
+            GC, overflow
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Caching.Memory.IEntryLink">
+            <summary>
+            Used to flow expiration information from one entry to another. <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> instances and minimum absolute
+            expiration will be copied from the dependent entry to the parent entry. The parent entry will not expire if the
+            dependent entry is removed manually, removed due to memory pressure, or expires due to sliding expiration.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.IEntryLink.AbsoluteExpiration">
+            <summary>
+            Gets the minimum absolute expiration for all dependent entries, or null if not set.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.IEntryLink.ExpirationTokens">
+            <summary>
+            Gets all the <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> instances from the dependent entries.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.IEntryLink.AddExpirationTokens(System.Collections.Generic.IList{Microsoft.Extensions.Primitives.IChangeToken})">
+            <summary>
+            Adds <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> instances from a dependent entries.
+            </summary>
+            <param name="expirationTokens"><see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> instances from dependent entries.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.IEntryLink.SetAbsoluteExpiration(System.DateTimeOffset)">
+            <summary>
+            Sets the absolute expiration for from a dependent entry. The minimum value across all dependent entries
+            will be used.
+            </summary>
+            <param name="absoluteExpiration"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.IMemoryCache.CreateLinkingScope">
+            <summary>
+            Creates an entry link scope.
+            </summary>
+            <returns>The <see cref="T:Microsoft.Extensions.Caching.Memory.IEntryLink"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.IMemoryCache.Set(System.Object,System.Object,Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions)">
+            <summary>
+            Create or overwrite an entry in the cache.
+            </summary>
+            <param name="key">An object identifying the entry.</param>
+            <param name="value">The value to be cached.</param>
+            <param name="options">The <see cref="T:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions"/>.</param>
+            <returns>The object that was cached.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.IMemoryCache.TryGetValue(System.Object,System.Object@)">
+            <summary>
+            Gets the item associated with this key if present.
+            </summary>
+            <param name="key">An object identifying the requested entry.</param>
+            <param name="value">The located value or null.</param>
+            <returns>True if the key was found.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.IMemoryCache.Remove(System.Object)">
+            <summary>
+            Removes the object associated with the given key.
+            </summary>
+            <param name="key">An object identifying the entry.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryExtensions.SetPriority(Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions,Microsoft.Extensions.Caching.Memory.CacheItemPriority)">
+            <summary>
+            Sets the priority for keeping the cache entry in the cache during a memory pressure tokened cleanup.
+            </summary>
+            <param name="options"></param>
+            <param name="priority"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryExtensions.AddExpirationToken(Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions,Microsoft.Extensions.Primitives.IChangeToken)">
+            <summary>
+            Expire the cache entry if the given <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> expires.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions"/>.</param>
+            <param name="expirationToken">The <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> that causes the cache entry to expire.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryExtensions.SetAbsoluteExpiration(Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions,System.TimeSpan)">
+            <summary>
+            Sets an absolute expiration time, relative to now.
+            </summary>
+            <param name="options"></param>
+            <param name="relative"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryExtensions.SetAbsoluteExpiration(Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions,System.DateTimeOffset)">
+            <summary>
+            Sets an absolute expiration date for the cache entry.
+            </summary>
+            <param name="options"></param>
+            <param name="absolute"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryExtensions.SetSlidingExpiration(Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions,System.TimeSpan)">
+            <summary>
+            Sets how long the cache entry can be inactive (e.g. not accessed) before it will be removed.
+            This will not extend the entry lifetime beyond the absolute expiration (if set).
+            </summary>
+            <param name="options"></param>
+            <param name="offset"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryExtensions.RegisterPostEvictionCallback(Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions,Microsoft.Extensions.Caching.Memory.PostEvictionDelegate)">
+            <summary>
+            The given callback will be fired after the cache entry is evicted from the cache.
+            </summary>
+            <param name="options"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryExtensions.RegisterPostEvictionCallback(Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions,Microsoft.Extensions.Caching.Memory.PostEvictionDelegate,System.Object)">
+            <summary>
+            The given callback will be fired after the cache entry is evicted from the cache.
+            </summary>
+            <param name="options"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryExtensions.AddEntryLink(Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions,Microsoft.Extensions.Caching.Memory.IEntryLink)">
+            <summary>
+            Adds inherited token and absolute expiration information.
+            </summary>
+            <param name="link"></param>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions.AbsoluteExpiration">
+            <summary>
+            Gets or sets an absolute expiration date for the cache entry.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions.AbsoluteExpirationRelativeToNow">
+            <summary>
+            Gets or sets an absolute expiration time, relative to now.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions.SlidingExpiration">
+            <summary>
+            Gets or sets how long a cache entry can be inactive (e.g. not accessed) before it will be removed.
+            This will not extend the entry lifetime beyond the absolute expiration (if set).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions.ExpirationTokens">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> instances which cause the cache entry to expire.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions.PostEvictionCallbacks">
+            <summary>
+            Gets or sets the callbacks will be fired after the cache entry is evicted from the cache.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheEntryOptions.Priority">
+            <summary>
+            Gets or sets the priority for keeping the cache entry in the cache during a
+            memory pressure triggered cleanup. The default is <see cref="F:Microsoft.Extensions.Caching.Memory.CacheItemPriority.Normal"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Caching.Memory.PostEvictionDelegate">
+            <summary>
+            Signature of the callback which gets called when a cache entry expires.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="reason">The <see cref="T:Microsoft.Extensions.Caching.Memory.EvictionReason"/>.</param>
+            <param name="state">The information that was passed when registering the callback.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryExtensions.SetAbsoluteExpiration(Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions,System.TimeSpan)">
+            <summary>
+            Sets an absolute expiration time, relative to now.
+            </summary>
+            <param name="options"></param>
+            <param name="relative"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryExtensions.SetAbsoluteExpiration(Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions,System.DateTimeOffset)">
+            <summary>
+            Sets an absolute expiration date for the cache entry.
+            </summary>
+            <param name="options"></param>
+            <param name="absolute"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryExtensions.SetSlidingExpiration(Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions,System.TimeSpan)">
+            <summary>
+            Sets how long the cache entry can be inactive (e.g. not accessed) before it will be removed.
+            This will not extend the entry lifetime beyond the absolute expiration (if set).
+            </summary>
+            <param name="options"></param>
+            <param name="offset"></param>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions.AbsoluteExpiration">
+            <summary>
+            Gets or sets an absolute expiration date for the cache entry.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions.AbsoluteExpirationRelativeToNow">
+            <summary>
+            Gets or sets an absolute expiration time, relative to now.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions.SlidingExpiration">
+            <summary>
+            Gets or sets how long a cache entry can be inactive (e.g. not accessed) before it will be removed.
+            This will not extend the entry lifetime beyond the absolute expiration (if set).
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Caching.Distributed.DistributedCacheExtensions">
+            <summary>
+            Extension methods for setting data in an <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.DistributedCacheExtensions.Set(Microsoft.Extensions.Caching.Distributed.IDistributedCache,System.String,System.Byte[])">
+            <summary>
+            Sets a sequence of bytes in the specified cache with the specified key.
+            </summary>
+            <param name="cache">The cache in which to store the data.</param>
+            <param name="key">The key to store the data in.</param>
+            <param name="value">The data to store in the cache.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.DistributedCacheExtensions.SetAsync(Microsoft.Extensions.Caching.Distributed.IDistributedCache,System.String,System.Byte[])">
+            <summary>
+            Asynchronously sets a sequence of bytes in the specified cache with the specified key.
+            </summary>
+            <param name="cache">The cache in which to store the data.</param>
+            <param name="key">The key to store the data in.</param>
+            <param name="value">The data to store in the cache.</param>
+            <returns>A task that represents the asynchronous set operation.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Internal.ISystemClock">
+            <summary>
+            Abstracts the system clock to facilitate testing.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.ISystemClock.UtcNow">
+            <summary>
+            Retrieves the current system time in UTC.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Internal.SystemClock">
+            <summary>
+            Provides access to the normal system clock.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.SystemClock.UtcNow">
+            <summary>
+            Retrieves the current system time in UTC.
+            </summary>
+        </member>
+    </members>
+</doc>

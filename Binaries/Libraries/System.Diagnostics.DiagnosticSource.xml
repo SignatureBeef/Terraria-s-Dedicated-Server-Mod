@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Diagnostics.DiagnosticSource</name>
+    </assembly>
+    <members>
+        <member name="T:System.Diagnostics.DiagnosticSource">
+            <summary>
+            This is the basic API to 'hook' parts of the framework.   It is like an EventSource
+            (which can also write object), but is intended to log complex objects that can't be serialized.
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticSource.Write(System.String,System.Object)">
+            <summary>
+            Write is a generic way of logging complex payloads.  Each notification
+            is given a name, which identifies it as well as a object (typically an anonymous type)
+            that gives the information to pass to the notification, which is arbitrary.  
+            
+            The name should be short (so don't use fully qualified names unless you have to
+            to avoid ambiguity), but you want the name to be globally unique.  Typically your componentName.eventName
+            where componentName and eventName are strings less than 10 characters are a good compromise.  
+            notification names should NOT have '.' in them because component names have dots and for them both
+            to have dots would lead to ambiguity.   The suggestion is to use _ instead.  It is assumed 
+            that listeners will use string prefixing to filter groups, thus having hierarchy in component 
+            names is good.  
+            </summary>
+            <param name="name">The name of the event being written.</param>
+            <param name="value">An object that represent the value being passed as a payload for the event.
+            This is often a anonymous type which contains several sub-values.</param>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticSource.IsEnabled(System.String)">
+            <summary>
+            Optional: if there is expensive setup for the notification, you can call IsEnabled
+            before doing this setup.   Consumers should not be assuming that they only get notifications
+            for which IsEnabled is true however, it is optional for producers to call this API. 
+            The name should be the same as what is passed to Write.   
+            </summary>
+            <param name="name">The name of the event being written.</param>
+        </member>
+        <member name="T:System.Diagnostics.DiagnosticListener">
+            <summary>
+            A DiagnosticListener is something that forwards on events written with DiagnosticSource.
+            It is an IObservable (has Subscribe method), and it also has a Subscribe overload that
+            lets you specify a 'IsEnabled' predicate that users of DiagnosticSource will use for 
+            'quick checks'.   
+            
+            The item in the stream is a KeyValuePair[string, object] where the string is the name
+            of the diagnostic item and the object is the payload (typically an anonymous type).  
+            
+            There may be many DiagnosticListeners in the system, but we encourage the use of
+            The DiagnosticSource.DefaultSource which goes to the DiagnosticListener.DefaultListener.
+            
+            If you need to see 'everything' you can subscribe to the 'AllListeners' event that
+            will fire for every live DiagnosticListener in the appdomain (past or present). 
+            </summary>
+        </member>
+        <member name="P:System.Diagnostics.DiagnosticListener.AllListeners">
+            <summary>
+            When you subscribe to this you get callbacks for all NotificationListeners in the appdomain
+            as well as those that occurred in the past, and all future Listeners created in the future. 
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticListener.Subscribe(System.IObserver{System.Collections.Generic.KeyValuePair{System.String,System.Object}},System.Predicate{System.String})">
+            <summary>
+            Add a subscriber (Observer).  If 'IsEnabled' == null (or not present), then the Source's IsEnabled 
+            will always return true.  
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticListener.Subscribe(System.IObserver{System.Collections.Generic.KeyValuePair{System.String,System.Object}})">
+            <summary>
+            Same as other Subscribe overload where the predicate is assumed to always return true.  
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticListener.#ctor(System.String)">
+            <summary>
+            Make a new DiagnosticListener, it is a NotificationSource, which means the returned result can be used to 
+            log notifications, but it also has a Subscribe method so notifications can be forwarded
+            arbitrarily.  Thus its job is to forward things from the producer to all the listeners
+            (multi-casting).    Generally you should not be making your own DiagnosticListener but use the
+            DiagnosticListener.Default, so that notifications are as 'public' as possible.  
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticListener.Dispose">
+            <summary>
+            Clean up the NotificationListeners.   Notification listeners do NOT DIE ON THEIR OWN
+            because they are in a global list (for discoverability).  You must dispose them explicitly. 
+            Note that we do not do the Dispose(bool) pattern because we frankly don't want to support
+            subclasses that have non-managed state.   
+            </summary>
+        </member>
+        <member name="P:System.Diagnostics.DiagnosticListener.Name">
+            <summary>
+            When a DiagnosticListener is created it is given a name.   Return this.  
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticListener.ToString">
+            <summary>
+            Return the name for the ToString() to aid in debugging.  
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticListener.IsEnabled(System.String)">
+            <summary>
+            Override abstract method
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticListener.Write(System.String,System.Object)">
+            <summary>
+            Override abstract method
+            </summary>
+        </member>
+        <member name="T:System.Diagnostics.DiagnosticListener.AllListenerObservable">
+            <summary>
+            Logically AllListenerObservable has a very simple task.  It has a linked list of subscribers that want
+            a callback when a new listener gets created.   When a new DiagnosticListener gets created it should call 
+            OnNewDiagnosticListener so that AllListenerObservable can forward it on to all the subscribers.   
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticListener.AllListenerObservable.OnNewDiagnosticListener(System.Diagnostics.DiagnosticListener)">
+            <summary>
+            Called when a new DiagnosticListener gets created to tell anyone who subscribed that this happened.  
+            </summary>
+            <param name="diagnosticListener"></param>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticListener.AllListenerObservable.Remove(System.Diagnostics.DiagnosticListener.AllListenerObservable.AllListenerSubscription)">
+            <summary>
+            Remove 'subscription from the list of subscriptions that the observable has.   Called when
+            subscriptions are disposed.   Returns true if the subscription was removed.  
+            </summary>
+        </member>
+        <member name="T:System.Diagnostics.DiagnosticListener.AllListenerObservable.AllListenerSubscription">
+            <summary>
+            One node in the linked list of subscriptions that AllListenerObservable keeps.   It is
+            IDisposable, and when that is called it removes itself from the list.  
+            </summary>
+        </member>
+        <member name="T:System.Diagnostics.DiagnosticSourceEventSource">
+            <summary>
+            Current this EventSource is only here so that the Debugger can inject code using Function evaluation
+            We may add actual logging requests as well at some point.   This can be removed if the debugger  no 
+            longer needs it.   
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticSourceEventSource.OnEventCommand(System.Diagnostics.Tracing.EventCommandEventArgs)">
+            <summary>
+            On every command (which the debugger can force by turning on this EventSource with ETW)
+            call a function that the debugger can hook to do an arbitrary func evaluation.  
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:System.Diagnostics.DiagnosticSourceEventSource.BreakPointWithDebuggerFuncEval">
+            <summary>
+            A function which is fully interruptible even in release code so we can stop here and 
+            do function evaluation in the debugger.   Thus this is just a place that is useful
+            for the debugger to place a breakpoint where it can inject code with function evaluation
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EntityFramework.Sqlite</name>
+    </assembly>
+    <members>
+        <member name="P:Microsoft.Data.Entity.Internal.SqliteStrings.InvalidMigrationOperation">
+            <summary>
+            SQLite cannot support this migration operation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.SqliteStrings.MigrationScriptGenerationNotSupported">
+            <summary>
+            Generating idempotent scripts for migration is not currently supported by SQLite.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.SqliteStrings.SchemasNotSupported">
+            <summary>
+            SQLite does not support schemas.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.SqliteStrings.SequencesNotSupported">
+            <summary>
+            SQLite does not support sequences.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Storage.Internal.SqliteTypeMapper.GetMapping(System.String)">
+            <summary>
+                Returns a clr type for a SQLite column type. Defaults to typeof(string).
+                It uses the same heuristics from
+                <see href="https://www.sqlite.org/datatype3.html">"2.1 Determination of Column Affinity"</see>
+            </summary>
+        </member>
+    </members>
+</doc>

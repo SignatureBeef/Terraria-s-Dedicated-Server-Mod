@@ -1,0 +1,363 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.PlatformAbstractions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.CallContextServiceLocator">
+            <summary>
+            Exposes the ambient service provider.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.PlatformAbstractions.CallContextServiceLocator.Locator">
+            <summary>
+            Provides access to the <see cref="T:Microsoft.Extensions.PlatformAbstractions.IServiceProviderLocator"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage">
+            <summary>
+            Represents a single diagnostic message, such as a compilation error or a project.json parsing error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage.ErrorCode">
+            <summary>
+            The moniker associated with the error message
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage.SourceFilePath">
+            <summary>
+            Path of the file that produced the message.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage.Message">
+            <summary>
+            Gets the error message.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage.Severity">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessageSeverity"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage.StartLine">
+            <summary>
+            Gets the one-based line index for the start of the compilation error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage.StartColumn">
+            <summary>
+            Gets the zero-based column index for the start of the compilation error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage.EndLine">
+            <summary>
+            Gets the one-based line index for the end of the compilation error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage.EndColumn">
+            <summary>
+            Gets the zero-based column index for the end of the compilation error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage.FormattedMessage">
+            <summary>
+            Gets the formatted error message.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage.Source">
+            <summary>
+            Gets the source of this message
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessageExtensions.HasErrors(System.Collections.Generic.IEnumerable{Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage})">
+            <summary>
+            Returns true if <paramref name="messages"/> has at least one message with <see cref="F:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessageSeverity.Error"/>.
+            </summary>
+            <param name="messages">Sequence of <see cref="T:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage"/> objects.</param>
+            <returns><c>true</c> if any messages is an error message, <c>false</c> otherwise.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessageSeverity">
+            <summary>
+            Specifies the severity of a <see cref="T:Microsoft.Extensions.PlatformAbstractions.DiagnosticMessage"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.IApplicationEnvironment">
+            <summary>
+            Provides access to common application information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IApplicationEnvironment.ApplicationName">
+            <summary>
+            Gets the application name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IApplicationEnvironment.ApplicationVersion">
+            <summary>
+            Gets the version of the application, as specified in the project.json file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IApplicationEnvironment.ApplicationBasePath">
+            <summary>
+            Gets the base directory of the application, defined as the path to the directory containing the project.json file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IApplicationEnvironment.Configuration">
+            <summary>
+            Gets the configuration. This should only be used for runtime compilation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IApplicationEnvironment.RuntimeFramework">
+            <summary>
+            Gets the target version and profile of the .NET Framework for the application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IApplicationEnvironment.GetData(System.String)">
+            <summary>
+            Gets the specified value from Application Global Data.
+            </summary>
+            <remarks>
+            <para>
+            Application Global Data is a collection of name-value pairs that is stored in a global set of data shared by the entire
+            application. On Desktop CLR, this is backed by the <see cref="M:System.AppDomain.GetData(System.String)"/> and <see cref="M:System.AppDomain.SetData(System.String,System.Object)"/>
+            methods, and provides access to the same data. In other environments, such as CoreCLR, where AppDomains are not available,
+            this data set is backed by a specially created global dictionary controlled by the implementor of this interface.
+            </para>
+            <para>
+            On Desktop CLR, this method can be used to retrieve predefined application domain properties. See <see cref="M:System.AppDomain.GetData(System.String)"/>
+            for a complete list.
+            </para>
+            </remarks>
+            <param name="name">The name of the Application Global Data item to retrieve.</param>
+            <returns>The value of the item identified by <paramref name="name"/>, or null if no item exists.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IApplicationEnvironment.SetData(System.String,System.Object)">
+            <summary>
+            Sets the specified value in Application Global Data.
+            </summary>
+            <remarks>
+            <para>
+            Application Global Data is a collection of name-value pairs that is stored in a global set of data shared by the entire
+            application. On Desktop CLR, this is backed by the <see cref="M:System.AppDomain.GetData(System.String)"/> and <see cref="M:System.AppDomain.SetData(System.String,System.Object)"/>
+            methods, and provides access to the same data. In other environments, such as CoreCLR, where AppDomains are not available,
+            this data set is backed by a specially created global dictionary controlled by the implementor of this interface.
+            </para>
+            <para>
+            On Desktop CLR, this method can be used to modify SOME predefined application domain properties. See <see cref="M:System.AppDomain.SetData(System.String,System.Object)"/>
+            for a complete list.
+            </para>
+            </remarks>
+            <param name="name">The name of the Application Global Data item to set.</param>
+            <param name="value">The value to store in Application Global Data.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.IApplicationShutdown">
+            <summary>
+            Exposes methods that allow control over the application lifetime.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IApplicationShutdown.RequestShutdown">
+            <summary>
+            Requests termination the current application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IApplicationShutdown.ShutdownRequested">
+            <summary>
+            Gets a <see cref="T:System.Threading.CancellationToken"/> that is signaled when application shutdown is requested.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContext">
+            <summary>
+            A context in which assemblies can be loaded.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContext.Load(System.Reflection.AssemblyName)">
+            <summary>
+            Load an assembly by name.
+            </summary>
+            <param name="assemblyName">The name of the assembly.</param>
+            <returns>The loaded assembly.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContext.LoadFile(System.String)">
+            <summary>
+            Loads the assembly located at the provided file system path.
+            </summary>
+            <param name="path">The fully qualified path of the file to load.</param>
+            <returns>The loaded assembly.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContext.LoadStream(System.IO.Stream,System.IO.Stream)">
+            <summary>
+            Loads the assembly with a common object file format (COFF)-based image containing an emitted assembly, optionally including symbols for the assembly.
+            </summary>
+            <param name="assemblyStream">The stream representing the assembly.</param>
+            <param name="assemblySymbols">The stream representing the symbols.</param>
+            <returns>The loaded assembly.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContext.LoadUnmanagedLibrary(System.String)">
+            <summary>
+            Loads an unmanaged library by name.
+            </summary>
+            <param name="path">The name of the unmanaged library to load.</param>
+            <returns>A handle to the unmanaged library or <c>IntPtr.Zero</c> if the library cannot be loaded.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContext.LoadUnmanagedLibraryFromPath(System.String)">
+            <summary>
+            Loads an unmanaged library from the provided path.
+            </summary>
+            <param name="path">The path to load the unmanaged library from.</param>
+            <returns>A handle to the unmanaged library or <c>IntPtr.Zero</c> if the library cannot be loaded.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContextAccessor">
+            <summary>
+            Provides access to created <see cref="T:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContext"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContextAccessor.Default">
+            <summary>
+            Gets the default <see cref="T:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContext"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContextAccessor.GetLoadContext(System.Reflection.Assembly)">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoadContext"/> associated with the specified <see cref="T:System.Reflection.Assembly"/>.
+            </summary>
+            <param name="assembly">The assembly.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoader">
+            <summary>
+            Defines a contract for an assembly loader. This is an extension point that can be used to implement custom assembly loading logic.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoader.Load(System.Reflection.AssemblyName)">
+            <summary>
+            Load an assembly by name.
+            </summary>
+            <param name="assemblyName">The name of the assembly.</param>
+            <returns>The loaded assembly.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoader.LoadUnmanagedLibrary(System.String)">
+            <summary>
+            Loads an unmanaged library by name.
+            </summary>
+            <param name="name">The name of the library to load.</param>
+            <returns>A handle to the unmanaged library or <c>IntPtr.Zero</c> if the library cannot be loaded.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoaderContainer">
+            <summary>
+            Provides access to assembly loaders used for runtime assembly resolution.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoaderContainer.AddLoader(Microsoft.Extensions.PlatformAbstractions.IAssemblyLoader)">
+            <summary>
+            Adds an <see cref="T:Microsoft.Extensions.PlatformAbstractions.IAssemblyLoader"/> to the runtime.
+            </summary>
+            <param name="loader">The loader to add.</param>
+            <returns>A disposable object representing the registration of the loader. Disposing it removes the loader from the runtime.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.ICompilerOptions">
+            <summary>
+            Provides an interface to well-known Compiler Options like "defines" and "optimize", as well as a
+            general-purpose interface for reading from the 'compilerOptions' section.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.ILibraryManager">
+            <summary>
+            Provides access to the complete graph of dependencies for the application.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.IRuntimeEnvironment">
+            <summary>
+            Provides access to the runtime environment.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IRuntimeEnvironment.OperatingSystem">
+            <summary>
+            Gets the current operating system name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IRuntimeEnvironment.OperatingSystemVersion">
+            <summary>
+            Gets the current operating system version.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IRuntimeEnvironment.RuntimeType">
+            <summary>
+            Gets the runtime type. Common values include CLR, CoreCLR and Mono.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IRuntimeEnvironment.RuntimeArchitecture">
+            <summary>
+            Gets the runtime architecture. Common values include x86 and x64.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IRuntimeEnvironment.RuntimeVersion">
+            <summary>
+            Gets the runtime version.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IRuntimeEnvironment.RuntimePath">
+            <summary>
+            Gets the path to the runtime foler.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.IRuntimeServices">
+            <summary>
+            Provides a list of service types exposed by the runtime.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IRuntimeServices.Services">
+            <summary>
+            Gets the list of exposed service types.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.IServiceProviderLocator">
+            <summary>
+            Provides access to the current <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.IServiceProviderLocator.ServiceProvider">
+            <summary>
+            Gets or sets the current <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.Library">
+            <summary>
+            Exposes information about a library which can be an assembly, project, or a package.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.Library.Name">
+            <summary>
+            Gets the name of the library.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.Library.Version">
+            <summary>
+             Gets the version of the library.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.Library.Path">
+            <summary>
+            Gets the path to the library. For projects, this is a path to the project.json file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.Library.Type">
+            <summary>
+            Gets the type of library. Common values include Project, Package, and Assembly.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.Library.Dependencies">
+            <summary>
+            Gets a list of dependencies for the library. The dependencies are names of other <see cref="T:Microsoft.Extensions.PlatformAbstractions.Library"/> objects.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.PlatformAbstractions.Library.Assemblies">
+            <summary>
+            Gets a list of assembly names from the library that can be loaded. Packages can contain multiple assemblies.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.PlatformAbstractions.RuntimeOptions">
+            <summary>
+            Represents the options passed into the runtime on boot
+            </summary>
+        </member>
+    </members>
+</doc>

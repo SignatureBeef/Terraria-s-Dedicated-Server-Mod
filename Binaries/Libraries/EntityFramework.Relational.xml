@@ -1,0 +1,356 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EntityFramework.Relational</name>
+    </assembly>
+    <members>
+        <member name="M:Microsoft.Data.Entity.RelationalDatabaseFacadeExtensions.Migrate(Microsoft.Data.Entity.Infrastructure.DatabaseFacade)">
+            <summary>
+                Applies any pending migrations for the context to the database.
+            </summary>
+            <param name="databaseFacade"> The <see cref="T:Microsoft.Data.Entity.Infrastructure.DatabaseFacade"/> for the context. </param>
+        </member>
+        <member name="M:Microsoft.Data.Entity.RelationalDatabaseFacadeExtensions.MigrateAsync(Microsoft.Data.Entity.Infrastructure.DatabaseFacade,System.Threading.CancellationToken)">
+            <summary>
+                Asynchronously applies any pending migrations for the context to the database.
+            </summary>
+            <param name="databaseFacade"> The <see cref="T:Microsoft.Data.Entity.Infrastructure.DatabaseFacade"/> for the context. </param>
+            <param name="cancellationToken"> A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete. </param>
+            <returns> A task that represents the asynchronous migration operation. </returns>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.InvalidEnumValue(System.Object,System.Object)">
+            <summary>
+            The value provided for argument '{argumentName}' must be a valid value of enum type '{enumType}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.ModificationFunctionInvalidEntityState(System.Object)">
+            <summary>
+            Cannot create a ModificationFunction for an entity in state '{entityState}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.UpdateConcurrencyException(System.Object,System.Object)">
+            <summary>
+            Database operation expected to affect {expectedRows} row(s) but actually affected {actualRows} row(s). Data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.MultipleProvidersConfigured">
+            <summary>
+            Multiple relational database provider configurations found. A context can only be configured to use a single database provider.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.NoProviderConfigured">
+            <summary>
+            No relational database providers are configured. Configure a database provider using OnConfiguring or by creating an ImmutableDbContextOptions with a database provider configured and passing it to the context.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.ConnectionAndConnectionString">
+            <summary>
+            Both an existing DbConnection and a connection string have been configured. When an existing DbConnection is used the connection string must be set on that connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.NoConnectionOrConnectionString">
+            <summary>
+            A relational store has been configured without specifying either the DbConnection or connection string to use.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.UnsupportedType(System.Object)">
+            <summary>
+            No mapping to a relational type can be found for the CLR type '{clrType}'
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.RelationalNotInUse">
+            <summary>
+            Relational-specific methods can only be used when the context is using a relational database provider.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.UpdateStoreException">
+            <summary>
+            An error occurred while updating the entries. See the inner exception for details.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.TransactionAlreadyStarted">
+            <summary>
+            The connection is already in a transaction and cannot participate in another transaction.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.TransactionAssociatedWithDifferentConnection">
+            <summary>
+            The specified transaction is not associated with the current connection. Only transactions associated with the current connection may be used.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.SequenceDefinitionMismatch(System.Object)">
+            <summary>
+            The SQL Server sequence '{sequenceName}' was already specified with a different definition.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.RelationalLoggerCreatingDatabase(System.Object)">
+            <summary>
+            Creating database '{databaseName}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.RelationalLoggerOpeningConnection(System.Object)">
+            <summary>
+            Opening connection '{connectionString}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.RelationalLoggerClosingConnection(System.Object)">
+            <summary>
+            Closing connection '{connectionString}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.RelationalLoggerBeginningTransaction(System.Object)">
+            <summary>
+            Beginning transaction with isolation level '{isolationLevel}'.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.RelationalLoggerCommittingTransaction">
+            <summary>
+            Committing transaction.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.RelationalLoggerRollingbackTransaction">
+            <summary>
+            Rolling back transaction.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.BadSequenceType">
+            <summary>
+            Invalid type for sequence. Valid types are 'Int64' (the default), 'Int32', 'Int16', and 'Byte'.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.BadSequenceString">
+            <summary>
+            Unable to deserialize sequence from model metadata. See inner exception for details.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.InvalidMigrationId(System.Object)">
+            <summary>
+            '{migrationId}' is not a valid migration identifier.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.LocalMigrationNotFound(System.Object)">
+            <summary>
+            The history repository includes a migration with the identifier '{migrationId}' but the migration assembly does not contain the corresponding migration class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.MigrationsNotInUse">
+            <summary>
+            Migrations-specific methods can only be used when the context is using a migrations-enabled database provider.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.MigratorLoggerApplyingMigration(System.Object)">
+            <summary>
+            Applying migration '{migrationId}'.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.MigratorLoggerCreatingHistoryTable">
+            <summary>
+            Creating migration history table.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.MigratorLoggerDroppingHistoryTable">
+            <summary>
+            Dropping migration history table.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.MigratorLoggerRevertingMigration(System.Object)">
+            <summary>
+            Reverting migration '{migrationId}'.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.MigratorLoggerUpToDate">
+            <summary>
+            The database is up to date.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.MissingMigrationMetadata(System.Object)">
+            <summary>
+            '{migrationType}' does not implement IMigrationMetadata.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.MigrationNotFound(System.Object)">
+            <summary>
+            The migration '{migrationName}' was not found.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.UnknownOperation(System.Object,System.Object)">
+            <summary>
+            The current migration SQL generator '{sqlGeneratorType}' is unable to generate SQL for operations of type '{operationType}'.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.InvalidCommandTimeout">
+            <summary>
+            The specified CommandTimeout value is not valid. It must be a positive number.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.InvalidMaxBatchSize">
+            <summary>
+            The specified MaxBatchSize value is not valid. It must be a positive number.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.UnableToDiscriminate(System.Object)">
+            <summary>
+            Unable to materialize entity of type '{entityType}'. No discriminators were matched.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.DiscriminatorPropertyMustBeOnRoot(System.Object)">
+            <summary>
+            A discriminator property cannot be set for the entity type '{entityType}' because it is not the root of an inheritance hierarchy.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.DiscriminatorPropertyNotFound(System.Object,System.Object)">
+            <summary>
+            Unable to set property '{property}' as a discriminator for entity type '{entityType}' because it is not a property of '{entityType}'.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.AmbientTransaction">
+            <summary>
+            An ambient transaction has been detected. Connections opened by Entity Framework will not be enlisted in ambient transactions. To suppress this warning call SuppressAmbientTransactionWarning() when overriding DbContext.OnConfiguring.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.PossibleUnintendedUseOfEquals(System.Object,System.Object)">
+            <summary>
+            Possible unintended use of method Equals(object) for arguments of different types: '{left}', '{right}'. This comparison will always return 'false'.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.StoredProcedureIncludeNotSupported">
+            <summary>
+            The Include operation is not supported when calling a stored procedure.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.GeneratingDown(System.Object)">
+            <summary>
+            Generating down script for migration '{migration}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.GeneratingUp(System.Object)">
+            <summary>
+            Generating up script for migration '{migration}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.ApplyingMigration(System.Object)">
+            <summary>
+            Applying migration '{migration}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.RevertingMigration(System.Object)">
+            <summary>
+            Unapplying migration '{migration}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.UsingConnection(System.Object,System.Object)">
+            <summary>
+            Using database '{database}' on server '{dataSource}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.FromSqlMissingColumn(System.Object)">
+            <summary>
+            The required column '{column}' was not present in the results of a 'FromSql' operation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.DuplicateTableName(System.Object,System.Object,System.Object)">
+            <summary>
+            Cannot use table '{table}' in schema '{schema}' for entity '{entityType}' since it is being used for another entity.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.InvalidCreateScript">
+            <summary>
+            GetCreateScript only handles operations in a single batch. For more advanced scenarios, override HistoryRepository.GetCreateScript in your provider.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.DuplicateParameterName(System.Object)">
+            <summary>
+            The parameter '{parameterName}' was already specified with a different value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.DiscriminatorEntityTypeNotDerived(System.Object,System.Object)">
+            <summary>
+            Cannot configure the discriminator value for entity type '{entityType}' because it doesn't derive from '{rootEntityType}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.DiscriminitatorValueIncompatible(System.Object,System.Object,System.Object)">
+            <summary>
+            Cannot set discriminator value '{value}' for discriminator property '{discriminator}' because it is not assignable to property of type '{discriminatorType}'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.NoDiscriminatorForValue(System.Object,System.Object)">
+            <summary>
+            Cannot set discriminator value for entity type '{entityType}' because the root entity type '{rootEntityType}' doesn't have a discriminator property set.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.NoDiscriminatorProperty(System.Object)">
+            <summary>
+            The entity type '{entityType}' is part of a hierarchy, but does not have a discriminator property configured.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.NoDiscriminatorValue(System.Object)">
+            <summary>
+            The entity type '{entityType}' is part of a hierarchy, but does not have a discriminator value configured.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.InvalidKeyValue(System.Object)">
+            <summary>
+            Unable to materialize an entity of type '{entityType}' because it has an null key value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.ClientEvalDisabled(System.Object)">
+            <summary>
+            Unabled to compile the LINQ expression '{expression}' because it requires client evaluation, which is disabled. Either enable client evaluation or rewrite the query to not require client evaluation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.ClientEvalWarning(System.Object)">
+            <summary>
+            The LINQ expression '{expression}' could not be translated and will be evaluated locally.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Internal.RelationalStrings.ParameterLoggingEnabled">
+            <summary>
+            SQL parameter value logging is enabled. As SQL parameter values may include sensitive application data, this mode should only be enabled during development.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.RelationalLoggerExecutedCommand(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            Executed DbCommand ({elapsed}ms) [Parameters=[{parameters}], CommandType='{commandType}', CommandTimeout='{commandTimeout}']{newLine}{commandText}
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Internal.RelationalStrings.DuplicateColumnName(System.Object,System.Object,System.Object)">
+            <summary>
+            Cannot use column name '{columnName}' in entity '{entityType}' for property '{property}' since it is being used for another property.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Data.Entity.Migrations.HistoryRepository.InterpretExistsResult(System.Object)">
+            <returns>true if the table exists; otherwise, false.</returns>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Migrations.Operations.RenameSequenceOperation.NewName">
+            <summary>
+                The new schema name or null if unchanged.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Migrations.Operations.RenameSequenceOperation.NewSchema">
+            <summary>
+                The new sequence name or null if unchanged.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Migrations.Operations.RenameTableOperation.NewSchema">
+            <summary>
+                The new schema name or null if unchanged.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.Entity.Migrations.Operations.RenameTableOperation.NewName">
+            <summary>
+                The new table name or null if unchanged.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Data.Entity.Update.AffectedCountModificationCommandBatch">
+            <summary>
+                A <see cref="T:Microsoft.Data.Entity.Update.ReaderModificationCommandBatch" /> for providers which append an SQL query to find out
+                how many rows were affected (see <see cref="M:Microsoft.Data.Entity.Update.UpdateSqlGenerator.AppendSelectAffectedCountCommand(System.Text.StringBuilder,System.String,System.String)" />).
+            </summary>
+        </member>
+        <member name="T:Microsoft.Data.Entity.Utilities.RelationalImplyTypes">
+            <summary>
+                DO NOT USE. <see cref="T:Microsoft.Data.Entity.Utilities.ImpliedEntityType`1" />
+            </summary>
+        </member>
+    </members>
+</doc>
