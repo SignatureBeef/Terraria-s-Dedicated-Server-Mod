@@ -1,4 +1,6 @@
-# TDSM: Rebind [![Build Status](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod.svg?branch=master)](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod) [![Slack](https://img.shields.io/badge/Chat%20on-Slack-blue.svg)](http://tdsm.sithous.com/slack)
+# TDSM: Rebind
+[![Build Status](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod.svg?branch=master)](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod) [![Slack](https://img.shields.io/badge/Chat%20on-Slack-blue.svg)](https://openterraria.com/#public-chat) ![Linux](https://openterraria.com/bleeding-edge/svg/Linux) ![Mac](https://openterraria.com/bleeding-edge/svg/Mac) ![Server](https://openterraria.com/bleeding-edge/svg/Server) ![Windows](https://openterraria.com/bleeding-edge/svg/Windows)
+
 *Supporting Terraria v1.3!*  
 TDSM is a server modification of the official Terraria dedicated server software via the [Open Terraria API](https://github.com/DeathCradle/Open-Terraria-API/) project. It extends functionallity giving the option for advanced permissions and plugin support. TDSM is a great choice for alternative server software for Terraria if you want stability, multi-platform, and added functionallity. It's also updated very quickly after a new Terraria release because of the way the new TDSM Rebind has been written.
 
@@ -37,7 +39,7 @@ Need help? Sure, no problem. ;)
 #### Wiki
 There is a Wiki! Take a look at it from the Wiki link on the right side of the GitHub repo home page. Or click [here](https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki).
 #### Live Chat [![Slack](https://img.shields.io/badge/Chat%20on-Slack-blue.svg)](http://tdsm.sithous.com/slack)
-Want to chat with the core team members, other TDSM server operators like you, and plugin developers? Join our official [Slack](http://tdsm.sithous.com/slack) chat.
+Want to chat with the core team members, other TDSM server operators like you, and plugin developers? Join our official [Slack](https://openterraria.com/#public-chat) chat.
 
 ## Showcase Server
 We have a showcase server running the latest release of TDSM (and maybe sometimes the latest build?)! Join us and play on it any time you want. We are glad to have you. Mainly it's for checking it out from the player's perspective and getting a feel for it, but you could play some too. Though at this time the world may not be persistant and there could be some bad bugs from time to time if we do update it to a dev build.
