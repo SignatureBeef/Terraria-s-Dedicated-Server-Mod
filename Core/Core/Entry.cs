@@ -108,10 +108,13 @@ namespace TDSM.Core
             Whitelist = new DataRegister(System.IO.Path.Combine(Globals.DataPath, "whitelist.txt"), false);
 
             string configFile;
-            if (!String.IsNullOrEmpty(configFile = Terraria.Initializers.LaunchInitializer.TryParameter(new string[] { "-config" })))
+            if (!String.IsNullOrEmpty(configFile = Terraria.Initializers.LaunchInitializer.TryParameter("-config")))
                 Config.LoadFromFile(configFile);
             
             Config.LoadFromArguments();
+
+            OTA.Data.EF7.OTAContextFactory.ConnectionProvider = Config.DatabaseProvider;
+            OTA.Data.EF7.OTAContextFactory.ConnectionString = Config.DatabaseConnectionString;
 
             ProgramLog.LogRotation = Config.LogRotation;
 

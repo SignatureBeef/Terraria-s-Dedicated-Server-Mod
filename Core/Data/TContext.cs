@@ -244,6 +244,11 @@ namespace TDSM.Core.Data
 
         public DbSet<DataSetting> Settings { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             CreateModel(modelBuilder);

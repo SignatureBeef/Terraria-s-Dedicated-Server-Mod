@@ -97,6 +97,14 @@ namespace TDSM.Core
         public int Maintenance_SaveIntervalMinutes { get; set; } = 10;
 
         #endregion
+
+        #region Database
+        [ConfigPrefix("database-provider")]
+        public string DatabaseProvider { get; set; }
+
+        [ConfigPrefix("database-connection")]
+        public string DatabaseConnectionString { get; set; }
+        #endregion
     }
 }
 
