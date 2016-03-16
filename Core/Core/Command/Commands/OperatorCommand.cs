@@ -43,13 +43,13 @@ namespace TDSM.Core.Command.Commands
 
             if (Storage.IsAvailable)
             {
-                var existing = AuthenticatedUsers.GetUser(playerName);
+                var existing = Authentication.GetPlayer(playerName);
                 if (existing != null)
                 {
                     if (existing.Operator)
                         throw new CommandError("Player is already an operator");
 
-                    if (AuthenticatedUsers.UpdateUser(playerName, null, op: true))
+                    if (Authentication.UpdatePlayer(playerName, null, op: true))
                     {
                         Utils.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
                         var player = Tools.GetPlayerByName(playerName);
@@ -106,7 +106,7 @@ namespace TDSM.Core.Command.Commands
             var playerName = args.GetString(0);
             if (Storage.IsAvailable)
             {
-                var existing = AuthenticatedUsers.GetUser(playerName);
+                var existing = Authentication.GetPlayer(playerName);
                 if (existing != null)
                 {
                     if (!existing.Operator)
@@ -120,7 +120,7 @@ namespace TDSM.Core.Command.Commands
                         player.SetAuthentication(null, "tdsm");
                     }
 
-                    if (AuthenticatedUsers.UpdateUser(playerName, null, false))
+                    if (Authentication.UpdatePlayer(playerName, null, false))
                     {
                         sender.Message("Deop success", Color.DarkGreen);
                     }
@@ -171,7 +171,7 @@ namespace TDSM.Core.Command.Commands
                 var player = sender as Player;
                 if (Storage.IsAvailable)
                 {
-                    var existing = AuthenticatedUsers.GetUser(sender.SenderName);
+                    var existing = Authentication.GetPlayer(sender.SenderName);
                     if (existing != null)
                     {
                         if (existing.ComparePassword(sender.SenderName, password))

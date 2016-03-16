@@ -62,7 +62,7 @@ namespace TDSM.Core
         public Dictionary<string, string> CommandDictionary { get; set; }
 
         //private Task _customInvasion;
-        internal Dictionary<Int32,Int32> _invasion;
+        internal Dictionary<Int32, Int32> _invasion;
         internal int _assignedInvasionType = OTA.Callbacks.NPCCallback.AssignInvasionType();
         internal bool _notfInbound;
 
@@ -110,11 +110,10 @@ namespace TDSM.Core
             string configFile;
             if (!String.IsNullOrEmpty(configFile = Terraria.Initializers.LaunchInitializer.TryParameter("-config")))
                 Config.LoadFromFile(configFile);
-            
+
             Config.LoadFromArguments();
 
-            OTA.Data.EF7.OTAContextFactory.ConnectionProvider = Config.DatabaseProvider;
-            OTA.Data.EF7.OTAContextFactory.ConnectionString = Config.DatabaseConnectionString;
+            OTA.Data.DatabaseFactory.Initialise(Config.DatabaseProvider, Config.DatabaseConnectionString);
 
             ProgramLog.LogRotation = Config.LogRotation;
 
@@ -129,6 +128,12 @@ namespace TDSM.Core
             }
 
             ProgramLog.Log("TDSM Rebind core enabled");
+        }
+
+        protected override void PreEnable()
+        {
+            base.PreEnable();
+            OTA.Data.DatabaseFactory.Migrate();
         }
 
         public void OnListeningForCommands(ref HookContext ctx, ref OTA.Commands.Events.CommandArgs.Listening args)

@@ -49,7 +49,7 @@ namespace TDSM.Core.Data.Permissions
         /// <summary>
         /// Fetch the list of nodes for a group
         /// </summary>
-        NodePermission[] GroupNodes(string groupName);
+        PermissionNode[] GroupNodes(string groupName);
 
         /// <summary>
         /// Add a user to a group.
@@ -86,7 +86,7 @@ namespace TDSM.Core.Data.Permissions
         /// </summary>
         /// <returns>The nodes.</returns>
         /// <param name="username">Username.</param>
-        NodePermission[] UserNodes(string username);
+        PermissionNode[] UserNodes(string username);
 
         /// <summary>
         /// Fetches the lowest inherited group

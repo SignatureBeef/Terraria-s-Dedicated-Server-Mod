@@ -6,6 +6,10 @@ using System.Linq;
 using TDSM.Core;
 using TDSM.Core.Data.Permissions;
 using OTA.Permissions;
+using OTA.Data;
+using OTA.Data.Dapper.Extensions;
+using Dapper.Contrib.Extensions;
+using Dapper;
 
 namespace TDSM.Core.Data
 {
@@ -426,25 +430,29 @@ namespace TDSM.Core.Data
                 throw new InvalidOperationException("No connector attached");
 
             var vPermissionValue = Permission.Denied;
-            var vUserId = 0;
-            var vGroupId = 0;
-            var vPrevGroupId = 0;
+            var vPlayerId = 0L;
+            var vGroupId = 0L;
+            var vPrevGroupId = 0L;
             var vNodeFound = false;
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+#else
             using (var ctx = new TContext())
+#endif
             {
                 if (prmIsGuest == false && prmAuthentication != null && prmAuthentication.Length > 0)
                 {
-                    var user = ctx.GetUser(prmAuthentication).Single();
-                    if (user != null)
+                    var player = ctx.GetPlayer(prmAuthentication).Single();
+                    if (player != null)
                     {
-                        vUserId = user.Id;
+                        vPlayerId = player.Id;
 
-                        if (user.Operator)
+                        if (player.Operator)
                             return Permission.Permitted;
                     }
 
-                    if (vUserId > 0)
+                    if (vPlayerId > 0)
                     {
                         /*
                         If the user has specific nodes then use them
@@ -453,7 +461,7 @@ namespace TDSM.Core.Data
                     */
 
                         /*Do we have any nodes?*/
-                        var nodes = ctx.GetPermissionByNodeForUser(vUserId, prmNode).ToArray();
+                        var nodes = ctx.GetPermissionByNodeForPlayer(vPlayerId, prmNode).ToArray();
                         if (nodes != null && nodes.Length > 0)
                         {
                             if (nodes.Where(x => x.Permission == Permission.Denied).Count() == 0)
@@ -475,7 +483,7 @@ namespace TDSM.Core.Data
                             Else guestMode
                         */
 
-                            var grp = ctx.GetUserGroups(vUserId).FirstOrDefault();
+                            var grp = ctx.GetPlayerGroups(vPlayerId).FirstOrDefault();
                             vGroupId = 0;
                             if (grp != null) vGroupId = grp.Id;
                             if (vGroupId > 0)
@@ -557,7 +565,12 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+                return ctx.SingleOrDefault<Group>(new { Name = name });
+#else
             using (var ctx = new TContext()) return ctx.Groups.SingleOrDefault(x => x.Name == name);
+#endif
         }
 
         /// <summary>
@@ -577,6 +590,41 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                var group = ctx.SingleOrDefault<Group>(new { Name = name });
+                if (group != null)
+                {
+                    group.ApplyToGuests = applyToGuests;
+                    group.Parent = parent;
+                    group.Chat_Red = r;
+                    group.Chat_Green = g;
+                    group.Chat_Blue = b;
+                    group.Chat_Prefix = prefix;
+                    group.Chat_Suffix = suffix;
+
+                    ctx.Update(group);
+                }
+                else
+                {
+                    group = new Group()
+                    {
+                        Name = name,
+                        ApplyToGuests = applyToGuests,
+                        Parent = parent,
+                        Chat_Red = r,
+                        Chat_Green = g,
+                        Chat_Blue = b,
+                        Chat_Prefix = prefix,
+                        Chat_Suffix = suffix
+                    };
+                    group.Id = ctx.Insert(group);
+                }
+
+                return group;
+            }
+#else
             using (var ctx = new TContext())
             {
                 var group = ctx.Groups.SingleOrDefault(x => x.Name == name);
@@ -607,15 +655,34 @@ namespace TDSM.Core.Data
 
                 ctx.SaveChanges();
 
-                return group;
-            }
+            return group;
+        }
+#endif
         }
 
-        public static NodePermission FindOrCreateNode(string node, Permission permission)
+        public static PermissionNode FindOrCreateNode(string node, Permission permission)
         {
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                var existing = ctx.SingleOrDefault<PermissionNode>(new { Node = node, Permission = permission });
+                if (existing != null) return existing;
+                else
+                {
+                    existing = new PermissionNode()
+                    {
+                        Node = node,
+                        Permission = permission
+                    };
+                    existing.Id = ctx.Insert(existing);
+
+                    return existing;
+                }
+            }
+#else
             using (var ctx = new TContext())
             {
                 var existing = ctx.Nodes.SingleOrDefault(x => x.Node == node && x.Permission == permission);
@@ -633,6 +700,7 @@ namespace TDSM.Core.Data
                     return existing;
                 }
             }
+#endif
         }
 
         /// <summary>
@@ -645,6 +713,10 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+                return ctx.Delete<Group>(new { Name = name }) > 0;
+#else
             using (var ctx = new TContext())
             {
                 ctx.Groups.RemoveRange(ctx.Groups.Where(x => x.Name == name));
@@ -652,6 +724,7 @@ namespace TDSM.Core.Data
 
                 return !ctx.Groups.Any(x => x.Name == name);
             }
+#endif
         }
 
         /// <summary>
@@ -666,6 +739,20 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            var perm = FindOrCreateNode(node, permission);
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                var group = ctx.SingleOrDefault<Group>(new { Name = groupName });
+                ctx.Insert(new GroupNode()
+                {
+                    GroupId = group.Id,
+                    NodeId = perm.Id
+                });
+
+                return true;
+            }
+#else
             using (var ctx = new TContext())
             {
                 var group = ctx.Groups.Where(x => x.Name == groupName).SingleOrDefault();
@@ -681,6 +768,7 @@ namespace TDSM.Core.Data
 
                 return true;
             }
+#endif
         }
 
         /// <summary>
@@ -695,6 +783,19 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            var group = FindGroup(groupName);
+            if (group == null) return false;
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                return ctx.Execute($"delete from {typeof(GroupNode).Name} where Id in ( " +
+                        $"select gn.Id from {typeof(GroupNode).Name} gn " +
+                            $"inner join {typeof(PermissionNode).Name} nd on gn.NodeId = nd.Id " +
+                        "where gn.GroupId = @GroupId and nd.Node = @Node and nd.Permission = @Permission" +
+                    ")",
+                    new { GroupId = group.Id, Node = node, Permission = (int)permission }) > 0;
+            }
+#else
             using (var ctx = new TContext())
             {
                 ctx.GroupNodes.RemoveRange(
@@ -709,6 +810,7 @@ namespace TDSM.Core.Data
                         join nds in ctx.GroupNodes on grp.Id equals nds.GroupId
                         select nds).Any();
             }
+#endif
         }
 
         /// <summary>
@@ -720,10 +822,17 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                return ctx.Query<String>($"select Name from {typeof(Group).Name}").ToArray();
+            }
+#else
             using (var ctx = new TContext())
             {
                 return ctx.Groups.Select(x => x.Name).ToArray();
             }
+#endif
         }
 
         /// <summary>
@@ -731,11 +840,20 @@ namespace TDSM.Core.Data
         /// </summary>
         /// <returns>The nodes.</returns>
         /// <param name="groupName">Group name.</param>
-        public static NodePermission[] GroupNodes(string groupName)
+        public static PermissionNode[] GroupNodes(string groupName)
         {
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                return ctx.Query<PermissionNode>($"select nd.* from {typeof(Group).Name} g " +
+                    $"inner join {typeof(GroupNode).Name} gn on g.Id = gn.GroupId " +
+                    $"inner join {typeof(PermissionNode).Name} nd on gn.NodeId = nd.Id " +
+                    "where g.Name = @GroupName", new { GroupName = groupName }).ToArray();
+            }
+#else
             using (var ctx = new TContext())
             {
                 return ctx.Groups
@@ -744,6 +862,7 @@ namespace TDSM.Core.Data
                     .Join(ctx.Nodes, gp => gp.Id, nd => nd.Id, (a, b) => b)
                     .ToArray();
             }
+#endif
         }
 
         /// <summary>
@@ -757,13 +876,32 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                var player = ctx.Single<DbPlayer>(new { Name = username });
+                var group = ctx.Single<Group>(new { Name = groupName });
+
+                //Temporary until the need for more than one group
+                if (ctx.Where<PlayerGroup>(new { PlayerId = player.Id }).Any(x => x.GroupId > 0))
+                    throw new NotSupportedException("A player can only be associated to one group, please assign a parent to the desired group");
+
+                ctx.Insert(new PlayerGroup()
+                {
+                    GroupId = group.Id,
+                    PlayerId = player.Id
+                });
+
+                return true;
+            }
+#else
             using (var ctx = new TContext())
             {
                 var user = ctx.Players.Single(x => x.Name == username);
                 var group = ctx.Groups.Single(x => x.Name == groupName);
 
                 //Temporary until the need for more than one group
-                if (ctx.PlayerGroups.Any(x => x.GroupId > 0))
+                if (ctx.PlayerGroups.Any(x => x.PlayerId == user.Id && x.GroupId > 0))
                     throw new NotSupportedException("A player can only be associated to one group, please assign a parent to the desired group");
 
                 ctx.PlayerGroups.Add(new PlayerGroup()
@@ -776,6 +914,7 @@ namespace TDSM.Core.Data
 
                 return true;
             }
+#endif
         }
 
         /// <summary>
@@ -789,6 +928,15 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                var player = ctx.Single<DbPlayer>(new { Name = username });
+                var group = ctx.Single<Group>(new { Name = groupName });
+
+                return ctx.Delete<PlayerGroup>(new { PlayerId = player.Id, GroupId = group.Id }) > 0;
+            }
+#else
             using (var ctx = new TContext())
             {
                 var user = ctx.Players.Single(x => x.Name == username);
@@ -806,6 +954,7 @@ namespace TDSM.Core.Data
                     x.UserId == user.Id
                 );
             }
+#endif
         }
 
         /// <summary>
@@ -820,23 +969,41 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            var perm = FindOrCreateNode(node, permission);
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                var player = ctx.Single<DbPlayer>(new { Name = username });
+
+                if (ctx.Any<PlayerNode>(new { PlayerId = player.Id, NodeId = perm.Id }))
+                    return false;
+
+                return ctx.Insert(new PlayerNode()
+                {
+                    NodeId = perm.Id,
+                    PlayerId = player.Id
+                }) > 0;
+            }
+#else
             using (var ctx = new TContext())
             {
                 var user = ctx.Players.Single(x => x.Name == username);
                 var perm = FindOrCreateNode(node, permission);
 
-                ctx.PlayerNodes.RemoveRange(ctx.PlayerNodes.Where(x =>
-                    x.NodeId == perm.Id &&
-                    x.UserId == user.Id
-                ));
+            //TODO (EF) WRONG! Looks like it was copied code.
+                //ctx.PlayerNodes.RemoveRange(ctx.PlayerNodes.Where(x =>
+                //    x.NodeId == perm.Id &&
+                //    x.UserId == user.Id
+                //));
 
-                ctx.SaveChanges();
+                //ctx.SaveChanges();
 
-                return ctx.PlayerNodes.Any(x =>
-                    x.NodeId == perm.Id &&
-                    x.UserId == user.Id
-                );
+                //return ctx.PlayerNodes.Any(x =>
+                //    x.NodeId == perm.Id &&
+                //    x.UserId == user.Id
+                //);
             }
+# endif
         }
 
         /// <summary>
@@ -851,6 +1018,19 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                var player = ctx.Single<DbPlayer>(new { Name = username });
+
+                return ctx.Execute($"delete from {typeof(PlayerNode).Name} where Id in ( " +
+                        $"select pn.Id from {typeof(PlayerNode).Name} pn " +
+                            $"inner join {typeof(PermissionNode).Name} nd on pn.NodeId = nd.Id " +
+                        "where pn.PlayerId = @PlayerId and nd.Node = @Node and nd.Permission = @Permission" +
+                    ")",
+                    new { PlayerId = player.Id, Node = node, Permission = (int)permission }) > 0;
+            }
+#else
             using (var ctx = new TContext())
             {
                 ctx.PlayerNodes.RemoveRange(ctx.Players
@@ -865,6 +1045,7 @@ namespace TDSM.Core.Data
                     .Join(ctx.PlayerNodes, x => x.Id, y => y.UserId, (a, b) => b)
                     .Any();
             }
+#endif
         }
 
         /// <summary>
@@ -877,6 +1058,16 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                return ctx.Query<string>($"select g.Name from {typeof(DbPlayer).Name} p " +
+                    $"inner join {typeof(PlayerGroup).Name} pg on p.Id = pg.PlayerId " +
+                    $"inner join {typeof(Group).Name} g on pg.GroupId = g.Id " +
+                    $"where p.Name = @PlayerName",
+                    new { PlayerName = username }).ToArray();
+            }
+#else
             using (var ctx = new TContext())
             {
                 return ctx.Players
@@ -886,6 +1077,7 @@ namespace TDSM.Core.Data
                     .Select(x => x.Name)
                     .ToArray();
             }
+#endif
         }
 
         /// <summary>
@@ -893,11 +1085,21 @@ namespace TDSM.Core.Data
         /// </summary>
         /// <returns>The nodes.</returns>
         /// <param name="username">Username.</param>
-        public static NodePermission[] UserNodes(string username)
+        public static PermissionNode[] UserNodes(string username)
         {
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                return ctx.Query<PermissionNode>($"select n.* from {typeof(DbPlayer).Name} p " +
+                    $"inner join {typeof(PlayerNode).Name} pn on p.Id = pn.PlayerId " +
+                    $"inner join {typeof(PermissionNode).Name} n on pn.NodeId = n.Id " +
+                    $"where p.Name = @PlayerName",
+                    new { PlayerName = username }).ToArray();
+            }
+#else
             using (var ctx = new TContext())
             {
                 return ctx.Players
@@ -906,6 +1108,7 @@ namespace TDSM.Core.Data
                     .Join(ctx.Nodes, pn => pn.Id, nd => nd.Id, (a, b) => b)
                     .ToArray();
             }
+#endif
         }
 
         /// <summary>
@@ -919,7 +1122,17 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
-            using (var ctx = new TContext())
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                return ctx.QueryFirstOrDefault<Group>($"select g.* from {typeof(DbPlayer).Name} p " +
+                    $"inner join {typeof(PlayerGroup).Name} pg on p.Id = pg.PlayerId " +
+                    $"inner join {typeof(Group).Name} g on pg.GroupId = g.Id " +
+                    $"where p.Name = @PlayerName order by pg.Id",
+                    new { PlayerName = username });
+            }
+#else
+                using (var ctx = new TContext())
             {
                 return ctx.Players
                     .Where(x => x.Name == username)
@@ -927,6 +1140,7 @@ namespace TDSM.Core.Data
                     .Join(ctx.Groups, pg => pg.GroupId, gr => gr.Id, (a, b) => b)
                     .FirstOrDefault();
             }
+#endif
         }
 
         /// <summary>
@@ -960,10 +1174,15 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+                return ctx.FirstOrDefault<Group>(new { ApplyToGuests = true });
+#else
             using (var ctx = new TContext())
             {
                 return ctx.Groups.Where(x => x.ApplyToGuests).FirstOrDefault();
             }
+#endif
         }
     }
 #endif

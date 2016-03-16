@@ -13,6 +13,7 @@ using TDSM.Core.Command.Commands;
 using TDSM.Core.Net.Web;
 using TDSM.Core.Data;
 using OTA.Extensions;
+using OTA.Data;
 
 namespace TDSM.Core
 {
@@ -71,7 +72,11 @@ namespace TDSM.Core
             //So we must ensure the data is saved.
             //ServerCharacters.CharacterManager.EnsureSave = true;
 
+#if ENTITY_FRAMEWORK_7
             using (var dbCtx = new TContext())
+#elif DAPPER
+            using (var dbCtx = DatabaseFactory.CreateConnection())
+#endif
             {
                 if (CharacterManager.Mode == CharacterMode.UUID)
                 {
@@ -99,7 +104,11 @@ namespace TDSM.Core
         {
             if (ctx.Client.State >= 4 && CharacterManager.Mode == CharacterMode.AUTH)
             {
+#if ENTITY_FRAMEWORK_7
                 using (var dbCtx = new TContext())
+#elif DAPPER
+                using (var dbCtx = DatabaseFactory.CreateConnection())
+#endif
                 {
                     CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !Config.SSC_AllowGuestInfo);
                 }
@@ -116,7 +125,11 @@ namespace TDSM.Core
         {
             if (Terraria.Main.ServerSideCharacter)
             {
+#if ENTITY_FRAMEWORK_7
                 using (var dbCtx = new TContext())
+#elif DAPPER
+                using (var dbCtx = DatabaseFactory.CreateConnection())
+#endif
                 {
                     CharacterManager.SavePlayerData(dbCtx, true, ctx.Player);
                 }
@@ -129,12 +142,12 @@ namespace TDSM.Core
                 }
                 //ProgramLog.Log("{0}", ctx.Player.name); //, args.Prefix + " " + args.ArgumentString);
             }
-            #if TDSMServer
+#if TDSMServer
             if (RestartWhenNoPlayers && ClientConnection.All.Count - 1 == 0)
             {
             PerformRestart();
             }
-            #endif
+#endif
         }
 
         //[Hook(HookOrder.NORMAL)]
@@ -213,7 +226,7 @@ namespace TDSM.Core
                 ctx.SetResult(HookResult.IGNORE);
         }
 
-        #if TDSMServer
+#if TDSMServer
         [Hook(HookOrder.NORMAL)]
         void OnDefaultServerStart(ref HookContext ctx, ref HookArgs.StartDefaultServer args)
         {
@@ -226,7 +239,7 @@ namespace TDSM.Core
         } else
         ProgramLog.Log("Vanilla only specified, continuing on with Re-Logic code...");
         }
-        #endif
+#endif
 
         [Hook(HookOrder.LATE)]
         //Late so other plugins can perform alterations

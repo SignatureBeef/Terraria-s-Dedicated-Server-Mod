@@ -3,10 +3,13 @@ using OTA.Data;
 using TDSM.Core.ServerCharacters;
 using TDSM.Core.Data;
 using TDSM.Core.Data.Models;
+using Dapper.Contrib.Extensions;
+using System.Data;
+using TDSM.Core.ServerCharacters.Models;
 
 namespace TDSM.Core.ServerCharacters.Tables
 {
-    #if DATA_CONNECTOR
+#if DATA_CONNECTOR
     internal class DefaultLoadoutTable
     {
         public const String TableName = "SSC_Loadout";
@@ -101,7 +104,7 @@ namespace TDSM.Core.ServerCharacters.Tables
 
 
 
-#elif ENTITY_FRAMEWORK_6 || ENTITY_FRAMEWORK_7
+#elif ENTITY_FRAMEWORK_6 || ENTITY_FRAMEWORK_7 || DAPPER
     internal class DefaultLoadoutTable
     {
         public const String TableName = "SSC_Loadout";
@@ -111,8 +114,17 @@ namespace TDSM.Core.ServerCharacters.Tables
         public const String Setting_Health = "SSC_Health";
         public const String Setting_MaxHealth = "SSC_MaxHealth";
 
-        public static LoadoutItem AddItem(/*CharacterManager.ItemType type,*/ int itemId)
+        public static LoadoutItem AddItem(/*CharacterManager.ItemType type,*/ long itemId)
         {
+#if DAPPER
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                var li = new LoadoutItem()
+                {
+                    ItemId = itemId
+                };
+                li.Id = ctx.Insert(li);
+#else
             using (var ctx = new TContext())
             {
                 var li = new LoadoutItem()
@@ -122,23 +134,28 @@ namespace TDSM.Core.ServerCharacters.Tables
                 ctx.DefaultLoadout.Add(li);
 
                 ctx.SaveChanges();
+#endif
 
                 return li;
             }
         }
 
+#if DAPPER
+        public static void PopulateDefaults(IDbConnection ctx, bool save, NewPlayerInfo info)
+#else
         public static void PopulateDefaults(TContext ctx, bool save, NewPlayerInfo info)
+#endif
         {
-            SettingsStore.Set(Setting_Health, info.Health);
-            SettingsStore.Set(Setting_MaxHealth, info.MaxHealth);
-            SettingsStore.Set(Setting_Mana, info.Mana);
-            SettingsStore.Set(Setting_MaxMana, info.MaxMana);
+            //SettingsStore.Set(Setting_Health, info.Health);
+            //SettingsStore.Set(Setting_MaxHealth, info.MaxHealth);
+            //SettingsStore.Set(Setting_Mana, info.Mana);
+            //SettingsStore.Set(Setting_MaxMana, info.MaxMana);
 
             if (info.Inventory != null)
             {
                 foreach (var item in info.Inventory)
                 {
-                    var id = ItemTable.NewItem(ctx, save, CharacterManager.ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    var id = ItemTable.NewItem(ctx, save, ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id.Id);
                 }
             }
@@ -147,7 +164,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Armor)
                 {
-                    var id = ItemTable.NewItem(ctx, save, CharacterManager.ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    var id = ItemTable.NewItem(ctx, save, ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id.Id);
                 }
             }
@@ -156,11 +173,11 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Dye)
                 {
-                    var id = ItemTable.NewItem(ctx, save, CharacterManager.ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    var id = ItemTable.NewItem(ctx, save, ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id.Id);
                 }
             }
         }
     }
-    #endif
-}
+#endif
+    }

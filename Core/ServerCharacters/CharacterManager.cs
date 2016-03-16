@@ -8,6 +8,8 @@ using OTA.Plugin;
 using System.Linq;
 using TDSM.Core.Data;
 using TDSM.Core.Data.Extensions;
+using System.Data;
+using TDSM.Core.ServerCharacters.Models;
 
 namespace TDSM.Core.ServerCharacters
 {
@@ -15,18 +17,6 @@ namespace TDSM.Core.ServerCharacters
     {
         internal const String SQLSafeName = "tdsm";
         internal const String Key_NewCharacter = "tdsm_NewCharacter";
-
-        public enum ItemType
-        {
-            Inventory = 1,
-            Armor,
-            Dye,
-            Equipment,
-            MiscDyes,
-            Bank,
-            Bank2,
-            Trash
-        }
 
         public static CharacterMode Mode { get; set; }
 
@@ -152,7 +142,11 @@ namespace TDSM.Core.ServerCharacters
                 EnsureSave = false;
                 try
                 {
+#if ENTITY_FRAMEWORK_7
                     using (var ctx = new TContext())
+#elif DAPPER
+                    using(var ctx = DatabaseFactory.CreateConnection())
+#endif
                     {
                         foreach (var ply in Terraria.Main.player)
                         {
@@ -162,7 +156,9 @@ namespace TDSM.Core.ServerCharacters
                             }
                         }
 
+#if ENTITY_FRAMEWORK_7
                         ctx.SaveChanges();
+#endif
                     }
                 }
                 catch (Exception e)
@@ -175,7 +171,7 @@ namespace TDSM.Core.ServerCharacters
             }
         }
 
-        public static ServerCharacter LoadPlayerData(TContext ctx, Player player, bool returnNewInfo = false)
+        public static ServerCharacter LoadPlayerData(IDbConnection ctx, Player player, bool returnNewInfo = false)
         {
             //If using a flat based system ensure the MODE is stored
             string authName = null;
@@ -213,6 +209,11 @@ namespace TDSM.Core.ServerCharacters
                     var ssc = Tables.CharacterTable.GetCharacter(Mode, auth, player.ClientUUId);
                     if (ssc != null)
                     { 
+#elif DAPPER
+                    var dbSSC = Tables.CharacterTable.GetCharacter(ctx, Mode, auth, player.ClientUUId);
+                    if (dbSSC != null)
+                    {
+                        var ssc = dbSSC.ToServerCharacter();
 #endif
                         //                        ProgramLog.Log("Loading SSC loadout");
 
@@ -295,7 +296,11 @@ namespace TDSM.Core.ServerCharacters
             return null;
         }
 
+#if ENTITY_FRAMEWORK_7
         public static bool SavePlayerData(TContext ctx, bool save, Player player)
+#elif DAPPER
+        public static bool SavePlayerData(IDbConnection ctx, bool save, Player player)
+#endif
         {
             if (!player.IsAuthenticated()) return false;
 
@@ -319,7 +324,7 @@ namespace TDSM.Core.ServerCharacters
                 {
                     var auth = player.GetAuthenticatedAs();
 
-                    #if ENTITY_FRAMEWORK_6
+#if ENTITY_FRAMEWORK_6
                     int userId = 0;
                     if (Mode == CharacterMode.AUTH)
                     {
@@ -355,8 +360,8 @@ namespace TDSM.Core.ServerCharacters
                     if (!SaveCharacterItem(ctx, save, player, character.Id, ItemType.Trash, player.trashItem, 0, items)) return false;
 
 
-                    #elif ENTITY_FRAMEWORK_7
-                    #else
+#elif ENTITY_FRAMEWORK_7
+#else
                     var character = Tables.CharacterTable.GetCharacter(ctx, Mode, auth, player.ClientUUId);
                     if (character == null)
                     {
@@ -523,7 +528,7 @@ namespace TDSM.Core.ServerCharacters
 //                            }
 //                        }
                     }
-                    #endif
+#endif
                 }
                 else
                 {
@@ -556,7 +561,7 @@ namespace TDSM.Core.ServerCharacters
             return false;
         }
 
-        #if ENTITY_FRAMEWORK_6
+#if ENTITY_FRAMEWORK_6
         private static bool SaveCharacterItem(TContext ctx, bool save, Player player, int characterId, ItemType type, Item item, int slot, SlotItem[] existing)
         {
             var netId = 0;
@@ -606,8 +611,12 @@ namespace TDSM.Core.ServerCharacters
 
             return true;
         }
-        #else
+#else
+#if ENTITY_FRAMEWORK_7
         private static bool SaveCharacterItem(TContext ctx, bool save, Player player, int characterId, ItemType type, Item item, int slot)
+#elif DAPPER
+        private static bool SaveCharacterItem(IDbConnection ctx, bool save, Player player, long characterId, ItemType type, Item item, int slot)
+#endif
         {
             var netId = 0;
             var prefix = 0;
@@ -639,7 +648,11 @@ namespace TDSM.Core.ServerCharacters
             return true;
         }
 
+#if ENTITY_FRAMEWORK_7
         private static bool SaveCharacterItems(TContext ctx, bool save, Player player, int characterId, Item[] items, ItemType type)
+#elif DAPPER
+        private static bool SaveCharacterItems(IDbConnection ctx, bool save, Player player, long characterId, Item[] items, ItemType type)
+#endif
         {
             for (var i = 0; i < items.Length; i++)
             {
@@ -648,9 +661,13 @@ namespace TDSM.Core.ServerCharacters
 
             return true;
         }
-                    #endif
+#endif
 
+#if ENTITY_FRAMEWORK_7
         public static void LoadForAuthenticated(TContext ctx, Player player, bool createIfNone = true)
+#elif DAPPER
+        public static void LoadForAuthenticated(IDbConnection ctx, Player player, bool createIfNone = true)
+#endif
         {
             var ssc = LoadPlayerData(ctx, player, createIfNone);
 

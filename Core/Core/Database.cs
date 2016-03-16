@@ -11,6 +11,9 @@ using TDSM.Core.Data.Permissions;
 using TDSM.Core.Data.Models;
 using OTA;
 using OTA.Permissions;
+using System.Data;
+using Dapper.Contrib.Extensions;
+using OTA.Data.Dapper.Extensions;
 
 namespace TDSM.Core
 {
@@ -24,7 +27,7 @@ namespace TDSM.Core
         [TDSMComponent(ComponentEvent.Enabled)]
         public static void SetupDatabase(Entry plugin)
         {
-            #if ENTITY_FRAMEWORK_6
+#if ENTITY_FRAMEWORK_6
             Storage.IsAvailable = OTA.Data.EF6.OTAContext.HasConnection;
 
             if (Storage.IsAvailable) ProgramLog.Admin.Log("Entity framework has a registered connection.");
@@ -42,14 +45,13 @@ namespace TDSM.Core
             //        ctx.SaveChanges();
             //    }
 
-            #elif !ENTITY_FRAMEWORK_7
-            using (var ctx = new TContext())
-            {
-            ctx.Database.EnsureCreated();
-            Storage.IsAvailable = true;
-            }
-
-            #endif
+            //#elif ENTITY_FRAMEWORK_7
+            //using (var ctx = new TContext())
+            //{
+            //    ctx.Database.EnsureCreated();
+            //    Storage.IsAvailable = true;
+            //}
+#endif
         }
 
         //protected override void DatabaseInitialising(System.Data.Entity.DbModelBuilder builder)
@@ -66,17 +68,21 @@ namespace TDSM.Core
         {
             base.DatabaseCreated();
 
-            using (var ctx = new TContext())
-            {
-                ProgramLog.Admin.Log("Creating default groups...");
-                CreateDefaultGroups(ctx);
+            //using (var ctx = new TContext())
+            //{
+            //    ProgramLog.Admin.Log("Creating default groups...");
+            //    CreateDefaultGroups(ctx);
 
-                ProgramLog.Admin.Log("Creating default SSC values...");
-                DefaultLoadoutTable.PopulateDefaults(ctx, true, CharacterManager.StartingOutInfo);
-            }
+            //    ProgramLog.Admin.Log("Creating default SSC values...");
+            //    DefaultLoadoutTable.PopulateDefaults(ctx, true, CharacterManager.StartingOutInfo);
+            //}
         }
 
+#if ENTITY_FRAMEWORK_7
         public void CreateDefaultGroups(TContext ctx)
+#elif DAPPER
+        public void CreateDefaultGroups(IDbConnection ctx)
+#endif
         {
             var pc = OTA.Commands.CommandManager.Parser.GetTDSMCommandsForAccessLevel(AccessLevel.PLAYER);
             var ad = OTA.Commands.CommandManager.Parser.GetTDSMCommandsForAccessLevel(AccessLevel.OP);
@@ -99,9 +105,15 @@ namespace TDSM.Core
                     .ToArray(), ctx, "[OP] ");
         }
 
+#if ENTITY_FRAMEWORK_7
         static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, TContext ctx,
                                 string chatPrefix = null,
                                 string chatSuffix = null)
+#elif DAPPER
+        static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, IDbConnection ctx,
+                                string chatPrefix = null,
+                                string chatSuffix = null)
+#endif
         {
             var grp = new Group()
             {
@@ -114,6 +126,8 @@ namespace TDSM.Core
                 Chat_Prefix = chatPrefix,
                 Chat_Suffix = chatSuffix
             };
+
+#if ENTITY_FRAMEWORK_7
             ctx.Groups.Add(grp);
 
             ctx.SaveChanges(); //Save to get the ID
@@ -140,6 +154,28 @@ namespace TDSM.Core
             }
 
             ctx.SaveChanges();
+#elif DAPPER
+            grp.Id = ctx.Insert(grp);
+            foreach (var nd in nodes)
+            {
+                var node = ctx.SingleOrDefault<PermissionNode>(new { Node = nd, Permission = Permission.Permitted });
+                if (node == null)
+                {
+                    node = new PermissionNode()
+                    {
+                        Node = nd,
+                        Permission = Permission.Permitted
+                    };
+                    node.Id = ctx.Insert(node);
+                }
+
+                ctx.Insert(new GroupNode()
+                {
+                    GroupId = grp.Id,
+                    NodeId = node.Id
+                });
+            }
+#endif
         }
     }
 }

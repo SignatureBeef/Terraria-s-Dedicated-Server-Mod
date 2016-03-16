@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using TDSM.Core.Data.Permissions;
 using OTA.Logging;
 using OTA.Permissions;
+using TDSM.Core.Data.Models;
 
 namespace TDSM.Core.Command.Commands
 {
@@ -230,7 +231,7 @@ namespace TDSM.Core.Command.Commands
                     if (!args.TryGetString(a++, out groupName))
                         throw new CommandError("Expected group name after username");
 
-                    user = AuthenticatedUsers.GetUser(username);
+                    user = Authentication.GetPlayer(username);
                     if (null == user)
                         throw new CommandError("No user found by: " + username);
 
@@ -254,7 +255,7 @@ namespace TDSM.Core.Command.Commands
                     if (!args.TryGetString(a++, out groupName))
                         throw new CommandError("Expected group name after username");
 
-                    user = AuthenticatedUsers.GetUser(username);
+                    user = Authentication.GetPlayer(username);
                     if (null == user)
                         throw new CommandError("No user found by: " + username);
 
@@ -282,7 +283,7 @@ namespace TDSM.Core.Command.Commands
                     if (!args.TryGetBool(a++, out deny))
                         deny = false;
 
-                    user = AuthenticatedUsers.GetUser(username);
+                    user = Authentication.GetPlayer(username);
                     if (null == user)
                         throw new CommandError("No user found by: " + username);
 
@@ -305,7 +306,7 @@ namespace TDSM.Core.Command.Commands
                     if (!args.TryGetBool(a++, out deny))
                         deny = false;
 
-                    user = AuthenticatedUsers.GetUser(username);
+                    user = Authentication.GetPlayer(username);
                     if (null == user)
                         throw new CommandError("No user found by: " + username);
 
@@ -324,7 +325,7 @@ namespace TDSM.Core.Command.Commands
                     if (!args.TryGetString(a++, out username))
                         throw new CommandError("Expected username name after [" + cmd + "]");
 
-                    user = AuthenticatedUsers.GetUser(username);
+                    user = Authentication.GetPlayer(username);
                     if (null == user)
                         throw new CommandError("No user found by: " + username);
 
@@ -348,7 +349,7 @@ namespace TDSM.Core.Command.Commands
                     if (!args.TryGetString(a++, out username))
                         throw new CommandError("Expected username name after [" + cmd + "]");
 
-                    user = AuthenticatedUsers.GetUser(username);
+                    user = Authentication.GetPlayer(username);
                     if (null == user)
                         throw new CommandError("No user found by: " + username);
 
@@ -372,7 +373,7 @@ namespace TDSM.Core.Command.Commands
                     if (!args.TryGetString(a++, out username))
                         throw new CommandError("Expected part of a users name after [" + cmd + "]");
 
-                    var matches = AuthenticatedUsers.FindUsersByPrefix(username);
+                    var matches = Authentication.FindPlayersByPrefix(username);
                     if (matches != null && matches.Length > 0)
                     {
                         sender.Message("Matches:");
@@ -413,10 +414,10 @@ namespace TDSM.Core.Command.Commands
                         if (grp == null || grp.Id == 0) sender.Message("No group found by {0}", groupName);
                     }
 
-                    var existing = AuthenticatedUsers.GetUser(username);
+                    var existing = Authentication.GetPlayer(username);
                     if (existing == null)
                     {
-                        if (AuthenticatedUsers.CreateUser(username, password, op) != null)
+                        if (Authentication.CreatePlayer(username, password, op) != null)
                         {
                             if (op)
                             {
@@ -461,10 +462,10 @@ namespace TDSM.Core.Command.Commands
 
                     args.TryGetBool(a++, out op);
 
-                    var updatee = AuthenticatedUsers.GetUser(username);
+                    var updatee = Authentication.GetPlayer(username);
                     if (updatee != null)
                     {
-                        if (AuthenticatedUsers.UpdateUser(username, password, op))
+                        if (Authentication.UpdatePlayer(username, password, op))
                         {
                             if (op)
                             {
@@ -487,10 +488,10 @@ namespace TDSM.Core.Command.Commands
                     if (!args.TryGetString(a++, out username))
                         throw new CommandError("Expected username name after [" + cmd + "]");
 
-                    var delUser = AuthenticatedUsers.GetUser(username);
+                    var delUser = Authentication.GetPlayer(username);
                     if (delUser != null)
                     {
-                        if (AuthenticatedUsers.DeleteUser(username))
+                        if (Authentication.DeletePlayer(username))
                         {
                             sender.Message("Successfully removed user " + username);
                         }

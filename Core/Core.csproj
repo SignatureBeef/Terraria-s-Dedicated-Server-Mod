@@ -14,7 +14,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;ENTITY_FRAMEWORK_7</DefineConstants>
+    <DefineConstants>DEBUG;DAPPER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
@@ -28,12 +28,16 @@
     <ConsolePause>False</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework.Core, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.Core.7.0.0-rc1-final\lib\net451\EntityFramework.Core.dll</HintPath>
+    <Reference Include="Dapper, Version=1.50.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.0-beta8\lib\net451\Dapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework.Relational, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.Relational.7.0.0-rc1-final\lib\net451\EntityFramework.Relational.dll</HintPath>
+    <Reference Include="Dapper.Contrib, Version=1.50.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.Contrib.1.50.0-beta8\lib\net45\Dapper.Contrib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
@@ -108,6 +112,7 @@
       <HintPath>..\packages\System.Collections.Immutable.1.1.38-beta-23516\lib\dotnet5.1\System.Collections.Immutable.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.0.0-beta-23516\lib\dotnet5.2\System.Diagnostics.DiagnosticSource.dll</HintPath>
       <Private>True</Private>
@@ -164,7 +169,23 @@
     <Reference Include="System.Collections.Concurrent" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\LoadoutItemMigration.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\PlayerMigration.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\GroupMigration.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\SlotItemMigration.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\CharacterMigration.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\PlayerNodeMigration.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\PlayerGroupMigration.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\PermissionNodeMigration.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\GroupNodeMigration.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\APIAccountRoleMigration.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\CreateAndSeed.cs" />
+    <Compile Include="Data\Models\Migrations\CreateAndSeed\APIAccountMigration.cs" />
     <Compile Include="ServerCharacters\CharacterManager.cs" />
+    <Compile Include="ServerCharacters\ItemType.cs" />
+    <Compile Include="ServerCharacters\Models\Character.cs" />
+    <Compile Include="ServerCharacters\Models\LoadoutItem.cs" />
+    <Compile Include="ServerCharacters\Models\SlotItem.cs" />
     <Compile Include="ServerCharacters\ServerCharacter.cs" />
     <Compile Include="Definitions\DefinitionManager.cs" />
     <Compile Include="Events\HookPoints.cs" />
@@ -182,15 +203,15 @@
     <Compile Include="Data\Management\BackupManager.cs" />
     <Compile Include="Data\Management\LogManagement.cs" />
     <Compile Include="Data\Management\SaveManager.cs" />
-    <Compile Include="Data\AuthenticatedUsers.cs" />
-    <Compile Include="Data\DbPlayer.cs" />
-    <Compile Include="Data\Group.cs" />
+    <Compile Include="Data\Authentication.cs" />
+    <Compile Include="Data\Models\DbPlayer.cs" />
+    <Compile Include="Data\Models\Group.cs" />
     <Compile Include="Data\SettingsStore.cs" />
     <Compile Include="Data\Models\APIAccount.cs" />
     <Compile Include="Data\Models\APIAccountRole.cs" />
     <Compile Include="Data\Models\DataSetting.cs" />
     <Compile Include="Data\Models\GroupNode.cs" />
-    <Compile Include="Data\Models\NodePermission.cs" />
+    <Compile Include="Data\Models\Node.cs" />
     <Compile Include="Data\Models\PlayerGroup.cs" />
     <Compile Include="Data\Models\PlayerNode.cs" />
     <Compile Include="Data\Permissions\IPermissionsHandler.cs" />

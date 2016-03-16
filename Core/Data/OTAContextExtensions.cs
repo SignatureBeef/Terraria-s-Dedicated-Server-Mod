@@ -1,6 +1,10 @@
 ﻿using System.Linq;
 using TDSM.Core.Data.Models;
 using OTA.Permissions;
+using System.Data;
+using OTA.Data.Dapper.Extensions;
+using System.Collections.Generic;
+using Dapper;
 
 namespace TDSM.Core.Data
 {
@@ -55,6 +59,53 @@ namespace TDSM.Core.Data
                 .Join(ctx.GroupNodes, gr => gr.Id, pn => pn.GroupId, (pl, gn) => gn)
                 .Join(ctx.Nodes, pn => pn.NodeId, np => np.Id, (a, b) => b)
                 .Any(n => n.Node == node && n.Permission == permission);
+        }
+    }
+#elif DAPPER
+    public static class OTAContextExtensions
+    {
+        public static IEnumerable<DbPlayer> GetPlayer(this IDbConnection ctx, string name)
+        {
+            return ctx.Where<DbPlayer>(new { Name = name });
+        }
+
+        public static IEnumerable<Group> GetPlayerGroups(this IDbConnection ctx, long playerId)
+        {
+            return ctx.Query<Group>($"select g.* from {typeof(DbPlayer).Name} p " +
+                $"inner join {typeof(PlayerGroup).Name} pg on p.Id = pg.UserId " +
+                $"inner join {typeof(Group).Name} g on pg.GroupId = g.Id " +
+                "where p.Id = @PlayerId", new { PlayerId = playerId });
+        }
+
+        public static IEnumerable<PermissionNode> GetPermissionByNodeForPlayer(this IDbConnection ctx, long playerId, string node)
+        {
+            return ctx.Query<PermissionNode>($"select nd.* from {typeof(DbPlayer).Name} p " +
+                $"inner join {typeof(PlayerNode).Name} pn on p.Id = pn.UserId " +
+                $"inner join {typeof(PermissionNode).Name} nd on pn.NodeId = nd.Id " +
+                "where p.Id = @PlayerId and nd.Node = @Node", new { PlayerId = playerId, Node = node });
+        }
+
+        public static IEnumerable<PermissionNode> GetPermissionByNodeForGroup(this IDbConnection ctx, long groupId, string node)
+        {
+            return ctx.Query<PermissionNode>($"select nd.* from {typeof(Group).Name} g " +
+                $"inner join {typeof(GroupNode).Name} gn on g.Id = pn.GroupId " +
+                $"inner join {typeof(PermissionNode).Name} nd on gn.NodeId = nd.Id " +
+                "where g.Id = @GroupId and nd.Node = @Node", new { GroupId = groupId, Node = node });
+        }
+
+        public static IEnumerable<Group> GetParentForGroup(this IDbConnection ctx, long groupId)
+        {
+            return ctx.Query<Group>($"select p.* from {typeof(Group).Name} g " +
+                $"inner join {typeof(Group).Name} p on g.Parent = p.Name " +
+                "where g.Id = @GroupId", new { GroupId = groupId });
+        }
+
+        public static bool GuestGroupHasNode(this IDbConnection ctx, string node, Permission permission)
+        {
+            return ctx.ExecuteScalar<long>($"select count(nd.Id) from {typeof(Group).Name} g " +
+                $"inner join {typeof(GroupNode).Name} gn on g.Id = pn.GroupId " +
+                $"inner join {typeof(PermissionNode).Name} nd on gn.NodeId = nd.Id " +
+                "where g.ApplyToGuests = 1 and nd.Node = @Node and nd.Permission = @Permission", new {Node = node, Permission = (int)permission }) > 0L;
         }
     }
 #endif

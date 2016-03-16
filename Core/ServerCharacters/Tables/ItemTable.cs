@@ -1,13 +1,14 @@
-﻿using System;
-using OTA.Data;
-using TDSM.Core.ServerCharacters;
-using TDSM.Core.Data;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
+using Dapper;
+using Dapper.Contrib.Extensions;
+using OTA.Data.Dapper.Extensions;
+using System.Data;
+using TDSM.Core.ServerCharacters.Models;
 
 namespace TDSM.Core.ServerCharacters.Tables
 {
-    #if DATA_CONNECTOR
+#if DATA_CONNECTOR
     internal class ItemTable
     {
         public const String TableName = "SSC_Items";
@@ -121,10 +122,6 @@ namespace TDSM.Core.ServerCharacters.Tables
             }
         }
     }
-
-
-
-
 #elif ENTITY_FRAMEWORK_6 || ENTITY_FRAMEWORK_7
     internal class ItemTable
     {
@@ -175,5 +172,53 @@ namespace TDSM.Core.ServerCharacters.Tables
             else return false;
         }
     }
-    #endif
+#elif DAPPER
+    internal class ItemTable
+    {
+        public static SlotItem NewItem(IDbConnection ctx, bool save, ItemType type, int netId, int stack, int prefix, bool favorite, int slot, long? characterId = null)
+        {
+            var item = new SlotItem()
+            {
+                Type = type,
+                NetId = netId,
+                Stack = stack,
+                Prefix = prefix,
+                Favorite = favorite,
+                Slot = slot,
+                CharacterId = characterId
+            };
+
+            item.Id = ctx.Insert(item);
+
+            return item;
+        }
+
+        public static SlotItem GetItem(IDbConnection ctx, ItemType type, int slot, long? characterId = null)
+        {
+            return ctx.QueryFirstOrDefault<SlotItem>(new { Type = type, Slot = slot, CharacterId = characterId });
+        }
+
+        public static List<SlotItem> GetItemsForCharacter(IDbConnection ctx, ItemType type, long? characterId = null)
+        {
+            return ctx.Where<SlotItem>(new { Type = type, CharacterId = characterId }).ToList();
+        }
+
+        public static bool UpdateItem(IDbConnection ctx, bool save, ItemType type, int netId, int prefix, int stack, bool favorite, int slot, long? characterId = null)
+        {
+            var existing = GetItem(ctx, type, slot, characterId);
+            if (existing != null)
+            {
+                existing.NetId = netId;
+                existing.Prefix = prefix;
+                existing.Stack = stack;
+                existing.Favorite = favorite;
+
+                ctx.Update(existing);
+
+                return true;
+            }
+            else return false;
+        }
+    }
+#endif
 }
