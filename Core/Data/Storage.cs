@@ -788,9 +788,9 @@ namespace TDSM.Core.Data
             if (group == null) return false;
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Execute($"delete from {typeof(GroupNode).Name} where Id in ( " +
-                        $"select gn.Id from {typeof(GroupNode).Name} gn " +
-                            $"inner join {typeof(PermissionNode).Name} nd on gn.NodeId = nd.Id " +
+                return ctx.Execute($"delete from {TableMapper.TypeToName<GroupNode>()} where Id in ( " +
+                        $"select gn.Id from {TableMapper.TypeToName<GroupNode>()} gn " +
+                            $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on gn.NodeId = nd.Id " +
                         "where gn.GroupId = @GroupId and nd.Node = @Node and nd.Permission = @Permission" +
                     ")",
                     new { GroupId = group.Id, Node = node, Permission = (int)permission }) > 0;
@@ -825,7 +825,7 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Query<String>($"select Name from {typeof(Group).Name}").ToArray();
+                return ctx.Query<String>($"select Name from {TableMapper.TypeToName<Group>()}").ToArray();
             }
 #else
             using (var ctx = new TContext())
@@ -848,9 +848,9 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Query<PermissionNode>($"select nd.* from {typeof(Group).Name} g " +
-                    $"inner join {typeof(GroupNode).Name} gn on g.Id = gn.GroupId " +
-                    $"inner join {typeof(PermissionNode).Name} nd on gn.NodeId = nd.Id " +
+                return ctx.Query<PermissionNode>($"select nd.* from {TableMapper.TypeToName<Group>()} g " +
+                    $"inner join {TableMapper.TypeToName<GroupNode>()} gn on g.Id = gn.GroupId " +
+                    $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on gn.NodeId = nd.Id " +
                     "where g.Name = @GroupName", new { GroupName = groupName }).ToArray();
             }
 #else
@@ -1023,9 +1023,9 @@ namespace TDSM.Core.Data
             {
                 var player = ctx.Single<DbPlayer>(new { Name = username });
 
-                return ctx.Execute($"delete from {typeof(PlayerNode).Name} where Id in ( " +
-                        $"select pn.Id from {typeof(PlayerNode).Name} pn " +
-                            $"inner join {typeof(PermissionNode).Name} nd on pn.NodeId = nd.Id " +
+                return ctx.Execute($"delete from {TableMapper.TypeToName<PlayerNode>()} where Id in ( " +
+                        $"select pn.Id from {TableMapper.TypeToName<PlayerNode>()} pn " +
+                            $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on pn.NodeId = nd.Id " +
                         "where pn.PlayerId = @PlayerId and nd.Node = @Node and nd.Permission = @Permission" +
                     ")",
                     new { PlayerId = player.Id, Node = node, Permission = (int)permission }) > 0;
@@ -1061,9 +1061,9 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Query<string>($"select g.Name from {typeof(DbPlayer).Name} p " +
-                    $"inner join {typeof(PlayerGroup).Name} pg on p.Id = pg.PlayerId " +
-                    $"inner join {typeof(Group).Name} g on pg.GroupId = g.Id " +
+                return ctx.Query<string>($"select g.Name from {TableMapper.TypeToName<DbPlayer>()} p " +
+                    $"inner join {TableMapper.TypeToName<PlayerGroup>()} pg on p.Id = pg.PlayerId " +
+                    $"inner join {TableMapper.TypeToName<Group>()} g on pg.GroupId = g.Id " +
                     $"where p.Name = @PlayerName",
                     new { PlayerName = username }).ToArray();
             }
@@ -1093,9 +1093,9 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Query<PermissionNode>($"select n.* from {typeof(DbPlayer).Name} p " +
-                    $"inner join {typeof(PlayerNode).Name} pn on p.Id = pn.PlayerId " +
-                    $"inner join {typeof(PermissionNode).Name} n on pn.NodeId = n.Id " +
+                return ctx.Query<PermissionNode>($"select n.* from {TableMapper.TypeToName<DbPlayer>()} p " +
+                    $"inner join {TableMapper.TypeToName<PlayerNode>()} pn on p.Id = pn.PlayerId " +
+                    $"inner join {TableMapper.TypeToName<PermissionNode>()} n on pn.NodeId = n.Id " +
                     $"where p.Name = @PlayerName",
                     new { PlayerName = username }).ToArray();
             }
@@ -1125,9 +1125,9 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.QueryFirstOrDefault<Group>($"select g.* from {typeof(DbPlayer).Name} p " +
-                    $"inner join {typeof(PlayerGroup).Name} pg on p.Id = pg.PlayerId " +
-                    $"inner join {typeof(Group).Name} g on pg.GroupId = g.Id " +
+                return ctx.QueryFirstOrDefault<Group>($"select g.* from {TableMapper.TypeToName<DbPlayer>()} p " +
+                    $"inner join {TableMapper.TypeToName<PlayerGroup>()} pg on p.Id = pg.PlayerId " +
+                    $"inner join {TableMapper.TypeToName<Group>()} g on pg.GroupId = g.Id " +
                     $"where p.Name = @PlayerName order by pg.Id",
                     new { PlayerName = username });
             }

@@ -114,6 +114,7 @@ namespace TDSM.Core
             Config.LoadFromArguments();
 
             OTA.Data.DatabaseFactory.Initialise(Config.DatabaseProvider, Config.DatabaseConnectionString);
+            Storage.IsAvailable = true;
 
             ProgramLog.LogRotation = Config.LogRotation;
 

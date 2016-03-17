@@ -477,7 +477,7 @@ namespace TDSM.Core.Data
                 var player = new DbPlayer(name, password)
                 {
                     Operator = op,
-                    DateAddedUTC = DateTime.UtcNow
+                    DateAdded = DateTime.UtcNow
                 };
                 player.Id = ctx.Insert(player);
 

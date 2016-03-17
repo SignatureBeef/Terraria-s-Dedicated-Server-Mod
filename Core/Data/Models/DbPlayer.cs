@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Dapper.Contrib.Extensions;
+using System;
 
 namespace TDSM.Core.Data.Models
 {
     /// <summary>
     /// Default OTA user information
     /// </summary>
+    [Table("Players")]
     public class DbPlayer
     {
         public long Id { get; set; }
@@ -15,7 +17,7 @@ namespace TDSM.Core.Data.Models
 
         public bool Operator { get; set; }
 
-        public DateTime DateAddedUTC { get; set; }
+        public DateTime DateAdded { get; set; }
 
         public DbPlayer()
         {
