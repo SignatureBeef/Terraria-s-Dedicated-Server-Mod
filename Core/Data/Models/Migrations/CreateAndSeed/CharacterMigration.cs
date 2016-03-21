@@ -33,7 +33,7 @@ namespace TDSM.Core.Data.Models.Migrations
                 .AsInt32()
                 .NotNullable();
 
-            table.WithColumn("MaxHelth")
+            table.WithColumn("MaxHealth")
                 .AsInt32()
                 .NotNullable();
 
