@@ -13,3 +13,5 @@ cecil
 /packages
 
 .DS_Store
+.vs
+.vscode

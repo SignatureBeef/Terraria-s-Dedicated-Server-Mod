@@ -1,4 +1,13 @@
-﻿using FluentMigrator;
+﻿using Dapper.Contrib.Extensions;
+using FluentMigrator;
+using FluentMigrator.Builders.Insert;
+using FluentMigrator.Model;
+using OTA;
+using OTA.Data.Dapper.Extensions;
+using OTA.Permissions;
+using TDSM.Core.Command;
+using System.Linq;
+using System;
 
 namespace TDSM.Core.Data.Models.Migrations
 {
@@ -21,13 +30,15 @@ namespace TDSM.Core.Data.Models.Migrations
 
             APIAccount_Up();
             APIAccountRole_Up();
+
+            Seed();
         }
 
         public override void Down()
         {
             APIAccountRole_Down();
             APIAccount_Down();
-            
+
             Character_Down();
             LoadoutItem_Down();
             SlotItem_Down();
@@ -39,6 +50,11 @@ namespace TDSM.Core.Data.Models.Migrations
             Group_Down();
             PermissionNode_Down();
             Player_Down();
+        }
+
+        void Seed()
+        {
+            Entry.CreateDefaultGroups(this);
         }
     }
 }

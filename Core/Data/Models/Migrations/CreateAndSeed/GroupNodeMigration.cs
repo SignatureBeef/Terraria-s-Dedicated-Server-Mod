@@ -25,7 +25,6 @@ namespace TDSM.Core.Data.Models.Migrations
             table.WithColumn("NodeId")
                 .AsInt64()
                 .NotNullable()
-                .Unique()
                 .ForeignKey("PermissionNode", "Id");
         }
 

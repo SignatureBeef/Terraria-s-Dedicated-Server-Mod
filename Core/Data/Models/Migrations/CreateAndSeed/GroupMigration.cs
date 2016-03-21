@@ -27,7 +27,7 @@ namespace TDSM.Core.Data.Models.Migrations
 
             table.WithColumn("Parent")
                 .AsString(255)
-                .NotNullable();
+                .Nullable();
 
             table.WithColumn("Chat_Red")
                 .AsByte()

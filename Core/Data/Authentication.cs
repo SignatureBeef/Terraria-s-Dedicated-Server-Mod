@@ -326,7 +326,7 @@ namespace TDSM.Core.Data
 #if ENTITY_FRAMEWORK_7
                 using (var ctx = new TContext()) return ctx.Players.Count();
 #elif DAPPER
-                using (var ctx = DatabaseFactory.CreateConnection()) return ctx.ExecuteScalar<long>("select count(*) from Players");
+                using (var ctx = DatabaseFactory.CreateConnection()) return ctx.ExecuteScalar<long>($"select count(*) from {TableMapper.TypeToName<DbPlayer>()}");
 #endif
             }
         }
@@ -408,7 +408,7 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Query<DbPlayer>("select * from Player where Name like @Name", new { Name = '%' + search + '%' })
+                return ctx.Query<DbPlayer>($"select * from {TableMapper.TypeToName<DbPlayer>()} where Name like @Name", new { Name = '%' + search + '%' })
                     .Select(x => x.Name)
                     .ToArray();
             }
@@ -447,7 +447,7 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Execute("delete from Players where Name = @Name", new { Name = name }) > 0;
+                return ctx.Execute($"delete from {TableMapper.TypeToName<DbPlayer>()} where Name = @Name", new { Name = name }) > 0;
             }
 #else
             using (var ctx = new TContext())

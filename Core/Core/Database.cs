@@ -81,7 +81,7 @@ namespace TDSM.Core
 #if ENTITY_FRAMEWORK_7
         public void CreateDefaultGroups(TContext ctx)
 #elif DAPPER
-        public void CreateDefaultGroups(IDbConnection ctx)
+        public static void CreateDefaultGroups(Data.Models.Migrations.CreateAndSeed ctx)
 #endif
         {
             var pc = OTA.Commands.CommandManager.Parser.GetTDSMCommandsForAccessLevel(AccessLevel.PLAYER);
@@ -110,11 +110,13 @@ namespace TDSM.Core
                                 string chatPrefix = null,
                                 string chatSuffix = null)
 #elif DAPPER
-        static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, IDbConnection ctx,
+        static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, Data.Models.Migrations.CreateAndSeed migration,
                                 string chatPrefix = null,
                                 string chatSuffix = null)
 #endif
+
         {
+#if ENTITY_FRAMEWORK_7
             var grp = new Group()
             {
                 Name = name,
@@ -126,8 +128,6 @@ namespace TDSM.Core
                 Chat_Prefix = chatPrefix,
                 Chat_Suffix = chatSuffix
             };
-
-#if ENTITY_FRAMEWORK_7
             ctx.Groups.Add(grp);
 
             ctx.SaveChanges(); //Save to get the ID
@@ -155,26 +155,41 @@ namespace TDSM.Core
 
             ctx.SaveChanges();
 #elif DAPPER
-            grp.Id = ctx.Insert(grp);
-            foreach (var nd in nodes)
+            migration.Execute.WithConnection((ctx, transaction) =>
             {
-                var node = ctx.SingleOrDefault<PermissionNode>(new { Node = nd, Permission = Permission.Permitted });
-                if (node == null)
+                var grp = new Group()
                 {
-                    node = new PermissionNode()
-                    {
-                        Node = nd,
-                        Permission = Permission.Permitted
-                    };
-                    node.Id = ctx.Insert(node);
-                }
+                    Name = name,
+                    ApplyToGuests = guest,
+                    Parent = parent,
+                    Chat_Red = r,
+                    Chat_Green = g,
+                    Chat_Blue = b,
+                    Chat_Prefix = chatPrefix,
+                    Chat_Suffix = chatSuffix
+                };
 
-                ctx.Insert(new GroupNode()
+                grp.Id = ctx.Insert(grp);
+                foreach (var nd in nodes)
                 {
-                    GroupId = grp.Id,
-                    NodeId = node.Id
-                });
-            }
+                    var node = ctx.SingleOrDefault<PermissionNode>(new { Node = nd, Permission = Permission.Permitted });
+                    if (node == null)
+                    {
+                        node = new PermissionNode()
+                        {
+                            Node = nd,
+                            Permission = Permission.Permitted
+                        };
+                        node.Id = ctx.Insert(node);
+                    }
+
+                    ctx.Insert(new GroupNode()
+                    {
+                        GroupId = grp.Id,
+                        NodeId = node.Id
+                    });
+                }
+            });
 #endif
         }
     }
