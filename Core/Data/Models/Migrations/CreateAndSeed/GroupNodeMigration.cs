@@ -20,12 +20,12 @@ namespace TDSM.Core.Data.Models.Migrations
                 .AsInt64()
                 .NotNullable()
                 .Indexed()
-                .ForeignKey("APIAccount", "Id");
+                .ForeignKey(TableMapper.TypeToName<Group>(), "Id");
 
             table.WithColumn("NodeId")
                 .AsInt64()
                 .NotNullable()
-                .ForeignKey("PermissionNode", "Id");
+                .ForeignKey(TableMapper.TypeToName<PermissionNode>(), "Id");
         }
 
         public void GroupNode_Down()

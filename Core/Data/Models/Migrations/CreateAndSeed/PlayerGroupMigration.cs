@@ -20,13 +20,13 @@ namespace TDSM.Core.Data.Models.Migrations
                 .AsInt64()
                 .NotNullable()
                 .Indexed()
-                .ForeignKey("DbPlayer", "Id");
+                .ForeignKey(TableMapper.TypeToName<DbPlayer>(), "Id");
 
             table.WithColumn("GroupId")
                 .AsInt64()
                 .NotNullable()
                 .Indexed()
-                .ForeignKey("Group", "Id");
+                .ForeignKey(TableMapper.TypeToName<Group>(), "Id");
         }
 
         public void PlayerGroup_Down()

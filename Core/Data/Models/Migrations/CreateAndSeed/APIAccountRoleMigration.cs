@@ -20,7 +20,7 @@ namespace TDSM.Core.Data.Models.Migrations
                 .AsInt64()
                 .NotNullable()
                 .Unique()
-                .ForeignKey("APIAccount", "Id");
+                .ForeignKey(TableMapper.TypeToName<APIAccount>(), "Id");
 
             table.WithColumn("Type")
                 .AsString(255)

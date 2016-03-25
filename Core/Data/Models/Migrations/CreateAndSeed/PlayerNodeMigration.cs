@@ -20,13 +20,13 @@ namespace TDSM.Core.Data.Models.Migrations
                 .AsInt64()
                 .NotNullable()
                 .Indexed()
-                .ForeignKey("DbPlayer", "Id");
+                .ForeignKey(TableMapper.TypeToName<DbPlayer>(), "Id");
 
             table.WithColumn("NodeId")
                 .AsInt64()
                 .NotNullable()
                 .Indexed()
-                .ForeignKey("PermissionNode", "Id");
+                .ForeignKey(TableMapper.TypeToName<PermissionNode>(), "Id");
         }
 
         public void PlayerNode_Down()

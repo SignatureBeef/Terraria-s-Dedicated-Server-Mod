@@ -21,7 +21,7 @@ namespace TDSM.Core.Data.Models.Migrations
                 .AsInt64()
                 .NotNullable()
                 .Indexed()
-                .ForeignKey("SlotItem", "Id");
+                .ForeignKey(TableMapper.TypeToName<SlotItem>(), "Id");
         }
 
         public void LoadoutItem_Down()

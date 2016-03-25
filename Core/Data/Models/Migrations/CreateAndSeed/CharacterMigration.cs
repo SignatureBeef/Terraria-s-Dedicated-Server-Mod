@@ -21,7 +21,7 @@ namespace TDSM.Core.Data.Models.Migrations
                 .AsInt64()
                 .NotNullable()
                 .Indexed()
-                .ForeignKey("DbPlayer", "Id");
+                .ForeignKey(TableMapper.TypeToName<DbPlayer>(), "Id");
 
             table.WithColumn("UUID")
                 .AsString(50)
