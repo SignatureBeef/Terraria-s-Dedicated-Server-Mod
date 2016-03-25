@@ -290,6 +290,7 @@ namespace TDSM.Core.ServerCharacters.Tables
         public static Character NewCharacter
         (
             IDbConnection ctx,
+            IDbTransaction txn,
             CharacterMode mode,
             string auth,
             string clientUUID,
@@ -316,6 +317,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             return NewCharacter
             (
                 ctx,
+                txn,
                 mode,
                 auth,
                 clientUUID,
@@ -343,6 +345,7 @@ namespace TDSM.Core.ServerCharacters.Tables
         public static Character NewCharacter
         (
             IDbConnection ctx,
+            IDbTransaction txn,
             CharacterMode mode,
             string auth,
             string clientUUID,
@@ -369,7 +372,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             long? playerId = null;
             if (mode == CharacterMode.AUTH)
             {
-                var user = Authentication.GetPlayer(auth);
+                var user = Authentication.GetPlayer(auth, ctx, txn);
                 playerId = user.Id;
             }
             else if (mode != CharacterMode.UUID)
@@ -399,7 +402,7 @@ namespace TDSM.Core.ServerCharacters.Tables
                 AnglerQuests = anglerQuests
             };
 
-            chr.Id = ctx.Insert(chr);
+            chr.Id = ctx.Insert(chr, transaction: txn);
 
             return chr;
         }
@@ -407,6 +410,7 @@ namespace TDSM.Core.ServerCharacters.Tables
         public static Character UpdateCharacter
         (
             IDbConnection ctx,
+            IDbTransaction txn,
             CharacterMode mode,
             string auth,
             string clientUUID,
@@ -433,6 +437,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             return UpdateCharacter
             (
                 ctx,
+                txn,
                 mode,
                 auth,
                 clientUUID,
@@ -457,12 +462,12 @@ namespace TDSM.Core.ServerCharacters.Tables
             );
         }
 
-        public static Character GetCharacter(IDbConnection ctx, CharacterMode mode, string auth, string clientUUID)
+        public static Character GetCharacter(IDbConnection ctx, IDbTransaction txn, CharacterMode mode, string auth, string clientUUID)
         {
             long playerId = 0;
             if (mode == CharacterMode.AUTH)
             {
-                var player = Authentication.GetPlayer(auth);
+                var player = Authentication.GetPlayer(auth, ctx, txn);
 
                 if (player == null)
                 {
@@ -477,17 +482,18 @@ namespace TDSM.Core.ServerCharacters.Tables
 
             if (mode == CharacterMode.AUTH)
             {
-                return ctx.SingleOrDefault<Character>(new { PlayerId = playerId });
+                return ctx.SingleOrDefault<Character>(new { PlayerId = playerId }, transaction: txn);
             }
             else
             {
-                return ctx.SingleOrDefault<Character>(new { UUID = clientUUID });
+                return ctx.SingleOrDefault<Character>(new { UUID = clientUUID }, transaction: txn);
             }
         }
 
         public static Character UpdateCharacter
         (
             IDbConnection ctx,
+            IDbTransaction txn,
             CharacterMode mode,
             string auth,
             string clientUUID,
@@ -514,7 +520,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             long? playerId = null;
             if (mode == CharacterMode.AUTH)
             {
-                var player = Authentication.GetPlayer(auth);
+                var player = Authentication.GetPlayer(auth, ctx, txn);
                 playerId = player.Id;
             }
             else if (mode != CharacterMode.UUID)
@@ -523,11 +529,11 @@ namespace TDSM.Core.ServerCharacters.Tables
             Character chr;
             if (mode == CharacterMode.AUTH)
             {
-                chr = ctx.SingleOrDefault<Character>(new { PlayerId = playerId.Value });
+                chr = ctx.SingleOrDefault<Character>(new { PlayerId = playerId.Value }, transaction: txn);
             }
             else
             {
-                chr = ctx.SingleOrDefault<Character>(new { UUID = clientUUID });
+                chr = ctx.SingleOrDefault<Character>(new { UUID = clientUUID }, transaction: txn);
             }
 
             chr.Health = health;
@@ -549,7 +555,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             chr.ShoeColor = shoeColor;
             chr.AnglerQuests = anglerQuests;
 
-            ctx.Update(chr);
+            ctx.Update(chr, transaction: txn);
 
             return chr;
         }

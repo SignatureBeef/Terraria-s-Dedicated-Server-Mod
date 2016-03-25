@@ -64,48 +64,48 @@ namespace TDSM.Core.Data
 #elif DAPPER
     public static class OTAContextExtensions
     {
-        public static IEnumerable<DbPlayer> GetPlayer(this IDbConnection ctx, string name)
+        public static IEnumerable<DbPlayer> GetPlayer(this IDbConnection ctx, string name, IDbTransaction transaction = null)
         {
-            return ctx.Where<DbPlayer>(new { Name = name });
+            return ctx.Where<DbPlayer>(new { Name = name }, transaction: transaction);
         }
 
-        public static IEnumerable<Group> GetPlayerGroups(this IDbConnection ctx, long playerId)
+        public static IEnumerable<Group> GetPlayerGroups(this IDbConnection ctx, long playerId, IDbTransaction transaction = null)
         {
             return ctx.Query<Group>($"select g.* from {TableMapper.TypeToName<DbPlayer>()} p " +
                 $"inner join {TableMapper.TypeToName<PlayerGroup>()} pg on p.Id = pg.UserId " +
                 $"inner join {TableMapper.TypeToName<Group>()} g on pg.GroupId = g.Id " +
-                "where p.Id = @PlayerId", new { PlayerId = playerId });
+                "where p.Id = @PlayerId", new { PlayerId = playerId }, transaction: transaction);
         }
 
-        public static IEnumerable<PermissionNode> GetPermissionByNodeForPlayer(this IDbConnection ctx, long playerId, string node)
+        public static IEnumerable<PermissionNode> GetPermissionByNodeForPlayer(this IDbConnection ctx, long playerId, string node, IDbTransaction transaction = null)
         {
             return ctx.Query<PermissionNode>($"select nd.* from {TableMapper.TypeToName<DbPlayer>()} p " +
                 $"inner join {TableMapper.TypeToName<PlayerNode>()} pn on p.Id = pn.UserId " +
                 $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on pn.NodeId = nd.Id " +
-                "where p.Id = @PlayerId and nd.Node = @Node", new { PlayerId = playerId, Node = node });
+                "where p.Id = @PlayerId and nd.Node = @Node", new { PlayerId = playerId, Node = node }, transaction: transaction);
         }
 
-        public static IEnumerable<PermissionNode> GetPermissionByNodeForGroup(this IDbConnection ctx, long groupId, string node)
+        public static IEnumerable<PermissionNode> GetPermissionByNodeForGroup(this IDbConnection ctx, long groupId, string node, IDbTransaction transaction = null)
         {
             return ctx.Query<PermissionNode>($"select nd.* from {TableMapper.TypeToName<Group>()} g " +
                 $"inner join {TableMapper.TypeToName<GroupNode>()} gn on g.Id = pn.GroupId " +
                 $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on gn.NodeId = nd.Id " +
-                "where g.Id = @GroupId and nd.Node = @Node", new { GroupId = groupId, Node = node });
+                "where g.Id = @GroupId and nd.Node = @Node", new { GroupId = groupId, Node = node }, transaction: transaction);
         }
 
-        public static IEnumerable<Group> GetParentForGroup(this IDbConnection ctx, long groupId)
+        public static IEnumerable<Group> GetParentForGroup(this IDbConnection ctx, long groupId, IDbTransaction transaction = null)
         {
             return ctx.Query<Group>($"select p.* from {TableMapper.TypeToName<Group>()} g " +
                 $"inner join {TableMapper.TypeToName<Group>()} p on g.Parent = p.Name " +
-                "where g.Id = @GroupId", new { GroupId = groupId });
+                "where g.Id = @GroupId", new { GroupId = groupId }, transaction: transaction);
         }
 
-        public static bool GuestGroupHasNode(this IDbConnection ctx, string node, Permission permission)
+        public static bool GuestGroupHasNode(this IDbConnection ctx, string node, Permission permission, IDbTransaction transaction = null)
         {
             return ctx.ExecuteScalar<long>($"select count(nd.Id) from {TableMapper.TypeToName<Group>()} g " +
-                $"inner join {TableMapper.TypeToName<GroupNode>()} gn on g.Id = pn.GroupId " +
+                $"inner join {TableMapper.TypeToName<GroupNode>()} gn on g.Id = gn.GroupId " +
                 $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on gn.NodeId = nd.Id " +
-                "where g.ApplyToGuests = 1 and nd.Node = @Node and nd.Permission = @Permission", new {Node = node, Permission = (int)permission }) > 0L;
+                "where g.ApplyToGuests = 1 and nd.Node = @Node and nd.Permission = @Permission", new { Node = node, Permission = (int)permission }, transaction: transaction) > 0L;
         }
     }
 #endif

@@ -27,6 +27,9 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dapper, Version=1.50.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.50.0-beta8\lib\net451\Dapper.dll</HintPath>
@@ -181,6 +184,7 @@
     <Compile Include="Data\Models\Migrations\CreateAndSeed\APIAccountRoleMigration.cs" />
     <Compile Include="Data\Models\Migrations\CreateAndSeed\CreateAndSeed.cs" />
     <Compile Include="Data\Models\Migrations\CreateAndSeed\APIAccountMigration.cs" />
+    <Compile Include="Data\Permissions\OTAPIPermissions.cs" />
     <Compile Include="ServerCharacters\CharacterManager.cs" />
     <Compile Include="ServerCharacters\ItemType.cs" />
     <Compile Include="ServerCharacters\Models\Character.cs" />
@@ -214,7 +218,6 @@
     <Compile Include="Data\Models\Node.cs" />
     <Compile Include="Data\Models\PlayerGroup.cs" />
     <Compile Include="Data\Models\PlayerNode.cs" />
-    <Compile Include="Data\Permissions\IPermissionsHandler.cs" />
     <Compile Include="Data\Management\APIAccountManager.cs" />
     <Compile Include="Data\PermissionsOAuthProvider.cs" />
     <Compile Include="Data\OTAContextExtensions.cs" />
@@ -345,4 +348,8 @@
       <Name>API</Name>
     </ProjectReference>
   </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

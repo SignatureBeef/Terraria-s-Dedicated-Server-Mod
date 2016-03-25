@@ -88,11 +88,26 @@ namespace TDSM.Core
             var ad = OTA.Commands.CommandManager.Parser.GetTDSMCommandsForAccessLevel(AccessLevel.OP);
             var op = OTA.Commands.CommandManager.Parser.GetTDSMCommandsForAccessLevel(AccessLevel.CONSOLE); //Funny how these have now changed
 
+            var additionalGuestNodes = new []
+            {
+                "ota.help",
+                "terraria.playing",
+                "terraria.time",
+                "ota.plugins"
+            };
+
             CreateGroup("Guest", true, null, 255, 255, 255, pc
                     .Where(x => !String.IsNullOrEmpty(x.Node))
                     .Select(x => x.Node)
+                    .Concat(additionalGuestNodes)
                     .Distinct()
                     .ToArray(), ctx, "[Guest] ");
+            CreateGroup("Player", false, "Guest", 255, 255, 255, pc
+                    .Where(x => !String.IsNullOrEmpty(x.Node))
+                    .Select(x => x.Node)
+                    .Concat(additionalGuestNodes)
+                    .Distinct()
+                    .ToArray(), ctx, "[Player] ");
             CreateGroup("Admin", false, "Guest", 240, 131, 77, ad
                     .Where(x => !String.IsNullOrEmpty(x.Node))
                     .Select(x => x.Node)
@@ -112,7 +127,8 @@ namespace TDSM.Core
 #elif DAPPER
         static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, Data.Models.Migrations.CreateAndSeed migration,
                                 string chatPrefix = null,
-                                string chatSuffix = null)
+                                string chatSuffix = null,
+                                Action<Group> complete = null)
 #endif
 
         {
@@ -189,6 +205,8 @@ namespace TDSM.Core
                         NodeId = node.Id
                     });
                 }
+
+                if (complete != null) complete(grp);
             });
 #endif
         }

@@ -175,7 +175,7 @@ namespace TDSM.Core.ServerCharacters.Tables
 #elif DAPPER
     internal class ItemTable
     {
-        public static SlotItem NewItem(IDbConnection ctx, bool save, ItemType type, int netId, int stack, int prefix, bool favorite, int slot, long? characterId = null)
+        public static SlotItem NewItem(IDbConnection ctx, IDbTransaction txn, bool save, ItemType type, int netId, int stack, int prefix, bool favorite, int slot, long? characterId = null)
         {
             var item = new SlotItem()
             {
@@ -188,24 +188,24 @@ namespace TDSM.Core.ServerCharacters.Tables
                 CharacterId = characterId
             };
 
-            item.Id = ctx.Insert(item);
+            item.Id = ctx.Insert(item, transaction: txn);
 
             return item;
         }
 
-        public static SlotItem GetItem(IDbConnection ctx, ItemType type, int slot, long? characterId = null)
+        public static SlotItem GetItem(IDbConnection ctx, IDbTransaction txn, ItemType type, int slot, long? characterId = null)
         {
             return ctx.QueryFirstOrDefault<SlotItem>(new { Type = type, Slot = slot, CharacterId = characterId });
         }
 
-        public static List<SlotItem> GetItemsForCharacter(IDbConnection ctx, ItemType type, long? characterId = null)
+        public static List<SlotItem> GetItemsForCharacter(IDbConnection ctx, IDbTransaction txn, ItemType type, long? characterId = null)
         {
-            return ctx.Where<SlotItem>(new { Type = type, CharacterId = characterId }).ToList();
+            return ctx.Where<SlotItem>(new { Type = type, CharacterId = characterId }, transaction: txn).ToList();
         }
 
-        public static bool UpdateItem(IDbConnection ctx, bool save, ItemType type, int netId, int prefix, int stack, bool favorite, int slot, long? characterId = null)
+        public static bool UpdateItem(IDbConnection ctx, IDbTransaction txn, bool save, ItemType type, int netId, int prefix, int stack, bool favorite, int slot, long? characterId = null)
         {
-            var existing = GetItem(ctx, type, slot, characterId);
+            var existing = GetItem(ctx, txn, type, slot, characterId);
             if (existing != null)
             {
                 existing.NetId = netId;
@@ -213,7 +213,7 @@ namespace TDSM.Core.ServerCharacters.Tables
                 existing.Stack = stack;
                 existing.Favorite = favorite;
 
-                ctx.Update(existing);
+                ctx.Update(existing, transaction: txn);
 
                 return true;
             }

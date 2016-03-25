@@ -123,7 +123,12 @@ namespace TDSM.Core.ServerCharacters.Tables
                 {
                     ItemId = itemId
                 };
-                li.Id = ctx.Insert(li);
+
+                using (var txn = ctx.BeginTransaction())
+                {
+                    li.Id = ctx.Insert(li, transaction: txn);
+                    txn.Commit();
+                }
 #else
             using (var ctx = new TContext())
             {
@@ -141,7 +146,7 @@ namespace TDSM.Core.ServerCharacters.Tables
         }
 
 #if DAPPER
-        public static void PopulateDefaults(IDbConnection ctx, bool save, NewPlayerInfo info)
+        public static void PopulateDefaults(IDbConnection ctx, IDbTransaction txn, bool save, NewPlayerInfo info)
 #else
         public static void PopulateDefaults(TContext ctx, bool save, NewPlayerInfo info)
 #endif
@@ -155,7 +160,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Inventory)
                 {
-                    var id = ItemTable.NewItem(ctx, save, ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    var id = ItemTable.NewItem(ctx, txn, save, ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id.Id);
                 }
             }
@@ -164,7 +169,7 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Armor)
                 {
-                    var id = ItemTable.NewItem(ctx, save, ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    var id = ItemTable.NewItem(ctx, txn, save, ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id.Id);
                 }
             }
@@ -173,11 +178,11 @@ namespace TDSM.Core.ServerCharacters.Tables
             {
                 foreach (var item in info.Dye)
                 {
-                    var id = ItemTable.NewItem(ctx, save, ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
+                    var id = ItemTable.NewItem(ctx, txn, save, ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
                     AddItem(id.Id);
                 }
             }
         }
     }
 #endif
-    }
+}

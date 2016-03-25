@@ -21,7 +21,7 @@ namespace TDSM.Core.Command.Commands
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Allows a player server operator status")
                 .WithHelpText("<player> <password> - Sets the player as an operator on the server and sets the OP password for that player.")
-                .WithPermissionNode("tdsm.IsOp()")
+                .WithPermissionNode("tdsm.op")
                 .Calls(this.OpPlayer);
 
             AddCommand("deop")

@@ -78,23 +78,27 @@ namespace TDSM.Core
             using (var dbCtx = DatabaseFactory.CreateConnection())
 #endif
             {
-                if (CharacterManager.Mode == CharacterMode.UUID)
+                using (var txn = dbCtx.BeginTransaction())
                 {
-                    CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !Config.SSC_AllowGuestInfo);
-                }
-                else if (CharacterManager.Mode == CharacterMode.AUTH)
-                {
-                    if (!String.IsNullOrEmpty(ctx.Player.GetAuthenticatedAs()))
+                    if (CharacterManager.Mode == CharacterMode.UUID)
                     {
-                        CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !Config.SSC_AllowGuestInfo);
+                        CharacterManager.LoadForAuthenticated(dbCtx, txn, ctx.Player, !Config.SSC_AllowGuestInfo);
                     }
-                    else
+                    else if (CharacterManager.Mode == CharacterMode.AUTH)
                     {
-                        if (!Config.SSC_AllowGuestInfo)
+                        if (!String.IsNullOrEmpty(ctx.Player.GetAuthenticatedAs()))
                         {
-                            CharacterManager.LoadForGuest(ctx.Player);
+                            CharacterManager.LoadForAuthenticated(dbCtx, txn, ctx.Player, !Config.SSC_AllowGuestInfo);
+                        }
+                        else
+                        {
+                            if (!Config.SSC_AllowGuestInfo)
+                            {
+                                CharacterManager.LoadForGuest(ctx.Player);
+                            }
                         }
                     }
+                    txn.Commit();
                 }
             }
         }
@@ -110,7 +114,11 @@ namespace TDSM.Core
                 using (var dbCtx = DatabaseFactory.CreateConnection())
 #endif
                 {
-                    CharacterManager.LoadForAuthenticated(dbCtx, ctx.Player, !Config.SSC_AllowGuestInfo);
+                    using (var txn = dbCtx.BeginTransaction())
+                    {
+                        CharacterManager.LoadForAuthenticated(dbCtx, txn, ctx.Player, !Config.SSC_AllowGuestInfo);
+                        txn.Commit();
+                    }
                 }
 
                 if (Config.SSC_AllowGuestInfo)
@@ -131,7 +139,11 @@ namespace TDSM.Core
                 using (var dbCtx = DatabaseFactory.CreateConnection())
 #endif
                 {
-                    CharacterManager.SavePlayerData(dbCtx, true, ctx.Player);
+                    using (var txn = dbCtx.BeginTransaction())
+                    {
+                        CharacterManager.SavePlayerData(dbCtx, txn, true, ctx.Player);
+                        txn.Commit();
+                    }
                 }
             }
             if (ctx.Player != null)

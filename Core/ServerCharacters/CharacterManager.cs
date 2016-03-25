@@ -148,12 +148,16 @@ namespace TDSM.Core.ServerCharacters
                     using(var ctx = DatabaseFactory.CreateConnection())
 #endif
                     {
-                        foreach (var ply in Terraria.Main.player)
+                        using (var txn = ctx.BeginTransaction())
                         {
-                            if (ply != null && ply.active && ply.GetSSCReadyForSave())
+                            foreach (var ply in Terraria.Main.player)
                             {
-                                SavePlayerData(ctx, false, ply);
+                                if (ply != null && ply.active && ply.GetSSCReadyForSave())
+                                {
+                                    SavePlayerData(ctx, txn, false, ply);
+                                }
                             }
+                            txn.Commit();
                         }
 
 #if ENTITY_FRAMEWORK_7
@@ -171,7 +175,7 @@ namespace TDSM.Core.ServerCharacters
             }
         }
 
-        public static ServerCharacter LoadPlayerData(IDbConnection ctx, Player player, bool returnNewInfo = false)
+        public static ServerCharacter LoadPlayerData(IDbConnection ctx, IDbTransaction txn, Player player, bool returnNewInfo = false)
         {
             //If using a flat based system ensure the MODE is stored
             string authName = null;
@@ -210,7 +214,7 @@ namespace TDSM.Core.ServerCharacters
                     if (ssc != null)
                     { 
 #elif DAPPER
-                    var dbSSC = Tables.CharacterTable.GetCharacter(ctx, Mode, auth, player.ClientUUId);
+                    var dbSSC = Tables.CharacterTable.GetCharacter(ctx, txn, Mode, auth, player.ClientUUId);
                     if (dbSSC != null)
                     {
                         var ssc = dbSSC.ToServerCharacter();
@@ -220,28 +224,28 @@ namespace TDSM.Core.ServerCharacters
                         //                        ProgramLog.Admin.Log("Loading SSC loadout: " + dbSSC.Id);
                         //                        ProgramLog.Admin.Log("Translated SCC: " + (ssc != null));
                         //
-                        var inv = Tables.ItemTable.GetItemsForCharacter(ctx, ItemType.Inventory, ssc.Id);
+                        var inv = Tables.ItemTable.GetItemsForCharacter(ctx, txn, ItemType.Inventory, ssc.Id);
                         if (null != inv) ssc.Inventory = inv.ToList();
 
-                        var amr = Tables.ItemTable.GetItemsForCharacter(ctx, ItemType.Armor, ssc.Id);
+                        var amr = Tables.ItemTable.GetItemsForCharacter(ctx, txn, ItemType.Armor, ssc.Id);
                         if (null != amr) ssc.Armor = amr.ToList();
 
-                        var dye = Tables.ItemTable.GetItemsForCharacter(ctx, ItemType.Dye, ssc.Id);
+                        var dye = Tables.ItemTable.GetItemsForCharacter(ctx, txn, ItemType.Dye, ssc.Id);
                         if (null != dye) ssc.Dye = dye.ToList();
 
-                        var equipment = Tables.ItemTable.GetItemsForCharacter(ctx, ItemType.Equipment, ssc.Id);
+                        var equipment = Tables.ItemTable.GetItemsForCharacter(ctx, txn, ItemType.Equipment, ssc.Id);
                         if (null != equipment) ssc.Equipment = equipment.ToList();
 
-                        var miscdye = Tables.ItemTable.GetItemsForCharacter(ctx, ItemType.MiscDyes, ssc.Id);
+                        var miscdye = Tables.ItemTable.GetItemsForCharacter(ctx, txn, ItemType.MiscDyes, ssc.Id);
                         if (null != miscdye) ssc.MiscDyes = miscdye.ToList();
 
-                        var bank = Tables.ItemTable.GetItemsForCharacter(ctx, ItemType.Bank, ssc.Id);
+                        var bank = Tables.ItemTable.GetItemsForCharacter(ctx, txn, ItemType.Bank, ssc.Id);
                         if (null != bank) ssc.Bank = bank.ToList();
 
-                        var bank2 = Tables.ItemTable.GetItemsForCharacter(ctx, ItemType.Bank2, ssc.Id);
+                        var bank2 = Tables.ItemTable.GetItemsForCharacter(ctx, txn, ItemType.Bank2, ssc.Id);
                         if (null != bank2) ssc.Bank2 = bank2.ToList();
 
-                        var trash = Tables.ItemTable.GetItemsForCharacter(ctx, ItemType.Trash, ssc.Id);
+                        var trash = Tables.ItemTable.GetItemsForCharacter(ctx, txn, ItemType.Trash, ssc.Id);
 #if ENTITY_FRAMEWORK_6 || ENTITY_FRAMEWORK_7
                         if (null != trash && trash.Count > 0) ssc.Trash = trash.First();
 #elif DATA_CONNECTOR
@@ -299,7 +303,7 @@ namespace TDSM.Core.ServerCharacters
 #if ENTITY_FRAMEWORK_7
         public static bool SavePlayerData(TContext ctx, bool save, Player player)
 #elif DAPPER
-        public static bool SavePlayerData(IDbConnection ctx, bool save, Player player)
+        public static bool SavePlayerData(IDbConnection ctx, IDbTransaction txn, bool save, Player player)
 #endif
         {
             if (!player.IsAuthenticated()) return false;
@@ -362,7 +366,7 @@ namespace TDSM.Core.ServerCharacters
 
 #elif ENTITY_FRAMEWORK_7
 #else
-                    var character = Tables.CharacterTable.GetCharacter(ctx, Mode, auth, player.ClientUUId);
+                    var character = Tables.CharacterTable.GetCharacter(ctx, txn, Mode, auth, player.ClientUUId);
                     if (character == null)
                     {
 //                        if (player.ClearPluginData(Key_NewCharacter))
@@ -370,6 +374,7 @@ namespace TDSM.Core.ServerCharacters
                         character = Tables.CharacterTable.NewCharacter
                             (
                             ctx,
+                            txn,
                             Mode,
                             auth,
                             player.ClientUUId,
@@ -404,6 +409,7 @@ namespace TDSM.Core.ServerCharacters
                         character = Tables.CharacterTable.UpdateCharacter
                         (
                             ctx,
+                            txn,
                             Mode,
                             auth,
                             player.ClientUUId,
@@ -430,12 +436,12 @@ namespace TDSM.Core.ServerCharacters
 
                     if (character != null)
                     {
-                        if (!SaveCharacterItems(ctx, save, player, character.Id, player.inventory, ItemType.Inventory)) return false;
-                        if (!SaveCharacterItems(ctx, save, player, character.Id, player.armor, ItemType.Armor)) return false;
-                        if (!SaveCharacterItems(ctx, save, player, character.Id, player.dye, ItemType.Dye)) return false;
-                        if (!SaveCharacterItems(ctx, save, player, character.Id, player.miscEquips, ItemType.Equipment)) return false;
-                        if (!SaveCharacterItems(ctx, save, player, character.Id, player.miscDyes, ItemType.MiscDyes)) return false;
-                        if (!SaveCharacterItem(ctx, save, player, character.Id, ItemType.Trash, player.trashItem, 0)) return false;
+                        if (!SaveCharacterItems(ctx, txn, save, player, character.Id, player.inventory, ItemType.Inventory)) return false;
+                        if (!SaveCharacterItems(ctx, txn, save, player, character.Id, player.armor, ItemType.Armor)) return false;
+                        if (!SaveCharacterItems(ctx, txn, save, player, character.Id, player.dye, ItemType.Dye)) return false;
+                        if (!SaveCharacterItems(ctx, txn, save, player, character.Id, player.miscEquips, ItemType.Equipment)) return false;
+                        if (!SaveCharacterItems(ctx, txn, save, player, character.Id, player.miscDyes, ItemType.MiscDyes)) return false;
+                        if (!SaveCharacterItem(ctx, txn, save, player, character.Id, ItemType.Trash, player.trashItem, 0)) return false;
 
 //                        for (var i = 0; i < player.inventory.Length; i++)
 //                        {
@@ -615,7 +621,7 @@ namespace TDSM.Core.ServerCharacters
 #if ENTITY_FRAMEWORK_7
         private static bool SaveCharacterItem(TContext ctx, bool save, Player player, int characterId, ItemType type, Item item, int slot)
 #elif DAPPER
-        private static bool SaveCharacterItem(IDbConnection ctx, bool save, Player player, long characterId, ItemType type, Item item, int slot)
+        private static bool SaveCharacterItem(IDbConnection ctx, IDbTransaction txn, bool save, Player player, long characterId, ItemType type, Item item, int slot)
 #endif
         {
             var netId = 0;
@@ -631,10 +637,10 @@ namespace TDSM.Core.ServerCharacters
                 favorite = item.favorited;
             }
 
-            var slotItem = Tables.ItemTable.GetItem(ctx, type, slot, characterId);
+            var slotItem = Tables.ItemTable.GetItem(ctx, txn, type, slot, characterId);
             if (slotItem != null)
             {
-                if (!Tables.ItemTable.UpdateItem(ctx, save, type, netId, prefix, stack, favorite, slot, characterId))
+                if (!Tables.ItemTable.UpdateItem(ctx, txn, save, type, netId, prefix, stack, favorite, slot, characterId))
                 {
                     ProgramLog.Error.Log("Failed to save {1} for player: {0}", player.name, type.ToString());
                     return false;
@@ -642,7 +648,7 @@ namespace TDSM.Core.ServerCharacters
             }
             else
             {
-                slotItem = Tables.ItemTable.NewItem(ctx, save, type, netId, prefix, stack, favorite, slot, characterId);
+                slotItem = Tables.ItemTable.NewItem(ctx, txn, save, type, netId, prefix, stack, favorite, slot, characterId);
             }
 
             return true;
@@ -651,12 +657,12 @@ namespace TDSM.Core.ServerCharacters
 #if ENTITY_FRAMEWORK_7
         private static bool SaveCharacterItems(TContext ctx, bool save, Player player, int characterId, Item[] items, ItemType type)
 #elif DAPPER
-        private static bool SaveCharacterItems(IDbConnection ctx, bool save, Player player, long characterId, Item[] items, ItemType type)
+        private static bool SaveCharacterItems(IDbConnection ctx, IDbTransaction transaction, bool save, Player player, long characterId, Item[] items, ItemType type)
 #endif
         {
             for (var i = 0; i < items.Length; i++)
             {
-                if (!SaveCharacterItem(ctx, save, player, characterId, type, items[i], i)) return false;
+                if (!SaveCharacterItem(ctx, transaction, save, player, characterId, type, items[i], i)) return false;
             }
 
             return true;
@@ -666,10 +672,10 @@ namespace TDSM.Core.ServerCharacters
 #if ENTITY_FRAMEWORK_7
         public static void LoadForAuthenticated(TContext ctx, Player player, bool createIfNone = true)
 #elif DAPPER
-        public static void LoadForAuthenticated(IDbConnection ctx, Player player, bool createIfNone = true)
+        public static void LoadForAuthenticated(IDbConnection ctx, IDbTransaction txn, Player player, bool createIfNone = true)
 #endif
         {
-            var ssc = LoadPlayerData(ctx, player, createIfNone);
+            var ssc = LoadPlayerData(ctx, txn, player, createIfNone);
 
             if (ssc != null)
             {

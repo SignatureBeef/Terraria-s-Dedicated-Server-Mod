@@ -7,6 +7,7 @@ using Dapper.Contrib.Extensions;
 using Dapper;
 using OTA.Data.Dapper.Extensions;
 using TDSM.Core.Data.Models;
+using System.Data;
 
 namespace TDSM.Core.Data
 {
@@ -326,7 +327,13 @@ namespace TDSM.Core.Data
 #if ENTITY_FRAMEWORK_7
                 using (var ctx = new TContext()) return ctx.Players.Count();
 #elif DAPPER
-                using (var ctx = DatabaseFactory.CreateConnection()) return ctx.ExecuteScalar<long>($"select count(*) from {TableMapper.TypeToName<DbPlayer>()}");
+                using (var ctx = DatabaseFactory.CreateConnection())
+                {
+                    using (var txn = ctx.BeginTransaction())
+                    {
+                        return ctx.ExecuteScalar<long>($"select count(*) from {TableMapper.TypeToName<DbPlayer>()}", transaction: txn);
+                    }
+                }
 #endif
             }
         }
@@ -346,7 +353,8 @@ namespace TDSM.Core.Data
 #elif DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Count<DbPlayer>(new { Name = name }) > 0;
+                using (var txn = ctx.BeginTransaction())
+                    return ctx.Count<DbPlayer>(new { Name = name }, transaction: txn) > 0;
             }
 #endif
         }
@@ -369,7 +377,8 @@ namespace TDSM.Core.Data
 #elif DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Where<DbPlayer>(new { Name = name })
+                using (var txn = ctx.BeginTransaction())
+                    return ctx.Where<DbPlayer>(new { Name = name }, transaction: txn)
                     .Select(x => x.Password)
                     .FirstOrDefault();
             }
@@ -381,7 +390,7 @@ namespace TDSM.Core.Data
         /// </summary>
         /// <returns>The player instance.</returns>
         /// <param name="name">Player name.</param>
-        public static DbPlayer GetPlayer(string name)
+        public static DbPlayer GetPlayer(string name, IDbConnection connection = null, IDbTransaction transaction = null)
         {
 #if ENTITY_FRAMEWORK_7
             using (var ctx = new TContext())
@@ -391,10 +400,15 @@ namespace TDSM.Core.Data
                     .FirstOrDefault();
             }
 #elif DAPPER
-            using (var ctx = DatabaseFactory.CreateConnection())
+            if (connection == null)
             {
-                return ctx.FirstOrDefault<DbPlayer>(new { Name = name });
+                using (var ctx = DatabaseFactory.CreateConnection())
+                {
+                    using (var txn = ctx.BeginTransaction())
+                        return ctx.FirstOrDefault<DbPlayer>(new { Name = name }, transaction: txn);
+                }
             }
+            else return connection.FirstOrDefault<DbPlayer>(new { Name = name }, transaction: transaction);
 #endif
         }
 
@@ -408,7 +422,8 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Query<DbPlayer>($"select * from {TableMapper.TypeToName<DbPlayer>()} where Name like @Name", new { Name = '%' + search + '%' })
+                using (var txn = ctx.BeginTransaction())
+                    return ctx.Query<DbPlayer>($"select * from {TableMapper.TypeToName<DbPlayer>()} where Name like @Name", new { Name = '%' + search + '%' }, transaction: txn)
                     .Select(x => x.Name)
                     .ToArray();
             }
@@ -447,7 +462,12 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                return ctx.Execute($"delete from {TableMapper.TypeToName<DbPlayer>()} where Name = @Name", new { Name = name }) > 0;
+                using (var txn = ctx.BeginTransaction())
+                {
+                    var res = ctx.Execute($"delete from {TableMapper.TypeToName<DbPlayer>()} where Name = @Name", new { Name = name }, transaction: txn) > 0;
+                    txn.Commit();
+                    return res;
+                }
             }
 #else
             using (var ctx = new TContext())
@@ -474,14 +494,18 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                var player = new DbPlayer(name, password)
+                using (var txn = ctx.BeginTransaction())
                 {
-                    Operator = op,
-                    DateAdded = DateTime.UtcNow
-                };
-                player.Id = ctx.Insert(player);
+                    var player = new DbPlayer(name, password)
+                    {
+                        Operator = op,
+                        DateAdded = DateTime.UtcNow
+                    };
+                    player.Id = ctx.Insert(player, transaction: txn);
 
-                return player;
+                    txn.Commit();
+                    return player;
+                }
             }
 #else
             using (var ctx = new TContext())
@@ -514,15 +538,19 @@ namespace TDSM.Core.Data
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
-                var player = ctx.SingleOrDefault<DbPlayer>(new { Name = name });
-                if (player == null) throw new InvalidOperationException("Cannot update a non-existent player");
+                using (var txn = ctx.BeginTransaction())
+                {
+                    var player = ctx.SingleOrDefault<DbPlayer>(new { Name = name }, transaction: txn);
+                    if (player == null) throw new InvalidOperationException("Cannot update a non-existent player");
 
-                if (password != null) player.SetRawPassword(password);
-                if (op.HasValue) player.Operator = op.Value;
+                    if (password != null) player.SetRawPassword(password);
+                    if (op.HasValue) player.Operator = op.Value;
 
-                ctx.Update(player);
+                    ctx.Update(player, transaction: txn);
 
-                return true;
+                    txn.Commit();
+                    return true;
+                }
             }
 #else
             using (var ctx = new TContext())

@@ -27,7 +27,8 @@ namespace TDSM.Core.Net.Web.ApiControllers
         /// </summary>
         public HttpResponseMessage Get()
         {
-            return this.Request.CreateResponse(HttpStatusCode.OK, new {
+            return this.Request.CreateResponse(HttpStatusCode.OK, new
+            {
                 //Connection info
                 Name = Terraria.Main.ActiveWorldFileData.Name,
                 Port = Terraria.Netplay.ListenPort,
@@ -58,11 +59,7 @@ namespace TDSM.Core.Net.Web.ApiControllers
         {
             if (ShowPlugins)
             {
-                return OTA.Plugin.PluginManager._plugins
-                    .Where(x => x.Value.IsEnabled)
-                    .Select(y => y.Value.Name)
-                    .OrderBy(z => z)
-                    .ToArray();
+                return OTA.Plugin.PluginManager.Enabled.NameAndVersions.OrderBy(x => x).ToArray();
             }
 
             return null;

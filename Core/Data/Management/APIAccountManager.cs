@@ -17,7 +17,10 @@ namespace TDSM.Core.Data.Management
             }
 #elif DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
-                return await ctx.FirstOrDefaultAsync<APIAccount>(new { Username = name });
+            {
+                using (var txn = ctx.BeginTransaction())
+                    return await ctx.FirstOrDefaultAsync<APIAccount>(new { Username = name }, transaction: txn);
+            }
 #else
             return null;
 #endif
@@ -32,7 +35,10 @@ namespace TDSM.Core.Data.Management
             }
 #elif DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
-                return (await ctx.WhereAsync<APIAccountRole>(new { AccountId = accountId })).ToArray();
+            {
+                using (var txn = ctx.BeginTransaction())
+                    return (await ctx.WhereAsync<APIAccountRole>(new { AccountId = accountId }, transaction: txn)).ToArray();
+            }
 #else
             return null;
 #endif

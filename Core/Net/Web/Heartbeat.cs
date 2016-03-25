@@ -20,7 +20,7 @@ namespace TDSM.Core.Net.Web
     /// </summary>
     public static class Heartbeat
     {
-        internal const String EndPoint = "http://heartbeat.tdsm.org/";
+        internal const String EndPoint = "https://openterraria.com/tdsm/heartbeat/beat";
         internal const Double MinuteInterval = 5;
 
         private static System.Timers.Timer _timer;
@@ -36,26 +36,21 @@ namespace TDSM.Core.Net.Web
 
         public static string ServerDomain { get; set; }
 
-        private static DateTime? _lastUpdateNotice;
+        public static bool RequiresAuthentication { get; set; }
 
-        [Flags]
-        public enum UpdateReady : byte
+        public enum ResponseCode : int
         {
-            API = 1,
-            Core = 2,
-            NPCDefinitions = 4,
-            ItemDefinitions = 8,
-            PluginOutOfDate = 16
-        }
-
-        public enum ResponseCode : byte
-        {
-            UpToDate = 0,
-            UpdateReady = 1,
+            UpToDate = 1,
             ServerKey = 2,
 
             //Maybe a notice (flag for server/console and players - must be allowed in config)
             StringResponse = 255
+        }
+
+        public class HeartbeatResponse
+        {
+            public ResponseCode Code { get; set; }
+            public string Value { get; set; }
         }
 
         private static string _serverKey = GetServerKey();
@@ -103,10 +98,10 @@ namespace TDSM.Core.Net.Web
                 return (ResponseCode)DataBuffer[Index++];
             }
 
-            public UpdateReady ReadUpdateReady()
-            {
-                return (UpdateReady)DataBuffer[Index++];
-            }
+            //public UpdateReady ReadUpdateReady()
+            //{
+            //    return (UpdateReady)DataBuffer[Index++];
+            //}
 
             public int ReadInt32()
             {
@@ -151,130 +146,89 @@ namespace TDSM.Core.Net.Web
             {
                 using (var wc = new WebClient())
                 {
-                    var req = new System.Collections.Specialized.NameValueCollection();
-//                    var req = new System.Collections.Generic.Dictionary<String, String>();
-                    req.Add("API", Globals.Version.Major + "." + Globals.Version.Minor);
-                    req.Add("Core", _coreBuild.ToString());
-                    req.Add("Platform", ((int)Platform.Type).ToString());
-                    req.Add("OSPlatform", ((int)Environment.OSVersion.Platform).ToString());
-                    if (!String.IsNullOrEmpty(_serverKey))
-                        req.Add("UUID", _serverKey);
-                    req.Add("NPCDef", Definitions.DefinitionManager.NPCVersion.ToString());
-                    req.Add("ItemDef", Definitions.DefinitionManager.ItemVersion.ToString());
-                    req.Add("RequiresAuth", (!String.IsNullOrEmpty(Terraria.Netplay.ServerPassword)).ToString());
-                    //req.Add("ServiceTo", ServerCore.Server.UniqueConnections.ToString());
-
-                    if (PublishToList)
-                    {
-                        req.Add("Port", Terraria.Netplay.ListenPort.ToString());
-                        req.Add("MaxPlayers", Terraria.Main.maxNetPlayers.ToString());
-                        //req.Add("ConnectedPlayers", ServerCore.ClientConnection.All.Count.ToString());
-
-                        if (!String.IsNullOrEmpty(ServerName))
-                            req.Add("Name", ServerName);
-                        if (!String.IsNullOrEmpty(ServerDescription))
-                            req.Add("Desc", ServerDescription);
-                        if (!String.IsNullOrEmpty(ServerDomain))
-                            req.Add("Domain", ServerDomain);
-                    }
-
                     //TODO; Maybe plugin versions
                     //TODO; think about branches, release or dev
 
-                    var data = wc.UploadValues(EndPoint, "POST", req);
-//                    var parameters = (from x in req select String.Concat(x.Key, "=", Uri.EscapeDataString(x.Value))).ToArray();
-//                    var data = wc.DownloadData(EndPoint + "?" + String.Join("&", parameters));
+                    var json = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                    {
+                        API = new
+                        {
+                            Major = Globals.Version.Major,
+                            Minor = Globals.Version.Minor
+                        },
+                        Core = _coreBuild,
+
+                        Platform = (int)Platform.Type,
+                        OSPlatform = (int)Environment.OSVersion.Platform,
+
+                        ServerKey = _serverKey,
+
+                        NpcVersion = Definitions.DefinitionManager.NPCVersion,
+                        ItemVersion = Definitions.DefinitionManager.ItemVersion,
+
+                        RequiresAuthentication = !String.IsNullOrEmpty(Terraria.Netplay.ServerPassword) || RequiresAuthentication,
+
+                        Port = PublishToList ? Terraria.Netplay.ListenPort : 0,
+                        MaxPlayers = PublishToList ? Terraria.Main.maxNetPlayers : 0,
+                        Name = PublishToList ? ServerName : String.Empty,
+                        Description = PublishToList ? ServerDescription : String.Empty,
+                        Domain = PublishToList ? ServerDomain : String.Empty,
+
+                        Plugins = OTA.Plugin.PluginManager.Loaded.NameAndVersions.ToArray()
+                    });
+
+                    wc.Headers.Add("Content-Type: application/json");
+
+                    var data = wc.UploadData(EndPoint, "POST", UTF8Encoding.Default.GetBytes(json));
                     if (data != null && data.Length > 0)
                     {
-                        var reader = (BufferReader)data;
-                        switch (reader.ReadResponseCode())
+                        var message = Newtonsoft.Json.JsonConvert.DeserializeObject<HeartbeatResponse>(UTF8Encoding.Default.GetString(data));
+                        if (message != null)
                         {
-                            case ResponseCode.UpToDate:
-                                //We're online - all up to date
-                                try
-                                {
-                                    var str = reader.ReadString();
-                                    if (!String.IsNullOrEmpty(str))
+                            switch (message.Code)
+                            {
+                                case ResponseCode.ServerKey:
+                                    try
                                     {
-                                        ProgramLog.Log("Heartbeat Sent: " + str);
+                                        if (!String.IsNullOrEmpty(message.Value) && message.Value.Length == 36)
+                                        {
+                                            SetServerKey(message.Value);
+                                            Beat(); //Rebeat to acknowledge the new UUID
+                                        }
                                     }
-                                }
-                                catch
-                                {
-                                }
-                                break;
-                            case ResponseCode.UpdateReady:
-                                var flag = reader.ReadUpdateReady();
-
-                                var updates = String.Empty;
-                                if ((flag & UpdateReady.API) != 0)
-                                    updates += "API";
-                                if ((flag & UpdateReady.Core) != 0)
-                                    updates += (updates.Length > 0 ? ", " : String.Empty) + "Core";
-                                if ((flag & UpdateReady.NPCDefinitions) != 0)
-                                    updates += (updates.Length > 0 ? ", " : String.Empty) + "NPC definitions";
-                                if ((flag & UpdateReady.ItemDefinitions) != 0)
-                                    updates += (updates.Length > 0 ? ", " : String.Empty) + "Item definitions";
-
-                                if ((flag & UpdateReady.PluginOutOfDate) != 0)
-                                {
-                                    var len = reader.ReadInt32();
-                                    //for (var x = 0; x < len; x++)
-                                    //{
-                                    //    var name = reader.ReadStringByDef();
-                                    //    if (!String.IsNullOrEmpty(name)) updates += (updates.Length > 0 ? ", " : String.Empty) + name;
-                                    //}
-                                    updates += (updates.Length > 0 ? ", " : String.Empty) + len + " plugin(s)";
-                                }
-
-                                if (!String.IsNullOrEmpty(updates))
-                                {
-                                    if (!_lastUpdateNotice.HasValue || (DateTime.Now - _lastUpdateNotice.Value).TotalMinutes >= 60)
+                                    catch
                                     {
-                                        Utils.NotifyAllOps("Updates are ready for: " + updates);
-                                        _lastUpdateNotice = DateTime.Now;
                                     }
-                                }
-                                break;
-                            case ResponseCode.ServerKey:
-                                try
-                                {
-                                    var str = reader.ReadString();
-                                    if (!String.IsNullOrEmpty(str) && str.Length == 36)
+                                    break;
+                                case ResponseCode.StringResponse:
+                                    try
                                     {
-                                        SetServerKey(str);
-                                        Beat();
+                                        if (!String.IsNullOrEmpty(message.Value))
+                                        {
+                                            ProgramLog.Log(message.Value);
+                                        }
                                     }
-                                }
-                                catch
-                                {
-                                }
-                                break;
-                            case ResponseCode.StringResponse:
-                                try
-                                {
-                                    var str = reader.ReadString();
-                                    if (!String.IsNullOrEmpty(str))
+                                    catch
                                     {
-                                        ProgramLog.Log("Heartbeat Sent: " + str);
                                     }
-                                }
-                                catch
-                                {
-                                }
-                                break;
-                        //default:
-                        //    ProgramLog.Log("Invalid heartbeat response.");
-                        //    try
-                        //    {
-                        //        var str = reader.ReadString();
-                        //        if (!String.IsNullOrEmpty(str))
-                        //        {
-                        //            ProgramLog.Log("Heartbeat Sent: " + str);
-                        //        }
-                        //    }
-                        //    catch { }
-                        //    break;
+                                    break;
+                                    //default:
+                                    //    ProgramLog.Log("Invalid heartbeat response.");
+                                    //    try
+                                    //    {
+                                    //        var str = reader.ReadString();
+                                    //        if (!String.IsNullOrEmpty(str))
+                                    //        {
+                                    //            ProgramLog.Log("Heartbeat Sent: " + str);
+                                    //        }
+                                    //    }
+                                    //    catch { }
+                                    //    break;
+                            }
+                        }
+                        else
+                        {
+                            ProgramLog.Log("Invalid heartbeat response.");
                         }
                     }
                     else
@@ -282,10 +236,10 @@ namespace TDSM.Core.Net.Web
                 }
             }
 #if DEBUG
-            catch //(Exception e)
+            catch (Exception e)
             {
                 ProgramLog.Log("Heartbeat failed, are we online or is the tdsm server down?");
-//                ProgramLog.Log(e);
+                ProgramLog.Log(e);
             }
 #else
             catch
