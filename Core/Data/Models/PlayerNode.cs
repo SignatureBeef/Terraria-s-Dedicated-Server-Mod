@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace TDSM.Core.Data.Models
 {
     /// <summary>
@@ -10,6 +9,7 @@ namespace TDSM.Core.Data.Models
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
+        [Dapper.Contrib.Extensions.Key]
         public long Id { get; set; }
 
         /// <summary>

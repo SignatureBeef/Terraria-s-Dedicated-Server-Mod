@@ -9,6 +9,7 @@ namespace TDSM.Core.Data.Models
     [Table("Players")]
     public class DbPlayer
     {
+        [Dapper.Contrib.Extensions.Key]
         public long Id { get; set; }
 
         public string Name { get; set; }

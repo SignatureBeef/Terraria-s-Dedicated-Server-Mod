@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dapper.Contrib</name>
+    </assembly>
+    <members>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.GetAsync``1(System.Data.IDbConnection,System.Object,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Returns a single entity by a single id from table "Ts" asynchronously using .NET 4.5 Task. T must be of interface type. 
+            Id must be marked with [Key] attribute.
+            Created entity is tracked/intercepted for changes and used by the Update() extension. 
+            </summary>
+            <typeparam name="T">Interface type to create and populate</typeparam>
+            <param name="connection">Open SqlConnection</param>
+            <param name="id">Id of the entity to get, must be marked with [Key] attribute</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>Entity of T</returns>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.GetAllAsync``1(System.Data.IDbConnection,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Returns a list of entites from table "Ts".  
+            Id of T must be marked with [Key] attribute.
+            Entities created from interfaces are tracked/intercepted for changes and used by the Update() extension
+            for optimal performance. 
+            </summary>
+            <typeparam name="T">Interface or type to create and populate</typeparam>
+            <param name="connection">Open SqlConnection</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>Entity of T</returns>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.InsertAsync``1(System.Data.IDbConnection,``0,System.Data.IDbTransaction,System.Nullable{System.Int32},ISqlAdapter)">
+            <summary>
+            Inserts an entity into table "Ts" asynchronously using .NET 4.5 Task and returns identity id.
+            </summary>
+            <param name="connection">Open SqlConnection</param>
+            <param name="entityToInsert">Entity to insert</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <param name="sqlAdapter">The specific ISqlAdapter to use, auto-detected based on connection if null</param>
+            <returns>Identity of inserted entity</returns>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.UpdateAsync``1(System.Data.IDbConnection,``0,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Updates entity in table "Ts" asynchronously using .NET 4.5 Task, checks if the entity is modified if the entity is tracked by the Get() extension.
+            </summary>
+            <typeparam name="T">Type to be updated</typeparam>
+            <param name="connection">Open SqlConnection</param>
+            <param name="entityToUpdate">Entity to be updated</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>true if updated, false if not found or not modified (tracked entities)</returns>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.DeleteAsync``1(System.Data.IDbConnection,``0,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Delete entity in table "Ts" asynchronously using .NET 4.5 Task.
+            </summary>
+            <typeparam name="T">Type of entity</typeparam>
+            <param name="connection">Open SqlConnection</param>
+            <param name="entityToDelete">Entity to delete</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>true if deleted, false if not found</returns>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.DeleteAllAsync``1(System.Data.IDbConnection,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Delete all entities in the table related to the type T asynchronously using .NET 4.5 Task.
+            </summary>
+            <typeparam name="T">Type of entity</typeparam>
+            <param name="connection">Open SqlConnection</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>true if deleted, false if none found</returns>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.Get``1(System.Data.IDbConnection,System.Object,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Returns a single entity by a single id from table "Ts".  
+            Id must be marked with [Key] attribute.
+            Entities created from interfaces are tracked/intercepted for changes and used by the Update() extension
+            for optimal performance. 
+            </summary>
+            <typeparam name="T">Interface or type to create and populate</typeparam>
+            <param name="connection">Open SqlConnection</param>
+            <param name="id">Id of the entity to get, must be marked with [Key] attribute</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>Entity of T</returns>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.GetAll``1(System.Data.IDbConnection,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Returns a list of entites from table "Ts".  
+            Id of T must be marked with [Key] attribute.
+            Entities created from interfaces are tracked/intercepted for changes and used by the Update() extension
+            for optimal performance. 
+            </summary>
+            <typeparam name="T">Interface or type to create and populate</typeparam>
+            <param name="connection">Open SqlConnection</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>Entity of T</returns>
+        </member>
+        <member name="F:Dapper.Contrib.Extensions.SqlMapperExtensions.TableNameMapper">
+            <summary>
+            Specify a custom table name mapper based on the POCO type name
+            </summary>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.Insert``1(System.Data.IDbConnection,``0,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Inserts an entity into table "Ts" and returns identity id or number if inserted rows if inserting a list.
+            </summary>
+            <param name="connection">Open SqlConnection</param>
+            <param name="entityToInsert">Entity to insert, can be list of entities</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>Identity of inserted entity, or number of inserted rows if inserting a list</returns>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.Update``1(System.Data.IDbConnection,``0,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Updates entity in table "Ts", checks if the entity is modified if the entity is tracked by the Get() extension.
+            </summary>
+            <typeparam name="T">Type to be updated</typeparam>
+            <param name="connection">Open SqlConnection</param>
+            <param name="entityToUpdate">Entity to be updated</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>true if updated, false if not found or not modified (tracked entities)</returns>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.Delete``1(System.Data.IDbConnection,``0,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Delete entity in table "Ts".
+            </summary>
+            <typeparam name="T">Type of entity</typeparam>
+            <param name="connection">Open SqlConnection</param>
+            <param name="entityToDelete">Entity to delete</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>true if deleted, false if not found</returns>
+        </member>
+        <member name="M:Dapper.Contrib.Extensions.SqlMapperExtensions.DeleteAll``1(System.Data.IDbConnection,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary>
+            Delete all entities in the table related to the type T.
+            </summary>
+            <typeparam name="T">Type of entity</typeparam>
+            <param name="connection">Open SqlConnection</param>
+            <param name="transaction">The transaction to run under, null (the default) if none</param>
+            <param name="commandTimeout">Number of seconds before command execution timeout</param>
+            <returns>true if deleted, false if none found</returns>
+        </member>
+        <member name="F:Dapper.Contrib.Extensions.SqlMapperExtensions.GetDatabaseType">
+            <summary>
+            Specifies a custom callback that detects the database type instead of relying on the default strategy (the name of the connection type object).
+            Please note that this callback is global and will be used by all the calls that require a database specific adapter.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -8,6 +8,7 @@ using Dapper;
 using OTA.Data.Dapper.Extensions;
 using TDSM.Core.Data.Models;
 using System.Data;
+using OTA.Data.Dapper.Mappers;
 
 namespace TDSM.Core.Data
 {
@@ -423,7 +424,7 @@ namespace TDSM.Core.Data
             using (var ctx = DatabaseFactory.CreateConnection())
             {
                 using (var txn = ctx.BeginTransaction())
-                    return ctx.Query<DbPlayer>($"select * from {TableMapper.TypeToName<DbPlayer>()} where Name like @Name", new { Name = '%' + search + '%' }, transaction: txn)
+                    return ctx.Query<DbPlayer>($"select * from {TableMapper.TypeToName<DbPlayer>()} where {ColumnMapper.Enclose("Name")} like @Name", new { Name = '%' + search + '%' }, transaction: txn)
                     .Select(x => x.Name)
                     .ToArray();
             }

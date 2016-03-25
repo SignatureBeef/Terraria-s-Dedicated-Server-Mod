@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using OTA.Data.Dapper.Extensions;
+using OTA.Data.Dapper.Mappers;
 
 namespace TDSM.Core.Data.Models.Migrations
 {

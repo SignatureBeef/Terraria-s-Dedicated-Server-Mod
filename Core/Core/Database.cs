@@ -14,6 +14,9 @@ using OTA.Permissions;
 using System.Data;
 using Dapper.Contrib.Extensions;
 using OTA.Data.Dapper.Extensions;
+using System.Text;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace TDSM.Core
 {
@@ -88,7 +91,7 @@ namespace TDSM.Core
             var ad = OTA.Commands.CommandManager.Parser.GetTDSMCommandsForAccessLevel(AccessLevel.OP);
             var op = OTA.Commands.CommandManager.Parser.GetTDSMCommandsForAccessLevel(AccessLevel.CONSOLE); //Funny how these have now changed
 
-            var additionalGuestNodes = new []
+            var additionalGuestNodes = new[]
             {
                 "ota.help",
                 "terraria.playing",
@@ -185,10 +188,11 @@ namespace TDSM.Core
                     Chat_Suffix = chatSuffix
                 };
 
-                grp.Id = ctx.Insert(grp);
+
+                grp.Id = ctx.Insert(grp, transaction);
                 foreach (var nd in nodes)
                 {
-                    var node = ctx.SingleOrDefault<PermissionNode>(new { Node = nd, Permission = Permission.Permitted });
+                    var node = ctx.SingleOrDefault<PermissionNode>(new { Node = nd, Permission = Permission.Permitted }, transaction: transaction);
                     if (node == null)
                     {
                         node = new PermissionNode()
@@ -196,14 +200,14 @@ namespace TDSM.Core
                             Node = nd,
                             Permission = Permission.Permitted
                         };
-                        node.Id = ctx.Insert(node);
+                        node.Id = ctx.Insert(node, transaction: transaction);
                     }
 
                     ctx.Insert(new GroupNode()
                     {
                         GroupId = grp.Id,
                         NodeId = node.Id
-                    });
+                    }, transaction: transaction);
                 }
 
                 if (complete != null) complete(grp);

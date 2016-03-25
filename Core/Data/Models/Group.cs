@@ -7,6 +7,7 @@ namespace TDSM.Core.Data.Models
     /// </summary>
     public class Group
     {
+        [Dapper.Contrib.Extensions.Key]
         public long Id { get; set; }
 
         public string Name { get; set; }

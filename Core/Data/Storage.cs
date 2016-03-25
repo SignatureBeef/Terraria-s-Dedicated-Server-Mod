@@ -10,6 +10,7 @@ using OTA.Data;
 using OTA.Data.Dapper.Extensions;
 using Dapper.Contrib.Extensions;
 using Dapper;
+using OTA.Data.Dapper.Mappers;
 
 namespace TDSM.Core.Data
 {
@@ -815,10 +816,10 @@ namespace TDSM.Core.Data
             {
                 using (var txn = ctx.BeginTransaction())
                 {
-                    var res = ctx.Execute($"delete from {TableMapper.TypeToName<GroupNode>()} where Id in ( " +
-                        $"select gn.Id from {TableMapper.TypeToName<GroupNode>()} gn " +
-                            $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on gn.NodeId = nd.Id " +
-                        "where gn.GroupId = @GroupId and nd.Node = @Node and nd.Permission = @Permission" +
+                    var res = ctx.Execute($"delete from {TableMapper.TypeToName<GroupNode>()} where {ColumnMapper.Enclose("Id")} in ( " +
+                        $"select gn.{ColumnMapper.Enclose("Id")} from {TableMapper.TypeToName<GroupNode>()} gn " +
+                            $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on gn.{ColumnMapper.Enclose("NodeId")} = nd.{ColumnMapper.Enclose("Id")} " +
+                        $"where gn.{ColumnMapper.Enclose("GroupId")} = @GroupId and nd.{ColumnMapper.Enclose("Node")} = @Node and nd.{ColumnMapper.Enclose("Permission")} = @Permission" +
                     ")",
                     new { GroupId = group.Id, Node = node, Permission = (int)permission }, transaction: txn) > 0;
                     txn.Commit();
@@ -881,9 +882,9 @@ namespace TDSM.Core.Data
             {
                 using (var txn = ctx.BeginTransaction())
                     return ctx.Query<PermissionNode>($"select nd.* from {TableMapper.TypeToName<Group>()} g " +
-                    $"inner join {TableMapper.TypeToName<GroupNode>()} gn on g.Id = gn.GroupId " +
-                    $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on gn.NodeId = nd.Id " +
-                    "where g.Name = @GroupName", new { GroupName = groupName }, transaction: txn).ToArray();
+                    $"inner join {TableMapper.TypeToName<GroupNode>()} gn on g.{ColumnMapper.Enclose("Id")} = gn.{ColumnMapper.Enclose("GroupId")} " +
+                    $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on gn.{ColumnMapper.Enclose("NodeId")} = nd.{ColumnMapper.Enclose("Id")} " +
+                    $"where g.{ColumnMapper.Enclose("Name")} = @GroupName", new { GroupName = groupName }, transaction: txn).ToArray();
             }
 #else
 			using (var ctx = new TContext())
@@ -1071,10 +1072,10 @@ namespace TDSM.Core.Data
                 {
                     var player = ctx.Single<DbPlayer>(new { Name = username }, transaction: txn);
 
-                    var res = ctx.Execute($"delete from {TableMapper.TypeToName<PlayerNode>()} where Id in ( " +
-                            $"select pn.Id from {TableMapper.TypeToName<PlayerNode>()} pn " +
-                                $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on pn.NodeId = nd.Id " +
-                            "where pn.PlayerId = @PlayerId and nd.Node = @Node and nd.Permission = @Permission" +
+                    var res = ctx.Execute($"delete from {TableMapper.TypeToName<PlayerNode>()} where {ColumnMapper.Enclose("Id")} in ( " +
+                            $"select pn.{ColumnMapper.Enclose("Id")} from {TableMapper.TypeToName<PlayerNode>()} pn " +
+                                $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on pn.{ColumnMapper.Enclose("NodeId")} = nd.{ColumnMapper.Enclose("Id")} " +
+                            $"where pn.{ColumnMapper.Enclose("PlayerId")} = @PlayerId and nd.{ColumnMapper.Enclose("Node")} = @Node and nd.{ColumnMapper.Enclose("Permission")} = @Permission" +
                         ")",
                         new { PlayerId = player.Id, Node = node, Permission = (int)permission }, transaction: txn) > 0;
                     txn.Commit();
@@ -1114,10 +1115,10 @@ namespace TDSM.Core.Data
             {
                 using (var txn = ctx.BeginTransaction())
                 {
-                    return ctx.Query<string>($"select g.Name from {TableMapper.TypeToName<DbPlayer>()} p " +
-                        $"inner join {TableMapper.TypeToName<PlayerGroup>()} pg on p.Id = pg.PlayerId " +
-                        $"inner join {TableMapper.TypeToName<Group>()} g on pg.GroupId = g.Id " +
-                        $"where p.Name = @PlayerName",
+                    return ctx.Query<string>($"select g.{ColumnMapper.Enclose("Name")} from {TableMapper.TypeToName<DbPlayer>()} p " +
+                        $"inner join {TableMapper.TypeToName<PlayerGroup>()} pg on p.{ColumnMapper.Enclose("Id")} = pg.{ColumnMapper.Enclose("PlayerId")} " +
+                        $"inner join {TableMapper.TypeToName<Group>()} g on pg.{ColumnMapper.Enclose("GroupId")} = g.{ColumnMapper.Enclose("Id")} " +
+                        $"where p.{ColumnMapper.Enclose("Name")} = @PlayerName",
                         new { PlayerName = username }, transaction: txn).ToArray();
                 }
             }
@@ -1150,9 +1151,9 @@ namespace TDSM.Core.Data
                 using (var txn = ctx.BeginTransaction())
                 {
                     return ctx.Query<PermissionNode>($"select n.* from {TableMapper.TypeToName<DbPlayer>()} p " +
-                        $"inner join {TableMapper.TypeToName<PlayerNode>()} pn on p.Id = pn.PlayerId " +
-                        $"inner join {TableMapper.TypeToName<PermissionNode>()} n on pn.NodeId = n.Id " +
-                        $"where p.Name = @PlayerName",
+                        $"inner join {TableMapper.TypeToName<PlayerNode>()} pn on p.{ColumnMapper.Enclose("Id")} = pn.{ColumnMapper.Enclose("PlayerId")} " +
+                        $"inner join {TableMapper.TypeToName<PermissionNode>()} n on pn.{ColumnMapper.Enclose("NodeId")} = n.{ColumnMapper.Enclose("Id")} " +
+                        $"where p.{ColumnMapper.Enclose("Name")} = @PlayerName",
                         new { PlayerName = username }, transaction: txn).ToArray();
                 }
             }
@@ -1185,9 +1186,9 @@ namespace TDSM.Core.Data
                 using (var txn = ctx.BeginTransaction())
                 {
                     return ctx.QueryFirstOrDefault<Group>($"select g.* from {TableMapper.TypeToName<DbPlayer>()} p " +
-                    $"inner join {TableMapper.TypeToName<PlayerGroup>()} pg on p.Id = pg.PlayerId " +
-                    $"inner join {TableMapper.TypeToName<Group>()} g on pg.GroupId = g.Id " +
-                    $"where p.Name = @PlayerName order by pg.Id",
+                    $"inner join {TableMapper.TypeToName<PlayerGroup>()} pg on p.{ColumnMapper.Enclose("Id")} = pg.{ColumnMapper.Enclose("PlayerId")} " +
+                    $"inner join {TableMapper.TypeToName<Group>()} g on pg.{ColumnMapper.Enclose("GroupId")} = g.{ColumnMapper.Enclose("Id")} " +
+                    $"where p.{ColumnMapper.Enclose("Name")} = @PlayerName order by pg.{ColumnMapper.Enclose("Id")}",
                     new { PlayerName = username }, transaction: txn);
                 }
             }
