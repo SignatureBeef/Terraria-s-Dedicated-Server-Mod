@@ -146,7 +146,6 @@ namespace TDSM.Core.Net.Web
             {
                 using (var wc = new WebClient())
                 {
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                     //TODO; Maybe plugin versions
                     //TODO; think about branches, release or dev
 
