@@ -816,11 +816,11 @@ namespace TDSM.Core.Data
             {
                 using (var txn = ctx.BeginTransaction())
                 {
-                    var res = ctx.Execute($"delete from {TableMapper.TypeToName<GroupNode>()} where {ColumnMapper.Enclose("Id")} in ( " +
+                    var res = ctx.Execute($"delete from {TableMapper.TypeToName<GroupNode>()} where {ColumnMapper.Enclose("Id")} in ( select Id from (" +
                         $"select gn.{ColumnMapper.Enclose("Id")} from {TableMapper.TypeToName<GroupNode>()} gn " +
                             $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on gn.{ColumnMapper.Enclose("NodeId")} = nd.{ColumnMapper.Enclose("Id")} " +
                         $"where gn.{ColumnMapper.Enclose("GroupId")} = @GroupId and nd.{ColumnMapper.Enclose("Node")} = @Node and nd.{ColumnMapper.Enclose("Permission")} = @Permission" +
-                    ")",
+                    ") sq )",
                     new { GroupId = group.Id, Node = node, Permission = (int)permission }, transaction: txn) > 0;
                     txn.Commit();
                     return res;
@@ -1072,11 +1072,11 @@ namespace TDSM.Core.Data
                 {
                     var player = ctx.Single<DbPlayer>(new { Name = username }, transaction: txn);
 
-                    var res = ctx.Execute($"delete from {TableMapper.TypeToName<PlayerNode>()} where {ColumnMapper.Enclose("Id")} in ( " +
+                    var res = ctx.Execute($"delete from {TableMapper.TypeToName<PlayerNode>()} where {TableMapper.TypeToName<PlayerNode>()}.{ColumnMapper.Enclose("Id")} in ( select Id from (" +
                             $"select pn.{ColumnMapper.Enclose("Id")} from {TableMapper.TypeToName<PlayerNode>()} pn " +
                                 $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on pn.{ColumnMapper.Enclose("NodeId")} = nd.{ColumnMapper.Enclose("Id")} " +
                             $"where pn.{ColumnMapper.Enclose("PlayerId")} = @PlayerId and nd.{ColumnMapper.Enclose("Node")} = @Node and nd.{ColumnMapper.Enclose("Permission")} = @Permission" +
-                        ")",
+                        ") sq)",
                         new { PlayerId = player.Id, Node = node, Permission = (int)permission }, transaction: txn) > 0;
                     txn.Commit();
                     return res;
