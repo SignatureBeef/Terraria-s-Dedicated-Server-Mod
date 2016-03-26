@@ -117,12 +117,12 @@ namespace TDSM.Core
             OTA.Data.DatabaseFactory.Initialise(Config.DatabaseProvider, Config.DatabaseConnectionString);
             Storage.IsAvailable = true;
             OTA.Permissions.Permissions.SetHandler(new OTAPIPermissions());
+            Dapper.SqlMapper.AddTypeMap(typeof(PasswordFormat), System.Data.DbType.Int32);
+            Dapper.SqlMapper.AddTypeMap(typeof(Byte), System.Data.DbType.Byte);
 
             ProgramLog.LogRotation = Config.LogRotation;
 
             Hook(OTA.Commands.Events.CommandEvents.Listening, OnListeningForCommands);
-
-            Dapper.SqlMapper.AddTypeMap(typeof(Byte), System.Data.DbType.Byte);
 
             AddComponents<Entry>();
             if (!RunComponent(ComponentEvent.Initialise))

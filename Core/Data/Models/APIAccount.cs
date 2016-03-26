@@ -22,6 +22,7 @@ namespace TDSM.Core.Data.Models
         /// Sets the password.
         /// </summary>
         /// <value>The password.</value>
+        [Dapper.Contrib.Extensions.Write(false)]
         public string Password
         {
             set

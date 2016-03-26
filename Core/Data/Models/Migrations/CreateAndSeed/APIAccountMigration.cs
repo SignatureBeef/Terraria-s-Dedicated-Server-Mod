@@ -21,10 +21,6 @@ namespace TDSM.Core.Data.Models.Migrations
                 .NotNullable()
                 .Unique();
 
-            table.WithColumn("Password")
-                .AsString(255)
-                .NotNullable();
-
             table.WithColumn("PasswordHash")
                 .AsString(512)
                 .NotNullable();

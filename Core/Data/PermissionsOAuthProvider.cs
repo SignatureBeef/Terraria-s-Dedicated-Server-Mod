@@ -46,7 +46,7 @@ namespace TDSM.Core.Data
                 return;
             }
 
-            var user = await APIAccountManager.FindByName(context.UserName);
+            var user = await APIAccountManager.FindByNameAsync(context.UserName);
             if (user != null && user.ComparePassword(context.Password))
             {
                 var identity = new ClaimsIdentity(context.Options.AuthenticationType);
