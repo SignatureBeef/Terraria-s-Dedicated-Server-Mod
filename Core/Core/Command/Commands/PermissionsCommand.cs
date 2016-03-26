@@ -25,7 +25,7 @@ namespace TDSM.Core.Command.Commands
                 .WithHelpText("list")
                 .WithHelpText("listnodes <group>")
                 .Calls(this.GroupPermission);
-            
+
             AddCommand("user")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithPermissionNode("tdsm.user")
@@ -50,6 +50,10 @@ namespace TDSM.Core.Command.Commands
 
             int a = 0;
             string groupName;
+            bool applyToGuests;
+            string parent, prefix, suffix;
+            byte r = 0, g = 0, b = 0;
+
             var cmd = args.GetString(a++);
             switch (cmd)
             {
@@ -58,26 +62,17 @@ namespace TDSM.Core.Command.Commands
                     if (!args.TryGetString(a++, out groupName))
                         throw new CommandError("Expected group name after [" + cmd + "]");
 
-                    bool applyToGuests;
                     args.TryGetBool(a++, out applyToGuests);
-
-                    string parent;
                     args.TryGetString(a++, out parent);
 
-                    byte r;
                     if (!args.TryGetByte(a++, out r))
                         r = 255;
-                    byte g;
                     if (!args.TryGetByte(a++, out g))
                         g = 255;
-                    byte b;
                     if (!args.TryGetByte(a++, out b))
                         b = 255;
 
-                    string prefix;
                     args.TryGetString(a++, out prefix);
-
-                    string suffix;
                     args.TryGetString(a++, out suffix);
 
                     if (Storage.FindGroup(groupName) != null)
@@ -109,8 +104,36 @@ namespace TDSM.Core.Command.Commands
                         sender.Message("Failed to remove group " + groupName, Color.Red);
                     }
                     break;
+
                 case "update":
-                    //group remove "Guest"
+                    //group update "Guest" <ApplyToGuests> <Parent> <R> <G> <B> <Prefix> <Suffix>
+                    if (!args.TryGetString(a++, out groupName))
+                        throw new CommandError("Expected group name after [" + cmd + "]");
+
+                    args.TryGetBool(a++, out applyToGuests);
+                    args.TryGetString(a++, out parent);
+
+                    if (!args.TryGetByte(a++, out r))
+                        r = 255;
+                    if (!args.TryGetByte(a++, out g))
+                        g = 255;
+                    if (!args.TryGetByte(a++, out b))
+                        b = 255;
+
+                    args.TryGetString(a++, out prefix);
+                    args.TryGetString(a++, out suffix);
+
+                    if (Storage.FindGroup(groupName) == null)
+                        throw new CommandError("This is no group defined as " + groupName);
+
+                    if (Storage.AddOrUpdateGroup(groupName, applyToGuests, parent, r, g, b, prefix, suffix) != null)
+                    {
+                        sender.Message("Successfully updated group " + groupName, Color.Green);
+                    }
+                    else
+                    {
+                        sender.Message("Failed to update group " + groupName, Color.Red);
+                    }
                     break;
 
                 case "addnode":
@@ -453,7 +476,7 @@ namespace TDSM.Core.Command.Commands
                     break;
 
                 case "update":
-                    //user add "username" "password" "op"
+                    //user update "username" "password" "op"
                     if (!args.TryGetString(a++, out username))
                         throw new CommandError("Expected username name after [" + cmd + "]");
 
