@@ -5,6 +5,7 @@ using OTA;
 using Terraria;
 using Microsoft.Xna.Framework;
 using TDSM.Core.Misc;
+using System.Linq;
 
 namespace TDSM.Core.Command.Commands
 {
@@ -16,6 +17,7 @@ namespace TDSM.Core.Command.Commands
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Spawns NPCs")
                 .WithHelpText("<amount> \"<name:id>\" \"<player>\"")
+                .WithHelpText("<amount> \"<name:id>\" \"<player>\" -item <item>")
                 .WithPermissionNode("tdsm.spawnnpc")
                 .Calls(this.SpawnNPC);
         }
@@ -35,16 +37,21 @@ namespace TDSM.Core.Command.Commands
             //var customHealth = args.TryPopAny<Int32>("-health", out health);
 
             Player player = sender as Player;
-            int amount;
-            if (args.Count > 4)
+            int amount, offset = -1;
+            if (args.Count > 5)
                 throw new CommandError("Too many arguments");
             else if (sender is ConsoleSender && args.Count <= 2)
             {
                 if (!Netplay.anyClients || !Tools.TryGetFirstOnlinePlayer(out player))
                     throw new CommandError("No players online.");
             }
-            else if (args.Count >= 3)
+            else if (args.Count == 3)
                 player = args.GetOnlinePlayer(2);
+            else if (args.Count >= 4)
+            {
+                player = args.GetOnlinePlayer(2);
+                args.TryPopAny<Int32>("-item", out offset);
+            }
 
             var npcName = args.GetString(1).ToLower().Trim();
 
@@ -64,16 +71,29 @@ namespace TDSM.Core.Command.Commands
                 else throw new CommandError("No npc exists {0}", npcName);
             }
 
+            npcs = npcs.OrderBy(x => x.Name).ToArray();
             if (npcs.Length > 1)
             {
-                bool first;
-                args.TryGetBool(3, out first);
-
-                if (!first)
-                    throw new CommandError("Too many results for {0}, total count {1}", npcName, npcs.Length);
+                if (offset == -1)
+                {
+                    sender.SendMessage("Npcs matching " + npcName + ':');
+                    for (var x = 0; x < npcs.Length; x++)
+                    {
+                        if (sender is ConsoleSender)
+                        {
+                            sender.SendMessage($"\t{x}\t- {npcs[x].Name}");
+                        }
+                        else
+                        {
+                            sender.SendMessage($"{x} - {npcs[x].Name}");
+                        }
+                    }
+                    return;
+                }
             }
+            else offset = 0;
 
-            var npc = npcs[0];
+            var npc = npcs[offset];
             if (npc.Boss.HasValue && npc.Boss == true)
                 throw new CommandError("This NPC can only be summoned by the SPAWNBOSS command.");
             try
