@@ -140,7 +140,7 @@ namespace TDSM.Core.Net.Web
             }
         }
 
-        static void Beat()
+        static void Beat(bool allowSubBeat = true)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace TDSM.Core.Net.Web
                                         if (!String.IsNullOrEmpty(message.Value) && message.Value.Length == 36)
                                         {
                                             SetServerKey(message.Value);
-                                            Beat(); //Rebeat to acknowledge the new UUID
+                                            if (allowSubBeat) Beat(false); //Rebeat to acknowledge the new UUID
                                         }
                                     }
                                     catch
