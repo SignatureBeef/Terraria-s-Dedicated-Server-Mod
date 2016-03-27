@@ -114,11 +114,14 @@ namespace TDSM.Core
 
             Config.LoadFromArguments();
 
-            OTA.Data.DatabaseFactory.Initialise(Config.DatabaseProvider, Config.DatabaseConnectionString);
-            Storage.IsAvailable = true;
-            OTA.Permissions.Permissions.SetHandler(new OTAPIPermissions());
-            Dapper.SqlMapper.AddTypeMap(typeof(PasswordFormat), System.Data.DbType.Int32);
-            Dapper.SqlMapper.AddTypeMap(typeof(Byte), System.Data.DbType.Byte);
+            if (!String.IsNullOrEmpty(Config.DatabaseProvider))
+            {
+                OTA.Data.DatabaseFactory.Initialise(Config.DatabaseProvider, Config.DatabaseConnectionString);
+                Storage.IsAvailable = true;
+                OTA.Permissions.Permissions.SetHandler(new OTAPIPermissions());
+                Dapper.SqlMapper.AddTypeMap(typeof(PasswordFormat), System.Data.DbType.Int32);
+                Dapper.SqlMapper.AddTypeMap(typeof(Byte), System.Data.DbType.Byte);
+            }
 
             ProgramLog.LogRotation = Config.LogRotation;
 
