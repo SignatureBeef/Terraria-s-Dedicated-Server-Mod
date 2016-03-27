@@ -1,17 +1,9 @@
-﻿using Dapper.Contrib.Extensions;
-using FluentMigrator;
-using FluentMigrator.Builders.Insert;
-using FluentMigrator.Model;
-using OTA;
-using OTA.Data.Dapper.Extensions;
-using OTA.Permissions;
-using TDSM.Core.Command;
-using System.Linq;
-using System;
+﻿using FluentMigrator;
+using OTA.Data.Dapper;
 
 namespace TDSM.Core.Data.Models.Migrations
 {
-    [Migration(1)]
+    [OTAMigration(1, typeof(Core.Entry))]
     public partial class CreateAndSeed : Migration
     {
         public override void Up()

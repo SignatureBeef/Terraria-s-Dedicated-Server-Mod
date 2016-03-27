@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿
+using FluentMigrator;
 using OTA.Data.Dapper.Extensions;
 using TDSM.Core.ServerCharacters.Models;
 

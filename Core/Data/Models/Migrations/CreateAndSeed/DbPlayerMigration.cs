@@ -18,6 +18,7 @@ namespace TDSM.Core.Data.Models.Migrations
 
             table.WithColumn("Name")
                 .AsString(50)
+                .Unique()
                 .NotNullable();
 
             table.WithColumn("Password")

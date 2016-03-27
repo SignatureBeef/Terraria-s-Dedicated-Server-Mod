@@ -1,6 +1,5 @@
 ﻿using FluentMigrator;
 using OTA.Data.Dapper.Extensions;
-using TDSM.Core.ServerCharacters.Models;
 
 namespace TDSM.Core.Data.Models.Migrations
 {
@@ -19,6 +18,7 @@ namespace TDSM.Core.Data.Models.Migrations
 
             table.WithColumn("Name")
                 .AsString(255)
+                .Unique()
                 .NotNullable();
 
             table.WithColumn("ApplyToGuests")
