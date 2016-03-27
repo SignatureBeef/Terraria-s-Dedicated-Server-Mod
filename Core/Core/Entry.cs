@@ -141,7 +141,8 @@ namespace TDSM.Core
         protected override void PreEnable()
         {
             base.PreEnable();
-            OTA.Data.DatabaseFactory.Migrate();
+            if (!String.IsNullOrEmpty(Config.DatabaseProvider))
+                OTA.Data.DatabaseFactory.Migrate();
         }
 
         public void OnListeningForCommands(ref HookContext ctx, ref OTA.Commands.Events.CommandArgs.Listening args)
