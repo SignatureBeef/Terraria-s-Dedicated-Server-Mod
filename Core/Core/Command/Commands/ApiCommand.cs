@@ -12,7 +12,7 @@ namespace TDSM.Core.Command.Commands
     {
         public override void Initialise()
         {
-            AddCommand("api")
+            var api = AddCommand("api")
                 .WithPermissionNode("tdsm.api")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Manage API accounts")
@@ -22,6 +22,47 @@ namespace TDSM.Core.Command.Commands
                 .WithHelpText("removerole <account> <type> <value>")
                 .WithHelpText("search <term>")
                 .Calls(ManageApi);
+
+            api.SubCommand("addaccount", "aa", "newaccount")
+                .WithPermissionNode("tdsm.api")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithHelpText("addaccount <username> <password>")
+                .Calls(AddAccount);
+        }
+
+        void AddAccount(ISender sender, ArgumentList args)
+        {
+            if (!Storage.IsAvailable)
+                throw new CommandError("No permissions plugin or data plugin is attached");
+
+            var a = 0;
+            string name, pass;
+            APIAccount acc = null;
+
+            //api addaccount "username" "password"
+            if (!args.TryGetString(a++, out name))
+                throw new CommandError("Expected username after addaccount");
+
+            if (!args.TryGetString(a++, out pass))
+                throw new CommandError("Expected password after username");
+
+            acc = APIAccountManager.FindByName(name);
+            if (acc == null)
+            {
+                acc = APIAccountManager.Create(name, pass);
+                if (acc.Id > 0)
+                {
+                    sender.SendMessage("Successfully created account.", R: 0, B: 0);
+                }
+                else
+                {
+                    sender.SendMessage("Failed to create account.", G: 0, B: 0);
+                }
+            }
+            else
+            {
+                throw new CommandError("Existing API account found by " + name);
+            }
         }
 
         void ManageApi(ISender sender, ArgumentList args)

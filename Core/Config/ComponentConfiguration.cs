@@ -45,8 +45,7 @@ namespace TDSM.Core.Config
         public virtual bool LoadFromArguments(string[] args)
         {
             var line = String.Join(" ", args);
-            var al = new List<String>();
-            OTA.Commands.CommandParser.Tokenize(line, al);
+            var al = OTA.Commands.CommandParser.Tokenize(line);
 
             var t = typeof(ConfigPrefixAttribute);
             var props = typeof(T).GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(ConfigPrefixAttribute)));

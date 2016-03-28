@@ -6,7 +6,7 @@ namespace TDSM.Core.Command
     {
         internal AccessLevel? _accessLevel;
 
-        public TDSMCommandInfo(string prefix) : base(prefix) { }
+        public TDSMCommandInfo(string[] aliases) : base(aliases) { }
 
         public TDSMCommandInfo WithAccessLevel(AccessLevel accessLevel)
         {

@@ -4,6 +4,8 @@
 *.userprefs
 
 /Binaries/*.zip
+/WebInterface
+/WebInterface.old
 
 bin/
 obj/

@@ -32,7 +32,7 @@ namespace TDSM.Core.Command.Commands
                 .Calls(this.OldList);
 
             // this is what the server crawler expects
-            AddCommand("playing", true)
+            AddCommand("playing")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("Lists online players")
                 .SetDefaultUsage()

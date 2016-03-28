@@ -25,7 +25,7 @@ namespace TDSM.Core.Command.Commands
             {
                 if (Core.CommandDictionary.ContainsKey(player.name))
                 {
-                    CommandManager.Parser.ParsePlayerCommand(player, Core.CommandDictionary[player.name]);
+                    CommandManager.Parser.ParseAndProcess(player, Core.CommandDictionary[player.name]);
                     ProgramLog.Log("Executed {0}'s previous command: {1}", player.name, Core.CommandDictionary[player.name]);
                 }
                 else
@@ -35,7 +35,7 @@ namespace TDSM.Core.Command.Commands
             if (sender is ConsoleSender)
             {
                 if (Core.CommandDictionary.ContainsKey("CONSOLE"))
-                    CommandManager.Parser.ParseConsoleCommand(Core.CommandDictionary["CONSOLE"]);
+                    CommandManager.Parser.ParseAndProcess(CommandParser.ConsoleSender, Core.CommandDictionary["CONSOLE"]);
                 else
                     sender.SendMessage("No Previous Command", 255, 255, 20, 20);
             }
