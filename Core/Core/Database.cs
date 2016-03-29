@@ -17,6 +17,7 @@ using OTA.Data.Dapper.Extensions;
 using System.Text;
 using System.Collections.Generic;
 using System.Reflection;
+using OTA.Plugin;
 
 namespace TDSM.Core
 {
@@ -121,6 +122,25 @@ namespace TDSM.Core
                     .Select(x => x.Node)
                     .Distinct()
                     .ToArray(), ctx, "[OP] ");
+        }
+
+        [Hook]
+        void OnPlayerRegistered(ref HookContext ctx, ref Events.HookArgs.PlayerRegistered args)
+        {
+            foreach (var groupName in Config.DefaultPlayerGroup.Split(','))
+            {
+                var group = args.Connection.Single<Group>(new { Name = groupName }, transaction: args.Transaction);
+
+                //Temporary until the need for more than one group
+                if (args.Connection.Where<PlayerGroup>(new { PlayerId = args.Player.Id }, transaction: args.Transaction).Any(x => x.GroupId > 0))
+                    throw new NotSupportedException("A player can only be associated to one group, please assign a parent to the desired group");
+
+                args.Connection.Insert(new PlayerGroup()
+                {
+                    GroupId = group.Id,
+                    PlayerId = args.Player.Id
+                }, transaction: args.Transaction);
+            }
         }
 
 #if ENTITY_FRAMEWORK_7

@@ -9,6 +9,7 @@ using OTA.Data.Dapper.Extensions;
 using TDSM.Core.Data.Models;
 using System.Data;
 using OTA.Data.Dapper.Mappers;
+using OTA.Plugin;
 
 namespace TDSM.Core.Data
 {
@@ -504,8 +505,26 @@ namespace TDSM.Core.Data
                     };
                     player.Id = ctx.Insert(player, transaction: txn);
 
-                    txn.Commit();
-                    return player;
+                    var hc = new HookContext();
+                    var ha = new Events.HookArgs.PlayerRegistered()
+                    {
+                        Connection = ctx,
+                        Transaction = txn,
+                        Player = player
+                    };
+
+                    Events.HookPoints.PlayerRegistered.Invoke(ref hc, ref ha);
+
+                    if (hc.Result == HookResult.DEFAULT)
+                    {
+                        txn.Commit();
+                        return player;
+                    }
+                    else
+                    {
+                        txn.Rollback();
+                        return null;
+                    }
                 }
             }
 #else

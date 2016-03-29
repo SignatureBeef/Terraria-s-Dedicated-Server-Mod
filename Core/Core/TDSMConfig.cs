@@ -11,6 +11,9 @@ namespace TDSM.Core
         [ConfigPrefix("whitelist")]
         public bool WhitelistEnabled { get; set; }
 
+        [ConfigPrefix("default-player-group")]
+        public string DefaultPlayerGroup { get; set; }
+
         #region Heartbeat
 
         [ConfigPrefix("server-list")]
