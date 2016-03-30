@@ -339,15 +339,14 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\Open-Terraria-API\OTA.Commands\OTA.Commands.csproj">
-      <Project>{1F4BFCFD-FA1F-4E47-B44E-91E18EC785AC}</Project>
-      <Name>OTA.Commands</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Open-Terraria-API\API\API.csproj">
-      <Project>{A1F792B2-5D80-4DE4-B5DB-7A05DBEABD60}</Project>
+      <Project>{a1f792b2-5d80-4de4-b5db-7a05dbeabd60}</Project>
       <Name>API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Open-Terraria-API\OTA.Commands\OTA.Commands.csproj">
+      <Project>{1f4bfcfd-fa1f-4e47-b44e-91e18ec785ac}</Project>
+      <Name>OTA.Commands</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

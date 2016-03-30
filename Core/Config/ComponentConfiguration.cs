@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace TDSM.Core.Config
 {
-    public abstract class ComponentConfiguration<T>
+    public abstract class ComponentConfiguration
     {
         public virtual bool LoadFromFile(string filePath)
         {
@@ -48,7 +48,7 @@ namespace TDSM.Core.Config
             var al = OTA.Commands.CommandParser.Tokenize(line);
 
             var t = typeof(ConfigPrefixAttribute);
-            var props = typeof(T).GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(ConfigPrefixAttribute)));
+            var props = this.GetType().GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(ConfigPrefixAttribute)));
             foreach (var prop in props)
             {
                 var configKey = '-' + ((ConfigPrefixAttribute)Attribute.GetCustomAttribute(prop, t)).Prefix;
@@ -67,7 +67,7 @@ namespace TDSM.Core.Config
         public bool SetPropertiesByPrefix(string prefix, string value)
         {
             var t = typeof(ConfigPrefixAttribute);
-            var props = typeof(T).GetProperties()
+            var props = this.GetType().GetProperties()
                 .Where(prop => Attribute.IsDefined(prop, typeof(ConfigPrefixAttribute)))
                 .Select(x => new { Prop = x, Prefix = ((ConfigPrefixAttribute)Attribute.GetCustomAttribute(x, t)).Prefix })
                 .Where(x => x.Prefix == prefix);
