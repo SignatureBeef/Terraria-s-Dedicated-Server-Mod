@@ -195,7 +195,7 @@ namespace TDSM.Core.ServerCharacters.Tables
 
         public static SlotItem GetItem(IDbConnection ctx, IDbTransaction txn, ItemType type, int slot, long? characterId = null)
         {
-            return ctx.QueryFirstOrDefault<SlotItem>(new { Type = type, Slot = slot, CharacterId = characterId });
+            return ctx.QueryFirstOrDefault<SlotItem>(new { Type = type, Slot = slot, CharacterId = characterId }, transaction: txn);
         }
 
         public static List<SlotItem> GetItemsForCharacter(IDbConnection ctx, IDbTransaction txn, ItemType type, long? characterId = null)
