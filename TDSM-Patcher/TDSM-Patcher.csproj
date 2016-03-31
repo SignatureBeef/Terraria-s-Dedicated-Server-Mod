@@ -104,4 +104,10 @@
       <Name>OTA.Patcher</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Open-Terraria-API\Binaries\Server\OTA.Commands.dll">
+      <Link>OTA.Commands.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
