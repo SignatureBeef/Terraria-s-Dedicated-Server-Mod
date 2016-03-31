@@ -396,7 +396,7 @@ namespace TDSM.Core.Command.Commands
                     if (!args.TryGetString(a++, out username))
                         throw new CommandError("Expected part of a users name after [" + cmd + "]");
 
-                    var matches = Authentication.FindPlayersByPrefix(username);
+                    var matches = Authentication.FindPlayersByPrefix(username, true);
                     if (matches != null && matches.Length > 0)
                     {
                         sender.Message("Matches:");

@@ -35,7 +35,7 @@ namespace TDSM.Core.Command.Commands
             if (sender is ConsoleSender)
             {
                 if (Core.CommandDictionary.ContainsKey("CONSOLE"))
-                    CommandManager.Parser.ParseAndProcess(CommandParser.ConsoleSender, Core.CommandDictionary["CONSOLE"]);
+                    CommandManager.Parser.ParseAndProcess(ConsoleSender.Default, Core.CommandDictionary["CONSOLE"]);
                 else
                     sender.SendMessage("No Previous Command", 255, 255, 20, 20);
             }

@@ -430,7 +430,7 @@ namespace TDSM.Core.Data
             if (!IsAvailable)
                 throw new InvalidOperationException("No connector attached");
 
-            var vPermissionValue = Permission.Denied;
+            var vPermissionValue = Permission.NoPermission;
             var vPlayerId = 0L;
             var vGroupId = 0L;
             var vPrevGroupId = 0L;

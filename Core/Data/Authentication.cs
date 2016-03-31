@@ -419,14 +419,14 @@ namespace TDSM.Core.Data
         /// </summary>
         /// <returns>The users by prefix.</returns>
         /// <param name="search">Search.</param>
-        public static string[] FindPlayersByPrefix(string search)
+        public static string[] FindPlayersByPrefix(string search, bool includeOp = false)
         {
 #if DAPPER
             using (var ctx = DatabaseFactory.CreateConnection())
             {
                 using (var txn = ctx.BeginTransaction())
                     return ctx.Query<DbPlayer>($"select * from {TableMapper.TypeToName<DbPlayer>()} where {ColumnMapper.Enclose("Name")} like @Name", new { Name = '%' + search + '%' }, transaction: txn)
-                    .Select(x => x.Name)
+                    .Select(x => includeOp && x.Operator ? x.Name + " [Op]" : x.Name)
                     .ToArray();
             }
 #else
