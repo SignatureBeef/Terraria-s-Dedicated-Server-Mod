@@ -187,6 +187,7 @@
     <Compile Include="Data\Models\Migrations\CreateAndSeed\CreateAndSeed.cs" />
     <Compile Include="Data\Models\Migrations\CreateAndSeed\APIAccountMigration.cs" />
     <Compile Include="Data\Permissions\OTAPIPermissions.cs" />
+    <Compile Include="Net\PacketHandling\Packets\NpcStrike.cs" />
     <Compile Include="ServerCharacters\CharacterManager.cs" />
     <Compile Include="ServerCharacters\ItemType.cs" />
     <Compile Include="ServerCharacters\Models\Character.cs" />

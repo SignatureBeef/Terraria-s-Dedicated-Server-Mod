@@ -11,20 +11,26 @@ namespace TDSM.Core.Net.PacketHandling.Packets
     {
         public Packet PacketId
         {
-            get { return Packet.STRIKE_NPC; }
+            get { return Packet.DAMAGE_NPC; }
         }
 
         public bool Read(int bufferId, int start, int length)
         {
             var buffer = NetMessage.buffer[bufferId];
-            
-            int npcId = (int)buffer.reader.ReadInt16();
-            int playerId = (int)buffer.reader.ReadByte();
-            
+
+            var npcId = (int)buffer.reader.ReadInt16();
+            var damage = (int)buffer.reader.ReadInt16();
+            var knockBack = buffer.reader.ReadSingle();
+            var hitDirection = (int)(buffer.reader.ReadByte() - 1);
+            var critical = buffer.reader.ReadByte();
+
             if (Main.netMode == 2)
-                playerId = bufferId;
-            
-            var ply = Main.player[playerId];
+            {
+                if (damage < 0) damage = 0;
+                Main.npc[npcId].PlayerInteraction(buffer.whoAmI);
+            }
+
+            var ply = Main.player[bufferId];
             var ctx = new HookContext()
             {
                 Sender = ply,
@@ -36,22 +42,40 @@ namespace TDSM.Core.Net.PacketHandling.Packets
                 Damage = ply.inventory[ply.selectedItem].damage,
                 HitDirection = ply.direction,
                 Knockback = ply.inventory[ply.selectedItem].knockBack,
-                Critical = false,
-                FromNet = false,
-                NoEffect = false
+                Critical = false
             };
-            
+
             TDSMHookPoints.NpcHurtReceived.Invoke(ref ctx, ref args);
-            
+
             if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE) return true;
-            
-            Terraria.Main.npc[npcId].StrikeNPC(args.Damage, args.Knockback, args.HitDirection, false, false, false);
-            
-            if (Main.netMode == 2)
+
+            if (damage >= 0)
+                Main.npc[npcId].StrikeNPC(damage, knockBack, hitDirection, critical == 1, false, true);
+            else
             {
-                NetMessage.SendData(24, -1, bufferId, "", npcId, (float)playerId, 0, 0, 0, 0, 0);
-                NetMessage.SendData(23, -1, -1, "", npcId, 0, 0, 0, 0, 0, 0);
+                Main.npc[npcId].life = 0;
+                Main.npc[npcId].HitEffect(0, 10.0);
+                Main.npc[npcId].active = false;
             }
+
+            if (Main.netMode != 2)
+                return true;
+
+            NetMessage.SendData(28, -1, buffer.whoAmI, String.Empty, npcId, (float)damage, knockBack, (float)hitDirection, (int)critical);
+            if (Main.npc[npcId].life <= 0)
+                NetMessage.SendData(23, -1, -1, String.Empty, npcId);
+            else Main.npc[npcId].netUpdate = true;
+
+            if (Main.npc[npcId].realLife < 0)
+                return true;
+
+            if (Main.npc[Main.npc[npcId].realLife].life <= 0)
+            {
+                NetMessage.SendData(23, -1, -1, String.Empty, Main.npc[npcId].realLife);
+                return true;
+            }
+
+            Main.npc[Main.npc[npcId].realLife].netUpdate = true;
             return true;
         }
     }

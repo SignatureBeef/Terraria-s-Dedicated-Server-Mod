@@ -16,10 +16,6 @@ namespace TDSM.Core.Plugin.Hooks
             public float Knockback { get; set; }
 
             public bool Critical { get; set; }
-
-            public bool FromNet { get; set; }
-
-            public bool NoEffect { get; set; }
         }
     }
 
