@@ -1,23 +1,17 @@
-﻿using OTA.Plugin;
-using System;
-using OTA.Misc;
-using TDSM.Core.Command;
-using System.Collections.Generic;
-using OTA;
-using OTA.Command;
+﻿using OTA;
+using OTA.Config;
+using OTA.Extensions;
 using OTA.Logging;
-using TDSM.Core.Plugin.Hooks;
+using OTA.Plugin;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Text;
-using Microsoft.Xna.Framework;
-using System.Linq;
-using TDSM.Core.Misc;
-using OTA.Extensions;
 using TDSM.Core.Data;
-using OTA.Config;
 using TDSM.Core.Data.Permissions;
+using TDSM.Core.Misc;
+using TDSM.Core.Plugin.Hooks;
 
 [assembly: PluginDependency("OTA.Commands")]
 
