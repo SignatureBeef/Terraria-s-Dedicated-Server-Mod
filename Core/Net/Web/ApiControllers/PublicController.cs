@@ -49,6 +49,7 @@ namespace TDSM.Core.Net.Web.ApiControllers
                 //Version info
                 OTA = OTA.Globals.BuildInfo,
                 Terraria = Terraria.Main.versionNumber,
+                TDSM = Entry.CoreVersion,
 
                 //Can be used to determine if the actual server is started or not
                 ServerState = OTA.Globals.CurrentState

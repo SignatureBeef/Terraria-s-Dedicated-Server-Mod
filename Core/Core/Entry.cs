@@ -28,6 +28,8 @@ namespace TDSM.Core
     {
         public const Int32 CoreBuild = 6;
 
+        public static readonly string CoreVersion = CoreBuild + Globals.PhaseToSuffix(ReleasePhase.ReleaseCandiate);
+
         public TDSMConfig Config { get; private set; } = new TDSMConfig();
 
         private bool _useTimeLock;
@@ -86,7 +88,7 @@ namespace TDSM.Core
             this.Author = "TDSM";
             this.Description = "TDSM Core";
             this.Name = "TDSM Core Module";
-            this.Version = CoreBuild + Globals.PhaseToSuffix(ReleasePhase.LiveRelease);
+            this.Version = CoreVersion;
         }
 
         protected override void Enabled()
