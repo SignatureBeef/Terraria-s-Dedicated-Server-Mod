@@ -15,6 +15,11 @@ namespace TDSM.Patcher
 
     class MainClass
     {
+        static void ReplaceTextInFile(string filepath, string search, string replacement)
+        {
+            File.WriteAllText(filepath, File.ReadAllText(filepath).Replace(search, replacement));
+        }
+
         public static void Main(string[] args)
         {
             //Debugging :)
@@ -131,6 +136,10 @@ namespace TDSM.Patcher
                 if (File.Exists(target)) File.Delete(target);
                 File.Copy(file.FullName, target);
             }
+
+            ReplaceTextInFile(Path.Combine(pathToBinaries.FullName, "start-server.bat"), "serverconfig.txt", "server.config");
+            ReplaceTextInFile(Path.Combine(pathToBinaries.FullName, "start-server.cmd"), "serverconfig.txt", "server.config");
+            ReplaceTextInFile(Path.Combine(pathToBinaries.FullName, "start-server.sh"), "serverconfig.txt", "server.config");
 
             OTAPatcher.PromptUserToRun(OTAPatcher.OutputName + ".exe", Type.GetType("Mono.Runtime") != null);
 
