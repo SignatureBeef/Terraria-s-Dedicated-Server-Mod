@@ -46,7 +46,7 @@ namespace TDSM.Core.Data.Models.Migrations
 
         void Seed()
         {
-            Entry.CreateDefaultGroups(this);
+            Entry.PopulateDefaults(this);
         }
     }
 }

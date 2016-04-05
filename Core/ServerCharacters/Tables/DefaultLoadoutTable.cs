@@ -6,6 +6,9 @@ using TDSM.Core.Data.Models;
 using Dapper.Contrib.Extensions;
 using System.Data;
 using TDSM.Core.ServerCharacters.Models;
+using Dapper;
+using OTA.Data.Dapper.Mappers;
+using System.Collections.Generic;
 
 namespace TDSM.Core.ServerCharacters.Tables
 {
@@ -114,21 +117,21 @@ namespace TDSM.Core.ServerCharacters.Tables
         public const String Setting_Health = "SSC_Health";
         public const String Setting_MaxHealth = "SSC_MaxHealth";
 
-        public static LoadoutItem AddItem(/*CharacterManager.ItemType type,*/ long itemId)
+        public static LoadoutItem AddItem(/*CharacterManager.ItemType type,*/ long itemId, IDbConnection ctx, IDbTransaction transaction)
         {
 #if DAPPER
-            using (var ctx = DatabaseFactory.CreateConnection())
+            //using (var ctx = DatabaseFactory.CreateConnection())
+            //{
+            var li = new LoadoutItem()
             {
-                var li = new LoadoutItem()
-                {
-                    ItemId = itemId
-                };
+                ItemId = itemId
+            };
 
-                using (var txn = ctx.BeginTransaction())
-                {
-                    li.Id = ctx.Insert(li, transaction: txn);
-                    txn.Commit();
-                }
+            //using (var txn = ctx.BeginTransaction())
+            //{
+            li.Id = ctx.Insert(li, transaction: transaction);
+            //txn.Commit();
+            //}
 #else
             using (var ctx = new TContext())
             {
@@ -141,8 +144,8 @@ namespace TDSM.Core.ServerCharacters.Tables
                 ctx.SaveChanges();
 #endif
 
-                return li;
-            }
+            return li;
+            //}
         }
 
 #if DAPPER
@@ -161,7 +164,7 @@ namespace TDSM.Core.ServerCharacters.Tables
                 foreach (var item in info.Inventory)
                 {
                     var id = ItemTable.NewItem(ctx, txn, save, ItemType.Inventory, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
-                    AddItem(id.Id);
+                    AddItem(id.Id, ctx, txn);
                 }
             }
 
@@ -170,7 +173,7 @@ namespace TDSM.Core.ServerCharacters.Tables
                 foreach (var item in info.Armor)
                 {
                     var id = ItemTable.NewItem(ctx, txn, save, ItemType.Armor, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
-                    AddItem(id.Id);
+                    AddItem(id.Id, ctx, txn);
                 }
             }
 
@@ -179,9 +182,70 @@ namespace TDSM.Core.ServerCharacters.Tables
                 foreach (var item in info.Dye)
                 {
                     var id = ItemTable.NewItem(ctx, txn, save, ItemType.Dye, item.NetId, item.Stack, item.Prefix, item.Favorite, item.Slot);
-                    AddItem(id.Id);
+                    AddItem(id.Id, ctx, txn);
                 }
             }
+        }
+
+        public static NewPlayerInfo LoadNewPlayerInfo()
+        {
+            var inventory = new List<SlotItem>();
+            var armor = new List<SlotItem>();
+            var dye = new List<SlotItem>();
+            using (var ctx = DatabaseFactory.CreateConnection())
+            {
+                using (var txn = ctx.BeginTransaction())
+                {
+                    var res = ctx.Query($"select si.* from LoadoutItems li left join SlotItems si on li.ItemId = si.Id order by si.Slot", transaction: txn);
+
+                    if (res != null)
+                    {
+                        foreach (var row in res)
+                        {
+                            var type = (ItemType)row.Type;
+                            switch (type)
+                            {
+                                case ItemType.Inventory:
+                                    inventory.Add(new SlotItem()
+                                    {
+                                        NetId = row.NetId,
+                                        Stack = row.Stack,
+                                        Prefix = row.Prefix,
+                                        Favorite = row.Favorite,
+                                        Slot = row.Slot
+                                    });
+                                    break;
+                                case ItemType.Armor:
+                                    armor.Add(new SlotItem()
+                                    {
+                                        NetId = row.NetId,
+                                        Stack = row.Stack,
+                                        Prefix = row.Prefix,
+                                        Favorite = row.Favorite,
+                                        Slot = row.Slot
+                                    });
+                                    break;
+                                case ItemType.Dye:
+                                    dye.Add(new SlotItem()
+                                    {
+                                        NetId = row.NetId,
+                                        Stack = row.Stack,
+                                        Prefix = row.Prefix,
+                                        Favorite = row.Favorite,
+                                        Slot = row.Slot
+                                    });
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            return new NewPlayerInfo()
+            {
+                Armor = armor.ToArray(),
+                Inventory = inventory.ToArray(),
+                Dye = dye.ToArray()
+            };
         }
     }
 #endif

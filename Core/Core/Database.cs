@@ -85,7 +85,7 @@ namespace TDSM.Core
 #if ENTITY_FRAMEWORK_7
         public void CreateDefaultGroups(TContext ctx)
 #elif DAPPER
-        public static void CreateDefaultGroups(Data.Models.Migrations.CreateAndSeed ctx)
+        public static void CreateDefaultGroups(IDbConnection ctx, IDbTransaction txn)
 #endif
         {
             var pc = OTA.Commands.CommandManager.Parser.GetTDSMCommandsForAccessLevel(AccessLevel.PLAYER);
@@ -105,42 +105,52 @@ namespace TDSM.Core
                     .Select(x => x.Node)
                     .Concat(additionalGuestNodes)
                     .Distinct()
-                    .ToArray(), ctx, "[Guest] ");
+                    .ToArray(), ctx, txn, "[Guest] ");
             CreateGroup("Player", false, "Guest", 255, 255, 255, pc
                     .Where(x => !String.IsNullOrEmpty(x.Node))
                     .Select(x => x.Node)
                     .Concat(additionalGuestNodes)
                     .Distinct()
-                    .ToArray(), ctx, "[Player] ");
+                    .ToArray(), ctx, txn, "[Player] ");
             CreateGroup("Admin", false, "Guest", 240, 131, 77, ad
                     .Where(x => !String.IsNullOrEmpty(x.Node))
                     .Select(x => x.Node)
                     .Distinct()
-                    .ToArray(), ctx, "[Admin] ");
+                    .ToArray(), ctx, txn, "[Admin] ");
             CreateGroup("Operator", false, "Admin", 77, 166, 240, op
                     .Where(x => !String.IsNullOrEmpty(x.Node))
                     .Select(x => x.Node)
                     .Distinct()
-                    .ToArray(), ctx, "[OP] ");
+                    .ToArray(), ctx, txn, "[OP] ");
+        }
+
+        public static void PopulateDefaults(Data.Models.Migrations.CreateAndSeed migration)
+        {
+            migration.Execute.WithConnection((ctx, transaction) =>
+            {
+                CreateDefaultGroups(ctx, transaction);
+                DefaultLoadoutTable.PopulateDefaults(ctx, transaction, true, CharacterManager.StartingOutInfo);
+            });
         }
 
         [Hook]
         void OnPlayerRegistered(ref HookContext ctx, ref Events.HookArgs.PlayerRegistered args)
         {
-            foreach (var groupName in Config.DefaultPlayerGroup.Split(','))
-            {
-                var group = args.Connection.Single<Group>(new { Name = groupName }, transaction: args.Transaction);
-
-                //Temporary until the need for more than one group
-                if (args.Connection.Where<PlayerGroup>(new { PlayerId = args.Player.Id }, transaction: args.Transaction).Any(x => x.GroupId > 0))
-                    throw new NotSupportedException("A player can only be associated to one group, please assign a parent to the desired group");
-
-                args.Connection.Insert(new PlayerGroup()
+            if (!String.IsNullOrEmpty(Config.DefaultPlayerGroup))
+                foreach (var groupName in Config.DefaultPlayerGroup.Split(','))
                 {
-                    GroupId = group.Id,
-                    PlayerId = args.Player.Id
-                }, transaction: args.Transaction);
-            }
+                    var group = args.Connection.Single<Group>(new { Name = groupName }, transaction: args.Transaction);
+
+                    //Temporary until the need for more than one group
+                    if (args.Connection.Where<PlayerGroup>(new { PlayerId = args.Player.Id }, transaction: args.Transaction).Any(x => x.GroupId > 0))
+                        throw new NotSupportedException("A player can only be associated to one group, please assign a parent to the desired group");
+
+                    args.Connection.Insert(new PlayerGroup()
+                    {
+                        GroupId = group.Id,
+                        PlayerId = args.Player.Id
+                    }, transaction: args.Transaction);
+                }
         }
 
 #if ENTITY_FRAMEWORK_7
@@ -148,10 +158,9 @@ namespace TDSM.Core
                                 string chatPrefix = null,
                                 string chatSuffix = null)
 #elif DAPPER
-        static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, Data.Models.Migrations.CreateAndSeed migration,
+        static void CreateGroup(string name, bool guest, string parent, byte r, byte g, byte b, string[] nodes, IDbConnection ctx, IDbTransaction txn,
                                 string chatPrefix = null,
-                                string chatSuffix = null,
-                                Action<Group> complete = null)
+                                string chatSuffix = null)
 #endif
 
         {
@@ -194,44 +203,39 @@ namespace TDSM.Core
 
             ctx.SaveChanges();
 #elif DAPPER
-            migration.Execute.WithConnection((ctx, transaction) =>
+            var grp = new Group()
             {
-                var grp = new Group()
+                Name = name,
+                ApplyToGuests = guest,
+                Parent = parent,
+                Chat_Red = r,
+                Chat_Green = g,
+                Chat_Blue = b,
+                Chat_Prefix = chatPrefix,
+                Chat_Suffix = chatSuffix
+            };
+
+
+            grp.Id = ctx.Insert(grp, txn);
+            foreach (var nd in nodes)
+            {
+                var node = ctx.SingleOrDefault<PermissionNode>(new { Node = nd, Permission = Permission.Permitted }, transaction: txn);
+                if (node == null)
                 {
-                    Name = name,
-                    ApplyToGuests = guest,
-                    Parent = parent,
-                    Chat_Red = r,
-                    Chat_Green = g,
-                    Chat_Blue = b,
-                    Chat_Prefix = chatPrefix,
-                    Chat_Suffix = chatSuffix
-                };
-
-
-                grp.Id = ctx.Insert(grp, transaction);
-                foreach (var nd in nodes)
-                {
-                    var node = ctx.SingleOrDefault<PermissionNode>(new { Node = nd, Permission = Permission.Permitted }, transaction: transaction);
-                    if (node == null)
+                    node = new PermissionNode()
                     {
-                        node = new PermissionNode()
-                        {
-                            Node = nd,
-                            Permission = Permission.Permitted
-                        };
-                        node.Id = ctx.Insert(node, transaction: transaction);
-                    }
-
-                    ctx.Insert(new GroupNode()
-                    {
-                        GroupId = grp.Id,
-                        NodeId = node.Id
-                    }, transaction: transaction);
+                        Node = nd,
+                        Permission = Permission.Permitted
+                    };
+                    node.Id = ctx.Insert(node, transaction: txn);
                 }
 
-                if (complete != null) complete(grp);
-            });
+                ctx.Insert(new GroupNode()
+                {
+                    GroupId = grp.Id,
+                    NodeId = node.Id
+                }, transaction: txn);
+            }
 #endif
         }
     }

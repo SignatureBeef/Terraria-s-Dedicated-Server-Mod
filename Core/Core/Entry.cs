@@ -65,17 +65,17 @@ namespace TDSM.Core
 
         internal bool _likeABoss;
         internal static CyclicQueue<String> _labDeathMessages = new CyclicQueue<String>((new string[]
-            {
-                " jumped out a window",
-                " had to approve memo's",
-                " failed to promote synergy",
-                " cried deeply",
-                " was too busy eating chicken strips",
-                " forgot to approve memo's",
-                " crashed into the sun",
-                " blacked out in a sewer",
-                " swallowed sadness"
-            }).Shuffle());
+        {
+            " jumped out a window",
+            " had to approve memo's",
+            " failed to promote synergy",
+            " cried deeply",
+            " was too busy eating chicken strips",
+            " forgot to approve memo's",
+            " crashed into the sun",
+            " blacked out in a sewer",
+            " swallowed sadness"
+        }).Shuffle());
 
         public Entry()
         {
@@ -98,6 +98,7 @@ namespace TDSM.Core
 
             //Register hook sources
             PluginManager.RegisterHookSource(typeof(TDSMHookPoints));
+            PluginManager.RegisterHookSource(typeof(Events.HookPoints));
 
             CommandDictionary = new Dictionary<string, string>();
 
