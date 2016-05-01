@@ -8,6 +8,10 @@ using System.Text;
 using OTA;
 using OTA.Misc;
 using OTA.Logging;
+using System.Net.Http;
+using ModernHttpClient;
+using System.Threading.Tasks;
+using System.Net.Http.Headers;
 
 namespace TDSM.Core.Net.Web
 {
@@ -140,11 +144,11 @@ namespace TDSM.Core.Net.Web
             }
         }
 
-        static void Beat(bool allowSubBeat = true)
+        static async Task Beat(bool allowSubBeat = true)
         {
             try
             {
-                using (var wc = new WebClient())
+                using (var client = new HttpClient(new NativeMessageHandler()))
                 {
                     //TODO; Maybe plugin versions
                     //TODO; think about branches, release or dev
@@ -177,12 +181,19 @@ namespace TDSM.Core.Net.Web
                         Plugins = OTA.Plugin.PluginManager.Loaded.NameAndVersions.ToArray()
                     });
 
-                    wc.Headers.Add("Content-Type: application/json");
+                    client.DefaultRequestHeaders
+                          .Accept
+                          .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    var data = wc.UploadData(EndPoint, "POST", UTF8Encoding.Default.GetBytes(json));
-                    if (data != null && data.Length > 0)
+                    var data = await client.PostAsync(EndPoint, new StringContent(json));
+                    if (data != null && data.StatusCode == HttpStatusCode.OK)
                     {
-                        var message = Newtonsoft.Json.JsonConvert.DeserializeObject<HeartbeatResponse>(UTF8Encoding.Default.GetString(data));
+                        HeartbeatResponse message = null;
+                        var content = await data.Content.ReadAsStringAsync();
+                        if (!String.IsNullOrWhiteSpace(content))
+                            message = Newtonsoft.Json.JsonConvert.DeserializeObject<HeartbeatResponse>(content);
+
+
                         if (message != null)
                         {
                             switch (message.Code)
@@ -193,7 +204,7 @@ namespace TDSM.Core.Net.Web
                                         if (!String.IsNullOrEmpty(message.Value) && message.Value.Length == 36)
                                         {
                                             SetServerKey(message.Value);
-                                            if (allowSubBeat) Beat(false); //Rebeat to acknowledge the new UUID
+                                            if (allowSubBeat) await Beat(false); //Rebeat to acknowledge the new UUID
                                         }
                                     }
                                     catch
@@ -274,10 +285,10 @@ namespace TDSM.Core.Net.Web
             {
                 _coreBuild = coreBuild;
                 _timer = new System.Timers.Timer(1000 * 60 * MinuteInterval);
-                var callback = new System.Timers.ElapsedEventHandler((e, a) =>
+                var callback = new System.Timers.ElapsedEventHandler(async (e, a) =>
                     {
                         if (Enabled)
-                            Beat();
+                            await Beat();
                     });
                 _timer.Elapsed += callback;
                 _timer.Start();
