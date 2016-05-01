@@ -14,13 +14,19 @@ namespace TDSM.Core.Definitions
         internal static int NPCVersion
         {
             get
-            { return _npc.Version; }
+            {
+                if (_npc == null) return 0;
+                return _npc.Version;
+            }
         }
 
         internal static int ItemVersion
         {
             get
-            { return _item.Version; }
+            {
+                if (_item == null) return 0;
+                return _item.Version;
+            }
         }
 
         [TDSMComponent(ComponentEvent.Initialise)]
@@ -92,7 +98,7 @@ namespace TDSM.Core.Definitions
             var singular = _npc.Data
                 .Where(x => x.Name.ToLower() == lowered)
                 .ToArray();
-            
+
             if (singular.Length == 1) return singular;
 
             return _npc.Data
