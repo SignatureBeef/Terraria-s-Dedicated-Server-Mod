@@ -23,7 +23,7 @@ namespace TDSM.Core.Net.Web
     /// </summary>
     public static class Heartbeat
     {
-        internal static readonly String EndPoint = $"{Scheme}openterraria.com/tdsm/heartbeat/beat";
+        internal static String EndPoint => $"{Scheme}openterraria.com/tdsm/heartbeat/beat";
         internal const Double MinuteInterval = 5;
 
         private static System.Timers.Timer _timer;
@@ -152,6 +152,7 @@ namespace TDSM.Core.Net.Web
         {
             try
             {
+                ProgramLog.Debug.Log($"Beating to {EndPoint} using scheme {Scheme}");
                 using (var wc = new WebClient())
                 {
                     //TODO; Maybe plugin versions

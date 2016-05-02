@@ -172,6 +172,7 @@
     <Reference Include="System.Collections.Concurrent" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Command\Commands\DebugCommand.cs" />
     <Compile Include="Core\Command\Commands\ChangePasswordCommand.cs" />
     <Compile Include="Core\Command\Commands\PrivateMessageCommand.cs" />
     <Compile Include="Data\Models\Migrations\CreateAndSeed\LoadoutItemMigration.cs" />
