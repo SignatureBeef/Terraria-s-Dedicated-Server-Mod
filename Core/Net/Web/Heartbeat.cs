@@ -43,6 +43,8 @@ namespace TDSM.Core.Net.Web
 
         public static bool RequiresAuthentication { get; set; }
 
+        public static DateTime? LastBeat { get; private set; }
+
         public enum ResponseCode : int
         {
             UpToDate = 1,
@@ -231,6 +233,7 @@ namespace TDSM.Core.Net.Web
                                     //    catch { }
                                     //    break;
                             }
+                            LastBeat = DateTime.Now;
                         }
                         else
                         {

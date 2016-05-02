@@ -103,6 +103,10 @@ namespace TDSM.Core.Command.Commands
                 case "?":
                 case "print":
                     sender.SendMessage("Heartbeat is " + (Heartbeat.Enabled ? "enabled" : "disabled"));
+                    if (Heartbeat.LastBeat.HasValue)
+                        sender.SendMessage("Last beat: " + Heartbeat.LastBeat);
+                    else
+                        sender.SendMessage("Last beat: n/a");
                     sender.SendMessage("Server list " + (Heartbeat.PublishToList ? "public" : "private"));
                     sender.SendMessage("Current name: " + Heartbeat.ServerName);
                     sender.SendMessage("Current domain: " + Heartbeat.ServerDomain);
