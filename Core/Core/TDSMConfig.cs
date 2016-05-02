@@ -231,6 +231,9 @@ namespace TDSM.Core
         [ConfigPrefix("heartbeat")]
         public bool EnableHeartbeat { get; set; } = true;
 
+        [ConfigPrefix("heartbeat-scheme")]
+        public string Heartbeat_Scheme { get; set; } = "https://";
+
         #endregion
 
         #region RCON

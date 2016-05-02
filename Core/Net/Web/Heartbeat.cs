@@ -23,7 +23,7 @@ namespace TDSM.Core.Net.Web
     /// </summary>
     public static class Heartbeat
     {
-        internal const String EndPoint = "https://openterraria.com/tdsm/heartbeat/beat";
+        internal static readonly String EndPoint = $"{Scheme}openterraria.com/tdsm/heartbeat/beat";
         internal const Double MinuteInterval = 5;
 
         private static System.Timers.Timer _timer;
@@ -38,6 +38,8 @@ namespace TDSM.Core.Net.Web
         public static string ServerDescription { get; set; }
 
         public static string ServerDomain { get; set; }
+
+        public static string Scheme { get; set; }
 
         public static bool RequiresAuthentication { get; set; }
 
@@ -139,6 +141,7 @@ namespace TDSM.Core.Net.Web
                 ServerName = core.Config.Heartbeat_ServerName;
                 ServerDescription = core.Config.Heartbeat_ServerDescription;
                 ServerDomain = core.Config.Heartbeat_ServerDomain;
+                Scheme = String.IsNullOrWhiteSpace(core.Config.Heartbeat_Scheme) ? "https://" : core.Config.Heartbeat_Scheme;
                 Heartbeat.Begin(Entry.CoreBuild);
             }
         }
