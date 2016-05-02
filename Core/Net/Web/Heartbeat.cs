@@ -140,6 +140,7 @@ namespace TDSM.Core.Net.Web
         {
             if (core.Config.EnableHeartbeat)
             {
+                PublishToList = core.Config.Heartbeat_PublishToList;
                 ServerName = core.Config.Heartbeat_ServerName;
                 ServerDescription = core.Config.Heartbeat_ServerDescription;
                 ServerDomain = core.Config.Heartbeat_ServerDomain;
