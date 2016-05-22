@@ -15,23 +15,23 @@ namespace TDSM.Core.Net.PacketHandling.Packets
         }
 
         public bool Read(int bufferId, int start, int length)
-        { 
+        {
             var buffer = NetMessage.buffer[bufferId];
-            
+
             ActionType action = (ActionType)buffer.reader.ReadByte();
             int x = (int)buffer.reader.ReadInt16();
             int y = (int)buffer.reader.ReadInt16();
             short type = buffer.reader.ReadInt16();
             int style = (int)buffer.reader.ReadByte();
             bool fail = type == 1;
-            
+
             if (!WorldGen.InWorld(x, y, 3))
             {
                 return true;
             }
-            
+
             var player = Main.player[bufferId];
-            
+
             //TODO implement the old methods
             var ctx = new HookContext
             {
@@ -39,7 +39,7 @@ namespace TDSM.Core.Net.PacketHandling.Packets
                 Sender = player,
                 Player = player,
             };
-            
+
             var args = new TDSMHookArgs.PlayerWorldAlteration
             {
                 X = x,
@@ -48,27 +48,27 @@ namespace TDSM.Core.Net.PacketHandling.Packets
                 Type = type,
                 Style = style
             };
-            
+
             TDSMHookPoints.PlayerWorldAlteration.Invoke(ref ctx, ref args);
-            
+
             if (ctx.CheckForKick())
                 return true;
-            
+
             if (ctx.Result == HookResult.IGNORE)
                 return true;
-            
+
             if (ctx.Result == HookResult.RECTIFY)
             {
                 //Terraria.WorldGen.SquareTileFrame (x, y, true);
                 NetMessage.SendTileSquare(bufferId, x, y, 1);
                 return true;
             }
-            
+
             if (Main.tile[x, y] == null)
             {
                 Main.tile[x, y] = new OTA.Memory.MemTile();
             }
-            
+
             if (Main.netMode == 2)
             {
                 if (!fail)
@@ -137,6 +137,23 @@ namespace TDSM.Core.Net.PacketHandling.Packets
                 case ActionType.FrameTrack:
                     Minecart.FrameTrack(x, y, true, false);
                     break;
+                case ActionType.PlaceWire4:
+                    WorldGen.PlaceWire4(x, y);
+                    break;
+                case ActionType.KillWire4:
+                    WorldGen.KillWire4(x, y);
+                    break;
+                case ActionType.PlaceLogicGate:
+                    Wiring.SetCurrentUser(bufferId);
+                    Wiring.PokeLogicGate(x, y);
+                    Wiring.SetCurrentUser(-1);
+                    return true;
+                case ActionType.Actuate:
+                    Wiring.SetCurrentUser(bufferId);
+                    Wiring.Actuate(x, y);
+                    Wiring.SetCurrentUser(-1);
+                    return true;
+
             }
             if (Main.netMode != 2)
             {

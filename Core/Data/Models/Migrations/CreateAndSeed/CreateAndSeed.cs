@@ -3,7 +3,7 @@ using OTA.Data.Dapper;
 
 namespace TDSM.Core.Data.Models.Migrations
 {
-    [OTAMigration(1, typeof(Core.Entry))]
+    [OTAMigration(1, typeof(Entry))]
     public partial class CreateAndSeed : Migration
     {
         public override void Up()

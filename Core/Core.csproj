@@ -26,6 +26,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
+    <DefineConstants>DAPPER</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
@@ -166,12 +168,13 @@
       <HintPath>..\Open-Terraria-API\Binaries\Libraries\KopiLua.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Collections.Concurrent" />
     <Reference Include="TerrariaServer">
       <HintPath>..\Open-Terraria-API\Binaries\Server\TerrariaServer.exe</HintPath>
     </Reference>
-    <Reference Include="System.Collections.Concurrent" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Command\Commands\ConnectionCommand.cs" />
     <Compile Include="Core\Command\Commands\DebugCommand.cs" />
     <Compile Include="Core\Command\Commands\ChangePasswordCommand.cs" />
     <Compile Include="Core\Command\Commands\PrivateMessageCommand.cs" />

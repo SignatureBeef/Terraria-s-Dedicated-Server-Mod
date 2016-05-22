@@ -107,7 +107,7 @@ namespace TDSM.Core.Command.Commands
                         sender.SendMessage("Last beat: " + Heartbeat.LastBeat);
                     else
                         sender.SendMessage("Last beat: n/a");
-                    sender.SendMessage("Server list " + (Heartbeat.PublishToList ? "public" : "private"));
+                    sender.SendMessage("Server list is " + (Heartbeat.PublishToList ? "public" : "private"));
                     sender.SendMessage("Current name: " + Heartbeat.ServerName);
                     sender.SendMessage("Current domain: " + Heartbeat.ServerDomain);
                     sender.SendMessage("Current description: " + Heartbeat.ServerDescription);

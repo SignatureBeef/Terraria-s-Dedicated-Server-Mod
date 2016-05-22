@@ -31,11 +31,6 @@ namespace TDSM.Core.Net.PacketHandling.Packets
                 existing = Main.sign[signId].text;
             }
             
-            Main.sign[signId] = new Sign();
-            Main.sign[signId].x = x;
-            Main.sign[signId].y = y;
-            
-            Sign.TextSign(signId, text);
             int ply = (int)buffer.reader.ReadByte();
 
             var ctx = new HookContext
@@ -58,7 +53,13 @@ namespace TDSM.Core.Net.PacketHandling.Packets
             
             if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
                 return true;
-            
+
+            Main.sign[signId] = new Sign();
+            Main.sign[signId].x = args.X;
+            Main.sign[signId].y = args.Y;
+
+            Sign.TextSign(signId, args.Text);
+
             if (Main.netMode == 2 && existing != text)
             {
                 ply = bufferId;

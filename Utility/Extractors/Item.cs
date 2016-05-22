@@ -61,7 +61,7 @@ namespace TDSM.Utility.Extractors
             {
                 Version = 3,
                 Data = writable
-            });
+            }, "item.xml");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <DefinitionFileOfItemInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Version>3</Version>
   <Data>
@@ -15893,9 +15893,9 @@
     <ItemInfo>
       <Id>414</Id>
       <NetId>414</NetId>
-      <Affix>Mudstone Block</Affix>
+      <Affix>Mudstone Brick</Affix>
       <Prefix>0</Prefix>
-      <Name>Mudstone Block</Name>
+      <Name>Mudstone Brick</Name>
       <MaxStack>999</MaxStack>
     </ItemInfo>
     <ItemInfo>
@@ -20681,6 +20681,14 @@
       <Prefix>0</Prefix>
       <Name>Red Torch</Name>
       <MaxStack>99</MaxStack>
+    </ItemInfo>
+    <ItemInfo>
+      <Id>509</Id>
+      <NetId>509</NetId>
+      <Affix>Red Wrench</Affix>
+      <Prefix>0</Prefix>
+      <Name>Red Wrench</Name>
+      <MaxStack>1</MaxStack>
     </ItemInfo>
     <ItemInfo>
       <Id>667</Id>
@@ -28017,14 +28025,6 @@
       <Prefix>0</Prefix>
       <Name>Wrath Potion</Name>
       <MaxStack>30</MaxStack>
-    </ItemInfo>
-    <ItemInfo>
-      <Id>509</Id>
-      <NetId>509</NetId>
-      <Affix>Wrench</Affix>
-      <Prefix>0</Prefix>
-      <Name>Wrench</Name>
-      <MaxStack>1</MaxStack>
     </ItemInfo>
     <ItemInfo>
       <Id>1700</Id>

@@ -1,3 +1,137 @@
+Version 1.3.1 Changes-------------------------------------------------------------------------------------------------
+
+
+Features:
+	Added Controller Support using Xinput.
+	Added Inventory Sorting.
+	Dart Traps & all Temple Traps can now be hammered to rotate 90 degrees at a time.
+	Added smart interact, making chatting with NPCs, opening doors and using objects easier.
+	Cannons (normal, bunny, confetti, Snowball Launcher) can now be controlled by wire and shoot fake projectiles!
+	Improved Smart Cursor & made it interact with more items.
+
+
+Quality of Life:
+	Improved Wire drawing to look less fuzzy with multiple colors on the same tile.
+	Improved over 1,800 sprite graphics.
+	Optimized net messages for tile entities (target dummies, item frames)
+	Improved the Settings Menu and added new settings.
+	Added new large gem over-head display.
+	Improved melee hit detection around slopes.
+	You can now use situational building accessories from your inventory and toggle their effects like info accessories.
+	Info icons now have a border around them when aimed at (clarity!).
+	Improved keybinding options, you can now also bind to mouse 3/4/5.
+
+
+Items:
+	Added Logic Gates (AND, NAND, OR, NOR, XOR, NXOR)
+	Added Logic Gate Lamps (On, Off, Faulty)
+	Added Logic Sensors (Day, Night, Under Player)
+	Added Liquid Sensors (Water, Lava, Honey, Any)
+	Added Conveyor Belts.
+	Added The Grand Design.
+	Added Yellow Wrench.
+	Added Junction Box.
+	Added Mechanical Lens.
+	Added Announcement Box.
+	Added Actuation Rod.
+	Added Team Blocks and Platforms.
+	Added Static Hook.
+	Added Presserator. 
+	Added Engineering Helmet.
+	Added Companion Cube.
+	Added Gem Locks.
+	Added Large Amber.
+	Added Weighted Pressure Plates (4 colors).
+	Added Wire Bulb.
+	Added 12 new craftable Critter Statues.
+	Added Portal Gun Station.
+	Added Trapped Chests.
+	Added Projectile Pressure Pad.
+	Added several new monster statues.
+	Added Angler Tackle Bag.
+	Added Geyser Trap.
+	Added Bone Campfire.
+	Added Ultra Bright Campfire.
+	Added Multicolor Wrench.
+
+
+Miscellaneous:
+	Critters spawned from statues are no longer catchable.
+	Highly increased Duke Fishron's "run away" distance.
+	Medusa can no longer petrify players directly above her.
+	Medusa is now Hardmode-only.
+	Added NPC names for the painter, wizard, and skeleton merchant, based on contest results.
+	You can now find Beehives in the Jungle - Not the bees!
+	Lowered the volume of the Solar Eruption's use sound.
+	Torches can now be put on actuated tiles.
+	Slimes should no longer be able to go through 1 block high gaps.
+	Target dummies no longer benefit from lifesteal or spectre set.
+
+
+Bug Fixes:
+	Fixed Frostbite hiding time left when wet under certain circumstances.
+	Fixed Desert Spirit hitbox to match sprite size.
+	Fixed NPCs not recognizing kills / interactions properly if they have multiple segments.
+	Fixed music boxes not emitting music notes while open.
+	Fixed Flesh Grass spreading under Sunflowers.
+	Fixed Tally Counter not showing information for enemies hit with mounts or special attacks.
+	Fixed player leg skin colors mismatching the rest of the body when in stealth.
+	Fixed Seedler not dropping from Boss Bags.
+	Fixed popular NPC Housing exploit.
+	Fixed Ranger Lifesteal bug.
+	Fixed Paint Sprayer spraying over blocks in several occasions that it should not (e.g. grass that gets turned into dirt as a result of placing an object).
+	Fixed being on the edge of the underground not counting when spawning dungeon / Underground Desert monsters.
+	Fixed teleporting directly on top of a pressure plate not triggering it properly since.
+	Fixed Town NPC melee weapons drawing brightly while in darkness.
+	Fixed Crimson Heart failing to stand to roll roll around on platforms.
+	Fixed tile entities not properly clearing on world clear procedure.
+	Fixed Crystal Storm not bouncing its shots.
+	Fixed chests without custom names not showing mouse over icons.
+	Fixed Wooden Boomerang being unusable when near slopes.
+	Fixed Wall of Flesh going above hell and dragging everyone with it.
+	Fixed Martian Saucer having invisible / unhittable body parts in multiplayer.
+	Fixed Martian Probe not causing Martian Invasions when it should.
+	Harpies and Antlion Swarmers can no longer swim.
+	Fixed dressers blowing up from explosive projectiles.
+	Fixed Gi and Kimono leg sprites being genderswapped.
+	Fixed ancient light and fishron bubbles not appearing in expert mode.
+	Fixed Werewolf sounds being bugged if used for vanity.
+	Fixed Tax Collector not using some of his special chat dialog.
+	Fixed infinite flight time exploit.
+	Fixed Martian Saucers missing their home planet during the invasion and leaving.
+	Fixed trapdoors de-syncing when operated via wires.
+	Fixed L shaped housing exploit.
+	Fixed minecarts hitting invincible enemies.
+	Fixed multiple bugs regarding auto-pause and inventory management.
+	Demon Altars should no longer create 'unbreakable' pots.
+	Fixed rare "character not respawning" under certain circumstances.
+	Fixed background drawing through completely unlit walls in hell.
+	Fixed solar pickaxe using a bad glowmask.
+	Fixed wall of flesh not spawning in singleplayer under certain circumstance.
+	Fixed snow not falling naturally after a player jumps in most cases.
+	Fixed paintball gun and confetti grenades being unable to crit.
+	Fixed Titanium Armor & Black Belt dodges not working against Moon Lord.
+	Fixed animated tilesets touching half-bricks stop animating.
+	Fixed yet another duplication exploit.
+	Fixed altered worlds getting stuck in spirit release phase under a rare circumstance.
+	Fixed Chlorophyte protection in the jungle not being as effective as it should be.
+	Fixed right clicking equipment at inventory not granting achievements for equipping it.
+	Fixed paladin's shield ally protection benefits not functioning properly.
+	Fixed minor capitalization issue in the guide's help text.
+	Fixed star in a bottle buff not working.
+	Brain of Cthulhu & Eater of Worlds now properly leave upon massacring the player / if the player leaves their territory.
+	Fixed issue where the nurse would not heal all debuffs under rare circumstances.
+	Fixed double damage popups from other players inflicting harm to themselves via explosives.
+	Fixed 'full-screen map' button opening a black screen if map is disabled in general.
+	Fixed players being unable to get on a mount if they're too close to workbenches.
+	Fixed shenanigans with actuating gemspark blocks.
+	Fixed Mudstone Brick having a bad name (Mudstone Block).
+	Tiles under Lihzahrd altars can no longer be actuated until the golem is defeated.
+	Fixed temporary holes in the darkness when removing light sources.
+	Fixed items that cost less than 5 copper always sell for 1 copper , even when sold in Stacks.
+
+
+
 Version 1.3.0.8 Changes-----------------------------------------------------------------------------------------------
 
 

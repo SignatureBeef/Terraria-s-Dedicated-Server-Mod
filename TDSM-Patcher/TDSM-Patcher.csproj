@@ -76,18 +76,6 @@
       <Link>serverconfig.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\Open-Terraria-API\Binaries\OTA.dll">
-      <Link>OTA.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Open-Terraria-API\Binaries\OTA.dll.mdb">
-      <Link>OTA.dll.mdb</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Open-Terraria-API\Binaries\OTA.pdb">
-      <Link>OTA.pdb</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="start-server.cmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -107,6 +95,10 @@
   <ItemGroup>
     <Content Include="..\Open-Terraria-API\Binaries\Server\OTA.Commands.dll">
       <Link>OTA.Commands.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Open-Terraria-API\Binaries\Server\OTA.dll">
+      <Link>OTA.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

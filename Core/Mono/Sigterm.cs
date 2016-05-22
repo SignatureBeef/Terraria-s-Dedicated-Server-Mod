@@ -30,19 +30,19 @@ namespace TDSM.Core.Mono
 
         /// <summary>
         /// This class is used to isolate the mono specific code into it's own container.
-        /// The Sigterm class is used to check what platform is running with triggering
-        /// a load of the Mono.Posix dll.
+        /// The Sigterm class is used to check what platform is running without triggering
+        /// a load of the Mono.Posix dll. Calling this class will trigger the load.
         /// </summary>
         internal static class MonoSigterm
         {
-            private static bool _attached;
-            private static Thread signal_thread;
+            private static bool _attached, _exiting;
+            private static Thread _signal_thread;
 
             public static void Attach(Entry plugin)
             {
                 try
                 {
-                    if (!_attached)
+                    if (!_exiting && !_attached)
                     {
                         _attached = true;
                         // Catch SIGINT, SIGUSR1 and SIGTERM
@@ -53,44 +53,52 @@ namespace TDSM.Core.Mono
                             new UnixSignal(Signum.SIGTERM)
                         };
 
-                        (signal_thread = new Thread(delegate ()
+                        (_signal_thread = new Thread(() =>
                         {
                             System.Threading.Thread.CurrentThread.Name = "SIG";
-                            while (!Terraria.Netplay.disconnect && _attached)
+                            try
                             {
-                                // Wait for a signal to be delivered
-                                var index = UnixSignal.WaitAny(signals, -1);
-                                var signal = signals[index].Signum;
-
-                                if (!Terraria.Netplay.disconnect && _attached)
+                                while (!Terraria.Netplay.disconnect && _attached)
                                 {
-                                    _attached = false;
-                                    OTA.Logging.ProgramLog.Log("Server received Exit Signal");
+                                    // Wait for a signal to be delivered
+                                    if (UnixSignal.WaitAll(signals, 250))
+                                    {
+                                        if (!Terraria.Netplay.disconnect && _attached)
+                                        {
+                                            _attached = false;
+                                            OTA.Logging.ProgramLog.Log("Server received Exit Signal");
 
-                                    Terraria.IO.WorldFile.saveWorld(false);
-                                    Terraria.Netplay.disconnect = true;
+                                            Terraria.IO.WorldFile.saveWorld(false);
+                                            Terraria.Netplay.disconnect = true;
+                                        }
+                                    }
                                 }
+
+                                OTA.Logging.ProgramLog.Debug.Log("Sigterm thread exiting");
+                            }
+                            catch (System.Exception e)
+                            {
+                                OTA.Logging.ProgramLog.Log(e, "Sigterm exception");
                             }
                         })).Start();
                     }
-
-                    OTA.Logging.ProgramLog.Log("Server can accept SIGTERM");
                 }
                 catch
                 {
-                    OTA.Logging.ProgramLog.Log("Failed to attatch SIGTERM listener");
+                    OTA.Logging.ProgramLog.Log("Failed to attach Sigterm listener");
                 }
             }
 
             public static void Detach(Entry plugin)
             {
-                _attached = false;
-                try
+                if (_attached && _signal_thread != null)
                 {
-                    signal_thread.Abort();
-                }
-                catch
-                {
+                    _attached = false;
+                    _exiting = true;
+
+                    //Instead of killing the thread, wait for it to exit.
+                    _signal_thread.Join();
+                    _signal_thread = null;
                 }
             }
         }

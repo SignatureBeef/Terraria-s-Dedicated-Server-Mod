@@ -36,10 +36,10 @@ namespace TDSM.Utility
 
         public abstract void Extract();
 
-        protected void Write<T>(T item)
+        protected void Write<T>(T item, string filename)
         {
             var bf = new XmlSerializer(typeof(T));
-            var info = new System.IO.FileInfo("npc.xml");
+            var info = new System.IO.FileInfo(filename);
             if (info.Exists) info.Delete();
 
             using (var fs = info.OpenWrite())
