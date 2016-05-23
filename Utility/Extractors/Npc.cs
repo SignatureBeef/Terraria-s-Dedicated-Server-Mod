@@ -57,7 +57,7 @@ namespace TDSM.Utility.Extractors
             {
                 Version = 2,
                 Data = writable
-            }, "npc.xml");
+            }, "npc.json");
         }
     }
 }

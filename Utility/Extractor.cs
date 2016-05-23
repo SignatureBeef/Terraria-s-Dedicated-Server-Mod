@@ -22,7 +22,7 @@ namespace TDSM.Utility
         {
             this.current++;
 
-            if(!string.IsNullOrEmpty(last))
+            if (!string.IsNullOrEmpty(last))
             {
                 System.Console.Write(new string('\b', last.Length));
             }
@@ -38,17 +38,10 @@ namespace TDSM.Utility
 
         protected void Write<T>(T item, string filename)
         {
-            var bf = new XmlSerializer(typeof(T));
-            var info = new System.IO.FileInfo(filename);
-            if (info.Exists) info.Delete();
+            if (System.IO.File.Exists(filename)) System.IO.File.Delete(filename);
 
-            using (var fs = info.OpenWrite())
-            {
-                bf.Serialize(fs, item);
-                fs.Flush();
-            }
-
-            bf = null;
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(item);
+            System.IO.File.WriteAllText(filename, json);
         }
     }
 }

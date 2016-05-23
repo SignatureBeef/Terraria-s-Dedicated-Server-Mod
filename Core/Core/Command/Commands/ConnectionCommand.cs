@@ -47,7 +47,11 @@ namespace TDSM.Core.Command.Commands
                                         sender.Message($"Slot {i}, player active: {player.active}, conn active: {conn.IsActive}.");
                                     }
                                 }
-                                else if (player == null && conn.IsActive)
+                                else if (player == null && conn.IsConnected())
+                                {
+                                    sender.Message($"Player at slot {i} is null, but the connection instance is connected.");
+                                }
+                                else if (player == null && conn.IsActive) //If IsConnected == true, IsActive will be
                                 {
                                     sender.Message($"Player at slot {i} is null, but the connection instance is active.");
                                 }

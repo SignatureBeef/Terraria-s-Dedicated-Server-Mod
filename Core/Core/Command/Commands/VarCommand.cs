@@ -59,7 +59,7 @@ namespace TDSM.Core.Command.Commands
             //No arguments supported yet
             var cmd = args.GetString(0);
 
-            if (cmd == "field")
+            if (cmd == "field" || cmd == "arr")
             {
                 var type = args.GetString(1);
                 var mem = args.GetString(2);
@@ -83,7 +83,7 @@ namespace TDSM.Core.Command.Commands
                     throw new CommandError("Invalid field: " + mem);
 
                 string val = null;
-                if (args.TryGetString(3, out val))
+                if (cmd != "arr" && args.TryGetString(3, out val))
                 {
                     object data = GetDataValue(am.FieldType, val);
                     am.SetValue(null, data);
@@ -99,7 +99,58 @@ namespace TDSM.Core.Command.Commands
                 {
                     var v = am.GetValue(null);
                     if (v != null)
-                        val = v.ToString();
+                    {
+                        if (v.GetType().IsArray)
+                        {
+                            var index = args.GetInt(3);
+                            var obj = (v as Array).GetValue(index);
+                            if (obj is Terraria.RemoteClient)
+                            {
+                                val = "";
+                                var rc = obj as Terraria.RemoteClient;
+
+                                val += $"Id: {rc.Id}\n";
+                                val += $"IsActive: {rc.IsActive}\n";
+                                val += $"IsAnnouncementCompleted: {rc.IsAnnouncementCompleted}\n";
+                                val += $"IsConnected(): {rc.IsConnected()}\n";
+                                val += $"IsReading: {rc.IsReading}\n";
+                                val += $"Name: {rc.Name}\n";
+                                val += $"PendingTermination: {rc.PendingTermination}\n";
+                                val += $"SpamAddBlock: {rc.SpamAddBlock}\n";
+                                val += $"SpamAddBlockMax: {rc.SpamAddBlockMax}\n";
+                                val += $"SpamDeleteBlock: {rc.SpamDeleteBlock}\n";
+                                val += $"SpamDeleteBlockMax: {rc.SpamDeleteBlockMax}\n";
+                                val += $"SpamProjectile: {rc.SpamProjectile}\n";
+                                val += $"SpamProjectileMax: {rc.SpamProjectileMax}\n";
+                                val += $"SpamWater: {rc.SpamWater}\n";
+                                val += $"SpamWaterMax: {rc.SpamWaterMax}\n";
+                                val += $"State: {rc.State}\n";
+                                val += $"StatusCount: {rc.StatusCount}\n";
+                                val += $"StatusMax: {rc.StatusMax}\n";
+                                val += $"StatusText: {rc.StatusText}\n";
+                                val += $"StatusText2: {rc.StatusText2}\n";
+                                val += $"TimeOutTimer: {rc.TimeOutTimer}\n";
+
+#if CUSTOM_SOCKETS
+                                if (rc.Socket is OTA.Sockets.ClientConnection)
+                                {
+                                    val += "\n=======================\nClientConnection\n";
+                                    var cc = rc.Socket as OTA.Sockets.ClientConnection;
+                                    val += $"Active: {cc.Active}\n";
+                                    val += $"BytesReceived: {cc.BytesReceived}\n";
+                                    val += $"BytesSent: {cc.BytesSent}\n";
+                                    val += $"IsOTAClient: {cc.IsOTAClient}\n";
+                                    val += $"QueueLength: {cc.QueueLength}\n";
+                                    val += $"QueueSize: {cc.QueueSize}\n";
+                                    //val += $"RemoteAddress: {cc.RemoteAddress}\n";
+                                    val += $"SlotId: {cc.SlotId}\n";
+                                }
+#endif
+                            }
+                            else val = obj.ToString();
+                        }
+                        else val = v.ToString();
+                    }
                     else
                         val = "null";
                     sender.Message("Value: " + val);

@@ -38,12 +38,12 @@ namespace TDSM.Core.Definitions
 
         public static bool Initialise()
         {
-            var npc = new FileInfo(Path.Combine(Globals.DataPath, "npc.xml"));
-            var item = new FileInfo(Path.Combine(Globals.DataPath, "item.xml"));
+            var npc = new FileInfo(Path.Combine(Globals.DataPath, "npc.json"));
+            var item = new FileInfo(Path.Combine(Globals.DataPath, "item.json"));
 
             //Always keep these in the data path, as we may use the update mechanism to update these definitions periodically
-            var intNPC = LoadDefinition<NPCInfo>("npc.xml");
-            var intItem = LoadDefinition<ItemInfo>("item.xml");
+            var intNPC = LoadDefinition<NPCInfo>("npc.json");
+            var intItem = LoadDefinition<ItemInfo>("item.json");
 
             //If they already exist we must compare with the internal versions. Use the latest.
             if (npc.Exists)
@@ -52,7 +52,7 @@ namespace TDSM.Core.Definitions
                 if (current.Version < intNPC.Version)
                 {
                     //Save new
-                    Save<NPCInfo>(npc, intNPC);
+                    Save<NPCInfo>(npc.FullName, intNPC);
                     ProgramLog.Log("NPC definitions were updated to v{0}", intNPC.Version);
                     _npc = intNPC;
                 }
@@ -60,7 +60,7 @@ namespace TDSM.Core.Definitions
             }
             else
             {
-                Save<NPCInfo>(npc, intNPC);
+                Save<NPCInfo>(npc.FullName, intNPC);
                 _npc = intNPC;
             }
             if (item.Exists)
@@ -69,7 +69,7 @@ namespace TDSM.Core.Definitions
                 if (current.Version < intItem.Version)
                 {
                     //Save new
-                    Save<ItemInfo>(item, intItem);
+                    Save<ItemInfo>(item.FullName, intItem);
                     ProgramLog.Log("Item definitions were updated to v{0}", intItem.Version);
                     _item = intItem;
                 }
@@ -77,7 +77,7 @@ namespace TDSM.Core.Definitions
             }
             else
             {
-                Save<ItemInfo>(item, intItem);
+                Save<ItemInfo>(item.FullName, intItem);
                 _item = intItem;
             }
 
@@ -129,18 +129,12 @@ namespace TDSM.Core.Definitions
 
         #region "IO"
 
-        static void Save<T>(FileInfo info, DefinitionFile<T> definition) where T : class
+        static void Save<T>(string filename, DefinitionFile<T> definition) where T : class
         {
-            if (info.Exists) info.Delete();
-            var bf = new System.Xml.Serialization.XmlSerializer(typeof(DefinitionFile<T>));
+            if (System.IO.File.Exists(filename)) System.IO.File.Delete(filename);
 
-            using (var fs = info.OpenWrite())
-            {
-                bf.Serialize(fs, definition);
-                fs.Flush();
-            }
-
-            bf = null;
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(definition);
+            System.IO.File.WriteAllText(filename, json);
         }
 
         static DefinitionFile<T> LoadDefinition<T>(string internalFile) where T : class
@@ -157,11 +151,11 @@ namespace TDSM.Core.Definitions
 
         static DefinitionFile<T> LoadDefinition<T>(Stream input) where T : class
         {
-            DefinitionFile<T> obj = null;
-            var bf = new System.Xml.Serialization.XmlSerializer(typeof(DefinitionFile<T>));
-            obj = (DefinitionFile<T>)bf.Deserialize(input);
-            bf = null;
-            return obj;
+            using (var st = new StreamReader(input))
+            {
+                var json = st.ReadToEnd();
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<DefinitionFile<T>>(json);
+            }
         }
 
         static Stream GetInternalDefinition(string file)

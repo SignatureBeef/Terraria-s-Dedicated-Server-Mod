@@ -62,11 +62,13 @@ namespace TDSM.Core.Command.Commands
                     {
                         NetMessage.SendData((int)Packet.DISCONNECT, x, -1, message);
 
+#if CUSTOM_SOCKETS
                         var rc = Netplay.Clients[x];
                         if (rc != null && rc.Socket != null && rc.Socket is ClientConnection)
                         {
                             (rc.Socket as ClientConnection).Flush();
                         }
+#endif
                     }
                 }
 

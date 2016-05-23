@@ -62,10 +62,6 @@
       <Link>Newtonsoft.Json.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\Open-Terraria-API\Official\TerrariaServer.exe">
-      <Link>TerrariaServer.exe</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="additional.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -93,6 +89,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Binaries\Server\TerrariaServer.exe">
+      <Link>TerrariaServer.exe</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Open-Terraria-API\Binaries\Server\OTA.Commands.dll">
       <Link>OTA.Commands.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
