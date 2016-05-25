@@ -201,6 +201,10 @@
     <Compile Include="Data\Models\Migrations\CreateAndSeed\APIAccountMigration.cs" />
     <Compile Include="Data\Permissions\OTAPIPermissions.cs" />
     <Compile Include="Net\PacketHandling\Packets\NpcStrike.cs" />
+    <Compile Include="Net\PacketHandling\Packets\PaintWall.cs" />
+    <Compile Include="Net\PacketHandling\Packets\PaintTile.cs" />
+    <Compile Include="PluginHooks\PaintWall.cs" />
+    <Compile Include="PluginHooks\PaintTile.cs" />
     <Compile Include="ServerCharacters\CharacterManager.cs" />
     <Compile Include="ServerCharacters\ItemType.cs" />
     <Compile Include="ServerCharacters\Models\Character.cs" />
