@@ -83,13 +83,13 @@ namespace TDSM.Core.Data
             return ctx.Query<PermissionNode>($"select nd.* from {TableMapper.TypeToName<DbPlayer>()} p " +
                 $"inner join {TableMapper.TypeToName<PlayerNode>()} pn on p.{ColumnMapper.Enclose("Id")} = pn.{ColumnMapper.Enclose("PlayerId")} " +
                 $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on pn.{ColumnMapper.Enclose("NodeId")} = nd.{ColumnMapper.Enclose("Id")} " +
-                $"where p.{ColumnMapper.Enclose("Id")} = @PlayerId and nd.{ColumnMapper.Enclose("Node")} = @Node", new { PlayerId = playerId, Node = node }, transaction: transaction);
+                $"where p.{ColumnMapper.Enclose("Id")} = @PlayerId and (nd.{ColumnMapper.Enclose("Node")} = @Node or nd.{ColumnMapper.Enclose("Node")} ='*')", new { PlayerId = playerId, Node = node }, transaction: transaction);
         }
 
         public static IEnumerable<PermissionNode> GetPermissionByNodeForGroup(this IDbConnection ctx, long groupId, string node, IDbTransaction transaction = null)
         {
             return ctx.Query<PermissionNode>($"select nd.* from {TableMapper.TypeToName<Group>()} g " +
-                $"inner join {TableMapper.TypeToName<GroupNode>()} gn on g.{ColumnMapper.Enclose("Id")} = pn.{ColumnMapper.Enclose("GroupId")} " +
+                $"inner join {TableMapper.TypeToName<GroupNode>()} gn on g.{ColumnMapper.Enclose("Id")} = gn.{ColumnMapper.Enclose("GroupId")} " +
                 $"inner join {TableMapper.TypeToName<PermissionNode>()} nd on gn.{ColumnMapper.Enclose("NodeId")} = nd.{ColumnMapper.Enclose("Id")} " +
                 $"where g.{ColumnMapper.Enclose("Id")} = @GroupId and nd.{ColumnMapper.Enclose("Node")} = @Node", new { GroupId = groupId, Node = node }, transaction: transaction);
         }

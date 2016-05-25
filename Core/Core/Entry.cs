@@ -1,5 +1,8 @@
-﻿using OTA;
+﻿using Dapper;
+using OTA;
 using OTA.Config;
+using OTA.Data;
+using OTA.Data.Dapper.Mappers;
 using OTA.Extensions;
 using OTA.Logging;
 using OTA.Plugin;
@@ -9,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using TDSM.Core.Data;
+using TDSM.Core.Data.Models;
 using TDSM.Core.Data.Permissions;
 using TDSM.Core.Misc;
 using TDSM.Core.Plugin.Hooks;
@@ -118,6 +122,35 @@ namespace TDSM.Core
                 OTA.Permissions.Permissions.SetHandler(new OTAPIPermissions());
                 Dapper.SqlMapper.AddTypeMap(typeof(PasswordFormat), System.Data.DbType.Int32);
                 Dapper.SqlMapper.AddTypeMap(typeof(Byte), System.Data.DbType.Byte);
+
+                //Test if we have a connection
+                try
+                {
+                    using (var ctx = DatabaseFactory.CreateConnection())
+                    {
+                        using (var txn = ctx.BeginTransaction())
+                        {
+                            try
+                            {
+                                var count = ctx.ExecuteScalar<long>($"select 1;", transaction: txn);
+//#if DEBUG
+//                                ProgramLog.Debug.EnableConsoleOutput = true;
+//#endif
+                                if (count != 1)
+                                    ProgramLog.Debug.Log("Failed to get a valid number from the database.");
+                                else ProgramLog.Debug.Log("Database connected.");
+                            }
+                            finally
+                            {
+                                txn.Commit();
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ProgramLog.Error.Log(ex, "Failed to connect to the database.");
+                }
             }
 
             ProgramLog.LogRotation = Config.LogRotation;

@@ -464,10 +464,10 @@ namespace TDSM.Core.Data
                         */
 
                             /*Do we have any nodes?*/
-                            var nodes = ctx.GetPermissionByNodeForPlayer(vPlayerId, prmNode, transaction: txn).ToArray();
-                            if (nodes != null && nodes.Length > 0)
+                            var nodes = ctx.GetPermissionByNodeForPlayer(vPlayerId, prmNode, transaction: txn);
+                            if (nodes != null && nodes.Count() > 0)
                             {
-                                if (nodes.Where(x => x.Permission == Permission.Denied).Count() == 0)
+                                if (nodes.Any(x => x.Node == "*") || nodes.Where(x => x.Permission == Permission.Denied).Count() == 0)
                                 {
                                     vPermissionValue = Permission.Permitted;
                                     vNodeFound = true;
@@ -500,15 +500,19 @@ namespace TDSM.Core.Data
 
                                         var groupPermissions = ctx.GetPermissionByNodeForGroup(vGroupId, prmNode, transaction: txn);
 
-                                        if (groupPermissions.Where(x => x.Permission == Permission.Denied).Count() > 0)
+                                        if
+                                        (
+                                            groupPermissions.Any(x => x.Node == "*" && x.Permission == Permission.Permitted) || 
+                                            groupPermissions.Where(x => x.Permission == Permission.Permitted).Count() > 0
+                                        )
                                         {
-                                            vPermissionValue = Permission.Denied;
+                                            vPermissionValue = Permission.Permitted;
                                             vGroupId = 0;
                                             vNodeFound = true;
                                         }
-                                        else if (groupPermissions.Where(x => x.Permission == Permission.Permitted).Count() > 0)
+                                        else if (groupPermissions.Where(x => x.Permission == Permission.Denied).Count() > 0)
                                         {
-                                            vPermissionValue = Permission.Permitted;
+                                            vPermissionValue = Permission.Denied;
                                             vGroupId = 0;
                                             vNodeFound = true;
                                         }
