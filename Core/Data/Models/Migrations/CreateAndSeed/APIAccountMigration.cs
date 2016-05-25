@@ -17,7 +17,7 @@ namespace TDSM.Core.Data.Models.Migrations
                 .Unique();
 
             table.WithColumn("Username")
-                .AsString(255)
+                .AsString(100)
                 .NotNullable()
                 .Unique();
 
