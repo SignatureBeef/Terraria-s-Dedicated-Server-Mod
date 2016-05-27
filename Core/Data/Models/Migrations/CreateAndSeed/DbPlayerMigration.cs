@@ -31,8 +31,7 @@ namespace TDSM.Core.Data.Models.Migrations
 
             table.WithColumn("DateAdded")
                 .AsDateTime()
-                .NotNullable()
-                .WithDefault(SystemMethods.CurrentDateTime);
+                .NotNullable();
         }
 
         public void Player_Down()

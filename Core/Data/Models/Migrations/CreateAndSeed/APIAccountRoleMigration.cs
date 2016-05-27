@@ -33,8 +33,7 @@ namespace TDSM.Core.Data.Models.Migrations
 
             table.WithColumn("DateFrom")
                 .AsDateTime()
-                .NotNullable()
-                .WithDefault(SystemMethods.CurrentDateTime);
+                .NotNullable();
 
             table.WithColumn("DateTo")
                 .AsDateTime()

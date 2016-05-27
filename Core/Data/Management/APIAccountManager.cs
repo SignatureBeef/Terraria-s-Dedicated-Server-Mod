@@ -6,6 +6,7 @@ using OTA.Data.Dapper.Extensions;
 using Dapper.Contrib.Extensions;
 using OTA.Data.Dapper.Mappers;
 using Dapper;
+using System;
 
 namespace TDSM.Core.Data.Management
 {
@@ -106,7 +107,8 @@ namespace TDSM.Core.Data.Management
             {
                 AccountId = accountId,
                 Type = type,
-                Value = value
+                Value = value,
+                DateFrom = DateTime.UtcNow
             };
 
             using (var ctx = DatabaseFactory.CreateConnection())
