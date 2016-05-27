@@ -22,7 +22,7 @@ namespace TDSM.Core
         [Hook]
         private void OnSetTitle(ref HookContext ctx, ref HookArgs.SetWindowTitle args)
         {
-            ctx.SetResult( HookResult.RECTIFY, resultParam: $"{args.Title} | TDSM ({Entry.CoreVersion}) , OTAPI ({Globals.BuildInfo})");
+            ctx.SetResult(HookResult.RECTIFY, resultParam: $"{args.Title} | TDSM ({Entry.CoreVersion}) , OTAPI ({Globals.BuildInfo})");
         }
 
         [Hook(HookOrder.LATE)]
@@ -179,13 +179,15 @@ namespace TDSM.Core
         [Hook(HookOrder.NORMAL)]
         void OnServerTick(ref HookContext ctx, ref HookArgs.ServerTick args)
         {
-            if (Terraria.Main.ServerSideCharacter)
+            if (Main.ServerSideCharacter)
             {
-                ServerCharacters.CharacterManager.SaveAll();
+                CharacterManager.SaveAll();
             }
 
-            TDSM.Core.Data.Management.SaveManager.OnUpdate();
-            TDSM.Core.Data.Management.BackupManager.OnUpdate();
+            SaveManager.OnUpdate();
+            BackupManager.OnUpdate();
+
+            RunComponent(ComponentEvent.ServerTick);
         }
 
         [Hook(HookOrder.NORMAL)]

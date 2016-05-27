@@ -255,10 +255,12 @@ namespace TDSM.Core
 #endif
         }
 
-        void OnWorldSave(ref HookContext ctx, ref HookArgs.WorldAutoSave args)
-        {
-            //let our backup manager do it's thing
-            ctx.SetResult(HookResult.IGNORE, true);
-        }
+        //[Hook] TODO: commented out due to exit saves not working. 
+        //the intention is only meant to supress vanilla calls, so this hook needs to change to something else
+        //void OnWorldSave(ref HookContext ctx, ref HookArgs.WorldAutoSave args)
+        //{
+        //    //let our backup manager do it's thing
+        //    ctx.SetResult(HookResult.IGNORE, true);
+        //}
     }
 }

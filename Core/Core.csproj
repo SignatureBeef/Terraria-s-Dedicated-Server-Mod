@@ -108,14 +108,6 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OTA, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Open-Terraria-API\API\bin\Server-Debug\OTA.dll</HintPath>
-    </Reference>
-    <Reference Include="OTA.Commands, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Open-Terraria-API\OTA.Commands\bin\Server-Debug\OTA.Commands.dll</HintPath>
-    </Reference>
     <Reference Include="Remotion.Linq, Version=2.0.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.2.0.2\lib\net45\Remotion.Linq.dll</HintPath>
       <Private>True</Private>
@@ -357,6 +349,10 @@
     <ProjectReference Include="..\Open-Terraria-API\API\API.csproj">
       <Project>{a1f792b2-5d80-4de4-b5db-7a05dbeabd60}</Project>
       <Name>API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Open-Terraria-API\OTA.Commands\OTA.Commands.csproj">
+      <Project>{1f4bfcfd-fa1f-4e47-b44e-91e18ec785ac}</Project>
+      <Name>OTA.Commands</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

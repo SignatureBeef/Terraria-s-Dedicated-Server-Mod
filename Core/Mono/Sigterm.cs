@@ -1,7 +1,5 @@
-﻿using Mono.Unix;
-using Mono.Unix.Native;
-using OTA;
-using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace TDSM.Core.Mono
 {
@@ -10,21 +8,12 @@ namespace TDSM.Core.Mono
     /// </summary>
     public static class Sigterm
     {
-        [TDSMComponent(ComponentEvent.ReadyForCommands)]
-        public static void Attach(Entry plugin)
+        [TDSMComponent(ComponentEvent.ServerTick)]
+        public static void OnServerTick(Entry plugin)
         {
-            if (Tools.RuntimePlatform != OTA.Misc.RuntimePlatform.Microsoft)
+            if (OTA.Tools.RuntimePlatform != OTA.Misc.RuntimePlatform.Microsoft)
             {
-                MonoSigterm.Attach(plugin);
-            }
-        }
-
-        [TDSMComponent(ComponentEvent.ServerStopping)]
-        public static void Detach(Entry plugin)
-        {
-            if (Tools.RuntimePlatform != OTA.Misc.RuntimePlatform.Microsoft)
-            {
-                MonoSigterm.Detach(plugin);
+                MonoSigterm.OnServerTick(plugin);
             }
         }
 
@@ -35,70 +24,21 @@ namespace TDSM.Core.Mono
         /// </summary>
         internal static class MonoSigterm
         {
-            private static bool _attached, _exiting;
-            private static Thread _signal_thread;
-
-            public static void Attach(Entry plugin)
+            private static IEnumerable<global::Mono.Unix.UnixSignal> _signals = new[]
             {
-                try
-                {
-                    if (!_exiting && !_attached)
-                    {
-                        _attached = true;
-                        // Catch SIGINT, SIGUSR1 and SIGTERM
-                        UnixSignal[] signals = new UnixSignal[]
-                        {
-                            new UnixSignal(Signum.SIGINT),
-                            new UnixSignal(Signum.SIGUSR1),
-                            new UnixSignal(Signum.SIGTERM)
-                        };
+                new global::Mono.Unix.UnixSignal(global::Mono.Unix.Native.Signum.SIGINT),
+                new global::Mono.Unix.UnixSignal(global::Mono.Unix.Native.Signum.SIGUSR1),
+                new global::Mono.Unix.UnixSignal(global::Mono.Unix.Native.Signum.SIGTERM)
+            };
 
-                        (_signal_thread = new Thread(() =>
-                        {
-                            System.Threading.Thread.CurrentThread.Name = "SIG";
-                            try
-                            {
-                                while (!Terraria.Netplay.disconnect && _attached)
-                                {
-                                    // Wait for a signal to be delivered
-                                    if (UnixSignal.WaitAll(signals, 250))
-                                    {
-                                        if (!Terraria.Netplay.disconnect && _attached)
-                                        {
-                                            _attached = false;
-                                            OTA.Logging.ProgramLog.Log("Server received Exit Signal");
-
-                                            Terraria.IO.WorldFile.saveWorld(false);
-                                            Terraria.Netplay.disconnect = true;
-                                        }
-                                    }
-                                }
-
-                                OTA.Logging.ProgramLog.Debug.Log("Sigterm thread exiting");
-                            }
-                            catch (System.Exception e)
-                            {
-                                OTA.Logging.ProgramLog.Log(e, "Sigterm exception");
-                            }
-                        })).Start();
-                    }
-                }
-                catch
-                {
-                    OTA.Logging.ProgramLog.Log("Failed to attach Sigterm listener");
-                }
-            }
-
-            public static void Detach(Entry plugin)
+            public static void OnServerTick(Entry plugin)
             {
-                if (_attached && _signal_thread != null)
+                if (_signals.Any(s => s.IsSet))
                 {
-                    _attached = false;
-                    _exiting = true;
+                    OTA.Logging.ProgramLog.Log("Server received Exit Signal, auto saving...");
 
-                    //Instead of killing the thread, wait for it to exit.
-                    _signal_thread.Join();
-                    _signal_thread = null;
+                    Terraria.IO.WorldFile.saveWorld(false);
+                    Terraria.Netplay.disconnect = true;
                 }
             }
         }

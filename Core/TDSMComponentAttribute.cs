@@ -13,7 +13,8 @@ namespace TDSM.Core
 
         ServerStarting,
         ServerStopping,
-        ServerInitialising
+        ServerInitialising,
+        ServerTick
     }
 
     /// <summary>
