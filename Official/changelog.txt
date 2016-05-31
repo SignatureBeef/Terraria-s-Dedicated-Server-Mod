@@ -1,3 +1,28 @@
+Version 1.3.1.1 Changes-----------------------------------------------------------------------------------------------
+
+
+Quality of life:
+	All liquid & logic sensors aside "player above" now allow teleportations
+	Added a third frameskip option for those with high-end PCs who got performance issues in 1.3.1 (current "Off" got renamed to "Subtle", old "Off" from 1.3 is back as "Off")
+		
+
+Bug Fixes:
+	Fixed liquids getting frozen in the air until a game restart (hopefully)
+	Fixed gamepad instructions getting frozen on virtual keyboard instructions
+	Fixed two duplication exploits
+	Fixed cannons not shooting cannonballs when pulsed via non-player triggered
+	Fixed slightly inccorect display for "player above" logic sensor (was 1 pixel too small in every direction)
+	Fixed incorrect text at the gamepad options ("Thumbstick Hotbar / "Thumbstick Cursor Snap" should've been "DPad Hotbar" & "DPad Cursor Snap")
+	Fixed training dummies potentially getting permanent invisible corruption
+	Fixed mouse clicks not getting detected until you click a keyboard button on game startup (hopefully)
+	Fixed many furnitures breaking instantly when they're placed aboved platform stairs
+	Fixed multiple issues with geyser placement
+	Fixed particles not drawing in capture mode if background is disabled
+	Fixed the Guide's help tips not detecting the demolitionist nor the goblin tinkerer properly
+	Fixed Grasshopper Statue having no recipe
+
+
+
 Version 1.3.1 Changes-------------------------------------------------------------------------------------------------
 
 
