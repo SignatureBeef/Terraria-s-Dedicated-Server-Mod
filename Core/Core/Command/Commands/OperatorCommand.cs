@@ -16,11 +16,11 @@ namespace TDSM.Core.Command.Commands
                 .WithPermissionNode("tdsm.auth")
                 .WithDescription("Sign in")
                 .Calls(this.Auth);
-            
+
             AddCommand("op")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Allows a player server operator status")
-                .WithHelpText("<player> <password> - Sets the player as an operator on the server and sets the OP password for that player.")
+                .WithHelpText("<player> <password> [-create] - Sets the player as an operator on the server and sets the OP password for that player.")
                 .WithPermissionNode("tdsm.op")
                 .Calls(this.OpPlayer);
 
@@ -44,7 +44,24 @@ namespace TDSM.Core.Command.Commands
             if (Storage.IsAvailable)
             {
                 var existing = Authentication.GetPlayer(playerName);
-                if (existing != null)
+
+                if (existing == null && (args.Contains("-c") || args.Contains("-create")))
+                {
+                    var password = args.GetString(1);
+                    existing = Authentication.CreatePlayer(playerName, password, true);
+
+                    Utils.NotifyAllOps("Opping " + playerName + " [" + sender.SenderName + "]", true);
+                    var player = Tools.GetPlayerByName(playerName);
+                    if (player != null)
+                    {
+                        player.SendMessage("You are now a server operator.", Color.Green);
+                        player.SetOp(true);
+                        player.SetAuthentication(player.name, "tdsm");
+                    }
+
+                    sender.Message("Op success", Color.DarkGreen);
+                }
+                else if (existing != null)
                 {
                     if (existing.Operator)
                         throw new CommandError("Player is already an operator");
@@ -70,7 +87,7 @@ namespace TDSM.Core.Command.Commands
                 else
                 {
                     sender.Message("No user found by " + playerName, Color.DarkRed);
-                    sender.Message("Please use the `user` command", Color.DarkRed);
+                    sender.Message("Please use the `user` command or add the -create switch", Color.DarkRed);
                 }
             }
             else
