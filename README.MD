@@ -3,7 +3,7 @@
 
 &#x1F53B;&#x1F53B;&#x1F53B;&#x1F53B;&#x1F53B;&#x1F53B;&#x1F53B;
 # Announcement
-I have recently joined up with NyxStudios (the guys who make TShock) to work on the new Orion/TShock 5 software. I reccommend you start migrating away from TDSM as there will be no futher updates.
+I have recently joined up with NyxStudios (the guys who make TShock) to work on the new Orion/TShock 5 software. I recommend you start migrating away from TDSM as there will be no futher updates.
 Orion/TShock5 will also be powered by OTAPI and feature most of what TDSM offered, if not more, including a higher quality of code.
 
 &#x1F53A;&#x1F53A;&#x1F53A;&#x1F53A;&#x1F53A;&#x1F53A;&#x1F53A;
