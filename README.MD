@@ -1,6 +1,13 @@
 # TDSM: Rebind
 [![Build Status](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod.svg?branch=master)](https://travis-ci.org/DeathCradle/Terraria-s-Dedicated-Server-Mod) [![Slack](https://img.shields.io/badge/Chat%20on-Slack-blue.svg)](https://openterraria.com/#public-chat)
 
+&#x1F53B;&#x1F53B;&#x1F53B;&#x1F53B;&#x1F53B;&#x1F53B;&#x1F53B;
+# Announcement
+I have recently joined up with NyxStudios (the guys who make TShock) to work on the new Orion/TShock 5 software. I reccommend you start migrating away from TDSM as there will be no futher updates.
+Orion/TShock5 will also be powered by OTAPI and feature most of what TDSM offered, if not more, including a higher quality of code.
+
+&#x1F53A;&#x1F53A;&#x1F53A;&#x1F53A;&#x1F53A;&#x1F53A;&#x1F53A;
+
 *Supporting Terraria v1.3!*  
 TDSM is a server modification of the official Terraria dedicated server software via the [Open Terraria API](https://github.com/DeathCradle/Open-Terraria-API/) project. It extends functionallity giving the option for advanced permissions and plugin support. TDSM is a great choice for alternative server software for Terraria if you want stability, multi-platform, and added functionallity. It's also updated very quickly after a new Terraria release because of the way the new TDSM Rebind has been written.
 
